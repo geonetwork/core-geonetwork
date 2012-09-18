@@ -123,19 +123,25 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @param isTemplate
      * @param title
      * @param owner
-     * @param groupOwner
+     //*** @param groupOwner
      * @param docType
      * @param context 
      * @return
      * @throws SQLException
      */
-	public String insert(Dbms dbms, String schema, Element xml, int id,
+    //*** public String insert(Dbms dbms, String schema, Element xml, String id,
+	//				 String source, String uuid, String createDate,
+	//				 String changeDate, String isTemplate, String title,
+	//		 String owner, String groupOwner, String docType, ServiceContext context)
+	//		 throws Exception {
+    public String insert(Dbms dbms, String schema, Element xml, String id,
 					 String source, String uuid, String createDate,
 					 String changeDate, String isTemplate, String title,
-			 int owner, String groupOwner, String docType, ServiceContext context) 
+                         String owner, String docType, ServiceContext context)
 			 throws Exception {
 
-		return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+        //***return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+        return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, docType);
 	}
 
     /**
@@ -155,7 +161,6 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws SQLException, SVNException
      */
 	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws Exception {
-
 		// old XML comes from the database
 	  Element oldXml = super.internalSelect(dbms, "metadata", id);		
 
@@ -170,6 +175,27 @@ public class XmlSerializerSvn extends XmlSerializer {
 		}
 
 	}
+
+    @Override
+    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws Exception {
+        // old XML comes from the database
+        Element oldXml = super.internalSelect(dbms, "workspace", id);
+
+        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+
+        if (svnMan == null) { // do nothing
+            Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
+        } else {
+            // set subversion manager to record history on this metadata when commit
+            // takes place
+            svnMan.setHistory(dbms, id, context);
+        }
+    }
+
+    @Override
+    public void deleteFromWorkspace(Dbms dbms, String id) throws Exception {
+        deleteFromWorkspaceDB(dbms, id);
+    }
 
     /**
      * Deletes a metadata record given its id. The metadata record is deleted

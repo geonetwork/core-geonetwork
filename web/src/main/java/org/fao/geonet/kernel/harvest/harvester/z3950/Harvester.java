@@ -26,6 +26,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -40,6 +41,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.main.Info;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.DocType;
 import org.jdom.Document;
@@ -50,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -181,7 +184,7 @@ class Harvester {
 				catCodes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), categName);
 
 				if (Xml.selectElement(categories,"record[name='"+categName+"']") == null) {
-					int newId = context.getSerialFactory().getSerial(dbms, "Categories");
+					String newId = UUID.randomUUID().toString();
 					dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, categName);
 					Lib.local.insert(dbms, "Categories", newId, repoName);
 					addcateg = true;
@@ -254,7 +257,7 @@ class Harvester {
 						md = Xml.transform(md, thisXslt);
                         if(log.isDebugEnabled()) log.debug("After transform: "+Xml.getString(md));
 					} catch (Exception e) {
-						System.out.println("Cannot transform XML, ignoring. Error was: "+e.getMessage());
+                        Log.error(Geonet.HARVESTER, "Cannot transform XML, ignoring. Error was: " + e.getMessage());
 						result.badFormat++;
 						continue; // skip this one
 					}
@@ -285,11 +288,7 @@ class Harvester {
 				log.info("  - Adding metadata with " + uuid);
 
 				//--- generate a new metadata id
-		
-				int id = context.getSerialFactory().getSerial(dbms, "Metadata");
-                // TODO end confusion about datatypes
-                String id$ = Integer.toString(id);
-
+				String id = IDFactory.newID();
 				String docType = "";
 				if (!transformIt && (doc.getDocType() != null)) {
 					docType = Xml.getString(doc.getDocType());
@@ -309,13 +308,11 @@ class Harvester {
                 // insert metadata
                 //
 				try {
-                    String groupOwner = "1", isTemplate = "n", title = null;
-                    int owner = 1;
+                    String group = "1", isTemplate = "n", title = null, owner = "1";
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(context, dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
-                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
-
+                    dataMan.insertMetadata(context, dbms, schema, md, id, uuid, owner, group, params.uuid, isTemplate,
+                            docType, title, category, createDate, changeDate, ufo, indexImmediate);
 				}
                 catch (Exception e) {
 					log.error("Unable to insert metadata "+e.getMessage());
@@ -324,8 +321,8 @@ class Harvester {
 					continue;
 				}
 
-				addPrivileges(id$);
-				addCategories(id$, catCodes.get(colCode));
+				addPrivileges(id);
+				addCategories(id, catCodes.get(colCode));
 
 				dataMan.setTemplateExt(dbms, id, "n", null);
 				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
@@ -339,13 +336,14 @@ class Harvester {
 						docVal = new Document(md);
 					}
 
-					if (!dataMan.doValidate(dbms, schema, id$, docVal, context.getLanguage())) {
+					if (!dataMan.doValidate(dbms, schema, id, docVal, context.getLanguage())) {
 						result.doesNotValidate++;
 					} 
 				}
 			
 				boolean indexGroup = false;
-				dataMan.indexMetadata(dbms, id$, indexGroup);
+                boolean workspace = false;
+                dataMan.indexMetadata(dbms, id, indexGroup, workspace, true);
 
 				result.addedMetadata++;
 			}
@@ -401,11 +399,11 @@ class Harvester {
                 if(log.isDebugEnabled())
                     log.debug("    - Skipping removed group with id:" + priv.getGroupId());
 			else {
-				for (int opId : priv.getOperations()) {
+				for (String opId : priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					// --- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId + "");
 					} else
                     if(log.isDebugEnabled()) log.debug("       --> " + name + " (skipped)");

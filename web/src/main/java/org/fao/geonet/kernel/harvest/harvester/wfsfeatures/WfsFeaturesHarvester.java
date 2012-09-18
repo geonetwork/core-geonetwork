@@ -100,7 +100,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -146,16 +146,16 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	{
 		WfsFeaturesParams params = (WfsFeaturesParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
-		settingMan.add(dbms, "id:"+optionsId, "query",  params.query);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
-		settingMan.add(dbms, "id:"+optionsId, "stylesheet",  params.stylesheet);
-		settingMan.add(dbms, "id:"+optionsId, "streamFeatures",  params.streamFeatures);
-		settingMan.add(dbms, "id:"+optionsId, "createSubtemplates",  params.createSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "templateId",  params.templateId);
-		settingMan.add(dbms, "id:"+optionsId, "recordsCategory",  params.recordsCategory);
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url, false);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon, false);
+		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang, false);
+		settingMan.add(dbms, "id:"+optionsId, "query",  params.query, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema, false);
+		settingMan.add(dbms, "id:"+optionsId, "stylesheet",  params.stylesheet, false);
+		settingMan.add(dbms, "id:"+optionsId, "streamFeatures",  params.streamFeatures, false);
+		settingMan.add(dbms, "id:"+optionsId, "createSubtemplates",  params.createSubtemplates, false);
+		settingMan.add(dbms, "id:"+optionsId, "templateId",  params.templateId, false);
+		settingMan.add(dbms, "id:"+optionsId, "recordsCategory",  params.recordsCategory, false);
 	}
 
 	//---------------------------------------------------------------------------

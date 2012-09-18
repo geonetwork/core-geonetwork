@@ -65,8 +65,7 @@ public class UpdateCategories implements Service {
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//--- remove old operations
@@ -84,7 +83,8 @@ public class UpdateCategories implements Service {
 		}
 
 		//--- index metadata
-        dataMan.indexInThreadPool(context, id, dbms);
+        boolean workspace = false;
+        dataMan.indexInThreadPool(context, id, dbms, workspace, true);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

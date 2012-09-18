@@ -41,6 +41,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     editUrl: undefined,
     updateUrl: undefined,
     frame: false,
+    editorToolBar: undefined,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
     defaultConfig: {
@@ -1304,6 +1305,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
             metadataId: this.metadataId,
+            workspace: true,
             editor: this,
             getThumbnail: this.catalogue.services.mdGetThumbnail,
             setThumbnail: this.catalogue.services.mdSetThumbnail,

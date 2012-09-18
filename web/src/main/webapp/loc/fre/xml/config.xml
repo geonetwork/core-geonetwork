@@ -47,6 +47,13 @@
     <requestedlanguagesorted>Résultats de la recherche dans la langue demandée triés sur le dessus</requestedlanguagesorted>
     <requestedlanguageignored>Ignorer la langue demandée à la recherche</requestedlanguageignored>
 
+    <clustering>regroupement</clustering>
+    <enableClustering>Activer le regroupement</enableClustering>
+    <JMSBrokerConnectionURL>URL(s) courtier JMS</JMSBrokerConnectionURL>
+
+    <symbolicLocking>verrouillage symbolique</symbolicLocking>
+    <enableSymbolicLocking>Activer le verrouillage symbolique</enableSymbolicLocking>
+
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
@@ -388,6 +395,15 @@
             Ignorer la langue demandée pour les résultats de recherche.
         </tip>
 
+        <tip id="cluster.enable">
+            Activez cette pour le clustering.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Entrez l'URL de votre courtier JMS. E.G. : failover://tcp://localhost:61616.
+        </tip>
+        <tip id="symbolicLocking.enable">
+            Lorsque cette option est activée, n'importe quel éditeur de métadonnées peut débloquer dans ses groupes (non seulement examinateurs).
+        </tip>
     </tips>
 	
 	<data.dataDir>Répertoire des données :</data.dataDir>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- NOTE: cluster settings common to all nodes in the cluster (i.e. 'enabled' and 'JMS broker URL') are stored in the
+     database and part of GeoNetwork Settings. -->
+<config>
+	<jms>
+        <!--
+        Uniquely identify this node in the cluster. The value must be different from that in all other nodes in the
+        cluster and should remain the same after re-starts.
+        -->
+        <clientID>CHANGEME</clientID>
+	</jms>
+</config>

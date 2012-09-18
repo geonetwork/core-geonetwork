@@ -91,7 +91,7 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 		//--- retrieve/initialize information
 		params.create(node);
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 
@@ -128,24 +128,24 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	{
 		Z3950ConfigParams params = (Z3950ConfigParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
+		settingMan.add(dbms, "id:"+siteId, "host",    params.host, false);
+		settingMan.add(dbms, "id:"+siteId, "port",    params.port, false);
 
 		//--- store options
 
-		settingMan.add(dbms, "id:"+optionsId, "clearConfig",  params.clearConfig);
+		settingMan.add(dbms, "id:"+optionsId, "clearConfig",  params.clearConfig, false);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(dbms, path, "search", "", false);
 
-			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText);
-			settingMan.add(dbms, "id:"+searchID, "title",      s.title);
-			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac);
-			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords);
-			settingMan.add(dbms, "id:"+searchID, "category",   s.category);
+			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText, false);
+			settingMan.add(dbms, "id:"+searchID, "title",      s.title, false);
+			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac, false);
+			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords, false);
+			settingMan.add(dbms, "id:"+searchID, "category",   s.category, false);
 		}
 	}
 

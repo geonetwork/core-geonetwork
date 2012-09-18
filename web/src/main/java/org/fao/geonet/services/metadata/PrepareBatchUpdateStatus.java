@@ -75,19 +75,19 @@ public class PrepareBatchUpdateStatus implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> ids = new HashSet<Integer>();
+		Set<String> ids = new HashSet<String>();
 
 		//-----------------------------------------------------------------------
 		//--- run through the selected set of metadata records 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
+			String uuid = iter.next();
 			String id   = dataMan.getMetadataId(dbms, uuid);
 
 			//--- check access, if owner then process 
 			
 			if (am.isOwner(context, id)) {
-				ids.add(new Integer(id));
+				ids.add(id);
 			}
 		}
 		}

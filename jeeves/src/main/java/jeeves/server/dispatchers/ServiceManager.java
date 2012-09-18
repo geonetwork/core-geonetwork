@@ -52,7 +52,6 @@ import jeeves.utils.BLOB;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.jdom.Element;
@@ -82,7 +81,6 @@ public class ServiceManager
     private ProfileManager  profilMan;
     private MonitorManager monitorManager;
 
-	private SerialFactory   serialFact;
     private String  appPath;
     private String  baseUrl;
     private String  uploadDir;
@@ -109,7 +107,6 @@ public class ServiceManager
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
 	public boolean isStartupError() { return startupError; }
@@ -326,7 +323,7 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name)
 	{
-		ServiceContext context = new ServiceContext(name, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, monitorManager, providMan, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -349,7 +346,7 @@ public class ServiceManager
 	public void dispatch(ServiceRequest req, UserSession session)
 	{
 
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());

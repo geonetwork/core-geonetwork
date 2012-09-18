@@ -23,16 +23,13 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.util.List;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
@@ -42,6 +39,8 @@ import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
+
+import java.util.List;
 
 //=============================================================================
 
@@ -68,7 +67,7 @@ public class ListIdentifiers extends AbstractTokenLister
 
 		while (num<Lib.MAX_RECORDS && pos < result.ids.size())
 		{
-			int id = result.ids.get(pos);
+			String id = result.ids.get(pos);
 
 			Header h = buildHeader(context, id, result.prefix);
 
@@ -93,7 +92,7 @@ public class ListIdentifiers extends AbstractTokenLister
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception
+	private Header buildHeader(ServiceContext context, String id, String prefix) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -145,6 +144,3 @@ public class ListIdentifiers extends AbstractTokenLister
 		return h;
 	}
 }
-
-//=============================================================================
-

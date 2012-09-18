@@ -1,29 +1,31 @@
 INSERT INTO Languages VALUES ('nor','norsk', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (33, 'nor', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (34, 'nor', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (35, 'nor', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (36, 'nor', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('33', 'nor', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('34', 'nor', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('35', 'nor', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('36', 'nor', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'nor','Kart og grafikk');
-INSERT INTO CategoriesDes VALUES (2,'nor','Datasett');
-INSERT INTO CategoriesDes VALUES (3,'nor','Interakive ressurser');
-INSERT INTO CategoriesDes VALUES (4,'nor','Applikasjoner');
-INSERT INTO CategoriesDes VALUES (5,'nor','Studier og anbefalinger');
-INSERT INTO CategoriesDes VALUES (6,'nor','Konferanseresultater');
-INSERT INTO CategoriesDes VALUES (7,'nor','Fotografier');
-INSERT INTO CategoriesDes VALUES (8,'nor','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'nor','Kataloger');
-INSERT INTO CategoriesDes VALUES (10,'nor','Andre ressurser');
-INSERT INTO CategoriesDes VALUES (11,'nor','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'nor','Registers');
-INSERT INTO CategoriesDes VALUES (13,'nor','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'nor','Gjest');
-INSERT INTO GroupsDes VALUES (0,'nor','Intranett');
-INSERT INTO GroupsDes VALUES (1,'nor','Alle');
-INSERT INTO GroupsDes VALUES (2,'nor','Eksempelgruppe');
+INSERT INTO CategoriesDes VALUES ('1','nor','Kart og grafikk');
+INSERT INTO CategoriesDes VALUES ('2','nor','Datasett');
+INSERT INTO CategoriesDes VALUES ('3','nor','Interakive ressurser');
+INSERT INTO CategoriesDes VALUES ('4','nor','Applikasjoner');
+INSERT INTO CategoriesDes VALUES ('5','nor','Studier og anbefalinger');
+INSERT INTO CategoriesDes VALUES ('6','nor','Konferanseresultater');
+INSERT INTO CategoriesDes VALUES ('7','nor','Fotografier');
+INSERT INTO CategoriesDes VALUES ('8','nor','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','nor','Kataloger');
+INSERT INTO CategoriesDes VALUES ('10','nor','Andre ressurser');
+INSERT INTO CategoriesDes VALUES ('11','nor','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','nor','Registers');
+INSERT INTO CategoriesDes VALUES ('13','nor','Physical Samples');
+
+INSERT INTO GroupsDes VALUES ('-1','nor','Gjest');
+INSERT INTO GroupsDes VALUES ('0','nor','Intranett');
+INSERT INTO GroupsDes VALUES ('1','nor','Alle');
+INSERT INTO GroupsDes VALUES ('2','nor','Eksempelgruppe');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'nor','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'nor','Abkhazian');
@@ -510,19 +512,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'nor','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'nor','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'nor','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'nor','Publisér');
-INSERT INTO OperationsDes VALUES (1,'nor','Nedlasting');
-INSERT INTO OperationsDes VALUES (2,'nor','Oppdatering');
-INSERT INTO OperationsDes VALUES (3,'nor','Varsle');
-INSERT INTO OperationsDes VALUES (5,'nor','Interaktivt kart');
-INSERT INTO OperationsDes VALUES (6,'nor','Aktuelt');
+INSERT INTO OperationsDes VALUES ('0','nor','Publisér');
+INSERT INTO OperationsDes VALUES ('1','nor','Nedlasting');
+INSERT INTO OperationsDes VALUES ('2','nor','Oppdatering');
+INSERT INTO OperationsDes VALUES ('3','nor','Varsle');
+INSERT INTO OperationsDes VALUES ('5','nor','Interaktivt kart');
+INSERT INTO OperationsDes VALUES ('6','nor','Aktuelt');
 
-INSERT INTO StatusValuesDes VALUES (0,'nor','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'nor','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'nor','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'nor','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'nor','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'nor','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','nor','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','nor','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','nor','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','nor','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','nor','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','nor','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','nor','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'nor','Armenia');
 INSERT INTO RegionsDes VALUES (2,'nor','Afghanistan');

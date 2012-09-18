@@ -28,7 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -76,9 +75,7 @@ public class GetStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (!am.isOwner(context,id)) 
@@ -87,7 +84,7 @@ public class GetStatus implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata status
 
-		Element stats = dataMan.getStatus(dbms, iLocalId);
+		Element stats = dataMan.getStatus(dbms, id);
 
 		String status = Params.Status.UNKNOWN;
 		String userId = "-1"; // no userId
@@ -124,8 +121,8 @@ public class GetStatus implements Service
 		//-----------------------------------------------------------------------
 		//--- get the list of content reviewers for this metadata record
 
-		Set<Integer> ids = new HashSet<Integer>();
-		ids.add(new Integer(id));
+		Set<String> ids = new HashSet<String>();
+		ids.add(id);
 
 		Element cRevs = am.getContentReviewers(dbms, ids);
 		cRevs.setName("contentReviewers");

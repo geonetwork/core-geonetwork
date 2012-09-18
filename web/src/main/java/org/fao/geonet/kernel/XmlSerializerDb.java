@@ -23,22 +23,13 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
-import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
@@ -87,7 +78,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param dbms
      * @param schema
      * @param xml
-     * @param serial
+     * @param id
      * @param source
      * @param uuid
      * @param createDate
@@ -95,19 +86,24 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param isTemplate
      * @param title
      * @param owner
-     * @param groupOwner
+     //*** @param groupOwner
      * @param docType
-		 * @param session
+		 * @param context
      * @return
      * @throws SQLException
      */
-	public String insert(Dbms dbms, String schema, Element xml, int serial,
+	//***public String insert(Dbms dbms, String schema, Element xml, String id,
+	//				 String source, String uuid, String createDate,
+	//				 String changeDate, String isTemplate, String title,
+	//				 String owner, String groupOwner, String docType, ServiceContext context)
+	//				 throws SQLException {
+    public String insert(Dbms dbms, String schema, Element xml, String id,
 					 String source, String uuid, String createDate,
 					 String changeDate, String isTemplate, String title,
-					 int owner, String groupOwner, String docType, ServiceContext context) 
+                         				 String owner, String docType, ServiceContext context)
 					 throws SQLException {
-
-		return insertDb(dbms, schema, xml, serial, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+		//***return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+        return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, docType);
 
 	}
 
@@ -119,15 +115,23 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param xml
      * @param changeDate
      * @param updateDateStamp
-     * @param userId
 		 * @param context
      *
      * @throws SQLException
      */
 	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws SQLException {
-
 		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
 	}
+
+    public void updateWorkspace(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws SQLException {
+        updateDbWorkspace(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+    }
+
+    @Override
+    public void deleteFromWorkspace(Dbms dbms, String id) throws Exception {
+        deleteFromWorkspaceDB(dbms, id);
+    }
+
 
     /**
      * Deletes an xml element given its id.

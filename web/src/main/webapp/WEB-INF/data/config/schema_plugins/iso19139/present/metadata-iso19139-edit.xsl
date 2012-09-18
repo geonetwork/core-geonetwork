@@ -459,7 +459,9 @@
     </xsl:variable>
     <xsl:variable name="attrs">
       <xsl:for-each select="gco:*/@*">
+                <xsl:if test="((namespace-uri(.)!=$geonetUri) and (name(.) != 'class'))">
         <xsl:value-of select="name(.)"/>
+                </xsl:if>
       </xsl:for-each>
     </xsl:variable>
 
@@ -627,7 +629,7 @@
       <xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
       <xsl:with-param name="visible" select="false()"/>
       <xsl:with-param name="action" select="concat('Ext.getCmp(', $apos, 'editorPanel', $apos, 
-        ').showFileUploadPanel(', //geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+        ').showFileUploadPanel(', /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
     </xsl:call-template>
   </xsl:template>
  
@@ -1884,7 +1886,7 @@
 
           </xsl:with-param>
           <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="group" select="/root/gui/strings/metadata"/>
+          <xsl:with-param name="group" select="/root/gui/strings/metametadata"/>
           <xsl:with-param name="edit" select="$edit"/>
         </xsl:call-template>
     
@@ -1994,14 +1996,14 @@
     </xsl:variable>
     
     <xsl:call-template name="complexElementGui">
-      <xsl:with-param name="title" select="/root/gui/strings/metadata"/>
+            <xsl:with-param name="title" select="/root/gui/strings/metametadata"/>
       <xsl:with-param name="validationLink" select="$validationLink"/>
       <xsl:with-param name="edit" select="true()"/>
       <xsl:with-param name="content">
     
       <!-- if the parent is root then display fields not in tabs -->
         <xsl:choose>
-          <xsl:when test="name(..)='root'">
+                    <xsl:when test="name(..)='root' or name(..)='source' or name(..)='target'">
           <xsl:apply-templates mode="elementEP" select="gmd:fileIdentifier|geonet:child[string(@name)='fileIdentifier']
             |gmd:language|geonet:child[string(@name)='language']
             |gmd:characterSet|geonet:child[string(@name)='characterSet']
@@ -2130,7 +2132,7 @@
     
     
     <xsl:call-template name="complexElementGui">
-      <xsl:with-param name="title" select="/root/gui/strings/metadata"/>
+            <xsl:with-param name="title" select="/root/gui/strings/metametadata"/>
       <xsl:with-param name="content">
         <xsl:call-template name="iso19139Metadata">
           <xsl:with-param name="schema" select="$schema"/>
@@ -2225,13 +2227,13 @@
     
     <xsl:if test="$edit=false()">
       <xsl:if test="count(gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString[contains(string(.),'download')])>1 and
-                  //geonet:info/download='true'">
+                  ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download='true'">
         <xsl:call-template name="complexElementGui">
           <xsl:with-param name="title" select="/root/gui/strings/downloadSummary"/>
           <xsl:with-param name="content">
             <tr>
               <td  align="center">
-                <button class="content" onclick="javascript:runFileDownloadSummary('{//geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
+                                <button class="content" onclick="javascript:runFileDownloadSummary('{ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}','{/root/gui/strings/downloadSummary}')" type="button">
                   <xsl:value-of select="/root/gui/strings/showFileDownloadSummary"/>  
                 </button>
               </td>
@@ -2462,7 +2464,7 @@
   <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'OGC:WMS-') and contains(gmd:protocol/gco:CharacterString,'-get-map') and gmd:name]" priority="2">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
-    <xsl:variable name="metadata_id" select="//geonet:info/id" />
+        <xsl:variable name="metadata_id" select="ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id" />
     <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
     <xsl:variable name="name" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)" />
     <xsl:variable name="description" select="normalize-space(gmd:description/gco:CharacterString)" />
@@ -2473,7 +2475,7 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
       </xsl:when>
-      <xsl:when test="string(//geonet:info/dynamic)='true' and string($name)!='' and string($linkage)!=''">
+            <xsl:when test="string(/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($name)!='' and string($linkage)!=''">
       <!-- Create a link for a WMS service that will open in the map viewer -->
         <xsl:apply-templates mode="simpleElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
@@ -2496,7 +2498,7 @@
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="title"  select="/root/gui/strings/viewInGE"/>
           <xsl:with-param name="text">
-            <a href="{/root/gui/locService}/google.kml?uuid={//geonet:info/uuid}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
+                        <a href="{/root/gui/locService}/google.kml?uuid={ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/uuid}&amp;layers={$name}" title="{/root/strings/interactiveMap}">
               <xsl:choose>
                 <xsl:when test="string($description)!=''">
                   <xsl:value-of select="$description"/>
@@ -2531,12 +2533,12 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
       </xsl:when>
-      <xsl:when test="string(//geonet:info/dynamic)='true' and string($linkage)!=''">
+            <xsl:when test="string(ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/dynamic)='true' and string($linkage)!=''">
         <xsl:apply-templates mode="simpleElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="title"  select="/root/gui/strings/interactiveMap"/>
           <xsl:with-param name="text">
-            <a href="javascript:runIM_selectService('{$linkage}',2,{//geonet:info/id})" title="{/root/strings/interactiveMap}">              
+                        <a href="javascript:runIM_selectService('{$linkage}',2,{ancestor-or-self::*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id})" title="{/root/strings/interactiveMap}">
               <xsl:choose>
                 <xsl:when test="string($description)!=''">
                   <xsl:value-of select="$description"/>
@@ -2570,7 +2572,7 @@
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
       </xsl:when>
-      <xsl:when test="string(//geonet:info/download)='true' and string($linkage)!='' and not(contains($linkage,$download_check))">
+            <xsl:when test="string(/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/download)='true' and string($linkage)!='' and not(contains($linkage,$download_check))">
         <xsl:apply-templates mode="simpleElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="title"  select="/root/gui/strings/downloadData"/>
@@ -3394,7 +3396,7 @@
             <xsl:variable name="fileName" select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
             <xsl:variable name="url" select="if (contains($fileName, '://')) 
                                                 then $fileName 
-                                                else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
+                                                else geonet:get-thumbnail-url($fileName,  /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info, /root/gui/locService)"/>
 
             <div class="md-view">
               <a rel="lightbox-viewset" href="{$url}">

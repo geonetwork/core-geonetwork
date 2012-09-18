@@ -1,5 +1,11 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterException;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.harvest.HarvestMessage;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -26,7 +32,25 @@ public class HarvesterJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
+
+            if(ClusterConfig.isEnabled()) {
+                if (harvester.getNodeId().equals(ClusterConfig.getClientID())) {
+                    try {
+                        Log.info(Geonet.HARVESTER, "clustering enabled, creating harvest message");
+                        HarvestMessage message = new HarvestMessage();
+                        message.setId(harvester.getID());
+                        Producer harvestProducer = ClusterConfig.get(Geonet.ClusterMessageQueue.HARVEST);
+                        harvestProducer.produce(message);
+                    }
+                    catch (ClusterException x) {
+                        Log.error(Geonet.HARVESTER, x.getMessage());
+                        x.printStackTrace();
+                    }
+                }
+            } else {
             harvester.harvest();
+            }
+
         } catch (Throwable t) {
             throw new JobExecutionException(t, false);
         }

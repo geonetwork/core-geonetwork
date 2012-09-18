@@ -74,6 +74,11 @@ Ext.extend(GeoNetwork.data.OpenSearchSuggestionReader, Ext.data.JsonReader, {
         this.rootId = 1;
         var root = (!this.rootId ? this.getRoot(o) : o[this.rootId]);
         
+	// Sort case insensitive
+	root.sort(function(a, b){
+    		return a.toLowerCase() > b.toLowerCase();
+	});
+        
         for (i = 0, len = root.length; i < len; i++) {
             var n = root[i], values = {}, id = ((sid || sid === 0) &&
             n[sid] !== undefined &&

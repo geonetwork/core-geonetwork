@@ -34,6 +34,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -156,8 +157,8 @@ public class ShibLogin implements Service
 			String surname, String firstname, String profile, String group) throws SQLException
 	{
         boolean groupProvided = ((group != null) && (!(group.equals(""))));
-        int groupId = -1;
-        int userId = -1;
+        String groupId = "-1";
+        String userId = "-1";
 
         if (groupProvided) {
             String query = "SELECT id FROM Groups WHERE name=?";
@@ -165,16 +166,15 @@ public class ShibLogin implements Service
             List list  = dbms.select(query, group).getChildren();
 
             if (list.isEmpty()) {
-                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+                groupId = IDFactory.newID();
 
                 query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
                 dbms.execute(query, groupId, group);
                 Lib.local.insert(dbms, "Groups", groupId, group);
 
-            } else {
-                String gi = ((Element) list.get(0)).getChildText("id");
-
-                groupId = new Integer(gi).intValue();
+            } 
+            else {
+                groupId = ((Element) list.get(0)).getChildText("id");
             }
         }
 		//--- update user information into the database
@@ -185,12 +185,10 @@ public class ShibLogin implements Service
 
 		//--- if the user was not found --> add it
 
-		if (res == 0)
-		{
-			userId = context.getSerialFactory().getSerial(dbms, "Users");
+		if (res == 0) {
+			userId = IDFactory.newID();
 
-			query = 	"INSERT INTO Users(id, username, name, surname, profile, password) "+
-						"VALUES(?,?,?,?,?,?)";
+			query = "INSERT INTO Users(id, username, name, surname, profile, password) VALUES(?,?,?,?,?,?)";
 
 			dbms.execute(query, userId, username, firstname, surname, profile, "Via Shibboleth");
 
@@ -201,10 +199,8 @@ public class ShibLogin implements Service
                 String count = ((Element) list.get(0)).getChildText("numr");
 
                  if (count.equals("0")) {
-                     query = "INSERT INTO UserGroups(userId, groupId) "+
-                             "VALUES(?,?)";
+                     query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
                      dbms.execute(query, userId, groupId);
-
                  }
             }
 		}

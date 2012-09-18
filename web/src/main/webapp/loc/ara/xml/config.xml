@@ -22,6 +22,13 @@
     <requestedlanguagesorted>نتائج البحث في اللغة المطلوبة على أعلى مرتبة</requestedlanguagesorted>
     <requestedlanguageignored>تجاهل اللغة المطلوبة في البحث</requestedlanguageignored>
 
+    <clustering>المجموعات</clustering>
+    <enableClustering>تمكين المجموعات</enableClustering>
+    <JMSBrokerConnectionURL>JMS URL سمسار (ق)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>رمزي تأمين</symbolicLocking>
+    <enableSymbolicLocking>تمكين تأمين رمزي</enableSymbolicLocking>
+
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>
 	<recommendedThreads>Recommended</recommendedThreads>
@@ -377,7 +384,19 @@
 		<tip id="searchStats.enable">
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
+
+        <tip id="cluster.enable">
+            تمكين هذا لتجميع.
+        </tip>
+        <tip id="cluster.jmsurl">
+            إدخال عنوان الموقع إلى وسيط دائرة الخدمات الطبية المشتركة الخاصة بك. على سبيل المثال :/ الفشل TCP / :/ / كلهوست: 61616.
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            عندما يتم تمكين هذا، قد فتح أي محرر الفوقية في مجموعات (وليس فقط المراجعون).
+        </tip>
 	</tips>
+	
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>

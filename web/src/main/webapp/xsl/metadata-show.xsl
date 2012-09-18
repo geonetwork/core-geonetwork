@@ -83,6 +83,16 @@
 						
 						<table width="100%">
 						
+                            <xsl:if test="(string(geonet:info/workspace)='true')">
+                                <tr>
+                                    <td valign="top" height="100%" align="center" class="padded-content">
+                                        <div style="font-size:x-large;">
+                                            <xsl:value-of select="/root/gui/strings/workspaceview"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </xsl:if>
+
 							<xsl:variable name="buttons">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">

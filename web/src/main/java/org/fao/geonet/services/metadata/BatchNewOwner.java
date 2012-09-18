@@ -72,9 +72,9 @@ public class BatchNewOwner implements Service
 		String targetUsr = Util.getParam(params, Params.USER);
 		String targetGrp = Util.getParam(params, Params.GROUP);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
@@ -90,38 +90,40 @@ public class BatchNewOwner implements Service
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 
 			if (info == null) {
-				notFound.add(new Integer(id));	
+				notFound.add(id);
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(id);
 			} else {
 
 	 			//-- Get existing owner and privileges for that owner - note that 
 				//-- owners don't actually have explicit permissions - only their 
 				//-- group does which is why we have an ownerGroup (parameter groupid)
 				String sourceUsr = info.owner; 
-				String sourceGrp = info.groupOwner; 
-				if (sourceGrp.equals("")) {
-					context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
+				//***
+				// String sourceGrp = info.groupOwner;
+				//
+				//if (sourceGrp.equals("")) {
+				//	context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
 					dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
-				} else {
-					Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
-
-					// -- Set new privileges for new owner from privileges of the old  
-					// -- owner, if none then set defaults
-					if (sourcePriv.size() == 0) {
-						dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
-						context.info("No privileges for user "+sourceUsr+" on metadata "+id+", so setting default privileges");
-					} else {
-						for (String priv : sourcePriv) {
-							dm.unsetOperation(context, dbms, id, sourceGrp, priv);
-							dm.setOperation(context, dbms, id, targetGrp, priv);
-						}
-					}
-				}
+				//} else {
+				//	Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
+                                //
+				//	// -- Set new privileges for new owner from privileges of the old  
+				//	// -- owner, if none then set defaults
+				//	if (sourcePriv.size() == 0) {
+				//		dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
+				//		context.info("No privileges for user "+sourceUsr+" on metadata "+id+", so setting default privileges");
+				//	} else {
+				//		for (String priv : sourcePriv) {
+				//			dm.unsetOperation(context, dbms, id, sourceGrp, priv);
+				//			dm.setOperation(context, dbms, id, targetGrp, priv);
+				//		}
+				//	}
+				//}
 				// -- set the new owner into the metadata record
-				dm.updateMetadataOwner(dbms, Integer.parseInt(id), targetUsr, targetGrp);
+				dm.updateMetadataOwner(dbms, id, targetUsr);
 
-				metadata.add(new Integer(id));
+				metadata.add(id);
 			}
 		}
 		}
@@ -146,7 +148,7 @@ public class BatchNewOwner implements Service
 	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
 	{
 
-		Object args[] = { new Integer(id), new Integer(id), new Integer(userId), new Integer(groupId) };
+		Object args[] = { id, id, userId, groupId };
 		String query = "SELECT * "+
 							"FROM OperationAllowed, Metadata "+
 							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";

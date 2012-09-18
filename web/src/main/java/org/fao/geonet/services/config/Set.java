@@ -23,9 +23,6 @@
 
 package org.fao.geonet.services.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -34,12 +31,14 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -143,6 +142,11 @@ public class Set implements Service
         new ConfigEntry(ConfigEntry.Type.BOOL,   false, "requestedLanguage/only",             "system/requestedLanguage/only"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true, "requestedLanguage/sorted",     "system/requestedLanguage/sorted"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   false,  "requestedLanguage/ignored",             "system/requestedLanguage/ignored"),
+
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "clustering/enable",             "system/clustering/enable"),
+        new ConfigEntry(ConfigEntry.Type.STRING, false, "clustering/jmsurl",             "system/clustering/jmsurl"),
+
+        new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "symbolicLocking/enable",             "system/symbolicLocking/enable"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/withdisclaimer",     "system/downloadservice/withdisclaimer"),

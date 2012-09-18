@@ -10,8 +10,21 @@
 			<xsl:with-param name="title" select="/root/gui/strings/systemInfo"/>
 
 			<xsl:with-param name="content">
-				<xsl:apply-templates mode="block" select="/root/info/*"/>
+                <xsl:if test="count(//info) > 1">
+                    <div style="text-align:left;padding:5px;">
+                        <h2>Retrieved system configuration of <xsl:value-of select="count(//info)"/> nodes</h2>
 
+                        <xsl:for-each select="//info">
+                            <xsl:sort select="system/children/nodeId/value" />
+                            <fieldset style="text-align:left; margin:40px 0px;color:#0963F4;border-color:#2C7DF7;border-width:1px;">
+                                <legend style="font-weight:bold;">Node identifier: <xsl:value-of select="system/children/nodeId/value"/></legend>
+                                <div style="margin:5px;color:#064377;">
+                                    <xsl:apply-templates mode="block" select="*"/>
+                                </div>
+                            </fieldset>
+                        </xsl:for-each>
+                    </div>
+                </xsl:if>
                 <fieldset style="text-align:left;">
                     <legend>Monitoring</legend>
                     <ul>

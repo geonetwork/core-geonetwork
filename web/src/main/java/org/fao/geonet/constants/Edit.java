@@ -75,6 +75,8 @@ public class Edit{
 			public static final String SCHEMA      = "schema";
 			public static final String CREATE_DATE = "createDate";
 			public static final String CHANGE_DATE = "changeDate";
+            public static final String STATUS = "status";
+            public static final String STATUS_NAME = "statusName";
 			public static final String SOURCE      = "source";
 			public static final String SCORE       = "score";
 			public static final String CATEGORY    = "category";
@@ -84,12 +86,18 @@ public class Edit{
 			public static final String IS_TEMPLATE = "isTemplate";
 			public static final String TITLE       = "title";
 			public static final String IS_HARVESTED= "isHarvested";
+            public static final String IS_LOCKED = "isLocked";
+            public static final String IS_WORKSPACE  = "isWorkspace";
+            public static final String LOCKED_BY = "lockedBy";
 			public static final String HARVEST_INFO= "harvestInfo";
+            public static final String OWNER_ID  = "ownerId";
 			public static final String OWNERNAME   = "ownername";
+            public static final String USER_PROFILE   = "userProfile";
 			public static final String POPULARITY  = "popularity";
 			public static final String RATING      = "rating";
 			public static final String SELECTED    = "selected";
 			public static final String SUBTEMPLATES = "subtemplates";
+            public static final String SYMBOLIC_LOCKING = "symbolicLocking";
       public static final String DISPLAY_ORDER  = "displayOrder";
       public static final String BASEURL     = "baseUrl";
       public static final String LOCSERV     = "locService";

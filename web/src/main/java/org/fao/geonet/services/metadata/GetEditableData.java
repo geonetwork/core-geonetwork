@@ -23,15 +23,20 @@
 
 package org.fao.geonet.services.metadata;
 
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -56,14 +61,41 @@ public class GetEditableData implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
+	public Element exec(Element params, ServiceContext context) throws Exception {
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
         String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dataMan = gc.getDataManager();
+        AccessManager accessMan = gc.getAccessManager();
+        UserSession session = context.getUserSession();
+        String userId = session.getUserId();
+
+        //
+        // check access
+        //
+
+        MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        if (info == null) {
+            throw new IllegalArgumentException("Metadata not found --> " + id);
+        }
+        boolean canEdit = accessMan.canEdit(context, id);
+        SettingManager settingManager = gc.getSettingManager();
+        boolean harvesterEditing = settingManager.getValueAsBool("system/harvester/enableEditing");
+
+        if(! canEdit) {
+            throw new OperationNotAllowedEx("You are not authorized to edit this.");
+        }
+        else if(info.isHarvested && !harvesterEditing) {
+            throw new OperationNotAllowedEx("You can not edit this because it is harvested and editing harvested metadata is not enabled.");
+        }
+        else if(info.isLocked && !info.lockedBy.equals(userId)) {
+            throw new OperationNotAllowedEx("You can not edit this because it is locked and you do not own the lock.");
+        }
+
 
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
@@ -73,17 +105,37 @@ public class GetEditableData implements Service
 		
         //-----------------------------------------------------------------------
 		//--- get metadata
-		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
-		if (elMd == null)
+
+        // try to get from Workspace
+        Element md = new AjaxEditUtils(context).getMetadataEmbeddedFromWorkspace(context, id, true, showValidationErrors);
+        // not in workspace; try to get from metadata
+        if (md == null)  {
+            md = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
+            if (md == null)  {
 			throw new IllegalArgumentException("Metadata not found --> " + id);
+            }
+            else {
+                // lock metadata
+                dataMan.lockMetadata(dbms, userId, id);
+                // copy to workspace
+                dataMan.saveWorkspace(dbms, id);
+                // re-index md to index lock
+                boolean workspace = false;
+                dataMan.indexMetadata(dbms, id, false, workspace, true);
+                workspace = true;
+                dataMan.indexMetadata(dbms, id, false, workspace, true);
+            }
+        }
+        else {
+            //System.out.println("*** metadata found in workspace, id: " + id);
+        }
 
         if(justCreated != null) {
        //   elMd.addContent(new Element("JUSTCREATED").setText("true"));
         }
-		//-----------------------------------------------------------------------
-		//--- return metadata
 
-		return elMd;
+		//--- return metadata
+		return md;
 	}
 }
 

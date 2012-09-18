@@ -37,8 +37,11 @@ import java.util.List;
 // interface to search metadata
 //--------------------------------------------------------------------------------
 
-public abstract class MetaSearcher
-{
+/**
+ * TODO javadoc.
+ *
+ */
+public abstract class MetaSearcher {
 	private int     _from, _to;
 	private boolean _valid = false;
 	
@@ -60,35 +63,46 @@ public abstract class MetaSearcher
 	//--------------------------------------------------------------------------------
 	// utilities
 	
-	protected void initSearchRange(ServiceContext srvContext)
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param srvContext
+     */
+	protected void initSearchRange(ServiceContext srvContext) {
 		// get from and to default values
 		_from = 1;
-		try
-		{
+		try {
 			Element defaultSearch = SearchDefaults.getDefaultSearch(srvContext, null);
 			_to = Integer.parseInt(defaultSearch.getChildText(Geonet.SearchResult.HITS_PER_PAGE));
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			_to = 10;
 		}
 	}
 	
-	protected void updateSearchRange(Element request)
-	{
+    /**
+     * TODO javadoc.
+     * @param request
+     */
+	protected void updateSearchRange(Element request) {
 		// get request parameters
 		String sFrom = request.getChildText("from");
 		String sTo   = request.getChildText("to");
-		if (sFrom != null)
-		{
-			try { _from = Integer.parseInt(sFrom); }
-			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'from' parameter: " + sFrom); }
+		if (sFrom != null) {
+			try {
+                _from = Integer.parseInt(sFrom);
+            }
+			catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("Bad 'from' parameter: " + sFrom);
+            }
 		}
-		if (sTo != null)
-		{
-			try { _to = Integer.parseInt(sTo); }
-			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'to' parameter: " + sTo); }
+		if (sTo != null) {
+			try {
+                _to = Integer.parseInt(sTo);
+            }
+			catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("Bad 'to' parameter: " + sTo);
+		}
 		}
 
 		int count = getSize();
@@ -100,8 +114,16 @@ public abstract class MetaSearcher
 	protected int getTo()       { return _to; }
 	protected boolean isValid() { return _valid; }
 
-	public Element get(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param srvContext
+     * @param request
+     * @param config
+     * @return
+     * @throws Exception
+     */
+	public Element get(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
 		String id = Util.getParam(request, Params.ID);
 		
 		// save _from and _to
@@ -129,9 +151,14 @@ public abstract class MetaSearcher
 		return null;
 	}
 	
-	protected static void addElement(Element root, String name, String value)
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param root
+     * @param name
+     * @param value
+     */
+	protected static void addElement(Element root, String name, String value) {
 		root.addContent(new Element(name).setText(value));
 	}
 }
-

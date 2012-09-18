@@ -49,6 +49,32 @@
 			</error>
 		</service>
 
+        <service name="metadata.diff">
+            <class name=".services.metadata.Diff"/>
+
+            <output sheet="metadata-diff.xsl">
+                <call name="services" class="jeeves.guiservices.services.Get"/>
+                <call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+            </output>
+
+            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+                <xml name="error" file="xml/metadata-show-error.xml" />
+            </error>
+        </service>
+
+        <service name="metadata.diff.editmode">
+            <class name=".services.metadata.Diff"/>
+
+            <output sheet="metadata-diff-editor.xsl">
+                <call name="services" class="jeeves.guiservices.services.Get"/>
+                <call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+            </output>
+
+            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+                <xml name="error" file="xml/metadata-show-error.xml" />
+            </error>
+        </service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.show.embedded">
@@ -164,6 +190,16 @@
 
 			<error id="client" sheet="metadata-error.xsl"/>
 		</service>
+
+        <!-- unlock locked metadata -->
+        <service name="metadata.unlock">
+            <class name=".services.metadata.Unlock"/>
+
+            <output sheet="infomodal.xsl">
+                <xml name="info" file="xml/metadata-unlock.xml" />
+            </output>
+        </service>
+
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- reset - forget edits and return to last saved version -->
@@ -503,6 +539,16 @@
 			<class name=".services.metadata.IndexOptimize" />
 		</service>
 
+
+        <service name="metadata.grab.lock.form">
+            <class name=".services.user.List" />
+            <output sheet="metadata-grab-lock.xsl"/>
+        </service>
+
+        <service name="metadata.grab.lock">
+            <class name=".services.metadata.GrabLock" />
+        </service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.admin.form">
@@ -737,6 +783,23 @@
 
         <service name="xml.user.metadata">
           <class name=".guiservices.metadata.GetByOwner" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Locked Metadata                                               -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.list.locked">
+            <class name=".services.metadata.GetLocked" />
+            <output sheet="search-results.xsl">
+                <call name="searchDefaults" class=".guiservices.search.GetDefaults" />
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="services" class="jeeves.guiservices.services.Get" />
+                <call name="repositories" class=".services.main.Info">
+                    <param name="type" value="z3950repositories" />
+                </call>
+            </output>
         </service>
 
         <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->

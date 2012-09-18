@@ -283,8 +283,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>www-data</user>
-				<password>www-data</password>
+				<user>postgres</user>
+				<password>postgres</password>
 				<!-- we use org.postgis.DriverWrapper in place of
 				     org.postgresql.Driver to support both postgresql and postgis -->
 			  <driver>org.postgresql.Driver</driver>
@@ -347,6 +347,7 @@
 		<param name="preferredSchema" value="iso19139" />
 		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
 		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
+        <param name="clusterConfigDir" value="cluster" />
 
 		<!-- search statistics stuff -->
 		<!-- true to log into DB WKT of spatial objects involved in a search operation
@@ -355,7 +356,7 @@
 		<param name="statLogSpatialObjects" value="false" />
 		<param name="statLogAsynch" value="true" />
 		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
-		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
+		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_dummy,type" />
 
 		<!-- The maximum number of writes in a transaction on the spatial index 
 				
@@ -1002,7 +1003,7 @@
 
                 <call name="groups" class="jeeves.services.db.Select">
                     <param name="db" value="main-db" />
-                    <param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
+                    <param name="query" value="SELECT * FROM Groups WHERE internal = 'n ' ORDER BY name" />
                 </call>
 			</output>
 		</service>

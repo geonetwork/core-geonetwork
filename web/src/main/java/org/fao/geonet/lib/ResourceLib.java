@@ -33,6 +33,7 @@ import org.fao.geonet.kernel.AccessManager;
 
 import java.io.File;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Utility class to deal with data and removed directory.
@@ -91,6 +92,26 @@ public class ResourceLib {
 	}
 
 	/**
+     * Calculates a directory name from an id. This is to create a nested structure, preventing too many sub dirs
+     * in an otherwise flat structure.
+     * @param id
+     * @return
+     */
+    private String calculateGroupDir(String id) {
+        //System.out.println("calculating groupdir for md with id: '" + id + "'");
+        // old ids (before using UUIDs) were just numbers. UUIDs will contain at least hyphens that fail this test.
+        if(Pattern.matches("^\\d*$", id)) {
+            String group = pad(Integer.parseInt(id) / 100, 3);
+            return group + "00-" + group + "99";
+        }
+        // new uuid-id : 3-level subdirs with names from the first 3 * 2 characters. As chars in uuid are hex, there
+        // will be max 16 * 16 = 256 group subdirectories anywhere in the structure.
+        else {
+            return id.substring(0, 1) + File.separator + id.substring(2, 3) + File.separator + id.substring(4, 5);
+        }
+    }
+
+	/**
 	 * Get the metadata data directory
 	 * 
 	 * @param dataDir
@@ -100,10 +121,8 @@ public class ResourceLib {
 	 * @return The metadata data directory
 	 */
 	public String getMetadataDir(String dataDir, String id) {
-		String group = pad(Integer.parseInt(id) / 100, 3);
-		String groupDir = group + "00-" + group + "99";
-
-		return dataDir + "/" + groupDir + "/" + id + "/";
+		String groupDir = calculateGroupDir(id);
+		return dataDir + File.separator + groupDir + File.separator + id + File.separator;
 	}
 
 	/**
@@ -174,9 +193,7 @@ public class ResourceLib {
 	 *         be stored when it is removed
 	 */
 	public String getRemovedDir(String removedDir, String id) {
-		String group = pad(Integer.parseInt(id) / 100, 3);
-		String groupDir = group + "00-" + group + "99";
-
+        String groupDir = calculateGroupDir(id);
 		return removedDir + "/" + groupDir + "/";
 	}
 

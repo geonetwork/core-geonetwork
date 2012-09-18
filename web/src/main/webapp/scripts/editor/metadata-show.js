@@ -131,10 +131,96 @@
 				return false;
 			}
 		
-			function doOtherButton(url, title, width, height)
-			{
+function doOtherButton(url, title, width, height, afterHideURL) {
+    Modalbox.show(url,{title: title, width: width, height: height, afterHide: function() {
+        if(afterHideURL != null) {
+            var loading = $("loading");
+            if(loading) {
+                loading.show();
+            }
+            // wait a bit, otherwise re-indexing is not ready and result does not appear to be updated
+            setTimeout(function(){
+                window.location = afterHideURL;
+            }, 2000);
+        }
+        else  {
+            if ($("simple_search_pnl") && $("simple_search_pnl").visible()) {
+                setTimeout(runSimpleSearch(), 2000);
+            }
+            else if ($("advanced_search_pnl") && $("advanced_search_pnl").visible()) {
+                setTimeout(runAdvancedSearch(), 2000);
+            }
+            else {
+                return;
+            }
+
+        }
+
+        /*
+         // my metadata
+         } else if ($("metadata_search_pnl") && $("metadata_search_pnl").visible()) {
+         location.replace(getGNServiceURL('main.search') + "?hitsPerPage=10&_isLocked=y&sortBy=date");
+
+         // metadatata show
+         } else {
+         location.replace(getGNServiceURL('metadata.show') + "?id="+ id + "&skipPopularity=y");
+         }   */
+
+        // Jose, why this ?!
+        runRssSearch();
+
+    }});
+    return true;
+}
+
+
+function doOtherButton(url, title, width, height, afterHideURL) {
+
 				if (height === undefined) height = 400;
-				Modalbox.show(url,{title: title, width: width, height: height});
+    Modalbox.show(url,{title: title, width: width, height: height, afterHide: function() {
+
+        afterHideURL = afterHideURL.toString();
+        if(afterHideURL != null && ! (afterHideURL.match("main.home$") == "main.home") ) {
+            var loading = $("loading");
+            if(loading) {
+                loading.show();
+            }
+            // wait a bit, otherwise re-indexing is not ready and result does not appear to be updated
+            setTimeout(function(){
+                window.location = afterHideURL;
+            }, 2000);
+        }
+        else  {
+            if (!$("simple_search_pnl") || !$("advanced_search_pnl")) {
+                return;
+            }
+            if ($("simple_search_pnl").visible()) {
+                setTimeout(runSimpleSearch(), 2000);
+            }
+            else if ($("advanced_search_pnl").visible()) {
+                setTimeout(runAdvancedSearch(), 2000);
+            }
+            else {
+                return;
+            }
+        }
+
+        // TODO: Manage metadata.show (fromWorkspace params, etc) , my metadata form , Metadata in edit session form
+        /*
+         // my metadata
+         } else if ($("metadata_search_pnl") && $("metadata_search_pnl").visible()) {
+         location.replace(getGNServiceURL('main.search') + "?hitsPerPage=10&_isLocked=y&sortBy=date");
+
+         // metadatata show
+         } else {
+         location.replace(getGNServiceURL('metadata.show') + "?id="+ id + "&skipPopularity=y");
+         }   */
+
+        // Jose, why this ?!
+        runRssSearch();
+
+    }});
+
 				return true;
 			}
 		
@@ -233,4 +319,3 @@
 					}
 				});
 			}
-

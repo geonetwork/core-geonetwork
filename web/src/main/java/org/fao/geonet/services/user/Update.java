@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class Update implements Service
 			//
 			if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
 				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
-					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", new Integer(myUserId));
+					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", myUserId);
 					java.util.List<Element> myGroups = grps.getChildren();
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
@@ -128,13 +129,14 @@ public class Update implements Service
 				Element usersTest = dbms.select(query, username);
 				if (usersTest.getChildren().size() != 0) throw new IllegalArgumentException("User with username "+username+" already exists");
 
-				id = context.getSerialFactory().getSerial(dbms, "Users") +"";
+				id = IDFactory.newID();
 
 				query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
 							"address, city, state, zip, country, email, organisation, kind) "+
 							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, new Integer(id), username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
+				dbms.execute(query, id, username, Util.scramble(password), surname, name, profile, address, city, state,
+                        zip, country, email, organ, kind);
 
 			//--- add groups
 
@@ -150,11 +152,12 @@ public class Update implements Service
 				if (operation.equals(Params.Operation.FULLUPDATE)) {
 					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 
-					dbms.execute (query, username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, Util.scramble(password), surname, name, profile, address, city,
+                            state, zip, country, email, organ, kind, id);
 
 					//--- add groups
 
-					dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+					dbms.execute("DELETE FROM UserGroups WHERE userId=?", id);
 
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
@@ -164,20 +167,22 @@ public class Update implements Service
 			// -- edit user info
 				} else if (operation.equals(Params.Operation.EDITINFO)) {
 					String query = "UPDATE Users SET username=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, id);
 					//--- add groups
 				
-					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", id);
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
 						addGroup(dbms, id, group);
 					}
 
 			// -- reset password
-				} else if (operation.equals(Params.Operation.RESETPW)) {
+				}
+                else if (operation.equals(Params.Operation.RESETPW)) {
 					String query = "UPDATE Users SET password=? WHERE id=?";
-					dbms.execute (query, Util.scramble(password),new Integer(id));
-				} else {
+					dbms.execute (query, Util.scramble(password), id);
+				}
+                else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}
 			} 
@@ -197,10 +202,8 @@ public class Update implements Service
 	/** Adds a user to a group
 	  */
 
-	private void addGroup(Dbms dbms, String user, String group) throws Exception
-	{
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
-						 new Integer(user), new Integer(group));
+	private void addGroup(Dbms dbms, String user, String group) throws Exception {
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", user, group);
 	}
 }
 

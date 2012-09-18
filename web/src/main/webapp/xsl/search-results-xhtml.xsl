@@ -169,6 +169,14 @@
 										<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
 									</button>
 								</xsl:if>
+
+                                <!-- Metadata diff -->
+                                <xsl:if test="/root/gui/services/service/@name='metadata.diff'">
+                                    <!--xsl:text>&#160;</xsl:text-->
+                                    <button onclick="compareMetadata('{/root/gui/strings/compareMetadataSelMessage}');">
+                                        <xsl:value-of select="/root/gui/strings/compareMetadata"/>
+                                    </button>
+                                </xsl:if>
 							</xsl:if>
 							<button onclick="gn_filteredSearch()"><xsl:value-of select="/root/gui/strings/selectedOnly"/></button>
 							<button onclick="runPdfSearch(true);" alt="{/root/gui/strings/savepdf}" title="{/root/gui/strings/savepdf}"><xsl:value-of select="/root/gui/strings/printSelection"/></button>
@@ -254,7 +262,7 @@
 
 	<xsl:template name="hits">
 		<xsl:comment>HITS</xsl:comment>		
-		<xsl:for-each select="/root/response/*[name(.)!='summary']">
+        <xsl:for-each select="/root/response/*[name(.)!='summary' and name(.)!='sortBy']">
 
 <!-- cope with errors - usually from Z servers with badly formed XML -->
 
@@ -491,17 +499,21 @@
 			
 			<!-- some ownership info -->
 			<xsl:if test="$remote=false() and $metadata/geonet:info/isHarvested = 'n' and /root/gui/session/userId!=''">
-				<div class="ownership">
+                <div class="ownership" style="padding:15px 5px;">
 					<span class="owner"><xsl:value-of select="concat(/root/gui/strings/owner,': ',$metadata/geonet:info/ownername)"/></span>
 					&#160;
-					<xsl:choose>
-						<xsl:when test="$metadata/geonet:info/owner='true'">
-								<img src="{/root/gui/url}/images/owner.png" title="{/root/gui/strings/ownerRights}"/>
-						</xsl:when>
-						<xsl:otherwise>
-								<img src="{/root/gui/url}/images/notowner.png" title="{/root/gui/strings/noOwnerRights}"/>
-						</xsl:otherwise>
-					</xsl:choose>
+                    <xsl:if test="$metadata/geonet:info/isLocked = 'y'">
+                        <!-- metadata is locked -->
+                        <img src="{/root/gui/url}/images/lock.png" title="{/root/gui/strings/islocked}" alt="{/root/gui/strings/islocked}" style="width:32px;vertical-align:middle;"/>
+                    </xsl:if>
+                    <xsl:if test="$metadata/geonet:info/isLocked = 'y' and ( $metadata/geonet:info/userProfile = 'Administrator' or /root/gui/session/userId = $metadata/geonet:info/lockedBy )">
+                        <!-- you are allowed to unlock it -->
+                        <img src="{/root/gui/url}/images/keys.png" title="{/root/gui/strings/canunlock}" alt="{/root/gui/strings/canunlock}" style="width:32px;vertical-align:middle;"/>
+                    </xsl:if>
+                    <xsl:if test="( $metadata/geonet:info/isLocked = 'y' and /root/gui/session/userId = $metadata/geonet:info/lockedBy ) or ( $metadata/geonet:info/isLocked != 'y' and ( $metadata/geonet:info/edit = 'true'or ( /root/gui/config/harvester/enableEditing = 'true' and $metadata/geonet:info/isHarvested = 'y' and geonet:info/edit='true')  )   )">
+                        <!-- you are allowed to edit it -->
+                        <img src="{/root/gui/url}/images/edit.png" title="{/root/gui/strings/canedit}" alt="{/root/gui/strings/canedit}" style="width:32px;vertical-align:middle;"/>
+                    </xsl:if>
 				</div>
 			</xsl:if>
 			
@@ -525,10 +537,10 @@
 									</button>
 								</xsl:when>
 								<xsl:otherwise>
-									<button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata({$metadata/geonet:info/id})" title="{/root/gui/strings/show}">
+                                    <button id="gn_showmd_{$metadata/geonet:info/id}"  class="content" onclick="gn_showMetadata('{$metadata/geonet:info/id}')" title="{/root/gui/strings/show}">
 										<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
 									</button>
-									<button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/show}">
+                                    <button id="gn_hidemd_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideMetadata('{$metadata/geonet:info/id}')" style="display:none;" title="{/root/gui/strings/show}">
 										<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/show"/>
 									</button>
 									<button id="gn_loadmd_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/show}">
@@ -583,10 +595,10 @@
 										<button class="content" onclick="load('{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=distribution')" title="{/root/gui/strings/interactiveMap}"><xsl:value-of select="/root/gui/strings/interactiveMap"/></button>
 									</xsl:when>
 									<xsl:otherwise>
-										<button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList({$metadata/geonet:info/id})" title="{/root/gui/strings/interactiveMap}">
+                                        <button id="gn_showinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_showInterList('{$metadata/geonet:info/id}')" title="{/root/gui/strings/interactiveMap}">
 											<img src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/>
 										</button>
-										<button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList({$metadata/geonet:info/id})" style="display:none;" title="{/root/gui/strings/interactiveMap}">
+                                        <button id="gn_hideinterlist_{$metadata/geonet:info/id}"  class="content" onclick="gn_hideInterList('{$metadata/geonet:info/id}')" style="display:none;" title="{/root/gui/strings/interactiveMap}">
 											<img src="{/root/gui/url}/images/minus.png" style="padding-right:3px;"/><xsl:value-of select="/root/gui/strings/interactiveMap"/>
 										</button>
 										<button id="gn_loadinterlist_{$metadata/geonet:info/id}"  class="content" style="display:none;" title="{/root/gui/strings/interactiveMap}">

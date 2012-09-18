@@ -31,6 +31,13 @@
     <requestedlanguagesorted>Zoekresultaten in gewenste taal gesorteerd op de top</requestedlanguagesorted>
     <requestedlanguageignored>Negeer gevraagde zoektaal</requestedlanguageignored>
 
+    <clustering>Clustering</clustering>
+    <enableClustering>Clustering aanzetten</enableClustering>
+    <JMSBrokerConnectionURL>JMS broker URL(s)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>symbolische vergrendeling</symbolicLocking>
+    <enableSymbolicLocking>Schakel symbolische vergrendeling in</enableSymbolicLocking>
+
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -375,6 +382,16 @@
             Negeer gevraagde taal voor de zoekresultaten.
         </tip>
 
+        <tip id="cluster.enable">
+            Schakel dit in voor clustering.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Geef de URL naar uw JMS makelaar. Bijv. failover://tcp://localhost:61616.
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            Wanneer deze is ingeschakeld, kan elke editor te openen metadata in zijn groepen (niet alleen Reviewers).
+        </tip>
 	</tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>

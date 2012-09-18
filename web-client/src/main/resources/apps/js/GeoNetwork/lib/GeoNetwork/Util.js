@@ -55,6 +55,10 @@ GeoNetwork.Util = {
         var openlayerLang = this.getISO2LangCode(lang);
 
         OpenLayers.Lang.setCode(openlayerLang);
+
+        // Update templates with new language texts
+        new GeoNetwork.Templates().refreshTemplates();
+
         var s = document.createElement("script");
         s.type = 'text/javascript';
         s.src = baseUrl + "/js/ext/src/locale/ext-lang-" + openlayerLang + ".js";
@@ -146,6 +150,55 @@ GeoNetwork.Util = {
         }
         return colors;
     },
+
+    findContainerId: function(node) {
+	  if(node == null) {
+		  console.log('container id not found');
+		  return null;
+	  }
+	  if(node.parentNode.tagName == 'DIV' && node.parentNode.id) {
+	  	console.log('found container id: ' + node.parentNode.id);
+	  	return node.parentNode.id;
+	  }
+	  return GeoNetwork.Util.findContainerId(node.parentNode);
+    },
+    
+    getTopLeft: function (elm) {
+
+		var x, y = 0;
+		
+		//set x to elm’s offsetLeft
+		x = elm.offsetLeft;
+		
+		
+		//set y to elm’s offsetTop
+		y = elm.offsetTop;
+		
+		
+		//set elm to its offsetParent
+		elm = elm.offsetParent;
+		
+		
+		//use while loop to check if elm is null
+		// if not then add current elm’s offsetLeft to x
+		//offsetTop to y and set elm to its offsetParent
+		
+		while(elm != null)
+		{
+		
+		x = parseInt(x) + parseInt(elm.offsetLeft);
+		y = parseInt(y) + parseInt(elm.offsetTop);
+		elm = elm.offsetParent;
+		}
+		
+		//here is interesting thing
+		//it return Object with two properties
+		//Top and Left
+		
+		return {Top:y, Left: x};
+		
+	},
+
     /** api: method[buildPermalinkMenu] 
      *  :param l: String or Function If String the link is added as is, if a function
      *  the function is called on 'show' event
@@ -199,4 +252,5 @@ GeoNetwork.Util = {
             menu: menu
         });
     }
+
 };

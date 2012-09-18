@@ -15,7 +15,24 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
     <anyLanguage>Ongeacht welke taal</anyLanguage>
-	<nodata>Null</nodata>
+
+    <workspaceview>Werkblad view</workspaceview>
+    <metadataview>Metadata view</metadataview>
+    <vieworiginal>Bekijk origineel</vieworiginal>
+    <viewworkspace>Bekijk werkblad kopie</viewworkspace>
+    <islocked>Deze metadata is geblokkeerd door een edit sessie</islocked>
+    <canunlock>U kunt dit deblokkeren</canunlock>
+    <canedit>U kunt dit wijzigen</canedit>
+    <unlock>Annuleer edit sessie</unlock>
+    <unlockMetadataTitle>Annuleer edit sessie</unlockMetadataTitle>
+    <lockedmetadata>Metadata in edit sessie</lockedmetadata>
+    <lockedmetadatadesc>Toont edit sessies die van u zijn of die u kunt overnemen</lockedmetadatadesc>
+    <grab.lock>Verander eigenaar edit sessie</grab.lock>
+    <grabbed.lock>Edit sessie eigenaar gewisseld</grabbed.lock>
+    <currentlockowner>Huidige sessie eigenaar</currentlockowner>
+    <switchdiff>Verwissel links en rechts</switchdiff>
+
+
 	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -33,7 +50,7 @@
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
 	<status>Status</status>
-	<changeLogMessage>Change Log Message</changeLogMessage>
+	<changeLogMessage>Informatie betreffende de wijziging</changeLogMessage>
 	<updateStatus>Wijzigingsstatus</updateStatus>
 	<batchUpdateStatusTitle>Batch Wijzigingsstatus Operation</batchUpdateStatusTitle>
 	<startVersion>Start Versioning</startVersion>
@@ -109,7 +126,7 @@
        <stat.simpleVsAdvanced>Eenvoudig vs. geavanceerd zoeken</stat.simpleVsAdvanced>
        <stat.mdPopularity>Metadata populariteit</stat.mdPopularity>
        <stat.graphicalStats>Grafische statistieken</stat.graphicalStats>
-       <stat.tip2>Kies een datum eenhedi (jaar, maand, dag) en een datum spanne en klik OK om de grafiek te tonen</stat.tip2>
+       <stat.tip2>Kies een datum eenheid (jaar, maand, dag) en een datum spanne en klik OK om de grafiek te tonen</stat.tip2>
        <stat.numberOfRequests>Aantal requests</stat.numberOfRequests>
         <stat.chooseDateFrom>Kies een datum van</stat.chooseDateFrom>
        <stat.dateFrom>Datum vanaf</stat.dateFrom>
@@ -179,6 +196,8 @@
 	<publishing js="true">Publishing ...</publishing>
 	<logo>Logo configuration</logo>
 	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <chooseLogo>Kies logo</chooseLogo>
+    <orgLogo>Organisatie logo</orgLogo>
     <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
@@ -397,12 +416,18 @@
 	<clear js="true">Wissen</clear>
 	<clearAll>Alles wissen</clearAll>
 	<close js="true">Sluiten</close>
+    <compareMetadata>Metadata vergelijken</compareMetadata>
+    <compareMetadataSelMessage>Selecteer 2 metadata records om te vergelijken</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Vergelijk met werkblad versie</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Vergelijk met werkblad versie in Bewerken modus</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Vergelijk met origineel</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Vergelijk in Bewerken modus met origineel</compareMetadataOriginalEditMode>
 	<completeTab>Uitgebreide weergave</completeTab>
 	<completeTabEditor>Geavanceerde editor</completeTabEditor>
 	<confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
     <confirmCancelCreate>Weet u zeker dat u wilt annuleren creëren van deze metadata?</confirmCancelCreate>
 	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
-	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wild verwijderen uit de database?</confirmBatchDelete>
+	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wilt verwijderen uit de database?</confirmBatchDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
 	<confirmPassword>Bevestig wachtwoord</confirmPassword>
 	<constraintsTab>Beperkingen</constraintsTab>
@@ -641,6 +666,7 @@
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadata</metadata>
+    <metametadata>Meta-Metadata</metametadata>
 	<metadataAdded>Metadata met ID: is opgenomen in de database</metadataAdded>
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
@@ -1203,6 +1229,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1299,6 +1326,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
           <what>
             <l1>INSPIRE zoekopties</l1>
             <l2>INSPIRE metadata</l2>
@@ -1378,6 +1410,7 @@
     <addremove>Toevoegen / Verwijderen</addremove>
     <enabled>Ingeschakeld</enabled>
     <notifications>Kennisgeving aan externe doelen</notifications>
+    <url>URL</url>
     
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

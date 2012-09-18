@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Attribute;
@@ -46,10 +47,7 @@ import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.Parent;
 import org.jdom.Text;
-import org.jdom.filter.ContentFilter;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,7 +57,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 //=============================================================================
 
@@ -87,10 +84,10 @@ public class BatchExtractSubtemplates implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
-		Set<Integer> subtemplates = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
+		Set<String> subtemplates = new HashSet<String>();
 
 		// Get xpath, extract-title XSLT name, category and test from args
 		String xpath = Util.getParam(params, Params.XPATH);
@@ -144,7 +141,7 @@ public class BatchExtractSubtemplates implements Service
 
 		// -- reindex metadata
 		context.info("Re-indexing metadata");
-		Set<Integer> indexers = new HashSet<Integer>();
+		Set<String> indexers = new HashSet<String>();
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers);
@@ -165,7 +162,7 @@ public class BatchExtractSubtemplates implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private void processRecord(ServiceContext context, Dbms dbms, String uuid, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> subtemplates, Element response) throws Exception {
+	private void processRecord(ServiceContext context, Dbms dbms, String uuid, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<String> metadata, Set<String> notFound, Set<String> notOwner, Set<String> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -182,9 +179,9 @@ public class BatchExtractSubtemplates implements Service
 			MdInfo info = dataMan.getMetadataInfo(dbms, id);
 	
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(id);
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(id);
 			} else {
 				extractSubtemplates(context, dataMan, dbms, id, category, xpath, getTit, xpathTit, doChanges, metadata, subtemplates, response); 	
 			}
@@ -194,7 +191,7 @@ public class BatchExtractSubtemplates implements Service
 		}
 	}
 
-	private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
+	private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<String> metadata, Set<String> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -290,11 +287,11 @@ public class BatchExtractSubtemplates implements Service
 						// add node as a subtemplate
 						String docType = null, createDate = null, changeDate = null;
 						String group = "1"; 
-						int user = context.getUserSession().getUserIdAsInt(); 
+						String userId = context.getUserSession().getUserId();
 						boolean ufo = false, indexImmediate = false;
-						int sId = context.getSerialFactory().getSerial(dbms, "Metadata");
+						String sId = IDFactory.newID();
 
-						dataMan.insertMetadata(context, dbms, mdInfo.schemaId, (Element)elem.clone(), sId, uuid, user, group, gc.getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate); 
+						dataMan.insertMetadata(context, dbms, mdInfo.schemaId, (Element)elem.clone(), sId, uuid, userId, group, gc.getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate);
 						subtemplates.add(sId);
 					}
 				}
@@ -328,12 +325,9 @@ public class BatchExtractSubtemplates implements Service
 			boolean validate = false, ufo = false, indexImmediate = false;
 			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true); 
 
-			metadata.add(new Integer(id));
+			metadata.add(id);
 		}
 		
 	}
 
 }
-
-//=============================================================================
-

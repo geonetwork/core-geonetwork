@@ -16,6 +16,21 @@
 
 	<!-- new strings - 2.7 -->
 	<nodata>Null</nodata>
+    <workspaceview>рабочее зрения</workspaceview>
+    <metadataview>Метаданные зрения</metadataview>
+    <vieworiginal>просмотреть оригинал</vieworiginal>
+    <viewworkspace>Просмотр рабочей копии</viewworkspace>
+    <islocked>Эти метаданные заблокирована</islocked>
+    <canunlock>Вы имеете право открыть это</canunlock>
+    <canedit>Вы можете редактировать это</canedit>
+    <unlock>Разблокировать эти метаданные</unlock>
+    <unlockMetadataTitle>Unlock metadata</unlockMetadataTitle>
+    <lockedmetadata>Закрытые метаданных</lockedmetadata>
+    <lockedmetadatadesc>Списки метаданных редактировать сеансы, которые вы самостоятельно или, что вы можете взять на себя</lockedmetadatadesc>
+    <grab.lock>Изменение владельца блокировки</grab.lock>
+    <grabbed.lock>Изменен владельца блокировки</grabbed.lock>
+    <currentlockowner>В настоящее время метаданных замок принадлежит пользователю</currentlockowner>
+    <switchdiff>Включите левый и правый</switchdiff>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -401,6 +416,12 @@ ISO 19115 не позволяет иметь более одного.
 	<clear js="true">Очистить</clear>
 	<clearAll>Очистить все</clearAll>
 	<close js="true">Закрыть</close>
+    <compareMetadata>Сравнить метаданных</compareMetadata>
+    <compareMetadataSelMessage>Вы должны выбрать 2 записей метаданных для сравнения</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Сравнить с рабочей копией</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Сравнить с рабочей копией в режиме редактирования</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Сравните с оригинальным</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Сравните с оригинальным в режиме редактирования</compareMetadataOriginalEditMode>
 	<completeTab>Улучшенный вид</completeTab>
 	<completeTabEditor>Улучшенный редактор</completeTabEditor>
 	<confirmCancel>Вы уверены, что хотите выйти из редактора? (Вы потеряете все несохраненные изменения)</confirmCancel>
@@ -635,6 +656,7 @@ ISO 19115 не позволяет иметь более одного.
 	<metadata-template-order-desc>Сортировать Ваши шаблоны</metadata-template-order-desc>
 	<metadata-template-add-default>Добавить шаблоны</metadata-template-add-default>
 	<metadata>Метаданные</metadata>
+    <metametadata>Метаданные</metametadata>
 	<metadataAdded>Идентификатор добавленных метаданных:</metadataAdded>
 	<metadataDeleted>Идентификатор удаленных метаданных:</metadataDeleted>
 	<metadataInsertResults>Результаты импорта метаданных</metadataInsertResults>
@@ -1137,6 +1159,7 @@ ISO 19115 не позволяет иметь более одного.
 		<iso19139>Сохранить метаданные ISO19115/19139 в формате XML</iso19139>
 		<iso19139fra>Сохранить метаданные ISO19115/19139 Fra в формате XML</iso19139fra>
 	</savexml>
+  <url>URL</url>
   <thesaurus>
     <load>Загрузить из хранилища тезаурусов GeoNetwork </load>    	<addelement>Добавить элемент</addelement>
 		<admin>Управлять тезаурусом</admin>
@@ -1187,6 +1210,7 @@ ISO 19115 не позволяет иметь более одного.
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1283,6 +1307,11 @@ ISO 19115 не позволяет иметь более одного.
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>INSPIRE поиск</l1>
             <l2>INSPIRE метаданные</l2>

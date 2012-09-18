@@ -1,29 +1,29 @@
 INSERT INTO Languages VALUES ('fin','suomi', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (37, 'fin', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (38, 'fin', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (39, 'fin', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (40, 'fin', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('37', 'fin', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('38', 'fin', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('39', 'fin', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('40', 'fin', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'fin','Kartat & kuvat');
-INSERT INTO CategoriesDes VALUES (2,'fin','Tietoaineistot');
-INSERT INTO CategoriesDes VALUES (3,'fin','Vuorovaikutteiset resurssit');
-INSERT INTO CategoriesDes VALUES (4,'fin','Sovellukset');
-INSERT INTO CategoriesDes VALUES (5,'fin','Esimerkkitapaukset, parhaat käytännöt');
-INSERT INTO CategoriesDes VALUES (6,'fin','Konferenssijulkaisut');
-INSERT INTO CategoriesDes VALUES (7,'fin','Valokuvat');
-INSERT INTO CategoriesDes VALUES (8,'fin','Äänitteet / Videot');
-INSERT INTO CategoriesDes VALUES (9,'fin','Hakemistot');
-INSERT INTO CategoriesDes VALUES (10,'fin','Other information resources');
-INSERT INTO CategoriesDes VALUES (11,'fin','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'fin','Registers');
-INSERT INTO CategoriesDes VALUES (13,'fin','Fyysisiä näytteitä');
+INSERT INTO CategoriesDes VALUES ('1','fin','Kartat & kuvat');
+INSERT INTO CategoriesDes VALUES ('2','fin','Tietoaineistot');
+INSERT INTO CategoriesDes VALUES ('3','fin','Vuorovaikutteiset resurssit');
+INSERT INTO CategoriesDes VALUES ('4','fin','Sovellukset');
+INSERT INTO CategoriesDes VALUES ('5','fin','Esimerkkitapaukset, parhaat käytännöt');
+INSERT INTO CategoriesDes VALUES ('6','fin','Konferenssijulkaisut');
+INSERT INTO CategoriesDes VALUES ('7','fin','Valokuvat');
+INSERT INTO CategoriesDes VALUES ('8','fin','Äänitteet / Videot');
+INSERT INTO CategoriesDes VALUES ('9','fin','Hakemistot');
+INSERT INTO CategoriesDes VALUES ('10','fin','Other information resources');
+INSERT INTO CategoriesDes VALUES ('11','fin','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','fin','Registers');
+INSERT INTO CategoriesDes VALUES ('13','fin','Fyysisiä näytteitä');
 
-INSERT INTO GroupsDes VALUES (-1,'fin','Vierailija');
-INSERT INTO GroupsDes VALUES (0,'fin','Intranet');
-INSERT INTO GroupsDes VALUES (1,'fin','Kaikki');
-INSERT INTO GroupsDes VALUES (2,'fin','Ryhmä');
+INSERT INTO GroupsDes VALUES ('-1','fin','Vierailija');
+INSERT INTO GroupsDes VALUES ('0','fin','Intranet');
+INSERT INTO GroupsDes VALUES ('1','fin','Kaikki');
+INSERT INTO GroupsDes VALUES ('2','fin','Ryhmä');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'fin','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'fin','Abkhazian');
@@ -510,19 +510,13 @@ INSERT INTO IsoLanguagesDes VALUES (482,'fin','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'fin','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'fin','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'fin','Publish');
-INSERT INTO OperationsDes VALUES (1,'fin','Download');
-INSERT INTO OperationsDes VALUES (2,'fin','Editing');
-INSERT INTO OperationsDes VALUES (3,'fin','Notify');
-INSERT INTO OperationsDes VALUES (5,'fin','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'fin','Featured');
-
-INSERT INTO StatusValuesDes VALUES (0,'fin','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'fin','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'fin','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'fin','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'fin','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'fin','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','fin','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','fin','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','fin','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','fin','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','fin','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','fin','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','fin','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'fin','Armenia');
 INSERT INTO RegionsDes VALUES (2,'fin','Afghanistan');

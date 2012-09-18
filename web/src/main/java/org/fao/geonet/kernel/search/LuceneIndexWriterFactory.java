@@ -5,6 +5,9 @@ import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.constants.Geonet;
 
@@ -78,9 +81,17 @@ public class LuceneIndexWriterFactory {
         getWriter(locale).addDocument(doc);
     }
 
-    public synchronized void deleteDocuments( Term term ) throws Exception {
+    public synchronized void deleteDocuments( Term term, boolean workspace ) throws Exception {
         for( IndexWriter writer : allExistingWriters() ) {
-            writer.deleteDocuments(term);
+            BooleanQuery query = new BooleanQuery();
+            query.add(new TermQuery(term), BooleanClause.Occur.MUST);
+            if(workspace) {
+                query.add(new TermQuery(new Term(LuceneIndexField._IS_WORKSPACE, "true")), BooleanClause.Occur.MUST);
+            }
+            else {
+                query.add(new TermQuery(new Term(LuceneIndexField._IS_WORKSPACE, "true")), BooleanClause.Occur.MUST_NOT);
+            }
+            writer.deleteDocuments(query);
         }
     }
 

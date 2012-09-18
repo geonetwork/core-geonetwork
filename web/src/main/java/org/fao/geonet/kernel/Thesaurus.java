@@ -25,6 +25,12 @@ package org.fao.geonet.kernel;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterException;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.thesaurus.AddThesaurusElemMessage;
+import org.fao.geonet.jms.message.thesaurus.DeleteThesaurusElemMessage;
+import org.fao.geonet.jms.message.thesaurus.UpdateThesaurusElemMessage;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ISODate;
@@ -58,6 +64,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * TODO javadoc.
+ *
+ */
 public class Thesaurus {
 	private String fname;
 
@@ -97,6 +107,8 @@ public class Thesaurus {
 	private IsoLanguagesMapper isoLanguageMapper;
 
 	/**
+     * TODO javadoc.
+     *
 	 * @param fname
 	 *            file name
 	 * @param type
@@ -105,6 +117,18 @@ public class Thesaurus {
 	public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
 	    this(mapper, fname, type, dname, thesaurusFile, siteUrl, false);
 	}
+
+    /**
+     * TODO javadoc.
+     *
+     * @param mapper
+     * @param fname
+     * @param type
+     * @param dname
+     * @param thesaurusFile
+     * @param siteUrl
+     * @param ignoreMissingError
+     */
     public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
 		this.isoLanguageMapper = mapper;
@@ -118,7 +142,15 @@ public class Thesaurus {
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
 	}
 
-	
+    /**
+     * TODO javadoc.
+     *
+     * @param fname
+     * @param type
+     * @param dname
+     * @param thesaurusFile
+     * @param siteUrl
+     */
 	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
 		this(null, fname, type, dname, thesaurusFile, siteUrl);
 	}
@@ -172,7 +204,8 @@ public class Thesaurus {
 
 
 	/**
-	 * 
+	 * TODO javadoc.
+     *
 	 * @param fname
 	 * @param type
 	 * @param dname
@@ -182,6 +215,15 @@ public class Thesaurus {
 		return type + "." + dname + "." + fname.substring(0, fname.indexOf(".rdf"));
 	}
 
+    /**
+     * TODO javadoc.
+     *
+     * @param fname
+     * @param type
+     * @param dname
+     * @param siteUrl
+     * @return
+     */
 	private String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
 		if (type.equals(Geonet.CodeList.REGISTER)) {
 			return siteUrl + "/?uuid="+fname.substring(0, fname.indexOf(".rdf"));
@@ -247,7 +289,7 @@ public class Thesaurus {
 	}
 
 	/**
-	 * Add a keyword to the Thesaurus.
+	 * Adds a keyword to the Thesaurus.
 	 * 
 	 * @param keyword The keyword to add
 	 * 
@@ -255,7 +297,31 @@ public class Thesaurus {
 	 * @throws AccessDeniedException
 	 * @throws GraphException
 	 */
-    public URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
+    public URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException, ClusterException {
+        URI uri = addElementWithoutSendingTopic(keyword);
+
+        // TODO: Maybe better to add methods in ThesaurusManager to abstract add/delete/update thesaurus manager and move this code there?
+        if(ClusterConfig.isEnabled()) {
+            AddThesaurusElemMessage message = new AddThesaurusElemMessage();
+            message.setOriginatingClientID(ClusterConfig.getClientID());
+            message.setThesaurusName(getKey());
+            message.setKeyword(keyword);
+            Producer addThesaurusElProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.ADDTHESAURUS_ELEM);
+            addThesaurusElProducer.produce(message);
+        }
+        return uri;
+    }
+
+	/**
+	 * Adds a keyword to the Thesaurus.
+	 * 
+	 * @param keyword The keyword to add
+	 * 
+	 * @throws IOException
+	 * @throws AccessDeniedException
+	 * @throws GraphException
+	 */
+public URI addElementWithoutSendingTopic(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -316,7 +382,7 @@ public class Thesaurus {
     }
 	
     /**
-     * Remove keyword from thesaurus.
+     * Removes keyword from thesaurus.
      * 
      * @param keyword
      * @throws MalformedQueryException
@@ -325,7 +391,7 @@ public class Thesaurus {
      * @throws AccessDeniedException
      */
     public Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
-            QueryEvaluationException, IOException, AccessDeniedException {
+                                                               QueryEvaluationException, IOException, AccessDeniedException, ClusterException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
 
@@ -339,7 +405,32 @@ public class Thesaurus {
      * @param code
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
+    public Thesaurus removeElement(String namespace, String code) throws AccessDeniedException, ClusterException {
+        Thesaurus thesaurus = removeElementWithoutSendingTopic(namespace, code);
+
+        // TODO: Maybe better to add methods in ThesaurusManager to abstract add/delete/update thesaurus manager and move this code there?
+        if(ClusterConfig.isEnabled()) {
+            DeleteThesaurusElemMessage message = new DeleteThesaurusElemMessage();
+            message.setOriginatingClientID(ClusterConfig.getClientID());
+            message.setNamespace(namespace) ;
+            message.setCode(code);
+            message.setThesaurusName(getKey()) ;
+            
+            Producer deleteThesaurusElProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.DELETETHESAURUS_ELEM);
+            deleteThesaurusElProducer.produce(message);
+        }
+        return thesaurus;
+    }
+
+    /**
+     * TODO javadoc.
+     *
+     * @param namespace
+     * @param code
+     * @return
+     * @throws AccessDeniedException
+     */
+    public Thesaurus removeElementWithoutSendingTopic(String namespace, String code) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
@@ -355,13 +446,19 @@ public class Thesaurus {
         return this;
     }
 
+    /**
+     * TODO javadoc.
+     *
+     * @param lang
+     * @return
+     */
     private String toiso639_1_Lang(String lang) {
          String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(Geonet.DEFAULT_LANGUAGE, Geonet.DEFAULT_LANGUAGE.substring(2));
         return getIsoLanguageMapper().iso639_2_to_iso639_1(lang, defaultCode);
      }
 
 	/**
-	 * Update the keyword.  If replaceLanguages is true all of the old data will be removed and the new data in the keyword will replace it.
+	 * Updates the keyword. If replaceLanguages is true all of the old data will be removed and the new data in the keyword will replace it.
 	 * 
 	 * @param keyword the bean with the updated information
 	 * @param replace If true all of the old data will be removed and the new data in the keyword will replace it.  If false only the data in the
@@ -375,9 +472,41 @@ public class Thesaurus {
 	 * @throws QueryEvaluationException
 	 * @throws GraphException
 	 */
-	public URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
-	        MalformedQueryException, QueryEvaluationException, GraphException {
-	    
+	public URI updateElement(KeywordBean keyword, String oldId, String namespace, boolean replace) throws AccessDeniedException, IOException,
+                                                                          MalformedQueryException, QueryEvaluationException, GraphException, ClusterException {
+
+        URI uri = updateElementWithoutSendingTopic(keyword, replace);
+
+        // TODO: Maybe better to add methods in ThesaurusManager to abstract add/delete/update thesaurus manager and move this code there?
+        if(ClusterConfig.isEnabled()) {
+            UpdateThesaurusElemMessage message = new UpdateThesaurusElemMessage();
+            message.setOriginatingClientID(ClusterConfig.getClientID());
+            message.setThesaurusName(getKey());
+            message.setNewId(keyword.getCode());
+            message.setOldId(oldId);
+            message.setNamespace(namespace);
+
+            Producer addThesaurusElProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.UPDATETHESAURUS_ELEM);
+            addThesaurusElProducer.produce(message);
+        }
+
+
+        return uri;
+    }
+
+    /**
+     * TODO javadoc.
+     *
+     * @param keyword
+     * @param replace
+     * @return
+     * @throws AccessDeniedException
+     * @throws IOException
+     * @throws MalformedQueryException
+     * @throws QueryEvaluationException
+     * @throws GraphException
+     */
+     public URI updateElementWithoutSendingTopic(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException, MalformedQueryException, QueryEvaluationException, GraphException {	    
         // Get thesaurus graph
         Graph myGraph = repository.getGraph();      
         
@@ -464,10 +593,17 @@ public class Thesaurus {
         return subject;
 	}
 
-
+    /**
+     * TODO javadoc.
+     *
+     * @param replace
+     * @param myGraph
+     * @param iter
+     * @param valueLanguages
+     */
     private void removeMatchingLiterals(boolean replace, Graph myGraph, StatementIterator iter, Set<String> valueLanguages) {
         try {
-            ArrayList<Statement> toRemove = new ArrayList<Statement>();
+            List<Statement> toRemove = new ArrayList<Statement>();
             while (iter.hasNext()) {
                 Statement st = iter.next();
                 if (st.getObject() instanceof Literal) {
@@ -483,7 +619,8 @@ public class Thesaurus {
             for (Statement statement : toRemove) {
                 myGraph.remove(statement);
             }
-        } finally {
+        }
+        finally {
             iter.close();
         }
     }
@@ -511,6 +648,15 @@ public class Thesaurus {
 		}				
 		return res;
 	}
+
+    /**
+     * TODO javadoc.
+     * @param bean
+     * @param newcode
+     * @return
+     * @throws AccessDeniedException
+     * @throws IOException
+     */
     public Thesaurus updateCode(KeywordBean bean, String newcode) throws AccessDeniedException, IOException {
         return updateCode(bean.getNameSpaceCode(), bean.getRelativeCode(), newcode);
     }
@@ -643,8 +789,8 @@ public class Thesaurus {
     }
 
 		/**
-		 * finalize method shuts down the local sesame repository just before an 
-		 * unused Thesaurus object is garbage collected - to save resources 
+		 * Shuts down the local sesame repository just before an
+		 * unused Thesaurus object is garbage collected - to save resources.
 		 *
 	   */
 		protected void finalize() {
@@ -658,7 +804,7 @@ public class Thesaurus {
         }
 
         /**
-         * Adds a relation between two keywords.  Both directions in relation will be added   
+         * Adds a relation between two keywords.  Both directions in relation will be added.
          * 
          * @param subject the keyword that is related to the other keyword
          * @param related the relation between the two keywords
@@ -680,69 +826,4 @@ public class Thesaurus {
              myGraph.add(subjectURI, relationURI, relatedSubjectURI);
              myGraph.add(relatedSubjectURI, opposteRelationURI, subjectURI);
         }
-
-        // ------------------------------- Deprecated methods -----------------------------
-        /**
-         * @deprecated since 2.9.0.  Use {@link #add(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String lang) throws GraphException, IOException,
-                AccessDeniedException {
-
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setCode(code)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang);
-            
-            return addElement(bean);
-        }
-
-        /**
-         * @deprecated since 2.9.0 use {@link #add(KeywordBean)}
-         */
-        URI addElement(String code, String prefLab, String note, String east, String west, String south,
-                               String north, String lang) throws IOException, AccessDeniedException, GraphException {
-            
-            return addElement(new KeywordBean(getIsoLanguageMapper())
-                        .setCode(code)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang)
-                        .setCoordEast(east)
-                        .setCoordNorth(north)
-                        .setCoordSouth(south)
-                        .setCoordWest(west));
-        }
-
-
-        /**
-         * @deprecated since 2.9.0 use {@link #updateElement(KeywordBean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String lang) throws IOException,
-                MalformedQueryException, QueryEvaluationException, AccessDeniedException, GraphException {
-            KeywordBean keyword = new KeywordBean(getIsoLanguageMapper())
-                        .setNamespaceCode(namespace)
-                        .setRelativeCode(id)
-                        .setValue(prefLab, lang)
-                        .setDefinition(note, lang);
-            return updateElement(keyword, false);
-        }
-        /**
-         * @deprecated Since 2.9.0 use {@link #updateElement(KeywordBean)}
-         */
-        URI updateElement(String namespace, String id, String prefLab, String note, String east, String west,
-                                  String south, String north, String lang) throws AccessDeniedException, IOException,
-                MalformedQueryException, QueryEvaluationException, GraphException {
-
-            KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setNamespaceCode(namespace)
-                .setRelativeCode(id)
-                .setValue(prefLab, lang)
-                .setDefinition(note, lang)
-                .setCoordEast(east)
-                .setCoordNorth(north)
-                .setCoordSouth(south)
-                .setCoordWest(west);
-            
-            return updateElement(bean, true);
-        }
-
 }

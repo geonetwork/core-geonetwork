@@ -6,8 +6,8 @@ REM ======================================================================
 
 CREATE TABLE Relations
   (
-    id         int,
-    relatedId  int,
+    id         varchar2(36),
+    relatedId  varchar2(36),
     primary key(id,relatedId)
   );
 
@@ -15,7 +15,7 @@ REM ======================================================================
 
 CREATE TABLE Categories
   (
-    id    int,
+    id    varchar2(36),
     name  varchar2(255)   not null,
     primary key(id),
     unique(name)
@@ -47,6 +47,7 @@ CREATE TABLE Languages
     name  varchar2(32)   not null,
     isInspire char(1)     default 'n',
     isDefault char(1)     default 'n',
+
     primary key(id)
   );
 
@@ -107,7 +108,7 @@ REM ======================================================================
 
 CREATE TABLE Users
   (
-    id            int,
+    id            varchar2(36),
     username      varchar2(256)    not null,
     password      varchar2(40)    not null,
     surname       varchar2(32),
@@ -129,7 +130,7 @@ REM ======================================================================
 
 CREATE TABLE Operations
   (
-    id        int,
+    id        varchar2(36),
     name      varchar2(32)   not null,
     reserved  char(1)       default 'n' not null,
     primary key(id)
@@ -139,7 +140,7 @@ REM ======================================================================
 
 CREATE TABLE OperationsDes
   (
-    idDes   int,
+    idDes   varchar2(36),
     langId  varchar2(5),
     label   varchar2(96)   not null,
     primary key(idDes,langId)
@@ -149,7 +150,7 @@ REM ======================================================================
 
 CREATE TABLE Requests
   (
-    id             int,
+    id             varchar2(36),
     requestDate    varchar2(30),
     ip             varchar2(128),
     query          varchar2(4000),
@@ -173,8 +174,8 @@ REM ======================================================================
 
 CREATE TABLE Params
   (
-    id          int,
-    requestId   int,
+    id          varchar2(36),
+    requestId   varchar2(36),
     queryType   varchar2(128),
     termField   varchar2(128),
     termText    varchar2(128),
@@ -195,15 +196,17 @@ REM ======================================================================
 
 CREATE TABLE HarvestHistory
   (
-    id             int not null,
+    id             varchar2(36) not null,
     harvestDate    varchar2(30),
-    harvesterUuid  varchar2(250),
-    harvesterName  varchar2(128),
-    harvesterType  varchar2(128),
+		harvesterUuid  varchar2(250),
+		harvesterName  varchar2(128),
+		harvesterType  varchar2(128),
     deleted        char(1) default 'n' not null,
     info           varchar2(2000),
     params         clob,
+
     primary key(id)
+
   );
 
 CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
@@ -212,11 +215,12 @@ REM ======================================================================
 
 CREATE TABLE Groups
   (
-    id           int,
+    id           varchar2(36),
     name         varchar2(32)    not null,
     description  varchar2(255),
     email        varchar2(32),
-    referrer     int,
+    referrer     varchar2(36),
+    internal     char(1) default 'n' not null,
     primary key(id),
     unique(name)
   );
@@ -225,7 +229,7 @@ REM ======================================================================
 
 CREATE TABLE GroupsDes
   (
-    idDes   int,
+    idDes   varchar2(36),
     langId  varchar2(5),
     label   varchar2(96)   not null,
     primary key(idDes,langId)
@@ -235,8 +239,8 @@ REM ======================================================================
 
 CREATE TABLE UserGroups
   (
-    userId   int,
-    groupId  int,
+    userId   varchar2(36),
+    groupId  varchar2(36),
     primary key(userId,groupId)
   );
 
@@ -244,7 +248,7 @@ REM ======================================================================
 
 CREATE TABLE CategoriesDes
   (
-    idDes   int,
+    idDes   varchar2(36),
     langId  varchar2(5),
     label   varchar2(255)   not null,
     primary key(idDes,langId)
@@ -252,39 +256,83 @@ CREATE TABLE CategoriesDes
 
 REM ======================================================================
 
-CREATE TABLE Metadata
+CREATE TABLE Workspace
   (
-    id           int,
+    id           varchar2(36),
     uuid         varchar2(250)   not null,
     schemaId     varchar2(32)    not null,
     isTemplate   char(1)        default 'n' not null,
     isHarvested  char(1)        default 'n' not null,
+    isLocked     char(1)        default 'n' not null,
+    lockedBy     varchar2(36),
     createDate   varchar2(30)    not null,
     changeDate   varchar2(30)    not null,
-    data         clob           not null,
+    data         text    not null,
+    source       varchar2(250)   not null,
+    title        varchar2(255),
+    root         varchar2(255),
+    harvestUuid  varchar2(250)   default null,
+    owner        varchar2(36)    not null,
+    doctype      varchar2(255),
+    harvestUri   varchar2(255)   default null,
+    rating       int            default 0 not null,
+    popularity   int            default 0 not null,
+		displayorder int,
+
+    primary key(id),
+    unique(uuid)
+  );
+
+REM ======================================================================
+
+CREATE TABLE Metadata
+  (
+    id           varchar2(36),
+    uuid         varchar2(250)   not null,
+    schemaId     varchar2(32)    not null,
+    isTemplate   char(1)        default 'n' not null,
+    isHarvested  char(1)        default 'n' not null,
+    isLocked     char(1)        default 'n' not null,
+    lockedBy     varchar2(36),
+    createDate   varchar2(30)    not null,
+    changeDate   varchar2(30)    not null,
+    data         long           not null,
     source       varchar2(250)   not null,
     title        varchar2(255),
     root         varchar2(255),
     harvestUuid  varchar2(250)   default null,
     owner        int            not null,
     doctype      varchar2(255),
-    groupOwner   int            default null,
     harvestUri   varchar2(255)   default null,
     rating       int            default 0 not null,
     popularity   int            default 0 not null,
-    displayorder int,
+	displayorder int,
+
     primary key(id),
     unique(uuid)
   );
 
 CREATE TABLE Validation 
   (
-    metadataId   int,
+    metadataId   varchar2(36),
     valType      varchar2(40),
     status       int,
     tested       int,
     failed       int,
     valDate      varchar2(30),
+    
+    primary key(metadataId, valType)
+);
+
+CREATE TABLE ValidationWorkspace
+  (
+    metadataId   varchar2(36),
+    valType      varchar2(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar2(30),
+
     primary key(metadataId, valType)
 );
 
@@ -293,8 +341,8 @@ REM ======================================================================
 
 CREATE TABLE MetadataCateg
   (
-    metadataId  int,
-    categoryId  int,
+    metadataId  varchar2(36),
+    categoryId  varchar2(36),
     primary key(metadataId,categoryId)
   );
 
@@ -302,8 +350,8 @@ REM ======================================================================
 
 CREATE TABLE StatusValues
   (
-    id        int not null,
-    name      varchar2(32)   not null,
+    id        varchar2(36) not null,
+    name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
     primary key(id)
   );
@@ -312,7 +360,7 @@ REM ======================================================================
 
 CREATE TABLE StatusValuesDes
   (
-    idDes   int not null,
+    idDes   varchar2(36) not null,
     langId  varchar2(5) not null,
     label   varchar2(96)   not null,
     primary key(idDes,langId)
@@ -322,9 +370,9 @@ REM ======================================================================
 
 CREATE TABLE MetadataStatus
   (
-    metadataId  int not null,
-    statusId    int default 0 not null,
-    userId      int not null,
+    metadataId  varchar2(36) not null,
+    statusId    varchar2(36) default 0 not null,
+    userId      varchar2(36) not null,
     changeDate   varchar2(30)    not null,
     changeMessage   varchar2(2048) not null,
     primary key(metadataId,statusId,userId,changeDate),
@@ -337,9 +385,9 @@ REM ======================================================================
 
 CREATE TABLE OperationAllowed
   (
-    groupId      int,
-    metadataId   int,
-    operationId  int,
+    groupId      varchar2(36),
+    metadataId   varchar2(36),
+    operationId  varchar2(36),
     primary key(groupId,metadataId,operationId)
   );
 
@@ -349,7 +397,7 @@ REM ======================================================================
 
 CREATE TABLE MetadataRating
   (
-    metadataId  int,
+    metadataId  varchar2(36),
     ipAddress   varchar2(32),
     rating      int           not null,
     primary key(metadataId,ipAddress)
@@ -359,12 +407,13 @@ REM ======================================================================
 
 CREATE TABLE MetadataNotifiers
   (
-    id         int,
+    id         varchar2(36),
     name       varchar2(32)    not null,
     url        varchar2(255)   not null,
     enabled    char(1)        default 'n' not null,
     username       varchar2(32),
     password       varchar2(32),
+
     primary key(id)
   );
 
@@ -378,6 +427,7 @@ CREATE TABLE MetadataNotifications
     metadataUuid       varchar2(250)   not null,
     action             char(1)        not null,
     errormsg           clob,
+
     primary key(metadataId,notifierId)
   );
 
@@ -386,10 +436,11 @@ REM ======================================================================
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
-    idField   int,
+    idField   varchar2(36),
     langId    varchar2(5)    not null,
     field     varchar2(32)   not null,
     label     clob,
+
     primary key(idField)
   );
 
@@ -408,9 +459,11 @@ CREATE TABLE spatialIndex
   (
 		fid int,
     id  varchar2(250),
-    the_geom SDO_GEOMETRY,
-    primary key(fid)
-  );
+		the_geom SDO_GEOMETRY,
+
+		primary key(fid)
+
+	);
 
 CREATE INDEX spatialIndexNDX1 ON spatialIndex(id);
 DELETE FROM user_sdo_geom_metadata WHERE TABLE_NAME = 'SPATIALINDEX';
@@ -429,7 +482,6 @@ ALTER TABLE GroupsDes ADD FOREIGN KEY (idDes) REFERENCES Groups (id);
 ALTER TABLE IsoLanguagesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE IsoLanguagesDes ADD FOREIGN KEY (idDes) REFERENCES IsoLanguages (id);
 ALTER TABLE Metadata ADD FOREIGN KEY (owner) REFERENCES Users (id);
-ALTER TABLE Metadata ADD FOREIGN KEY (groupOwner) REFERENCES Groups (id);
 ALTER TABLE Validation ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (categoryId) REFERENCES Categories (id);
 ALTER TABLE MetadataCateg ADD FOREIGN KEY (metadataId) REFERENCES Metadata (id);

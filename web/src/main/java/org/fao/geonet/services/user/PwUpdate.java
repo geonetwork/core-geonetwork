@@ -68,27 +68,24 @@ public class PwUpdate implements Service
 
 		if (userId == null) throw new UserNotFoundEx(null);
 
-		
 		// check valid user 
-		int iUserId = Integer.parseInt(userId);
-		Element elUser = dbms.select(	"SELECT * FROM Users WHERE id=?",iUserId);
+        Element elUser = dbms.select(	"SELECT * FROM Users WHERE id=?", userId);
 		if (elUser.getChildren().size() == 0)
 			throw new UserNotFoundEx(userId);
 
 		// check old password
 		String query = "SELECT * FROM Users WHERE id=? AND password=?";
-		elUser = dbms.select(query, iUserId, Util.scramble(password));
+		elUser = dbms.select(query, userId, Util.scramble(password));
 		if (elUser.getChildren().size() == 0) {
 			// Check old password hash method
-			elUser = dbms.select(query, iUserId, Util.oldScramble(password));
+			elUser = dbms.select(query, userId, Util.oldScramble(password));
 
 			if (elUser.getChildren().size() == 0)
 				throw new IllegalArgumentException("Old password is not correct");
 		}
 		
-		
 		// all ok so change password
-		dbms.execute("UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
+		dbms.execute("UPDATE Users SET password=? WHERE id=?", newPassword, userId);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

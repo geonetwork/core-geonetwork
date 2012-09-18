@@ -33,10 +33,10 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Update implements Service
-{
+/**
+ *
+ */
+public class Update implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -45,23 +45,16 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		for (Object r : params.getChildren("region"))
-		{
+		for (Object r : params.getChildren("region")) {
 			Element region = (Element) r;
-
 			String  id    = Util.getAttrib(region, Params.ID);
 			Element label = Util.getChild (region, "label");
 
-			Lib.local.update(dbms, "Regions", Integer.parseInt(id), label);
+			Lib.local.update(dbms, "Regions", id, label);
 		}
-
 		return new Element("ok");
 	}
 }
-
-//=============================================================================
-

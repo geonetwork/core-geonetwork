@@ -16,6 +16,22 @@
 
     <anyLanguage>Qualquer língua</anyLanguage>
 	<nodata>Null</nodata>
+
+    <workspaceview>Vista do espaço de trabalho</workspaceview>
+    <metadataview>Vista de metadado</metadataview>
+    <vieworiginal>Ver o original</vieworiginal>
+    <viewworkspace>Ver cópia de espaço de trabalho</viewworkspace>
+    <islocked>Esse metadado é trancado em sessão de edição</islocked>
+    <canunlock>Você tem permissão para desbloquear este</canunlock>
+    <canedit>Você está autorizado a editar esta</canedit>
+    <unlock>Cancelar sessão de edição</unlock>
+    <unlockMetadataTitle>Cancelar sessão de edição</unlockMetadataTitle>
+    <lockedmetadata>Metadados em sessão de edição</lockedmetadata>
+    <lockedmetadatadesc>Lista de sessões de edição que você próprio ou que você está autorizado a assumir</lockedmetadatadesc>
+    <grab.lock>Mudar proprietário de sessão de edição</grab.lock>
+    <grabbed.lock>Proprietário de sessão de edição mudou</grabbed.lock>
+    <currentlockowner>Atualmente, o bloqueio de metadados é de propriedade do usuário</currentlockowner>
+    <switchdiff>Mudar esquerda e direita</switchdiff>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -396,6 +412,12 @@
 	<clear js="true">Esvaziar</clear>
 	<clearAll>Esvaziar tudo</clearAll>
 	<close js="true">Fechar</close>
+    <compareMetadata>Compare metadados</compareMetadata>
+    <compareMetadataSelMessage>Você deve selecionar 2 registros de metadados para comparar</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Compare com o cópia do espaço de trabalho</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Comparar com o cópia do espaço de trabalho no modo de edição</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Compare com o original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Compare no modo de edição com o original</compareMetadataOriginalEditMode>
 	<completeTab>Vista ampliada</completeTab>
 	<completeTabEditor>Editor ampliado</completeTabEditor>
 	<confirmCancel>Tem certeza que quer sair do editor? (Todas as alterações não gravadas perderiam-se)</confirmCancel>
@@ -630,6 +652,7 @@
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadados</metadata>
+    <metametadata>Metadados</metametadata>
 	<metadataAdded>Metadados com o ID seguinte foram adicionados:</metadataAdded>
 	<metadataDeleted>Metadados com o ID seguinte foram apagados:</metadataDeleted>
 	<metadataInsertResults>Resultados de importação dos metadados</metadataInsertResults>
@@ -1364,6 +1387,7 @@
 	<addremove>Adicionar / Remover</addremove>
     <enabled>habilitado</enabled>
     <notifications>Notificação para alvos remotos</notifications>
+    <url>URL</url>    
 
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

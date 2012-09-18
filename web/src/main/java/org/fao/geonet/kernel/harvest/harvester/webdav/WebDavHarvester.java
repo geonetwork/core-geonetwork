@@ -90,7 +90,7 @@ public class WebDavHarvester extends AbstractHarvester {
 		params.create(node);
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
@@ -114,18 +114,17 @@ public class WebDavHarvester extends AbstractHarvester {
 		//--- could be half updated and so it could be in an inconsistent state
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
-		
 		params = copy;
 	}
 
 	//---------------------------------------------------------------------------
 	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		WebDavParams params = (WebDavParams) p;
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
-		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse);
-		settingMan.add(dbms, "id:"+optionsId, "subtype", params.subtype);
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url, false);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon, false);
+		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate, false);
+		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse, false);
+		settingMan.add(dbms, "id:"+optionsId, "subtype", params.subtype, false);
 	}
 
 	//---------------------------------------------------------------------------

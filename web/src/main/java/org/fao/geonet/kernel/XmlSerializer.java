@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -89,7 +90,7 @@ public abstract class XmlSerializer {
      */
 	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
+		Element rec = dbms.select(query, id).getChild(Jeeves.Elem.RECORD);
 
 		if (rec == null)
 			return null;
@@ -105,7 +106,7 @@ public abstract class XmlSerializer {
      * @param dbms
      * @param schema
      * @param xml
-     * @param serial
+     * @param id
      * @param source
      * @param uuid
      * @param createDate
@@ -114,15 +115,19 @@ public abstract class XmlSerializer {
      * @param root
      * @param title
      * @param owner
-     * @param groupOwner
+     //*** @param groupOwner
      * @param docType
      * @return
      * @throws SQLException
      */
-	protected String insertDb(Dbms dbms, String schema, Element xml, int serial,
+	//***protected String insertDb(Dbms dbms, String schema, Element xml, String id,
+	//				 String source, String uuid, String createDate,
+	//				 String changeDate, String isTemplate, String root, String title,
+	//				 String owner, String groupOwner, String docType) throws SQLException {
+    protected String insertDb(Dbms dbms, String schema, Element xml, String id,
 					 String source, String uuid, String createDate,
 					 String changeDate, String isTemplate, String root, String title,
-					 int owner, String groupOwner, String docType) throws SQLException {
+                              String owner, String docType) throws SQLException {
 	
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
@@ -141,7 +146,7 @@ public abstract class XmlSerializer {
 		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
 		Vector<Serializable> args = new Vector<Serializable>();
-		args.add(serial);
+		args.add(id);
 		args.add(schema);
 		args.add(Xml.getString(xml));
 		args.add(createDate);
@@ -154,11 +159,12 @@ public abstract class XmlSerializer {
 		args.add(owner);
 		args.add(docType);
 
-		if (groupOwner != null) {
-			fields.append(", groupOwner");
-			values.append(", ?");
-			args.add(new Integer(groupOwner));
-		}
+		//***
+        //if (groupOwner != null) {
+		//	fields.append(", groupOwner");
+		//	values.append(", ?");
+		//	args.add(groupOwner);
+		//}
 
 		if (title != null)
 		{
@@ -170,7 +176,79 @@ public abstract class XmlSerializer {
 		String query = "INSERT INTO Metadata (" + fields + ") VALUES(" + values + ")";
 		dbms.execute(query, args.toArray());
 
-		return Integer.toString(serial);
+		return id;
+	}
+
+    public void copyToWorkspace(Dbms dbms, String id) throws SQLException {
+        Element result = dbms.select("SELECT * FROM Metadata WHERE id=?", id);
+        if(result == null) {
+            throw new IllegalArgumentException("Could not find metadata with id " + id);
+        }
+        else {
+            List results = result.getChildren();
+            if(CollectionUtils.isEmpty(results)) {
+                throw new IllegalArgumentException("Could not find metadata with id " + id);
+            }
+            else if(results.size() > 1) {
+                throw new IllegalArgumentException("Found more than 1 metadata with id " + id);
+            }
+            else {
+                Element record = (Element)results.get(0);
+                String uuid = record.getChildText("uuid");
+                String schemaId = record.getChildText("schemaid");
+                String isTemplate = record.getChildText("istemplate");
+                String isHarvested = record.getChildText("isharvested");
+                String isLocked = record.getChildText("islocked");
+                String lockedBy = record.getChildText("lockedby");
+                String createDate = record.getChildText("createdate");
+                String changeDate = record.getChildText("changedate");
+                String data = record.getChildText("data");
+                String source = record.getChildText("source");
+                String title = record.getChildText("title");
+                String root = record.getChildText("root");
+                String harvestUuid = record.getChildText("harvestuuid");
+                String owner = record.getChildText("owner");
+                String docType = record.getChildText("doctype");
+                //***
+                // String groupOwner = record.getChildText("groupowner");
+                String harvestUri = record.getChildText("harvesturi");
+                String rating = record.getChildText("rating");
+                String popularity = record.getChildText("popularity");
+                String displayorder = record.getChildText("displayorder");
+
+                StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, uuid, " +
+                        "isTemplate, isHarvested, isLocked, lockedBy, root, owner, doctype");
+                StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+                Vector<Serializable> args = new Vector<Serializable>();
+                args.add(id);
+                args.add(schemaId);
+                args.add(data);
+                args.add(createDate);
+                args.add(changeDate);
+                args.add(source);
+                args.add(uuid);
+                args.add(isTemplate);
+                args.add(isHarvested);
+                args.add(isLocked);
+                args.add(lockedBy);
+                args.add(root);
+                args.add(owner);
+                args.add(docType);
+                //***
+                //if (groupOwner != null) {
+                //    fields.append(", groupOwner");
+                //    values.append(", ?");
+                //    args.add(groupOwner);
+                //}
+                if (title != null) {
+                    fields.append(", title");
+                    values.append(", ?");
+                    args.add(title);
+                }
+                String query = "INSERT INTO Workspace (" + fields + ") VALUES(" + values + ")";
+                dbms.execute(query, args.toArray());
+            }
+        }
 	}
 
     /**
@@ -204,7 +282,7 @@ public abstract class XmlSerializer {
         }
 
  		args.add(root);
-		args.add(new Integer(id));
+		args.add(id);
 
         if (updateDateStamp)  {
             dbms.execute(query, args.toArray());
@@ -212,6 +290,49 @@ public abstract class XmlSerializer {
             dbms.execute(queryMinor, args.toArray());
         }
 	}
+
+    protected void updateDbWorkspace(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp) throws SQLException {
+        if (resolveXLinks()) Processor.removeXLink(xml);
+
+        String query = "UPDATE Workspace SET data=?, changeDate=?, root=? WHERE id=?";
+        String queryMinor = "UPDATE Workspace SET data=?, root=? WHERE id=?";
+
+        Vector<Serializable> args = new Vector<Serializable>();
+
+        fixCR(xml);
+        args.add(Xml.getString(xml));
+
+        if (updateDateStamp) {
+            if (changeDate == null)	{
+                args.add(new ISODate().toString());
+            } else {
+                args.add(changeDate);
+            }
+        }
+
+        args.add(root);
+        args.add(id);
+
+        if (updateDateStamp)  {
+            dbms.execute(query, args.toArray());
+        } else {
+            dbms.execute(queryMinor, args.toArray());
+        }
+	}
+
+    /**
+     * Deletes a record from workspace.
+     *
+     * @param dbms
+     * @param id
+     * @throws SQLException
+     */
+    protected void deleteFromWorkspaceDB(Dbms dbms, String id) throws SQLException {
+        String query = "DELETE FROM Workspace WHERE id=?";
+        Vector<Serializable> args = new Vector<Serializable>();
+        args.add(id);
+        dbms.execute(query, args.toArray());
+    }
 
     /**
      * Deletes an xml element given its id.
@@ -226,7 +347,7 @@ public abstract class XmlSerializer {
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
 		String query = "DELETE FROM " + table + " WHERE id=?";
-		dbms.execute(query, new Integer(id));
+		dbms.execute(query, id);
 	}
 
     /**
@@ -255,10 +376,22 @@ public abstract class XmlSerializer {
 		 String changeDate, boolean updateDateStamp, ServiceContext context) 
 		 throws Exception;
 
+    public abstract void updateWorkspace(Dbms dbms, String id, Element xml,
+                                String changeDate, boolean updateDateStamp, ServiceContext context)
+            throws Exception;
+
+    public abstract void deleteFromWorkspace(Dbms dbms, String id)
+            throws Exception;
+    //***
+	//public abstract String insert(Dbms dbms, String schema, Element xml,
+	//				 String id, String source, String uuid, String createDate,
+	//				 String changeDate, String isTemplate, String title,
+	//		 String owner, String groupOwner, String docType, ServiceContext context)
+	//		 throws Exception;
 	public abstract String insert(Dbms dbms, String schema, Element xml, 
-					 int serial, String source, String uuid, String createDate,
+                                  String id, String source, String uuid, String createDate,
 					 String changeDate, String isTemplate, String title,
-			 int owner, String groupOwner, String docType, ServiceContext context) 
+                                  String owner, String docType, ServiceContext context)
 			 throws Exception;
 
 	public abstract Element select(Dbms dbms, String table, String id) 

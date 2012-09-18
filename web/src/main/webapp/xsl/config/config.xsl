@@ -54,6 +54,8 @@
 		<xsl:call-template name="xlinkResolver"/>
 		<xsl:call-template name="searchStats"/>
         <xsl:call-template name="multilingual"/>
+        <xsl:call-template name="clustering"/>
+        <xsl:call-template name="locking"/>
 		<xsl:call-template name="downloadservice"/>
 		<xsl:call-template name="hyperlinks"/>
 		<xsl:call-template name="localrating"/>
@@ -69,6 +71,45 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
+    <xsl:template name="clustering">
+        <h1 align="left"><xsl:value-of select="/root/gui/config/clustering"/></h1>
+        <div align="left" style="{$style}">
+            <table>
+                <tr>
+                    <td class="padded">
+                        <input id="clustering.enable" class="content" type="checkbox"/>
+                    </td>
+                    <td class="padded">
+                        <label for="clustering.enable">
+                            <xsl:value-of select="/root/gui/config/enableClustering"/>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="padded" width="{$width}"><xsl:value-of select="/root/gui/config/JMSBrokerConnectionURL"/></td>
+                    <td class="padded"><input id="clustering.jmsurl" class="content" type="text" value="" size="80"/></td>
+                </tr>
+            </table>
+        </div>
+    </xsl:template>
+
+    <xsl:template name="locking">
+        <h1 align="left"><xsl:value-of select="/root/gui/config/symbolicLocking"/></h1>
+        <div align="left" style="{$style}">
+            <table>
+                <tr>
+                    <td class="padded">
+                        <input id="symbolicLocking.enable" class="content" type="checkbox"/>
+                    </td>
+                    <td class="padded">
+                        <label for="symbolicLocking.enable">
+                            <xsl:value-of select="/root/gui/config/enableSymbolicLocking"/>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </xsl:template>
 
 	<xsl:template name="multilingual">
         <h1 align="left"><xsl:value-of select="/root/gui/config/multilingual"/></h1>

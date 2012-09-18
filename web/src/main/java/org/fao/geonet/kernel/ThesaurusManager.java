@@ -33,6 +33,10 @@ import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.thesaurus.AddThesaurusMessage;
+import org.fao.geonet.jms.message.thesaurus.DeleteThesaurusMessage;
 import org.fao.geonet.kernel.oaipmh.Lib;
 
 import org.jdom.Element;
@@ -254,7 +258,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 						}
 
             try {
-                addThesaurus(gst);
+                addThesaurusWithoutSendingTopic(gst);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -319,7 +323,25 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param gst
 	 */
 	public void addThesaurus(Thesaurus gst) throws Exception {
+        addThesaurusWithoutSendingTopic(gst);
 
+        if(ClusterConfig.isEnabled()) {
+            AddThesaurusMessage message = new AddThesaurusMessage();
+            message.setOriginatingClientID(ClusterConfig.getClientID());
+            message.setFname(gst.getFname());
+            message.setType(gst.getType());
+            message.setDir(gst.getDname());
+            message.setThesaurusFile(gst.getFile().getPath()) ;
+            Producer addThesaurusProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.ADDTHESAURUS);
+            addThesaurusProducer.produce(message);
+        }
+	}
+
+	/**
+	 * 
+	 * @param gst
+	 */
+    public void addThesaurusWithoutSendingTopic(Thesaurus gst) throws Exception {
 		String thesaurusName = gst.getKey();
 
         if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
@@ -337,10 +359,28 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param name
 	 */
-	public void remove(String name){
+	public void remove(String name) throws Exception {
+        removeWithoutSendingTopic(name);
+
+        if(ClusterConfig.isEnabled()) {
+            DeleteThesaurusMessage message = new DeleteThesaurusMessage();
+            message.setOriginatingClientID(ClusterConfig.getClientID());
+            message.setName(name);
+
+            Producer deleteThesaurusProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.DELETETHESAURUS);
+            deleteThesaurusProducer.produce(message);
+        }
+	}
+
+    /**
+     *
+     * @param name
+     */
+    public void removeWithoutSendingTopic(String name) {
 		service.removeRepository(name);
 		thesauriMap.remove(name);
 	}
+	
 	
 	/**
 	 * 

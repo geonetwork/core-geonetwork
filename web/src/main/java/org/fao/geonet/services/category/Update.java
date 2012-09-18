@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 //=============================================================================
@@ -60,7 +61,7 @@ public class Update implements Service
 
 		if (id == null)	// For Adding new category
 		{
-			int newId = context.getSerialFactory().getSerial(dbms, "Categories");
+			String newId = IDFactory.newID();
 
 			dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, name);
 			Lib.local.insert(dbms, "Categories", newId, name);
@@ -69,14 +70,10 @@ public class Update implements Service
 		}
 		else 	//--- For Update
 		{
-			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, new Integer(id));
-
+			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, id);
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}
 
 		return elRes;
 	}
 }
-
-//=============================================================================
-

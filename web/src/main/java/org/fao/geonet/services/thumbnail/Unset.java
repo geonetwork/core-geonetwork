@@ -32,17 +32,17 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
-public class Unset implements Service
-{
+/**
+ * TODO Javadoc.
+ *
+ */
+public class Unset implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -57,11 +57,17 @@ public class Unset implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		String id      = Util.getParam(params, Params.ID);
 		String type    = Util.getParam(params, Params.TYPE);
-		String version = Util.getParam(params, Params.VERSION);
 
 		Lib.resource.checkEditPrivilege(context, id);
 
@@ -69,15 +75,8 @@ public class Unset implements Service
 		//--- extract thumbnail filename
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 		DataManager dataMan = gc.getDataManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		//--- check if the metadata has been modified from last time
-
-		if (version != null && !dataMan.getVersion(id).equals(version))
-			throw new ConcurrentUpdateEx(id);
 
 		Element result = dataMan.getThumbnails(dbms, id);
 
@@ -96,7 +95,6 @@ public class Unset implements Service
 
 		dataMan.unsetThumbnail(context, id, type.equals("small"));
 		
-		
 		File thumbnail = new File(file);
 		if (thumbnail.exists()) {
 			if (!thumbnail.delete()) {
@@ -107,20 +105,19 @@ public class Unset implements Service
 			    context.debug("Thumbnail does not exist: " + file);
 		}
 		
-		//-----------------------------------------------------------------------
-
 		Element response = new Element("a");
 		response.addContent(new Element("id").setText(id));
-		response.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
 		return response;
 	}
 
-	/*
+    /**
 	 * Remove thumbnail images. 
-	 * (Useful for harvester which can not edit metadata but could have
-	 * set up a thumbnail on harvesting
-	 * )
+     * (Useful for harvester which can not edit metadata but could have set up a thumbnail on harvesting).
+     * @param id
+     * @param type
+     * @param context
+     * @throws Exception
 	 */
 	public void removeThumbnailFile (String id,  String type, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -143,6 +140,15 @@ public class Unset implements Service
 		
 	}
 	
+    /**
+     * TODO Javadoc.
+     *
+     * @param result
+     * @param type
+     * @param id
+     * @param context
+     * @throws Exception
+     */
 	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {
 		
 		result = result.getChild(type);
@@ -185,7 +191,3 @@ public class Unset implements Service
 		private static final String FNAME_PARAM   = "fname=";
 
 }
-
-//=============================================================================
-
-

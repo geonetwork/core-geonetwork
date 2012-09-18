@@ -16,6 +16,22 @@
 
 	<!-- new strings - 2.7 -->
 	<nodata>Null</nodata>
+    <workspaceview>Vista del espacio de trabajo</workspaceview>
+    <metadataview>Vista metadato</metadataview>
+    <vieworiginal>Ver la original</vieworiginal>
+    <viewworkspace>Vista copia de área de trabajo</viewworkspace>
+    <islocked>Este metadato está bloqueado</islocked>
+    <canunlock>Se le permite desbloquear este</canunlock>
+    <canedit>Usted está autorizado a modificar este</canedit>
+    <unlock>Desbloquear este metadato</unlock>
+    <unlockMetadataTitle>Desbloquear metadatos</unlockMetadataTitle>
+    <lockedmetadata>Metadato bloqueado</lockedmetadata>
+    <lockedmetadatadesc>Lista de los metadatos que posee o que se le permite hacerse cargo de</lockedmetadatadesc>
+    <grab.lock>Cambio de propietario del bloqueo</grab.lock>
+    <grabbed.lock>Bloqueo cambió de dueño</grabbed.lock>
+    <currentlockowner>Actualmente, el bloqueo de los metadatos es propiedad del usuario</currentlockowner>
+    <switchdiff>Cambiar a izquierda y derecha</switchdiff>
+
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -397,6 +413,12 @@
 	<clear js="true">Borrar</clear>
 	<clearAll>Borrar todos</clearAll>
 	<close js="true">Cerrar</close>
+    <compareMetadata>Comparar los metadatos</compareMetadata>
+    <compareMetadataSelMessage>Usted debe seleccionar 2 registros de metadatos para comparar</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Comparar con la copia del área de trabajo</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Comparar con la copia del área de trabajo en modo de edición</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Comparar con el original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Comparar en el modo de edición con el original</compareMetadataOriginalEditMode>
 	<completeTab>Vista en bloques</completeTab>
 	<completeTabEditor>Editar en bloques</completeTabEditor>
 	<confirmCancel>¿Está seguro de que desea abandonar el editor? (Perderá todos los cambios no guardados)</confirmCancel>
@@ -631,6 +653,7 @@
 	<metadata-template-order-desc>Ordenar sus plantillas</metadata-template-order-desc>
 	<metadata-template-add-default>Añadir plantillas</metadata-template-add-default>
 	<metadata>Metadatos</metadata>
+    <metametadata>Metadatos</metametadata>
 	<metadataAdded>Metadato añadido con ID:</metadataAdded>
 	<metadataDeleted>Metadato borrado con ID:</metadataDeleted>
 	<metadataInsertResults>Resultados de la importación de metadatos</metadataInsertResults>
@@ -1182,6 +1205,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1278,6 +1302,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>Opciones de búsqueda de INSPIRE </l1>
             <l2>Metadatos INSPIRE metadata</l2>
@@ -1357,6 +1386,7 @@
 	<addremove>Agregar o quitar</addremove>
     <enabled>Habilitado</enabled>
     <notifications>Notificación a los objetivos a distancia</notifications>
+    <url>URL</url>
     
     <cswServer>CSW server</cswServer>
     <cswServerDes>CSW Server configuration</cswServerDes>

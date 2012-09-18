@@ -27,6 +27,8 @@ import com.esri.sde.sdk.client.SeException;
 import com.esri.sde.sdk.client.SeQuery;
 import com.esri.sde.sdk.client.SeRow;
 import com.esri.sde.sdk.client.SeSqlConstruct;
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 	private static final String ISO_METADATA_IDENTIFIER = "MD_Metadata";
 	
 	public List<String> retrieveMetadata() throws Exception {
-		System.out.println("start retrieve metadata");
+        Log.info(Geonet.ARCSDE, "start retrieve metadata");
 		List<String> results = new ArrayList<String>();
 		try {	
 			// query table containing XML metadata
@@ -74,7 +76,7 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 					bytes.read(buff);
 					String document = new String(buff);
 					if(document.contains(ISO_METADATA_IDENTIFIER)) {
-						System.out.println("ISO metadata found");
+                        Log.debug(Geonet.ARCSDE, "ISO metadata found");
 						results.add(document);
 					}
 				}
@@ -83,13 +85,13 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 				}
 			}			
 			query.close();
-			System.out.println("cool");
+            Log.info(Geonet.ARCSDE, "cool");
 			return results;
 		}
 		catch(SeException x) {
 			SeError error = x.getSeError();
 			String description = error.getExtError() + " " + error.getExtErrMsg() + " " + error.getErrDesc();
-			System.out.println(description);
+            Log.error(Geonet.ARCSDE, description);
 			x.printStackTrace();
 			throw new Exception(x);
 		}

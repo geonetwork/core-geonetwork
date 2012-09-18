@@ -82,10 +82,8 @@ public class PrepareBatchUpdatePrivileges implements Service
 
 		List list = elGroup.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
+		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
-
 			el.setName(Geonet.Elem.GROUP);
 
 			//--- get all operations that this group can do on given metadata
@@ -93,16 +91,12 @@ public class PrepareBatchUpdatePrivileges implements Service
 
 			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
 
-			int grpId = Integer.parseInt(sGrpId);
-
 			//--- now extend the group list adding proper operations
 			List listOper = elOper.getChildren();
 
-			for(int j=0; j<listOper.size(); j++)
-			{
+			for(int j=0; j<listOper.size(); j++) {
 				String operId = ((Element) listOper.get(j)).getChildText("id");
-				Element elGrpOper = new Element(Geonet.Elem.OPER)
-													.addContent(new Element(Geonet.Elem.ID).setText(operId));
+				Element elGrpOper = new Element(Geonet.Elem.OPER).addContent(new Element(Geonet.Elem.ID).setText(operId));
 				el.addContent(elGrpOper);
 			}
 		}

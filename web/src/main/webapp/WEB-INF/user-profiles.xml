@@ -192,6 +192,13 @@
 
 	<profile name="Editor" extends="RegisteredUser">
 
+        <!-- lists locked metadata this user may unlock -->
+        <allow service="metadata.list.locked"/>
+        <!-- transfers metadata lock to selected user -->
+        <allow service="metadata.grab.lock"/>
+        <!-- lists users that this user may transfer metadata lock to -->
+        <allow service="metadata.grab.lock.form"/>
+
 		<!-- Allow to see the list of groups the user is member of -->
 		<allow service="group.list"/>
 		<allow service="group.get"/>
@@ -260,8 +267,16 @@
 		<allow service="metadata.processing"/>
 	  <allow service="metadata.processing.new"/>
 		<allow service="xml.metadata.processing"/>
-		<allow service="metadata.batch.extract.subtemplates.form"/>
-		<allow service="metadata.batch.extract.subtemplates"/>
+
+        <!-- Allow unlocking metadata -->
+        <allow service="metadata.unlock"/>
+
+        <!-- Allow metadata diff -->
+        <allow service="metadata.diff"/>
+        <allow service="metadata.diff.editmode"/>
+
+        <allow service="diff"/>
+        <allow service="diff.edit"/>
 
         <!-- Allow to retrieve user owned metadata -->
         <allow service="xml.user.metadata"/>

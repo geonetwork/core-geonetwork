@@ -2,7 +2,8 @@ Ext.namespace('GeoNetwork');
 
 var catalogue;
 var app;
-var cookie;
+
+var mapTabAccessCount = 0;
 
 GeoNetwork.app = function(){
     // private vars:
@@ -10,6 +11,7 @@ GeoNetwork.app = function(){
     var searching = false;
     var editorWindow;
     var editorPanel;
+    var cookie;
 
     /**
      * Application parameters are :
@@ -259,6 +261,19 @@ GeoNetwork.app = function(){
             items: GeoNetwork.util.SearchFormTools.getWhen()
         });
 
+        var ownerField = new Ext.form.TextField({
+            name: 'E__owner',
+            hidden: true
+        });
+        var isHarvestedField = new Ext.form.TextField({
+            name: 'E__isHarvested',
+            hidden: true
+        });
+
+        var isLockedField = new Ext.form.TextField({
+            name: 'E__isLocked',
+            hidden: true
+        });
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -270,7 +285,7 @@ GeoNetwork.app = function(){
         advancedCriteria.push(themekeyField, orgNameField, categoryField,
             spatialTypes, denominatorField,
             catalogueField, groupField,
-            metadataTypeField, validField);
+            metadataTypeField, validField, ownerField, isHarvestedField, isLockedField);
         var adv = {
             xtype: 'fieldset',
             title: OpenLayers.i18n('advancedSearchOptions'),
@@ -288,7 +303,7 @@ GeoNetwork.app = function(){
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services,
             GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true,
             GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-            adv);
+            adv, GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined));
         // Add advanced mode criteria to simple form - end
 
 
@@ -746,7 +761,6 @@ GeoNetwork.app = function(){
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
             var lang = urlParameters.hl || GeoNetwork.defaultLocale;
-
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }
@@ -904,8 +918,20 @@ GeoNetwork.app = function(){
                                 title:OpenLayers.i18n('Map'),
                                 layout:'fit',                              
                                 margins:margins,
-                                items: [iMap.getViewport()]
+                                items: [iMap.getViewport()],
+                                listeners: {
+                                    afterLayout: function(c){
+                                        if (mapTabAccessCount > 2) return;
 
+                                        mapTabAccessCount++;
+
+                                        // First time afterLayout is executed on page load, setting extent is not ok then
+                                        // Set extent when first click on Map tab
+                                        if (mapTabAccessCount == 2) {
+                                            if (iMap) iMap.getMap().zoomToMaxExtent();
+                                        }
+                                    }
+                                }
                             }
                         ]
                     }
@@ -970,14 +996,12 @@ GeoNetwork.app = function(){
 
             //resultPanel.setHeight(Ext.getCmp('center').getHeight());
 
-            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
+            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin', 'afterStatusChange', 'afterUnlock', 'afterGrabEditSession'];
             Ext.each(events, function (e) {
                 catalogue.on(e, function(){
                     if (searching === true) {
                         Ext.getCmp('searchBt').fireEvent('click');
                     }
-
-        
                 });
             });
         },

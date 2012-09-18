@@ -27,7 +27,6 @@ import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.SerialFactory;
 
 import java.util.Hashtable;
 
@@ -40,7 +39,6 @@ public class BasicContext
 {
 	private ResourceManager resMan;
 	private ProviderManager provMan;
-	private SerialFactory   serialFact;
 
 	protected Logger logger;
 	private   String baseUrl;
@@ -55,13 +53,12 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public BasicContext(MonitorManager mm, ProviderManager pm, Hashtable<String, Object> contexts)
 	{
 		resMan = new ResourceManager(mm, pm);
 
         this.monitorManager = mm;
 		provMan    = pm;
-		serialFact = sf;
 		htContexts = contexts;
 	}
 
@@ -74,7 +71,6 @@ public class BasicContext
 	//--- readonly objects
 
 	public ResourceManager getResourceManager() { return resMan;     }
-	public SerialFactory   getSerialFactory()   { return serialFact; }
 
 	//--- read/write objects
 

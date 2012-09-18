@@ -1,29 +1,30 @@
 INSERT INTO Languages VALUES ('chi','中文', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (13, 'chi', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (14, 'chi', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (15, 'chi', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (16, 'chi', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('13', 'chi', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('14', 'chi', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('15', 'chi', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('16', 'chi', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'chi','Maps & graphics');
-INSERT INTO CategoriesDes VALUES (2,'chi','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'chi','Interactive resources');
-INSERT INTO CategoriesDes VALUES (4,'chi','Applications');
-INSERT INTO CategoriesDes VALUES (5,'chi','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'chi','Conference proceedings');
-INSERT INTO CategoriesDes VALUES (7,'chi','Photo');
-INSERT INTO CategoriesDes VALUES (8,'chi','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'chi','Directories');
-INSERT INTO CategoriesDes VALUES (10,'chi','Other information resources');
-INSERT INTO CategoriesDes VALUES (11,'chi','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'chi','Registers');
-INSERT INTO CategoriesDes VALUES (13,'chi','Physical Samples');
+INSERT INTO CategoriesDes VALUES ('1','chi','Maps & graphics');
+INSERT INTO CategoriesDes VALUES ('2','chi','Datasets');
+INSERT INTO CategoriesDes VALUES ('3','chi','Interactive resources');
+INSERT INTO CategoriesDes VALUES ('4','chi','Applications');
+INSERT INTO CategoriesDes VALUES ('5','chi','Case studies, best practices');
+INSERT INTO CategoriesDes VALUES ('6','chi','Conference proceedings');
+INSERT INTO CategoriesDes VALUES ('7','chi','Photo');
+INSERT INTO CategoriesDes VALUES ('8','chi','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','chi','Directories');
+INSERT INTO CategoriesDes VALUES ('10','chi','Other information resources');
+INSERT INTO CategoriesDes VALUES ('11','chi','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','chi','Registers');
+INSERT INTO CategoriesDes VALUES ('13','chi','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'chi','Guest');
-INSERT INTO GroupsDes VALUES (0,'chi','Intranet');
-INSERT INTO GroupsDes VALUES (1,'chi','All');
-INSERT INTO GroupsDes VALUES (2,'chi','Sample group');
+INSERT INTO GroupsDes VALUES ('-1','chi','Guest');
+INSERT INTO GroupsDes VALUES ('0','chi','Intranet');
+INSERT INTO GroupsDes VALUES ('1','chi','All');
+INSERT INTO GroupsDes VALUES ('2','chi','Sample group');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'chi','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'chi','Abkhazian');
@@ -510,19 +511,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'chi','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'chi','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'chi','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'chi','Publish');
-INSERT INTO OperationsDes VALUES (1,'chi','Download');
-INSERT INTO OperationsDes VALUES (2,'chi','Editing');
-INSERT INTO OperationsDes VALUES (3,'chi','Notify');
-INSERT INTO OperationsDes VALUES (5,'chi','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'chi','Featured');
+INSERT INTO OperationsDes VALUES ('0','chi','Publish');
+INSERT INTO OperationsDes VALUES ('1','chi','Download');
+INSERT INTO OperationsDes VALUES ('2','chi','Editing');
+INSERT INTO OperationsDes VALUES ('3','chi','Notify');
+INSERT INTO OperationsDes VALUES ('5','chi','Interactive Map');
+INSERT INTO OperationsDes VALUES ('6','chi','Featured');
 
-INSERT INTO StatusValuesDes VALUES (0,'chi','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'chi','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'chi','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'chi','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'chi','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'chi','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','chi','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','chi','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','chi','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','chi','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','chi','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','chi','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','chi','Just created');
 
 INSERT INTO RegionsDes VALUES  (1,'chi','Armenia');
 INSERT INTO RegionsDes VALUES (2,'chi','Afghanistan');

@@ -16,6 +16,21 @@
 
     <anyLanguage>jede Sprache</anyLanguage>
 	<nodata>Null</nodata>
+    <workspaceview>Workspace-Ansicht</workspaceview>
+    <metadataview>Metadaten-Ansicht</metadataview>
+    <vieworiginal>View original</vieworiginal>
+    <viewworkspace>Ansicht Arbeitsbereich Kopie</viewworkspace>
+    <islocked>Diese Metadaten werden gesperrt</islocked>
+    <canunlock>Sie sind berechtigt, diese zu entsperren</canunlock>
+    <canedit>Sie sind berechtigt, diese zu bearbeiten</canedit>
+    <unlock>Schalte diese Metadaten</unlock>
+    <unlockMetadataTitle>Unlock metadata</unlockMetadataTitle>
+    <lockedmetadata>Gesperrt Metadaten</lockedmetadata>
+    <lockedmetadatadesc>Listen Metadaten bearbeiten Sitzungen, die Sie besitzen oder dass Sie berechtigt sind, übernehmen</lockedmetadatadesc>
+    <grab.lock>Ändern Sie Eigentümer der Sperre</grab.lock>
+    <grabbed.lock>Geändert Besitzer der Sperre</grabbed.lock>
+    <currentlockowner>Derzeit werden die Metadaten des Schlosses erfolgt durch Benutzer gehören</currentlockowner>
+    <switchdiff>Schalten linken und rechten</switchdiff>
   <!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -390,6 +405,12 @@
 	<clear js="true">leeren</clear>
 	<clearAll>Alles leeren</clearAll>
 	<close js="true">Schliessen</close>
+    <compareMetadata>vergleichen Sie Metadaten</compareMetadata>
+    <compareMetadataSelMessage>Sie müssen zwei Metadaten-Einträgen zu vergleichen</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Vergleichen mit Arbeitsbereich Kopie</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Vergleichen mit Kopie Arbeitsbereich im Bearbeitungsmodus</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Vergleichen mit original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Vergleichen im Bearbeitungsmodus mit original</compareMetadataOriginalEditMode>
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
 	<confirmCancel>Sind Sie sicher, dass Sie die Aktion abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
@@ -624,6 +645,7 @@
 	<metadata-template-order-desc>Vorlagen sortieren</metadata-template-order-desc>
 	<metadata-template-add-default>Vorlagen hinzufügen</metadata-template-add-default>
 	<metadata>Metadaten</metadata>
+    <metametadata>Metadaten</metametadata>
 	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
 	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>
 	<metadataInsertResults>Ergebnis des Metadaten Imports</metadataInsertResults>
@@ -1273,6 +1295,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Dienst für den Zugriff auf externe Daten und Programme (comRemoteFileAndExecutableManagement)</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>INSPIRE Suchoptionen</l1>
             <l2>INSPIRE Metadaten</l2>

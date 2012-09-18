@@ -75,22 +75,22 @@ public class BatchUpdateCategories implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
+			String uuid = iter.next();
 			String id   = dm.getMetadataId(dbms, uuid);
 								
 			//--- check access
 
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(id);
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(id);
 			} else {
 
 				//--- remove old operations
@@ -106,7 +106,7 @@ public class BatchUpdateCategories implements Service
 					if (name.startsWith("_"))
 						dm.setCategory(context, dbms, id, name.substring(1));
 				}
-				metadata.add(new Integer(id));
+				metadata.add(id);
 			}
 		}
 		}

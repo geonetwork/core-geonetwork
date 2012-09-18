@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 //=============================================================================
@@ -62,7 +63,7 @@ public class Update implements Service
 
 		if (id == null)	// For Adding new group
 		{
-			int newId = context.getSerialFactory().getSerial(dbms, "Groups");
+			String newId = IDFactory.newID();
 
 			String query = "INSERT INTO Groups(id, name, description, email) VALUES (?, ?, ?, ?)";
 
@@ -75,7 +76,7 @@ public class Update implements Service
 		{
 			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
 
-			dbms.execute(query, name, descr, email, new Integer(id));
+			dbms.execute(query, name, descr, email, id);
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}
@@ -83,6 +84,3 @@ public class Update implements Service
 		return elRes;
 	}
 }
-
-//=============================================================================
-

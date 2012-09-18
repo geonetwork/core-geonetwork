@@ -56,7 +56,7 @@ GeoNetwork.data.GroupStore = function(url){
         
     }
     
-    return new Ext.data.XmlStore({
+    return new GeoNetwork.data.GeoNetworkLabelsXmlStore({
         autoDestroy: true,
         proxy: new Ext.data.HttpProxy({
             method: 'GET',

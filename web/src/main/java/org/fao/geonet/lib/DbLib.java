@@ -84,7 +84,7 @@ public class DbLib {
 	 */
 	public boolean touch(Dbms dbms) {
 		try {
-			select(dbms, "Metadata", "Touch", "id = 0");
+			select(dbms, "Metadata", "Touch", "id = '0'");
 			return true;
 		} catch (Exception e) {
 			return false;

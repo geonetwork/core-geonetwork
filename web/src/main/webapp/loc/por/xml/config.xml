@@ -28,6 +28,13 @@
     <requestedlanguagesorted>Resultados da busca em idioma solicitado classificados no topo</requestedlanguagesorted>
     <requestedlanguageignored>Ignorar idioma solicitado em busca</requestedlanguageignored>
 
+    <clustering>agrupamento</clustering>
+    <enableClustering>Ativar agrupamento</enableClustering>
+    <JMSBrokerConnectionURL>JMS URL corretor(es)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>bloqueio simbólico</symbolicLocking>
+    <enableSymbolicLocking>Ativar o bloqueio simbólico</enableSymbolicLocking>
+
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activar</enable>
 		
@@ -377,6 +384,15 @@
             Ignorar idioma solicitado para resultados de busca.
         </tip>
 
+        <tip id="cluster.enable">
+            Habilite esta para clustering.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Digite a URL para o seu corretor JMS. Por exemplo:  failover/tcp://localhost:61616.
+        </tip>
+        <tip id="symbolicLocking.enable">
+            Quando este estiver habilitado, qualquer editor pode desbloquear metadados em seus grupos (não apenas Revisores).
+        </tip>
     </tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>

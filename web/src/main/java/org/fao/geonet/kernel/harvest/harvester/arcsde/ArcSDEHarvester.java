@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
@@ -38,6 +39,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -75,12 +77,12 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	@Override
 	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		ArcSDEParams as = (ArcSDEParams) params;
-		settingMan.add(dbms, "id:"+siteId, "icon", as.icon);
-		settingMan.add(dbms, "id:"+siteId, "server", as.server);
-		settingMan.add(dbms, "id:"+siteId, "port", as.port);
-		settingMan.add(dbms, "id:"+siteId, "username", as.username);
-		settingMan.add(dbms, "id:"+siteId, "password", as.password);
-		settingMan.add(dbms, "id:"+siteId, "database", as.database);
+		settingMan.add(dbms, "id:"+siteId, "icon", as.icon, false);
+		settingMan.add(dbms, "id:"+siteId, "server", as.server, false);
+		settingMan.add(dbms, "id:"+siteId, "port", as.port, false);
+		settingMan.add(dbms, "id:"+siteId, "username", as.username, false);
+		settingMan.add(dbms, "id:"+siteId, "password", as.password, false);
+		settingMan.add(dbms, "id:"+siteId, "database", as.database, false);
 	}
 	
 	@Override
@@ -105,7 +107,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			//--- force the creation of a new uuid
 			params.uuid = UUID.randomUUID().toString();
 		
-			String id = settingMan.add(dbms, "harvesting", "node", getType());
+			String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 			storeNode(dbms, params, "id:"+id);
 			
 			Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -157,15 +159,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 	@Override
 	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
-		System.out.println("ArcSDE harvest starting");
+        Log.debug(Geonet.HARVESTER, "ArcSDE harvest starting");
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
 		List<String> metadataList = adapter.retrieveMetadata();
 		align(metadataList, rm);
-		System.out.println("ArcSDE harvest finished");
+        Log.debug(Geonet.HARVESTER, "ArcSDE harvest finished");
 	}
 	
 	private void align(List<String> metadataList, ResourceManager rm) throws Exception {
-		System.out.println("Start of alignment for : "+ params.name);
+        Log.debug(Geonet.HARVESTER, "Start of alignment for : "+ params.name);
 		ArcSDEResult result = new ArcSDEResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
@@ -194,7 +196,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			else {
 				String uuid = dataMan.extractUUID(schema, iso19139);
 				if(uuid == null || uuid.equals("")) {
-					System.out.println("Skipping metadata due to failure extracting uuid (uuid null or empty).");
+                    Log.debug(Geonet.HARVESTER, "Skipping metadata due to failure extracting uuid (uuid null or empty).");
 					result.badFormat++;
 				}
 				else {
@@ -202,7 +204,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
                     // validate it here if requested
                     if (params.validate) {
                         if(!dataMan.validate(iso19139))  {
-                            System.out.println("Ignoring invalid metadata with uuid " + uuid);
+                            Log.debug(Geonet.HARVESTER, "Ignoring invalid metadata with uuid " + uuid);
                             result.doesNotValidate++;
                             continue;
                         }
@@ -213,12 +215,12 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					//
 					String id = dataMan.getMetadataId(dbms, uuid);
 					if (id == null)	{
-						System.out.println("adding new metadata");
+                        Log.debug(Geonet.HARVESTER, "adding new metadata");
 						id = addMetadata(iso19139, uuid, dbms, schema, localGroups, localCateg);
 						result.added++;
 					}
 					else {
-						System.out.println("updating existing metadata, id is: " + id);
+                        Log.debug(Geonet.HARVESTER, "updating existing metadata, id is: " + id);
 						updateMetadata(iso19139, id, dbms, localGroups, localCateg);
 						result.updated++;
 					}
@@ -241,7 +243,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Updating metadata with id: "+ id);
+        Log.debug(Geonet.HARVESTER, "  - Updating metadata with id: "+ id);
         //
         // update metadata
         //
@@ -251,14 +253,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
         String language = context.getLanguage();
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
 		addPrivileges(id, localGroups, dbms);
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -271,30 +274,29 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	 * @throws Exception
 	 */
 	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Adding metadata with remote uuid: "+ uuid);
+        Log.debug(Geonet.HARVESTER, "  - Adding metadata with remote uuid: "+ uuid);
 
         //
         // insert metadata
         //
         String source = params.uuid;
         String createDate = new ISODate().toString();
-        int userId = 1;
+        String userId = "1";
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
-                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, xml, id, uuid, userId, group, source, isTemplate, docType, title,
+                category, createDate, createDate, ufo, indexImmediate);
 
-
-
-		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, source);
+		dataMan.setTemplateExt(dbms, id, "n", null);
+		dataMan.setHarvestedExt(dbms, id, source);
 
 		addPrivileges(id, localGroups, dbms);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		return id;
 	}
 	
@@ -307,10 +309,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
-				System.out.println("    - Skipping removed category with id:"+ catId);
+                Log.debug(Geonet.HARVESTER, "    - Skipping removed category with id:"+ catId);
 			}
 			else {
-				System.out.println("    - Setting category : "+ name);
+                Log.debug(Geonet.HARVESTER, "    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -323,19 +325,19 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 			if (name == null) {
-				System.out.println("    - Skipping removed group with id:"+ priv.getGroupId());
+                Log.debug(Geonet.HARVESTER, "    - Skipping removed group with id:"+ priv.getGroupId());
 			}
 			else {
-				System.out.println("    - Setting privileges for group : "+ name);
-				for (int opId: priv.getOperations()) {
+                Log.debug(Geonet.HARVESTER, "    - Setting privileges for group : "+ name);
+				for (String opId: priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						System.out.println("       --> "+ name);
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
+                        Log.debug(Geonet.HARVESTER, "       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else {
-						System.out.println("       --> "+ name +" (skipped)");
+                        Log.debug(Geonet.HARVESTER, "       --> "+ name +" (skipped)");
 					}
 				}
 			}

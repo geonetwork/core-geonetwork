@@ -27,7 +27,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -38,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -175,23 +175,22 @@ class Harvester {
 		//
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, uuid, userid, group, params.uuid, isTemplate, docType,
+                title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
 
-
-		int iId = Integer.parseInt(id);
-
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, rf.getPath());
+		dataMan.setTemplateExt(dbms, id, "n", null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid, rf.getPath());
 
 		addPrivileges(id);
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		result.added++;
 	}
 
@@ -269,10 +268,10 @@ class Harvester {
 			}
 			else {
                 if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
-				for (int opId: priv.getOperations()) {
+				for (String opId: priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
                         if(log.isDebugEnabled()) log.debug("       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
@@ -312,12 +311,13 @@ class Harvester {
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(record.id));
+			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", record.id);
 			addPrivileges(record.id);
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
+			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", record.id);
 			addCategories(record.id);
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, record.id);
+            boolean workspace = false;
+            dataMan.indexMetadataGroup(dbms, record.id, workspace, true);
 			result.updated++;
 		}
 	}

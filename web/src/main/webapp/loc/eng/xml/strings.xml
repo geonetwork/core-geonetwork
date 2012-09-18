@@ -16,6 +16,22 @@
 
     <anyLanguage>Any language</anyLanguage>
 	<nodata>Null</nodata>
+    <workspaceview>Workspace view</workspaceview>
+    <metadataview>Metadata view</metadataview>
+    <vieworiginal>View original</vieworiginal>
+    <viewworkspace>View workspace copy</viewworkspace>
+    <islocked>This metadata is locked in edit session</islocked>
+    <canunlock>You are allowed to unlock this</canunlock>
+    <canedit>You are allowed to edit this</canedit>
+    <unlock>Cancel edit session</unlock>
+    <unlockMetadataTitle>Cancel edit session</unlockMetadataTitle>
+    <lockedmetadata>Metadata in edit session</lockedmetadata>
+    <lockedmetadatadesc>Lists metadata edit sessions that you own or that you are allowed to take over</lockedmetadatadesc>
+    <grab.lock>Change edit session owner</grab.lock>
+    <grabbed.lock>Changed owner of edit session</grabbed.lock>
+    <currentlockowner>Currently the metadata lock is owned by user</currentlockowner>
+    <switchdiff>Switch left and right</switchdiff>
+
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -393,6 +409,12 @@
 	<clear js="true">Clear</clear>
 	<clearAll>Clear All</clearAll>
 	<close js="true">Close</close>
+    <compareMetadata>Compare metadata</compareMetadata>
+    <compareMetadataSelMessage>You must select 2 metadata records to compare</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Compare with workspace copy</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Compare with workspace copy in edit mode</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Compare with original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Compare in edit mode with original</compareMetadataOriginalEditMode>
 	<completeTab>Advanced view</completeTab>
 	<completeTabEditor>Advanced editor</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
@@ -629,6 +651,7 @@
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
     <metadata>Metadata</metadata>
+    <metametadata>Meta-Metadata</metametadata>
 	<metadataAdded>Metadata added with ID:</metadataAdded>
 	<metadataDeleted>Metadata deleted with ID:</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
@@ -1364,6 +1387,7 @@
     <addremove>Add/Remove</addremove>
     <enabled>Enabled</enabled>
     <notifications>Notification to remote targets</notifications>
+    <url>URL</url>
     
     <cswServer>CSW server configuration</cswServer>
     <cswServerDes>Define CSW settings (title, access contraints, ...)</cswServerDes>

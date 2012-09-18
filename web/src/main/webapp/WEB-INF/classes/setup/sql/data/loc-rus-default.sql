@@ -1,29 +1,30 @@
 INSERT INTO Languages VALUES ('rus','русский язык', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (29, 'rus', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (30, 'rus', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (31, 'rus', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (32, 'rus', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('29', 'rus', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('30', 'rus', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('31', 'rus', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('32', 'rus', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'rus','Карты и графика');
-INSERT INTO CategoriesDes VALUES (2,'rus','Наборы данных');
-INSERT INTO CategoriesDes VALUES (3,'rus','Интерактивные ресурсы');
-INSERT INTO CategoriesDes VALUES (4,'rus','Компьютерные программы');
-INSERT INTO CategoriesDes VALUES (5,'rus','Практические ситуации');
-INSERT INTO CategoriesDes VALUES (6,'rus','Материалы конференций');
-INSERT INTO CategoriesDes VALUES (7,'rus','Фотографии');
-INSERT INTO CategoriesDes VALUES (8,'rus','Аудио/Видео');
-INSERT INTO CategoriesDes VALUES (9,'rus','Каталоги/справочники');
-INSERT INTO CategoriesDes VALUES (10,'rus','Другие ресурсы');
-INSERT INTO CategoriesDes VALUES (11,'rus','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'rus','Registers');
-INSERT INTO CategoriesDes VALUES (13,'rus','Физические образцы');
+INSERT INTO CategoriesDes VALUES ('1','rus','Карты и графика');
+INSERT INTO CategoriesDes VALUES ('2','rus','Наборы данных');
+INSERT INTO CategoriesDes VALUES ('3','rus','Интерактивные ресурсы');
+INSERT INTO CategoriesDes VALUES ('4','rus','Компьютерные программы');
+INSERT INTO CategoriesDes VALUES ('5','rus','Практические ситуации');
+INSERT INTO CategoriesDes VALUES ('6','rus','Материалы конференций');
+INSERT INTO CategoriesDes VALUES ('7','rus','Фотографии');
+INSERT INTO CategoriesDes VALUES ('8','rus','Аудио/Видео');
+INSERT INTO CategoriesDes VALUES ('9','rus','Каталоги/справочники');
+INSERT INTO CategoriesDes VALUES ('10','rus','Другие ресурсы');
+INSERT INTO CategoriesDes VALUES ('11','rus','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','rus','Registers');
+INSERT INTO CategoriesDes VALUES ('13','rus','Физические образцы');
 
-INSERT INTO GroupsDes VALUES (-1,'rus','Guest');
-INSERT INTO GroupsDes VALUES (0,'rus','Пример группы');
-INSERT INTO GroupsDes VALUES (1,'rus','Все');
-INSERT INTO GroupsDes VALUES (2,'rus','Пример группы');
+INSERT INTO GroupsDes VALUES ('-1','rus','Guest');
+INSERT INTO GroupsDes VALUES ('0','rus','Пример группы');
+INSERT INTO GroupsDes VALUES ('1','rus','Все');
+INSERT INTO GroupsDes VALUES ('2','rus','Пример группы');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'rus','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'rus','Abkhazian');
@@ -510,20 +511,21 @@ INSERT INTO IsoLanguagesDes VALUES (482,'rus','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'rus','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'rus','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'rus','Просмотр');
-INSERT INTO OperationsDes VALUES (1,'rus','Загрузка');
-INSERT INTO OperationsDes VALUES (2,'rus','Editing');
-INSERT INTO OperationsDes VALUES (3,'rus','Уведомление');
-INSERT INTO OperationsDes VALUES (5,'rus','Интерактивная карта');
-INSERT INTO OperationsDes VALUES (6,'rus','Предлагаемая карта');
+INSERT INTO OperationsDes VALUES ('0','rus','Просмотр');
+INSERT INTO OperationsDes VALUES ('1','rus','Загрузка');
+INSERT INTO OperationsDes VALUES ('2','rus','Editing');
+INSERT INTO OperationsDes VALUES ('3','rus','Уведомление');
+INSERT INTO OperationsDes VALUES ('5','rus','Интерактивная карта');
+INSERT INTO OperationsDes VALUES ('6','rus','Предлагаемая карта');
 
-INSERT INTO StatusValuesDes VALUES (0,'rus','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'rus','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'rus','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'rus','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'rus','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'rus','Rejected');
-						
+INSERT INTO StatusValuesDes VALUES ('0','rus','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','rus','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','rus','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','rus','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','rus','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','rus','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','rus','Just created');
+
 INSERT INTO RegionsDes VALUES (1,'rus','Armenia');
 INSERT INTO RegionsDes VALUES (2,'rus','Afghanistan');
 INSERT INTO RegionsDes VALUES (3,'rus','Albania');

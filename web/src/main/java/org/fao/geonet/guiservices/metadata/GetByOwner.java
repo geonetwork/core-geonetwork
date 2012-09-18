@@ -67,10 +67,11 @@ public class GetByOwner implements Service {
         }
         // if the user is a reviewer, return all metadata of the user's groups
         else if(userProfile.equals(Geonet.Profile.REVIEWER) || userProfile.equals(Geonet.Profile.USER_ADMIN)) {
-            query = "SELECT id FROM Metadata "+
-                    "WHERE groupOwner IN "+
-										"(SELECT groupId FROM UserGroups WHERE userId=? "+
+            query = "SELECT metadataid as id FROM OperationAllowed"+
+                    "WHERE operationid = 2 AND groupid IN "+
+										"(SELECT groupid FROM UserGroups WHERE userid=? "+
                     "AND isHarvested='n')" ;
+
         }
         // if the user is an editor, return metadata owned by this user
         else if(userProfile.equals(Geonet.Profile.EDITOR) ) {
@@ -95,7 +96,7 @@ public class GetByOwner implements Service {
 
         Element result;
 				if (useOwnerId) {
-					result = dbms.select(query, new Integer(ownerId));
+					result = dbms.select(query, ownerId);
 				} else {
 					result = dbms.select(query);
 				}

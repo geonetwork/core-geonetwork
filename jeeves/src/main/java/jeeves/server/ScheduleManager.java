@@ -36,7 +36,6 @@ import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.SerialFactory;
 
 import org.jdom.Element;
 import org.quartz.JobDetail;
@@ -54,7 +53,6 @@ public class ScheduleManager
 	private String baseUrl;
 	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
 	private ProviderManager providMan;
-	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
 
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
@@ -95,7 +93,6 @@ public class ScheduleManager
 
     public void setProviderMan  (ProviderManager p) { providMan  = p; }
     public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setAppPath(String  path)  { appPath = path;  }
 
     //--------------------------------------------------------------------------
@@ -103,14 +100,13 @@ public class ScheduleManager
     public String getAppPath() { return appPath;}
     public String getBaseUrl() {return baseUrl;}
     public ProviderManager getProvidMan() {return providMan;}
-    public SerialFactory getSerialFact() {return serialFact;}
     public MonitorManager getMonitorManager() {return monitorManager;}
     public Hashtable<String, Object> getHtContexts() {return htContexts;}
 
     //--------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-   void addSchedule(String pack, Element sched) throws Exception
+   public void addSchedule(String pack, Element sched) throws Exception
 	{
 		String name = sched.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
 		String clas = sched.getAttributeValue(ConfigFile.Schedule.Attr.CLASS);

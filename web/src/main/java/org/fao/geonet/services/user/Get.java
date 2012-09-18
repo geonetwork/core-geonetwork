@@ -70,13 +70,13 @@ public class Get implements Service
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-			Element elUser = dbms.select ("SELECT * FROM Users WHERE id=?", Integer.valueOf(id));
+			Element elUser = dbms.select ("SELECT * FROM Users WHERE id=?", id);
 
 		//--- retrieve user groups
 
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-			java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",Integer.valueOf(id)).getChildren();
+			java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",id).getChildren();
 
 			for(int i=0; i<list.size(); i++)
 			{
@@ -90,7 +90,7 @@ public class Get implements Service
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info
 
-				java.util.List adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1",Integer.valueOf(myUserId),Integer.valueOf(id)).getChildren();
+				java.util.List adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1",myUserId,id).getChildren();
 				if (adminlist.size() == 0) {
 					throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
 				}

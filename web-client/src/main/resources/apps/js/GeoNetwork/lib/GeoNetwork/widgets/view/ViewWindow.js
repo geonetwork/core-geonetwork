@@ -78,6 +78,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
          */
         permalink: true
     },
+    workspaceCopy: false,
     serviceUrl: undefined,
     catalogue: undefined,
     metadataUuid: undefined,
@@ -113,7 +114,14 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         }];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
-        this.setTitle(this.record ? this.record.get('title') : '');
+
+        if (this.workspaceCopy) {
+            this.setTitle(OpenLayers.i18n('workspaceCopy').toUpperCase() + ' - ' + (this.record ? this.record.get('title') : ''));
+
+        } else {
+            this.setTitle(this.record ? this.record.get('title') : '');
+
+        }
         
         this.panel = new GeoNetwork.view.ViewPanel({
             serviceUrl: this.serviceUrl,
@@ -128,7 +136,8 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             border: false,
             frame: false,
             autoScroll: true,
-            permalink: this.permalink
+            permalink: this.permalink,
+            workspaceCopy: this.workspaceCopy
         });
         this.add(this.panel);
         

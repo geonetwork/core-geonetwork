@@ -71,6 +71,7 @@ GeoNetwork.data.CatalogueSourceStore = function(url){
             mapping: 'uuid'
         }, {
             name: 'name'
-        }]
+        }],
+        sortInfo: { field:'name', direction:'ASC' }  
     });
 };

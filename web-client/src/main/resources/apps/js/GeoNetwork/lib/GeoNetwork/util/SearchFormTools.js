@@ -55,7 +55,7 @@ GeoNetwork.util.SearchFormTools = {
         if (services) {
             fields.push(new GeoNetwork.form.OpenSearchSuggestionTextField({
                 hideLabel: true,
-                width: 285,
+                anchor: '100%',
                 minChars: 2,
                 loadingText: '...',
                 hideTrigger: true,
@@ -404,7 +404,8 @@ GeoNetwork.util.SearchFormTools = {
                     ['rating#', OpenLayers.i18n('rating')], 
                     ['popularity#', OpenLayers.i18n('popularity')], 
                     ['denominator#', OpenLayers.i18n('scaleDesc')], 
-                    ['denominator#reverse', OpenLayers.i18n('scaleAsc')]]
+                    ['denominator#reverse', OpenLayers.i18n('scaleAsc')]],
+            sortInfo: { field:'name', direction:'ASC' }
         });
     },
     /** api:method[getFullTextField]
@@ -509,7 +510,14 @@ GeoNetwork.util.SearchFormTools = {
 
         var groupStore = GeoNetwork.data.GroupStore(url),
             tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
-        groupStore.load();
+
+        groupStore.load({ 
+            callback: function() {
+                this.sortByLang(GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()));
+            }, 
+            scope: groupStore
+        });
+
         var config = {
                 name: 'E_group',
                 mode: 'local',
@@ -525,10 +533,12 @@ GeoNetwork.util.SearchFormTools = {
                 valueDelimiter: ' or ',
                 stackItems: true,
                 displayFieldTpl: '{[values.label.' + lang + ']}'});
-            return new Ext.ux.form.SuperBoxSelect(config);
+            this.groupField = new Ext.ux.form.SuperBoxSelect(config);
         } else {
-            return new Ext.form.ComboBox(config);
+            this.groupField = new Ext.form.ComboBox(config);
         }
+
+        return this.groupField;
     },
     /**
      * api:method[refreshGroupFieldValues]
@@ -541,6 +551,7 @@ GeoNetwork.util.SearchFormTools = {
             this.groupField.store.reload();
         }
     },
+
     /** api:method[getMetadataTypeField]
      *  :return: A metadata type combo
      *
@@ -555,7 +566,8 @@ GeoNetwork.util.SearchFormTools = {
                 store: new Ext.data.ArrayStore({
                     id: 0,
                     fields: ['id', 'name'],
-                    data: [['n', OpenLayers.i18n('md')], ['y', OpenLayers.i18n('tpl')]]
+                    data: [['n', OpenLayers.i18n('md')], ['y', OpenLayers.i18n('tpl')]],
+                    sortInfo: { field:'name', direction:'ASC' }  
                 }),
                 valueField: 'id',
                 displayField: 'name'
@@ -580,7 +592,12 @@ GeoNetwork.util.SearchFormTools = {
 
         var store = GeoNetwork.data.CategoryStore(url);
         
-        store.load();
+        store.load({ 
+            callback: function() {
+                this.sortByLang(GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()));
+            }, 
+            scope: store
+        });
         
         var tpl = (imgUrl ?
                 '<tpl for="."><div class="x-combo-list-item"><img src="' + imgUrl + '{name}.png"/>{[values.label.' + lang + ']}</div></tpl>':
@@ -982,7 +999,8 @@ GeoNetwork.util.SearchFormTools = {
                     fields: ['id', 'name'],
                     data: [['1', OpenLayers.i18n('valid')], 
                             ['0', OpenLayers.i18n('notValid')],
-                            ['-1', OpenLayers.i18n('notDetermined')]]
+                            ['-1', OpenLayers.i18n('notDetermined')]],
+                    sortInfo: { field:'name', direction:'ASC' }  
                 }),
                 valueField: 'id',
                 displayField: 'name'
@@ -1004,7 +1022,12 @@ GeoNetwork.util.SearchFormTools = {
         var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 
         var store = GeoNetwork.data.StatusStore(url);
-        store.load();
+        store.load({ 
+            callback: function() {
+                this.sortByLang(GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()));
+            }, 
+            scope: store
+        });
         
         var tpl = '<tpl for="."><div class="x-combo-list-item">{[values.label.' + lang + ']}</div></tpl>';
         
@@ -1042,13 +1065,15 @@ GeoNetwork.util.SearchFormTools = {
             config = {
                     name: 'E_type',
                     mode: 'local',
+                    anchor: '100%',
                     autoSelect: false,
                     triggerAction: 'all',
                     fieldLabel: OpenLayers.i18n('resourceType'),
                     store: new Ext.data.ArrayStore({
                         id: 0,
                         fields: ['id', 'name'],
-                        data: codeList || defaultCodeList
+                        data: codeList || defaultCodeList,
+                        sortInfo: { field:'name', direction:'ASC' }  
                     }),
                     valueField: 'id',
                     displayField: 'name'
@@ -1088,7 +1113,8 @@ GeoNetwork.util.SearchFormTools = {
                     store: new Ext.data.ArrayStore({
                         id: 0,
                         fields: ['id', 'name'],
-                        data: codeList || defaultCodeList
+                        data: codeList || defaultCodeList,
+                        sortInfo: { field:'name', direction:'ASC' }  
                     }),
                     valueField: 'id',
                     displayField: 'name'

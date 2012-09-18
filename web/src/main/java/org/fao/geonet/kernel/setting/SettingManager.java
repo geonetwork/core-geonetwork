@@ -24,12 +24,17 @@
 package org.fao.geonet.kernel.setting;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterException;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.settings.SettingsMessage;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -83,10 +88,14 @@ public class SettingManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException
-	{
+    public SettingManager(Dbms dbms, ServiceConfig serviceConfig, ServiceContext serviceContext) throws SQLException {
 		this.dbms = dbms;
 		init(dbms);
+
+        this.serviceConfig = serviceConfig;
+        this.serviceContext = serviceContext;
+
+        ProviderManager provMan = serviceContext.getProviderManager();
 
 		for(ResourceProvider rp : provMan.getProviders()) {
 		    if (rp.getName().equals(dbms.getURL())) {
@@ -180,6 +189,20 @@ public class SettingManager
 				return false;
 
 			dbms.execute("UPDATE Settings SET name=? WHERE id=?", name, s.getId());
+            if(ClusterConfig.isEnabled()) {
+                try {
+                    Producer settingMessageProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.SETTINGS);
+                    SettingsMessage settingsMessage = new SettingsMessage();
+                    settingsMessage.setSenderClientID(ClusterConfig.getClientID());
+                    settingsMessage.setOrigin("setname");
+                    settingMessageProducer.produce(settingsMessage);
+                }
+                catch (ClusterException x) {
+                    System.err.println(x.getMessage());
+                    x.printStackTrace();
+                    // todo what ?
+                }
+            }
 			tasks.add(Task.getNameChangedTask(dbms, s, name));
 
 			return true;
@@ -243,13 +266,78 @@ public class SettingManager
 				else
 				{
 					dbms.execute("UPDATE Settings SET value=? WHERE id=?", value, s.getId());
+
 					tasks.add(Task.getValueChangedTask(dbms, s, value));
 				}
 			}
 
+            dbms.commit();
+
+            if(ClusterConfig.isEnabled()) {
+                try {
+                    Producer settingMessageProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.SETTINGS);
+                    SettingsMessage settingsMessage = new SettingsMessage();
+                    settingsMessage.setSenderClientID(ClusterConfig.getClientID());
+                    settingsMessage.setOrigin("setValues");
+                    settingMessageProducer.produce(settingsMessage);
+                }
+                catch (ClusterException x) {
+                    System.err.println(x.getMessage());
+                    x.printStackTrace();
+                    // todo what ?
+                }
+            }
 			return success;
-		} finally {
+		}
+        finally {
 			lock.writeLock().unlock();
+
+            // heikki: disabled this because it doesn't always work:
+            //
+            //2012-08-24 21:49:31,834 INFO  [geonetwork.jms] - initializing JMS actors
+            //Unexpected failure.
+            //javax.jms.JMSException: Unexpected failure.
+            //at org.apache.activemq.util.JMSExceptionSupport.create(JMSExceptionSupport.java:62)
+            //at org.apache.activemq.ActiveMQConnection.syncSendPacket(ActiveMQConnection.java:1306)
+            //at org.apache.activemq.ActiveMQConnection.ensureConnectionInfoSent(ActiveMQConnection.java:1392)
+            //at org.apache.activemq.ActiveMQConnection.setClientID(ActiveMQConnection.java:397)
+            //at org.fao.geonet.jms.JMSActor.<init>(JMSActor.java:61)
+            //at org.fao.geonet.jms.Producer.<init>(Producer.java:50)
+            //at org.fao.geonet.jms.ClusterConfig.initJMSActors(ClusterConfig.java:158)
+            //at org.fao.geonet.jms.ClusterConfig.initialize(ClusterConfig.java:259)
+            //at org.fao.geonet.kernel.setting.SettingManager.setValues(SettingManager.java:300)
+            //at org.fao.geonet.kernel.setting.SettingManager.setValue(SettingManager.java:233)
+            //at org.fao.geonet.kernel.harvest.harvester.AbstractHarvester$HarvestWithIndexProcessor.process(AbstractHarvester.java:499)
+            //at org.fao.geonet.kernel.MetadataIndexerProcessor.processWithFastIndexing(MetadataIndexerProcessor.java:39)
+            //at org.fao.geonet.kernel.harvest.harvester.AbstractHarvester.invoke(AbstractHarvester.java:362)
+            //at org.fao.geonet.kernel.harvest.HarvestManager.invoke(HarvestManager.java:485)
+            //
+            // if this happens the ClusterConfig is broken and nothing works anymore.
+            //
+            // Therefore, for now, it is a feature that if you change cluster settings, you must restart all nodes in
+            // the cluster.
+            //
+            // TODO investigate how to dynamically re-initialize the ClusterConfig without problems.
+            //
+
+            // start disabled code
+
+            // (re-)initialization of cluster config, because clustering settings may have been involved in this
+            // settings change. TODO only do this if clustering settings have actually changed.
+            //
+            //try {
+            //    ClusterConfig.initialize(serviceConfig, this, serviceContext);
+            //}
+            //catch (ClusterException x) {
+            //    System.err.println(x.getMessage());
+            //    x.printStackTrace();
+            //}
+            //catch (ClusterConfigurationException x) {
+            //    System.err.println(x.getMessage());
+            //    x.printStackTrace();
+            //}
+
+            // end disabled code
 		}
 	}
 
@@ -264,7 +352,7 @@ public class SettingManager
      * @return
      * @throws SQLException
      */
-	public String add(Dbms dbms, String path, Object name, Object value) throws SQLException
+	public String add(Dbms dbms, String path, Object name, Object value, boolean sendTopicMessage) throws SQLException
 	{
 		if (name == null)
 			throw new IllegalArgumentException("Name cannot be null");
@@ -294,6 +382,21 @@ public class SettingManager
 			String query = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
 
 			dbms.execute(query, child.getId(), parent.getId(), sName, sValue);
+
+            if (sendTopicMessage && ClusterConfig.isEnabled()) {
+                try {
+                    Producer settingMessageProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.SETTINGS);
+                    SettingsMessage settingsMessage = new SettingsMessage();
+                    settingsMessage.setSenderClientID(ClusterConfig.getClientID());
+                    settingsMessage.setOrigin("add");
+                    settingMessageProducer.produce(settingsMessage);
+                }
+                catch (ClusterException x) {
+                    System.err.println(x.getMessage());
+                    x.printStackTrace();
+                    // todo what ?
+                }
+            }
 
 			tasks.add(Task.getAddedTask(dbms, parent, child));
 
@@ -328,6 +431,20 @@ public class SettingManager
 
 			remove(dbms, s);
 
+            if(ClusterConfig.isEnabled()) {
+                try {
+                    Producer settingMessageProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.SETTINGS);
+                    SettingsMessage settingsMessage = new SettingsMessage();
+                    settingsMessage.setSenderClientID(ClusterConfig.getClientID());
+                    settingsMessage.setOrigin("remove");
+                    settingMessageProducer.produce(settingsMessage);
+                }
+                catch (ClusterException x) {
+                    System.err.println("ERROR Setting Remove ClusterMessage sending: " + x.getMessage());
+                    x.printStackTrace();
+                    // todo what ?
+                }
+            }
 			return true;
 		}
 		finally
@@ -665,6 +782,9 @@ public class SettingManager
 
 	private int maxSerial = 0;
 
+    ServiceConfig serviceConfig;
+    ServiceContext serviceContext;
+
 	//---------------------------------------------------------------------------
     /**
      * TODO javadoc.
@@ -676,7 +796,3 @@ public class SettingManager
 		public void abort(Object resource) { flush(resource, false); }
 	};
 }
-
-//=============================================================================
-
-

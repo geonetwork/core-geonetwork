@@ -78,7 +78,7 @@ public class ListRecords extends AbstractTokenLister
 
 		while (num<Lib.MAX_RECORDS && pos < result.ids.size())
 		{
-			int id = result.ids.get(pos);
+			String id = result.ids.get(pos);
 
 			Record r = buildRecord(context, id, result.prefix);
 
@@ -102,7 +102,7 @@ public class ListRecords extends AbstractTokenLister
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
+	private Record buildRecord(ServiceContext context, String id, String prefix) throws Exception
 	{
 
 		// have to catch exceptions and return null because this function can
@@ -119,6 +119,3 @@ public class ListRecords extends AbstractTokenLister
 		}
 	}
 }
-
-//=============================================================================
-

@@ -63,8 +63,7 @@ public class Search implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		SearchManager searchMan = gc.getSearchmanager();
@@ -123,7 +122,8 @@ public class Search implements Service
 		session.removeProperty(Geonet.Session.SEARCH_REQUEST);
 		context.info("Getting summary");
 
-		return searcher.getSummary();
+		Element summary = searcher.getSummary();
+        return summary;
 	}
 }
 

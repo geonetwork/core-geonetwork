@@ -248,6 +248,58 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }
     }
     
+    function getLocked(v, record){
+        if (record.geonet_info && record.geonet_info.isLocked) {
+            return record.geonet_info.isLocked[0].value;
+        } else {
+            return 'n';
+        }
+    }
+
+    function getWorkspace(v, record){
+        if (record.isWorkspace) {
+            return record.isWorkspace[0].value;
+        } else {
+            return 'false';
+        }
+    }
+
+    function getStatusCode(v, record){
+        if (record.geonet_info && record.geonet_info.status) {
+            return record.geonet_info.status[0].value;
+        } else {
+            return '0';
+        }
+    }
+
+    function getSymbolicLocking(v, record){
+        if (record.geonet_info && record.geonet_info.symbolicLocking) {
+            if (record.geonet_info.symbolicLocking[0].value == 'enabled') {
+                return 'y';
+            } else {
+                return 'n';
+            }
+        } else {
+            return 'n';
+        }
+    }
+
+    function getLockedBy(v, record){
+        if (record.geonet_info && record.geonet_info.lockedBy) {
+            return record.geonet_info.lockedBy[0].value;
+        } else {
+            return '';
+        }
+    }
+
+    function getOwner(v, record){
+        if (record.geonet_info && record.geonet_info.owner) {
+            return record.geonet_info.owner[0].value;
+        } else {
+            return 'false';
+        }
+    }
+
     return new Ext.data.JsonStore({
         totalProperty: 'summary.count',
         root: 'records',
@@ -274,6 +326,15 @@ GeoNetwork.data.MetadataResultsStore = function(){
             name: 'id',
             mapping: 'geonet_info.id[0].value',
             defaultValue: ''
+        }, {
+            name: 'locked',
+            convert: getLocked
+        }, {
+            name: 'workspace',
+            convert: getWorkspace
+        }, {
+            name: 'status',
+            convert: getStatusCode
         }, {
             name: 'schema',
             mapping: 'geonet_info.schema[0].value',
@@ -342,6 +403,16 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }, {
             name: 'valid_details',
             convert: getValidationInfo
-        }]
+        }, {
+            name: 'symbolicLocking',
+            convert: getSymbolicLocking
+        }, {
+            name: 'lockedBy',
+            convert: getLockedBy
+        }, {
+            name: 'owner',
+            convert: getOwner
+        }
+        ]
     });
 };

@@ -36,13 +36,10 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Creates a metadata copying data from a given template
+/**
+ * Creates a metadata copying data from a given template.
   */
-
-public class Create implements Service
-{
+public class Create implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -51,8 +48,7 @@ public class Create implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -80,12 +76,19 @@ public class Create implements Service
 			}		
 		}
 		
-		String groupOwner= Util.getParam(params, Params.GROUP);
+		//***
+		// String groupOwner= Util.getParam(params, Params.GROUP);
 
 		//--- query the data manager
 
-		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
-												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
+		//***
+		// String newId = dm.createMetadata(context, dbms, id, groupOwner, gc.getSiteId(),
+        //        context.getUserSession().getUserId(), (child.equals("n")?null:uuid), isTemplate);
+
+        //TODO let user select more than one group at md creation time
+        String editGroup = Util.getParam(params, Params.GROUP);
+
+        String newId = dm.createMetadata(context, dbms, id, editGroup, gc.getSiteId(), context.getUserSession().getUserId(),
 												  (child.equals("n")?null:uuid), isTemplate);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
@@ -94,7 +97,3 @@ public class Create implements Service
 		return response;
 	}
 }
-
-//=============================================================================
-
-

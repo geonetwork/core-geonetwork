@@ -88,7 +88,7 @@ public class Upload implements Service
 
 		String siteId = "unknown";
 		String mdUuid = "unknown";
-		Element sites = dbms.select(query.toString(), new Integer(id));
+		Element sites = dbms.select(query.toString(), id);
 		if (sites != null) {
 			for (Iterator i = sites.getChildren().iterator(); i.hasNext(); ) {
 				Element site = (Element)i.next();

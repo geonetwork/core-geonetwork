@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -129,7 +130,8 @@ public class Aligner
                     //--- maybe the metadata was unretrievable
 
                     if (id != null) {
-                        dataMan.indexMetadataGroup(dbms, id);
+                        boolean workspace = false;
+                        dataMan.indexMetadataGroup(dbms, id, workspace, true);
                     }
                 }
             }
@@ -169,17 +171,16 @@ public class Aligner
         //
         //  insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, params.uuid, userid, group, remoteUuid, isTemplate,
+                docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 
-		int iId = Integer.parseInt(id);
-
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid);
+		dataMan.setTemplate(dbms, id, "n", null);
+		dataMan.setHarvested(dbms, id, params.uuid);
 
 		result.addedMetadata++;
 

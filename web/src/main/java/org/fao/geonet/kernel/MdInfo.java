@@ -20,31 +20,30 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.kernel;
 
-//=============================================================================
-
-public class MdInfo
-{
+/**
+ * TODO javadoc.
+ */
+public class MdInfo {
 	public String   id;
 	public String   uuid;
 	public String   schemaId;
 	public Template template;
 	public boolean  isHarvested;
+    public boolean isLocked;
+    public boolean isWorkspace;
+    public String   lockedBy;
 	public String   createDate;
 	public String   changeDate;
 	public String   source;
 	public String   title;
 	public String   root;
 	public String   owner;
-	public String   groupOwner;
+	//***
+	// public String   groupOwner;
+    public String status;
         public String displayOrder;
-
-	//--------------------------------------------------------------------------
 
 	public enum Template { METADATA, TEMPLATE, SUBTEMPLATE}
 }
-
-//=============================================================================
-

@@ -26,6 +26,8 @@
 		
 								<xsl:for-each select="/root/response/statusvalues/status">
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
+                                <!-- do not display status JUSTCREATED -->
+                                <xsl:if test="id != 6">
 									<tr>
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>
@@ -34,13 +36,12 @@
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
 												</xsl:if>
-												<!-- status value submitted is disabled for reviewers  -->
-												<xsl:if test="$profile='Reviewer' or contains($profile,'Admin')">
-													<xsl:if test="name='submitted'">
+                                                <!-- status value draft and unknown is reserved for administrators  -->
+                                                <xsl:if test="not(contains($profile,'Admin'))">
+                                                    <xsl:if test="name='draft' or name='unknown'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</xsl:if>
-
 												<!-- some status values are not available to Editors -->
 												<xsl:if test="$profile='Editor'">
 													<xsl:if test="name='approved' or name='retired' or name='rejected'">
@@ -53,6 +54,7 @@
 											</input>
 										</td>
 									</tr>
+                                </xsl:if>
 								</xsl:for-each>				
 								<tr width="100%">
 									<td align="left">
@@ -66,7 +68,7 @@
 									<td align="center" colspan="2">
 										<xsl:choose>
 											<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">
-												<button class="content" onclick="radioModalUpdate('status','metadata.batch.update.status','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateStatusTitle)}')"><xsl:value-of select="/root/gui/strings/submit"/></button>
+                                            <button class="content" onclick="radioModalUpdate('status','metadata.batch.update.status','true','{concat(/root/gui/strings/results,' ',/root/gui/strings/batchUpdateStatusTitle)}');"><xsl:value-of select="/root/gui/strings/submit"/></button>
 											</xsl:when>
 											<xsl:otherwise>
 												<button class="content" onclick="radioModalUpdate('status','metadata.status');"><xsl:value-of select="/root/gui/strings/submit"/></button>

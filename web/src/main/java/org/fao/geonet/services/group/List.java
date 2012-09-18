@@ -51,7 +51,7 @@ public class List implements Service
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		Element elRes = Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
+		Element elRes = Lib.local.retrieveWhere(dbms, "Groups", "internal = ?", "n");
 		Element elOper= params.getChild(Jeeves.Elem.OPERATION);
 
 		if (elOper != null)

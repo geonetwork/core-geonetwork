@@ -23,13 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobKey.jobKey;
-
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -40,8 +33,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
-
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -66,6 +59,13 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.quartz.JobKey.jobKey;
 
 //=============================================================================
 
@@ -154,20 +154,30 @@ public abstract class AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @param node
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		status   = Status.INACTIVE;
 		error    = null;
 		id       = doAdd(dbms, node);
+        nodeId = ClusterConfig.getClientID();
 	}
 
-	//--------------------------------------------------------------------------
-
-	public void init(Element node) throws BadInputEx, SchedulerException
-	{
+    /**
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+	public void init(Element node) throws BadInputEx, SchedulerException {
 		id       = node.getAttributeValue("id");
 		status   = Status.parse(node.getChild("options").getChildText("status"));
 		error    = null;
+        nodeId = node.getChild("site").getChildText("nodeId");
 
 		//--- init harvester
 
@@ -194,10 +204,9 @@ public abstract class AbstractHarvester
         return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID,true);
     }
 
-	//--------------------------------------------------------------------------
-	/** Called when the application is shutdown 
-	 * @throws SchedulerException */
-
+    /**
+     * Called when the application is shutdown.
+     */
 	public void shutdown() throws SchedulerException {
        getScheduler().deleteJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 	}
@@ -206,21 +215,20 @@ public abstract class AbstractHarvester
         getScheduler().shutdown(false);
     }
 
-	//--------------------------------------------------------------------------
-	/** Called when the harvesting entry is removed from the system.
-	  * It is used to remove harvested metadata.
+    /**
+     * Called when the harvesting entry is removed from the system. It is used to remove harvested metadata.
+     * @param dbms
+     * @throws Exception
 	  */
+	public synchronized void destroy(Dbms dbms) throws Exception {
 
-	public synchronized void destroy(Dbms dbms) throws Exception
-	{
 	    doUnschedule();
 
 		//--- remove all harvested metadata
 
 		String getQuery = "SELECT id FROM Metadata WHERE harvestUuid=?";
 
-		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren())
-		{
+		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren()) {
 			Element el = (Element) o;
 			String  id = el.getChildText("id");
 
@@ -231,27 +239,42 @@ public abstract class AbstractHarvester
 		doDestroy(dbms);
 	}
 
-	//--------------------------------------------------------------------------
-
-	public synchronized OperResult start(Dbms dbms) throws SQLException, SchedulerException
-	{
-		if (status != Status.INACTIVE)
+    /**
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+	public synchronized OperResult start(Dbms dbms) throws SQLException, SchedulerException {
+		if (status != Status.INACTIVE) {
 			return OperResult.ALREADY_ACTIVE;
-
+        }
+        // if clustering is enabled, the periodic execution does not run the harvester but rather sends a message that
+        // any of the peer GN nodes can pick up; one node (the first to get the message) will actually run the
+        // harvester. Therefore, set status to ACTIVE only if we're NOT clustering, otherwise the message handler that
+        // does HarvestManager.invoke() won't really run the harvester because its status is already active.
+        if(!ClusterConfig.isEnabled()) {
 		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.ACTIVE);
-
 		status     = Status.ACTIVE;
-		error      = null;
+        }
+        else {
+            settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.ACTIVE);
+            status = Status.ACTIVE;
+        }
 		
+		error = null;
 		doSchedule();
 
 		return OperResult.OK;
 	}
 
-	//--------------------------------------------------------------------------
-
-	public synchronized OperResult stop(Dbms dbms) throws SQLException, SchedulerException
-	{
+    /**
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+	public synchronized OperResult stop(Dbms dbms) throws SQLException, SchedulerException {
 		if (status != Status.ACTIVE)
 			return OperResult.ALREADY_INACTIVE;
 
@@ -263,14 +286,51 @@ public abstract class AbstractHarvester
 		return OperResult.OK;
 	}
 
-	//--------------------------------------------------------------------------
-
-    public synchronized OperResult run(Dbms dbms) throws SQLException, SchedulerException {
-		if (status == Status.INACTIVE)
+    /**
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+	public synchronized OperResult run(Dbms dbms) throws SQLException, SchedulerException, Exception {
+		if (status == Status.INACTIVE) {
 			start(dbms);
+        }
 
-		if (running)
+		if (running) {
 			return OperResult.ALREADY_RUNNING;
+        }
+
+        // Set clusterRunning = true before send harvest message to avoid issues with ClusterConfig (see SettingManager.setValues finally block)
+        if(ClusterConfig.isEnabled()) {
+            if (getNodeId().equals(ClusterConfig.getClientID())) {
+                /**
+                 * Add setting to indicate harvester running in the cluster so all nodes can show the proper RUNNING info in the
+                 * harvesters list.
+                 *
+                 *
+                 * Settings are stored in memory using a ResourceListener, so only are saved when the dbms resource is closed
+                 * In "normal" jeeves request like saving a harvester jeeves closes the dbms when the request finishes and settings are updated
+                 *
+                 * Here is required to close it manually. Not so nice.
+                 *
+                 */
+                ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
+                Dbms dbms2 = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+
+                try {
+
+                    settingMan.setValue(dbms2, "harvesting/id:"+id+"/info/clusterRunning", "true") ;
+
+                }  finally {
+                    //-- commit Dbms resource (which makes it available to pool again)
+                    //-- to avoid exhausting Dbms pool
+                    rm.close(Geonet.Res.MAIN_DB, dbms2);
+                }
+            }
+
+
+        }
 
         getScheduler().triggerJob(jobKey(getParams().uuid, HARVESTER_GROUP_NAME));
 
@@ -279,27 +339,32 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public synchronized OperResult invoke(ResourceManager rm)
-	{
+	public synchronized OperResult invoke(ResourceManager rm) {
 		// Cannot do invoke if this harvester was started (iei active)
-		if (status != Status.INACTIVE)
+        if(!ClusterConfig.isEnabled()) {
+            if (status != Status.INACTIVE) {
 			return OperResult.ALREADY_ACTIVE;
-
+            }
+        }
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
 		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 		OperResult result = OperResult.OK;
 
-		try
-		{
+		try {
+			if(ClusterConfig.isEnabled()) {
 			status = Status.ACTIVE;
+                }
+            else {
+                status = Status.ACTIVE;
+            }
 			logger.info("Started harvesting from node : "+ nodeName);
-			doHarvest(logger, rm);
+            HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
+            h.processWithFastIndexing();
 			logger.info("Ended harvesting from node : "+ nodeName);
 
 			rm.close();
 		}
-		catch(Throwable t)
-		{
+		catch(Throwable t) {
             context.getMonitorManager().getCounter(AbstractHarvesterErrorCounter.class).inc();
 			result = OperResult.ERROR;
 			logger.warning("Raised exception while harvesting from : "+ nodeName);
@@ -317,21 +382,26 @@ public abstract class AbstractHarvester
 				logger.warning("CANNOT ABORT EXCEPTION");
 				logger.warning(" (C) Exc : "+ ex);
 			}
-		} finally {
+		}
+        finally {
 			status = Status.INACTIVE;
 		}
 
 		return result;
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     *
+     * @param dbms
+     * @param node
+     * @throws BadInputEx
+     * @throws SQLException
+     */
 	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException
 	{
 		doUpdate(dbms, id, node);
 
-		if (status == Status.ACTIVE)
-		{
+		if (status == Status.ACTIVE) {
 			//--- stop executor
 			doUnschedule();
 
@@ -345,16 +415,22 @@ public abstract class AbstractHarvester
 
 	public String getID() { return id; }
 
-	//--------------------------------------------------------------------------
-	/** Adds harvesting result information to each harvesting entry */
 
-	public void addInfo(Element node)
-	{
+    /**
+     * Adds harvesting result information to each harvesting entry.
+     * @param node
+     */
+	public void addInfo(Element node) {
 		Element info = node.getChild("info");
 
 		//--- 'running'
 
+        if (ClusterConfig.isEnabled()) {
+            info.addContent(new Element("running").setText(settingMan.getValueAsBool("harvesting/id:"+id+"/info/clusterRunning")+""));
+
+        } else {
 		info.addContent(new Element("running").setText(running+""));
+        }
 
 		//--- harvester specific info
 
@@ -366,12 +442,13 @@ public abstract class AbstractHarvester
 			node.addContent(JeevesException.toElement(error));
 	}
 
-	//---------------------------------------------------------------------------
-	/** Adds harvesting information to each metadata element. Some sites can generate
-	  * url for thumbnails */
-
-	public void addHarvestInfo(Element info, String id, String uuid)
-	{
+    /**
+     * Adds harvesting information to each metadata element. Some sites can generate url for thumbnails.
+     * @param info
+     * @param id
+     * @param uuid
+     */
+	public void addHarvestInfo(Element info, String id, String uuid) {
 		info.addContent(new Element("type").setText(getType()));
 	}
 
@@ -381,7 +458,9 @@ public abstract class AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	// Nested class to handle harvesting with fast indexing
+    /**
+     * Nested class to handle harvesting with fast indexing.
+     */
 	public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
 		ResourceManager rm;
 		Logger logger;
@@ -394,12 +473,47 @@ public abstract class AbstractHarvester
 
 		@Override
 		public void process() throws Exception {
+
+            try {
 			doHarvest(logger, rm);
+
+            } catch (Exception ex) {
+                throw ex;
+
+            } finally {
+                if(ClusterConfig.isEnabled()) {
+
+                    /**
+                     * Add setting to indicate harvester running in the cluster so all nodes can show the proper RUNNING info in the
+                     * harvesters list.
+                     *
+                     * Settings are stored in memory using a ResourceListener, so only are saved when the dbms resource is closed
+                     * In "normal" jeeves request like saving a harvester jeeves closes the dbms when the request finishes and settings are updated
+                     *
+                     * Here is required to close it manually. Not so nice.
+                     *
+                     */
+                    Dbms dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+
+                    try {
+                        settingMan.setValue(dbms, "harvesting/id:"+id+"/info/clusterRunning", "false") ;
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }  finally {
+                        //-- commit Dbms resource (which makes it available to pool again)
+                        //-- to avoid exhausting Dbms pool
+                        rm.close(Geonet.Res.MAIN_DB, dbms);
+                    }
+                }
+            }
 		}
 	}
 
-	void harvest()
-	{
+    /**
+     *
+     */
+	void harvest() {
 	    running = true;
 	    try {
 		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
@@ -459,7 +573,7 @@ public abstract class AbstractHarvester
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 			Element result = getResult();
 			if (error != null) result = JeevesException.toElement(error);
-			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
+			HarvesterHistoryDao.write(dbms, getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
 		} catch (Exception e) {
 			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
 			e.printStackTrace();
@@ -508,39 +622,47 @@ public abstract class AbstractHarvester
 	//---
 	//--- Protected storage methods
 	//---
-	//---------------------------------------------------------------------------
 
-	protected void storeNode(Dbms dbms, AbstractParams params, String path) throws SQLException
-	{
-		String siteId    = settingMan.add(dbms, path, "site",    "");
-		String optionsId = settingMan.add(dbms, path, "options", "");
-		String infoId    = settingMan.add(dbms, path, "info",    "");
-		String contentId = settingMan.add(dbms, path, "content", "");
+    /**
+     *
+     * @param dbms
+     * @param params
+     * @param path
+     * @throws SQLException
+     */
+	protected void storeNode(Dbms dbms, AbstractParams params, String path) throws SQLException {
+		String siteId    = settingMan.add(dbms, path, "site",    "", false);
+		String optionsId = settingMan.add(dbms, path, "options", "", false);
+		String infoId    = settingMan.add(dbms, path, "info",    "", false);
+		String contentId = settingMan.add(dbms, path, "content", "", false);
 
 		//--- setup site node ----------------------------------------
 
-		settingMan.add(dbms, "id:"+siteId, "name",     params.name);
-		settingMan.add(dbms, "id:"+siteId, "uuid",     params.uuid);
+		settingMan.add(dbms, "id:"+siteId, "name",     params.name, false);
+		settingMan.add(dbms, "id:"+siteId, "uuid",     params.uuid, false);
 
-		String useAccId = settingMan.add(dbms, "id:"+siteId, "useAccount", params.useAccount);
+        settingMan.add(dbms, "id:"+siteId, "nodeId", ClusterConfig.getClientID(), false);
 
-		settingMan.add(dbms, "id:"+useAccId, "username", params.username);
-		settingMan.add(dbms, "id:"+useAccId, "password", params.password);
+		String useAccId = settingMan.add(dbms, "id:"+siteId, "useAccount", params.useAccount, false);
+
+		settingMan.add(dbms, "id:"+useAccId, "username", params.username, false);
+		settingMan.add(dbms, "id:"+useAccId, "password", params.password, false);
 
 		//--- setup options node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
-		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsId, "status",     status);
+		settingMan.add(dbms, "id:"+optionsId, "every",      params.every, false);
+		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly, false);
+		settingMan.add(dbms, "id:"+optionsId, "status",     status, false);
 
 		//--- setup content node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+contentId, "importxslt", params.importXslt);
-		settingMan.add(dbms, "id:"+contentId, "validate",   params.validate);
+		settingMan.add(dbms, "id:"+contentId, "importxslt", params.importXslt, false);
+		settingMan.add(dbms, "id:"+contentId, "validate",   params.validate, false);
 
 		//--- setup stats node ----------------------------------------
 
-		settingMan.add(dbms, "id:"+infoId, "lastRun", "");
+		settingMan.add(dbms, "id:"+infoId, "lastRun", "", false);
+        settingMan.add(dbms, "id:"+infoId, "clusterRunning", "false", false);
 
 		//--- store privileges and categories ------------------------
 
@@ -550,43 +672,56 @@ public abstract class AbstractHarvester
 		storeNodeExtra(dbms, params, path, siteId, optionsId);
 	}
 
-	//---------------------------------------------------------------------------
-	/** Override this method with an empty body to avoid privileges storage */
+    /**
+     * Override this method with an empty body to avoid privileges storage.
+     * @param dbms
+     * @param params
+     * @param path
+     * @throws SQLException
+     */
+	protected void storePrivileges(Dbms dbms, AbstractParams params, String path) throws SQLException {
+		String privId = settingMan.add(dbms, path, "privileges", "", false);
 
-	protected void storePrivileges(Dbms dbms, AbstractParams params, String path) throws SQLException
-	{
-		String privId = settingMan.add(dbms, path, "privileges", "");
-
-		for (Privileges p : params.getPrivileges())
-		{
-			String groupId = settingMan.add(dbms, "id:"+ privId, "group", p.getGroupId());
-
-			for (int oper : p.getOperations())
-				settingMan.add(dbms, "id:"+ groupId, "operation", oper);
+		for (Privileges p : params.getPrivileges()) {
+			String groupId = settingMan.add(dbms, "id:"+ privId, "group", p.getGroupId(), false);
+			for (String oper : p.getOperations())
+				settingMan.add(dbms, "id:"+ groupId, "operation", oper, false);
 		}
 	}
 
-	//---------------------------------------------------------------------------
-	/** Override this method with an empty body to avoid categories storage */
-
-	protected void storeCategories(Dbms dbms, AbstractParams params, String path) throws SQLException
-	{
-		String categId = settingMan.add(dbms, path, "categories", "");
+    /**
+     * Override this method with an empty body to avoid categories storage.
+     * @param dbms
+     * @param params
+     * @param path
+     * @throws SQLException
+     */
+    protected void storeCategories(Dbms dbms, AbstractParams params, String path) throws SQLException {
+		String categId = settingMan.add(dbms, path, "categories", "", false);
 
 		for (String id : params.getCategories())
-			settingMan.add(dbms, "id:"+ categId, "category", id);
+			settingMan.add(dbms, "id:"+ categId, "category", id, false);
 	}
 
-	//---------------------------------------------------------------------------
-	/** Override this method to store harvesting node's specific settings */
+    /**
+     * Override this method to store harvesting node's specific settings.
+     * @param dbms
+     * @param params
+     * @param path
+     * @param siteId
+     * @param optionsId
+     * @throws SQLException
+     */
+	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {}
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path,
-											String siteId, String optionsId) throws SQLException {}
-
-	//---------------------------------------------------------------------------
-
-	protected void setValue(Map<String, Object> values, String path, Element el, String name)
-	{
+    /**
+     *
+     * @param values
+     * @param path
+     * @param el
+     * @param name
+     */
+	protected void setValue(Map<String, Object> values, String path, Element el, String name) {
 		if (el == null)
 			return ;
 
@@ -609,11 +744,17 @@ public abstract class AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
 	private String id;
 	private Status status;
 
 	private Throwable error;
     private boolean running = false;
+    private String nodeId;
 
 	protected ServiceContext context;
 	protected SettingManager settingMan;
@@ -621,7 +762,3 @@ public abstract class AbstractHarvester
 
 	private static Map<String, Class> hsHarvesters = new HashMap<String, Class>();
 }
-
-//=============================================================================
-
-

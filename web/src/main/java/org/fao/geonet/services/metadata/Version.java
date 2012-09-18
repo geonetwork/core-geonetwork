@@ -26,25 +26,18 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 //=============================================================================
 
@@ -64,9 +57,11 @@ public class Version implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		DataManager   dataMan   = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
 		UserSession   session   = context.getUserSession();
+        String userId = session.getUserId();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 		
@@ -77,9 +72,20 @@ public class Version implements Service
 
 		if (md == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
-
-		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+        MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        SettingManager settingManager = gc.getSettingManager();
+        boolean harvesterEditing = settingManager.getValueAsBool("system/harvester/enableEditing");
+        // TODO also check svnmanager is enabled
+        // allow if not harvested or harvested metadata can be edited, AND it's not locked and you can edit or it's locked by you
+        if(info.isHarvested && !harvesterEditing) {
+            throw new OperationNotAllowedEx("You can not version this because it is harvested and editing of harvested metadata is not enabled.");
+        }
+        else if(!accessMan.canEdit(context, id)) {
+            throw new OperationNotAllowedEx("You can not version this because you do not have editing rights to this metadata.");
+        }
+        else if(info.isLocked && !info.lockedBy.equals(userId)) {
+            throw new OperationNotAllowedEx("You can not version this because this metadata is locked and you don't own the lock.");
+        }
 
 		//-----------------------------------------------------------------------
 		//--- set metadata into the subversion repo

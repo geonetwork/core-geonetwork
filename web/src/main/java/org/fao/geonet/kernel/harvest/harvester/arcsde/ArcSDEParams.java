@@ -23,7 +23,9 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import jeeves.exceptions.BadInputEx;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
@@ -77,7 +79,8 @@ public class ArcSDEParams extends AbstractParams {
 		password = Util.getParam(site, "password", "");
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams create: " + server + ":" + port + " " + username + " " + password + " " + database);
+        Log.debug(Geonet.HARVESTER, "arcsdeparams create: " + server + ":" + port + " " + username + " " + password
+                + " " + database);
 	}
 
 	//---------------------------------------------------------------------------
@@ -95,7 +98,7 @@ public class ArcSDEParams extends AbstractParams {
 		password = Util.getParam(site, "password", "");
 		database = Util.getParam(site, "database", "");
 		icon = Util.getParam(site, "icon", "arcsde.gif");
-		System.out.println("arcsdeparams update: " + server + ":" + port + " " + username + " " + password + " " + database);
+        Log.debug(Geonet.HARVESTER, "arcsdeparams update: " + server + ":" + port + " " + username + " " + password + " " + database);
 	}
 	
 	//---------------------------------------------------------------------------

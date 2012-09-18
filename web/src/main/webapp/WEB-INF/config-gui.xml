@@ -24,7 +24,7 @@
  <!-- Widget client with sliding panel interface (metadata records open in a window) -->
  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="" createParameter="#create" stateId="s"/>-->
  <!-- As above but with extra parameters set: custom extent in debug mode in french --> 
- <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create" stateId="s"/>-->
+ <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fre" createParameter="#create" stateId="s"/>-->
  
  <!-- Comment out languages to hide them
  from language selector. -->

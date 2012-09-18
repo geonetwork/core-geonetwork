@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
 	<!-- ==================================================== -->
 	<codelist name="gmd:CI_DateTypeCode">
 		<entry>
 			<code>creation</code>
-			<label>creatie</label>
-			<description>Datum waarop de dataset of dataset serie is gecre&#236;erd.</description>
+			<label>Creatie</label>
+			<description>Aanmaakdatum of opnamedatum van de dataset</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>publication</code>
-			<label>publicatie</label>
-			<description>Publicatie datum waarop de dataset of dataset serie is gepubliceerd.</description>
+			<label>Publicatie</label>
+			<description>Uitgavedatum van de dataset.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>revision</code>
-			<label>revisie</label>
-			<description>Datum waarop de dataset of dataset serie is gecontroleerd, verbeterd of gewijzigd.</description>
+			<label>Wijziging</label>
+			<description>Datum van wijziging, controle, verbetering van dataset.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -26,7 +25,7 @@
 	<codelist name="gmd:CI_OnLineFunctionCode">
 		<entry>
 			<code>download</code>
-			<label>download</label>
+			<label>Download</label>
 			<description>online instructions for transferring data from one storage device or system to
 				another</description>
 		</entry>
@@ -161,67 +160,67 @@
 	<codelist name="gmd:CI_RoleCode">
 		<entry>
 			<code>resourceProvider</code>
-			<label>verstrekker</label>
+			<label>Verstrekker</label>
 			<description>Organisatie die de data verstrekt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>custodian</code>
-			<label>beheerder</label>
+			<label>Beheerder</label>
 			<description>Partij die verantwoordelijkheid heeft geaccepteerd en zorg draagt voor het beheer van de data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>owner</code>
-			<label>eigenaar</label>
+			<label>Eigenaar</label>
 			<description>Partij die eigenaar is van de data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>user</code>
-			<label>gebruiker</label>
+			<label>Gebruiker</label>
 			<description>Partij die de data gebruikt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>distributor</code>
-			<label>distributeur</label>
+			<label>Distributeur</label>
 			<description>Partij die de data verstrekt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>originator</code>
-			<label>maker</label>
-			<description>Partij die de data heeft gecre&#236;erd</description>
+			<label>Producent</label>
+			<description>Partij die de data heeft aangemaakt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>pointOfContact</code>
-			<label>contactpunt</label>
+			<label>Contactpunt</label>
 			<description>Partij waarmee contact kan worden opgenomen voor het vergaren van kennis of verstrekking van de data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>principalInvestigator</code>
-			<label>inwinner</label>
+			<label>Inwinner</label>
 			<description>Sleutelpartij verantwoordelijk voor verzamelen van data en de uitvoering van onderzoek.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>processor</code>
-			<label>bewerker</label>
-			<description>Partij die de data heeft bewerkt, zodanig dat de data is gewijzigd.</description>
+			<label>Bewerker</label>
+			<description>Partij die de data heeft bewerkt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>publisher</code>
-			<label>uitgever</label>
+			<label>Uitgever</label>
 			<description>Partij die de data publiceert.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>author</code>
-			<label>auteur</label>
+			<label>Auteur</label>
 			<description>Partij die auteur is van de data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -256,34 +255,32 @@
 	<codelist name="gmd:DS_AssociationTypeCode">
 		<entry>
 			<code>crossReference</code>
-			<label>crossReference</label>
-			<description>reference from one dataset to another</description>
+			<label>Kruisverwijzing</label>
+			<description>Verwijzing van de ene dataset naar de andere</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>largerWorkCitation</code>
-			<label>largerWorkCitation</label>
-			<description>reference to a master dataset of which this one is a part</description>
+			<label>Verwijzing naar een groter geheel</label>
+			<description>Verwijzing naar de master dataset waarvan deze dataset deel uit maakt</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>partOfSeamlessDatabase</code>
-			<label>partOfSeamlessDatabase</label>
-			<description>part of the same structured set of data held in a computer</description>
+			<label>Onderdeel van naadloze databank</label>
+			<description>Deel van hetzelfde geheel van gestructureerde data</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>source</code>
 			<label>source</label>
-			<description>mapping and charting information from which the dataset content
-			originates</description>
+			<description>Kaartinformatie waaruit de infoud van de dataset afgeleid is.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereoMate</code>
-			<label>stereoMate</label>
-			<description>part of a set of imagery that when used together, provides three-dimensional
-				images</description>
+			<label>Stereo Mate</label>
+			<description>Deel van een set van beelden die wanneer ze tesamen gebruikt worden, 3-Dimensionale opleveren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -291,92 +288,92 @@
 	<codelist name="gmd:DS_InitiativeTypeCode">
 		<entry>
 			<code>campaign</code>
-			<label>campaign</label>
-			<description>series of organized planned actions</description>
+			<label>Campagne</label>
+			<description>serie van georganiseerde acties</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>collection</code>
-			<label>collection</label>
-			<description>accumulation of datasets assembled for a specific purpose</description>
+			<label>Collectie</label>
+			<description>Set van datasets verzameld voor een specifiek doel.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>exercise</code>
-			<label>exercise</label>
-			<description>specific performance of a function or group of functions</description>
+			<label>Oefening</label>
+			<description>Specifieke uitvoering van een functie of set van functies.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>experiment</code>
-			<label>experiment</label>
-			<description>process designed to find if something is effective or valid</description>
+			<label>Experiment</label>
+			<description>Proces dat ontworpen is om uit te zoeken of iets effectief of geldig is.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>investigation</code>
-			<label>investigation</label>
-			<description>search or systematic inquiry</description>
+			<label>Onderzoek</label>
+			<description>Systematisch onderzoek</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>mission</code>
-			<label>mission</label>
-			<description>specific operation of a data collection system</description>
+			<label>Missie</label>
+			<description>Specifieke operatie van een data verzamelingssysteem.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>sensor</code>
-			<label>sensor</label>
-			<description>device or piece of equipment which detects or records</description>
+			<label>Sensor</label>
+			<description>Toestel dat detecteert en opneemt.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>operation</code>
-			<label>operation</label>
-			<description>action that is part of a series of actions</description>
+			<label>Operatie</label>
+			<description>Actie die onderdeel uitmaakt van een serie van acties</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>platform</code>
-			<label>platform</label>
-			<description>vehicle or other support base that holds a sensor</description>
+			<label>Platform</label>
+			<description>Voertuig of andere drager waarop een sensor bevestigd is.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>process</code>
-			<label>process</label>
-			<description>method of doing something involving a number of steps</description>
+			<label>Proces</label>
+			<description>Methode om een taak uit te voeren bestaande uit een aantal stappen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>program</code>
-			<label>program</label>
-			<description>specific planned activity</description>
+			<label>Programma</label>
+			<description>Specifieke geplande activiteit</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>project</code>
-			<label>project</label>
-			<description>organized undertaking, research, or development</description>
+			<label>Project</label>
+			<description>Georganiseerd ondernemen, onderzoek of ontwikkeling.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>study</code>
-			<label>study</label>
-			<description>examination or investigation</description>
+			<label>Studie</label>
+			<description>Onderzoek</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>task</code>
-			<label>task</label>
-			<description>piece of work</description>
+			<label>Taak</label>
+			<description>Werk dat je moet doen.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>trial</code>
-			<label>trial</label>
-			<description>process of testing to discover or demonstrate something</description>
+			<label>Proef</label>
+			<description>Proces van het testen om iets te ontdekken of demonstreten</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -505,7 +502,6 @@
 			<description>ISO/IEC 8859-11, Information technology - 8-bit single byte coded graphic
 				character sets - Part 11 : Latin/Thai alphabet</description>
 		</entry>
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part13</code>
@@ -917,33 +913,32 @@
 	<codelist name="gmd:MD_KeywordTypeCode">
 		<entry>
 			<code>discipline</code>
-			<label>discipline</label>
-			<description>keyword identifies a branch of instruction or specialized
-			learning</description>
+			<label>Discipline</label>
+			<description>Trefwoord dat een welbepaalde discipline identificeert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>place</code>
-			<label>place</label>
-			<description>keyword identifies a location</description>
+			<label>Plaats</label>
+			<description>Trefwoord dat een plaats identificeert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stratum</code>
-			<label>stratum</label>
-			<description>keyword identifies the layer(s) of any deposited substance</description>
+			<label>Stratum</label>
+			<description>Trefwoord dat de geologische laag of lagen identificeert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>temporal</code>
-			<label>temporal</label>
-			<description>keyword identifies a time period related to the dataset</description>
+			<label>Temporeel</label>
+			<description>Trefwoord dat een tijdperiode gerelateerd aan de dataset identificeert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>theme</code>
-			<label>theme</label>
-			<description>keyword identifies a particular subject or topic</description>
+			<label>Thema</label>
+			<description>Trefwoord dat een welbepaald onderwerp identificeert</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -951,19 +946,19 @@
 	<codelist name="gmd:MD_MaintenanceFrequencyCode">
 		<entry>
 			<code>continual</code>
-			<label>continu</label>
+			<label>Continu</label>
 			<description>Data wordt herhaaldelijk en vaak geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>daily</code>
-			<label>dagelijks</label>
+			<label>Dagelijks</label>
 			<description>Data wordt elke dag geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>weekly</code>
-			<label>wekelijks</label>
+			<label>Wekelijks</label>
 			<description>Data wordt wekelijks geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -975,7 +970,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>monthly</code>
-			<label>maandelijks</label>
+			<label>Maandelijks</label>
 			<description>Data wordt maandelijks geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -993,7 +988,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>annually</code>
-			<label>jaarlijks</label>
+			<label>Jaarlijks</label>
 			<description>Data wordt jaarlijks geactualiseerd.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1055,29 +1050,29 @@
 			<code>moreThan10annually</code>
 			<label>Meer dan 10-jaarlijks</label>
 			<description>Data wordt &#233;&#233;n keer per meer dan 10jaar geactualiseerd.</description>
-		</entry>        
+		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>asNeeded</code>
-			<label>indien nodig</label>
+			<label>Indien nodig</label>
 			<description>Data wordt geactualiseerd indien nodig.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>irregular</code>
-			<label>onregelmatig</label>
+			<label>Onregelmatig</label>
 			<description>Data wordt geactualiseerd in intervallen die niet even lang duren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>notPlanned</code>
-			<label>niet gepland</label>
+			<label>Niet gepland</label>
 			<description>Er zijn geen plannen om de data te actualiseren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>unknown</code>
-			<label>onbekend</label>
+			<label>Onbekend</label>
 			<description>Herzieningsfrequentie is niet bekend.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1513,22 +1508,19 @@ dataset.</description>
 		<entry>
 			<code>vector</code>
 			<label>vector</label>
-			<description>Vector data wordt gebruikt om
-geografische data te representeren.</description>
+			<description>Vector data wordt gebruikt om geografische data te representeren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>grid</code>
 			<label>grid</label>
-			<description>Grid data wordt gebruikt om geografische
-data te representeren.</description>
+			<description>Grid data wordt gebruikt om geografische data te representeren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>textTable</code>
 			<label>tekstTabel</label>
-			<description>Tekstuele of tabel data wordt gebruikt
-om geografische data te representeren.</description>
+			<description>Tekstuele of tabelvormige data wordt gebruikt om geografische data te representeren.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1539,10 +1531,8 @@ om geografische data te representeren.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereoModel</code>
-			<label>stereoModel</label>
-			<description>3D overzicht wordt gevormd door
-intersectie van twee kernstralen van twee
-overlappende beelden.</description>
+			<label>Stereo model</label>
+			<description>3D overzicht wordt gevormd door intersectie van twee kernstralen van twee overlappende beelden.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1578,13 +1568,8 @@ Vb: politieke en administratieve grenzen.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
-			<label>klimatologie,
-meteorologie
-atmosfeer</label>
-			<description>Processen en fenomenen in de
-atmosfeer.
-Vb: wolkbedekking, weer, klimaat
-verandering.</description>
+			<label>klimatologie, meteorologie, atmosfeer</label>
+			<description>Processen en fenomenen in de atmosfeer. Vb: wolkbedekking, weer, klimaat verandering.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1598,7 +1583,7 @@ visserij.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>elevation</code>            
+			<code>elevation</code>
 			<label>hoogte</label>
 			<description>Hoogte boven of onder zeeniveau.
 Vb: hoogtekaart, DEM, hellingen.</description>
@@ -1615,7 +1600,7 @@ natuurlijke reserves, vuilopslag.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Geo wetenschappelijke data</label>
+			<label>Geo wetenschappelijke informatie</label>
 			<description>Data die behoort tot een
 aardwetenschap. Vb: geologie, mineralen, structuur van
 de aarde, zwaartekrachtskaart,
@@ -1632,9 +1617,7 @@ Vb: ziekten, hygi&#233;ne, gezondheidszorg.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>referentie
-materiaal
-aardbedekking</label>
+			<label>beelden, basiskaarten, grondgebruik</label>
 			<description>Basiskaarten.
 Vb: landbedekking, topografische
 kaarten, foto's, ongeclassificeerde
@@ -1643,7 +1626,7 @@ kaarten.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
-			<label>militair</label>
+			<label>inlichtingen, militaire gegevens</label>
 			<description>Militaire basissen, structuren en
 activiteiten.
 Vb: barakken, oefenterreinen, militaire
@@ -1679,8 +1662,7 @@ riffen.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>planning
-kadaster</label>
+			<label>planning, kadaster</label>
 			<description>Informatie die gebruikt wordt voor
 nodige planmatige activiteiten.
 Vb: Landgebruik, kadastrale informatie.</description>
@@ -1698,8 +1680,7 @@ onderwijs.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>(civiele)
-structuren</label>
+			<label>(civiele) structuren</label>
 			<description>Civiele werken (door mensen gemaakte
 structuren).
 Gebouwen, musea, kerken, winkels,
@@ -1708,7 +1689,7 @@ torens.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
-			<label>transport</label>
+			<label>vervoer</label>
 			<description>Middelen voor vervoer van goederen
 en/of personen.
 Vb: Wegen, Vliegvelden, tunnels,
@@ -1717,7 +1698,7 @@ spoorwegen.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>nutsbedrijven
+			<label>nutsdiensten
 communicatie</label>
 			<description>Energie, waterleidingen en riolering en
 communicatie infrastructuren en
@@ -1957,37 +1938,37 @@ telecommunicatie, radio.</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-    <codelist name="srv:DCPList">
-			<entry>
-					<description>DCP is XML</description>
-					<code>XML</code>
-					<label>XML</label>
-			</entry>
-			<entry>
-					<description>DCP is CORBA</description>
-					<code>CORBA</code>
-					<label>CORBA</label>
-			</entry>
-			<entry>
-					<description>DCP is JAVA</description>
-					<code>JAVA</code>
-					<label>JAVA</label>
-			</entry>
-			<entry>
-					<description>DCP is COM</description>
-					<code>COM</code>
-					<label>COM</label>
-			</entry>
-			<entry>
-					<description>DCP is SQL</description>
-					<code>SQL</code>
-					<label>SQL</label>
-			</entry>
-			<entry>
-					<description>DCP is WebServices</description>
-					<code>WebServices</code>
-					<label>WebServices</label>
-			</entry>
+	<codelist name="srv:DCPList">
+		<entry>
+			<description>DCP is XML</description>
+			<code>XML</code>
+			<label>XML</label>
+		</entry>
+		<entry>
+			<description>DCP is CORBA</description>
+			<code>CORBA</code>
+			<label>CORBA</label>
+		</entry>
+		<entry>
+			<description>DCP is JAVA</description>
+			<code>JAVA</code>
+			<label>JAVA</label>
+		</entry>
+		<entry>
+			<description>DCP is COM</description>
+			<code>COM</code>
+			<label>COM</label>
+		</entry>
+		<entry>
+			<description>DCP is SQL</description>
+			<code>SQL</code>
+			<label>SQL</label>
+		</entry>
+		<entry>
+			<description>DCP is WebServices</description>
+			<code>WebServices</code>
+			<label>WebServices</label>
+		</entry>
 		<entry>
 			<code>httpGet</code>
 			<label>httpGet</label>
@@ -2004,9 +1985,9 @@ telecommunicatie, radio.</description>
 			<description>Verzend gebruikersdata naar de ge&#239;dentificeerde resource over httpPost. De data is opgenomen
 in de "request". Deze "request" is een "SOAP request".</description>
 		</entry>
-    </codelist>    
+	</codelist>
 	<!--=== CouplingType from ISO19119 ===-->
-    <codelist name="srv:SV_CouplingType">
+	<codelist name="srv:SV_CouplingType">
 		<entry>
 			<code>tight</code>
 			<label>tight</label>
@@ -2027,10 +2008,10 @@ niet wordt beschreven door de operatesOn klasse).</description>
 Looselycoupled services zouden een associatie kunnen hebben met een datatype door de
 serviceType definitie. Metadata voor data wordt niet geleverd in de service metadata.</description>
 		</entry>
-    </codelist>
+	</codelist>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-    <codelist name="srv:SV_ServiceType">
+	<codelist name="srv:SV_ServiceType">
 		<entry>
 			<code>OGC:CSW</code>
 			<label>OGC:CSW</label>
@@ -2050,7 +2031,7 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<code>OGC:WCS</code>
 			<label>OGC:WCS</label>
 			<description>Web Coverage Service</description>
-		</entry>        
+		</entry>
 		<entry>
 			<code>OGC:WCTS</code>
 			<label>OGC:WCTS</label>
@@ -2075,7 +2056,7 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<code>OGC:GML</code>
 			<label>OGC:GML</label>
 			<description>Geography Markup Language</description>
-		</entry>        
+		</entry>
 		<entry>
 			<code>OGC:KML</code>
 			<label>OGC:KML</label>
@@ -2091,7 +2072,7 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<label>download</label>
 			<description>download</description>
 		</entry>
-    </codelist>
+	</codelist>
 	<codelist name="srv:SV_ParameterDirection">
 		<entry>
 			<code>in</code>
@@ -2105,5 +2086,5 @@ serviceType definitie. Metadata voor data wordt niet geleverd in de service meta
 			<code>in/out</code>
 			<label>Input/output</label>
 		</entry>
-	</codelist> 	
+	</codelist>
 </codelists>

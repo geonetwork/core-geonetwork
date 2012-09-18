@@ -33,21 +33,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//=============================================================================
-
-public class LocalLib
-{
+/**
+ * TODO javadoc.
+ *
+ */
+public class LocalLib {
 	//-----------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
 	//-----------------------------------------------------------------------------
-    public List<String> getLanguagesInspire(Dbms dbms) throws SQLException
-	{
+
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+    public List<String> getLanguagesInspire(Dbms dbms) throws SQLException {
 		List<String> hm = new ArrayList<String>();
 
-		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isInspire='y'").getChildren())
-		{
+		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isInspire='y'").getChildren()) {
 			Element lang = (Element) obj;
             hm.add(lang.getChildText("id"));
 		}
@@ -55,10 +62,15 @@ public class LocalLib
 		return hm;
 	}
 
-    public String getDefaultLanguage(Dbms dbms) throws SQLException
-	{
-		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isDefault='y'").getChildren())
-		{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+    public String getDefaultLanguage(Dbms dbms) throws SQLException {
+		for (Object obj : dbms.select("SELECT * FROM Languages WHERE isDefault='y'").getChildren()) {
 			Element lang = (Element) obj;
 			return lang.getChildText("id");
 		}
@@ -66,12 +78,17 @@ public class LocalLib
 		return null;
 	}
 
-    public Map<String, String> getLanguagesIso(Dbms dbms) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+    public Map<String, String> getLanguagesIso(Dbms dbms) throws SQLException {
 		Map<String, String> hm = new HashMap<String, String>();
 
-		for (Object obj : dbms.select("SELECT * FROM Languages").getChildren())
-		{
+		for (Object obj : dbms.select("SELECT * FROM Languages").getChildren()) {
 			Element lang = (Element) obj;
 			hm.put(lang.getChildText("id"), lang.getChildText("isocode"));
 		}
@@ -79,12 +96,17 @@ public class LocalLib
 		return hm;
 	}
 
-	public Map<String, String> getLanguages(Dbms dbms) throws SQLException
-	{
-		HashMap<String, String> hm = new HashMap<String, String>();
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
+	public Map<String, String> getLanguages(Dbms dbms) throws SQLException {
+		Map<String, String> hm = new HashMap<String, String>();
 
-		for (Object obj : dbms.select("SELECT * FROM Languages").getChildren())
-		{
+		for (Object obj : dbms.select("SELECT * FROM Languages").getChildren()) {
 			Element lang = (Element) obj;
 			hm.put(lang.getChildText("id"), lang.getChildText("name"));
 		}
@@ -92,10 +114,17 @@ public class LocalLib
 		return hm;
 	}
 
-	//-----------------------------------------------------------------------------
 
-	public void insert(Dbms dbms, String baseTable, int id, String name) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param baseTable
+     * @param id
+     * @param name
+     * @throws SQLException
+     */
+	public void insert(Dbms dbms, String baseTable, String id, String name) throws SQLException {
 		Set<String> langs = getLanguages(dbms).keySet();
 
 		String query = "INSERT INTO "+ baseTable +"Des(idDes, langId, label) VALUES (?,?,?)";
@@ -104,11 +133,17 @@ public class LocalLib
 			dbms.execute(query, id, langId, name);
 	}
 
-	//-----------------------------------------------------------------------------
-
-	public void insert(Dbms dbms, String baseTable, int id, Map<String, String> locNames,
-							 String defName) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param baseTable
+     * @param id
+     * @param locNames
+     * @param defName
+     * @throws SQLException
+     */
+	public void insert(Dbms dbms, String baseTable, String id, Map<String, String> locNames, String defName) throws SQLException {
 		Set<String> langs = getLanguages(dbms).keySet();
 
 		String query = "INSERT INTO "+ baseTable +"Des(idDes, langId, label) VALUES (?,?,?)";
@@ -127,14 +162,19 @@ public class LocalLib
 		}
 	}
 
-	//-----------------------------------------------------------------------------
-
-	public void update(Dbms dbms, String baseTable, int id, Element label) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param baseTable
+     * @param id
+     * @param label
+     * @throws SQLException
+     */
+	public void update(Dbms dbms, String baseTable, String id, Element label) throws SQLException {
 		List labels = label.getChildren();
 
-		for (Object lt : labels)
-		{
+		for (Object lt : labels) {
 			Element locText = (Element) lt;
 
 			String langId = locText.getName();
@@ -144,42 +184,77 @@ public class LocalLib
 		}
 	}
 
-	//-----------------------------------------------------------------------------
-
-	public void update(Dbms dbms, String baseTable, int id, String langId,
-							 String label) throws SQLException
-	{
+    /**
+     *  TODO javadoc.
+     *
+     * @param dbms
+     * @param baseTable
+     * @param id
+     * @param langId
+     * @param label
+     * @throws SQLException
+     */
+	public void update(Dbms dbms, String baseTable, String id, String langId,
+							 String label) throws SQLException {
 		String query = "UPDATE "+ baseTable +"Des SET label=? WHERE idDes=? AND langId=?";
 
 		dbms.execute(query, label, id, langId);
 	}
 
-	//-----------------------------------------------------------------------------
 
-	public Element retrieve(Dbms dbms, String table) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param table
+     * @return
+     * @throws SQLException
+     */
+	public Element retrieve(Dbms dbms, String table) throws SQLException {
 		return retrieve(dbms, table, null, null, null, (Object[])null);
 	}
 
-	//-----------------------------------------------------------------------------
 
-	public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param table
+     * @param where
+     * @param args
+     * @return
+     * @throws SQLException
+     */
+	public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException {
 		return retrieve(dbms, table, null, where, null, args);
 	}
 
-	//-----------------------------------------------------------------------------
-
-	public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param table
+     * @param where
+     * @param orderBy
+     * @param args
+     * @return
+     * @throws SQLException
+     */
+	public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException {
 		return retrieve(dbms, table, null, where, orderBy, args);
 	}
 
-	//-----------------------------------------------------------------------------
-
-	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
-	{
-		return retrieve(dbms, table, id, null, null, new Integer(id));
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param table
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException {
+		return retrieve(dbms, table, id, null, null, id);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -188,19 +263,27 @@ public class LocalLib
 	//---
 	//-----------------------------------------------------------------------------
 
-	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args)
-												throws SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param table
+     * @param id
+     * @param where
+     * @param orderBy
+     * @param args
+     * @return
+     * @throws SQLException
+     */
+	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args) throws SQLException {
 		String query1 = "SELECT * FROM "+table;
 		String query2 = "SELECT * FROM "+table+"Des";
 
-		if (id == null)
-		{
+		if (id == null) {
 			if (where != null)
 				query1 += " WHERE "+ where;
 		}
-		else
-		{
+		else {
 			query1 += " WHERE id=?";
 			query2 += " WHERE idDes=?";
 		}
@@ -220,8 +303,7 @@ public class LocalLib
 
 		Map<String, List<String>> langData = new HashMap<String, List<String>>();
 
-		for (Object o : des)
-		{
+		for (Object o : des) {
 			Element loc = (Element) o;
 
 			String iddes = loc.getChildText("iddes");
@@ -242,8 +324,7 @@ public class LocalLib
 
 		//--- fill results
 
-		for (Object o : base)
-		{
+		for (Object o : base) {
 			Element record = (Element) o;
 			Element labels = new Element("label");
 
@@ -261,12 +342,7 @@ public class LocalLib
 				System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
 
 			}
-
 		}
-
 		return result.setName(table.toLowerCase());
 	}
 }
-
-//=============================================================================
-

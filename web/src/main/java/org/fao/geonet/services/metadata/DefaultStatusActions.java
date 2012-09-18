@@ -26,23 +26,21 @@ package org.fao.geonet.services.metadata;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.ISODate;
-
+import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -112,18 +110,53 @@ public class DefaultStatusActions implements StatusActions {
 	}
 
 	/** 
+     * Called when a metadata is created.
+     *
+     * @param id the id of the metadata
+     */
+    public void onCreate(String id) throws Exception {
+        String changeMessage = "GeoNetwork gebruiker "+session.getUserId()+" ("+session.getUsername()+")heeft metadata record met id "+id + " gecrëeerd.";
+        dm.setStatus(context, dbms, id, new Integer(Params.Status.JUSTCREATED), new ISODate().toString(), changeMessage);
+    }
+
+	/** 
 	  * Called when a record is edited to set/reset status.
 	  *
 		* @param id The metadata id that has been edited.
 		* @param minorEdit If true then the edit was a minor edit.
 		*/
-	public void onEdit(int id, boolean minorEdit) throws Exception {
+	public void onEdit(String id, boolean minorEdit) throws Exception {
 
-		if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
-			String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
-			unsetAllOperations(id);
+        // AGIV change
+        // if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
+        if (!minorEdit && !dm.getCurrentStatus(dbms, id).equals(Params.Status.DRAFT)) {
+
+            String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
+            //String changeMessage = "GeoNetwork gebruiker "+session.getUserId()+" ("+session.getUsername()+")heeft metadata record met id "+id + " bewerkt.";
+            //unsetAllOperations(id);
 			dm.setStatus(context, dbms, id, new Integer(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
 		}
+        else if(minorEdit) {
+            //System.out.println("*** minorEdit, not setting status to DRAFT");
+        }
+        else {
+            //System.out.println("*** current status is not APPROVED: "+ dm.getCurrentStatus(dbms, id));
+        }
+	}
+
+    public void onCancelEdit(String id) throws Exception {
+
+        if (dm.getCurrentStatus(dbms, id).equals(Params.Status.DRAFT)) {
+
+            //String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") canceled edit session for metadata record "+id;
+            String changeMessage = "GeoNetwork gebruiker "+session.getUserId()+" ("+session.getUsername()+") heeft de editeer sessie van metadata record met id "+id + " geannuleerd.";
+            //unsetAllOperations(id);
+            String revertToThisStatus = dm.getLastBeforeCurrentStatus(dbms, id);
+            if(StringUtils.isEmpty(revertToThisStatus)) {
+                revertToThisStatus = Params.Status.UNKNOWN;
+            }
+            dm.setStatus(context, dbms, id, new Integer(revertToThisStatus), new ISODate().toString(), changeMessage);
+        }
 		
 	}
 
@@ -135,12 +168,13 @@ public class DefaultStatusActions implements StatusActions {
 		* @param changeDate The date the status was changed.
 		* @param changeMessage The message explaining why the status has changed.
 		*/
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
+	public Set<String> statusChange(String status, Set<String> metadataIds, String changeDate, String changeMessage) throws Exception {
+        try {
 
-		Set<Integer> unchanged = new HashSet<Integer>();
+            Set<String> unchanged = new HashSet<String>();
 
 		//-- process the metadata records to set status
-		for (Integer mid : metadataIds) {
+            for (String mid : metadataIds) {
 			String currentStatus = dm.getCurrentStatus(dbms, mid);
 
 			//--- if the status is already set to value of status then do nothing
@@ -151,28 +185,40 @@ public class DefaultStatusActions implements StatusActions {
 			}
 
 			if (status.equals(Params.Status.APPROVED)) {
-				// setAllOperations(mid); - this is a short cut that could be enabled
-			} else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
-				unsetAllOperations(mid);
+                    setAllOperations(mid); //- this is a short cut that could be enabled
+                    dm.moveFromWorkspaceToMetadata(context, dbms, mid);
+                }
+                else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
+                    //unsetAllOperations(mid);
 			}
 
 			//--- set status, indexing is assumed to take place later
-			dm.setStatusExt(context, dbms, mid, new Integer(status), changeDate, changeMessage);
+                // heikki: why later ?!
+                //dm.setStatusExt(context, dbms, mid, new Integer(status), changeDate, changeMessage);
+                dm.setStatus(context, dbms, mid, new Integer(status), new ISODate().toString(), changeMessage);
+
 		}
 
 
 		//--- inform content reviewers if the status is submitted
     if (status.equals(Params.Status.SUBMITTED)) {
       informContentReviewers(metadataIds, changeDate, changeMessage);
+            }
     //--- inform owners if status is approved
-    } else if (status.equals(Params.Status.APPROVED)) {
+            else if (status.equals(Params.Status.APPROVED)) {
       informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, true);
+            }
     //--- inform owners if status is rejected
-    } else if (status.equals(Params.Status.REJECTED)) {
+            else if (status.equals(Params.Status.REJECTED)) {
       informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, false);
     }	
-
 		return unchanged;
+	}
+        catch(Throwable x) {
+            System.out.println("ERROR in statusChange " + x.getMessage());
+            x.printStackTrace();
+            throw new Exception(x);
+        }
 	}
 
 	//-------------------------------------------------------------------------
@@ -184,13 +230,13 @@ public class DefaultStatusActions implements StatusActions {
     *
     * @param mdId The metadata id to set privileges on
     */
-  private void setAllOperations(int mdId) throws Exception {
+  private void setAllOperations(String mdId) throws Exception {
     String allGroup = "1";
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
+    dm.setOperation(context, dbms, mdId, allGroup, AccessManager.OPER_VIEW);
+    dm.setOperation(context, dbms, mdId, allGroup, AccessManager.OPER_DOWNLOAD);
+    dm.setOperation(context, dbms, mdId, allGroup, AccessManager.OPER_NOTIFY);
+    dm.setOperation(context, dbms, mdId, allGroup, AccessManager.OPER_DYNAMIC);
+    dm.setOperation(context, dbms, mdId, allGroup, AccessManager.OPER_FEATURED);
   }
 
   /**
@@ -198,13 +244,16 @@ public class DefaultStatusActions implements StatusActions {
     *
     * @param mdId The metadata id to unset privileges on
     */
-  private void unsetAllOperations(int mdId) throws Exception {
+  private void unsetAllOperations(String mdId) throws Exception {
+    // for new workflow: md status does not impact visibility
+    /*
     String allGroup = "1";
     dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
     dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
     dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
     dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
     dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
+    */
   }
 		
 	/**
@@ -215,13 +264,22 @@ public class DefaultStatusActions implements StatusActions {
 		* @param changeDate The date that of the change in status
 		* @param changeMessage Message supplied by the user that set the status
 		*/
-	private void informContentReviewers(Set<Integer> metadata, String changeDate, String changeMessage) throws Exception {
+	private void informContentReviewers(Set<String> metadata, String changeDate, String changeMessage) throws Exception {
 
 		//--- get content reviewers (sorted on content reviewer userid)
 		Element contentRevs = am.getContentReviewers(dbms, metadata);
 
-		String subject = "Metadata records SUBMITTED by "+replyTo+" ("+replyToDescr+") on "+changeDate;
-		processList(contentRevs, subject, Params.Status.SUBMITTED, changeDate, changeMessage);
+        String subject;
+        if(metadata.size() == 1) {
+            subject = "Metadata record SUBMITTED by "+replyTo+" ("+replyToDescr+") on "+changeDate;
+
+        }
+        else {
+            subject = "Metadata records SUBMITTED by "+replyTo+" ("+replyToDescr+") on "+changeDate;
+            //subject = "Metadata records INGEDIEND door "+replyTo+" ("+replyToDescr+") op "+changeDate;
+        }
+        boolean multiple = metadata.size() > 1;
+		processList(contentRevs, subject, Params.Status.SUBMITTED, changeDate, changeMessage, metadata);
 	}
 
 	/**
@@ -232,20 +290,38 @@ public class DefaultStatusActions implements StatusActions {
 		* @param changeDate The date that of the change in status
 		* @param changeMessage Message supplied by the user that set the status
 		*/
-	private void informOwnersApprovedOrRejected(Set<Integer> metadata, String changeDate, String changeMessage, boolean approved) throws Exception {
+	private void informOwnersApprovedOrRejected(Set<String> metadata, String changeDate, String changeMessage, boolean approved) throws Exception {
 
 		//--- get metadata owners (sorted on owner userid)
 		Element owners = am.getOwners(dbms, metadata);
 
-		String subject = "Metadata records APPROVED";
+        String subject;
+        if(metadata.size() == 1) {
+            subject = "Metadata records APPROVED";
+            //subject = "Metadata record GOEDGEKEURD";
+        }
+        else {
+            subject = "Metadata records APPROVED";
+            //subject = "Metadata records GOEDGEKEURD";
+        }
+
+
 		String status = Params.Status.APPROVED;
 		if (!approved) {
-			subject = "Metadata records REJECTED";
+            if(metadata.size() == 1) {
+                subject = "Metadata record REJECTED";
+                //subject = "Metadata record AFGEWEZEN";
+            }
+            else {
+                subject = "Metadata records REJECTED";
+                //subject = "Metadata records AFGEWEZEN";
+            }
 			status = Params.Status.REJECTED;
 		}
 		subject += " by "+replyTo+" ("+replyToDescr+") on "+changeDate;
 
-		processList(owners, subject, status, changeDate, changeMessage);
+        boolean multiple = metadata.size() > 1;
+        processList(owners, subject, status, changeDate, changeMessage, metadata);
 
 	}
 
@@ -258,11 +334,11 @@ public class DefaultStatusActions implements StatusActions {
 		* @param changeDate Datestamp of status change
 		* @param changeMessage The message indicating why the status has changed
 		*/
-	private void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
+	private void processList(Element users, String subject, String status, String changeDate, String changeMessage, Set<String> metadataIds) throws Exception {
 
 		List<Element> userList = users.getChildren();
 
-		List<Integer> mIds = new ArrayList<Integer>();
+		List<String> mIds = new ArrayList<String>();
 		boolean first = true;
 		String lastUserId = "-100";
 		String email = "";
@@ -273,16 +349,16 @@ public class DefaultStatusActions implements StatusActions {
 			id  = user.getChildText("userid");
 			email      = user.getChildText("email");
 			if (!id.equals(lastUserId) && !first) {	// send out list
-				sendEmail(email, subject, status, changeDate, changeMessage);	
-				mIds = new ArrayList<Integer>();
+				sendEmail(email, subject, status, changeDate, changeMessage, metadataIds);
+				mIds = new ArrayList<String>();
 				lastUserId = id;
 			}
-			mIds.add(new Integer(mid));
+			mIds.add(mid);
 			first = false;
 		}
 
 		if (mIds.size() > 0) { // send out the last one
-			sendEmail(email, subject, status, changeDate, changeMessage);
+			sendEmail(email, subject, status, changeDate, changeMessage, metadataIds);
 		}
 	}
 
@@ -296,9 +372,14 @@ public class DefaultStatusActions implements StatusActions {
 		* @param changeDate Datestamp of status change
 		* @param changeMessage The message indicating why the status has changed
 		*/
-	private void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage) throws Exception {
+	private void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage, Set<String> metadataIds) throws Exception {
 
-		String message = changeMessage+"\n\nRecords are available from the following URL:\n"+buildMetadataSearchLink(status, changeDate);
+        String message = "";
+
+        for(String metadataId : metadataIds) {
+	    message = changeMessage+"\n\nRecords are available from the following URL:\n"+buildMetadataLink(metadataId);
+            //message = changeMessage+"\n\nHet metadatarecord is beschikbaar via de volgende URL:\n"+buildMetadataLink(metadataId);
+        }
 
 		if (!emailNotes) {
 			context.info("Would send email with message:\n"+message);
@@ -311,12 +392,26 @@ public class DefaultStatusActions implements StatusActions {
 	/**
 		* Build search link to metadata that has had a change of status.
 		*
+		* @param metadataId The id of the metadata
+		* @return string Search link to metadata
+		*/
+	private String buildMetadataLink(String metadataId) {
+		// TODO: hack voor AGIV
+		return "http://dev.ace.geocat.net:7080/geonetworkn1/apps/tabsearch/?id="+metadataId;
+	}
+
+
+    /**
+     * Build search link to metadata that has had a change of status.
+     *
 		* @param status The status of the metadata 
 		* @param changeDate The date the status has been set on the metadata 
 		* @return string Search link to metadata
 		*/
-	private String buildMetadataSearchLink(String status, String changeDate) {
+    private String buildMetadataSearchLink(String status, String metadataId, String changeDate) {
 		// FIXME : hard coded link to main.search 
 		return siteUrl+"/main.search?_status="+status+"&_statusChangeDate="+changeDate;
 	}
+
+
 }

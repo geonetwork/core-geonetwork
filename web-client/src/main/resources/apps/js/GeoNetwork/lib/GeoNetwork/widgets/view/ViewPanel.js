@@ -69,6 +69,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          *  Define if permalink button should be displayed or not. Default is false.
          */
         permalink: false,
+        workspaceCopy: false,
         /** api: config[relationTypes] 
          *  List of types of relation to be displayed in header. 
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
@@ -126,6 +127,27 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             });
         }
         
+        if (this.workspaceCopy == true) {
+            this.actionMenu.viewWorkspaceCopyAction.hide();
+            this.actionMenu.diffWorkspaceCopyAction.hide();
+
+            this.actionMenu.viewOriginalCopyAction.show();
+            this.actionMenu.diffOriginalCopyAction.show();
+            this.actionMenu.diffOriginalCopyEditModeAction.setText(OpenLayers.i18n('diffOriginalCopyEditMode'));
+            this.actionMenu.diffOriginalCopyEditModeAction.show();
+
+        } else {
+            this.actionMenu.viewWorkspaceCopyAction.show();
+            this.actionMenu.diffWorkspaceCopyAction.show();
+            this.actionMenu.diffOriginalCopyEditModeAction.setText(OpenLayers.i18n('diffWorkspaceCopyEditMode'));
+            this.actionMenu.diffOriginalCopyEditModeAction.show();
+
+            this.actionMenu.viewOriginalCopyAction.hide();
+            this.actionMenu.diffOriginalCopyAction.hide();
+
+
+        }
+
         var actionButton = {
             text: OpenLayers.i18n('mdMenu'),
             menu: this.actionMenu

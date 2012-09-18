@@ -16,7 +16,21 @@
 
     <anyLanguage>任何语言</anyLanguage>
 	<nodata>Null</nodata>
-
+    <workspaceview>工作区视图</workspaceview>
+    <metadataview>元数据视图</metadataview>
+    <vieworiginal>查看原图</vieworiginal>
+    <viewworkspace>查看工作区的副本</viewworkspace>
+    <islocked>此元数据已被锁定</islocked>
+    <canunlock>你被允许解锁</canunlock>
+    <canedit>你被允许编辑</canedit>
+    <unlock>解开这个元数据</unlock>
+    <unlockMetadataTitle>取消编辑会议</unlockMetadataTitle>
+    <lockedmetadata>锁定元数据</lockedmetadata>
+    <lockedmetadatadesc>列表元数据编辑会话，你自己或你被允许接管</lockedmetadatadesc>
+    <grab.lock>更改锁的所有者</grab.lock>
+    <grabbed.lock>锁的拥有者变更</grabbed.lock>
+    <currentlockowner>目前是由使用者所拥有的元数据锁</currentlockowner>
+    <switchdiff>切换左，右</switchdiff>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -180,6 +194,8 @@
 	
 	<logo>Logo configuration</logo>
 	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <chooseLogo>Choose logo</chooseLogo>
+    <orgLogo>Organisation logo</orgLogo>
     <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
@@ -395,6 +411,12 @@
 	<clear js="true">清除</clear>
 	<clearAll>Clear All</clearAll>
 	<close js="true">Close</close>
+    <compareMetadata>比较元数据</compareMetadata>
+    <compareMetadataSelMessage>你必须选择2元数据记录比较</compareMetadataSelMessage>
+    <compareMetadataWorkspace>与工作区的副本比较</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>在编辑模式下工作区的副本比较</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>比较原</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>在编辑模式与原来的比较</compareMetadataOriginalEditMode>
 	<completeTab>高级视图</completeTab>
 	<completeTabEditor>高级编辑器</completeTabEditor>
 	<confirmCancel>Are you sure you want to leave the editor? (You will lose any unsaved changes)</confirmCancel>
@@ -625,6 +647,7 @@
 	<metadata-template-order-desc>Sort your templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>元数据</metadata>
+    <metametadata>元数据</metametadata>
 	<metadataAdded>元数据已添加，其ID为：</metadataAdded>
 	<metadataDeleted>元数据已删除，其ID为：</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
@@ -744,6 +767,10 @@
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+  <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
+	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
+	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
     <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
 	<pubdate>出版日期</pubdate>
 	<publicationDate>出版日期</publicationDate>
@@ -1171,6 +1198,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1267,6 +1295,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>INSPIRE search options</l1>
             <l2>INSPIRE metadata</l2>
@@ -1283,6 +1316,7 @@
             <l13>Hide INSPIRE Themes</l13>
             <l14>INSPIRE Theme</l14>
             <l15>Service type</l15>
+        <l16>Classification of data services</l16>
         </what>
         <annex1>
             <theme id="inspire_CoordinateRefSystems">Coordinate reference systems</theme>

@@ -33,6 +33,7 @@ import jeeves.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -46,6 +47,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -266,6 +268,32 @@ class Harvester
 		// md5 the full capabilities URL
 		String uuid = Util.scramble (this.capabilitiesUrl); // is the service identifier
 		
+         // heikki for AGIV: make this string look a bit more like a UUID by inserting some hyphens
+         if(StringUtils.isNotEmpty(uuid)) {
+             if(uuid.length() > 8) {
+                 uuid = uuid.substring(0, 8) + '-' + uuid.substring(8);
+             }
+             if(uuid.length() > 13) {
+                 uuid = uuid.substring(0, 13) + '-' + uuid.substring(13);
+             }
+             if(uuid.length() > 18) {
+                 uuid = uuid.substring(0, 18) + '-' + uuid.substring(18);
+             }
+             if(uuid.length() > 23) {
+                 uuid = uuid.substring(0, 23) + '-' + uuid.substring(23);
+             }
+             if(uuid.length() > 28) {
+                 uuid = uuid.substring(0, 28) + '-' + uuid.substring(28);
+             }
+             if(uuid.length() > 33) {
+                 uuid = uuid.substring(0, 33) + '-' + uuid.substring(33);
+             }
+             if(uuid.length() > 38) {
+                 uuid = uuid.substring(0, 38) + '-' + uuid.substring(38);
+             }
+         }
+
+
 		//--- Loading stylesheet
 		String styleSheet = schemaMan.getSchemaDir(params.outputSchema) + 
 							Geonet.Path.CONVERT_STYLESHEETS
@@ -332,19 +360,18 @@ class Harvester
         //
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
-
-		int iId = Integer.parseInt(id);
+         String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, uuid, userid, group, params.uuid, isTemplate, docType,
+                title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		addPrivileges(id);
 		addCategories(id);
 		
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
-		dataMan.setTemplate(dbms, iId, "n", null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid, params.url);
+		dataMan.setTemplate(dbms, id, "n", null);
 		
 		dbms.commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index
@@ -637,31 +664,31 @@ class Harvester
             //
             //  insert metadata
             //
-            int userid = 1;
+            String userid = "1";
             String group = null, isTemplate = null, docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
+            reg.id = IDFactory.newID();
+            dataMan.insertMetadata(context, dbms, schema, xml, reg.id, reg.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
 			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms);
 			
-			int iId = Integer.parseInt(reg.id);
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
-
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
 			addPrivileges(reg.id);
 			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
 				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
+			dataMan.setHarvestedExt(dbms, reg.id, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
 			
 			dbms.commit();
 			
-			dataMan.indexMetadataGroup(dbms, reg.id);
+            boolean workspace = false;
+            dataMan.indexMetadataGroup(dbms, reg.id, workspace, true);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
@@ -859,9 +886,8 @@ class Harvester
 		{
 			String name = localCateg.getName (catId);
 
-			if (name == null) {
+			if (name == null)
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
-			}
 			else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
@@ -881,17 +907,14 @@ class Harvester
 			String name = localGroups.getName( priv.getGroupId ());
 
 			if (name == null)
-			{
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			}
 			else
 			{
-				for (int opId: priv.getOperations ())
-				{
+				for (String opId: priv.getOperations ()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6"))
 					{
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}

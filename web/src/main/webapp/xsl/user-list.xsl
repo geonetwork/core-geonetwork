@@ -64,7 +64,7 @@
 						<button class="content" onclick="load('{/root/gui/locService}/user.resetpw?id={id}')"><xsl:value-of select="/root/gui/strings/resetPassword"/></button>
 						&#160;
 						<xsl:if test="/root/gui/session/userId != id">
-							<button class="content" onclick="deleteUser('{/root/gui/locService}/user.remove?id={id}','{/root/gui/strings/delUserConf}', {id})"><xsl:value-of select="/root/gui/strings/delete"/></button>
+							<button class="content" onclick="deleteUser('{/root/gui/locService}/user.remove?id={id}','{/root/gui/strings/delUserConf}', '{id}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 						</xsl:if>
 					</td>
 				</tr>

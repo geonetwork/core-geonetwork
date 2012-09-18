@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //=============================================================================
 
@@ -50,14 +51,14 @@ public class Privileges
 
 	//---------------------------------------------------------------------------
 
-	public void add(int operation)
+	public void add(String operation)
 	{
 		alOperations.add(operation);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public Iterable<Integer> getOperations() { return alOperations; }
+	public Iterable<String> getOperations() { return alOperations; }
 
 	//---------------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ public class Privileges
 	{
 		Privileges copy = new Privileges(groupId);
 
-		for (int oper : alOperations)
+		for (String oper : alOperations)
 			copy.alOperations.add(oper);
 
 		return copy;
@@ -79,7 +80,7 @@ public class Privileges
 
 	private String groupId;
 
-	private ArrayList<Integer> alOperations = new ArrayList<Integer>();
+	private List<String> alOperations = new ArrayList<String>();
 }
 
 //=============================================================================

@@ -90,8 +90,7 @@ public class Rate implements Service
 		String rat = Util.getParam(params, Params.RATING);
 		String ip  = context.getIpAddress();
 
-		int iLocalId = Integer.parseInt(id);
-		if (!dm.existsMetadata(dbms, iLocalId))
+		if (!dm.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (ip == null)
@@ -113,7 +112,7 @@ public class Rate implements Service
 		
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
-			rating = dm.rateMetadata(dbms, new Integer(id), ip, rating);
+			rating = dm.rateMetadata(dbms, id, ip, rating);
 		else
 		{
 			//--- the metadata is harvested, is type=geonetwork?
@@ -132,11 +131,9 @@ public class Rate implements Service
 
 	//--------------------------------------------------------------------------
 
-	private String getHarvestingUuid(Dbms dbms, String id) throws Exception
-	{
+	private String getHarvestingUuid(Dbms dbms, String id) throws Exception {
 		String query = "SELECT harvestUuid FROM Metadata WHERE id=?";
-
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		List list = dbms.select(query, id).getChildren();
 
 		//--- if we don't have any metadata, just return
 
@@ -144,7 +141,6 @@ public class Rate implements Service
 			throw new MetadataNotFoundEx("id:"+ id);
 
 		Element rec = (Element) list.get(0);
-
 		String harvUuid = rec.getChildText("harvestuuid");
 
 		//--- metadata not harvested

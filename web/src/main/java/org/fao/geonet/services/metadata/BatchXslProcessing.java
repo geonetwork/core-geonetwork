@@ -93,16 +93,17 @@ public class BatchXslProcessing implements Service {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
-		Set<Integer> notProcessFound = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
+		Set<String> notProcessFound = new HashSet<String>();
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 		
 		synchronized(sm.getSelection("metadata")) {
-			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
+			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(),
+                    process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
 			m.processWithFastIndexing();
 		}
 
@@ -131,9 +132,11 @@ public class BatchXslProcessing implements Service {
 		String appPath;
 		Element params;
 		ServiceContext context;
-        Set<Integer> metadata, notFound, notOwner, notProcessFound;
+        Set<String> metadata, notFound, notOwner, notProcessFound;
 
-        public BatchXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath, Element params, ServiceContext context, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> notProcessFound) {
+        public BatchXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath,
+                                         Element params, ServiceContext context, Set<String> metadata,
+                                         Set<String> notFound, Set<String> notOwner, Set<String> notProcessFound) {
             super(dm);
             this.dbms = dbms;
             this.iter = iter;
@@ -149,12 +152,10 @@ public class BatchXslProcessing implements Service {
 
         @Override
         public void process() throws Exception {
-            GeonetContext gc = (GeonetContext) context
-                               .getHandlerContext(Geonet.CONTEXT_NAME);
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             DataManager dataMan = gc.getDataManager();
-
             while (iter.hasNext()) {
-                String uuid = (String) iter.next();
+                String uuid = iter.next();
                 String id = dm.getMetadataId(dbms, uuid);
                 context.info("Processing metadata with id:" + id);
 
@@ -163,6 +164,3 @@ public class BatchXslProcessing implements Service {
         }
 	}
 }
-
-// =============================================================================
-

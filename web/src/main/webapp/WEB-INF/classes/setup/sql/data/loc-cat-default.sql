@@ -1,29 +1,29 @@
 INSERT INTO Languages VALUES ('cat','català', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (53, 'cat', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (54, 'cat', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (55, 'cat', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (56, 'cat', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('53', 'cat', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('54', 'cat', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('55', 'cat', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('56', 'cat', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'cat','Maps & graphics');
-INSERT INTO CategoriesDes VALUES (2,'cat','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'cat','Interactive resources');
-INSERT INTO CategoriesDes VALUES (4,'cat','Applications');
-INSERT INTO CategoriesDes VALUES (5,'cat','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'cat','Conference proceedings');
-INSERT INTO CategoriesDes VALUES (7,'cat','Photo');
-INSERT INTO CategoriesDes VALUES (8,'cat','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'cat','Directories');
-INSERT INTO CategoriesDes VALUES (10,'cat','Other information resources');
-INSERT INTO CategoriesDes VALUES (11,'cat','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'cat','Registers');
-INSERT INTO CategoriesDes VALUES (13,'cat','Physical Samples');
+INSERT INTO CategoriesDes VALUES ('1','cat','Maps & graphics');
+INSERT INTO CategoriesDes VALUES ('2','cat','Datasets');
+INSERT INTO CategoriesDes VALUES ('3','cat','Interactive resources');
+INSERT INTO CategoriesDes VALUES ('4','cat','Applications');
+INSERT INTO CategoriesDes VALUES ('5','cat','Case studies, best practices');
+INSERT INTO CategoriesDes VALUES ('6','cat','Conference proceedings');
+INSERT INTO CategoriesDes VALUES ('7','cat','Photo');
+INSERT INTO CategoriesDes VALUES ('8','cat','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','cat','Directories');
+INSERT INTO CategoriesDes VALUES ('10','cat','Other information resources');
+INSERT INTO CategoriesDes VALUES ('11','cat','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','cat','Registers');
+INSERT INTO CategoriesDes VALUES ('13','cat','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'cat','Guest');
-INSERT INTO GroupsDes VALUES (0,'cat','Intranet');
-INSERT INTO GroupsDes VALUES (1,'cat','All');
-INSERT INTO GroupsDes VALUES (2,'cat','Sample group');
+INSERT INTO GroupsDes VALUES ('-1','cat','Guest');
+INSERT INTO GroupsDes VALUES ('0','cat','Intranet');
+INSERT INTO GroupsDes VALUES ('1','cat','All');
+INSERT INTO GroupsDes VALUES ('2','cat','Sample group');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'cat','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'cat','Abkhazian');
@@ -510,19 +510,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'cat','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'cat','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'cat','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'cat','Publish');
-INSERT INTO OperationsDes VALUES (1,'cat','Download');
-INSERT INTO OperationsDes VALUES (2,'cat','Editing');
-INSERT INTO OperationsDes VALUES (3,'cat','Notify');
-INSERT INTO OperationsDes VALUES (5,'cat','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'cat','Featured');
+INSERT INTO OperationsDes VALUES ('0','cat','Publish');
+INSERT INTO OperationsDes VALUES ('1','cat','Download');
+INSERT INTO OperationsDes VALUES ('2','cat','Editing');
+INSERT INTO OperationsDes VALUES ('3','cat','Notify');
+INSERT INTO OperationsDes VALUES ('5','cat','Interactive Map');
+INSERT INTO OperationsDes VALUES ('6','cat','Featured');
 
-INSERT INTO StatusValuesDes VALUES (0,'cat','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'cat','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'cat','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'cat','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'cat','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'cat','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','cat','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','cat','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','cat','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','cat','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','cat','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','cat','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','cat','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'cat','Armenia');
 INSERT INTO RegionsDes VALUES (2,'cat','Afghanistan');

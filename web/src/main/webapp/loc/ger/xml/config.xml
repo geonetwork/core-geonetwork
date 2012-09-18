@@ -28,6 +28,13 @@
     <requestedlanguagesorted>Suchergebnisse in gewünschte Sprache auf der Oberseite sortiert</requestedlanguagesorted>
     <requestedlanguageignored>Ignorieren gewünschten Sprache auf der Suche</requestedlanguageignored>
 
+    <clustering>Clustering</clustering>
+    <enableClustering>aktivieren Sie Clustern</enableClustering>
+    <JMSBrokerConnectionURL>JMS-Broker URL(s)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>symbolische Verriegelung</symbolicLocking>
+    <enableSymbolicLocking>Aktivieren symbolischen Verriegelung</enableSymbolicLocking>
+
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>
 
@@ -364,6 +371,15 @@
             Ignorieren gewünschte Sprache für die Suchergebnisse.
         </tip>
 
+        <tip id="cluster.enable">
+            Aktivieren Sie diese Option für das Clustering.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Geben Sie die URL zu Ihrem JMS-Broker. Z.B. failover://tcp://localhost:61616.
+        </tip>
+        <tip id="symbolicLocking.enable">
+            Wenn diese aktiviert ist, kann jeder Redakteur seine Metadaten in Gruppen entsperren (nicht nur Rezensenten).
+        </tip>
     </tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>

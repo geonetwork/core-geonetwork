@@ -258,7 +258,7 @@
 		</xsl:apply-templates>
 		
 		<xsl:call-template name="complexElementGui">
-			<xsl:with-param name="title" select="/root/gui/strings/metadata"/>
+			<xsl:with-param name="title" select="/root/gui/strings/metametadata"/>
 			<xsl:with-param name="content">
 				<xsl:call-template name="iso19115Simple2">
 					<xsl:with-param name="schema" select="$schema"/>
@@ -1988,7 +1988,7 @@
 		
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'metadata'"/>
-			<xsl:with-param name="text"    select="/root/gui/strings/metadata"/>
+			<xsl:with-param name="text"    select="/root/gui/strings/metametadata"/>
 			<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
 			<xsl:with-param name="tabLink" select="$tabLink"/>
 		</xsl:call-template>

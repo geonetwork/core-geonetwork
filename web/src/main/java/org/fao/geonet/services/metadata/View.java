@@ -28,7 +28,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -95,14 +94,27 @@ public class View implements Service {
 		// -----------------------------------------------------------------------
 		// --- get metadata
 
+        String fromWorkspaceParam = Util.getParam(params, "fromWorkspace", "false");
+        boolean fromWorkspace = Boolean.parseBoolean(fromWorkspaceParam);
+
 		Element elMd;
 		boolean addEditing = false;
 		if (!skipInfo) {
-            boolean withValidationErrors = false, keepXlinkAttributes = false;
+            boolean withValidationErrors = false, keepXlinkAttributes = false, withInfo = true;
+
+            if(fromWorkspace) {
+                elMd = dm.getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
+            } else {
 			elMd = dm.getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
+            }
+        } else {
+            if(fromWorkspace) {
+                boolean withValidationErrors = false, keepXlinkAttributes = false, withInfo = false;
+                elMd = dm.getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
 		} else {
 			elMd = dm.getMetadataNoInfo(context, id);
 		}
+        }
 
 		if (elMd == null)
 			throw new MetadataNotFoundEx(id);

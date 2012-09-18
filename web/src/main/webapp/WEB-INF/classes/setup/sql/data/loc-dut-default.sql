@@ -1,29 +1,30 @@
 INSERT INTO Languages VALUES ('dut','Nederlands', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (9, 'dut', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (10, 'dut', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (11, 'dut', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (12, 'dut', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('9', 'dut', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('10', 'dut', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('11', 'dut', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('12', 'dut', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'dut','Kaarten & afbeeldingen');
-INSERT INTO CategoriesDes VALUES (2,'dut','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'dut','Interactieve kaarten');
-INSERT INTO CategoriesDes VALUES (4,'dut','Toepassingen');
-INSERT INTO CategoriesDes VALUES (5,'dut','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'dut','Conferentie handelingen');
-INSERT INTO CategoriesDes VALUES (7,'dut','Fotos');
-INSERT INTO CategoriesDes VALUES (8,'dut','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'dut','Catalogi');
-INSERT INTO CategoriesDes VALUES (10,'dut','Andere informatie bronnen');
-INSERT INTO CategoriesDes VALUES (11,'dut','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'dut','Registers');
-INSERT INTO CategoriesDes VALUES (13,'dut','Physical Samples');
+INSERT INTO CategoriesDes VALUES ('1','dut','Kaarten & afbeeldingen');
+INSERT INTO CategoriesDes VALUES ('2','dut','Datasets');
+INSERT INTO CategoriesDes VALUES ('3','dut','Interactieve kaarten');
+INSERT INTO CategoriesDes VALUES ('4','dut','Toepassingen');
+INSERT INTO CategoriesDes VALUES ('5','dut','Case studies, best practices');
+INSERT INTO CategoriesDes VALUES ('6','dut','Conferentie handelingen');
+INSERT INTO CategoriesDes VALUES ('7','dut','Fotos');
+INSERT INTO CategoriesDes VALUES ('8','dut','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','dut','Catalogi');
+INSERT INTO CategoriesDes VALUES ('10','dut','Andere informatie bronnen');
+INSERT INTO CategoriesDes VALUES ('11','dut','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','dut','Registers');
+INSERT INTO CategoriesDes VALUES ('13','dut','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'dut','Gast');
-INSERT INTO GroupsDes VALUES (0,'dut','Intranet');
-INSERT INTO GroupsDes VALUES (1,'dut','Iedereen');
-INSERT INTO GroupsDes VALUES (2,'dut','Voorbeeldgroep');
+INSERT INTO GroupsDes VALUES ('-1','dut','Gast');
+INSERT INTO GroupsDes VALUES ('0','dut','Intranet');
+INSERT INTO GroupsDes VALUES ('1','dut','Iedereen');
+INSERT INTO GroupsDes VALUES ('2','dut','Voorbeeldgroep');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'dut','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'dut','Abkhazian');
@@ -140,7 +141,7 @@ INSERT INTO IsoLanguagesDes VALUES (112,'dut','Dravidian (Other)');
 INSERT INTO IsoLanguagesDes VALUES (113,'dut','Lower Sorbian');
 INSERT INTO IsoLanguagesDes VALUES (114,'dut','Duala');
 INSERT INTO IsoLanguagesDes VALUES (115,'dut','Nederlands, Midden (ca.1050-1350)');
-INSERT INTO IsoLanguagesDes VALUES (116,'dut','Nederlands; Vlaams');
+INSERT INTO IsoLanguagesDes VALUES (116,'dut','Nederlands');
 INSERT INTO IsoLanguagesDes VALUES (117,'dut','Dyula');
 INSERT INTO IsoLanguagesDes VALUES (118,'dut','Dzongkha');
 INSERT INTO IsoLanguagesDes VALUES (119,'dut','Efik');
@@ -510,19 +511,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'dut','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'dut','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'dut','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'dut','Publiceren');
-INSERT INTO OperationsDes VALUES (1,'dut','Download');
-INSERT INTO OperationsDes VALUES (2,'dut','Bewerken');
-INSERT INTO OperationsDes VALUES (3,'dut','Informeren');
-INSERT INTO OperationsDes VALUES (5,'dut','Interactieve Kaart');
-INSERT INTO OperationsDes VALUES (6,'dut','In het spotlicht');
+INSERT INTO OperationsDes VALUES ('0','dut','Publiceren');
+INSERT INTO OperationsDes VALUES ('1','dut','Download');
+INSERT INTO OperationsDes VALUES ('2','dut','Bewerken');
+INSERT INTO OperationsDes VALUES ('3','dut','Informeren');
+INSERT INTO OperationsDes VALUES ('5','dut','Interactieve Kaart');
+INSERT INTO OperationsDes VALUES ('6','dut','In het spotlicht');
 
-INSERT INTO StatusValuesDes VALUES (0,'dut','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'dut','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'dut','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'dut','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'dut','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'dut','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','dut','Onbekend');
+INSERT INTO StatusValuesDes VALUES ('1','dut','Klad');
+INSERT INTO StatusValuesDes VALUES ('2','dut','Goedgekeurd');
+INSERT INTO StatusValuesDes VALUES ('3','dut','Gepensioneerd');
+INSERT INTO StatusValuesDes VALUES ('4','dut','Ingediend');
+INSERT INTO StatusValuesDes VALUES ('5','dut','Afgewezen');
+INSERT INTO StatusValuesDes VALUES ('6','dut','Pas gecreëerd');
 
 INSERT INTO RegionsDes VALUES (1,'dut','Armenië');
 INSERT INTO RegionsDes VALUES (2,'dut','Afghanistan');

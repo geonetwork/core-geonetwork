@@ -40,7 +40,6 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -87,7 +86,6 @@ public class JeevesEngine
 	private ServiceManager  serviceMan  = new ServiceManager();
 	private ProviderManager providerMan = new ProviderManager();
 	private ScheduleManager scheduleMan = new ScheduleManager();
-	private SerialFactory   serialFact  = new SerialFactory();
 
 	private Logger appHandLogger = Log.createLogger(Log.APPHAND);
 	private List<Element> appHandList = new ArrayList<Element>();
@@ -148,14 +146,12 @@ public class JeevesEngine
 			serviceMan.setAppPath(appPath);
 			serviceMan.setProviderMan(providerMan);
 			serviceMan.setMonitorMan(monitorManager);
-			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);
 			serviceMan.setServlet(servlet);
 
 			scheduleMan.setAppPath(appPath);
 			scheduleMan.setProviderMan(providerMan);
 			scheduleMan.setMonitorManager(monitorManager);
-			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);

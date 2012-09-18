@@ -1,29 +1,33 @@
 INSERT INTO Languages VALUES ('ara','العربية', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (41, 'ara', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (42, 'ara', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (43, 'ara', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (44, 'ara', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('41', 'ara', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('42', 'ara', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('43', 'ara', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('44', 'ara', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'ara','Maps & graphics');
-INSERT INTO CategoriesDes VALUES (2,'ara','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'ara','Interactive resources');
-INSERT INTO CategoriesDes VALUES (4,'ara','Applications');
-INSERT INTO CategoriesDes VALUES (5,'ara','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'ara','Conference proceedings');
-INSERT INTO CategoriesDes VALUES (7,'ara','Photo');
-INSERT INTO CategoriesDes VALUES (8,'ara','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'ara','Directories');
-INSERT INTO CategoriesDes VALUES (10,'ara','Other information resources');
-INSERT INTO CategoriesDes VALUES (11,'ara','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'ara','Registers');
-INSERT INTO CategoriesDes VALUES (13,'ara','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'ara','Guest');
-INSERT INTO GroupsDes VALUES (0,'ara','Intranet');
-INSERT INTO GroupsDes VALUES (1,'ara','All');
-INSERT INTO GroupsDes VALUES (2,'ara','Sample group');
+-- TODO : Needs more work
+
+INSERT INTO CategoriesDes VALUES ('1','ara','Maps & graphics');
+INSERT INTO CategoriesDes VALUES ('2','ara','Datasets');
+INSERT INTO CategoriesDes VALUES ('3','ara','Interactive resources');
+INSERT INTO CategoriesDes VALUES ('4','ara','Applications');
+INSERT INTO CategoriesDes VALUES ('5','ara','Case studies, best practices');
+INSERT INTO CategoriesDes VALUES ('6','ara','Conference proceedings');
+INSERT INTO CategoriesDes VALUES ('7','ara','Photo');
+INSERT INTO CategoriesDes VALUES ('8','ara','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','ara','Directories');
+INSERT INTO CategoriesDes VALUES ('10','ara','Other information resources');
+INSERT INTO CategoriesDes VALUES ('11','ara','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','ara','Registers');
+INSERT INTO CategoriesDes VALUES ('13','ara','Physical Samples');
+
+INSERT INTO GroupsDes VALUES ('-1','ara','Guest');
+INSERT INTO GroupsDes VALUES ('0','ara','Intranet');
+INSERT INTO GroupsDes VALUES ('1','ara','All');
+INSERT INTO GroupsDes VALUES ('2','ara','Sample group');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'ara','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'ara','Abkhazian');
@@ -510,19 +514,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'ara','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'ara','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'ara','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'ara','Publish');
-INSERT INTO OperationsDes VALUES (1,'ara','Download');
-INSERT INTO OperationsDes VALUES (2,'ara','Editing');
-INSERT INTO OperationsDes VALUES (3,'ara','Notify');
-INSERT INTO OperationsDes VALUES (5,'ara','Interactive Map');
-INSERT INTO OperationsDes VALUES (6,'ara','Featured');
+INSERT INTO OperationsDes VALUES ('0','ara','Publish');
+INSERT INTO OperationsDes VALUES ('1','ara','Download');
+INSERT INTO OperationsDes VALUES ('2','ara','Editing');
+INSERT INTO OperationsDes VALUES ('3','ara','Notify');
+INSERT INTO OperationsDes VALUES ('5','ara','Interactive Map');
+INSERT INTO OperationsDes VALUES ('6','ara','Featured');
 
-INSERT INTO StatusValuesDes VALUES (0,'ara','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'ara','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'ara','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'ara','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'ara','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'ara','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','ara','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','ara','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','ara','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','ara','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','ara','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','ara','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','ara','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'ara','Armenia');
 INSERT INTO RegionsDes VALUES (2,'ara','Afghanistan');

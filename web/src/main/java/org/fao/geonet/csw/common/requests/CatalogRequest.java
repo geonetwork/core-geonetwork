@@ -469,7 +469,7 @@ public abstract class CatalogRequest
 			// If server return HTTP Error 500 Server error 
 			// when retrieving the data return null
 			if (httpMethod.getStatusCode() == 500) {
-				System.out.println("  Status code: " + httpMethod.getStatusCode());
+                Log.warning(Geonet.CSW, "  Status code: " + httpMethod.getStatusCode());
 				return null;
 			} else {
 				return Xml.loadStream(httpMethod.getResponseBodyAsStream());
@@ -505,7 +505,7 @@ public abstract class CatalogRequest
 			httpMethod = new GetMethod();
 			httpMethod.setPath(path);
 			httpMethod.setQueryString(alGetParams.toArray(new NameValuePair[1]));
-			System.out.println("GET params:"+httpMethod.getQueryString());
+            Log.debug(Geonet.CSW,"GET params:"+httpMethod.getQueryString());
 			if (useSOAP)
 				httpMethod.addRequestHeader("Accept", "application/soap+xml");
 		}
@@ -523,7 +523,7 @@ public abstract class CatalogRequest
 				postData = Xml.getString(new Document(soapEmbed(params)));
 				post.setRequestEntity(new StringRequestEntity(postData, "application/soap+xml", "UTF8"));
 			}
-			System.out.println("POST params:"+Xml.getString(params));
+            Log.debug(Geonet.CSW, "POST params:"+Xml.getString(params));
 			httpMethod = post;
 			httpMethod.setPath(address);
 		}

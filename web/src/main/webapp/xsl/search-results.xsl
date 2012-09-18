@@ -126,7 +126,7 @@
 	-->
 	<xsl:template name="hits">
 		<xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
-		<xsl:for-each select="/root/response/*[name(.)!='summary']">
+		<xsl:for-each select="/root/response/*[name(.)!='summary' and name(.)!='sortBy']">
 
 			<xsl:variable name="md">
 				<xsl:apply-templates mode="brief" select="."/>
@@ -213,9 +213,18 @@
 												<input class="content" type="checkbox" onclick="javascript:metadataselect('{geonet:info/uuid}', this.checked)"/>
 											</xsl:if>
 											-->
+                                            <xsl:choose>
+                                                <xsl:when test="$metadata/geonet:info/workspace">
+                                                    <a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple&amp;fromWorkspace=true">
+                                                        <xsl:value-of select="$metadata/title"/>
+                                                    </a>
+                                                </xsl:when>
+                                                <xsl:otherwise>
 											<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
 												<xsl:value-of select="$metadata/title"/>
 											</a>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
 										</h1>
 									</td>
 								<!-- Download XML for ISO and FGDC for use in applications like GeoNetwork or ESRI ArcCatalog -->

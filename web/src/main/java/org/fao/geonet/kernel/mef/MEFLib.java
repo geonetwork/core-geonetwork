@@ -29,7 +29,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +48,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -408,7 +408,7 @@ public class MEFLib {
 		String query = "SELECT name FROM MetadataCateg, Categories "
 				+ "WHERE categoryId = id AND metadataId = ?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		List list = dbms.select(query, id).getChildren();
 
 		for (int i = 0; i < list.size(); i++) {
 			Element record = (Element) list.get(i);
@@ -431,40 +431,36 @@ public class MEFLib {
 	 * @return
 	 * @throws Exception
 	 */
-	static Element buildInfoPrivileges(ServiceContext context, Element md)
-			throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+	static Element buildInfoPrivileges(ServiceContext context, Element md) throws Exception {
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = md.getChildText("id");
-		int iId = new Integer(id);
 		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
 				+ "FROM   OperationAllowed, Groups, Operations "
 				+ "WHERE  groupId = Groups.id "
 				+ "  AND  operationId = Operations.id "
 				+ "  AND  metadataId = ?";
 
-		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
-		// Only one groupOwner per metadata
-		Element grpOwnerRs = dbms.select(grpOwnerQuery, iId).getChild("record");
-		// Get group Owner ID
-		String grpOwnerId = grpOwnerRs.getChildText("groupowner");
-		String grpOwnerName = "";
+		//***
+		// String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
 
-		HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
+		// Only one groupOwner per metadata
+		//Element grpOwnerRs = dbms.select(grpOwnerQuery, id).getChild("record");
+		// Get group Owner ID
+		//String grpOwnerId = grpOwnerRs.getChildText("groupowner");
+		//String grpOwnerName = "";
+
+		Map<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
 
 		// --- retrieve accessible groups
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
-
-		Set<String> userGroups = am.getUserGroups(dbms, context
-				.getUserSession(), context.getIpAddress());
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
 
 		// --- scan query result to collect info
 
-		List list = dbms.select(query, iId).getChildren();
+		List list = dbms.select(query, id).getChildren();
 
 		for (int i = 0; i < list.size(); i++) {
 			Element record = (Element) list.get(i);
@@ -475,8 +471,9 @@ public class MEFLib {
 			if (!userGroups.contains(grpId))
 				continue;
 
-			if (grpOwnerId != null && grpOwnerId.equals(grpId))
-				grpOwnerName = grpName;
+			//***
+			// if (grpOwnerId != null && grpOwnerId.equals(grpId))
+			//	grpOwnerName = grpName;
 
 			ArrayList<String> al = hmPriv.get(grpName);
 
@@ -495,9 +492,10 @@ public class MEFLib {
 		for (String grpName : hmPriv.keySet()) {
 			Element group = new Element("group");
 			group.setAttribute("name", grpName);
+			//***
 			// Handle group owner
-			if (grpName.equals(grpOwnerName))
-				group.setAttribute("groupOwner", Boolean.TRUE.toString());
+			//if (grpName.equals(grpOwnerName))
+			//	group.setAttribute("groupOwner", Boolean.TRUE.toString());
 
 			privil.addContent(group);
 

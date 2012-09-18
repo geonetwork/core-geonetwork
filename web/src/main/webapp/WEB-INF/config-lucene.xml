@@ -55,6 +55,7 @@
     <dumpFields>
       <field name="_isTemplate" tagName="isTemplate"/>
       <field name="_isHarvested" tagName="isHarvested"/>
+      <field name="_isWorkspace" tagName="isWorkspace"/>
       <field name="_popularity" tagName="popularity"/>
       <field name="_rating" tagName="rating"/>
       <field name="_displayOrder" tagName="displayOrder"/>
@@ -160,10 +161,10 @@
     <Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     <Field name="_cat" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     
+    <Field name="keyword" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
+    <Field name="inspirerelated" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
+    <Field name="orgName" analyzer="org.fao.geonet.kernel.search.LowerCaseKeywordAnalyzer"/>
 
-    <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>
@@ -245,6 +246,9 @@
     <Field name="specificationTitle"/>
     <Field name="levelName"/>
     <Field name="subject"/>
+
+    <Field name="orgName"/>
+    <Field name="keyword"/>
   </tokenized>
 
   <!-- All Lucene numeric fields.

@@ -777,7 +777,7 @@ function gn_showMetadata(id) {
 }
 function gn_showMetadataTab(id, currTab)
 {
-    var pars = 'id=' + id + '&currTab=' + currTab;
+    var pars = 'id=' + id + '&currTab=' + currTab + '&fromWorkspace=true';
 
     $('gn_showmd_' + id) .hide();
     $('gn_loadmd_' + id) .show();

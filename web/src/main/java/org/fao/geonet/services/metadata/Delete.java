@@ -33,7 +33,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
@@ -68,6 +67,7 @@ public class Delete implements Service
 		DataManager   dataMan   = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
 		UserSession   session   = context.getUserSession();
+        String userId = session.getUserId();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -81,9 +81,14 @@ public class Delete implements Service
 		if (info == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+        boolean canEdit = accessMan.canEdit(context, id);
 
+        if(!canEdit) {
+            throw new OperationNotAllowedEx("You can not delete this because you are not authorized to edit this metadata.");
+        }
+        else if(info.isLocked && !info.lockedBy.equals(userId)) {
+            throw new OperationNotAllowedEx("You can not delete this because this metadata is locked and you do not own the lock.");
+        }
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder
 
@@ -99,6 +104,7 @@ public class Delete implements Service
 		//--- delete metadata and return status
 
 		dataMan.deleteMetadata(context, dbms, id);
+        dataMan.deleteFromWorkspace(dbms, id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

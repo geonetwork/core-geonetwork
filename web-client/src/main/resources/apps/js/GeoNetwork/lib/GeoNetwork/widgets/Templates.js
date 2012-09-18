@@ -103,6 +103,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
                 ],
     initComponent: function() {
         GeoNetwork.Templates.superclass.initComponent.call(this);
+        this.refreshTemplates();
     },
     /** api: method[getHarvesterTemplate]
      *
@@ -110,10 +111,9 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
      */    
     getHarvesterTemplate: function() {
         return new Ext.XTemplate(this.xmlTplMarkup);
-    }
-});
+    },
 
-
+     refreshTemplates: function() {
 GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +
                                 '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
 GeoNetwork.Templates.RATING_TPL = '<tpl if="isharvested==\'n\' || harvestertype==\'geonetwork\'"><div class="rating">' +
@@ -143,6 +143,50 @@ GeoNetwork.Templates.SIMPLE = new Ext.XTemplate(
                         '{value}{[xindex==xcount?"":", "]}',
                     '</tpl></span>',
                 '</tpl>',
+
+            '<tpl if="(values.userauthenticated == \'y\') && (edit==\'true\' || locked==\'y\' || values.canunlock==\'y\' || values.canedit==\'y\')">',
+            '<div>',
+            // status information
+            '<tpl if="edit==\'true\' && status ==\'1\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-blue.png" alt="'+  OpenLayers.i18n('status_1') + '" title="'+  OpenLayers.i18n('status_1') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_1'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'2\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-green.png" alt="'+  OpenLayers.i18n('status_2') + '" title="'+  OpenLayers.i18n('status_2') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_2'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'3\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-black.png" alt="'+  OpenLayers.i18n('status_3') + '" title="'+  OpenLayers.i18n('status_3') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_3'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'4\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-yellow.png" alt="'+  OpenLayers.i18n('status_4') + '" title="'+  OpenLayers.i18n('status_4') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_4'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'5\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-red.png" alt="'+  OpenLayers.i18n('status_5') + '" title="'+  OpenLayers.i18n('status_5') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_5'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'6\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-sepia.png" alt="'+  OpenLayers.i18n('status_6') + '" title="'+  OpenLayers.i18n('status_6') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_6'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && (status ==\'0\' || status == \'undefined\')">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-grey.png" alt="'+  OpenLayers.i18n('status_0') + '" title="'+  OpenLayers.i18n('status_0') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_0'),
+            '</tpl>',
+
+            // locked information
+            '<tpl if="locked==\'y\'">',
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
+            '</tpl>',
+
+            // can unlock information
+            '<tpl if="values.canunlock==\'y\'">',
+
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
+            '</tpl>',
+
+            // can edit information
+            '<tpl if="values.canedit==\'y\'">',
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
+            '</tpl>',
+            '</div>',
+            '</tpl>',
+
                 '</td></tr></table>',
             '</li>',
         '</tpl>',
@@ -174,6 +218,7 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
                         '<a href="#" class="md-mn addLayer" title="{title}" alt="{title}" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
                     '</tpl>',
                     '</tpl>',
+
                 '</div>',
                 '</li>',
             '</tpl>',
@@ -225,6 +270,50 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                         '<a href="#" onclick="catalogue.metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="' + OpenLayers.i18n('prepareDownload') + '" alt="download">&nbsp;</a>',
                         '</tpl>',
                     '</div>',
+
+            '<tpl if="(values.userauthenticated == \'y\') && (edit==\'true\' || locked==\'y\' || values.canunlock==\'y\' || values.canedit==\'y\')">',
+            '<div>',
+            // status information
+            '<tpl if="edit==\'true\' && status ==\'1\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-blue.png" alt="'+  OpenLayers.i18n('status_1') + '" title="'+  OpenLayers.i18n('status_1') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_1'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'2\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-green.png" alt="'+  OpenLayers.i18n('status_2') + '" title="'+  OpenLayers.i18n('status_2') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_2'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'3\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-black.png" alt="'+  OpenLayers.i18n('status_3') + '" title="'+  OpenLayers.i18n('status_3') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_3'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'4\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-yellow.png" alt="'+  OpenLayers.i18n('status_4') + '" title="'+  OpenLayers.i18n('status_4') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_4'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'5\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-red.png" alt="'+  OpenLayers.i18n('status_5') + '" title="'+  OpenLayers.i18n('status_5') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_5'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && status ==\'6\'">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-sepia.png" alt="'+  OpenLayers.i18n('status_6') + '" title="'+  OpenLayers.i18n('status_6') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_6'),
+            '</tpl>',
+            '<tpl if="edit==\'true\' && (status ==\'0\' || status == \'undefined\')">',
+            '<img class="md_status" src="{[catalogue.URL]}/images/bullets/bullet-grey.png" alt="'+  OpenLayers.i18n('status_0') + '" title="'+  OpenLayers.i18n('status_0') + '"/>&nbsp;' + OpenLayers.i18n('status_label') + OpenLayers.i18n('status_0'),
+            '</tpl>',
+
+            // locked information
+            '<tpl if="locked==\'y\'">',
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/lock.png" alt="'+  OpenLayers.i18n('metadataLocked') + '" title="'+  OpenLayers.i18n('metadataLocked') + '"/>',
+            '</tpl>',
+
+            // can unlock information
+            '<tpl if="values.canunlock==\'y\'">',
+
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/keys.png" alt="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '" title="'+  OpenLayers.i18n('allowedToUnlockMetadata') + '"/>',
+            '</tpl>',
+
+            // can edit information
+            '<tpl if="values.canedit==\'y\'">',
+            '<img class="md_status" width="30" height="30" src="{[catalogue.URL]}/images/edit.png" alt="'+  OpenLayers.i18n('allowedToEditMetadata') + '" title="'+  OpenLayers.i18n('allowedToEditMetadata') + '"/>',
+            '</tpl>',
+            '</div>',
+            '</tpl>',
+
                 '</td><td class="thumb">',
                         GeoNetwork.Templates.RATING_TPL,
                         '<div class="thumbnail">',
@@ -279,6 +368,49 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
         }
     }
 );
+
+    }
+
+
+});
+
+
+// Initialized in refreshTemplates method to get correct language
+GeoNetwork.Templates.TITLE = '';
+
+GeoNetwork.Templates.RATING_TPL = '<tpl if="isharvested==\'n\' || harvestertype==\'geonetwork\'"><div class="rating">' +
+                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' + 
+                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' + 
+                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'3\'">checked="true"</tpl> value="3"/>' +
+                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'4\'">checked="true"</tpl> value="4"/>' +
+                                           '<input type="radio" name="rating{[xindex]}" <tpl if="rating==\'5\'">checked="true"</tpl> value="5"/>' + 
+                                       '</div></tpl>'; 
+GeoNetwork.Templates.LOGO = '<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{source}.gif"/></div>';
+/** api: constructor 
+ *  .. class:: GeoNetwork.Templates.SIMPLE()
+ * 
+ *   An instance of a pre-configured GeoNetwork.Templates with title and 
+ *   keywords with abstract in tooltip.
+ */
+// Initialized in refreshTemplates method to get correct language
+GeoNetwork.Templates.SIMPLE = new Ext.XTemplate('');
+
+
+
+/** api: constructor 
+ *  .. class:: GeoNetwork.Templates.THUMBNAIL()
+ * 
+ *   An instance of a pre-configured GeoNetwork.Templates with thumbnail view
+ */
+// Initialized in refreshTemplates method to get correct language
+GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate('');
+
+/** api: constructor 
+ *  .. class:: GeoNetwork.Templates.FULL()
+ * 
+ *   An instance of a pre-configured GeoNetwork.Templates with full view
+ */// Initialized in refreshTemplates method to get correct language
+GeoNetwork.Templates.FULL = new Ext.XTemplate('');
 
 GeoNetwork.Templates.Relation = {
         SHORT: ['<li class="{type}">',

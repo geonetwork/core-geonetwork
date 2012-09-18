@@ -95,7 +95,6 @@
 		
 		<form name="present_{$type}" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.thumbnail.unset" method="post">
 			<input type="hidden" name="id"      value="{/root/thumbnail/id}"/>
-			<input type="hidden" name="version" value="{/root/thumbnail/version}"/>
 			<input type="hidden" name="type"    value="{$type}"/>
 
 			<tr>
@@ -130,7 +129,6 @@
 		<form name="absent_{$type}" accept-charset="UTF-8" action="{/root/gui/locService}/metadata.thumbnail.set" 
 				method="post" enctype="multipart/form-data">
 			<input type="hidden" name="id"      value="{/root/thumbnail/id}"/>
-			<input type="hidden" name="version" value="{/root/thumbnail/version}"/>
 			<input type="hidden" name="type"    value="{$type}"/>
 
 			<tr>			

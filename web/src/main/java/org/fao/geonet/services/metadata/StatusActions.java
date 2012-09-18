@@ -32,8 +32,10 @@ public interface StatusActions {
 
 	public void init(ServiceContext context, Dbms dbms);
 
-	public void onEdit(int id, boolean minorEdit) throws Exception;
+    public void onCreate(String id) throws Exception;
+    public void onEdit(String id, boolean minorEdit) throws Exception;
+    public void onCancelEdit(String id) throws Exception;
 
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception;
+	public Set<String> statusChange(String status, Set<String> metadataIds, String changeDate, String changeMessage) throws Exception;
 
 }

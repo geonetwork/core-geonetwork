@@ -277,6 +277,14 @@ function get_cookie ( cookie_name )
 	}
 
 
+  function compareMetadata(msg) {
+        if ($('nbselected').innerHTML != 2) {
+            alert(msg);
+        } else {
+            load(Env.locService +'/metadata.diff');
+        }
+    }
+
 /**********************************************************
  * Batch Operations are called through this routine
  **********************************************************/
@@ -772,6 +780,28 @@ function addSampleData(msgSelectSomething, msgFailedAddSampleMetadata, msgSucces
 						}
 	});
 }
+
+
+function unlockMetadata(id, title) {
+    Modalbox.show(getGNServiceURL('metadata.unlock') + "?id="+id,{title: title, width: 300, height: 200, afterHide: function() {
+        if ($("simple_search_pnl") && $("simple_search_pnl").visible()) {
+            runSimpleSearch();
+
+        } else if ($("advanced_search_pnl") && $("advanced_search_pnl").visible()) {
+            runAdvancedSearch();
+
+            // Used in my metadata form
+        } else if ($("metadata_search_pnl") && $("metadata_search_pnl").visible()) {
+            location.replace(getGNServiceURL('main.search') + "?hitsPerPage=10&_isLocked=y&sortBy=date");
+
+        } else {
+            location.replace(getGNServiceURL('home'));
+        }
+
+        runRssSearch();
+    }});
+}
+
 
 function idxOperation(service, wait, btn, warning)
 {

@@ -42,7 +42,6 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +52,6 @@ import java.util.Vector;
  *
  */
 public class EditLib {
-    private Hashtable<String, Integer> htVersions   = new Hashtable<String, Integer>(1000);
 	private SchemaManager scm;
 
 	//--------------------------------------------------------------------------
@@ -69,7 +67,6 @@ public class EditLib {
      */
 	public EditLib(SchemaManager scm) {
 		this.scm = scm;
-        htVersions.clear();
 	}
 
 	//--------------------------------------------------------------------------
@@ -87,10 +84,8 @@ public class EditLib {
      * @return
      * @throws Exception
      */
-	public String getVersionForEditing(String schema, String id, Element md) throws Exception {
-		String version = getVersion(id, true) +"";
+	public void getVersionForEditing(String schema, String id, Element md) throws Exception {
 	  addEditingInfo(schema,md,1,0);
-		return version;
 	}
 
     /**
@@ -133,25 +128,6 @@ public class EditLib {
 		enumerateTree(md,id,parent);
 	}
 
-    /**
-     * TODO javadoc.
-     *
-     * @param id
-     * @return
-     */
-	public String getVersion(String id) {
-		return Integer.toString(getVersion(id, false));
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param id
-     * @return
-     */
-	public String getNewVersion(String id) {
-		return Integer.toString(getVersion(id, true));
-	}
 
     /**
      * Given an element, creates all mandatory sub-elements. The given element should be empty.
@@ -324,7 +300,7 @@ public class EditLib {
      * @param el The element
      * @param qname The qualified name of the element
      * @param fragment XML fragment
-     * @param removeExisting Remove element of the same type before insertion
+     * 
      * @throws Exception
      * @throws IllegalStateException Fail to parse the fragment.
      */
@@ -398,27 +374,6 @@ public class EditLib {
             }
         }
 		return result;
-	}
-
-    /**
-     * Returns the version of a metadata, incrementing it if necessary.
-     *
-     * @param id
-     * @param increment
-     * @return
-     */
-	private synchronized int getVersion(String id, boolean increment) {
-		Integer inVer = htVersions.get(id);
-
-		if (inVer == null)
-			inVer = 1;
-
-		if (increment)
-			inVer = inVer + 1;
-
-		htVersions.put(id, inVer);
-
-		return inVer;
 	}
 
     /**

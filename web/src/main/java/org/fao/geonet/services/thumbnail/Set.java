@@ -29,12 +29,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import lizard.tiff.Tiff;
-
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -46,10 +44,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-//=============================================================================
-
-public class Set implements Service
-{
+/**
+ * TODO Javadoc.
+ */
+public class    Set implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -64,11 +62,17 @@ public class Set implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		String  id            = Util.getParam     (params, Params.ID);
 		String  type          = Util.getParam     (params, Params.TYPE);
-		String  version       = Util.getParam     (params, Params.VERSION);
 		String  file          = Util.getParam     (params, Params.FNAME);
 		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR);
 		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
@@ -84,21 +88,12 @@ public class Set implements Service
 		//--- environment vars
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 		DataManager dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		//--- check if the metadata has been modified from last time
-
-		if (version != null && !dataMan.getVersion(id).equals(version))
-			throw new ConcurrentUpdateEx(id);
 
 		//-----------------------------------------------------------------------
 		//--- create destination directory
 
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-
 		new File(dataDir).mkdirs();
 
 		//-----------------------------------------------------------------------
@@ -151,25 +146,32 @@ public class Set implements Service
 			dataMan.setThumbnail(context, id, type.equals("small"), file);
 		}
 
-		//-----------------------------------------------------------------------
-
 		Element response = new Element("a");
 		response.addContent(new Element("id").setText(id));
-		response.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
 		return response;
 	}
 
-	// FIXME : not elegant
+
+    /**
+     * // FIXME : not elegant.
+     *
+     * TODO Javadoc.
+     *
+     * @param params
+     * @param context
+     * @param dbms
+     * @param dataMan
+     * @return
+     * @throws Exception
+     */
 	public Element execOnHarvest(
 							Element params, 
 							ServiceContext context, 
 							Dbms dbms, 
-							DataManager dataMan) throws Exception
-	{
+							DataManager dataMan) throws Exception {
 		String  id            = Util.getParam     (params, Params.ID);
 		String  type          = Util.getParam     (params, Params.TYPE);
-		String  version       = Util.getParam     (params, Params.VERSION);
 		String  file          = Util.getParam     (params, Params.FNAME);
 		String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
 		boolean scaling       = Util.getParam     (params, Params.SCALING, false);
@@ -187,8 +189,7 @@ public class Set implements Service
 		//-----------------------------------------------------------------------
 		//--- create the small thumbnail, removing the old one
 
-		if (createSmall)
-		{
+		if (createSmall) {
 			String smallFile = getFileName(file, true);
 			String inFile    = context.getUploadDir() + file;
 			String outFile   = dataDir + smallFile;
@@ -201,8 +202,7 @@ public class Set implements Service
 		//--- create the requested thumbnail, removing the old one
 		// FIXME removeOldThumbnail(context, id, type);
 
-		if (scaling)
-		{
+		if (scaling) {
 			String newFile = getFileName(file, type.equals("small"));
 			String inFile  = context.getUploadDir() + file;
 			String outFile = dataDir + newFile;
@@ -214,8 +214,7 @@ public class Set implements Service
 
 			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
 		}
-		else
-		{
+		else {
 			//--- move uploaded file to destination directory
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
@@ -246,8 +245,15 @@ public class Set implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private void removeOldThumbnail(ServiceContext context, String id, String type) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param context
+     * @param id
+     * @param type
+     * @throws Exception
+     */
+	private void removeOldThumbnail(ServiceContext context, String id, String type) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
@@ -278,11 +284,16 @@ public class Set implements Service
 			context.error("Error while deleting thumbnail : "+file);
 	}
 
-	//--------------------------------------------------------------------------
-
-	private void createThumbnail(String inFile, String outFile, int scalingFactor,
-										  String scalingDir) throws IOException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param inFile
+     * @param outFile
+     * @param scalingFactor
+     * @param scalingDir
+     * @throws IOException
+     */
+	private void createThumbnail(String inFile, String outFile, int scalingFactor, String scalingDir) throws IOException {
 		BufferedImage origImg = getImage(inFile);
 
 		int imgWidth  = origImg.getWidth();
@@ -313,10 +324,14 @@ public class Set implements Service
 		ImageIO.write(bimg, IMAGE_TYPE, new File(outFile));
 	}
 
-	//--------------------------------------------------------------------------
-
-	private String getFileName(String file, boolean small)
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param file
+     * @param small
+     * @return
+     */
+	private String getFileName(String file, boolean small) {
 		int pos = file.lastIndexOf('.');
 
 		if (pos != -1)
@@ -326,10 +341,14 @@ public class Set implements Service
 							: file +"."+ IMAGE_TYPE;
 	}
 
-	//--------------------------------------------------------------------------
-
-	public BufferedImage getImage(String inFile) throws IOException
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param inFile
+     * @return
+     * @throws IOException
+     */
+	public BufferedImage getImage(String inFile) throws IOException {
 		String lcFile = inFile.toLowerCase();
 
 		if (lcFile.endsWith(".tif") || lcFile.endsWith(".tiff"))
@@ -352,10 +371,14 @@ public class Set implements Service
 		return ImageIO.read(new File(inFile));
 	}
 
-	//--------------------------------------------------------------------------
-
-	private Image getTiffImage(String inFile) throws IOException
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param inFile
+     * @return
+     * @throws IOException
+     */
+	private Image getTiffImage(String inFile) throws IOException {
 		Tiff t = new Tiff();
 		t.readInputStream(new FileInputStream(inFile));
 
@@ -392,7 +415,3 @@ public class Set implements Service
 	private static final String FNAME_PARAM   = "fname=";
 
 }
-
-//=============================================================================
-
-

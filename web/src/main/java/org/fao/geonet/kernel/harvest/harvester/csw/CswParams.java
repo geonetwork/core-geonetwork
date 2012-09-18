@@ -70,7 +70,7 @@ public class CswParams extends AbstractParams
             capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
         }
         catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
+            System.err.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
         }
@@ -98,7 +98,7 @@ public class CswParams extends AbstractParams
             capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
         }
         catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
+            System.err.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
         }

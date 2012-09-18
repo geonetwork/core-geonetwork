@@ -521,6 +521,9 @@ div.button {
 .cat-proceedings {
   background-image : url(../images/default/category/proceedings.png) !important;
 }
+.switchView {
+    background-image : url(../images/default/switch.png) !important;
+}
 /* Icon and button - end */
 
 

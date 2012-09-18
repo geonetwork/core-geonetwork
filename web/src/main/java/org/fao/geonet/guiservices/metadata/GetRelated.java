@@ -90,14 +90,12 @@ public class GetRelated implements Service {
         String from = Util.getParam(params, "from", "1");
         String to = Util.getParam(params, "to", "1000");
 
-        Log.info(Geonet.SEARCH_ENGINE,
-                "GuiService param is " + _config.getValue("guiService"));
+        Log.info(Geonet.SEARCH_ENGINE, "GuiService param is " + _config.getValue("guiService"));
 
         Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-        int id;
+        String id;
         String uuid;
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
         Dbms dbms = null;
 
@@ -111,15 +109,16 @@ public class GetRelated implements Service {
             if (uuid == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
 
-            id = Integer.parseInt(mdId);
-        } else {
+            id = mdId;
+        }
+        else {
             uuid = info.getChildText(Params.UUID);
-            id = Integer.parseInt(info.getChildText(Params.ID));
+            id = info.getChildText(Params.ID);
         }
 
         Element relatedRecords = new Element("relations");
 
-        Element md = Show.getCached(context.getUserSession(), Integer.toString(id));
+        Element md = Show.getCached(context.getUserSession(), id);
         if (type.equals("") || type.contains("children")) {
             relatedRecords.addContent(search(uuid, "children", context, from,
                     to, fast));
@@ -127,9 +126,7 @@ public class GetRelated implements Service {
         if (type.equals("") || type.contains("parent")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             if(md == null) {
-                md = gc.getDataManager().getMetadata(context,
-                        String.valueOf(id), forEditing, withValidationErrors,
-                        keepXlinkAttributes);
+                md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
             }
             if (md != null) {
                 Element parent = md.getChild("parentIdentifier", gmd);
@@ -140,34 +137,25 @@ public class GetRelated implements Service {
                     String parentId = dm.getMetadataId(dbms, parentUuid);
 
                     try {
-                        Lib.resource.checkPrivilege(context, parentId,
-                                AccessManager.OPER_VIEW);
-                        Element content = dm.getMetadata(context, parentId,
-                                forEditing, withValidationErrors,
+                        Lib.resource.checkPrivilege(context, parentId, AccessManager.OPER_VIEW);
+                        Element content = dm.getMetadata(context, parentId, forEditing, withValidationErrors,
                                 keepXlinkAttributes);
-                        relatedRecords.addContent(new Element("parent")
-                                .addContent(new Element("response")
-                                        .addContent(content)));
-                    } catch (Exception e) {
-                        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
-                                + parentId + " record is not visible for user.");
+                        relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(content)));
+                    }
+                    catch (Exception e) {
+                        Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata " + parentId + " record is not visible for user.");
                     }
                 }
             }
         }
         if (type.equals("") || type.contains("service")) {
-            relatedRecords.addContent(search(uuid, "services", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
         }
         // Related record from uuiref attributes in metadata record
-        if (type.equals("") || type.contains("dataset")
-                || type.contains("fcat") || type.contains("source")) {
+        if (type.equals("") || type.contains("dataset") || type.contains("fcat") || type.contains("source")) {
             boolean forEditing = false, withValidationErrors = false;
             if(md == null) {
-                md = gc.getDataManager()
-                    .getMetadata(context, String.valueOf(id), forEditing,
-                            withValidationErrors, false);
+                md = gc.getDataManager().getMetadata(context, String.valueOf(id), forEditing, withValidationErrors, false);
             }
 
             // Get datasets related to service search
@@ -175,8 +163,7 @@ public class GetRelated implements Service {
                 ElementFilter el = new ElementFilter("operatesOn", srv);
                 StringBuffer uuids = filterMetadata(md, el);
                 if (uuids.length() > 0) {
-                    relatedRecords.addContent(search(uuids.toString(),
-                            "datasets", context, from, to, fast));
+                    relatedRecords.addContent(search(uuids.toString(), "datasets", context, from, to, fast));
                 }
             }
             // if source
@@ -184,18 +171,15 @@ public class GetRelated implements Service {
                 ElementFilter el = new ElementFilter("source", gmd);
                 StringBuffer uuids = filterMetadata(md, el);
                 if (uuids.length() > 0) {
-                    relatedRecords.addContent(search(uuids.toString(),
-                            "sources", context, from, to, fast));
+                    relatedRecords.addContent(search(uuids.toString(), "sources", context, from, to, fast));
                 }
             }
             // if fcat
             if (type.equals("") || type.contains("fcat")) {
-                ElementFilter el = new ElementFilter(
-                        "featureCatalogueCitation", gmd);
+                ElementFilter el = new ElementFilter("featureCatalogueCitation", gmd);
                 StringBuffer uuids = filterMetadata(md, el);
                 if (uuids.length() > 0) {
-                    relatedRecords.addContent(search(uuids.toString(), "fcats",
-                            context, from, to, fast));
+                    relatedRecords.addContent(search(uuids.toString(), "fcats", context, from, to, fast));
                 }
             }
         }
@@ -204,13 +188,9 @@ public class GetRelated implements Service {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(id, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
-                    to, fast));
-
+            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
         }
-
         return relatedRecords;
-
     }
 
     private StringBuffer filterMetadata(Element md, ElementFilter el) {

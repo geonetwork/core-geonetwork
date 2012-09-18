@@ -33,7 +33,8 @@ public class SearchParameter {
 
     public static final String OWNER = "owner";
     public static final String GROUP = "group";
-    public static final String GROUPOWNER = "groupOwner";
+    //***
+    // public static final String GROUPOWNER = "groupOwner";
     public static final String ISREVIEWER = "isReviewer";
     public static final String ISUSERADMIN = "isUserAdmin";
     public static final String ISADMIN = "isAdmin";

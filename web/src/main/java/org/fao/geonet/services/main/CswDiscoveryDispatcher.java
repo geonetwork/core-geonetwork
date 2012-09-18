@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

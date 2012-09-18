@@ -38,6 +38,7 @@ Ext.namespace('GeoNetwork.editor');
 GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
     title: undefined,
     metadataId: undefined,
+    workspace: undefined,
     versionId: undefined,
     setThumbnail: undefined,
     unsetThumbnail: undefined,
@@ -83,7 +84,8 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
         
         this.store.reload({
             params: {
-                id: this.metadataId
+                id: this.metadataId,
+                fromWorkspace: this.workspace
             }
         });
     },
@@ -184,7 +186,8 @@ GeoNetwork.editor.ThumbnailPanel = Ext.extend(Ext.Panel, {
             items: [this.addButton, this.delButton]
         });
         
-        this.store = new GeoNetwork.data.MetadataThumbnailStore(this.getThumbnail, {id: this.metadataId});
+       // alert('thumbnailpanel init: workspace? ' + this.workspace);
+        this.store = new GeoNetwork.data.MetadataThumbnailStore(this.getThumbnail, {id: this.metadataId, fromWorkspace:this.workspace});
         this.store.on('load', function(){
             this.dataView.fireEvent('selectionchange', this);
             Ext.ux.Lightbox.register('a[rel^=lightbox-set]', true);

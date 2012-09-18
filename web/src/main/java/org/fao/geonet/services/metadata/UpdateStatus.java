@@ -36,6 +36,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -72,13 +74,23 @@ public class UpdateStatus implements Service {
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(dbms, id)) {
 			throw new IllegalArgumentException("Metadata not found --> " + id);
+        }
+
+        MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        SettingManager settingManager = gc.getSettingManager();
+        boolean harvesterEditing = settingManager.getValueAsBool("system/harvester/enableEditing");
 
 		//--- only allow the owner of the record to set its status
 		if (!am.isOwner(context, id)) {
-			throw new UnAuthorizedException("Only the owner of the metadata can set the status. User is not the owner of the metadata", null);
+            throw new UnAuthorizedException("You can not set the status of this because you are not the owner", null);
+        }
+        else {
+            // and only if it is not harvested or if harvested md can be edited
+            if(info.isHarvested && !harvesterEditing) {
+                throw new UnAuthorizedException("You can not set the status of this because it is harvested and editing harvested metadata is not enabled", null);
+            }
 		}
 
 		String status = Util.getParam(params, Params.STATUS);
@@ -91,13 +103,15 @@ public class UpdateStatus implements Service {
 
 		StatusActions sa = saf.createStatusActions(context, dbms);
 
-		Set<Integer> metadataIds = new HashSet<Integer>();
-		metadataIds.add(iLocalId);
+		Set<String> metadataIds = new HashSet<String>();
+		metadataIds.add(id);
 
-		Set<Integer> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
+		Set<String> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(dbms, id, false);
+        boolean workspace = false;
+        dataMan.indexMetadata(dbms, id, false, workspace, true);
+        // TODO index workspace ????
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

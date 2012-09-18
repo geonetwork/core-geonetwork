@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -127,13 +128,17 @@ public class Login implements Service
 		return (list.size() != 0);
 	}
 
-	//--------------------------------------------------------------------------
-
-	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException
-	{
+    /**
+     *
+     * @param context
+     * @param dbms
+     * @param info
+     * @throws SQLException
+     */
+	private void updateUser(ServiceContext context, Dbms dbms, LDAPInfo info) throws SQLException {
         boolean groupProvided = ((info.group != null) && (!(info.group.equals(""))));
-        int groupId = -1;
-        int userId = -1;
+        String groupId = "-1";
+        String userId = "-1";
 
         //--- Create group retrieved from LDAP if it's new
         if (groupProvided) {
@@ -141,13 +146,12 @@ public class Login implements Service
             List list  = dbms.select(query, info.group).getChildren();
 
             if (list.isEmpty()) {
-                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+                groupId = IDFactory.newID();
 			    query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
                 dbms.execute(query, groupId, info.group);
                 Lib.local.insert(dbms, "Groups", groupId, info.group);
             } else {
-                String gi = ((Element) list.get(0)).getChildText("id");
-                groupId = new Integer(gi).intValue();
+                groupId = ((Element) list.get(0)).getChildText("id");
             }
         }
 
@@ -161,10 +165,8 @@ public class Login implements Service
 
 		if (res == 0)
 		{
-			userId = context.getSerialFactory().getSerial(dbms, "Users");
-
-			query = 	"INSERT INTO Users(id, username, password, surname, name, profile) "+
-						"VALUES(?,?,?,?,?,?)";
+			userId = IDFactory.newID();
+			query = "INSERT INTO Users(id, username, password, surname, name, profile) VALUES(?,?,?,?,?,?)";
 
 			dbms.execute(query, userId, info.username, Util.scramble(info.password), "(LDAP)", info.name, info.profile);
 
@@ -176,8 +178,7 @@ public class Login implements Service
                 String count = ((Element) list.get(0)).getChildText("numr");
 
                 if (count.equals("0")) {
-                    query = 	"INSERT INTO UserGroups(userId, groupId) "+
-                                "VALUES(?,?)";
+                    query = "INSERT INTO UserGroups(userId, groupId) VALUES(?,?)";
 
                     dbms.execute(query, userId, groupId);
                 }
@@ -187,7 +188,3 @@ public class Login implements Service
 		dbms.commit();
 	}
 }
-
-//=============================================================================
-
-

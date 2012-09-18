@@ -286,6 +286,9 @@ table.related * a:hover,
 .statusIcon {
   background-image : url(../images/default/tag_blue_add.png) !important;
 }
+.unlockIcon {
+    background-image : url(../images/default/keys.png) !important;
+}
 .versioningIcon {
   background-image : url(../images/default/date_go.png) !important;
 }

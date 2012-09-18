@@ -86,8 +86,6 @@ public class Get implements Service
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		result.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
-
 		return result;
 	}
 

@@ -68,7 +68,7 @@ public class OwnershipUtils
 	public static List<Element> getUsers(ServiceContext context, UserSession us, Dbms dbms, List<Element> list) throws SQLException
 	{
 
-		int id = us.getUserIdAsInt();
+		String id = us.getUserId();
 
 		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
 			return list;
@@ -89,8 +89,9 @@ public class OwnershipUtils
 			String profile= elRec.getChildText("profile");
 
 			if (profileSet.contains(profile))
-				if (hsMyGroups.containsAll(getUserGroups(dbms, Integer.parseInt(userId))))
+				if (hsMyGroups.containsAll(getUserGroups(dbms, userId))) {
 					newList.add(elRec);
+		}
 		}
 
 		//--- return result
@@ -104,7 +105,7 @@ public class OwnershipUtils
 	//---
 	//--------------------------------------------------------------------------
 
-	private static Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
+	private static Set<String> getUserGroups(Dbms dbms, String id) throws SQLException
 	{
 
 		Set<String> hs = new HashSet<String>();

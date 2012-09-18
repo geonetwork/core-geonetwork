@@ -10,6 +10,9 @@ GeoNetwork.app = function(){
     var searching = false;
     var editorWindow;
     var editorPanel;
+
+    var orgNameField;
+    var themekeyField;
     
     /**
      * Application parameters are :
@@ -226,7 +229,7 @@ GeoNetwork.app = function(){
 //        var tpl = '<tpl for="."><div class="x-combo-list-item">' + 
 //            '{[values.value.replace(Ext.getDom(\'E_themekey\').value, \'<span>\' + Ext.getDom(\'E_themekey\').value + \'</span>\')]}' + 
 //          '</div></tpl>';
-        var themekeyField = new Ext.ux.form.SuperBoxSelect({
+          themekeyField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,
             queryParam: 'q',
@@ -283,11 +286,15 @@ GeoNetwork.app = function(){
             hidden: true
         });
 
-        var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
+        var isLockedField = new Ext.form.TextField({
+            name: 'E__isLocked',
+            hidden: true
+        });
 
+        var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
         var inspire = new Ext.form.FieldSet({
             title: OpenLayers.i18n('inspireSearchOptions'),
-            autoWidth: true,
+            anchor: "100%",
             hidden: hideInspirePanel,
             collapsible: true,
             collapsed: true,
@@ -297,7 +304,7 @@ GeoNetwork.app = function(){
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField, statusField, ownerField, isHarvestedField, inspire);
+                                metadataTypeField, validField, statusField, ownerField, isHarvestedField, inspire, isLockedField);
         var adv = new Ext.form.FieldSet({
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
@@ -305,8 +312,9 @@ GeoNetwork.app = function(){
             collapsible: true,
             collapsed: urlParameters.advanced!==undefined ? false : true,
             defaultType: 'checkbox',
+            anchor:'100%',
             defaults: {
-                width: 160
+                //width: 160
             },
             items: advancedCriteria
         });
@@ -702,7 +710,7 @@ GeoNetwork.app = function(){
                     id: 'west',
                     split: true,
                     minWidth: 300,
-                    width: 300,
+                    width: 330,
                     maxWidth: 400,
                     autoScroll: true,
                     collapsible: true,
@@ -756,7 +764,7 @@ GeoNetwork.app = function(){
             }
             
             // FIXME : should be in Search field configuration
-            Ext.get('E_any').setWidth(285);
+            //Ext.get('E_any').setWidth(285);
             Ext.get('E_any').setHeight(28);
             if (GeoNetwork.searchDefault.activeMapControlExtent) {
                 Ext.getCmp('geometryMap').setExtent();
@@ -767,7 +775,7 @@ GeoNetwork.app = function(){
             
             resultPanel.setHeight(Ext.getCmp('center').getHeight());
             
-            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
+            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin', 'afterUnlock', 'afterStatusChange', 'afterGrabEditSession'];
             Ext.each(events, function (e) {
                 catalogue.on(e, function(){
                     if (searching === true) {
@@ -776,12 +784,15 @@ GeoNetwork.app = function(){
                 });
             });
 
+            // Zoom map to full extent
+            if (iMap) iMap.getMap().zoomToMaxExtent();
+
             // Hack to run search after all app is rendered within a sec ...
             // It could have been better to trigger event in SearchFormPanel#applyState
             // FIXME
-            if (urlParameters.s_search !== undefined) {
-                setTimeout(function(){searchForm.fireEvent('search');}, 500);
-            }
+            //if (urlParameters.s_search !== undefined) {
+            //    setTimeout(function(){searchForm.fireEvent('search');}, 500);
+            //}
         },
         getIMap: function(){
             // init map if not yet initialized
@@ -794,6 +805,12 @@ GeoNetwork.app = function(){
         },
         getCatalogue: function(){
             return catalogue;
+        },
+        getOrgNameField: function() {
+            return orgNameField;
+        },
+        getThemekeyField: function() {
+            return themekeyField;
         },
         /**
          * Do layout
@@ -902,5 +919,38 @@ Ext.onReady(function(){
     
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
+
+    new Ext.ToolTip({
+        target : app.getOrgNameField().wrapEl,
+        delegate : 'li.x-superboxselect-item',
+        trackMouse : true,
+        renderTo : Ext.getBody(),
+        listeners : {
+            'beforeshow' : {
+                fn : function(tip) {
+                    var rec = app.getOrgNameField().findSelectedRecord(tip.triggerElement);
+                    tip.body.dom.innerHTML = rec.get('value');
+                },
+                scope: this
+            }
+        }
+    });
+
+
+    new Ext.ToolTip({
+        target : app.getThemekeyField().wrapEl,
+        delegate : 'li.x-superboxselect-item',
+        trackMouse : true,
+        renderTo : Ext.getBody(),
+        listeners : {
+            'beforeshow' : {
+                fn : function(tip) {
+                    var rec = app.getThemekeyField().findSelectedRecord(tip.triggerElement);
+                    tip.body.dom.innerHTML = rec.get('value');
+                },
+                scope: this
+            }
+        }
+    });
 
 });

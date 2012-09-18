@@ -17,3 +17,5 @@ web/src/main/webapp/WEB-INF/metadata_subversion/
 schematrons/.build
 docs/*/users/build
 .props/
+*.iml
+.idea/

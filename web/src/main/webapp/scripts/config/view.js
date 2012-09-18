@@ -206,6 +206,11 @@ ConfigView.prototype.setData = function(data)
     $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
     $('requestedLanguage.ignored').checked = data['REQUESTED_LANGUAGE_IGNORED'] == 'true';
 
+    $('clustering.enable').checked = data['CLUSTERING_ENABLE'] == 'true';
+    $('clustering.jmsurl').value = data['CLUSTERING_JMSURL'];
+
+    $('symbolicLocking.enable').checked = data['SYMBOLIC_LOCKING_ENABLE'] == 'true';
+
 	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
 
 	$('downloadservice.simple')        .checked = data['DOWNLOADSERVICE_SIMPLE'] == 'true';
@@ -334,6 +339,11 @@ ConfigView.prototype.getData = function()
         REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').checked,
         REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
         REQUESTED_LANGUAGE_IGNORED : $('requestedLanguage.ignored').checked,
+
+        CLUSTERING_ENABLE : $('clustering.enable').checked,
+        CLUSTERING_JMSURL : $('clustering.jmsurl').value,
+
+        SYMBOLIC_LOCKING_ENABLE : $('symbolicLocking.enable').checked,
 
 		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	

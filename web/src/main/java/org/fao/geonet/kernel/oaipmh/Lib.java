@@ -33,7 +33,6 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
@@ -115,7 +114,7 @@ public class Lib
 
 	//---------------------------------------------------------------------------
 
-	public static List<Integer> search(ServiceContext context, Element params) throws Exception
+	public static List<String> search(ServiceContext context, Element params) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
@@ -136,14 +135,14 @@ public class Lib
 
 		records.getChild("summary").detach();
 
-		List<Integer> result = new ArrayList<Integer>();
+		List<String> result = new ArrayList<String>();
 
 		for (Object o : records.getChildren())
 		{
 			Element rec  = (Element) o;
 			Element info = rec.getChild("info", Edit.NAMESPACE);
 
-			result.add(Integer.parseInt(info.getChildText("id")));
+			result.add(info.getChildText("id"));
 		}
 
 		searcher.close();

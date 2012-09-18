@@ -113,36 +113,27 @@ public class GetAdminOper implements Service
 
 			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
 
-			int grpId = Integer.parseInt(sGrpId);
-
 			String query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
-			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
+			List listAllow = dbms.select(query, id, sGrpId).getChildren();
 
 			//--- now extend the group list adding proper operations
 
 			List listOper = elOper.getChildren();
 
-			for(int j=0; j<listOper.size(); j++)
-			{
+			for(int j=0; j<listOper.size(); j++) {
 				String operId = ((Element) listOper.get(j)).getChildText("id");
-
-				Element elGrpOper = new Element(Geonet.Elem.OPER)
-													.addContent(new Element(Geonet.Elem.ID).setText(operId));
-
+				Element elGrpOper = new Element(Geonet.Elem.OPER).addContent(new Element(Geonet.Elem.ID).setText(operId));
 				boolean bFound = false;
 
-				for(int k=0; k<listAllow.size(); k++)
-				{
+				for(int k=0; k<listAllow.size(); k++) {
 					Element elAllow = (Element) listAllow.get(k);
 
-					if (operId.equals(elAllow.getChildText("operationid")))
-					{
+					if (operId.equals(elAllow.getChildText("operationid"))) {
 						bFound = true;
 						break;
 					}
 				}
-
 				if (bFound)
 					elGrpOper.addContent(new Element(Geonet.Elem.ON));
 

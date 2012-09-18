@@ -33,7 +33,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 
@@ -65,9 +64,9 @@ public class BatchVersion implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
         if(context.isDebug())
             context.debug("Get selected metadata");
@@ -75,7 +74,7 @@ public class BatchVersion implements Service
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
+			String uuid = iter.next();
             if(context.isDebug())
                 context.debug("Deleting metadata with uuid:"+ uuid);
 
@@ -87,16 +86,16 @@ public class BatchVersion implements Service
 				Element md = dataMan.getMetadataNoInfo(context, id);
 	
 				if (md == null) {
-					notFound.add(new Integer(id));
+					notFound.add(id);
 				} else if (!accessMan.isOwner(context, id)) {
-					notOwner.add(new Integer(id));
+					notOwner.add(id);
 				} else {
 	
 					//--- now set metadata into subversion repo
 					dataMan.versionMetadata(context, id, md);
                     if(context.isDebug())
                         context.debug("  Metadata with id " + id + " added to subversion repo.");
-					metadata.add(new Integer(id));
+					metadata.add(id);
 				}
 			} else
             if(context.isDebug())

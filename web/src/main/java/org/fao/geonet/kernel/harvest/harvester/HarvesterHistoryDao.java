@@ -24,11 +24,11 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
-import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -39,7 +39,6 @@ public class HarvesterHistoryDao {
 	/** Write the harvester history Dao to the database
 		* 
 		* @param dbms The database connection to use
-		* @param sf The serial factory to get the next available row id from
 		* @param type The harvester type
 		* @param name The name of the harvester
 		* @param uuid The uuid of the harvester (allocated on creation)
@@ -47,10 +46,10 @@ public class HarvesterHistoryDao {
 		* @param node XML describing the harvester parameters (info node removed)
 		* @param result XML describing the result that the harvester produced
 		*/
-	public static void write(Dbms dbms, SerialFactory sf, String type, String name, String uuid, String runDate, Element node, Element result) {
+	public static void write(Dbms dbms, String type, String name, String uuid, String runDate, Element node, Element result) {
 		try {
 			//--- generate a new id
-			int hhId = sf.getSerial(dbms, "HarvestHistory");
+			String hhId = IDFactory.newID();
 			
 			String query = "INSERT INTO HarvestHistory (id,harvestDate,harvesterUuid,"
 						+        "harvesterName,harvesterType,deleted,info,params)";
@@ -139,8 +138,7 @@ public class HarvesterHistoryDao {
 
 		int nrRecs = 0; 
 		for (Element id : ids) {
-			dbms.execute("DELETE from HarvestHistory "
-		    	+        "WHERE id = ?", new Integer(id.getText()));
+			dbms.execute("DELETE from HarvestHistory WHERE id = ?", id.getText());
 			nrRecs++;
 			dbms.commit();
 		}

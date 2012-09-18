@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -441,21 +442,22 @@ class Harvester
 		//
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, uuid, userid, group, params.uuid, isTemplate, docType,
+                title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
-		int iId = Integer.parseInt(id);
 		addPrivileges(id);
 		addCategories(id);
 		
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
+		dataMan.setTemplateExt(dbms, id, "n", null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid, uri);
 
         boolean indexGroup = false;
-        dataMan.indexMetadata(dbms, id, indexGroup);
+        boolean workspace = false;
+        dataMan.indexMetadata(dbms, id, indexGroup, workspace, true);
 		
 		dbms.commit();
 	}
@@ -1305,11 +1307,11 @@ class Harvester
 			if (name == null) {
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
 			} else {
-				for (int opId: priv.getOperations ()) {
+				for (String opId: priv.getOperations ()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					} else {
                         if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");

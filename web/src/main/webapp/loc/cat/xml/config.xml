@@ -29,6 +29,14 @@
     <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
     <requestedlanguageignored>Omet l'idioma sol·licitat en la recerca</requestedlanguageignored>
 
+
+    <clustering>agrupació</clustering>
+    <enableClustering>Active l'agrupament</enableClustering>
+    <JMSBrokerConnectionURL>JMS URL agent(es)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>bloqueig simbòlic</symbolicLocking>
+    <enableSymbolicLocking>Activar el bloqueig simbòlic</enableSymbolicLocking>
+
 	<oai>Proveïdor OAI</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -402,6 +410,17 @@
         </tip>
         <tip id="requestedlanguage.ignored">
             Omet l'idioma sol·licitat pels resultats de cerca.
+        </tip>
+
+        <tip id="cluster.enable">
+            Activi aquesta per l'agrupament.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Introduïu l'URL del seu agent de JMS. Per exemple commutació per error://tcp://localhost:61616.
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            Quan aquesta opció està activada, qualsevol editor pot desbloquejar les metadades en els seus grups (no només els revisors).
         </tip>
 
     </tips>

@@ -54,20 +54,13 @@ public class Remove implements Service
 	//--- 
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.PARENT_UUID, Params.PARENT_ID));
-		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		String parentId = Utils.getIdentifierFromParameters(params, context, Params.PARENT_UUID, Params.PARENT_ID);
+		String childId = Utils.getIdentifierFromParameters(params, context, Params.CHILD_UUID, Params.CHILD_ID);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
 		dbms.execute("DELETE FROM Relations WHERE id=? AND relatedId=?",parentId,childId);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

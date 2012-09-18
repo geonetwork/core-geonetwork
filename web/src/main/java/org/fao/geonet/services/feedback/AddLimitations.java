@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.feedback;
 
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -35,7 +34,6 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
@@ -183,7 +181,7 @@ public class AddLimitations implements Service
 
 		//--- now get the users name, organisation and email address to 
 		//--- prepopulate the feedback form
-		Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=?", session.getUserIdAsInt());
+		Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=?", session.getUserId());
 		Element elRec = elUser.getChild("record");
 		if (elRec != null) {
 			response.addContent(elRec.cloneContent());

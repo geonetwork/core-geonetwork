@@ -482,6 +482,7 @@ public class Geonet {
 		public static final String DIR              = "dir";
 		public static final String SUMMARY_CONFIG   = "summaryConfig";
 		public static final String LUCENE_CONFIG    = "luceneConfig";
+        public static final String CLUSTER_CONFIG    = "clusterConfigDir";
 		public static final String GUI_CONFIG       = "guiConfig";
 		public static final String PREFERRED_SCHEMA = "preferredSchema";
 		public static final String STAT_LOG_SPATIAL_OBJECTS  = "statLogSpatialObjects";
@@ -531,6 +532,10 @@ public class Geonet {
 	public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
 	public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
 	public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
+    public static final String CLUSTER      = GEONETWORK + ".cluster";
+    public static final String ARCSDE      = GEONETWORK + ".arcsde";
+    public static final String JMS      = GEONETWORK + ".jms";
+    public static final String DIFF      = GEONETWORK + ".difference";
 	public static final String DB			= GEONETWORK + ".database";
 	public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
     public static final String THESAURUS    = GEONETWORK + ".thesaurus";
@@ -573,5 +578,32 @@ public class Geonet {
 		public static final String MEF_IMPORT        = "mef.import";
 		public static final String MEF_EXPORT        = "mef.export";
 	}
+
+    /**
+     * Cluster message topics
+     */
+    public class ClusterMessageTopic {
+        public static final String REINDEX              = "RE-INDEX";
+        public static final String OPTIMIZEINDEX        = "OPTIMIZE-INDEX";
+        public static final String RELOADINDEXCONF      = "RELOAD-INDEX-CONF";
+        public static final String SETTINGS             = "SETTINGS";
+        public static final String ADDTHESAURUS         = "ADD-THESAURUS";
+        public static final String DELETETHESAURUS      = "DELETE-THESAURUS";
+        public static final String ADDTHESAURUS_ELEM    = "ADD-THESAURUS-ELEMENT";
+        public static final String UPDATETHESAURUS_ELEM = "UPDATE-THESAURUS-ELEMENT";
+        public static final String DELETETHESAURUS_ELEM = "DELETE-THESAURUS-ELEMENT";
+        public static final String MD_VERSIONING        = "MD-VERSIONING";
+        public static final String HARVESTER            = "HARVESTER";
+        public static final String SYSTEM_CONFIGURATION  = "SYSTEM_CONFIGURATION";
+        public static final String SYSTEM_CONFIGURATION_RESPONSE  = "SYSTEM_CONFIGURATION_RESPONSE";
+    }
+
+    /**
+     * Cluster message queues
+     */
+    public class ClusterMessageQueue {
+        public static final String HARVEST              = "HARVEST";
+        public static final String MD_NOTIFIER          = "MD-NOTIFIER";
+    }
 
 }

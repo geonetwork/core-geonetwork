@@ -217,7 +217,7 @@ public abstract class AbstractParams
 
             for (Object o1 : group.getChildren("operation")) {
                 Element oper = (Element) o1;
-                int op = getOperationId(oper);
+                String op = getOperationId(oper);
 
                 p.add(op);
             }
@@ -228,19 +228,19 @@ public abstract class AbstractParams
 
 	//---------------------------------------------------------------------------
 
-	private int getOperationId(Element oper) throws BadInputEx
+	private String getOperationId(Element oper) throws BadInputEx
 	{
 		String operName = oper.getAttributeValue("name");
 
 		if (operName == null)
 			throw new MissingParameterEx("attribute:name", oper);
 
-		int operID = dm.getAccessManager().getPrivilegeId(operName);
+		String operID = dm.getAccessManager().getPrivilegeId(operName);
 
-		if (operID == -1)
+		if (operID.equals("-1"))
 			throw new BadParameterEx("attribute:name", operName);
 
-		if (operID == 2 || operID == 4)
+		if (operID.equals("2") || operID.equals("4"))
 			throw new BadParameterEx("attribute:name", operName);
 
 		return operID;

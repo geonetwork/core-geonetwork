@@ -35,13 +35,10 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** For editing : adds a tag to a metadata. Access is restricted
+/**
+ * For editing : adds a tag to a metadata. Access is restricted.
   */
-
-public class AddElement implements Service
-{
+public class AddElement implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -50,8 +47,7 @@ public class AddElement implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();

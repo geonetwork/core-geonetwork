@@ -23,21 +23,21 @@
 
 package org.fao.geonet.services.notifications;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.notifications.domain.NotificationTarget;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -144,7 +144,7 @@ public class Save implements Service {
             // insert
             if(! notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())
                     && StringUtils.isNotBlank(notificationTarget.getUrl())) {
-                int id = context.getSerialFactory().getSerial(dbms, "MetadataNotifiers");
+                String id = IDFactory.newID();
                 String query = "INSERT INTO MetadataNotifiers(id, name, username, password, url, enabled) VALUES(?, ?, ?, ?, ?, ?)";
                 dbms.execute(query, id, notificationTarget.getName(), notificationTarget.getUsername(), notificationTarget.getPassword(), notificationTarget.getUrl(), enabled);
             }
@@ -153,14 +153,14 @@ public class Save implements Service {
                 String id = notificationTarget.getId();
                 // delete
                 if(notificationTarget.getName() == null) {
-                    int iid = Integer.parseInt(id);
-                    dbms.execute("DELETE FROM MetadataNotifications WHERE NotifierId=?", iid);
-                    dbms.execute("DELETE FROM MetadataNotifiers WHERE id=?", iid);
+                    dbms.execute("DELETE FROM MetadataNotifications WHERE NotifierId=?", id);
+                    dbms.execute("DELETE FROM MetadataNotifiers WHERE id=?", id);
                 }
                 // update
                 else {
                     String query = "UPDATE MetadataNotifiers SET name=?, username=?, password=?, url=?, enabled=? WHERE id=?";
-                    dbms.execute(query, notificationTarget.getName(), notificationTarget.getUsername(), notificationTarget.getPassword(), notificationTarget.getUrl(), enabled, Integer.parseInt(id));
+                    dbms.execute(query, notificationTarget.getName(), notificationTarget.getUsername(),
+                            notificationTarget.getPassword(), notificationTarget.getUrl(), enabled, id);
                 }
             }
         }

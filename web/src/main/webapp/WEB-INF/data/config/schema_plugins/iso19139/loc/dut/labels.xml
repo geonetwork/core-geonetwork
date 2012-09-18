@@ -35,7 +35,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:axisDimensionProperties">
 		<label>as dimensie eigenschappen</label>
-		<description>as dimensie eigenschappen</description>
+		<description>Dimensie eigenschappen van de As</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:characterEncoding">
@@ -44,8 +44,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:codeSpace">
-		<label>codeSpace</label>
-		<description>codeSpace</description>
+		<label>Codespace</label>
+		<description>Naam of identificerende term van de persoon of organisatie die verantwoordelijk is voor de code (namespace)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:composedOf">
@@ -60,8 +60,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataSetURI">
-		<label>dataSetURI</label>
-		<description>dataSetURI</description>
+		<label>Unique Resource Identifier (URI) van de dataset</label>
+		<description>Unieke identifier van de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:describes">
@@ -76,67 +76,67 @@
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Association">
 		<label>DS_Associatie</label>
-		<description>DS_Associatie</description>
+		<description>Dataset associatie</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_DataSet">
-		<label>DS_DataSet</label>
+		<label>DataSet</label>
 		<description>DS_DataSet</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Initiative">
-		<label>DS_Initiatief</label>
-		<description>DS_Initiatief</description>
+		<label>Initiatief</label>
+		<description>DS_Initiative</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_OtherAggregate">
-		<label>DS_AndereAggregatie</label>
-		<description>DS_AndereAggregatie</description>
+		<label>Andere aggregatie</label>
+		<description>DS_OtherAggregate</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Platform">
-		<label>DS_Platform</label>
+		<label>Platform</label>
 		<description>DS_Platform</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_ProductionSeries">
-		<label>DS_Productie Series</label>
-		<description>DS_Productie Series</description>
+		<label>Productie Series</label>
+		<description>DS_ProductionSeries</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Sensor">
-		<label>DS_Sensor</label>
+		<label>Sensor</label>
 		<description>DS_Sensor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_Series">
-		<label>DS_Series</label>
+		<label>Series</label>
 		<description>DS_Series</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_StereoMate">
-		<label>DS_StereoMate</label>
+		<label>StereoMate</label>
 		<description>DS_StereoMate</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_SpatialTemporalExtent">
-		<label>EX_Ruimtelijke en temporele dekking</label>
-		<description>EX_Ruimtelijke en temporele dekking</description>
+		<label>Ruimtelijke en temporele begrenzing</label>
+		<description>Ruimtelijke en temporele begrenzing</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureAttribute">
-		<label>feature Attribuut</label>
-		<description>feature Attribuut</description>
+		<label>Attribuut</label>
+		<description>Attribuut van een object</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureType">
-		<label>feature Type</label>
-		<description>feature Type</description>
+		<label>Object Type</label>
+		<description>Object type</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:georeferencedParameters">
 		<label>Gegeorefereerde Parameters</label>
-		<description>Gegeorefereerde Parameters</description>
+		<description>Gegeorefereerde parameters</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:has">
@@ -146,7 +146,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:initiativeType">
 		<label>initiatief type</label>
-		<description>initiatief type</description>
+		<description>type van het initiatief</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LanguageCode">
@@ -155,13 +155,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:locale">
-		<label>Landinstelling</label>
-		<description>landinstelling</description>
+		<label>locale </label>
+		<description>locale - regionale instelling</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LocalisedCharacterString">
 		<label>Vertaalde Tekenreeks</label>
-		<description>Vertaalde Tekenreeks</description>
+		<description>Vertaalde tekenreeks</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:localisedString">
@@ -170,12 +170,12 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_AggregateInformation">
-		<label>MD_Geaggregeerde Informatie</label>
+		<label>Informatie over het aggregaat</label>
 		<description>MD_Geaggregeerde Informatie</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DistributionUnits">
-		<label>MD_Distributie Eenheden</label>
+		<label>Distributie Eenheden</label>
 		<description>MD_Distributie Eenheden</description>
 	</element>
 	<!-- ==================================================== -->
@@ -191,7 +191,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:propertyType">
 		<label>propertyType</label>
-		<description>propertyType</description>
+		<description>Type van de eigenschap</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:PT_Locale">
@@ -211,7 +211,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:seriesMetadata">
 		<label>seriesMetadata</label>
-		<description>seriesMetadata</description>
+		<description>Metadata betreffende de serie</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:subset">
@@ -235,8 +235,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalCRS">
-		<label>Verticale CRS</label>
-		<description>Verticale CRS</description>
+		<label>Verticaal CRS</label>
+		<description>Verticaal coordinaat referentiesysteem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:abstract">
@@ -266,8 +266,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:amendmentNumber">
-		<label>Ammandement nummer</label>
-		<description>Ammandement nummer van de versie van het formaat</description>
+		<label>Amendement nummer nummer</label>
+		<description>Amendement nummer van de versie van het formaat</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationProfile">
@@ -277,30 +277,30 @@
 	<!-- ==================================================== -->
 	<element name="gmd:applicationSchemaInfo">
 		<label>Applicatie schema info</label>
-		<description>geeft informatie over het conceptuele schema van de dataset</description>
+		<description>Geeft informatie over het conceptuele schema</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributeDescription">
 		<label>Attribuut beschrijving</label>
-		<description>beschrijving van het attribuut dat wordt beschreven door de meetwaarde</description>
+		<description>Beschrijving van het attribuut dat wordt beschreven door de meetwaarde</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributeInstances">
 		<label>Attribuut instanties</label>
-		<description>attribuut instanties waarop de informatie van toepassing is</description>
+		<description>Attribuut instanties waarop de informatie van toepassing is</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributes">
 		<label>Attributen</label>
-		<description>attributen waarop de informatie van toepassing is</description>
+		<description>Attributen waarop de informatie van toepassing is</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:authority">
 		<label>Autoriteit</label>
-		<description>persoon of organisatie die verantwoordelijk is voor het beheer van een namespace.</description>
+		<description>Persoon of organisatie die verantwoordelijk is voor het beheer van een namespace.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:bitsPerValue">
@@ -310,43 +310,42 @@
 	<!-- ==================================================== -->
 	<element name="gmd:cameraCalibrationInformationAvailability">
 		<label>Camera calibratie informatie aanwezigheid</label>
-		<description>indicatie of er informatie aanwezig is waarmee de camera gecalibreerd kan worden.</description>
+		<description>Indicatie of er informatie aanwezig is waarmee de camera gecalibreerd kan worden.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cellGeometry">
 		<label>Cell geometrie</label>
-		<description>indentificatie van grid data als punt of cel.</description>
+		<description>Indentificatie van grid data als punt of cel.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:centerPoint">
 		<label>Middelpunt</label>
-		<description>earth location in the coordinate system defined by the Spatial Reference System
-			and the grid coordinate of the cell halfway between opposite ends of the grid in the
-			spatial dimensions</description>
+		<description>Locatie op aarde uitgedrukt in coordinaten gededefineerd door het Ruimtelijk Referentie Systeem - 
+			grid coordinaat van de cel in het midden tussen twee tegengestelde begrenzingen van het grid in de ruimtelijke dimensies.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:characterSet">
 		<label>Karakterset</label>
-		<description>Volledige naam van de karakterset die is gebruikt voor de opslag van de (meta)data. Voor de meeste data is dat utf8</description>
+		<description>Volledige naam van de karakterset die is gebruikt voor de opslag van de (meta)data.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:checkPointAvailability">
-		<label>beschikbaarheid controle punten</label>
-		<description>indicatie of er al dan niet geometrische posities beschikbaar zijn om de nauwkeurigheid van het gegeorefereerde grid te testen.</description>
+		<label>Beschikbaarheid controle punten</label>
+		<description>Indicatie of er al dan niet geometrische posities beschikbaar zijn om de nauwkeurigheid van het gegeorefereerde grid te testen.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:checkPointDescription">
-		<label>beschrijving controle punten</label>
-		<description>beschrijving van de geometrische posities waarmee de gridgegevens gecontroleerd kunnen worden</description>
+		<label>Beschrijving controle punten</label>
+		<description>Beschrijving van de geometrische posities waarmee de gridgegevens gecontroleerd kunnen worden</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Address">
 		<label>Adres</label>
-		<description>adres van de verantwoordelijke persoon of organisatie.</description>
+		<description>Adres van de verantwoordelijke persoon of organisatie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Citation">
@@ -366,12 +365,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:CI_DateTypeCode">
 		<label>Datum type code</label>
-		<description/>
+		<description>Datum type</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnLineFunctionCode">
 		<label>OnLine functie code</label>
-		<description/>
+		<description>Functie van de online code</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_PresentationFormCode">
@@ -386,12 +385,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:CI_RoleCode">
 		<label>Rol code</label>
-		<description/>
+		<description>Code van de rol van de organisatie</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Series">
 		<label>Series</label>
-		<description>Informatie over de serie of samengestelde dataset waarvan een dataset onderdeel vormt.</description>
+		<description>Informatie over de serie of samengestelde dataset waarvan de dataset een onderdeel vormt.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Telephone">
@@ -406,7 +405,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:citedResponsibleParty">
 		<label>Geciteerde verantwoordelijke partij</label>
-		<description>naam en positie van de persoon of organisatie die verantwoordelijk is voor de bron.</description>
+		<description>Naam en positie van de persoon of organisatie die verantwoordelijk is voor de bron.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:city">
@@ -422,35 +421,33 @@
 	<!-- ==================================================== -->
 	<element name="gmd:classificationSystem">
 		<label>Classificatiesysteem</label>
-		<description>naam van het Classificatiesysteem</description>
+		<description>Naam van het Classificatiesysteem</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cloudCoverPercentage">
-		<label>bedekkingsgraad bewolking</label>
-		<description>percentage van de oppervlakte van het gebied dat wordt bedekt door bewolking.</description>
+		<label>Bedekkingsgraad bewolking</label>
+		<description>Percentage van de oppervlakte van het gebied dat wordt bedekt door bewolking.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:code">
 		<label>Code</label>
-		<description>Alfanumerieke waarde die een instance binnen een namespace uniek identificeerd.</description>
+		<description>Alfanumerieke waarde die een instantie binnen een namespace uniek identificeerd.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:collectiveTitle">
 		<label>Collectieve titel</label>
-		<description>common title with holdings note. NOTE title identifies elements of a series
-			collectively, combined with information about what volumes are available at the source
-			cited</description>
+		<description>Gemeenschappelijke titel. Deze titel identificeert gezamelijk de elementen van een serie, gecombineerd met informatie over welke volumes beschikbaar zijn.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:complianceCode">
 		<label>Compliance code</label>
-		<description>indication of whether or not the cited feature catalogue complies with ISO 19110 </description>
+		<description>Indicatie over het feit of de geciteerde objectencatalogus conform is aan ISO 19110 </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:compressionGenerationQuantity">
 		<label>Compression generation quantity</label>
-		<description>count of the number the number of lossy compression cycles performed on the image</description>
+		<description>Aantal compressiecyclie met verlies die uitgevoerd zijn op het beeld.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:condition">
@@ -459,8 +456,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:constraintLanguage">
-		<label>Constraintlanguage van applicatieschema</label>
-		<description>Formele taal welke wordt gebruikt in het applicatieschema</description>
+		<label>Taal van het applicatieschema</label>
+		<description>Formele taal die gebruikt wordt in het applicatieschema</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -481,8 +478,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contentInfo">
-		<label>Object catalogus</label>
-		<description>Geeft informatie over de featurecatalogus en beschrijft de dekking en eigenschappen van afbeeldingsgegevens.</description>
+		<label>Objectencatalogus</label>
+		<description>Geeft informatie over de objectencatalogus en beschrijft de dekking en eigenschappen ervan.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contentType">
@@ -492,14 +489,15 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:controlPointAvailability">
-		<label>beschikbaarheid controle punten</label>
-		<description>indicatie of er al dan niet controlepunten bestaan.</description>
+		<label>Beschikbaarheid controle punten</label>
+		<description>Indicatie of er al dan niet controlepunten bestaan.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cornerPoints">
 		<label>Hoekpunten</label>
-		<description>earth location in the coordinate system defined by the Spatial Reference System and the grid coordinate of the cells at opposite ends of grid coverage along two diagonals in the grid spatial dimensions. There are four corner points in a georectified grid; at least two corner points along one diagonal are required</description>
+		<description>Locatie op aarde uitgedrukt in coordinaten gededefineerd door het Ruimtelijk Referentie Systeem - 
+			grid coordinaat van de cellen op tegengestelde begrenzingen van het grid volgens 2 diagonalen in de ruimtelijke dimensies van het grid.  Er zijn 4 hoekpunten in geogerectifieerd grid.  Minimaal 2 hoekpunten per diagonaal zijn vereist.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -510,7 +508,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:credit">
 		<label>Krediet</label>
-		<description>Erkenning van degene die bijgedragen hebben aan de bron.</description>
+		<description>Erkenning van diegene(n) die bijgedragen hebben aan de bron.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataQualityInfo">
@@ -520,7 +518,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:dataset">
 		<label>Dataset Set</label>
-		<description>dataset to which the information applies</description>
+		<description>Dataset waarop de informatie van toepassing is</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -532,13 +530,13 @@
 	<!-- ==================================================== -->
 	<element name="gmd:date">
 		<label>Datum</label>
-		<description>Datum van creatie, publicatie of wijziging. Het type gebeurtenis waar de datum op slaat is weergegeven in datum type. Het formaat van de datum is JJJJ-MM-DD(met streepjes). </description>
+		<description>Datum van creatie, publicatie of wijziging. Het type gebeurtenis waar de datum op slaat is weergegeven in het datum type. Het formaat van de datum is JJJJ-MM-DD. </description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateOfNextUpdate">
-		<label>Datum volgende update</label>
-		<description>Geplande datum van volgende update (YYYY-MM-DD)</description>
+		<label>Datum volgende herziening</label>
+		<description>Geplande datum van volgende herziening (YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateStamp">
@@ -548,8 +546,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime">
-		<label>Datum uitgevoerde bewerking</label>
-		<description>Datum en of periode waarop de bewerkingen zijn gestart.(YYYY-MM-DD)</description>
+		<label>Datum</label>
+		<description>Datum waarop de bewerkingen of metingen zijn gestart.(YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateType">
@@ -571,7 +569,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:denominator">
 		<label>Toepassingsschaal</label>
-		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal (dus u moet hier 10000 invoeren als de schaal 1 10000 betreft).</description>
+		<description>De beoogde schaal waarop het bestand waarheidsgetrouw gebruikt mag worden. Dit moet een positief numeriek getal zijn.  (Dus u moet hier 10000 invoeren als de schaal 1:10000 betreft.)</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -582,7 +580,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:densityUnits">
 		<label>Eenheden dichtheid</label>
-		<description>Eenheid waarmee de dichtheid is vastgelegd</description>
+		<description>Eenheid waarin de dichtheid wordt uitgedrukt.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -604,7 +602,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:dimension">
 		<label>Dimensie</label>
-		<description>informatie over de dimensie van de eenheid waarmee de cellwaarde is beschreven</description>
+		<description>Informatie over de dimensie van de eenheid waarmee de cellwaarde is beschreven</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dimensionName">
@@ -633,23 +631,23 @@
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo">
 		<label>Distributie info</label>
-		<description>Geeft informatie over de distributeur van de informatie of de wijze waarop dit wordt gerealiseerd.</description>
+		<description>Geeft informatie over de verdeler van de informatie of de wijze waarop dit wordt gerealiseerd.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributor">
-		<label>Distributeur</label>
-		<description>geeft informatie over de distributeur</description>
+		<label>Verdeler</label>
+		<description>Geeft informatie over de verdeler</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorContact">
-		<label>Distributeur contact</label>
+		<label>Verdeler contact informatie</label>
 		<description>Partij die men kan benaderen om de databron te verkrijgen.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorFormat">
 		<label>Distributeur formaat</label>
-		<description>geeft informatie over de formaten die verkrijgbaar zijn bij de distributeur</description>
+		<description>Geeft informatie over de formaten die verkrijgbaar zijn bij de distributeur</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -671,87 +669,82 @@
 	<!-- ==================================================== -->
 	<element name="gmd:domainValue">
 		<label>Domein waarde</label>
-		<description>geldige waarden die kunnen worden toegewezen aan het uitgebreide element</description>
+		<description>Geldige waarden die kunnen worden toegewezen aan het uitgebreide element</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_AbsoluteExternalPositionalAccuracy">
 		<label>Absolute external positional accuracy</label>
-		<description>closeness of reported coordinate values to values accepted as or being
-		true</description>
+		<description>Nabijheid van de gerapporteerde coordinaat waarden tot de werkelijke (of als werkelijk aanvaarde) coordinaten.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_AccuracyOfATimeMeasurement">
 		<label>Nauwkeurigheid van tijdwaarneming</label>
-		<description>correctness of the temporal references of an item (reporting of error in timemeasurement)</description>
+		<description>Nauwkeurigheid van de temporele informatie (rapporteert de fountenmarge in de tijdsmeting).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_CompletenessCommission">
 		<label>Overbodigde/aanvullende data</label>
-		<description>Data die als overmatig gezien kan worden zoals beschreven in het toepassingsgebied</description>
+		<description>Data die als overmatig gezien kan worden zoals beschreven in het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_CompletenessOmission">
 		<label>Ontbrekende data</label>
-		<description>Data welke niet aanwezig is in de dataset zoals beschreven in het toepassingsgebied</description>
+		<description>Data welke niet aanwezig is in de dataset zoals beschreven in het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ConceptualConsistency">
 		<label>Conceptuele consistentie</label>
-		<description>het zich houden aan de regels in het conceptuele schema</description>
+		<description>Het zich houden aan de regels opgelegd in het conceptuele schema.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ConformanceResult">
 		<label>Resultaat conformiteit met de specificatie </label>
-		<description>Resultaat conformiteit met de specificatie </description>
+		<description>Resultaat van de conformiteit met de specificatie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DataQuality">
 		<label>Data kwaliteit</label>
-		<description>informatie over de kwaliteit van de data op het niveau (dataset of serie) waar de kwaliteitsbeschrijving betrekking op heeft. </description>
+		<description>Informatie over de kwaliteit van de data op het niveau (dataset of serie) waar de kwaliteitsbeschrijving betrekking op heeft. </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DomainConsistency">
 		<label>Domain consistentie</label>
-		<description>adherence of values to the value domains</description>
+		<description>Overeenkomst van waarden met de opgelegde domeinen voor deze waarden.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_EvaluationMethodTypeCode">
 		<label>Evaluatie methode type code</label>
-		<description>type of method for evaluating an identified data quality measure</description>
+		<description>Type van de methode gebruikt voor evaluatie van de geidentificieerde kwaliteitsmeting.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_FormatConsistency">
 		<label>Formaat consistentie</label>
-		<description>degree to which data is stored in accordance with the physical structure of the
-			dataset, as described by the scope</description>
+		<description>Mate waarin de data opgeslagen is in overeenstemming met de fysische structuur van de dataset zoals bescheven in het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_GriddedDataPositionalAccuracy">
-		<label>Griddata positionele nauwkeurigheid</label>
-		<description>closeness of gridded data position values to values accepted as or being
-		true</description>
+		<label>Positionele nauwkeurigheid van grid data</label>
+		<description>Nabijheid van de posities van grid data to de werkelijke (of als werkelijk aanvaarde) waarden.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_NonQuantitativeAttributeAccuracy">
 		<label>Niet-kwantitatieve attribuut nauwkeurigheid</label>
-		<description>correctness of non-quantitative attributes</description>
+		<description>Correctheid van de waardes van niet-kwantitatieve attribuutgegevens.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_QuantitativeAttributeAccuracy">
 		<label>Kwantitatieve attribuut nauwkeurigheid</label>
-		<description>accuracy of quantitative attributes</description>
+		<description>Nauwkeurigheid van kwantitatieve attribuutgegevns</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_QuantitativeResult">
 		<label>Kwantitatieve resultaten</label>
-		<description>Information about the value (or set of values) obtained from applying a data
-			quality measure</description>
+		<description>Informatie over de waarde(n) die bekomen worden door een kwaliteitsmeting toe te passen.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_RelativeInternalPositionalAccuracy">
 		<label>Relatieve interne positie nauwkeurigheid</label>
-		<description>closeness of the relative positions of features in the scope to their respective
-			relative positions accepted as or being true</description>
+		<description>Nabijheid van de realtieve posities van objecten in het toepassingsgebied ten opzichte van de werkelijke (of als werkelijk aanvaarde) posities.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_Scope">
@@ -762,34 +755,32 @@
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TemporalConsistency">
 		<label>Temporele consistentie</label>
-		<description>correctness of ordered events or sequences, if reported</description>
+		<description>Correctheid van geordende gebeurtenissen of sekwenties, wanneer gerapporteerd</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TemporalValidity">
-		<label>Temporele validiteit</label>
-		<description>validity of data specified by the scope with respect to time</description>
+		<label>Temporele geldigheid</label>
+		<description>Geldigheid van data in verband met de tijdsdimensie gespecifieerd door het toepassinggebied</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ThematicClassificationCorrectness">
 		<label>Correctheid thematische classificatie</label>
-		<description>comparison of the classes assigned to features or their attributes to a universe
-			of discourse</description>
+		<description>Vergeljking van de klassen toegewezen aan objecten of hun attributen met de werkelijkheid.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TopologicalConsistency">
 		<label>Topologische consistentie</label>
-		<description>correctness of the explicitly encoded topological characteristics of the dataset
-			as described by the scope</description>
+		<description>Correctheid van de expliciet geencodeerde topologische karakteristieken van de dataset zoals beschreven in het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_AssociationTypeCode">
 		<label>Associatie type code</label>
-		<description>justification for the correlation of two datasets</description>
+		<description>Justificatie voor de correlatie van twee datasets</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DS_InitiativeTypeCode">
 		<label>Initiatief type code</label>
-		<description>type of aggregation activity in which datasets are related</description>
+		<description>Type van aggregatie activiteit waardoor twee datasets verwant zijn</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:eastBoundLongitude">
@@ -800,12 +791,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:edition">
 		<label>Versie</label>
-		<description>versie cq editie.</description>
+		<description>Versie of editie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:editionDate">
-		<label>Versie editie datum</label>
-		<description>Datum versie editie (YYYY-MM-DD)</description>
+		<label>Versie of editie datum</label>
+		<description>Datum van de versie of editie (YYYY-MM-DD).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:electronicMailAddress">
@@ -815,7 +806,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:environmentDescription">
 		<label>Systeem omschrijving</label>
-		<description>omschrijving van de omgeving waarin de dataset wordt bewerkt zoals de software, OS, bestandsnamen en de omvang van de dataset.</description>
+		<description>Omschrijving van de omgeving waarin de dataset wordt bewerkt zoals de software, besturingssysteem, bestandsnamen en de omvang van de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:equivalentScale">
@@ -836,73 +827,69 @@
 	<!-- ==================================================== -->
 	<element name="gmd:evaluationMethodType">
 		<label>Evaluatie methode type code</label>
-		<description>methode type welke gebruikt wordt om de kwaliteit van de dataset te kwalificeren</description>
+		<description>Type methode welke gebruikt wordt om de kwaliteit van de dataset te kwalificeren</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:evaluationProcedure">
 		<label>Evaluatie procedure</label>
-		<description>reference to the procedure information</description>
+		<description>Reference naar informatie over de gevolgde procedure.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_BoundingPolygon">
 		<label>EX_BoundingPolygon</label>
-		<description>boundary enclosing the dataset, expressed as the closed set of (x,y) coordinates
-			of the polygon (last point replicates first point)</description>
+		<description>Begrenzing die de dataset omsluit, uitgedrukt als een gesloten set van  (x,y) coordinaten van de polygoon (het laatste punt herhaalt het eerste punt)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_Extent">
-		<label>Dekking Bereik</label>
-		<description>informatie over de ruimtelijke, verticale of temporele dekking.</description>
+		<label>Begrenzing</label>
+		<description>Informatie over de ruimtelijke, verticale of temporele begrenzing.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicBoundingBox">
-		<label>Ruimtelijke dekking</label>
-		<description>Meest westelijke, oostelijke, zuidelijke en noordelijke coordinaat uit de horizontale dekking van de dataset weergegeven in longitude en lattitude en decimale graden (noord en oost als positieve waarden). Gebruik WGS84 als refsysteem.</description>
+		<label>Geografische begrenzing</label>
+		<description>Meest westelijke, oostelijke, zuidelijke en noordelijke coordinaat uit de horizontale begrenzing van de dataset weergegeven in longitude en lattitude en decimale graden (noord en oost als positieve waarden). Gebruik WGS84 als coordinaat referentie systeem.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicDescription">
-		<label>Geometrische beschrijving</label>
-		<description>Beschrijving van de ruimtelijke dekking van de dataset (using identifiers)</description>
+		<label>Geografische omschrijving</label>
+		<description>Beschrijving van de ruimtelijke begrenzing van de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_TemporalExtent">
-		<label>Temporele dekking</label>
-		<description>Periode die van toepassing is op de gegevens in de dataset</description>
+		<label>Temporele begrenzing</label>
+		<description>Periode die van toepassing is op de gegevens in de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_VerticalExtent">
-		<label>Verticale dekking</label>
-		<description>het verticale domein van de dataset</description>
+		<label>Verticale begrenzing</label>
+		<description>Het verticale domein van de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:explanation">
 		<label>Uitleg</label>
-		<description>explanation of the meaning of conformance for this result</description>
+		<description>Uitleg betreffende de betekenis van de conformiteit van dit resultaat.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extendedElementInformation">
 		<label>Uitgebreide element informatie</label>
-		<description>provides information about a new metadata element, not found in ISO 19115, which
-			is required to describe geographic data</description>
+		<description>Geeft informatie over een nieuw metadata element, dat niet bestaat in ISO 19115, dat nodig is om geografische data te beschrijven.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extensionOnLineResource">
-		<label>Extension Online resource</label>
-		<description>information about on-line sources containing the community profile name and the
-			extended metadata elements. Information for all new metadata elements</description>
+		<label>Extensie Online resource</label>
+		<description>Informatie over on-line bronnen die informatie over de naam en de bijkomende metadata elementen bevat.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extent">
-		<label>Dekking</label>
-		<description>Informatie over de ruimtelijke, verticale en temporele dekking van de dataset</description>
+		<label>Begrenzing</label>
+		<description>Informatie over de ruimtelijke, verticale en temporele begrenzing van de dataset</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extentTypeCode">
 		<label>Dekking type code</label>
-		<description>indication of whether the bounding polygon encompasses an area covered by the
-			data or an area where data is not present</description>
+		<description>Indication of the begrenzende polygoon de oppervlakte volledig bevat or een oppervlakte waar geen data aanwezig is.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:facsimile">
@@ -911,27 +898,26 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureCatalogueCitation">
-		<label>Feature catalogus citatie</label>
-		<description>complete bibliographic reference to one or more external feature catalogues</description>
+		<label>Objectencatalogus citatie</label>
+		<description>Volledige bibliografische referentie naar één of meerdere externe objectencatalogi</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureInstances">
-		<label>Feature instances</label>
-		<description>feature instances to which the information applies</description>
+		<label>Object instanties</label>
+		<description>Object instanties waarop de informatie van toepassing is.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:features">
-		<label>Features</label>
-		<description>features to which the information applies</description>
+		<label>Objecten</label>
+		<description>Objecten waarop de informatie van toepassing is.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureTypes">
-		<label>Feature types</label>
-		<description>subset of feature types from cited feature catalogue occurring in
-		data</description>
+		<label>Object types (entiteiten) </label>
+		<description>Gedeelte van de object types van de geciteerde objectencatalogus die in de data voorkomen.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fees">
@@ -945,18 +931,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileDescription">
-		<label>omschrijving bestand</label>
-		<description>omschrijving van de illustratie</description>
+		<label>Omschrijving bestand</label>
+		<description>Omschrijving van de voorbeeldweergave</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileIdentifier">
-		<label>Metadata ID</label>
-		<description>Unieke ID voor de metadata file.</description>
+		<label>Metadata ID (fileidentifier) </label>
+		<description>Unieke Identifier voor de metadata file.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileName">
 		<label>Voorbeeld</label>
-		<description>Bestandsnaam van een figuur waarin een voorbeeldweergave te zien is.</description>
+		<description>Bestandsnaam (of URL) van een figuur waarin een voorbeeldweergave te zien is.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -966,58 +952,57 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:filmDistortionInformationAvailability">
-		<label>Film distortion information availability</label>
-		<description>indication of whether or not Calibration Reseau information is
-		available</description>
+		<label>Beschikbaarheid van informatie over Fim distortion information</label>
+		<description>Indicatie of er al dan niet Calibration Reseau informatie beschikbaar is</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:formatDistributor">
-		<label>Formaat distributeur</label>
-		<description>Geeft informatie over de distributeur van het formaat</description>
+		<label>Formaat verdeler</label>
+		<description>Geeft informatie over de verdeler van het formaat</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:function">
 		<label>Functie</label>
-		<description>code for function performed by the online resource</description>
+		<description>Code voor de functie uitgeoefend door de online resource</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geographicElement">
 		<label>Geografisch object</label>
-		<description>geeft het geografisch component van de dekking van het beschreven object</description>
+		<description>Geeft de geografisch component van de dekking van het beschreven object</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geographicIdentifier">
 		<label>Geografische identifier</label>
-		<description>Alfanumerieke waarde die het geografisch gebied dat wordt bedekt door de data aangeeft.</description>
+		<description>Alfanumerieke waarde (identifier) die het geografisch gebied dat wordt bedekt door de data aangeeft.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjectCount">
 		<label>Aantal geometrische objecten</label>
-		<description>Totaal aantal objecten (punt cq vector) in de dataset</description>
+		<description>Totaal aantal objecten (punt / vector) in de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjects">
 		<label>Geometrische objecten</label>
-		<description>informatie over de geometrische objecten die worden gebruikt in de dataset</description>
+		<description>Informatie over de geometrische objecten die worden gebruikt in de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geometricObjectType">
 		<label>Geometrisch objecttype</label>
-		<description>name of point and vector spatial objects used to locate zero-, one-, and
-			two-dimensional spatial locations in the dataset</description>
+		<description>Naam van punt en vector ruimtelijke objecten die gebruikt worden om nul-, een,-, en
+			twee-dimensionele ruimtelijke locaties in de dataset te beschrijven.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicOverview">
 		<label>Voorbeeldweergave</label>
-		<description>Een plaatje dat de inhoud van de dataset weergeeft (inclusief legenda)</description>
+		<description>Een figuur die de inhoud van de dataset of datasetserie weergeeft (inclusief legende).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicsFile">
 		<label>Grafisch bestand</label>
-		<description>Volledig applicatieschema in een grafische bestand</description>
+		<description>Volledig applicatieschema in een grafisch bestand.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:handlingDescription">
@@ -1032,7 +1017,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevelName">
 		<label>Beschrijving hierarchisch niveau</label>
-		<description>Naam van de hierarchieniveaus waarop de metadata betrekking heeft.</description>
+		<description>Naam van het hierarchische niveau waarop de metadata betrekking heeft.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hoursOfService">
@@ -1052,32 +1037,29 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:illuminationAzimuthAngle">
-		<label>Illumination azimuth angle</label>
-		<description>illumination azimuth measured in degrees clockwise from true north at the time
-			the image is taken. For images from a scanning device, refer to the centre pixel of the
-			image</description>
+		<label>Illuminatie azimuth hoek</label>
+		<description>Illuminatie azimuth gemeten in graden volgens de richting van de klok vanaf true north op het tijdstip dat het beeld opgenomen werd.
+		. Voor beelden opgenomen door een scanning instrument, betreft het de waarde voor de centrale pixel van het beeld.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:illuminationElevationAngle">
-		<label>Illumination elevation angle</label>
-		<description>illumination elevation measured in degrees clockwise from the target plane at
-			intersection of the optical line of sight with the Earth_s surface. For images from a
-			scanning device, refer to the centre pixel of the image</description>
+		<label>Illumination elevatie hoek</label>
+		<description>Illuminatie elevatie gemeten in graden volgens de richting van de klok vanaf het vlak dat de intersectie vormt tussen de optische gezichtslijn en het aardoppervlak. Voor beelden opgenomen door een scanning instrument, betreft het de waarde voor de centrale pixel van het beeld.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:imageQualityCode">
 		<label>Afbeelding kwaliteitscode</label>
-		<description>specificeert de kwaliteit van de afbeelding</description>
+		<description>Specificeert de kwaliteit van de afbeelding</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:imagingCondition">
-		<label>Afbeelding conditie</label>
-		<description>conditions affected the image</description>
+		<label>Opname conditie</label>
+		<description>Condities die de opname van het beeld beinvloed hebben</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:includedWithDataset">
 		<label>Onderdeel van de dataset</label>
-		<description>indicatie of de featurecatalog al dan niet onderdeel uitmaakt van de dataset</description>
+		<description>Indicatie of de objectencatalogus al dan niet onderdeel uitmaakt van de dataset.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1089,12 +1071,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:ISBN">
 		<label>ISBN</label>
-		<description>international Standard Book Number</description>
+		<description>International Standard Book Number</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:ISSN">
 		<label>ISSN</label>
-		<description>international Standard Serial Number</description>
+		<description>International Standard Serial Number</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:issueIdentification">
@@ -1115,13 +1097,12 @@
 	<!-- ==================================================== -->
 	<element name="gmd:languageCode">
 		<label>Taalcode</label>
-		<description>Taal die wordt gebruikt om normale tekst te ontsluiten.</description>
+		<description>Code van de taal die wordt gebruikt.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:lensDistortionInformationAvailability">
-		<label>Lens distortion information availability</label>
-		<description>indication of whether or not lens aberration correction information is
-		available</description>
+		<label>Beschikbaarheid van lens distortie informatie</label>
+		<description>Indicatie of er al dan niet lens vervorming correctie information beschikbaar is.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:level">
@@ -1137,27 +1118,23 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Lineage">
-		<label>Lineage</label>
-		<description>information about the events or source data used in constructing the data
-			specified by the scope or lack of knowledge about lineage</description>
+		<label>Herkomst</label>
+		<description>Informatie over de gebeurtenissen of brondata die gebruikt werd in het aanmaken van de data gespecifieerd door het toepassingsgebied.  Of ontbreken van kennis in verband met deze herkomst.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_ProcessStep">
 		<label>Processtap</label>
-		<description>information about an event in the creation process for the data specified by the
-			scope</description>
+		<description>Informatie over een gebeurtenis in het productieproces van de data gespecifieerd door het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Source">
 		<label>Bron</label>
-		<description>information about the source data used in creating the data specified by the
-			scope</description>
+		<description>Informatie over de bron data gebruikt bij het produceren van de data gespecifieerd door het toepassingsgebied.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:lineage">
-		<label>Lineage</label>
-		<description>non-quantitative quality information about the lineage of the data specified by
-			the scope</description>
+		<label>Herkomst</label>
+		<description>Niet-kwantitative kwalitietsinformatie betreffende de herkomst van de dataset zoals gespecifieerd door het toepassingsgebied.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1179,66 +1156,64 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maximumOccurrence">
-		<label>Maximaal aantal gebeurtenissen</label>
-		<description>maximum occurrence of the extended element</description>
+		<label>Maximaal aantal voorkomens</label>
+		<description>Maximaal aantal voorkomens van het bijkomende element.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maximumValue">
 		<label>Maximum waarde</label>
-		<description>highest vertical extent contained in the dataset</description>
+		<description>Hoogste verticale waarde die de dataset bevat</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:maxValue">
 		<label>Maximale waarde</label>
-		<description>longest wavelength that the sensor is capable of collecting within a designated
-			band</description>
+		<description>Grootste golflengte die de sensor kan opnemen binnen de gespecifieerde band.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ApplicationSchemaInformation">
-		<label>Applicatie schema info</label>
-		<description>information about the application schema used to build the dataset</description>
+		<label>Applicatie schema informatie</label>
+		<description>Informatie over het applicatie schema gebruikt in de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Band">
 		<label>Band</label>
-		<description>range of wavelengths in the electromagnetic spectrum</description>
+		<description>Golflengte bereik in het electromagnetische spectrum</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_BrowseGraphic">
 		<label>MD_BrowseGraphic</label>
-		<description>graphic that provides an illustration of the dataset (should include a legend for
-			the graphic)</description>
+		<description>Weergave die een illustratie geeft van de dataset (bevat best een legende). </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CellGeometryCode">
 		<label>Cell geometry code</label>
-		<description>code indicating whether grid data is point or area</description>
+		<description>Code die aangeeft of grid data betrekking heeft op  punten of oppervlaktes</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CharacterSetCode">
 		<label>Karaktersetcode</label>
-		<description>name of the character coding standard used for the resource</description>
+		<description>Volledige naam van de karakter codeerstandaard</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ClassificationCode">
 		<label>Classificatiecode</label>
-		<description>name of the handling restrictions on the dataset</description>
+		<description>Naam van de gebruiksbeperkingen op de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Constraints">
 		<label>Beperkingen</label>
-		<description>beperkingen die van toepassing zijn op de wijze van toegang of het gebruik van een databron of metadata</description>
+		<description>Beperkingen die van toepassing zijn op de wijze van toegang of het gebruik van een databron of metadata</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CoverageContentTypeCode">
 		<label>Inhoud type code</label>
-		<description>specific type of information represented in the cell</description>
+		<description>Specific type informatie voorgesteld binnen een cell</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CoverageDescription">
-		<label>Beschrijving dekking</label>
-		<description>information about the content of a grid data cell</description>
+		<label>Beschrijving inhoud grid cel</label>
+		<description>Informatie over de inhoud van een cel binnen het data grid</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DataIdentification">
@@ -1248,45 +1223,42 @@
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DatatypeCode">
 		<label>Data type code</label>
-		<description>datatype of element or entity</description>
+		<description>Datatype van het element of entiteit.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DigitalTransferOptions">
-		<label>Digitale leverings opties</label>
-		<description>technical means and media by which a resource is obtained from the
-		distributor</description>
+		<label>Digitale leveringsopties</label>
+		<description>Technische middelen en media via dewelke een databron kan bekomen worden van de verdeler.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Dimension">
 		<label>Dimensies</label>
-		<description>axis properties</description>
+		<description>As eigenschappen</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DimensionNameTypeCode">
 		<label>Dimensienaam type code</label>
-		<description>name of the dimension</description>
+		<description>Naan van de dimensie.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Distribution">
 		<label>Distributie</label>
-		<description>information about the distributor of and options for obtaining the
-		resource</description>
+		<description>Informatie over de verdeler van en/of opties om de bron te verkrijgen.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Distributor">
-		<label>Distributeur</label>
-		<description>information about the distributor</description>
+		<label>Verdeler</label>
+		<description>Informatie over de verdeler.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ExtendedElementInformation">
 		<label>Aanvullend element informatie</label>
-		<description>new metadata element, not found in ISO 19115, which is required to describe
-			geographic data</description>
+		<description>Nieuw element niet bestaand in ISO 19115, welke vereist is om geografische data te beschrijven.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_FeatureCatalogueDescription">
-		<label>Featurecatalogus beschrijving</label>
-		<description>information identifying the feature catalogue</description>
+		<label>Objectencatalogus beschrijving</label>
+		<description>Information die een objectencatalogus identificeert</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Format">
@@ -1296,14 +1268,13 @@
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GeometricObjects">
 		<label>Geometrische objecten</label>
-		<description>number of objects, listed by geometric object type, used in the
-		dataset</description>
+		<description>Aantal objecten, opgelijst per geometrisch object type, dat gebruikt wordt in de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GeometricObjectTypeCode">
 		<label>Geometrische objecten type code</label>
-		<description>name of point and vector spatial objects used to locate zero-, one-, and
-			two-dimensional spatial locations in the dataset</description>
+		<description>Naam van punt en vector ruimtelijke objecten gebruikt voor nul-, één-, en
+			twee-dimensionale ruimtelijke locaties in de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Georectified">
@@ -1498,8 +1469,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:measureDescription">
-		<label>Measure description</label>
-		<description>description of the measure being determined</description>
+		<label>Beschrijving van de kwaliteitsmeting</label>
+		<description>Beschrijving van de kwaliteitsmeting</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:measureIdentification">
@@ -1541,7 +1512,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:metadataStandardVersion">
 		<label>Metadata standaard versie</label>
-		<description>Versie (profiel) van de metadata-standaard die wordt gebruikt.(Nederlandse metadatastandaard voor geografie 1.1)</description>
+		<description>Versie (profiel) van de metadata-standaard die wordt gebruikt.(GDI-Vlaanderen Best practice)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:minimumValue">
@@ -1586,7 +1557,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:offLine">
 		<label>Offline</label>
-		<description>information about offline media on whichthe resource can be obtaned</description>
+		<description>Information over de offline media waarop de bron te verkrijgen is.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:offset">
@@ -1596,12 +1567,11 @@
 	<!-- ==================================================== -->
 	<element name="gmd:onLine">
 		<label>OnLine bronnen</label>
-		<description>information about online sources from which the resource can be
-		obtained</description>
+		<description>Informatie over de online bronnen via dewelke de bron verkregen kan worden.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:orderingInstructions">
-		<label>Order procedure</label>
+		<label>Bestelprocedure</label>
 		<description>Algemene instructies, voorwaarden en services geleverd door de distributeur.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1732,7 +1702,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:processingLevelCode">
 		<label>Processing level code</label>
-		<description>image distributor_s code that identifies the level of radiometric and geometric
+		<description>image distributors code that identifies the level of radiometric and geometric
 			processing that has been applied</description>
 	</element>
 	<!-- ==================================================== -->
@@ -1888,41 +1858,39 @@
 	<!-- ==================================================== -->
 	<element name="gmd:softwareDevelopmentFile">
 		<label>Bestand software ontwikkeling</label>
-		<description>full application schema given as a software development file</description>
+		<description>Volledig applicatie schema als softwareontwikkelingsbestand</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:softwareDevelopmentFileFormat">
-		<label>Formaat bestand Software ontwikkeling</label>
-		<description>software dependent format used for the application schema software dependent
-		file</description>
+		<label> Software ontwikkelings bstandsformaat</label>
+		<description>Software afhankelijk formaat gebruikt voor de ontwikkeling van de applicatie schema software</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source">
 		<label>Bron</label>
-		<description>informatie over de bron</description>
+		<description>Informatie over de bron</description>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceCitation">
 		<label>Bron citatie</label>
-		<description>recommended reference to be used for the source data</description>
+		<description> Aangeraden referentie te gebruiken voor de bron data.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceExtent">
 		<label>Bron dekking (extent)</label>
-		<description>information about the spatial, vertical and temporal extent of the source data</description>
+		<description>Information over de ruimtelijke, verticale en temporele begrenzing van de bron data</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceReferenceSystem">
 		<label>Bron referentiesysteem</label>
-		<description>spatial reference system used by the source data</description>
+		<description>Ruimtelijk referentie systeem gebruikt door de bron data.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceStep">
 		<label>Bron process</label>
-		<description>information about an event in the creation process for the source
-		data</description>
+		<description>informatie over een gebeurtenis in het creatie proces van de bron data</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:southBoundLatitude">
@@ -1934,13 +1902,13 @@
 	<!-- ==================================================== -->
 	<element name="gmd:spatialExtent">
 		<label>Ruimtelijke dekking</label>
-		<description>spatial extent component of composite spatial and temporal extent</description>
+		<description>Ruimtelijke begrenzingscomponent binnen de ruimtelijke en temporele begrenzing</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialRepresentationInfo">
 		<label>Ruimtelijke representatie info</label>
-		<description>digital representation of spatial information in the dataset</description>
+		<description>Digitale representatie van de ruimtelijke informatie in the dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialRepresentationType">
@@ -1973,7 +1941,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:status">
 		<label>Status</label>
-		<description>status van de dataset</description>
+		<description>Status van de dataset</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:supplementalInformation">
@@ -1983,7 +1951,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:temporalElement">
 		<label>Temporeel element</label>
-		<description>provides temporal component of the extent of the referring object</description>
+		<description>Geeft temporele begrenzingsinformatie voor het object</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1994,13 +1962,13 @@
 	<!-- ==================================================== -->
 	<element name="gmd:title">
 		<label>Titel</label>
-		<description>Titel</description>
+		<description>Titel of naam</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:toneGradation">
 		<label>Tone gradatie</label>
-		<description>number of discrete numerical values in the grid data</description>
+		<description>Aantal discrete numerische waarden in de grid data</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:topicCategory">
@@ -2011,47 +1979,44 @@
 	<!-- ==================================================== -->
 	<element name="gmd:topologyLevel">
 		<label>Topologie level</label>
-		<description>code which identifies the degree of complexity of the spatial
-		relationships</description>
+		<description>Code die de complexiteitsgraad van ruimtelijke relaties definieert.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transferOptions">
-		<label>Leverings opties</label>
-		<description>provides information about technical means and media by which a resource is
+		<label>Leveringsopties</label>
+		<description>Geeft informatie over de technische middelen en media via de welke het bestand kan verkregen worden van de verdeler.
 			obtained from the distributor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transferSize">
-		<label>Bestands grootte</label>
-		<description>Verwachte grote van een eenheid van het bestand in genoemd formaat in Megabyte</description>
+		<label>Bestandsgrootte</label>
+		<description>Verwachte grootte van een eenheid van het bestand in genoemd formaat in Megabyte</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transformationDimensionDescription">
-		<label>Transformation dimension description</label>
-		<description>description of the information about which grid dimensions are the spatial
-			dimensions</description>
+		<label>Transformation dimensie beschrijving</label>
+		<description>Beschrijving over welke grid dimensies de ruimtelijke dimensies zijn.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transformationDimensionMapping">
-		<label>Transformation dimension mapping</label>
-		<description>information about which grid dimensions are the spatial dimensions</description>
+		<label>Transformation dimensie mapping</label>
+		<description>Information over welke grid dimensies de ruimtelijke dimensies zijn.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transformationParameterAvailability">
-		<label>Transformation parameter availability</label>
-		<description>indication of whether or not parameters for transformation exists</description>
+		<label>Transformatie parameter beschikbaarheid</label>
+		<description>Indicatie of er al dan niet parameters voor de transformatie bestaan.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:triangulationIndicator">
-		<label>Triangulation indicator</label>
-		<description>indication of whether or not triangulation has been performed upon the
-		image</description>
+		<label>Triangulatie indicator</label>
+		<description>Indication of er al dan niet triangulatie uitgevoerd werd op de dataset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:turnaround">
 		<label>Doorlooptijd</label>
-		<description>typical turnaround time for the filling of an order</description>
+		<description>Typische doorlooptijd van een bestelling (bv 10 werkdagen)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:type">
@@ -2061,11 +2026,11 @@
 	<!-- ==================================================== -->
 	<element name="gmd:units">
 		<label>eenheden</label>
-		<description>units in which sensor wavelengths are expressed</description>
+		<description>Eenheden waarin de golflengtes van de sensor uitgedrukt zijn.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:unitsOfDistribution">
-		<label>Leverings gebruikseenheid</label>
+		<label>Gebruikseenheid</label>
 		<description>Eenheid waarin de data wordt geleverd.</description>
 	</element>
 	<!-- ==================================================== -->
@@ -2076,7 +2041,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:updateScopeDescription">
 		<label>Omschrijving bereik update</label>
-		<description>aanvullende informatie over het bereik of de omvang van de bron. </description>
+		<description>Aanvullende informatie over het bereik of de omvang van de bron. </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:usageDateTime">
@@ -2107,7 +2072,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:userDeterminedLimitations">
 		<label>Door de gebruiker aangegeven gebruiksbeperkingen</label>
-		<description>applicaties/toepassingen (welke aangegeven zijn door de gebruiker) waarvoor de dataset beter niet gebruikt kan worden.</description>
+		<description>Applicaties/toepassingen (welke aangegeven zijn door de gebruiker) waarvoor de dataset beter niet gebruikt kan worden.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userNote">
@@ -2123,24 +2088,24 @@
 	<!-- ==================================================== -->
 	<element name="gmd:valueType">
 		<label>Waarde type</label>
-		<description>value type for reporting a data quality result</description>
+		<description>Type waarde voor het rapporteren van een datakwaliteitsresultaat.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:valueUnit">
 		<label>Waarde eenheid</label>
-		<description>value unit for reporting a data quality result</description>
+		<description>Eenheid voor het rapporteren van een datakwaliteitsresultaat.</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:version">
 		<label>Versie</label>
-		<description>Versie van het formaat (date, number, etc.)</description>
+		<description>Versie van het formaat (datum, nummer, ...)</description>
 	<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalElement">
 		<label>Verticaal element</label>
-		<description>provides vertical component of the extent of the referring object</description>
+		<description>Geeft de verticale component van de begrenzing van het gerefereerde object.</description>
 	<condition>conditional</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2151,7 +2116,7 @@
 	<!-- ==================================================== -->
 	<element name="gmd:volumes">
 		<label>Volumes</label>
-		<description>number of items in the media identified</description>
+		<description>Aantal elementen in het gïndentificeerde medium.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:westBoundLongitude">
@@ -2179,8 +2144,8 @@
 	<!-- ==================================================== -->
 	
 	<element name="gco:Measure">
-		<label>Measure</label>
-		<description></description>
+		<label>Kwaliteitsmeting</label>
+		<description>Kwaliteitsmeting</description>
 	</element>	
 	
 	<!-- ==================================================== -->
@@ -2285,31 +2250,31 @@
 
 
 	<element name="srv:SV_ServiceIdentification">
-		<label>Service Identification (19119)</label>
-		<description>ISO 19119-2005 Service Identification</description>
+		<label>Service Identificatie (19119)</label>
+		<description>ISO 19119-2005 Service Identificatie</description>
 	</element>
 	<element name="srv:serviceType">
 		<label>Service Type</label>
 		<description>Het type service.</description>
 	</element>
 	<element name="srv:serviceTypeVersion">
-		<label>Service Type Version</label>
+		<label>Service Type Versie</label>
 		<description>De versie die hier gehanteerd dient te worden is de versie van de specificatie van de service instance. Niet een implementatie versie van de software die geimplementeerd. Als scheidingsteken tussen de cijfers dient een punt gebruikt te worden.</description>
 	</element>
 	<element name="srv:accessProperties">
-		<label>Access Properties</label>
-		<description>Information about the availability of the service eg. fees, availability, oredering instructions</description>
+		<label>Toegang</label>
+		<description>Informatie over de beschikbaarheid van de service bv. kosten, bestelinformatie, ...</description>
 	</element>
 	<element name="srv:restrictions">
-		<label>Restrictions</label>
-		<description>Legal and security constraints on accessing the service and distributing data generated by the service</description>
+		<label>Beperkingen</label>
+		<description>Legale en veiligheidsbeperkingen betreffende de toegang tot de service en het verdelen van data gegenereerd door de service.</description>
 	</element>
     <element name="srv:containsOperations">
 		<label>Bevat operaties</label>
 		<description>De operaties die door een service worden aangeboden.</description>
 	</element>    
     <element name="srv:operatesOn">
-		<label>Operates on</label>
+		<label>Opereerd op</label>
 		<description>Dit element is conditioneel in INSPIRE. Het is verplicht als er links naar de datasets waarop de service opereert
 beschikbaar zijn. Voor dataservices is het dus verplicht. Dit element geeft informatie (metadata) over de data die in de service beschikbaar wordt gesteld.</description>
 	</element>   
@@ -2318,8 +2283,8 @@ beschikbaar zijn. Voor dataservices is het dus verplicht. Dit element geeft info
 		<description>De naam van de operatie.</description>
 	</element>
 	<element name="srv:SV_OperationMetadata">
-		<label>Operation</label>
-		<description>Operation Metadata</description>
+		<label>Operatie Metadata</label>
+		<description>Operatie Metadata</description>
 	</element>
     <element name="srv:DCP">
 		<label>DCP</label>
@@ -2327,19 +2292,19 @@ beschikbaar zijn. Voor dataservices is het dus verplicht. Dit element geeft info
 	</element>        
 	<element name="srv:DCPList">
 		<label>Distributed Computing Platforms List</label>
-		<description>List of distributed computing platforms on which the operation has been implemented</description>
+		<description>Lijst van distributed computing platforms waarop de operatie geïmplementeerd is.</description>
 	</element>
 	<element name="srv:operationDescription">
-		<label>Operation Description</label>
-		<description>Free text description of the intent of the operation and the results of the operation</description>
+		<label>Beschrijving van de operatie</label>
+		<description>Vrije tekstuele beschrijving van het doel en resultaten van de operatie.</description>
 	</element>
 	<element name="srv:invocationName">
-		<label>Invocation Name</label>
-		<description>The name used to invoke this interface within the context of the DCP. The name is identical for all DCPs</description>
+		<label>Invocatie Naam</label>
+		<description>De naam die gebruikt wordt om deze interface aan te roepen voor dit DCP. De  naam is identiek voor alle DCPs</description>
 	</element>
 	<element name="srv:parameters">
 		<label>Parameters</label>
-		<description>The parameters that are required for this interface</description>
+		<description>De parameters die vereist zijn voor deze interface</description>
 	</element>
     <element name="srv:connectPoint">
 		<label>Connect point linkage</label>
@@ -2347,32 +2312,32 @@ beschikbaar zijn. Voor dataservices is het dus verplicht. Dit element geeft info
 het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element heeft hetzelfde doel als Resource Locator uit 5.2.4.</description>
 	</element>     
 	<element name="srv:dependsOn">
-		<label>Depends On</label>
-		<description>List of operations that must be completed immediately before current operation is invoked, structured as a list for capturing alternate predecessor paths and sets for capturing parallel predecessor paths</description>
+		<label>Afhankelijk van</label>
+		<description>Lijst van operaties die moeten afgerond zijn voordat deze operatie wordt aangeroepen, gestructureerd als lijsten om alle mogelijke predecessor paden op te lijsten met sets voor parallele predecessor paden.</description>
 	</element>
 	<element name="srv:providerName">
 		<label>Provider Name</label>
-		<description>A unique identifier for this organization</description>
+		<description>Een unieke identifier voor deze organisatie</description>
 	</element>
 	<element name="srv:serviceContact">
 		<label>Service Contact</label>
-		<description>Information for contacting the service provider</description>
+		<description>Informatie om de dienstenleverancier te contacteren.</description>
 	</element>
 	<element name="srv:name">
-		<label>Name</label>
-		<description>The name, as used by the service for this chain or paramater</description>
+		<label>Naam</label>
+		<description>De naam zoals gebruikt door de service voor deze keten of parameter</description>
 	</element>
 	<element name="srv:description">
-		<label>Description</label>
-		<description>Narrative explanation of the services in the chain and resulting output or role of the parameter</description>
+		<label>Beschrijving</label>
+		<description>Beschrijving van de diensten ind e keten en de resulterende output of rol van de parameter.</description>
 	</element>
 	<element name="srv:optionality">
-		<label>Optionality</label>
-		<description>Indication if the parameter is required</description>
+		<label>Optionaliteit</label>
+		<description>Indicatie of de parameter verplicht is.</description>
 	</element>
 	<element name="srv:repeatability">
-		<label>Repeatability</label>
-		<description>Indication if more than one value of the parameter may be provided</description>
+		<label>Herhaalbaarheid</label>
+		<description>Indicatie of meer dan één waarde voor de parameter mag gegeven worden.</description>
 	</element>
     <element name="srv:coupledResource">
 		<label>Gekoppelde bron</label>
@@ -2380,7 +2345,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	</element>  
  	<element name="srv:SV_CoupledResource">
 		<label>Coupled Resource</label>
-		<description>Details of services coupled with this one</description>
+		<description>Details van de bronnen gekoppeld met deze service</description>
 	</element>
 	<element name="srv:identifier">
 		<label>Identifier</label>
@@ -2388,19 +2353,19 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	</element>
 	<element name="srv:couplingType">
 		<label>Coupling type</label>
-		<description>Soort koppeling tussen de service instance en de dataset.</description>
+		<description>Type van de koppeling tussen de service en de dataset.</description>
 	</element>
 	<element name="srv:SV_CouplingType">
 		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
+		<description>Type van de koppeling</description>
 	</element>
 	<element name="srv:extent">
 		<label>Extent</label>
-		<description>Geographic/Temporal Extent of Service</description>
+		<description>Geographische/Temporele begrenzing van de dienst</description>
 	</element>
 	<element name="srv:keywords">
-		<label>Keywords</label>
-		<description>Keywords describing service</description>
+		<label>Trefwoorden</label>
+		<description>Trefwoorden die de dients beschrijven</description>
 	</element>
 	<element name="srv:SV_Parameter">
 		<label>Parameter</label>
@@ -2440,26 +2405,26 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	<!-- ==================================================== -->
 	<element name="code">
 		<label>System code</label>
-		<description>Code. i.e. EPSG code.</description>
+		<description>Code. bv EPSG code.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="label">
 		<label>Content</label>
-		<description>Content</description>
+		<description>Inhoud</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="codeSpace">
-		<label>Reference Authority</label>
-		<description>Authority responsible for codification. i.e. EPSG</description>
+		<label>Referentie Authoriteit</label>
+		<description>Authoriteit verantwoordelijk voor de codes. bv EPSG</description>
 	</element>
 	<element name="gco:aName">
-		<label>Name</label>
+		<label>Naam</label>
 	</element>
 	<element name="gco:attributeType">
-		<label>Attribute type</label>
+		<label>Attribuut type</label>
 	</element>	
 	<element name="gco:TypeName">
-		<label>Type name</label>
+		<label>Type naam</label>
 	</element>
 
     <element name="uuidref">
@@ -2510,7 +2475,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	</element>      
 	<!-- ==================================================== -->
     <element name="gml:end">
-		<label>Eind</label>
+		<label>Einde</label>
 		<description></description>
 	</element>
 	<!-- ==================================================== -->
@@ -2583,7 +2548,7 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	<!-- ==================================================== -->
 	<element name="gml:LinearRingTypeCHOICE_ELEMENT0">
 		<label>Lijnsegment Element</label>
-		<description>Choose the Line Segment element: three points, position list or coordinate list</description>
+		<description>Kies het  Lijnsegment element: drie punten, lijst van posities of coordinatenlijst</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:LinearRingTypeCHOICE_ELEMENT1">
@@ -2612,15 +2577,15 @@ het verplichte element linkage, uit de klasse CI_OnlineResource. Dit element hee
 	</element>
     <element name="gmx:FileName">
         <label>File name</label>
-        <description>File name and source URL.</description>
+        <description>Bestandsnaam en URL van de bron.</description>
     </element>
     <element name="src">
-        <label>Source URL</label>
-        <description>URL of the document.</description>
+        <label>Bron URL</label>
+        <description>URL van het document.</description>
     </element>
 		<element name="gmx:Anchor">
 				<label>Anchor</label>
-				<description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
+				<description>Ondertsteunt hyper-linking mogelijkheden en verzekert een web-like implementatie van CharacterStrings</description>
 		</element>
 		<element name="xlink:href">
 			<label>Link href</label>

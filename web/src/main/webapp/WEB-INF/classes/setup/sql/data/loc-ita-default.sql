@@ -1,29 +1,29 @@
 INSERT INTO Languages VALUES ('ita','Italiano', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (49, 'ita', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (50, 'ita', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (51, 'ita', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (52, 'ita', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('49', 'ita', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('50', 'ita', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('51', 'ita', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('52', 'ita', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (1,'ita','Mappe e grafici');
-INSERT INTO CategoriesDes VALUES (2,'ita','Datasets');
-INSERT INTO CategoriesDes VALUES (3,'ita','Risorse interattive');
-INSERT INTO CategoriesDes VALUES (4,'ita','Applicazioni');
-INSERT INTO CategoriesDes VALUES (5,'ita','Casi di studio');
-INSERT INTO CategoriesDes VALUES (6,'ita','Atti di conferenze');
-INSERT INTO CategoriesDes VALUES (7,'ita','Fotografie');
-INSERT INTO CategoriesDes VALUES (8,'ita','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'ita','Archivi');
-INSERT INTO CategoriesDes VALUES (10,'ita','Altre risorse di informazione');
-INSERT INTO CategoriesDes VALUES (11,'ita','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'ita','Registri');
-INSERT INTO CategoriesDes VALUES (13,'ita','campioni fisici');
+INSERT INTO CategoriesDes VALUES ('1','ita','Mappe e grafici');
+INSERT INTO CategoriesDes VALUES ('2','ita','Datasets');
+INSERT INTO CategoriesDes VALUES ('3','ita','Risorse interattive');
+INSERT INTO CategoriesDes VALUES ('4','ita','Applicazioni');
+INSERT INTO CategoriesDes VALUES ('5','ita','Casi di studio');
+INSERT INTO CategoriesDes VALUES ('6','ita','Atti di conferenze');
+INSERT INTO CategoriesDes VALUES ('7','ita','Fotografie');
+INSERT INTO CategoriesDes VALUES ('8','ita','Audio/Video');
+INSERT INTO CategoriesDes VALUES ('9','ita','Archivi');
+INSERT INTO CategoriesDes VALUES ('10','ita','Altre risorse di informazione');
+INSERT INTO CategoriesDes VALUES ('11','ita','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','ita','Registri');
+INSERT INTO CategoriesDes VALUES ('13','ita','campioni fisici');
 
-INSERT INTO GroupsDes VALUES (-1,'ita','Visitatore');
-INSERT INTO GroupsDes VALUES (0,'ita','Intranet');
-INSERT INTO GroupsDes VALUES (1,'ita','Tutti');
-INSERT INTO GroupsDes VALUES (2,'ita','Gruppo di esempio');
+INSERT INTO GroupsDes VALUES ('-1','ita','Visitatore');
+INSERT INTO GroupsDes VALUES ('0','ita','Intranet');
+INSERT INTO GroupsDes VALUES ('1','ita','Tutti');
+INSERT INTO GroupsDes VALUES ('2','ita','Gruppo di esempio');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'ita','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'ita','Abkhazian');
@@ -510,19 +510,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'ita','Nessun contenuto linguistico; non
 INSERT INTO IsoLanguagesDes VALUES (483,'ita','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'ita','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'ita','Pubblica');
-INSERT INTO OperationsDes VALUES (1,'ita','Scarica');
-INSERT INTO OperationsDes VALUES (2,'ita','Modifica');
-INSERT INTO OperationsDes VALUES (3,'ita','Notifica');
-INSERT INTO OperationsDes VALUES (5,'ita','Mappa interattiva');
-INSERT INTO OperationsDes VALUES (6,'ita','In rilievo');
+INSERT INTO OperationsDes VALUES ('0','ita','Pubblica');
+INSERT INTO OperationsDes VALUES ('1','ita','Scarica');
+INSERT INTO OperationsDes VALUES ('2','ita','Modifica');
+INSERT INTO OperationsDes VALUES ('3','ita','Notifica');
+INSERT INTO OperationsDes VALUES ('5','ita','Mappa interattiva');
+INSERT INTO OperationsDes VALUES ('6','ita','In rilievo');
 
-INSERT INTO StatusValuesDes VALUES (0,'ita','Sconosciuto');
-INSERT INTO StatusValuesDes VALUES (1,'ita','Bozza');
-INSERT INTO StatusValuesDes VALUES (2,'ita','Approvato');
-INSERT INTO StatusValuesDes VALUES (3,'ita','Ritirato');
-INSERT INTO StatusValuesDes VALUES (4,'ita','Proposto');
-INSERT INTO StatusValuesDes VALUES (5,'ita','Respinto');
+INSERT INTO StatusValuesDes VALUES ('0','ita','Sconosciuto');
+INSERT INTO StatusValuesDes VALUES ('1','ita','Bozza');
+INSERT INTO StatusValuesDes VALUES ('2','ita','Approvato');
+INSERT INTO StatusValuesDes VALUES ('3','ita','Ritirato');
+INSERT INTO StatusValuesDes VALUES ('4','ita','Proposto');
+INSERT INTO StatusValuesDes VALUES ('5','ita','Respinto');
+INSERT INTO StatusValuesDes VALUES ('6','ita','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'ita','Armenia');
 INSERT INTO RegionsDes VALUES (2,'ita','Afghanistan');

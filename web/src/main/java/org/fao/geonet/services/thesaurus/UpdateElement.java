@@ -93,7 +93,7 @@ public class UpdateElement implements Service {
                 .setCoordWest(Util.getParam(params, "west"));
         } 
         
-        thesaurus.updateElement(bean, false);
+        thesaurus.updateElement(bean, oldid, namespace, false);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));

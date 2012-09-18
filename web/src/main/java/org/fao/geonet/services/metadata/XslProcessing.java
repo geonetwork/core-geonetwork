@@ -106,10 +106,10 @@ public class XslProcessing implements Service {
 		String process = Util.getParam(params, Params.PROCESS);
 		boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
-		Set<Integer> notProcessFound = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
+		Set<String> notProcessFound = new HashSet<String>();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 		Element processedMetadata;
@@ -155,8 +155,8 @@ public class XslProcessing implements Service {
 	 */	
 	public static Element process(String id, String process, boolean save,
 	        String appPath, Element params, ServiceContext context, 
-	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
-			Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
+	        Set<String> metadata, Set<String> notFound, Set<String> notOwner,
+			Set<String> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		UserSession session = context.getUserSession();
 		DataManager dataMan = gc.getDataManager();
@@ -168,9 +168,9 @@ public class XslProcessing implements Service {
 		MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
 		if (info == null) {
-			notFound.add(new Integer(id));
+			notFound.add(id);
 		} else if (!accessMan.isOwner(context, id)) {
-			notOwner.add(new Integer(id));
+			notOwner.add(id);
 		} else {
 
 			// -----------------------------------------------------------------------
@@ -181,7 +181,7 @@ public class XslProcessing implements Service {
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
 				context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-				notProcessFound.add(new Integer(id));
+				notProcessFound.add(id);
 				return null;
 			}
 			// --- Process metadata
@@ -210,15 +210,16 @@ public class XslProcessing implements Service {
                 // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
                 boolean updateDateStamp = true;
                 dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                boolean workspace = false;
     			if (useIndexGroup) {
-    				dataMan.indexMetadataGroup(dbms, id);
+    				dataMan.indexMetadataGroup(dbms, id, workspace, true);
     			}
                 else {
-                    dataMan.indexInThreadPool(context, id, dbms);
+                    dataMan.indexInThreadPool(context, id, dbms, workspace, true);
     			}
             }
 
-			metadata.add(new Integer(id));
+			metadata.add(id);
 
 			return processedMetadata;
 		}

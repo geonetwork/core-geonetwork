@@ -42,8 +42,7 @@ import java.util.Set;
 //=============================================================================
 
 public class Get implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -51,12 +50,9 @@ public class Get implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		int id = Integer.parseInt(Utils.getIdentifierFromParameters(params,
-				context));
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		String id = Utils.getIdentifierFromParameters(params, context);
 		String relation = Util.getParam(params, "relation", "normal");
-
 		return getRelation(id, relation, context);
 	}
 
@@ -70,9 +66,8 @@ public class Get implements Service {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static Element getRelation(int id, String relation, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+	public static Element getRelation(String id, String relation, ServiceContext context) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
 		
 		Set<String> result = getRelationIds(id, relation, context);
@@ -103,7 +98,7 @@ public class Get implements Service {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static Set<String> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
+	public static Set<String> getRelationIds(String id, String relation, ServiceContext context) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager()
 		.open(Geonet.Res.MAIN_DB);
 		
@@ -133,18 +128,15 @@ public class Get implements Service {
 	 * @return
 	 * @throws SQLException
 	 */
-	private static Set<String> retrieveIds(Dbms dbms, String query,
-			String field, int id) throws SQLException {
-		List<Element> records = dbms.select(query, new Integer(id)).getChildren();
+	private static Set<String> retrieveIds(Dbms dbms, String query, String field, String id) throws SQLException {
+		List<Element> records = dbms.select(query, id).getChildren();
 		Set<String> results = new HashSet<String>();
-
 		for (Object o : records) {
 			Element rec = (Element) o;
 			String val = rec.getChildText(field);
 
 			results.add(val);
 		}
-
 		return results;
 	}
 }

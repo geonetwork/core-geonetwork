@@ -105,7 +105,7 @@
                     expect the following columns to be returned:  
                     	popularity (sum of popu per group), groupid: the group identifier, groupname: the group name -->
                     <param name="query"
-                    		value="select sum(metadata.popularity) as popularity, groups.id as groupid, groups.name as groupname from metadata right join groups 	on metadata.groupowner = groups.id where groups.id > 1 group by groups.id, groups.name"/>
+                    		value="select sum(metadata.popularity) as popularity, groups.id as groupid, groups.name as groupname from metadata, groups where metadata.id IN (SELECT metadataid FROM OperationAllowed WHERE operationid = 0 AND groupid = groups.id) and groups.id > 1 group by groups.id, groups.name"/>
                 </call>
             </output>
         </service>
@@ -177,7 +177,7 @@
                     Please also have a look at WEB-INF/config.xml, for the statLuceneTermsToExlude parameter, that also controls
                     which lucene terms are logged
                  -->
-                    <param name="luceneTermFieldsToExclude" value="'_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_cat', '_owner', '_groupOwner', '_dummy', 'type'"/>
+                    <param name="luceneTermFieldsToExclude" value="'_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_cat', '_owner', '_dummy', 'type'"/>
                     <!-- the maximum number of results to return, as it may be huge, or -1 to get all results. -->
                     <param name="maxHits" value="20"/>
                 </call>
@@ -244,7 +244,7 @@
                     <!-- the max number of result to display in the UI -->
                     <param name="limit" value="10"/>
                     <param name="query"
-                    	value="select count(termtext) as tagcount, termtext from params where termfield not in ('_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_owner', '_groupOwner', '_cat', '_dummy', 'type') group by termtext having count(termtext) > 0  order by tagcount desc"
+                    	value="select count(termtext) as tagcount, termtext from params where termfield not in ('_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_owner', '_cat', '_dummy', 'type') group by termtext having count(termtext) > 0  order by tagcount desc"
                     />
                 </call>
             </output>

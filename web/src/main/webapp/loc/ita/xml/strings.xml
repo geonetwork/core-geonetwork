@@ -16,6 +16,21 @@
 
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
+    <workspaceview>Workspace vista</workspaceview>
+    <metadataview>metadata vista</metadataview>
+    <vieworiginal>Visualizza originale</vieworiginal>
+    <viewworkspace>Vista dell'area di lavoro di copia</viewworkspace>
+    <islocked>Questi metadati sono bloccato in sessione di modifica</islocked>
+    <canunlock>Siete autorizzati a sbloccare questo</canunlock>
+    <canedit>Siete autorizzati a modificare questo</canedit>
+    <unlock>Annulla modificare sessione</unlock>
+    <unlockMetadataTitle>Annulla modificare sessione</unlockMetadataTitle>
+    <lockedmetadata>Metadati nella sessione di modifica</lockedmetadata>
+    <lockedmetadatadesc>Elenchi metadati modificare le sessioni che si possiede o che vi è permesso di prendere in consegna</lockedmetadatadesc>
+    <grab.lock>Modifica modificare il proprietario della sessione</grab.lock>
+    <grabbed.lock>Cambiato proprietario della sessione di modifica</grabbed.lock>
+    <currentlockowner>Attualmente il blocco dei metadati è di proprietà dell'utente</currentlockowner>
+    <switchdiff>Passare a sinistra ea destra</switchdiff>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -395,6 +410,12 @@
 	<clear js="true">Pulisci</clear>
 	<clearAll>Pulisci tutto</clearAll>
 	<close js="true">Chiudi</close>
+    <compareMetadata>Confronta i metadati</compareMetadata>
+    <compareMetadataSelMessage>È necessario selezionare 2 record di metadati per confrontare</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Confronta con copia di lavoro</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Confronta con copia di lavoro in modalità di modifica</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Confronta con originale</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Confronta in modalità di modifica con originale</compareMetadataOriginalEditMode>
 	<completeTab>Visualizzazione avanzata</completeTab>
 	<completeTabEditor>Editor avanzato</completeTabEditor>
 	<confirmCancel>Si è sicuri di voler uscire dalla modalità editor (le modifiche saranno perse)</confirmCancel>
@@ -631,6 +652,7 @@
 	<metadata-template-order-desc>Ordina i tuoi modelli</metadata-template-order-desc>	
 	<metadata-template-add-default>Aggiungi modello</metadata-template-add-default>	
 	<metadata>Metadati</metadata>
+    <metametadata>Metadati</metametadata>
 	<metadataAdded>Aggiunti metadati con ID:</metadataAdded>
 	<metadataDeleted>Elimina metadati con ID:</metadataDeleted>
 	<metadataInsertResults>Risultati dell'importazione del metadato</metadataInsertResults>
@@ -1185,6 +1207,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>

@@ -68,8 +68,7 @@ public class Export {
 				Element record = (Element)records.get(i);
 
 				// get id
-				String sId = record.getChildText("id");
-				int id = Integer.parseInt(sId);
+				String id = record.getChildText("id");
 
 				// get and transform field
 				String sField = record.getChildText(field);

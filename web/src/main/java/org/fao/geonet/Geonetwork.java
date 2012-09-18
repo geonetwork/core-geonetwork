@@ -23,26 +23,12 @@
 
 package org.fao.geonet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.ServletContext;
-
-import com.yammer.metrics.core.MetricsRegistry;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
@@ -53,9 +39,12 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlResolver;
 import jeeves.xlink.Processor;
-
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterConfigurationException;
+import org.fao.geonet.jms.ClusterException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -100,7 +89,15 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This is the main class, it handles http connections and inits the system.
@@ -137,7 +134,7 @@ public class Geonetwork implements ApplicationHandler {
      * Inits the engine, loading all needed data.
 	  */
 	@SuppressWarnings(value = "unchecked")
-	public Object start(Element config, ServiceContext context) throws Exception {
+	public Object start(Element config, final ServiceContext context) throws Exception {
 		logger = context.getLogger();
 
 		path    = context.getAppPath();
@@ -187,7 +184,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		
 
-		// --- Check current database and create database if an emty one is found
+		// --- Check current database and create database if an empty one is found
 		String dbConfigurationFilePath = path + "/WEB-INF/config-db.xml";
 		dbConfiguration = Xml.loadFile(dbConfigurationFilePath);
         ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, servletContext, path, dbConfiguration);
@@ -208,7 +205,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Setting manager...");
 
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
+        SettingManager settingMan = new SettingManager(dbms, handlerConfig, context);
 
 		// --- Migrate database if an old one is found
 		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
@@ -217,6 +214,8 @@ public class Geonetwork implements ApplicationHandler {
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
 		              	 settingMan); 
 
+        // Copy logo and initialize site id
+        initLogo(servletContext, dbms, settingMan, context.getAppPath());
 
 		//------------------------------------------------------------------------
 		//--- initialize Z39.50
@@ -392,6 +391,17 @@ public class Geonetwork implements ApplicationHandler {
         MetadataNotifierManager metadataNotifierMan = new MetadataNotifierManager(dataMan);
 
         logger.info("  - Metadata notifier ...");
+
+        //--- initialize cluster configuration
+        try {
+            ClusterConfig.initialize(handlerConfig, settingMan, context);
+        }
+        catch(ClusterConfigurationException x) {
+            System.err.println("Cluster configuration failed: " + x.getMessage());
+            x.printStackTrace();
+            ClusterConfig.setEnabled(false);
+        }
+
 
 		//------------------------------------------------------------------------
 		//--- return application context
@@ -584,9 +594,10 @@ public class Geonetwork implements ApplicationHandler {
                 anyMigrationError = true;
             }
 			
-			// Update the logo 
-			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(servletContext, dbms, siteId, appPath);
+			// Update the logo
+                        // heikki: not necessary here 
+			//String siteId = settingMan.getValue("system/site/siteId");
+			//initLogo(servletContext, dbms, siteId, appPath);
 			
 			// TODO : Maybe a force rebuild index is required in such situation.
 			
@@ -668,12 +679,9 @@ public class Geonetwork implements ApplicationHandler {
                 Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
 	        }
 	        dbms.commit();
-            
-			// Copy logo
-			String uuid = UUID.randomUUID().toString();
-			initLogo(servletContext, dbms, uuid, context.getAppPath());
 			created = true;
-		} else {
+		}
+        else {
 			logger.info("      Found an existing GeoNetwork database.");
 		}
 
@@ -685,20 +693,26 @@ public class Geonetwork implements ApplicationHandler {
      *
      * @param servletContext
      * @param dbms
-* @param nodeUuid
-* @param appPath
-* @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws SQLException
+     * @param sm
+     * @param appPath
 	 */
-	private void initLogo(ServletContext servletContext, Dbms dbms, String nodeUuid, String appPath) {
-		createSiteLogo(nodeUuid, servletContext, appPath);
-		
-		try {
-			dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", nodeUuid);
-		} catch (SQLException e) {
-			logger.error("      Error when setting siteId values: " + e.getMessage());
-		}
+	private void initLogo(ServletContext servletContext, Dbms dbms, SettingManager sm, String appPath) {
+        try {
+            String siteId = sm.getValue("system/site/siteId");
+            logger.info("siteid was: " + siteId);
+            if(StringUtils.isNotEmpty(siteId) && siteId.equals("CHANGEME") || StringUtils.isEmpty(siteId)) {
+                siteId = UUID.randomUUID().toString();
+            }
+            sm.setValue(dbms, "system/site/siteId", siteId);
+            logger.info("siteid now: " + siteId);
+
+            createSiteLogo(siteId, servletContext, appPath);
+        }
+        catch (SQLException e) {
+            logger.error("      Error when setting siteId values: " + e.getMessage());
+            e.printStackTrace();
+            // TODO is it correct this is just swallowed ?
+        }
 	}
 
     /**
@@ -769,6 +783,17 @@ public class Geonetwork implements ApplicationHandler {
 		
         logger.info("shutting down CSW HarvestResponse executionService");
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();		
+
+        try {
+            if(ClusterConfig.isEnabled()) {
+                logger.info("shutting down cluster configuration");
+                ClusterConfig.shutdown();
+            }
+        } 
+        catch (ClusterException x) {
+            logger.error("Error shutting down cluster configuration: " + x.getMessage());
+            x.printStackTrace();
+        }
 
 		//------------------------------------------------------------------------
 		//--- end search

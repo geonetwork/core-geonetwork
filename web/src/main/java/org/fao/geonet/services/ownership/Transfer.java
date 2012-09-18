@@ -56,10 +56,10 @@ public class Transfer implements Service {
      * @throws Exception
      */
 	public Element exec(Element params, ServiceContext context) throws Exception {
-		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
-		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
-		int targetUsr = Util.getParamAsInt(params, "targetUser");
-		int targetGrp = Util.getParamAsInt(params, "targetGroup");
+		String sourceUsr = Util.getParam(params, "sourceUser");
+		String sourceGrp = Util.getParam(params, "sourceGroup");
+		String targetUsr = Util.getParam(params, "targetUser");
+		String targetGrp = Util.getParam(params, "targetGroup");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
@@ -77,14 +77,13 @@ public class Transfer implements Service {
 
 		int privCount = 0;
 
-		Set<Integer> metadata = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
 
-		for (String priv : sourcePriv)
-		{
+		for (String priv : sourcePriv) {
 			StringTokenizer st = new StringTokenizer(priv, "|");
 
-			int opId = Integer.parseInt(st.nextToken());
-			int mdId = Integer.parseInt(st.nextToken());
+			String opId = st.nextToken();
+			String mdId = st.nextToken();
 
 			dm.unsetOperation(context, dbms, mdId, sourceGrp, opId);
 
@@ -92,7 +91,9 @@ public class Transfer implements Service {
 				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
 								 "VALUES(?,?,?)", mdId, targetGrp, opId);
 
-			dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
+			//***
+			// dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
+            dbms.execute("UPDATE Metadata SET owner=? WHERE id=?", targetUsr, mdId);
 
 			metadata.add(mdId);
 			privCount++;
@@ -102,11 +103,12 @@ public class Transfer implements Service {
 
 		//--- reindex metadata
         List<String> list = new ArrayList<String>();
-		for (int mdId : metadata) {
-            list.add(Integer.toString(mdId));
+		for (String mdId : metadata) {
+            list.add(mdId);
         }
         
-        dm.indexInThreadPool(context,list, dbms);
+        boolean workspace = false;
+        dm.indexInThreadPool(context,list, dbms, workspace, true);
 
 		//--- return summary
 		return new Element("response")
@@ -122,7 +124,7 @@ public class Transfer implements Service {
      * @return
      * @throws SQLException
      */
-	private Set<String> retrievePrivileges(Dbms dbms, Integer userId, int groupId) throws SQLException {
+	private Set<String> retrievePrivileges(Dbms dbms, String userId, String groupId) throws SQLException {
 	    List list;
 	    if(userId==null) {
             String query = "SELECT * FROM OperationAllowed WHERE groupId=?";

@@ -6,6 +6,7 @@ xmlns:exslt = "http://exslt.org/common" exclude-result-prefixes="exslt">
 <xsl:import href="lucene-utils.xsl"/>
 
 <xsl:variable name="opView"     select="'_op0'"/>
+<xsl:variable name="opEdit"     select="'_op2'"/>
 <xsl:variable name="opDownload" select="'_op1'"/>
 <xsl:variable name="opDynamic"  select="'_op5'"/>
 <xsl:variable name="opFeatured" select="'_op6'"/>
@@ -253,7 +254,7 @@ compiles a request
 						<xsl:if test="/request/isReviewer">
 							<xsl:for-each select="/request/group">
 								<BooleanClause required="false" prohibited="false">
-									<TermQuery fld="_groupOwner" txt="{string(.)}"/>
+									<TermQuery fld="{$opEdit}" txt="{string(.)}"/>
 								</BooleanClause>
 							</xsl:for-each>
 						</xsl:if>

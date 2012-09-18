@@ -15,7 +15,23 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
     <anyLanguage>mikä tahansa kieli</anyLanguage>
-	<nodata>Null</nodata>
+
+    <workspaceview>Työtila näkymä</workspaceview>
+    <metadataview>Metadata näkymä</metadataview>
+    <vieworiginal>Katso alkuperäinen</vieworiginal>
+    <viewworkspace>Näytä työtila kopio</viewworkspace>
+    <islocked>Tämä metadata on lukittu</islocked>
+    <canunlock>Sinulla on oikeus avata tämän</canunlock>
+    <canedit>Sinulla on oikeus muokata</canedit>
+    <unlock>Avaa tämä metadata</unlock>
+    <unlockMetadataTitle>Unlock metadata</unlockMetadataTitle>
+    <lockedmetadata>Lukittu metadata</lockedmetadata>
+    <lockedmetadatadesc>Luettelot metatiedot muokata istuntoja, että omistat tai että sinulla on oikeus ottaa haltuunsa</lockedmetadatadesc>
+    <grab.lock>Muuta lukko omistaja</grab.lock>
+    <grabbed.lock>Muuttunut lukko omistaja</grabbed.lock>
+    <currentlockowner>Nykyisin metatietoja lukko omistaa käyttäjä</currentlockowner>
+    <switchdiff>Vaihda vasen ja oikea</switchdiff>
+
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -351,6 +367,12 @@
 	<clear>Tyhjennä</clear>
 	<clearAll>Tyhjennä kaikki</clearAll>
 	<close js="true">Sulje</close>
+    <compareMetadata>Vertaa metadata</compareMetadata>
+    <compareMetadataSelMessage>Sinun on valittava kaksi metatiedot Records vertailla</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Vertaa työtila kopio</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Vertaa työtila kopio muokkaustilassa</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Vertaa alkuperäinen</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Vertaa alkuperäisellä muokkaustilassa</compareMetadataOriginalEditMode>
 	<completeTab>JHS 158</completeTab>
 	<completeTabEditor>Tarkennettu editori</completeTabEditor>
 	<confirmBatchDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmBatchDelete>	
@@ -592,6 +614,7 @@
 	<metadata-template-add-default-desc>Valitse mallipohjat</metadata-template-add-default-desc>
 	<metadata-template-select>Valitse lisättävät mallipohjat.</metadata-template-select>
 	<metadata>Metatietodokumentti</metadata>
+    <metametadata>Metatietodokumentti</metametadata>
 	<metadataAdded>Metatietodokumentti lisätty tunnisteella:</metadataAdded>
 	<metadataDeleted>Metatietodokumentti poistettu tunnisteella:</metadataDeleted>
 	<metadataInsertResults>Metatietojen tiedostolisäyksen tulokset</metadataInsertResults>
@@ -989,6 +1012,7 @@ Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a 
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1085,6 +1109,11 @@ Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a 
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
 		<what>
 			<l1>Inspire-hakuehdot</l1>
 			<l2>Inspire-metatiedot</l2>

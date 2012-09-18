@@ -53,6 +53,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     selectedTpl: undefined,
     isChild: undefined,
     filter: undefined,
+    combo: undefined,
     createBt: undefined,
     validate: function(){
         if (this.selectedGroup !== undefined && this.selectedTpl !== undefined) {
@@ -146,10 +147,11 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             this.catalogue.search({E_template: 'y'}, null, null, 1, true, this.tplStore, null);
         }
         
-        this.add(new Ext.form.ComboBox({
+        this.combo = new Ext.form.ComboBox({
             name: 'E_group',
             mode: 'local',
             emptyText: OpenLayers.i18n('chooseGroup'),
+            editable: false,
             triggerAction: 'all',
             fieldLabel: OpenLayers.i18n('group'),
             store: this.groupStore,
@@ -160,11 +162,14 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 select: function(field, record, idx){
                     this.selectedGroup = record.get('id');
+                    this.combo.setValue(record.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
                     this.validate();
                 },
                 scope: this
             }
-        }));
+        });
+
+        this.add(this.combo);
         
         this.add({
                     xtype: 'textfield',
@@ -172,6 +177,28 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                     hidden: true,
                     value: this.isTemplate
                 });
+
+        // Remove special groups and select first group in the list
+        this.groupStore.load({
+            callback: function(){
+                this.groupStore.each(function(record) {
+                    if ((record.get('id') == '-1') || (record.get('id') == '0') || (record.get('id') == '1')) {
+                        this.remove(record);
+                    }
+                },  this.groupStore);
+
+
+                if (this.groupStore.getCount() > 0) {
+                    var recordSelected = this.groupStore.getAt(0);
+                    if (recordSelected) {
+                        this.selectedGroup = recordSelected.get('id');
+                        this.combo.setValue(recordSelected.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
+                        this.validate();
+                    }
+                }
+            },
+            scope: this
+        });
     }
 });
 

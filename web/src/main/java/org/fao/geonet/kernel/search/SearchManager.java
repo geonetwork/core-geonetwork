@@ -22,30 +22,8 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.servlet.ServletContext;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
@@ -53,7 +31,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -73,6 +50,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.reindex.OptimizeIndexMessage;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
@@ -102,8 +82,28 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Indexes metadata using Lucene.
@@ -128,7 +128,7 @@ public class SearchManager {
 	private File _luceneDir;
     private SettingInfo _settingInfo;
     /**
-     * Used when adding documents to the Lucene index.
+     * Used when adding documents to the Lucene index, and also to analyze query terms at search time.
      */
 	private static PerFieldAnalyzerWrapper _analyzer;
 	/**
@@ -188,7 +188,7 @@ public class SearchManager {
         PerFieldAnalyzerWrapper pfaw;
         Analyzer geoNetworkAnalyzer = SearchManager.createGeoNetworkAnalyzer(stopwords);
 		pfaw = new PerFieldAnalyzerWrapper(geoNetworkAnalyzer);
-		pfaw.addAnalyzer(LuceneIndexField.UUID, new GeoNetworkAnalyzer());
+		pfaw.addAnalyzer(LuceneIndexField._UUID, new GeoNetworkAnalyzer());
 		pfaw.addAnalyzer(LuceneIndexField.PARENTUUID, new GeoNetworkAnalyzer());
 		pfaw.addAnalyzer(LuceneIndexField.OPERATESON, new GeoNetworkAnalyzer());
 		pfaw.addAnalyzer(LuceneIndexField.SUBJECT, new KeywordAnalyzer());
@@ -222,7 +222,8 @@ public class SearchManager {
         PerFieldAnalyzerWrapper analyzer = (PerFieldAnalyzerWrapper)map.get(language); 
         if(analyzer != null) {
             return analyzer;
-        } else {
+        }
+        else {
             if(Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "Returning default analyzer.");
             }
@@ -402,7 +403,7 @@ public class SearchManager {
 	/**
 	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
 	 * 
-	 * @param defaultAnalyzer The default analyzer to use
+	 * @param defaultAnalyzerClass The default analyzer class name to use
 	 * @param fieldAnalyzers	The list of extra analyzer per field
 	 * @param referenceMap	A map where to reference the per field analyzer
 	 * @param referenceKey	The reference key
@@ -431,11 +432,10 @@ public class SearchManager {
 		for (Entry<String, String> e : fieldAnalyzers.entrySet()) {
 			String field = e.getKey();
 			String aClassName = e.getValue();
-			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-				Log.debug(Geonet.SEARCH_ENGINE, " Add analyzer for field: "
-						+ field + "=" + aClassName);
-			Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName,
-					field, stopwordsForLanguage);
+            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+                Log.debug(Geonet.SEARCH_ENGINE, " Add analyzer for field: " + field + "=" + aClassName);
+            }
+            Analyzer analyzer = createAnalyzerFromLuceneConfig(aClassName, field, stopwordsForLanguage);
 			pfa.addAnalyzer(field, analyzer);
 		}
 		
@@ -577,7 +577,7 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public synchronized void disableOptimizer() throws Exception {
         Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");
@@ -589,7 +589,7 @@ public class SearchManager {
      *
      * @param optimizerBeginAt
      * @param optimizerInterval
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
 		_luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
@@ -601,7 +601,7 @@ public class SearchManager {
      * @param type
      * @param stylesheetName
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
 		switch (type) {
@@ -659,24 +659,28 @@ public class SearchManager {
 	 * @param moreFields
 	 * @param isTemplate
 	 * @param title
-	 * @throws Exception
+     * @param workspace
+	 * @throws Exception hmm
 	 */
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
-                      String title) throws Exception {
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
+                      String title, boolean workspace) throws Exception {
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index. For workspace? " + workspace);
+        }
 		_indexWriter.openWriter();
 		try {
-            List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
+            List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, false);
             for( Pair<String, Document> document : docs ) {
                 _indexWriter.addDocument(document.one(), document.two());
-                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                     Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
             }
 		}
+		}
         finally {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from index");
+            }
 			_indexWriter.closeWriter();
 		}
 		_spatial.writer().index(schemaDir, id, metadata);
@@ -685,7 +689,7 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public void startIndexGroup() throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
@@ -702,12 +706,12 @@ public class SearchManager {
      * @param moreFields
      * @param isTemplate
      * @param title
-     * @throws Exception
+     * @param workspace
+     * @throws Exception hmm
      */
 	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
-                           String title) throws Exception {
-        List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
-                true);
+                           String title, boolean workspace) throws Exception {
+        List<Pair<String, Document>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, workspace, true);
         for( Pair<String, Document> document : docs ) {
             _indexWriter.addDocument(document.one(), document.two());
         }
@@ -717,7 +721,7 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public void endIndexGroup() throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
@@ -730,13 +734,15 @@ public class SearchManager {
      *
      * @param fld
      * @param txt
-     * @throws Exception
+     * @param workspace
+     * @throws Exception hmm
      */
-	public void deleteGroup(String fld, String txt) throws Exception {
+	public void deleteGroup(String fld, String txt, boolean workspace) throws Exception {
 		// possibly remove old document
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
-		_indexWriter.deleteDocuments(new Term(fld, txt));
+        }
+		_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
 
 		_spatial.writer().delete(txt);
 	}
@@ -750,20 +756,29 @@ public class SearchManager {
      * @param moreFields
      * @param isTemplate
      * @param title
+     * @param workspace
      * @param group
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
 	private List<Pair<String,Document>> buildIndexDocument(String schemaDir, Element metadata, String id,
-                                                           List<Element> moreFields, String isTemplate, String title,
+                                                           List<Element> moreFields, String isTemplate, String title, boolean workspace,
                                                            boolean group) throws Exception {
-
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
-		if (group) deleteGroup("_id", id);
-		else delete("_id", id);
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+        //
+        // delete earlier doc from index
+        //
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index. Workspace? " + workspace);
+        }
+		if (group) {
+            deleteGroup(LuceneIndexField._ID, id, workspace);
+        }
+		else {
+            delete(LuceneIndexField._ID, id, workspace);
+        }
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)){
             Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
+        }
 
 		Element xmlDoc;
 
@@ -778,17 +793,19 @@ public class SearchManager {
 
            StringBuilder sb = new StringBuilder();
 			allText(metadata, sb);
-			SearchManager.addField(xmlDoc, LuceneIndexField.TITLE, title, true, true);
+            SearchManager.addField(xmlDoc, LuceneIndexField._TITLE, title, true, true);
 			SearchManager.addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), true, true);
 		}
+        // no subtemplate
         else {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
-
+            }
             xmlDoc = getIndexFields(schemaDir, metadata);
 
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
+		}
 		}
 
         @SuppressWarnings(value = "unchecked")
@@ -797,7 +814,7 @@ public class SearchManager {
         List<Pair<String, Document>> documents = new ArrayList<Pair<String, Document>>();
         for( Element doc : documentElements ) {
             // add _id field
-            SearchManager.addField(doc, LuceneIndexField.ID, id, true, true);
+            SearchManager.addField(doc, LuceneIndexField._ID, id, true, true);
 
             // add more fields
             for( Element moreField : moreFields ) {
@@ -809,8 +826,9 @@ public class SearchManager {
             }
             documents.add(Pair.read(locale, newDocument(doc)));
         }
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
+        }
         return documents;
 	}
 
@@ -899,19 +917,22 @@ public class SearchManager {
      *
      * @param fld
      * @param txt
-     * @throws Exception
+     * @param workspace
+     * @throws Exception hmm
      */
-	public void delete(String fld, String txt) throws Exception {
+	public void delete(String fld, String txt, boolean workspace) throws Exception {
 		// possibly remove old document
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Opening Writer from delete");
+        }
 		_indexWriter.openWriter();
 		try {
-			_indexWriter.deleteDocuments(new Term(fld, txt));
+			_indexWriter.deleteDocuments(new Term(fld, txt), workspace);
 		}
         finally {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Closing Writer from delete");
+            }
 			_indexWriter.closeWriter();
 		}
 		_spatial.writer().delete(txt);
@@ -921,14 +942,14 @@ public class SearchManager {
      * TODO javadoc.
      *
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
 		IndexReader reader = getIndexReader(null);
 		try {
 			FieldSelector idXLinkSelector = new FieldSelector() {
 				public final FieldSelectorResult accept(String name) {
-					if (name.equals("_id") || name.equals("_hasxlinks")) return FieldSelectorResult.LOAD;
+					if (name.equals(LuceneIndexField._ID) || name.equals(LuceneIndexField._HASXLINKS)) return FieldSelectorResult.LOAD;
 					else return FieldSelectorResult.NO_LOAD;
 				}
 			};
@@ -937,8 +958,8 @@ public class SearchManager {
 			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
 				Document doc = reader.document(i, idXLinkSelector);
-				String id = doc.get("_id");
-				String hasxlinks = doc.get("_hasxlinks");
+				String id = doc.get(LuceneIndexField._ID);
+				String hasxlinks = doc.get(LuceneIndexField._HASXLINKS);
                 if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                     Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+hasxlinks+"'");
 				if (id == null) {
@@ -959,15 +980,16 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
+     * @param workspace
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
-	public Map<String,String> getDocsChangeDate() throws Exception {
+	public Map<String,String> getDocsChangeDate(boolean workspace) throws Exception {
 		IndexReader reader = getIndexReader(null);
 		try {
 			FieldSelector idChangeDateSelector = new FieldSelector() {
 				public final FieldSelectorResult accept(String name) {
-					if (name.equals("_id") || name.equals("_changeDate")) return FieldSelectorResult.LOAD;
+					if (name.equals(LuceneIndexField._ID) || name.equals(LuceneIndexField._CHANGE_DATE) || name.equals(LuceneIndexField._IS_WORKSPACE)) return FieldSelectorResult.LOAD;
 					else return FieldSelectorResult.NO_LOAD;
 				}
 			};
@@ -977,12 +999,17 @@ public class SearchManager {
 			for (int i = 0; i < reader.maxDoc(); i++) {
 				if (reader.isDeleted(i)) continue; // FIXME: strange lucene hack: sometimes it tries to load a deleted document
                 Document doc = reader.document(i, idChangeDateSelector);
-				String id = doc.get("_id");
+				String id = doc.get(LuceneIndexField._ID);
 				if (id == null) {
 					Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
 					continue;
 				}
-				docs.put(id, doc.get("_changeDate"));
+				if(workspace && doc.get(LuceneIndexField._IS_WORKSPACE) != null && doc.get(LuceneIndexField._IS_WORKSPACE).equals("true")) {
+                    docs.put(id, doc.get(LuceneIndexField._CHANGE_DATE));
+                }
+                if( (! workspace) && (doc.get(LuceneIndexField._IS_WORKSPACE) == null || !doc.get(LuceneIndexField._IS_WORKSPACE).equals("true")) ) {
+                    docs.put(id, doc.get(LuceneIndexField._CHANGE_DATE));
+                }
 			}
 			return docs;
 		}
@@ -996,7 +1023,7 @@ public class SearchManager {
 	 *
 	 * @param fld	The Lucene field name
 	 * @return	The list of values for the field
-	 * @throws Exception
+	 * @throws Exception hmm
 	 */
 	public Vector<String> getTerms(String fld) throws Exception {
 		Vector<String> terms = new Vector<String>();
@@ -1030,7 +1057,7 @@ public class SearchManager {
 	 * (a, the, ...).
 	 * @param threshold	Minimum frequency for a term to be returned.
 	 * @return	An unsorted and unordered list of terms with their frequency.
-	 * @throws Exception
+	 * @throws Exception hmm
 	 */
 	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
                                                 int threshold) throws Exception {
@@ -1099,9 +1126,9 @@ public class SearchManager {
      * @param schemaDir
      * @param xml
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
-    Element getIndexFields(String schemaDir, Element xml) throws Exception {
+    private Element getIndexFields(String schemaDir, Element xml) throws Exception {
         Element documents = new Element("Documents");
         try {
             String defaultStyleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
@@ -1109,7 +1136,9 @@ public class SearchManager {
             Map<String, String> params = new HashMap<String, String>();
             params.put("inspire", Boolean.toString(_inspireEnabled));
             params.put("thesauriDir", _thesauriDir);
+
             Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);
+
             if (new File(otherLocalesStyleSheet).exists()) {
                 @SuppressWarnings(value = "unchecked")
                 List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet, params).removeContent();
@@ -1125,7 +1154,7 @@ public class SearchManager {
             SearchManager.addField(xmlDoc, "_indexingErrorMsg", e.getMessage(), true, false);
             StringBuilder sb = new StringBuilder();
             allText(xml, sb);
-            SearchManager.addField(xmlDoc, "any", sb.toString(), false, true);
+            SearchManager.addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), false, true);
             documents.addContent(xmlDoc);
         }
         return documents;
@@ -1222,7 +1251,7 @@ public class SearchManager {
      * @param styleSheetName
      * @param xml
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
 	Element transform(String styleSheetName, Element xml) throws Exception {
 		try {
@@ -1240,8 +1269,8 @@ public class SearchManager {
      * 
      * @param priorityLocale the locale to prioritize. may be null
      * @return
-     * @throws java.io.IOException
-     * @throws InterruptedException
+     * @throws java.io.IOException hmm
+     * @throws InterruptedException hmm
      */
     public IndexReader getIndexReader( String priorityLocale ) throws InterruptedException, IOException {
         return _indexReader.getReader(priorityLocale);
@@ -1252,8 +1281,8 @@ public class SearchManager {
 	 *
 	 * @param reader
 	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException hmm
+	 * @throws InterruptedException hmm
 	 */
     public boolean isUpToDateReader(IndexReader reader) throws IOException, InterruptedException {
         return _indexReader.isUpToDateReader(reader);
@@ -1263,8 +1292,8 @@ public class SearchManager {
      * TODO javadoc.
      *
      * @param reader
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException hmm
+     * @throws InterruptedException hmm
      */
 	public void releaseIndexReader(IndexReader reader) throws InterruptedException, IOException {
 		_indexReader.releaseReader(reader);
@@ -1274,7 +1303,7 @@ public class SearchManager {
      * Creates an index in directory luceneDir if not already there.
      *
      * @param rebuild
-     * @throws Exception
+     * @throws Exception hmm
      */
 	private void setupIndex(boolean rebuild) throws Exception {
         if (_indexReader == null) {
@@ -1311,7 +1340,20 @@ public class SearchManager {
      *
      * @return
      */
-	public boolean optimizeIndex() {
+	public boolean optimizeIndex() throws Exception {
+	    boolean result = optimizeIndexWithoutSendingTopic();
+
+        if (result && ClusterConfig.isEnabled()) {
+            OptimizeIndexMessage message = new OptimizeIndexMessage();
+            message.setSenderClientID(ClusterConfig.getClientID());
+            Producer optimizeIndexProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.OPTIMIZEINDEX);
+            optimizeIndexProducer.produce(message);
+        }
+
+        return result;
+	}
+
+    public boolean optimizeIndexWithoutSendingTopic() {
 		try {
 			_indexWriter.openWriter();
 			_indexWriter.optimize();
@@ -1331,7 +1373,7 @@ public class SearchManager {
 	 *  @param xlinks
 	 *
      * @return
-     * @throws Exception
+     * @throws Exception hmm
      */
 	public boolean rebuildIndex(ServiceContext context, boolean xlinks) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -1345,10 +1387,11 @@ public class SearchManager {
 			}
 			if (!xlinks) {
 				setupIndex(true);
-				dataMan.init(context, dbms, true);
+				dataMan.init(context, dbms, true, false);
 			}
             else {
-				dataMan.rebuildIndexXLinkedMetadata(context);
+                boolean workspace = false;
+				dataMan.rebuildIndexXLinkedMetadata(context, workspace);
 			}
 			return true;
 		}

@@ -104,7 +104,7 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, false);
@@ -147,35 +147,35 @@ public class GeonetHarvester extends AbstractHarvester
 	{
 		GeonetParams params = (GeonetParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
-		settingMan.add(dbms, "id:"+siteId, "mefFormatFull", params.mefFormatFull);
-		settingMan.add(dbms, "id:"+siteId, "xslfilter", params.xslfilter);
+		settingMan.add(dbms, "id:"+siteId, "host",    params.host, false);
+		settingMan.add(dbms, "id:"+siteId, "createRemoteCategory", params.createRemoteCategory, false);
+		settingMan.add(dbms, "id:"+siteId, "mefFormatFull", params.mefFormatFull, false);
+		settingMan.add(dbms, "id:"+siteId, "xslfilter", params.xslfilter, false);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(dbms, path, "search", "", false);
 
-			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText);
-			settingMan.add(dbms, "id:"+searchID, "title",      s.title);
-			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac);
-			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords);
-			settingMan.add(dbms, "id:"+searchID, "digital",    s.digital);
-			settingMan.add(dbms, "id:"+searchID, "hardcopy",   s.hardcopy);
-			settingMan.add(dbms, "id:"+searchID, "sourceUuid", s.sourceUuid);
-			settingMan.add(dbms, "id:"+searchID, "sourceName", s.sourceName);
+			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText, false);
+			settingMan.add(dbms, "id:"+searchID, "title",      s.title, false);
+			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac, false);
+			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords, false);
+			settingMan.add(dbms, "id:"+searchID, "digital",    s.digital, false);
+			settingMan.add(dbms, "id:"+searchID, "hardcopy",   s.hardcopy, false);
+			settingMan.add(dbms, "id:"+searchID, "sourceUuid", s.sourceUuid, false);
+			settingMan.add(dbms, "id:"+searchID, "sourceName", s.sourceName, false);
 		}
 
 		//--- store group mapping
 
 		for (Group g : params.getGroupCopyPolicy())
 		{
-			String  groupID = settingMan.add(dbms, path, "groupCopyPolicy", "");
+			String  groupID = settingMan.add(dbms, path, "groupCopyPolicy", "", false);
 
-			settingMan.add(dbms, "id:"+groupID, "name",   g.name);
-			settingMan.add(dbms, "id:"+groupID, "policy", g.policy);
+			settingMan.add(dbms, "id:"+groupID, "name",   g.name, false);
+			settingMan.add(dbms, "id:"+groupID, "policy", g.policy, false);
 		}
 	}
 

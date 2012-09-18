@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -108,15 +107,13 @@ public class Insert implements Service
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;
-		if (isTemplate.equals("n"))
-		{
+		if (isTemplate.equals("n")) {
 			uuid = dataMan.extractUUID(schema, xml);
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
 		}
 		else uuid = UUID.randomUUID().toString();
 
-		String uuidAction = Util.getParam(params, Params.UUID_ACTION,
-				Params.NOTHING);
+		String uuidAction = Util.getParam(params, Params.UUID_ACTION, Params.NOTHING);
 
 		String date = new ISODate().toString();
 
@@ -130,11 +127,10 @@ public class Insert implements Service
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         
 		// Import record
-		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
-				gc.getSiteId(), gc.getSiteName(), context, id, date,
-				date, group, isTemplate, dbms);
+		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0, gc.getSiteId(), gc.getSiteName(), context, id,
+                date, date, group, isTemplate, dbms);
 		
-		int iId = Integer.parseInt(id.get(0));
+		String iId = id.get(0);
 		
 		
 		// Set template
@@ -146,19 +142,18 @@ public class Insert implements Service
 
 		if (!category.equals("_none_") || !category.equals("")) {
 			Element categs = new Element("categories");
-			categs.addContent((new Element("category")).setAttribute(
-					"name", category));
-
-			Importer.addCategories(context, dm, dbms, id.get(0), categs);
+			categs.addContent((new Element("category")).setAttribute("name", category));
+			Importer.addCategories(context, dm, dbms, iId, categs);
 		} 
 
 		// Index
-        dm.indexInThreadPool(context, id.get(0), dbms);
+        boolean workspace = false;
+        dm.indexInThreadPool(context, iId, dbms, workspace, true);
         
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
-	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0)))));
+        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, iId))));
 
 		return response;
 	};

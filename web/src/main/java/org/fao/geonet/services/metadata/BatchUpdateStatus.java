@@ -42,7 +42,6 @@ import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 //=============================================================================
@@ -81,44 +80,41 @@ public class BatchUpdateStatus implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
+                String uuid = iter.next();
 			String id   = dm.getMetadataId(dbms, uuid);
-								
 			MdInfo info = dm.getMetadataInfo(dbms, id);
-
 			if (info == null) {
-				notFound.add(new Integer(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
-			} else {
-				metadata.add(new Integer(id));
+                    notFound.add(id);
+                }
+                else if (!accessMan.isOwner(context, id)) {
+                    notOwner.add(id);
+                }
+                else {
+                    metadata.add(id);
 			}
 		}
 		}
 
 		String changeDate = new ISODate().toString();
 
-		//--- use StatusActionsFactory and StatusActions class to 
-    //--- change status and carry out behaviours for status changes
+        //--- use StatusActionsFactory and StatusActions class to change status and carry out behaviours for status changes
     StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
-
     StatusActions sa = saf.createStatusActions(context, dbms);
 
-    Set<Integer> noChange = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
+        Set<String> noChange = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
 		r.processWithFastIndexing();
 
-		// -- for the moment just return the sizes - we could return the ids
-		// -- at a later stage for some sort of result display
+		// -- for the moment just return the sizes - we could return the ids at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)
 						.addContent(new Element("done")    .setText(metadata.size()+""))
 						.addContent(new Element("notOwner").setText(notOwner.size()+""))

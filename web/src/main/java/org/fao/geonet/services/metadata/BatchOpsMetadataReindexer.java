@@ -19,16 +19,13 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.resources.dbms.Dbms;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -42,12 +39,12 @@ import java.util.concurrent.Future;
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 	
 	public class BatchOpsCallable implements Callable<Void> {
-		private final int ids[];
+		private final String ids[];
 		private final int beginIndex, count;
 		private final DataManager dm;
 		private final Dbms dbms;
 	
-		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm, Dbms dbms) {
+		BatchOpsCallable(String ids[], int beginIndex, int count, DataManager dm, Dbms dbms) {
 			this.ids = ids;
 			this.beginIndex = beginIndex;
 			this.count = count;
@@ -57,16 +54,17 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		
 		public Void call() throws Exception {
 			for(int i=beginIndex; i<beginIndex+count; i++) {
-				dm.indexMetadataGroup(dbms, ids[i]+"");
+                boolean workspace = false;
+                dm.indexMetadataGroup(dbms, ids[i], workspace, true);
 			}
 			return null;
 		}
 	}
 	
-  Set<Integer> metadata;
+  Set<String> metadata;
 	Dbms dbms;
 
-  public BatchOpsMetadataReindexer(DataManager dm, Dbms dbms, Set<Integer> metadata) {
+  public BatchOpsMetadataReindexer(DataManager dm, Dbms dbms, Set<String> metadata) {
       super(dm);
 			this.dbms = dbms;
       this.metadata = metadata;
@@ -77,8 +75,11 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-		int[] ids = new int[metadata.size()];
-		int i = 0; for (Integer id : metadata) ids[i++] = id;
+		String[] ids = new String[metadata.size()];
+		int i = 0;
+        for (String id : metadata) {
+            ids[i++] = id;
+        }
 
 		int perThread;
 		if (ids.length < threadCount) perThread = ids.length;
@@ -108,4 +109,3 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		executor.shutdown();
 	}
 }
-

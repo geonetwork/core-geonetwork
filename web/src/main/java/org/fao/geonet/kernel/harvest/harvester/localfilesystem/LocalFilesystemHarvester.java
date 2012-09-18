@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -37,6 +38,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.jdom.Element;
@@ -67,10 +69,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	@Override
 	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		LocalFilesystemParams lp = (LocalFilesystemParams) params;
-		settingMan.add(dbms, "id:"+siteId, "icon", lp.icon);
-		settingMan.add(dbms, "id:"+siteId, "recurse", lp.recurse);
-		settingMan.add(dbms, "id:"+siteId, "directory", lp.directoryname);
-		settingMan.add(dbms, "id:"+siteId, "nodelete", lp.nodelete);
+		settingMan.add(dbms, "id:"+siteId, "icon", lp.icon, false);
+		settingMan.add(dbms, "id:"+siteId, "recurse", lp.recurse, false);
+		settingMan.add(dbms, "id:"+siteId, "directory", lp.directoryname, false);
+		settingMan.add(dbms, "id:"+siteId, "nodelete", lp.nodelete, false);
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 		
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 		storeNode(dbms, params, "id:"+id);
 		
 		Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -139,7 +141,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * @return
 	 */
 	private List<String> harvestFromDirectory(File directory, boolean recurse) throws IOException {
-		System.out.println("LocalFilesystem harvesting: directory " + directory.getAbsolutePath());
+        Log.debug(Geonet.HARVESTER, "LocalFilesystem harvesting: directory " + directory.getAbsolutePath());
 		List<String> results = new ArrayList<String>();
 		if(! directory.exists()) {
 			throw new IOException("directory does not exist: "+ directory.getAbsolutePath());
@@ -162,7 +164,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					throw new IOException("cannot read file "+ file.getAbsolutePath());
 				}
 				else {
-					System.out.println("adding file: " + file.getName());
+                    Log.debug(Geonet.HARVESTER, "adding file: " + file.getName());
 					results.add(file.getAbsolutePath());
 				}
 			}
@@ -180,7 +182,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * @throws Exception
 	 */
 	private void align(List<String> results, ResourceManager rm) throws Exception {
-		System.out.println("Start of alignment for : "+ params.name);
+        Log.debug(Geonet.HARVESTER, "Start of alignment for : "+ params.name);
 		this.result = new LocalFilesystemResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
@@ -205,15 +207,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 			result.total++;
 			Element xml;
 			try {
-				System.out.println("reading file: " + xmlFile);	
+                Log.debug(Geonet.HARVESTER, "reading file: " + xmlFile);
 				xml = Xml.loadFile(xmlFile);
 			} catch (JDOMException e) { // JDOM problem
-				System.out.println("Error loading XML from file " + xmlFile +", ignoring");	
+                Log.error(Geonet.HARVESTER, "Error loading XML from file " + xmlFile +", ignoring");
 				e.printStackTrace();
 				result.badFormat++;
 				continue; // skip this one
 			} catch (Exception e) { // some other error
-				System.out.println("Error retrieving XML from file " + xmlFile +", ignoring");	
+                Log.error(Geonet.HARVESTER, "Error retrieving XML from file " + xmlFile +", ignoring");
 				e.printStackTrace();
 				result.unretrievable++;
 				continue; // skip this one
@@ -224,7 +226,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				try {
 					Xml.validate(xml);
 				} catch (Exception e) {
-					System.out.println("Cannot validate XML from file " + xmlFile +", ignoring. Error was: "+e.getMessage());
+                    Log.warning(Geonet.HARVESTER, "Cannot validate XML from file " + xmlFile +", ignoring. Error was: "+e.getMessage());
 					result.doesNotValidate++;
 					continue; // skip this one
 				}
@@ -235,7 +237,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				try {
 					xml = Xml.transform(xml, thisXslt);
 				} catch (Exception e) {
-					System.out.println("Cannot transform XML from file " + xmlFile+", ignoring. Error was: "+e.getMessage());
+                    Log.error(Geonet.HARVESTER, "Cannot transform XML from file " + xmlFile+", ignoring. Error was: "+e.getMessage());
 					result.badFormat++;
 					continue; // skip this one
 				}
@@ -253,12 +255,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				else {
 					String id = dataMan.getMetadataId(dbms, uuid);
 					if (id == null)	{
-						System.out.println("adding new metadata");
+                        Log.debug(Geonet.HARVESTER, "adding new metadata");
 						id = addMetadata(xml, uuid, dbms, schema, localGroups, localCateg);
 						result.added++;
 					}
 					else {
-						System.out.println("updating existing metadata, id is: " + id);
+                        Log.debug(Geonet.HARVESTER, "updating existing metadata, id is: " + id);
 						updateMetadata(xml, id, dbms, localGroups, localCateg);
 						result.updated++;
 					}
@@ -281,11 +283,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				}
 			}			
 		}
-		System.out.println("End of alignment for : "+ params.name);
+        Log.debug(Geonet.HARVESTER, "End of alignment for : "+ params.name);
 	}
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Updating metadata with id: "+ id);
+        Log.debug(Geonet.HARVESTER, "  - Updating metadata with id: "+ id);
 
         //
         // update metadata
@@ -296,14 +298,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         String language = context.getLanguage();
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
 		addPrivileges(id, localGroups, dbms);
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 	}
 
 	
@@ -318,7 +321,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * @throws Exception
 	 */
 	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Adding metadata with remote uuid: "+ uuid);
+        Log.debug(Geonet.HARVESTER, "  - Adding metadata with remote uuid: "+ uuid);
 
 		String source = params.uuid;
 		String createDate = new ISODate().toString();
@@ -326,21 +329,22 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, source,
-                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, xml, id, uuid, userid, group, source, isTemplate, docType, title,
+                category, createDate, createDate, ufo, indexImmediate);
 
-		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, source);
+		dataMan.setTemplateExt(dbms, id, "n", null);
+		dataMan.setHarvestedExt(dbms, id, source);
 
 		addPrivileges(id, localGroups, dbms);
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		return id;
 	}
 	
@@ -353,10 +357,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
-				System.out.println("    - Skipping removed category with id:"+ catId);
+                Log.debug(Geonet.HARVESTER, "    - Skipping removed category with id:"+ catId);
 			}
 			else {
-				System.out.println("    - Setting category : "+ name);
+                Log.debug(Geonet.HARVESTER, "    - Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -369,19 +373,19 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 			if (name == null) {
-				System.out.println("    - Skipping removed group with id:"+ priv.getGroupId());
+                Log.debug(Geonet.HARVESTER, "    - Skipping removed group with id:"+ priv.getGroupId());
 			}
 			else {
-				System.out.println("    - Setting privileges for group : "+ name);
-				for (int opId: priv.getOperations()) {
+                Log.debug(Geonet.HARVESTER, "    - Setting privileges for group : "+ name);
+				for (String opId: priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						System.out.println("       --> "+ name);
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
+                        Log.debug(Geonet.HARVESTER, "       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					}
 					else {
-						System.out.println("       --> "+ name +" (skipped)");
+                        Log.debug(Geonet.HARVESTER, "       --> "+ name +" (skipped)");
 					}
 				}
 			}
@@ -390,10 +394,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	
 	@Override
 	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
-		System.out.println("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
+        Log.debug(Geonet.HARVESTER, "LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
 		File directory = new File(params.directoryname);
 		List<String> results = harvestFromDirectory(directory, params.recurse);
-		System.out.println("LocalFilesystem doHarvest: found #" + results.size() + " results");
+        Log.debug(Geonet.HARVESTER, "LocalFilesystem doHarvest: found #" + results.size() + " results");
 		align(results, rm);		
 	}
 

@@ -52,8 +52,9 @@ public class UserQueryInput {
             SearchParameter.OWNER, 
             SearchParameter.ISADMIN, 
             SearchParameter.ISREVIEWER, 
-            SearchParameter.ISUSERADMIN, 
-            LuceneIndexField.GROUP_OWNER);
+            SearchParameter.ISUSERADMIN);
+            //***
+            // LuceneIndexField.GROUP_OWNER);
 
     /**
      * Don't take into account those field in search (those field are not 
@@ -86,11 +87,11 @@ public class UserQueryInput {
     private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();
     static {
         // Populate map for search parameter to Lucene mapping
-        searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField.SOURCE);
+        searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField._SOURCE);
         searchParamToLuceneField.put(SearchParameter.INSPIRE, LuceneIndexField.INSPIRE_CAT);
         searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
         searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
-        searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField._CAT);
     }
     private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();

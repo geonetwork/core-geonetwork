@@ -1,29 +1,29 @@
 INSERT INTO Languages VALUES ('fre','français', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (21, 'fre', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (22, 'fre', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (23, 'fre', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (24, 'fre', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('21', 'fre', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('22', 'fre', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('23', 'fre', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('24', 'fre', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (2,'fre','Jeux de données');
-INSERT INTO CategoriesDes VALUES (1,'fre','Cartes & graphiques');
-INSERT INTO CategoriesDes VALUES (7,'fre','Photographies');
-INSERT INTO CategoriesDes VALUES (10,'fre','Autres ressources');
-INSERT INTO CategoriesDes VALUES (5,'fre','Etude de cas, meilleures pratiques');
-INSERT INTO CategoriesDes VALUES (8,'fre','Vidéo/Audio');
-INSERT INTO CategoriesDes VALUES (9,'fre','Répertoires');
-INSERT INTO CategoriesDes VALUES (4,'fre','Applications');
-INSERT INTO CategoriesDes VALUES (3,'fre','Ressources interactives');
-INSERT INTO CategoriesDes VALUES (6,'fre','Conférences');
-INSERT INTO CategoriesDes VALUES (11,'fre','Serveurs Z3950');
-INSERT INTO CategoriesDes VALUES (12,'fre','Annuaires');
-INSERT INTO CategoriesDes VALUES (13,'fre','Echantillons physiques');
+INSERT INTO CategoriesDes VALUES ('2','fre','Jeux de données');
+INSERT INTO CategoriesDes VALUES ('1','fre','Cartes & graphiques');
+INSERT INTO CategoriesDes VALUES ('7','fre','Photographies');
+INSERT INTO CategoriesDes VALUES ('10','fre','Autres ressources');
+INSERT INTO CategoriesDes VALUES ('5','fre','Etude de cas, meilleures pratiques');
+INSERT INTO CategoriesDes VALUES ('8','fre','Vidéo/Audio');
+INSERT INTO CategoriesDes VALUES ('9','fre','Répertoires');
+INSERT INTO CategoriesDes VALUES ('4','fre','Applications');
+INSERT INTO CategoriesDes VALUES ('3','fre','Ressources interactives');
+INSERT INTO CategoriesDes VALUES ('6','fre','Conférences');
+INSERT INTO CategoriesDes VALUES ('11','fre','Serveurs Z3950');
+INSERT INTO CategoriesDes VALUES ('12','fre','Annuaires');
+INSERT INTO CategoriesDes VALUES ('13','fre','Echantillons physiques');
 
-INSERT INTO GroupsDes VALUES (-1,'fre','Invité');
-INSERT INTO GroupsDes VALUES (0,'fre','Intranet');
-INSERT INTO GroupsDes VALUES (1,'fre','Tous');
-INSERT INTO GroupsDes VALUES (2,'fre','Groupe exemple');
+INSERT INTO GroupsDes VALUES ('-1','fre','Invité');
+INSERT INTO GroupsDes VALUES ('0','fre','Intranet');
+INSERT INTO GroupsDes VALUES ('1','fre','Tous');
+INSERT INTO GroupsDes VALUES ('2','fre','Groupe exemple');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'fre','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'fre','Abkhaze');
@@ -510,19 +510,24 @@ INSERT INTO IsoLanguagesDes VALUES (482,'fre','Pas de contenu linguistique');
 INSERT INTO IsoLanguagesDes VALUES (483,'fre','N''ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'fre','Zaza; dimili; dimli; kirdki; kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'fre','Publier');
-INSERT INTO OperationsDes VALUES (1,'fre','Télécharger');
-INSERT INTO OperationsDes VALUES (2,'fre','Editer');
-INSERT INTO OperationsDes VALUES (3,'fre','Notifier');
-INSERT INTO OperationsDes VALUES (5,'fre','Carte interactive');
-INSERT INTO OperationsDes VALUES (6,'fre','Epingler');
+-- ======================================================================
+-- === Table: OperationsDes
+-- ======================================================================
 
-INSERT INTO StatusValuesDes VALUES (0,'fre','Inconnu');
-INSERT INTO StatusValuesDes VALUES (1,'fre','Brouillon');
-INSERT INTO StatusValuesDes VALUES (2,'fre','Validé');
-INSERT INTO StatusValuesDes VALUES (3,'fre','Retiré');
-INSERT INTO StatusValuesDes VALUES (4,'fre','A valider');
-INSERT INTO StatusValuesDes VALUES (5,'fre','Rejeté');
+INSERT INTO OperationsDes VALUES ('0','fre','Publier');
+INSERT INTO OperationsDes VALUES ('1','fre','Télécharger');
+INSERT INTO OperationsDes VALUES ('2','fre','Editer');
+INSERT INTO OperationsDes VALUES ('3','fre','Notifier');
+INSERT INTO OperationsDes VALUES ('5','fre','Carte interactive');
+INSERT INTO OperationsDes VALUES ('6','fre','Epingler');
+
+INSERT INTO StatusValuesDes VALUES ('0','fre','Inconnu');
+INSERT INTO StatusValuesDes VALUES ('1','fre','Brouillon');
+INSERT INTO StatusValuesDes VALUES ('2','fre','Validé');
+INSERT INTO StatusValuesDes VALUES ('3','fre','Retiré');
+INSERT INTO StatusValuesDes VALUES ('4','fre','A valider');
+INSERT INTO StatusValuesDes VALUES ('5','fre','Rejeté');
+INSERT INTO StatusValuesDes VALUES ('6','fre','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'fre','Arménie');
 INSERT INTO RegionsDes VALUES (2,'fre','Afghanistan');

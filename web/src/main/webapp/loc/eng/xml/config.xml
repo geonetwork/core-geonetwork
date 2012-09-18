@@ -31,6 +31,13 @@
     <requestedlanguagesorted>Search results in requested language sorted on top</requestedlanguagesorted>
     <requestedlanguageignored>Ignore requested language in search</requestedlanguageignored>
 
+    <clustering>Clustering</clustering>
+    <enableClustering>Enable clustering</enableClustering>
+    <JMSBrokerConnectionURL>JMS broker URL(s)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>Symbolic locking</symbolicLocking>
+    <enableSymbolicLocking>Enable symbolic locking</enableSymbolicLocking>
+
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -383,6 +390,17 @@
         </tip>
         <tip id="requestedlanguage.ignored">
             Ignore requested language for search results.
+        </tip>
+
+        <tip id="clustering.enable">
+            Enable this for clustering.
+        </tip>
+        <tip id="clustering.jmsurl">
+            Enter the URL to your JMS broker. E.g. failover://tcp://localhost:61616.
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            When this is enabled, any editor may unlock metadata in his groups (not only Reviewers).
         </tip>
 
     </tips>

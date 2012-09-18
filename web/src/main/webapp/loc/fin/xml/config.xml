@@ -36,6 +36,13 @@
     <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
     <requestedlanguageignored>Ohita pyydetyt kieli haku</requestedlanguageignored>
 		
+    <clustering>klusterointi</clustering>
+    <enableClustering>Ota klusterointi</enableClustering>
+    <JMSBrokerConnectionURL>JMS välittäjä URL(t)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>Symbolinen lukitus</symbolicLocking>
+    <enableSymbolicLocking>Ota symbolinen lukitus</enableSymbolicLocking>
+
 	<downloadservice>Latauspalvelu</downloadservice>
 	<leave>Käytä metatiedoissa olevaa linkkiä</leave>
 	<simple>Käytä Geonetworkin latauspalvelua (resources.get)</simple>
@@ -312,6 +319,16 @@
             Ohita pyydetään kieli hakutuloksia.
         </tip>
 
+        <tip id="cluster.enable">
+            Ota tämä klusterointi.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Anna URL-osoite JMS välittäjä. Esim. failover://tcp://localhost:61616.
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            Kun tämä on käytössä, toimittaja voi avata metatieto hänen ryhmissä (ei pelkästään) tarkasteltavaksi.
+        </tip>
     </tips>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
 	<data.dataDir>Data directory:</data.dataDir>

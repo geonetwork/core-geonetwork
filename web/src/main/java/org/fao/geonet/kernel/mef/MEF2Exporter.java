@@ -23,25 +23,9 @@
 
 package org.fao.geonet.kernel.mef;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
-import static org.fao.geonet.kernel.mef.MEFConstants.FS;
-import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
-import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Set;
-import java.util.zip.ZipOutputStream;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -53,6 +37,21 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Set;
+import java.util.zip.ZipOutputStream;
+
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
+import static org.fao.geonet.kernel.mef.MEFConstants.FS;
+import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
+import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 
 class MEF2Exporter {
 	/**
@@ -227,7 +226,7 @@ class MEF2Exporter {
 	}
 
 	/**
-	 * Get Feature Catalog ID if exists using relation table.
+	 * Gets Feature Catalog ID if exists using relation table.
 	 * 
 	 * @param context
 	 * @param dbms
@@ -236,17 +235,15 @@ class MEF2Exporter {
 	 * @return String Feature catalogue uuid.
 	 * @throws Exception
 	 */
-	private static String getFeatureCatalogID(ServiceContext context,
-			Dbms dbms, String uuid) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+	private static String getFeatureCatalogID(ServiceContext context, Dbms dbms, String uuid) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getDataManager();
 
 		String id = dm.getMetadataId(dbms, uuid);
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
-		Set<String> relatedIds = Get.getRelationIds(new Integer(id), "normal", context);
+		Set<String> relatedIds = Get.getRelationIds(id, "normal", context);
 		if (relatedIds.size() == 0)
 			return "";
 

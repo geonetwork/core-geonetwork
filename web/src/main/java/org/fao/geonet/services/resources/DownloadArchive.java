@@ -24,7 +24,6 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -152,7 +151,8 @@ public class DownloadArchive implements Service
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
-			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",new Integer(userId));
+			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",
+                    userId);
 			if (elUser.getChild("record") != null) {
 				userDetails.addContent(elUser.getChild("record").cloneContent());
 			}
@@ -390,7 +390,7 @@ public class DownloadArchive implements Service
 				query.append("AND    oa.metadataId = ?");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString(), new Integer(id));
+				Element groups = dbms.select(query.toString(), id);
 
 				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); ) {
 					Element group = (Element)i.next();

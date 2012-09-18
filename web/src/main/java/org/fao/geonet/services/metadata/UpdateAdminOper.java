@@ -38,31 +38,23 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
-//=============================================================================
-
-/** Stores all operations allowed for a metadata. Called by the metadata.admin service
+/**
+ * Stores all operations allowed for a metadata. Called by the metadata.admin service.
   */
-
-public class UpdateAdminOper implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class UpdateAdminOper implements Service {
 
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception hmm
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 		UserSession   us = context.getUserSession();
@@ -71,17 +63,13 @@ public class UpdateAdminOper implements Service
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
 		//--- check access
-
 		MdInfo info = dm.getMetadataInfo(dbms, id);
 
 		if (info == null)
 			throw new MetadataNotFoundEx(id);
 
-		//-----------------------------------------------------------------------
 		//--- remove old operations
-
 		boolean skip = false;
 
 		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled 
@@ -91,35 +79,29 @@ public class UpdateAdminOper implements Service
 		boolean isReviewer= Geonet.Profile.REVIEWER     .equals(us.getProfile());
 
 
-		if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
+		if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer) {
 			skip = true;
+        }
 
 		dm.deleteMetadataOper(dbms, id, skip);
 
-		//-----------------------------------------------------------------------
 		//--- set new ones
 
 		List list = params.getChildren();
-
-		for(int i=0; i<list.size(); i++)
-		{
+		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
-
 			String name  = el.getName();
 
-			if (name.startsWith("_"))
-			{
-				StringTokenizer st = new StringTokenizer(name, "_");
-
-				String groupId = st.nextToken();
-				String operId  = st.nextToken();
-
+			if (name.startsWith("_")) {
+				String groupId = name.substring(1, name.lastIndexOf('_'));
+				String operId  = name.substring(name.lastIndexOf('_') + 1);
 				dm.setOperation(context, dbms, id, groupId, operId);
 			}
 		}
 
 		//--- index metadata
-        dm.indexInThreadPool(context,id, dbms);
+        boolean workspace = false;
+        dm.indexInThreadPool(context,id, dbms, workspace, true);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

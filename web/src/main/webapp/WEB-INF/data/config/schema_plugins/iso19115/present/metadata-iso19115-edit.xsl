@@ -275,7 +275,7 @@
 		</xsl:apply-templates>
 		
 		<xsl:call-template name="complexElementGui">
-			<xsl:with-param name="title" select="/root/gui/strings/metadata"/>
+			<xsl:with-param name="title" select="/root/gui/strings/metametadata"/>
 			<xsl:with-param name="content">
 				<xsl:call-template name="iso19115Simple2">
 					<xsl:with-param name="schema" select="$schema"/>

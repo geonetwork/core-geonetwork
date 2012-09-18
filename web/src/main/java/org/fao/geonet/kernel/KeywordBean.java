@@ -273,7 +273,7 @@ public class KeywordBean {
     /**
      * Set a definition for the specified language
      * 
-     * @param definition the new definition
+     * @param value the new definition
      * @param lang the language to set, can be 2 or 3 letter language code
      * 
      * @return this keyword bean

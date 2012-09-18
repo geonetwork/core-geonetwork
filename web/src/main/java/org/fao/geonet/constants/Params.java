@@ -36,7 +36,9 @@ public class Params {
 	public static final String COMMENTS     = "comments";
 	public static final String SUBJECT      = "subject";
 	public static final String CURRTAB      = "currTab";
+    public static final String EDITMODE      = "editmode";
 	public static final String FINISHED     = "finished";
+    public static final String FIRST = "first";
 	public static final String DATA         = "data";
 	public static final String DIR          = "dir";
 	public static final String DESCRIPTION  = "description";
@@ -69,6 +71,7 @@ public class Params {
 	public static final String REF          = "ref";
 	public static final String MODE         = "mode";
 	public static final String SCHEMA       = "schema";
+    public static final String SECOND       = "second";
 	public static final String SHOWVALIDATIONERRORS  = "showvalidationerrors";
 	public static final String SITE_ID      = "siteId";
 	public static final String SITENAME     = "sitename";
@@ -78,6 +81,7 @@ public class Params {
 	public static final String TEMPLATE     = "template";
 	public static final String TITLE        = "title";
 	public static final String USER         = "user";
+    public static final String USER_ID      = "userId";
 	public static final String USERNAME     = "username";
 	public static final String VERSION      = "version";
 	public static final String VALIDATE     = "validate";
@@ -146,6 +150,7 @@ public class Params {
         public static final String RETIRED   = "3";
         public static final String SUBMITTED = "4";
         public static final String REJECTED  = "5";
+        public static final String JUSTCREATED  = "6";
 	}
 
     /**

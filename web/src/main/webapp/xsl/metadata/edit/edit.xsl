@@ -31,7 +31,7 @@
           <input type="hidden" id="template" name="template" value="{geonet:info/isTemplate}"/>
           <input type="hidden" id="uuid" value="{geonet:info/uuid}"/>
           <input type="hidden" name="id" value="{geonet:info/id}"/>
-          <!-- TODO : add groupOwner -->
+
           <input type="hidden" name="type" value="{geonet:info/id}"/>
           <!-- FIXME -->
           <input type="hidden" id="version" name="version" value="{geonet:info/version}"/>

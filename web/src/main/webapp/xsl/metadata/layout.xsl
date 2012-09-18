@@ -477,12 +477,14 @@
 	prevent drawing of geonet:* elements
 	-->
   <xsl:template mode="element"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="simpleElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="complexElement"
-    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
-  <xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
+    match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:inserted|geonet:class|geonet:deleted|class|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
+  
+    <xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class" priority="2"/>
+
   <!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->
@@ -1232,15 +1234,82 @@
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
                     and (name(.) != 'gmx:Anchor' and name(..) != 'gmx:Anchor')"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
+      <xsl:variable name="className" select="./@class"/>
+      <xsl:variable name="pairClassName" select="./@geonet:class"/>
+      <xsl:variable name="prefixedClassName" select="concat('diff-',$pairClassName)"/>
 
-    <tr id="{$id}">
+    <tr id="{$id}" type="metadata">
       <xsl:if test="not($visible)">
         <xsl:attribute name="style"> display:none; </xsl:attribute>
       </xsl:if>
       <xsl:attribute name="class">
         <!-- Add codelist value in CSS class -->
-        <xsl:if test="*/@codeListValue and not($edit)"><xsl:value-of select="*/@codeListValue"/></xsl:if>
+        <xsl:value-of select="$pairClassName"/> <xsl:if test="*/@codeListValue and not($edit)"><xsl:value-of select="*/@codeListValue"/></xsl:if>
       </xsl:attribute>
+
+      <xsl:if test="$pairClassName != ''">
+
+              <xsl:attribute name="onclick">
+                  // to know whether we're on source or target doc
+                  var containerId = GeoNetwork.Util.findContainerId(this);
+                  var id = this.id;
+                  console.log('this ' + id + ' containerId: ' +  containerId);
+                  var selected = Ext.query('.<xsl:value-of select="$pairClassName"/>');
+                  var correspondingElement;
+                  var thisTop;
+                  var correspondingElementTop;
+                  for(var i = 0; i &lt; selected.length; i++) {
+                  // the element being hovered
+                  if(selected[i].id == id)  {
+                  	if (!thisTop) thisTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;  
+                  }
+                  // the corresponding element in the other doc
+                  else {
+                  	if (!correspondingElementTop) correspondingElementTop = GeoNetwork.Util.getTopLeft(selected[i]).Top;
+                  }
+                  }
+                  if(containerId == 'source-container') {
+                    if (correspondingElementTop) $('target-container').scrollTop = correspondingElementTop-200;
+                  	if (thisTop) $('source-container').scrollTop = thisTop-200;
+                  }
+                  else if(containerId == 'target-container') {
+                  	if (correspondingElementTop) $('source-container').scrollTop = correspondingElementTop-200;
+                    if (thisTop)  $('target-container').scrollTop = thisTop-200;
+
+                  }
+              </xsl:attribute>
+          </xsl:if>
+
+        <xsl:if test=".//@geonet:updatedText or .//@geonet:updatedAttribute or .//@geonet:updatedElement">
+            <xsl:attribute name="style">
+                background:#668fff;
+            </xsl:attribute>
+
+            <xsl:attribute name="onmouseout">
+                var selected = Ext.query('.<xsl:value-of select="$prefixedClassName"/>');
+                for(var i = 0; i &lt; selected.length; i++) {
+                // TODO in Chrome (19, Windows7) the border is not (completely) removed !
+                // I think that's bug http://code.google.com/p/chromium/issues/detail?id=101150.
+                selected[i].style.border = '0px white';
+                selected[i].style.border.style = 'none';
+                }
+            </xsl:attribute>
+        </xsl:if>
+        <xsl:if test=".//@geonet:deletedText or .//@geonet:deleted">
+            <xsl:attribute name="style">
+                background:#fe5555;
+            </xsl:attribute>
+        </xsl:if>
+        <xsl:if test=".//@geonet:insertedText or .//@geonet:inserted">
+            <xsl:attribute name="style">
+                background:lightgreen;
+            </xsl:attribute>
+        </xsl:if>
+
+      <xsl:if test="not($visible)">
+        <xsl:attribute name="style"> display:none; </xsl:attribute>
+      </xsl:if>
+      
       <th id="stip.{$helpLink}">
         <xsl:attribute name="class">
           <xsl:text>main </xsl:text>
@@ -1334,7 +1403,7 @@
               </table>
             </div>
           </xsl:when>
-          <xsl:when test="not($edit) and @*">
+          <xsl:when test="not($edit) and @* except @geonet:*">
             <xsl:apply-templates mode="simpleAttribute" select="@*">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="edit" select="$edit"/>
@@ -1663,6 +1732,25 @@
 
     <xsl:variable name="isXLinked" select="count(ancestor::node()[@xlink:href]) > 0"/>
     <tr id="{$id}">
+      <xsl:if test="@geonet:xxxupdatedText or @geonet:xxxupdatedAttribute">
+            <xsl:attribute name="style">
+                border:solid #0741e0 1px;
+                background:#668fff;
+            </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@geonet:deleted">
+            <xsl:attribute name="style">
+                border:solid red 1px;
+                background:#fe5555;
+            </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@geonet:inserted">
+            <xsl:attribute name="style">
+                border:solid green 1px;
+                background:lightgreen;
+            </xsl:attribute>
+        </xsl:if>
+
       <td colspan="2" class="complex">
         <fieldset>
           <legend id="stip.{$helpLink}|{$id}">

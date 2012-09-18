@@ -104,8 +104,8 @@ public class GetLatestUpdated implements Service
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
 			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 			searcher.search(context, _request, _config);
-			Map<Integer,MdInfo> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(_maxItems);
-			for (Integer id : allMdInfo.keySet()) {
+			Map<String, MdInfo> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(_maxItems);
+			for (String id : allMdInfo.keySet()) {
 				try {
 					boolean forEditing = false;
 					boolean withValidationErrors = false;

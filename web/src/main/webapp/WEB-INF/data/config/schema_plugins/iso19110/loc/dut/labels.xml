@@ -5,39 +5,39 @@
     xmlns:gmd="http://www.isotc211.org/2005/gmd">
     
     <element name="gfc:FC_FeatureCatalogue">
-        <label>Feature Catalogue description</label>
-        <description></description>
+        <label>Beschrijving</label>
+        <description>Beschrijving van de objectencatalogus</description>
     </element>
     <element name="gfc:FC_FeatureAttribute">
-        <label>Attribute</label>
+        <label>Attribuut</label>
     </element>
     <element name="gfc:name">
-        <label>Name</label>
-        <description>Feature catalogue name</description>
+        <label>Naam</label>
+        <description>Naam van de objectencatalogus</description>
     </element>
     <element name="gfc:scope">
-        <label>Scope</label>
-        <description>Scope definition</description>
+        <label>Categorie</label>
+        <description>Toepassingsgebied van de objectencatalogus</description>
     </element>
     <element name="gfc:versionNumber">
-        <label>Version</label>
-        <description>Catalogue version</description>
+        <label>Versie</label>
+        <description>Versie van de objectencatalogus</description>
     </element>
     <element name="gfc:versionDate">
-        <label>Date</label>
-        <description>Catalogue date</description>
+        <label>Datum</label>
+        <description>Datum van deze versie van de objectencatalogus</description>
     </element>
     <element name="gfc:producer">
-        <label>Catalogue producer</label>
-        <description>Catalogue responsible</description>
+        <label>Producent</label>
+        <description>Verantwoordelijke organisatie voor de objectencatalogus</description>
     </element>
     <element name="gfc:featureType">
-        <label>Property description</label>
-        <description>Property description</description>
+        <label>Object Type</label>
+        <description>ObjectType</description>
     </element>
     <element name="gfc:isAbstract">
         <label>Abstract</label>
-        <description>Is this element an abstract element ?</description>
+        <description>Is dit een abstract element</description>
     </element>
     <element name="gfc:FC_FeatureType">
         <label>Attribute table description</label>
@@ -52,67 +52,67 @@
         <description>Association, attribute, operation, ...</description>
     </element>
     <element name="gfc:definition">
-        <label>Definition</label>
-        <description>Property definition</description>
+        <label>Definitie</label>
+        <description>Definitie</description>
     </element>
     <element name="gfc:fieldOfApplication">
-        <label>Field of application</label>
-        <description>Field of application</description>
+        <label>Toepassingsgebied</label>
+        <description>Toepassingsgebied</description>
     </element>
     <element name="gmd:responsibleParty">
-        <label>Responsible party</label>
-        <description>Responsible party</description>
+        <label>Verantwoordelijke organisatie</label>
+        <description>Verantwoordelijke organisatie</description>
     </element>
     <element name="gmd:CI_ResponsibleParty">
-        <label>Responsible party</label>
-        <description>Responsible party</description>
+        <label>Verantwoordelijke organisatie</label>
+        <description>Verantwoordelijke organisatie</description>
     </element>
     <element name="gco:lower">
-        <label>Lower cardinality</label>
-        <description>Lower cardinality</description>
+        <label>Laagste Cardinaliteit</label>
+        <description>Laagste Cardinaliteit</description>
     </element>
     <element name="gco:upper">
-        <label>Upper cardinality</label>
-        <description>Upper cardinality</description>
+        <label>Hoogste cardinaliteit</label>
+        <description>Hoogste cardinaliteit</description>
     </element>
     <element name="gfc:cardinality">
-        <label>Cardinalities</label>
-        <description>Cardinalities</description>
+        <label>Cardinaliteit attribuut</label>
+        <description>Cardinaliteit van het attribuut</description>
     </element>
     <element name="gfc:label">
-        <label>Label</label>
-        <description/>
+        <label>Domein definitie</label>
+        <description>Beschrijvend label één mogelijke waarde van het attribuut uniek identificeert.</description>
     </element>
     <element name="gfc:listedValue">
-        <label>Codelist</label>
-        <description>List of values for this element.</description>
+        <label>Codelijst</label>
+        <description>Lijst van waarden voor dit element</description>
     </element>
     <element name="gfc:constrainedBy">
-        <label>Constrained by</label>
-        <description></description>
+        <label>Beperkt door</label>
+        <description>Beperkt door</description>
     </element>
     <element name="gfc:definitionReference">
-        <label>Definition reference</label>
+        <label>Definitie referentie</label>
         <description></description>
     </element>
     <element name="gfc:code">
         <label>Code</label>
-        <description></description>
+        <description>Code</description>
     </element>
     <element name="gfc:isOrdered">
-        <label>Is ordered</label>
+        <label>Is geordend</label>
         <description></description>
     </element>
     <element name="gfc:isNavigable">
-        <label>Is navigable</label>
+        <label>Is navigeerbaar</label>
         <description></description>
     </element>
     <element name="gfc:roleType">
-        <label>Role type</label>
-        <description></description>
+        <label>Rol type</label>
+        <description>Type van de Rol</description>
     </element>
     <element name="gfc:inheritsFrom">
-        <label>Inherits from</label>
+        <label>Erft over van</label>
         <description></description>
     </element>
     <element name="gfc:inheritsTo">
@@ -120,11 +120,11 @@
         <description></description>
     </element>
     <element name="gfc:FC_InheritanceRelation">
-        <label>Heritance relation</label>
+        <label>Overervingsrelatie</label>
         <description></description>
     </element>
     <element name="gfc:functionalLanguage">
-        <label>Functional language</label>
+        <label>Functionele taal</label>
         <description></description>
     </element>
     <element name="gfc:definitionSource">
@@ -136,11 +136,11 @@
         <description></description>
     </element>
     <element name="gfc:FC_FeatureAssociation">
-        <label>Feature association</label>
+        <label>Object associatie</label>
         <description></description>
     </element>
     <element name="gfc:FC_AssociationRole">
-        <label>Association role</label>
+        <label>Associatie rol</label>
         <description></description>
     </element>
     <element name="gfc:FC_RoleType">
@@ -148,23 +148,23 @@
         <description></description>
     </element>
     <element name="gfc:description">
-        <label>Description</label>
+        <label>Beschrijving</label>
         <description></description>
     </element>
     <element name="gfc:aliases">
-        <label>Aliases</label>
+        <label>Alternatieve namen entiteit</label>
         <description></description>
     </element>
     <element name="gfc:FC_ListedValue">
-        <label>Codelist</label>
+        <label>Codelijst</label>
         <description></description>
     </element>
     <element name="gfc:valueType">
-        <label>Value type</label>
+        <label>Data type attribuut</label>
         <description></description>
     </element>
     <element name="gfc:memberName">
-        <label>Member name</label>
+        <label>Naam attribuut</label>
         <description></description>
     </element>
     <element name="gfc:FC_Constraint">
@@ -172,7 +172,7 @@
         <description></description>
     </element>
     <element name="gfc:uniqueInstance">
-        <label>Unique instance</label>
+        <label>Unieke instantie</label>
         <description></description>
     </element>
     <element name="gfc:type">
@@ -180,15 +180,15 @@
         <description></description>
     </element>
     <element name="gfc:relation">
-        <label>Relation</label>
+        <label>Relatie</label>
         <description></description>
     </element>
     <element name="gfc:featureCatalogue">
-        <label>Feature catalogue</label>
+        <label>Objectencatalogus</label>
         <description></description>
     </element>
     <element name="gfc:roleName">
-        <label>Role name</label>
+        <label>Rol</label>
         <description></description>
     </element>
     <element name="gfc:signature">
@@ -196,20 +196,20 @@
         <description></description>
     </element>
     <element name="gfc:formalDefinition">
-        <label>Formal definition</label>
+        <label>Formele definitie</label>
         <description></description>
     </element>
     <element name="gfc:triggeredByValueOf">
-        <label>Triggered by value of</label>
+        <label>Wordt getriggered door de waarde van</label>
         <description></description>
     </element>
     <element name="gfc:affectsValueOf">
-        <label>Affects value of</label>
+        <label>Heeft een effect op de waarde van</label>
     </element>
     <element name="gfc:observesValueOf">
-        <label>Observes value of</label>
+        <label>Observeert de waarde van</label>
     </element>
     <element name="gfc:valueMeasurementUnit">
-        <label>Value measurement unit</label>
+        <label>Meeteenheid van de waarde</label>
     </element>
 </labels>

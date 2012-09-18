@@ -75,21 +75,12 @@ public class AjaxEditUtils extends EditUtils {
      * @param dbms
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
-     * @param currVersion       Editing version which is checked against current editing version.
      * @return  The update metadata record
      * @throws Exception
      */
-    protected Element applyChangesEmbedded(Dbms dbms, String id, 
-                                        Hashtable changes, String currVersion) throws Exception {
+    protected Element applyChangesEmbedded(Dbms dbms, String id, Hashtable changes) throws Exception {
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();
-
-        // --- check if the metadata has been modified from last time
-        if (currVersion != null && !editLib.getVersion(id).equals(currVersion)) {
-            Log.error(Geonet.EDITOR, "Version mismatch: had " + currVersion + 
-                                            " but expected " + editLib.getVersion(id));
-            return null;
-        }
 
         // --- get metadata from session
         Element md = getMetadataFromSession(session, id);
@@ -270,6 +261,16 @@ public class AjaxEditUtils extends EditUtils {
 		setMetadataIntoSession(session, md, id);
 		return md;
 	}
+
+    public Element getMetadataEmbeddedFromWorkspace(ServiceContext srvContext, String id, boolean forEditing, boolean withValidationErrors) throws Exception {
+        boolean keepXlinkAttributes = false;
+        Element md = dataManager.getMetadataFromWorkspace(srvContext, id, forEditing, withValidationErrors, keepXlinkAttributes, true);
+        if(md != null) {
+            UserSession session = srvContext.getUserSession();
+            setMetadataIntoSession(session, md, id);
+        }
+        return md;
+    }
 
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
@@ -612,10 +613,6 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
-		//--- check if the metadata has been modified from last time
-		if (currVersion != null && !editLib.getVersion(id).equals(currVersion))
-			return false;
-
 		//--- get element to add
 		Element el = editLib.findElement(md, ref);
 
@@ -640,7 +637,8 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms,id);
+        boolean workspace = false;
+        dataManager.indexInThreadPoolIfPossible(dbms, id, workspace);
 
 		return true;
 	}
@@ -669,10 +667,6 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 
-		//--- check if the metadata has been modified from last time
-		if (currVersion != null && !editLib.getVersion(id).equals(currVersion))
-			return false;
-
 		//--- get element to remove
 		Element el = editLib.findElement(md, ref);
 
@@ -695,7 +689,8 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(dbms, md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms, id);
+        boolean workspace = false;
+        dataManager.indexInThreadPoolIfPossible(dbms, id, workspace);
 
 		return true;
 	}

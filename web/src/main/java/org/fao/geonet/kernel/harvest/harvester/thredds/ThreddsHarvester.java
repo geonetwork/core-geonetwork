@@ -100,7 +100,7 @@ public class ThreddsHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -146,31 +146,31 @@ public class ThreddsHarvester extends AbstractHarvester
 	{
 		ThreddsParams params = (ThreddsParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
-		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic);
-		settingMan.add(dbms, "id:"+optionsId, "createThumbnails",  params.createThumbnails);
-		settingMan.add(dbms, "id:"+optionsId, "createServiceMd", params.createServiceMd);
-		settingMan.add(dbms, "id:"+optionsId, "createCollectionDatasetMd",  params.createCollectionDatasetMd);
-		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
-		settingMan.add(dbms, "id:"+optionsId, "ignoreHarvestOnCollections",  params.ignoreHarvestOnCollections);
-		settingMan.add(dbms, "id:"+optionsId, "collectionGeneration",  params.collectionMetadataGeneration);
-		settingMan.add(dbms, "id:"+optionsId, "collectionFragmentStylesheet",  params.collectionFragmentStylesheet);
-		settingMan.add(dbms, "id:"+optionsId, "collectionMetadataTemplate",  params.collectionMetadataTemplate);
-		settingMan.add(dbms, "id:"+optionsId, "createCollectionSubtemplates",  params.createCollectionSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsDIF",  params.outputSchemaOnCollectionsDIF);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsFragments",  params.outputSchemaOnCollectionsFragments);
-		settingMan.add(dbms, "id:"+optionsId, "ignoreHarvestOnAtomics",  params.ignoreHarvestOnAtomics);
-		settingMan.add(dbms, "id:"+optionsId, "atomicGeneration",  params.atomicMetadataGeneration);
-		settingMan.add(dbms, "id:"+optionsId, "modifiedOnly",  params.modifiedOnly);
-		settingMan.add(dbms, "id:"+optionsId, "atomicFragmentStylesheet",  params.atomicFragmentStylesheet);
-		settingMan.add(dbms, "id:"+optionsId, "atomicMetadataTemplate",  params.atomicMetadataTemplate);
-		settingMan.add(dbms, "id:"+optionsId, "createAtomicSubtemplates",  params.createAtomicSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsDIF",  params.outputSchemaOnAtomicsDIF);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsFragments",  params.outputSchemaOnAtomicsFragments);
-		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
-		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url, false);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon, false);
+		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang, false);
+		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic, false);
+		settingMan.add(dbms, "id:"+optionsId, "createThumbnails",  params.createThumbnails, false);
+		settingMan.add(dbms, "id:"+optionsId, "createServiceMd", params.createServiceMd, false);
+		settingMan.add(dbms, "id:"+optionsId, "createCollectionDatasetMd",  params.createCollectionDatasetMd, false);
+		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd, false);
+		settingMan.add(dbms, "id:"+optionsId, "ignoreHarvestOnCollections",  params.ignoreHarvestOnCollections, false);
+		settingMan.add(dbms, "id:"+optionsId, "collectionGeneration",  params.collectionMetadataGeneration, false);
+		settingMan.add(dbms, "id:"+optionsId, "collectionFragmentStylesheet",  params.collectionFragmentStylesheet, false);
+		settingMan.add(dbms, "id:"+optionsId, "collectionMetadataTemplate",  params.collectionMetadataTemplate, false);
+		settingMan.add(dbms, "id:"+optionsId, "createCollectionSubtemplates",  params.createCollectionSubtemplates, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsDIF",  params.outputSchemaOnCollectionsDIF, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnCollectionsFragments",  params.outputSchemaOnCollectionsFragments, false);
+		settingMan.add(dbms, "id:"+optionsId, "ignoreHarvestOnAtomics",  params.ignoreHarvestOnAtomics, false);
+		settingMan.add(dbms, "id:"+optionsId, "atomicGeneration",  params.atomicMetadataGeneration, false);
+		settingMan.add(dbms, "id:"+optionsId, "modifiedOnly",  params.modifiedOnly, false);
+		settingMan.add(dbms, "id:"+optionsId, "atomicFragmentStylesheet",  params.atomicFragmentStylesheet, false);
+		settingMan.add(dbms, "id:"+optionsId, "atomicMetadataTemplate",  params.atomicMetadataTemplate, false);
+		settingMan.add(dbms, "id:"+optionsId, "createAtomicSubtemplates",  params.createAtomicSubtemplates, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsDIF",  params.outputSchemaOnAtomicsDIF, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchemaOnAtomicsFragments",  params.outputSchemaOnAtomicsFragments, false);
+		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd, false);
+		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory, false);
 	}
 
 	//---------------------------------------------------------------------------

@@ -65,6 +65,11 @@ ConfigModel.prototype.getConfig_OK = function(node)
             REQUESTED_LANGUAGE_SORTED : xml.evalXPath(node, 'requestedLanguage/sorted'),
             REQUESTED_LANGUAGE_IGNORED : xml.evalXPath(node, 'requestedLanguage/ignored'),
 
+            CLUSTERING_ENABLE : xml.evalXPath(node, 'clustering/enable'),
+            CLUSTERING_JMSURL : xml.evalXPath(node, 'clustering/jmsurl'),
+
+            SYMBOLIC_LOCKING_ENABLE: xml.evalXPath(node, 'symbolicLocking/enable'),
+
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
 			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
 			DOWNLOADSERVICE_WITHDISCLAIMER : xml.evalXPath(node, 'downloadservice/withdisclaimer'),
@@ -210,6 +215,13 @@ ConfigModel.updateTemp =
 '        <sorted>{REQUESTED_LANGUAGE_SORTED}</sorted>' +
 '        <ignored>{REQUESTED_LANGUAGE_IGNORED}</ignored>' +
 '	</requestedLanguage>'+
+'   <clustering>'+
+'		<enable>{CLUSTERING_ENABLE}</enable>'+
+'		<jmsurl>{CLUSTERING_JMSURL}</jmsurl>'+
+'   </clustering>'+
+'   <symbolicLocking>'+
+'		<enable>{SYMBOLIC_LOCKING_ENABLE}</enable>'+
+'   </symbolicLocking>'+
 '	<downloadservice>'+
 '		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+
 '		<simple>{DOWNLOADSERVICE_SIMPLE}</simple>'+

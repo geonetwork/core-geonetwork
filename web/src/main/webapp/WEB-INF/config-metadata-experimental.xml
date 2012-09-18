@@ -12,6 +12,37 @@
     </service>
 
 
+	<service name="diff">
+          <class name=".services.metadata.Diff">
+          </class>
+
+          <output sheet="metadata/diff/diff.xsl">
+              <call name="services" class="jeeves.guiservices.services.Get"/>
+              <call name="relation" class =".guiservices.metadata.GetRelated"/>
+              <call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+          </output>
+
+          <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+              <xml name="error" file="xml/metadata-show-error.xml" />
+          </error>
+    </service>
+
+	<service name="diff.edit">
+          <class name=".services.metadata.Diff">
+          </class>
+
+          <output sheet="metadata/diff/diff.edit.xsl">
+              <call name="services" class="jeeves.guiservices.services.Get"/>
+              <call name="relation" class =".guiservices.metadata.GetRelated"/>
+              <call name="isoLang"  class=".guiservices.isolanguages.Get"/>
+          </output>
+
+          <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+              <xml name="error" file="xml/metadata-show-error.xml" />
+          </error>
+    </service>
+	
+
     <service name="metadata.suggestion">
       <class name=".services.metadata.GetSuggestion"/>
     </service>

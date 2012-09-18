@@ -36,16 +36,12 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** For editing : update leaves information. Access is restricted
+/**
+ *  For editing : update leaves information. Access is restricted.
   */
-
-public class Update implements Service
-{
+public class Update implements Service {
 	private ServiceConfig config;
 
 	//--------------------------------------------------------------------------
@@ -65,8 +61,8 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
+
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
         ajaxEditUtils.preprocessUpdate(params, context);
 
@@ -77,7 +73,6 @@ public class Update implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id         = Util.getParam(params, Params.ID);
-		String version    = Util.getParam(params, Params.VERSION);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
@@ -89,14 +84,13 @@ public class Update implements Service
 
 
 		if (!forget) {
-			int iLocalId = Integer.parseInt(id);
-			dataMan.setTemplateExt(dbms, iLocalId, isTemplate, title);
+			dataMan.setTemplateExtWorkspace(dbms, id, isTemplate, title);
 
 			//--- use StatusActionsFactory and StatusActions class to possibly
 			//--- change status as a result of this edit (use onEdit method)
 			StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 			StatusActions sa = saf.createStatusActions(context, dbms);
-			saf.onEdit(sa, iLocalId, minor.equals("true"));
+			saf.onEdit(sa, id, minor.equals("true"));
 
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
@@ -106,10 +100,11 @@ public class Update implements Service
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
+				if (!dataMan.updateMetadataWorkspace(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
 					throw new ConcurrentUpdateEx(id);
 				}
-			} else {
+			}
+            else {
 				ajaxEditUtils.updateContent(params, false, true);
 			}
 		}
@@ -129,11 +124,16 @@ public class Update implements Service
         //--- if finished then remove the XML from the session
 		if (finished) {
 			ajaxEditUtils.removeMetadataEmbedded(session, id);
+            // Ext GUI: JustCreated is a md state. If Update is called with Finish and Forget, delete md in justcreated state
+            if(forget) {
+                String statusId = dataMan.getCurrentStatus(dbms, id);
+                if(Params.Status.JUSTCREATED.equals(statusId)) {
+                    dataMan.deleteFromWorkspace(dbms, id);
+                    dataMan.deleteMetadata(context, dbms, id);
+                }
+            }
 		}
 
 		return elResp;
 	}
 }
-
-//=============================================================================
-

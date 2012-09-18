@@ -38,6 +38,7 @@ import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 
@@ -73,9 +74,7 @@ public class GetCategories implements Service
 
 		//-----------------------------------------------------------------------
 		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(dbms, id))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		Element isOwner = new Element("owner");
@@ -87,12 +86,11 @@ public class GetCategories implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata categories
 
-		HashSet hsMetadataCat = new HashSet();
+		Set hsMetadataCat = new HashSet();
 
-		List mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",new Integer(id)).getChildren();
+		List mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?", id).getChildren();
 
-		for(int i=0; i<mdCat.size(); i++)
-		{
+		for(int i=0; i<mdCat.size(); i++) {
 			Element el = (Element) mdCat.get(i);
 			hsMetadataCat.add(el.getChildText("categoryid"));
 		}
@@ -104,8 +102,7 @@ public class GetCategories implements Service
 
 		List list = elCateg.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
+		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
 
 			el.setName(Geonet.Elem.CATEGORY);
@@ -127,7 +124,3 @@ public class GetCategories implements Service
 		return elRes;
 	}
 }
-
-//=============================================================================
-
-

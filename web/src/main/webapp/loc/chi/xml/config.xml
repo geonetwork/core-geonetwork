@@ -28,6 +28,13 @@
     <requestedlanguagesorted>要求语言的搜索结果排序顶部</requestedlanguagesorted>
     <requestedlanguageignored>无视要求语言搜索</requestedlanguageignored>
 
+    <clustering>聚类</clustering>
+    <enableClustering>启用集群</enableClustering>
+    <JMSBrokerConnectionURL>JMS代理URL（S）</JMSBrokerConnectionURL>
+
+    <symbolicLocking>象征性的锁</symbolicLocking>
+    <enableSymbolicLocking>启用象征性的锁</enableSymbolicLocking>
+
 	<z3950>Z39.50 Server</z3950>
 	<enable>Enable</enable>
 
@@ -378,6 +385,16 @@
             忽略搜索结果的语言要求。
         </tip>
 
+        <tip id="cluster.enable">
+            启用集群。
+        </tip>
+        <tip id="cluster.jmsurl">
+            输入网址到您的JMS代理。例如故障转移://TCP://本地主机：61616。
+        </tip>
+
+        <tip id="symbolicLocking.enable">
+            当启用，这是任何编辑器可能解开他的组元数据（不仅审稿）。
+        </tip>
     </tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>

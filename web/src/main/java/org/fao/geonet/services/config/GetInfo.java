@@ -22,24 +22,29 @@
 //==============================================================================
 package org.fao.geonet.services.config;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Properties;
-
-import javax.xml.transform.TransformerFactory;
-
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
 import jeeves.utils.TransformerFactoryFactory;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.sysconfig.NodeConfigurations;
+import org.fao.geonet.jms.message.sysconfig.SystemConfigurationMessage;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+
+import javax.xml.transform.TransformerFactory;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Retrieve various type of information about the system (eg. Java version, XSLT
@@ -67,6 +72,62 @@ public class GetInfo implements Service {
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+        Element info;
+
+        if(ClusterConfig.isEnabled()) {
+            String clusterExecutionValue = params.getChildText("clusterExecution");
+            boolean clusterExecution;
+            if(StringUtils.isEmpty(clusterExecutionValue)) {
+                clusterExecution = true;
+            }
+            else {
+                clusterExecution = Boolean.parseBoolean(clusterExecutionValue);
+            }
+            if(clusterExecution) {
+                synchronized(this) {
+                    info = new Element("clusterinfo");
+
+                    // clear existing cluster configuration
+                    NodeConfigurations clusterConfiguration = NodeConfigurations.getInstance();
+                    clusterConfiguration.clear();
+
+                    // publish message to instruct peer nodes to populate cluster configuration
+                    SystemConfigurationMessage message = new SystemConfigurationMessage();
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer systemConfigurationProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.SYSTEM_CONFIGURATION);
+                    systemConfigurationProducer.produce(message);
+
+                    // wait some time
+                    long time0, time1;
+                    time0 = System.currentTimeMillis();
+                    do{
+                        time1 = System.currentTimeMillis();
+                    }
+                    while( (time1 - time0) < 3 * 1000);
+
+                    // return aggregated system configuration from each peer node that has responded.
+                    Set<Element> nodeConfigs = clusterConfiguration.getNodeConfigurations();
+                    for(Iterator<Element> i = nodeConfigs.iterator(); i.hasNext() ;  ) {
+                        Element nodeConfig = i.next();
+                        nodeConfig = (Element)nodeConfig.clone();
+                        info.addContent(nodeConfig);
+                    }
+                    return info;
+                }
+            }
+            else {
+                return regularExecution(context);
+            }
+        }
+        else {
+            return regularExecution(context);
+        }
+
+
+    }
+
+
+    private Element regularExecution(ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		sm = gc.getSearchmanager();
@@ -80,6 +141,13 @@ public class GetInfo implements Service {
 		loadDatabaseInfo(context);
 
 		Element system = gc.getSettingManager().get("system", -1);
+
+        // bizarre structure used by Settings XML representation
+        Element nodeId = new Element("nodeId");
+        Element value = new Element("value");
+        value.setText(ClusterConfig.getClientID());
+        nodeId.addContent(value);
+        system.getChild("children").addContent(nodeId);
 
 		Element main = new Element("main");
 		addToElement(main, systemProperties);
@@ -103,10 +171,11 @@ public class GetInfo implements Service {
 		return info;
 	}
 
+
     /**
      * Load catalogue properties
      * 
-     * @param dataDir
+     * @param gc
      */
     private void loadCatalogueInfo(GeonetContext gc) {
     	ServiceConfig sc = gc.getHandlerConfig();

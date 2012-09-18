@@ -54,7 +54,10 @@ GeoNetwork.util.INSPIRESearchFormTools = {
                 store : new Ext.data.ArrayStore({
                     id : 0,
                     fields : [ 'id', 'label' ],
-                    data : serviceTypes
+                    data : serviceTypes,
+                    sortInfo : {
+                        field : "label"
+                    }
                 }),
                 valueField : 'id',
                 displayField : 'label'

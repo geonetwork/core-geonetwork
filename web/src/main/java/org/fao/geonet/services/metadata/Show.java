@@ -23,12 +23,14 @@
 
 package org.fao.geonet.services.metadata;
 
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -41,7 +43,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import jeeves.utils.Xml;
 
 //=============================================================================
 
@@ -97,6 +98,7 @@ public class Show implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
 		SchemaManager sm = gc.getSchemamanager();
+        AccessManager am = gc.getAccessManager();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 
@@ -113,14 +115,42 @@ public class Show implements Service
 		//-----------------------------------------------------------------------
 		//--- get metadata
 		
-		Element elMd;
+        String fromWorkspaceParam = Util.getParam(params, "fromWorkspace", "false");
+        boolean fromWorkspace = Boolean.parseBoolean(fromWorkspaceParam);
+
+		Element elMd = null;
 		boolean addEditing = false;
 		if (!skipInfo) {
-            boolean withValidationErrors = false, keepXlinkAttributes = false;
+            boolean withValidationErrors = false, keepXlinkAttributes = false, withInfo = true;
+            if(fromWorkspace) {
+                // only allow in same conditions as when View Workspace is displayed in Other Actions (i.e., when
+                // geonet:info/edit is true:
+                if (am.canEdit(context, id)) {;
+                    elMd = gc.getDataManager().getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
+                }
+                else {
+                    throw new OperationNotAllowedEx("You are not authorized to view this workspace copy");
+                }
+            }
+            // if not found in workspace, or if not requested from workspace, retrieve from metadata
+            if(elMd == null) {
             elMd = gc.getDataManager().getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
 		}
+		}
         else {
+            if(fromWorkspace) {
+                if (am.canEdit(context, id)) {
+                    boolean withValidationErrors = false, keepXlinkAttributes = false, withInfo = false;
+                    elMd = gc.getDataManager().getMetadataFromWorkspace(context, id, addEditing, withValidationErrors, keepXlinkAttributes, withInfo);
+                }
+        else {
+                    throw new OperationNotAllowedEx("You are not authorized to view this workspace copy");
+                }
+            }
+            // if not found in workspace, or if not requested from workspace, retrieve from metadata
+            if(elMd == null) {
 			elMd = dm.getMetadataNoInfo(context, id);
+		}
 		}
 
 		if (elMd == null) throw new MetadataNotFoundEx(id);

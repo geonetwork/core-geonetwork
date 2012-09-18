@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import javax.mail.Message;
@@ -46,7 +47,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -131,21 +131,16 @@ public class SelfRegister implements Service {
 		}
 
 		// Add new user to database
-
-		String id = context.getSerialFactory().getSerial(dbms, "Users")
-					+ "";
+		String id = IDFactory.newID();
 		String group = getGroupID(dbms);
 		String query = "INSERT INTO Users (id, username, password, surname, name, profile, "
 				+ "address, city, state, zip, country, email, organisation, kind) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		dbms.execute(query, new Integer(id), username, Util
-				.scramble(password), surname, name, PROFILE, address,
-				city, state, zip, country, email, organ, kind);
+		dbms.execute(query, id, username, Util.scramble(password), surname, name, PROFILE, address, city, state, zip,
+                country, email, organ, kind);
 
-		dbms.execute(
-				"INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
-				new Integer(id), new Integer(group));
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", id, group);
 
 		// Send email to user confirming registration
 

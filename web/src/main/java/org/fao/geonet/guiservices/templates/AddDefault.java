@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Element;
 
 import java.io.File;
@@ -45,7 +46,7 @@ import java.util.UUID;
 
 /**
  * A simple service that add all metadata templates available from schemas being
- * handled in the SchemaManager
+ * handled in the SchemaManager.
  * 
  */
 public class AddDefault implements Service {
@@ -76,7 +77,7 @@ public class AddDefault implements Service {
 		SchemaManager schemaMan = gc.getSchemamanager();
 
 		String siteId = gc.getSiteId();
-		int owner = context.getUserSession().getUserIdAsInt();
+		String owner = context.getUserSession().getUserId();
 
 		Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "
 				+ schemaList);
@@ -126,18 +127,23 @@ public class AddDefault implements Service {
                     //
                     // insert metadata
                     //
-                    String groupOwner = "1";
+                    String allGroup = "1";
                     String docType = null, category = null, createDate = null, changeDate = null;
                     boolean ufo = true, indexImmediate = true;
-					dataMan.insertMetadata(context, dbms, schemaName, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, owner, groupOwner, siteId,
+                    String id = IDFactory.newID();
+                    Log.debug(Geonet.RESOURCES,"generated id: " + id + " ( length " + id.length() + ")");
+
+
+					dataMan.insertMetadata(context, dbms, schemaName, xml, id, uuid, owner, allGroup, siteId,
                                            isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 					dbms.commit();
 					status = "loaded";
-				} catch (Exception e) {
+				} 
+                catch (Exception e) {
+                    e.printStackTrace();
 					serviceStatus = "false";
-					Log.error(Geonet.DATA_MANAGER, "Error loading template: "
-							+ e.getMessage());
+					Log.error(Geonet.DATA_MANAGER, "Error loading template: " + e.getMessage());
 				}
 				template.setAttribute("status", status);
 				schema.addContent(template);

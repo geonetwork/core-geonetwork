@@ -48,10 +48,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-//=============================================================================
-
-public class Info implements Service
-{
+/**
+ * TODO javadoc.
+ *
+ */
+public class Info implements Service {
 	private String xslPath;
 	private String xmlPath;
 	private String otherSheets;
@@ -154,31 +155,44 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+    /**
+     * TODO javadoc.
+     *
+     * @param context
+     * @param dbms
+     * @return
+     * @throws SQLException
+     */
 	private Element getGroups(ServiceContext context, Dbms dbms) throws SQLException
 	{
 		UserSession session = context.getUserSession();
 
 		if (!session.isAuthenticated()) {
-			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", "id < ?", "id", 2);
+            return Lib.local.retrieveWhere(dbms, "Groups", "internal = ?", "y");
 		}
 
 		//--- retrieve user groups
 
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile()))
-			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
-		else
-		{
-			String query = "SELECT groupId as id FROM UserGroups WHERE userId=?";
-
-			Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserIdAsInt()));
+        if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
+            return Lib.local.retrieve(dbms, "Groups");
+        } else {
+            String query = "SELECT ug.groupId as id FROM UserGroups ug WHERE ug.userId=?";
+            Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserId()));
 			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 
 			return Lib.element.pruneChildren(groups, ids);
 		}
+
 	}
 
-	//--------------------------------------------------------------------------
-
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param sm
+     * @return
+     * @throws SQLException
+     */
 	private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
 	{
 		String  query   = "SELECT * FROM Sources ORDER BY name";
@@ -367,7 +381,7 @@ public class Info implements Service
 		if (!us.isAuthenticated())
 			return new ArrayList<Element>();
 
-		int id = Integer.parseInt(us.getUserId());
+		String id = us.getUserId();
 
 		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
 			return dbms.select("SELECT * FROM Users").getChildren();
@@ -399,7 +413,7 @@ public class Info implements Service
 			if (!profileSet.contains(profile))
 				alToRemove.add(elRec);
 
-			else if (!hsMyGroups.containsAll(getUserGroups(dbms, Integer.parseInt(userId))))
+			else if (!hsMyGroups.containsAll(getUserGroups(dbms, userId)))
 				alToRemove.add(elRec);
 		}
 
@@ -415,20 +429,16 @@ public class Info implements Service
 
 	//--------------------------------------------------------------------------
 
-	private Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
-	{
+	private Set<String> getUserGroups(Dbms dbms, String id) throws SQLException {
 		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
 
 		List list = dbms.select(query, id).getChildren();
+		Set<String> hs = new HashSet<String>();
 
-		HashSet<String> hs = new HashSet<String>();
-
-		for(int i=0; i<list.size(); i++)
-		{
+		for(int i=0; i<list.size(); i++) {
 			Element el = (Element) list.get(i);
 			hs.add(el.getChildText("id"));
 		}
-
 		return hs;
 	}
 

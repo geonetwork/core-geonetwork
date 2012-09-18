@@ -76,9 +76,9 @@ public class BatchUpdatePrivileges implements Service
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
@@ -88,10 +88,12 @@ public class BatchUpdatePrivileges implements Service
 			//--- check access
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
-			} else {
+				notFound.add(id);
+			}
+            else if (!accessMan.isOwner(context, id)) {
+				notOwner.add(id);
+			}
+            else {
 
 				//--- remove old operations
 				boolean skip = false;
@@ -124,7 +126,7 @@ public class BatchUpdatePrivileges implements Service
 						dm.setOperation(context, dbms, id, groupId, operId);
 					}
 				}
-				metadata.add(new Integer(id));
+				metadata.add(id);
 			}
 		}
 		}

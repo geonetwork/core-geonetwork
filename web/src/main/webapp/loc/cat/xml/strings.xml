@@ -15,7 +15,24 @@
     <spa>Español</spa> <!-- Do not translate! -->
 
     <anyLanguage>Qualsevol llenguatge</anyLanguage>
-	<nodata>Null</nodata>
+
+    <workspaceview>Vista de espai de treball</workspaceview>
+    <metadataview>metadades vista</metadataview>
+    <vieworiginal>Veure original</vieworiginal>
+    <viewworkspace>Vista còpia de àrea de treball</viewworkspace>
+    <islocked>Aquest metadada està bloquejat</islocked>
+    <canunlock>Se li permet desbloquejar aquest</canunlock>
+    <canedit>Ets autoritzat a actualitzar aquest</canedit>
+    <unlock>Desbloquejar aquest metadada</unlock>
+    <unlockMetadataTitle>Desbloquejar metadata</unlockMetadataTitle>
+    <lockedmetadata>Metadata bloquejat</lockedmetadata>
+    <lockedmetadatadesc>Llistes de metadades editar sessions que posseeix o que se li permet fer-se càrrec de</lockedmetadatadesc>
+    <grab.lock>Canvi de propietari del bloqueig</grab.lock>
+    <grabbed.lock>Bloqueig va canviar de propietari</grabbed.lock>
+    <currentlockowner>Actualment, el bloqueig de les metadades és propietat de l'usuari</currentlockowner>
+    <switchdiff>Canviar a esquerra i dreta</switchdiff>
+
+
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -142,6 +159,20 @@
 	<showRemoteHTML>Mostrar HTML del servidor remot</showRemoteHTML>
 	<!-- end new strings -->
 	
+	<logo>Logo configuration</logo>
+    <logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+    <chooseLogo>Choose logo</chooseLogo>
+    <orgLogo>Organisation logo</orgLogo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+  <selectedLogo js="true">Selected logo:</selectedLogo>
+	<logoDel js="true">Remove</logoDel>
+	<logoForNode js="true">Use for the catalogue</logoForNode>
+  <logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
+	<url>URL</url>
+
 	<createChild>Crear fill</createChild>
 	<updateChildren>Actualitzar fills</updateChildren>
 	<updateChildrenOk>Fills actualitzats</updateChildrenOk>
@@ -346,6 +377,12 @@
 	<clear js="true">Esborrar</clear>
 	<clearAll>Esborrar tots</clearAll>
 	<close js="true">Tancar</close>
+    <compareMetadata>comparar les metadades</compareMetadata>
+    <compareMetadataSelMessage>Vostè ha de seleccionar 2 registres de metadades per a comparar</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Comparar amb espai de treball de còpia</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Comparar amb la còpia de l'àrea de treball en mode d'edició</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Comparar amb l'original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Comparar amb l'original en la manera d'edició</compareMetadataOriginalEditMode>
 	<completeTab>Vista avançada</completeTab>
 	<completeTabEditor>Editor avançat</completeTabEditor>
 	<confirmCancel>Esteu segurs que voleu sortir del mòdul editor? (Perdreu tots els canvis no guardats anteriorment)</confirmCancel>
@@ -459,6 +496,8 @@
 	<georss>Obrir alimentació GeoRSS</georss>
 	<group>Grup</group>
 	<usergroups>User groups</usergroups>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>
 	<groupManagement>Gestió de grups</groupManagement>
 	<groupManDes>Afegir/modificar/esborrar i mostrar grups</groupManDes>
 	<groups>Grups</groups>
@@ -582,6 +621,7 @@
 	<metadata-template-add-default-desc>Afegir plantilles per defecte</metadata-template-add-default-desc>
     <metadata-template-select>Seleccioneu les plantilles a afegir</metadata-template-select>
 	<metadata>Metadades</metadata>
+    <metametadata>Metadades</metametadata>
 	<metadataAdded>Metadades afegides amb ID:</metadataAdded>
 	<metadataDeleted>Metadades esborrades amb ID:</metadataDeleted>
 	<metadataInsertResults>Resultats de la importació de metadades</metadataInsertResults>
@@ -1080,6 +1120,7 @@
 		<iso19139fra>Guardar metadades Fra ISO19115/19139 com XML</iso19139fra>
 	</savexml>
 	<thesaurus>
+                <load>Load from GeoNetwork thesaurus repository</load>
 		<addelement>Afegir element</addelement>
 		<admin>Administrar tesaurus</admin>
 		<broader>Terme més ampli</broader>
@@ -1129,6 +1170,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1225,6 +1267,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>Opcions de cerca d'INSPIRE </l1>
             <l2>Metadades INSPIRE</l2>

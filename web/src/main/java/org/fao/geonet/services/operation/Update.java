@@ -56,7 +56,7 @@ public class Update implements Service
 			String  id    = Util.getAttrib(operat, Params.ID);
 			Element label = Util.getChild (operat, "label");
 
-			Lib.local.update(dbms, "Operations", Integer.parseInt(id), label);
+			Lib.local.update(dbms, "Operations", id, label);
 		}
 
 		return new Element("ok");

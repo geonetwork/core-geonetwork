@@ -2,8 +2,8 @@ package org.fao.geonet.kernel.search.log;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.IDFactory;
 
 import java.sql.SQLException;
 
@@ -166,11 +166,11 @@ public class QueryInfo {
 
 	/**
 	 * Stores this object into the database
-	 * @param con the SQL connection to use to make the query
+	 * @param dbms the SQL connection to use to make the query
 	 * @param requestId the Request unique identifier, used as foreign key into the Params table
 	 * @return true if insertion was successful, false otherwise. todo: use exception handling ?
 	 */
-	public boolean storeToDb(Dbms dbms, SerialFactory sf, int requestId) {
+	public boolean storeToDb(Dbms dbms, String requestId) {
 		if (dbms == null || dbms.isClosed()) {
             if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
                 Log.debug(Geonet.SEARCH_LOGGER, "null or closed dbms object");
@@ -178,7 +178,7 @@ public class QueryInfo {
 		}
 		try {
 			//--- generate a new metadata id
-			int paramId = sf.getSerial(dbms, "Params");
+			String paramId = IDFactory.newID();
 			
 			String query = "insert into params (id,requestId,queryType,termField,termText,";
 			query += "similarity,lowerText,upperText,inclusive) values (?,?,?,?,?,?,?,?,?)";

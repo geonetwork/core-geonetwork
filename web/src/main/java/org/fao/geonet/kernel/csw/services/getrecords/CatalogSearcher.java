@@ -579,8 +579,10 @@ public class CatalogSearcher {
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
-             LuceneIndexField.OWNER,
-             LuceneIndexField.GROUP_OWNER);
+             LuceneIndexField._OWNER);
+                //***
+                // ,
+                //LuceneIndexField.GROUP_OWNER);
 
         BooleanQuery bq = (BooleanQuery) q;
 

@@ -127,8 +127,9 @@ public class LuceneQueryBuilder {
      * @return Lucene query
      */
     public Query build(LuceneQueryInput luceneQueryInput) {
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "LuceneQueryBuilder: luceneQueryInput is: \n" + luceneQueryInput.toString());
+        }
 
         // Remember which range fields have been processed
         Set<String> processedRangeFields = new HashSet<String>();
@@ -188,7 +189,7 @@ public class LuceneQueryBuilder {
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
                         for(String fieldValue : fieldValues) {
-                            field = "any";
+                            field = LuceneIndexField.ANY;
                             Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
                             while(whitespaceScan.hasNext()) {
                                 fieldValue += " or " + whitespaceScan.next();
@@ -209,18 +210,20 @@ public class LuceneQueryBuilder {
                 }
             }
         }
+
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
+
         if(StringUtils.isNotEmpty(_language)) {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+            if(Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
-            return addLocaleTerm(query, _language, luceneQueryInput.isRequestedLanguageOnly());
         }
-        else {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+            query = (BooleanQuery) addLocaleTerm(query, _language, luceneQueryInput.isRequestedLanguageOnly());
+        }
+        else if(Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
-            return query;
         }
+        return query;
     }
 
     /**
@@ -321,7 +324,7 @@ public class LuceneQueryBuilder {
         // Search only for metadata (no template or sub-templates) if not set by search criteria before
         if (!templateCriteriaAdded) {
             occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+            Query q = new TermQuery(new Term(LuceneIndexField._IS_TEMPLATE, "n"));
             query.add(q, occur);
             templateCriteriaAdded = true;
         }
@@ -349,7 +352,7 @@ public class LuceneQueryBuilder {
         // Search only for metadata (no template or sub-templates) if not set by search criteria before
         if (!templateCriteriaAdded) {
             BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+            Query q = new TermQuery(new Term(LuceneIndexField._IS_TEMPLATE, "n"));
             query.add(q, occur);
             templateCriteriaAdded = true;
         }
@@ -375,7 +378,7 @@ public class LuceneQueryBuilder {
             if (LuceneIndexField.ANY.equals(fieldName)) {
                 addAnyTextQuery(fieldValue, similarity, (criteriaIsASet ? bq : query));
             }
-            else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
+            else if (LuceneIndexField._UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
                 addUUIDQuery(fieldValue, similarity, criteriaIsASet, bq, query);
             }
             else if (LuceneIndexField.NORTH.equals(fieldName)
@@ -386,7 +389,7 @@ public class LuceneQueryBuilder {
                 addBBoxQuery(searchCriteria, query);
             }
             // template
-            else if (LuceneIndexField.IS_TEMPLATE.equals(fieldName) || SearchParameter.TEMPLATE.equals(fieldName)) {
+            else if (LuceneIndexField._IS_TEMPLATE.equals(fieldName) || SearchParameter.TEMPLATE.equals(fieldName)) {
                 templateCriteria(fieldValue, query);
             }
             // all -- mapped to same Lucene field as 'any'
@@ -529,10 +532,10 @@ public class LuceneQueryBuilder {
 
             Query templateQ;
             if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
-                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
+                templateQ = new TermQuery(new Term(LuceneIndexField._IS_TEMPLATE, fieldValue));
             }
             else {
-                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+                templateQ = new TermQuery(new Term(LuceneIndexField._IS_TEMPLATE, "n"));
             }
             query.add(templateQ, templateOccur);
 
@@ -746,6 +749,13 @@ public class LuceneQueryBuilder {
 				query.add(clause);
 			}
             else {
+                // Phase query, don't use StringTokenizer
+                if ((searchParam.startsWith("\"") && searchParam.endsWith("\""))) {
+                    Query subQuery = textFieldToken(searchParam, luceneIndexField, similarity);
+                    if (subQuery != null) {
+                        booleanClause = new BooleanClause(subQuery, occur);
+                    }
+                } else {
 				// tokenize searchParam
 				StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
                 BooleanQuery booleanQuery = new BooleanQuery();
@@ -759,6 +769,7 @@ public class LuceneQueryBuilder {
 				}
 				booleanClause = new BooleanClause(booleanQuery, occur);
 			}
+		}
 		}
 		if (booleanClause != null) {
 			query.add(booleanClause);
@@ -788,6 +799,15 @@ public class LuceneQueryBuilder {
 			}
             else {
 				// tokenize searchParam only if tokenized when indexing
+
+                // Phase query, don't use StringTokenizer
+                if ((searchParam.startsWith("\"") && searchParam.endsWith("\""))) {
+                    Query subQuery = textFieldToken(searchParam, luceneIndexField, similarity);
+                    if (subQuery != null) {
+                        booleanClause = new BooleanClause(subQuery, occur);
+                    }
+                } else {
+
 				StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
 				if (st.countTokens() == 1) {
 					String token = st.nextToken();
@@ -809,6 +829,7 @@ public class LuceneQueryBuilder {
 					booleanClause = new BooleanClause(booleanQuery, occur);
 				}
 			}
+		}
 		}
 		if (booleanClause != null) {
 			query.add(booleanClause);
@@ -876,13 +897,21 @@ public class LuceneQueryBuilder {
 		}
 	}
 
+    /**
+     *
+     * @param fieldValue
+     * @param similarity
+     * @param criteriaIsASet
+     * @param bq
+     * @param query
+     */
     private void addUUIDQuery(String fieldValue, String similarity, boolean criteriaIsASet, BooleanQuery bq, BooleanQuery query)  {
         // the uuid param is an 'or' separated list. Remove the 'or's and handle like an 'or' query if more
         // than one uuid parameter is set, then a 'and' query is made
         if (fieldValue.contains(OR_SEPARATOR)) {
             // Add all separated values to the boolean query
             BooleanQuery uuidBooleanQuery = new BooleanQuery();
-            addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.UUID, uuidBooleanQuery);
+            addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField._UUID, uuidBooleanQuery);
             BooleanClause booleanClause = new BooleanClause(uuidBooleanQuery, BooleanClause.Occur.MUST);
             if (criteriaIsASet) {
                 bq.add(booleanClause);
@@ -892,10 +921,15 @@ public class LuceneQueryBuilder {
             }
         }
         else {
-            addNotRequiredTextField(fieldValue, LuceneIndexField.UUID, similarity, (criteriaIsASet ? bq : query));
+            addNotRequiredTextField(fieldValue, LuceneIndexField._UUID, similarity, (criteriaIsASet ? bq : query));
         }
     }
 
+    /**
+     *
+     * @param searchCriteria
+     * @param query
+     */
     private void addBBoxQuery(Map<String, Set<String>> searchCriteria, BooleanQuery query) {
         // No multiple BBOX support
         if (!spatialCriteriaAdded) {
@@ -917,23 +951,25 @@ public class LuceneQueryBuilder {
     }
 
     /**
-     * Add search privilege criteria to a query.
      * 
-     * @param luceneQueryInput user and system input
-     * @param query query being built
+     * @param groupsQuery
+     * @param luceneQueryInput
+     * @param selectWorkspaceDocs
+     * @return
      */
-    private void addPrivilegeQuery(LuceneQueryInput luceneQueryInput, BooleanQuery query) {
-        // Set user groups privileges
+    private boolean createGroupsQuery(BooleanQuery groupsQuery, LuceneQueryInput luceneQueryInput, boolean selectWorkspaceDocs) {
+
         Set<String> groups = luceneQueryInput.getGroups();
         String editable$ = luceneQueryInput.getEditable();
         boolean editable = BooleanUtils.toBoolean(editable$);
-        BooleanQuery groupsQuery = new BooleanQuery();
+
         boolean groupsQueryEmpty = true;
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+
         if (!CollectionUtils.isEmpty(groups)) {
             for (String group : groups) {
                 if (StringUtils.isNotBlank(group)) {
-                    if (!editable) {
+                    if (!editable && !selectWorkspaceDocs) {
                         // add to view
                         TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
                         BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
@@ -957,7 +993,7 @@ public class LuceneQueryBuilder {
         //
         String owner = luceneQueryInput.getOwner();
         if (owner != null) {
-            TermQuery ownerQuery = new TermQuery(new Term(LuceneIndexField.OWNER, owner));
+            TermQuery ownerQuery = new TermQuery(new Term(LuceneIndexField._OWNER, owner));
             BooleanClause.Occur ownerOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
             BooleanClause ownerClause = new BooleanClause(ownerQuery, ownerOccur);
             groupsQueryEmpty = false;
@@ -970,18 +1006,115 @@ public class LuceneQueryBuilder {
         //
         boolean admin = luceneQueryInput.getAdmin();
         if (admin) {
-            TermQuery adminQuery = new TermQuery(new Term(LuceneIndexField.DUMMY, "0"));
+            TermQuery adminQuery = new TermQuery(new Term(LuceneIndexField._DUMMY, "0"));
             BooleanClause adminClause = new BooleanClause(adminQuery, groupOccur);
             groupsQueryEmpty = false;
             groupsQuery.add(adminClause);
         }
 
-        // Add the privilege part of the query
+        return groupsQueryEmpty;
+    }
+
+    /**
+     *
+     * @param workspaceOrNotQuery
+     * @param luceneQueryInput
+     * @param selectWorkspaceDocs
+     * @return
+     */
+    private boolean createWorkspaceQuery(BooleanQuery workspaceOrNotQuery, LuceneQueryInput luceneQueryInput, boolean selectWorkspaceDocs) {
+        BooleanQuery groupsQuery = new BooleanQuery();
+        boolean groupsQueryEmpty = createGroupsQuery(groupsQuery, luceneQueryInput, selectWorkspaceDocs) ;
+
         if (!groupsQueryEmpty) {
-            BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
+            BooleanClause groupsClause = new BooleanClause(groupsQuery, BooleanClause.Occur.MUST);
+            workspaceOrNotQuery.add(groupsClause);
+
+            if(!selectWorkspaceDocs) {
+                TermQuery workspaceQuery = new TermQuery(new Term(LuceneIndexField._IS_WORKSPACE, "false"));
+                BooleanClause workspaceClause = new BooleanClause(workspaceQuery, BooleanClause.Occur.MUST);
+                workspaceOrNotQuery.add(workspaceClause);
+
+                if(StringUtils.isNotEmpty(luceneQueryInput.getOwner())) {
+                    //
+                    // this ensures that non-workspace docs are shown if workspace docs exist but you have no edit rights to them
+                    //
+                    BooleanQuery pfff = new BooleanQuery();
+
+                    BooleanQuery editGroupsQuery = new BooleanQuery();
+                    createGroupsQuery(editGroupsQuery, luceneQueryInput, selectWorkspaceDocs) ;
+                    BooleanClause editGroupsClause = new BooleanClause(editGroupsQuery, BooleanClause.Occur.MUST);
+
+                    TermQuery isLockedQuery = new TermQuery(new Term(LuceneIndexField._IS_LOCKED, "y"));
+                    BooleanClause isLockedClause = new BooleanClause(isLockedQuery, BooleanClause.Occur.MUST);
+
+                    //pfff.add(editGroupsClause);
+                    pfff.add(isLockedClause);
+
+                    BooleanClause pfffClause = new BooleanClause(pfff, BooleanClause.Occur.MUST_NOT);
+                    workspaceOrNotQuery.add(pfffClause);
+                }
+
+            }
+
+            else {
+                TermQuery workspaceQuery = new TermQuery(new Term(LuceneIndexField._IS_WORKSPACE, "true"));
+                BooleanClause workspaceClause = new BooleanClause(workspaceQuery, BooleanClause.Occur.MUST);
+                workspaceOrNotQuery.add(workspaceClause);
+
+                TermQuery isLockedQuery = new TermQuery(new Term(LuceneIndexField._IS_LOCKED, "y"));
+                BooleanClause isLockedClause = new BooleanClause(isLockedQuery, BooleanClause.Occur.MUST);
+                workspaceOrNotQuery.add(isLockedClause);
+            }
+        }
+        return groupsQueryEmpty;
+    }
+
+    /**
+     * Adds search privilege criteria to a query.
+     * 
+     * @param luceneQueryInput user and system input
+     * @param query query being built
+     */
+    private void addPrivilegeQuery(LuceneQueryInput luceneQueryInput, BooleanQuery query) {
+        // Set user groups privileges
+
+        BooleanQuery privilegeQuery = new BooleanQuery();
+        boolean privilegeQueryEmpty;
+
+        //
+        // create query for non-workspace documents
+        //
+        BooleanQuery nonWorkspaceQuery = new BooleanQuery();
+        boolean selectWorkspaceDocs = false;
+        boolean nonWorkspaceQueryEmpty = createWorkspaceQuery(nonWorkspaceQuery, luceneQueryInput, selectWorkspaceDocs);
+
+        if (!nonWorkspaceQueryEmpty) {
+            BooleanClause nonWorkspaceClause = new BooleanClause(nonWorkspaceQuery, BooleanClause.Occur.SHOULD);
+            privilegeQuery.add(nonWorkspaceClause);
+        }
+
+        //
+        // create query for workspace documents
+        //
+        BooleanQuery workspaceQuery = new BooleanQuery();
+        selectWorkspaceDocs = true;
+        boolean workspaceQueryEmpty = createWorkspaceQuery(workspaceQuery, luceneQueryInput, selectWorkspaceDocs);
+
+        if (!workspaceQueryEmpty) {
+            BooleanClause workspaceClause = new BooleanClause(workspaceQuery, BooleanClause.Occur.SHOULD);
+            privilegeQuery.add(workspaceClause);
+        }
+
+        privilegeQueryEmpty = nonWorkspaceQueryEmpty && workspaceQueryEmpty;
+
+        // Add the resulting privilege part to the query
+        if(!privilegeQueryEmpty) {
+            BooleanClause.Occur privilegeOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+            BooleanClause groupsClause = new BooleanClause(privilegeQuery, privilegeOccur);
             query.add(groupsClause);
         }
+
     }
 
     /**

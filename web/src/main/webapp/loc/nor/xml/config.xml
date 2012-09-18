@@ -29,6 +29,13 @@
     <requestedlanguagesorted>Søkeresultater i forespurte språket sortert på toppen</requestedlanguagesorted>
     <requestedlanguageignored>Ignorer forespurte språket i søket</requestedlanguageignored>
 
+    <clustering>clustering</clustering>
+    <enableClustering>Aktiver clustering</enableClustering>
+    <JMSBrokerConnectionURL>JMS megler URL (s)</JMSBrokerConnectionURL>
+
+    <symbolicLocking>symbolsk låsing</symbolicLocking>
+    <enableSymbolicLocking>Aktiver symbolsk låsing</enableSymbolicLocking>
+
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>
 		<datesearchopt>
@@ -358,6 +365,15 @@
             Ignorer forespurte språket for søkeresultater.
         </tip>
 
+        <tip id="cluster.enable">
+            Aktiver dette for clustering.
+        </tip>
+        <tip id="cluster.jmsurl">
+            Angi nettadressen til din JMS megler. F.eks failover://tcp://localhost:61616.
+        </tip>
+        <tip id="symbolicLocking.enable">
+            Når denne er aktivert, kan enhver redaktør låse metadata i sine grupper (ikke bare de korrekturleserne).
+        </tip>
     </tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>

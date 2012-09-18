@@ -23,7 +23,9 @@
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import jeeves.exceptions.BadInputEx;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
@@ -60,7 +62,7 @@ public class LocalFilesystemParams extends AbstractParams {
 		recurse = (recurseString.equals("on") || recurseString.equals("true"));
 		String nodeleteString = Util.getParam(site, "nodelete", "true");
 		nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
-		System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+        Log.debug(Geonet.HARVESTER, "recurse: " + recurse + " nodelete: " + nodelete);
 	}
 
 	//---------------------------------------------------------------------------
@@ -78,7 +80,7 @@ public class LocalFilesystemParams extends AbstractParams {
 		recurse = (recurseString.equals("on") || recurseString.equals("true"));
 		String nodeleteString = Util.getParam(site, "nodelete", "true");
 		nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
-		System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+        Log.debug(Geonet.HARVESTER, "recurse: " + recurse + " nodelete: " + nodelete);
 	}
 
 	public LocalFilesystemParams copy() {

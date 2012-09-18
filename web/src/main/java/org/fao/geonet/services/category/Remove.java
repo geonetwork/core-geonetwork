@@ -53,20 +53,17 @@ public class Remove implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		String id = Util.getParam(params, Params.ID);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		int iId = new Integer(id);
 		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId=?";
+		List<Element> reindex = dbms.select(query, id).getChildren();
 
-		List<Element> reindex = dbms.select(query, iId).getChildren();
-
-		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=?",iId);
-		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes=?",iId);
-		dbms.execute ("DELETE FROM Categories    WHERE id=?",iId);
+		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=?",id);
+		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes=?",id);
+		dbms.execute ("DELETE FROM Categories    WHERE id=?",id);
 
 		//--- reindex affected metadata
 
@@ -76,10 +73,6 @@ public class Remove implements Service
 		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
 		s.processWithFastIndexing();
 
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
 	}
 }
-
-//=============================================================================
-

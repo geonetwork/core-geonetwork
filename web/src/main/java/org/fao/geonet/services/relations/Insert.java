@@ -49,48 +49,41 @@ public class Insert implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
-	/*
-	 * Insert the relation between two metadata records.
+    /**
+     * Inserts the relation between two metadata records.
 	 * If it already exist, bypass insert statement and an alreadyExist flag.
 	 * 
 	 * @see jeeves.interfaces.Service#exec(org.jdom.Element,
 	 * jeeves.server.context.ServiceContext) Parameter name: parentId - Parent
 	 * metadata identifier Parameter name: childId - Child metadata identifier
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
 	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.PARENT_UUID, Params.PARENT_ID));
-		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
-				params, context, Params.CHILD_UUID, Params.CHILD_ID));
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		String parentId = Utils.getIdentifierFromParameters(params, context, Params.PARENT_UUID, Params.PARENT_ID);
+		String childId = Utils.getIdentifierFromParameters(params, context, Params.CHILD_UUID, Params.CHILD_ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String query = "Select count(*) as exist from Relations where id=? and relatedId=?";
 		Element record = dbms.select(query, parentId, childId).getChild("record");
 		boolean exist = false;
 		if (record.getChild("exist").getText().equals("1")) {
 			exist = true;
-		} else {
+		}
+        else {
 			// Add new relation
-			query = "INSERT INTO Relations (id, relatedId) "
-					+ "VALUES (?, ?)";
-	
+			query = "INSERT INTO Relations (id, relatedId) " + "VALUES (?, ?)";
 			dbms.execute(query, parentId, childId);
 		}
 		
-		Element response = new Element(Jeeves.Elem.RESPONSE)
-				.setAttribute("alreadyExist", String.valueOf(exist))
-				.addContent(
-						new Element("parentId").setText(String
-								.valueOf(parentId)))
-				.addContent(
-						new Element("childId").setText(String.valueOf(childId)));
+		Element response = new Element(Jeeves.Elem.RESPONSE).setAttribute("alreadyExist",
+                String.valueOf(exist))
+                .addContent(new Element("parentId").setText(String.valueOf(parentId)))
+                .addContent(new Element("childId").setText(String.valueOf(childId)));
 
 		return response;
 	}
 }
-
-// =============================================================================
-

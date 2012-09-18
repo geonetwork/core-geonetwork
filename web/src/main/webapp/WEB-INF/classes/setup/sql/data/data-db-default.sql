@@ -7,6 +7,7 @@ DELETE FROM MetadataRating;
 DELETE FROM MetadataStatus;
 DELETE FROM OperationAllowed;
 DELETE FROM Metadata;
+DELETE FROM Workspace;
 DELETE FROM CategoriesDes;
 DELETE FROM Categories;
 DELETE FROM IsoLanguagesDes;
@@ -28,28 +29,27 @@ DELETE FROM Relations;
 -- === Table: Categories
 -- ======================================================================
 
-INSERT INTO Categories VALUES (1,'maps');
-INSERT INTO Categories VALUES (2,'datasets');
-INSERT INTO Categories VALUES (3,'interactiveResources');
-INSERT INTO Categories VALUES (4,'applications');
-INSERT INTO Categories VALUES (5,'caseStudies');
-INSERT INTO Categories VALUES (6,'proceedings');
-INSERT INTO Categories VALUES (7,'photo');
-INSERT INTO Categories VALUES (8,'audioVideo');
-INSERT INTO Categories VALUES (9,'directories');
-INSERT INTO Categories VALUES (10,'otherResources');
-INSERT INTO Categories VALUES (11,'z3950Servers');
-INSERT INTO Categories VALUES (12,'registers');
-INSERT INTO Categories VALUES (13,'physicalSamples');
+INSERT INTO Categories VALUES ('1','maps');
+INSERT INTO Categories VALUES ('2','datasets');
+INSERT INTO Categories VALUES ('3','interactiveResources');
+INSERT INTO Categories VALUES ('4','applications');
+INSERT INTO Categories VALUES ('5','caseStudies');
+INSERT INTO Categories VALUES ('6','proceedings');
+INSERT INTO Categories VALUES ('7','photo');
+INSERT INTO Categories VALUES ('8','audioVideo');
+INSERT INTO Categories VALUES ('9','directories');
+INSERT INTO Categories VALUES ('10','otherResources');
+INSERT INTO Categories VALUES ('11','z3950Servers');
+INSERT INTO Categories VALUES ('12','registers');
 
 -- ======================================================================
 -- === Table: Groups
 -- ======================================================================
 
-INSERT INTO Groups VALUES (-1,'GUEST','self-registered users',NULL,NULL);
-INSERT INTO Groups VALUES (0,'intranet',NULL,NULL,NULL);
-INSERT INTO Groups VALUES (1,'all',NULL,NULL,NULL);
-INSERT INTO Groups VALUES (2,'sample',NULL,NULL,NULL);
+INSERT INTO Groups VALUES ('-1','GUEST','self-registered users',NULL,NULL,'y');
+INSERT INTO Groups VALUES ('0','intranet',NULL,NULL,NULL,'y');
+INSERT INTO Groups VALUES ('1','all',NULL,NULL,NULL,'y');
+INSERT INTO Groups VALUES ('2','sample',NULL,NULL,NULL,'n');
 
 -- ======================================================================
 -- === Table: IsoLanguages
@@ -549,12 +549,13 @@ INSERT INTO IsoLanguages VALUES  (484,'zza', NULL);
 -- === Table: StatusValues
 -- ======================================================================
 
-INSERT INTO StatusValues VALUES  (0,'unknown','y');
-INSERT INTO StatusValues VALUES  (1,'draft','y');
-INSERT INTO StatusValues VALUES  (2,'approved','y');
-INSERT INTO StatusValues VALUES  (3,'retired','y');
-INSERT INTO StatusValues VALUES  (4,'submitted','y');
-INSERT INTO StatusValues VALUES  (5,'rejected','y');
+INSERT INTO StatusValues VALUES  ('0','unknown','y');
+INSERT INTO StatusValues VALUES  ('1','draft','y');
+INSERT INTO StatusValues VALUES  ('2','approved','y');
+INSERT INTO StatusValues VALUES  ('3','retired','y');
+INSERT INTO StatusValues VALUES  ('4','submitted','y');
+INSERT INTO StatusValues VALUES  ('5','rejected','y');
+INSERT INTO StatusValues VALUES  ('6','justcreated','y');
 
 -- ======================================================================
 -- === Table: StatusValuesDes
@@ -564,12 +565,12 @@ INSERT INTO StatusValues VALUES  (5,'rejected','y');
 -- === Table: Operations
 -- ======================================================================
 
-INSERT INTO Operations VALUES  (0,'view','y');
-INSERT INTO Operations VALUES  (1,'download','y');
-INSERT INTO Operations VALUES  (2,'editing','y');
-INSERT INTO Operations VALUES  (3,'notify','y');
-INSERT INTO Operations VALUES  (5,'dynamic','y');
-INSERT INTO Operations VALUES  (6,'featured','y');
+INSERT INTO Operations VALUES  ('0','view','y');
+INSERT INTO Operations VALUES  ('1','download','y');
+INSERT INTO Operations VALUES  ('2','editing','y');
+INSERT INTO Operations VALUES  ('3','notify','y');
+INSERT INTO Operations VALUES  ('5','dynamic','y');
+INSERT INTO Operations VALUES  ('6','featured','y');
 
 -- ======================================================================
 -- === Table: OperationsDes
@@ -881,7 +882,7 @@ INSERT INTO Settings VALUES (1,0,'system',NULL);
 INSERT INTO Settings VALUES (2,0,'harvesting',NULL);
 INSERT INTO Settings VALUES (10,1,'site',NULL);
 INSERT INTO Settings VALUES (11,10,'name','My GeoNetwork catalogue');
-INSERT INTO Settings VALUES (12,10,'siteId','Dummy');
+INSERT INTO Settings VALUES (12,10,'siteId','CHANGEME');
 INSERT INTO Settings VALUES (13,10,'organization','My organization');
 INSERT INTO Settings VALUES (14,1,'platform',NULL);
 -- FIXME : needs to use maven filter for version and subVersion
@@ -1003,9 +1004,15 @@ INSERT INTO Settings VALUES (953,952,'only','false');
 INSERT INTO Settings VALUES (954,952,'sorted','false');
 INSERT INTO Settings VALUES (955,952,'ignored','true');
 
+INSERT INTO Settings VALUES (956,1,'clustering',NULL);
+INSERT INTO Settings VALUES (957,956,'enable','false');
+INSERT INTO Settings VALUES (958,956,'jmsurl','failover://tcp://localhost:61616');
+
+INSERT INTO Settings VALUES (959,1,'symbolicLocking',NULL);
+INSERT INTO Settings VALUES (960,959,'enable','false');
 
 -- ======================================================================
 -- === Table: Users
 -- ======================================================================
 
-INSERT INTO Users VALUES  (1,'admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','');
+INSERT INTO Users VALUES  ('1','admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','');

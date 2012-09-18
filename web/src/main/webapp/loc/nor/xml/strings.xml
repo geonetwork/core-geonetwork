@@ -16,6 +16,22 @@
 
     <anyLanguage>alle språk</anyLanguage>
 	<nodata>Null</nodata>
+    <workspaceview>arbeidsområde visning</workspaceview>
+    <metadataview>metadata visning</metadataview>
+    <vieworiginal>Vise original</vieworiginal
+    <viewworkspace>Vise arbeidsområdet kopi</viewworkspace>
+    <islocked>Disse metadataene er låst</islocked>
+    <canunlock>Du har lov til å låse opp denne</canunlock>
+    <canedit>Du har lov til å redigere denne</canedit>
+    <unlock>Lås opp denne metadata</unlock>
+    <unlockMetadataTitle>Unlock metadata</unlockMetadataTitle>
+    <lockedmetadata>Låst metadata</lockedmetadata>
+    <lockedmetadatadesc>Lister metadata redigere økter som du eier eller at du får lov til å ta over</lockedmetadatadesc>
+    <grab.lock>Endre lås eier</grab.lock>
+    <grabbed.lock>Endret lås eier</grabbed.lock>
+    <currentlockowner>Foreløpig metadata låsen er eid av brukeren</currentlockowner>
+    <switchdiff>Bytt venstre og høyre</switchdiff>
+
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -327,6 +343,12 @@
 	<clear>Fjern</clear>
 	<clearAll>Fjern alt</clearAll>
 	<close js="true">Lukk</close>
+    <compareMetadata>Sammenlign metadata</compareMetadata>
+    <compareMetadataSelMessage>Du må velge 2 metadata poster å sammenligne</compareMetadataSelMessage>
+    <compareMetadataWorkspace>Sammenlign med arbeidsområde kopi</compareMetadataWorkspace>
+    <compareMetadataWorkspaceEditMode>Sammenlign med arbeidsområde kopi i redigeringsmodus</compareMetadataWorkspaceEditMode>
+    <compareMetadataOriginal>Sammenlign med original</compareMetadataOriginal>
+    <compareMetadataOriginalEditMode>Sammenlign i redigeringsmodus med original</compareMetadataOriginalEditMode>
 	<completeTab>Avansert visning</completeTab>
 	<completeTabEditor>Avansert editor</completeTabEditor>
 	<confirmCancel>Er du sikker på at du vil gå ut av editoren? (Alt som ikke er lagret blir borte)</confirmCancel>
@@ -564,6 +586,7 @@
 	<metadata.admin.index.success>Ny søkeindeks er bygget.</metadata.admin.index.success>
 	<optimize>Optimalisér</optimize>
 	<metadata>Metadata</metadata>
+    <metametadata>Metadata</metametadata>
 	<metadataAdded>Metadata lagt til med ID:</metadataAdded>
 	<metadataDeleted>Metadata slettet med ID:</metadataDeleted>
 	<metadataInsertResults>Resultat av metadataimport</metadataInsertResults>
@@ -1117,6 +1140,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1213,6 +1237,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>INSPIRE search options</l1>
             <l2>INSPIRE metadata</l2>

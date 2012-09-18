@@ -136,7 +136,6 @@ public class UserSession
 	public String getProfile()   { return sProfile;  }
 	public String getEmailAddr() { return sEmailAddr;  }
 
-	public int getUserIdAsInt()  { return Integer.parseInt(sUserId); }
 }
 
 //=============================================================================

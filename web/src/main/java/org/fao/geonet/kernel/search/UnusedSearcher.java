@@ -167,23 +167,26 @@ class UnusedSearcher extends MetaSearcher
 	//---
 	//--------------------------------------------------------------------------
 
-	private boolean hasInternetGroup(Dbms dbms, String id) throws SQLException
-	{
-		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
-
-		List list = dbms.select(query, new Integer(id)).getChildren();
-
+    /**
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+	private boolean hasInternetGroup(Dbms dbms, String id) throws SQLException {
+		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId='1' AND metadataId=?";
+		List list = dbms.select(query, id).getChildren();
 		Element record = (Element) list.get(0);
-
 		int result = Integer.parseInt(record.getChildText("result"));
-
 		return (result > 0);
 	}
 
-	//--------------------------------------------------------------------------
-
-	private void makeSummary() throws Exception
-	{
+    /**
+     *
+     * @throws Exception
+     */
+	private void makeSummary() throws Exception {
 		elSummary = new Element("summary");
 
 		elSummary.setAttribute("count", getSize()+"");
@@ -196,7 +199,3 @@ class UnusedSearcher extends MetaSearcher
 		elSummary.addContent(elCategories);
 	}
 }
-
-//==============================================================================
-
-

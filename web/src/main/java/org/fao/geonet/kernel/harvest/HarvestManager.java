@@ -23,9 +23,7 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -34,6 +32,10 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.ClusterException;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.harvest.HarvesterMessage;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -47,18 +49,27 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-//=============================================================================
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
-public class HarvestManager
-{
+/**
+ * TODO javadoc.
+ */
+public class HarvestManager {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestManager(ServiceContext context, SettingManager sm, DataManager dm) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param context
+     * @param sm
+     * @param dm
+     * @throws Exception
+     */
+	public HarvestManager(ServiceContext context, SettingManager sm, DataManager dm) throws Exception {
 		this.context = context;
 
 		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
@@ -67,36 +78,54 @@ public class HarvestManager
 
 		AbstractHarvester.staticInit(context);
 		AbstractHarvester.getScheduler().getListenerManager().addJobListener(new HarversterJobListener(this), jobGroupEquals(AbstractHarvester.HARVESTER_GROUP_NAME));
+        initialize();
+
+	}
+    
+    public synchronized void initialize() throws Exception {
+        Log.debug(Geonet.HARVEST_MAN, "\n\n\n\n\n** initialize\n\n\n\n");
+        hmHarvesters.clear();
+        hmHarvestLookup.clear();
 		
 		Element entries = settingMan.get("harvesting", -1).getChild("children");
 
-		if (entries != null)
+        if (entries != null) {
 			for (Object o : entries.getChildren())
 			{
 				Element node = transform((Element) o);
 				String  type = node.getAttributeValue("type");
-
-				AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
+                AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
 				ah.init(node);
 				hmHarvesters.put(ah.getID(), ah);
 				hmHarvestLookup.put(ah.getParams().uuid, ah);
 			}
 	}
+    }
 
-	//---------------------------------------------------------------------------
 
-	private Element transformSort(Element nodes, String sortField) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param nodes
+     * @param sortField
+     * @return
+     * @throws Exception
+     */
+	private Element transformSort(Element nodes, String sortField) throws Exception {
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("sortField", sortField);
 
 		return Xml.transform(nodes, xslPath + Geonet.File.SORT_HARVESTERS, params);
 	}
 
-	//---------------------------------------------------------------------------
-
-	private Element transform(Element node) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param node
+     * @return
+     * @throws Exception
+     */
+	private Element transform(Element node) throws Exception {
 		String type = node.getChildText("value");
 
 		node = (Element) node.clone();
@@ -104,20 +133,23 @@ public class HarvestManager
 		return Xml.transform(node, xslPath + type +".xsl");
 	}
 
-	//---------------------------------------------------------------------------
 
-	public void shutdown() 
-	{
+    /**
+     * TODO javadoc.
+     */
+	public synchronized void shutdown() {
 		for (AbstractHarvester ah : hmHarvesters.values()) {
 	        try {
                 ah.shutdown();
-            } catch (SchedulerException e) {
+                    } 
+                    catch (SchedulerException e) {
                Log.error(Geonet.HARVEST_MAN, "Error shutting down"+ah.getID(), e);
             }
 		}
         try {
             AbstractHarvester.shutdownScheduler();
-        } catch (SchedulerException e) {
+                } 
+                catch (SchedulerException e) {
            Log.error(Geonet.HARVEST_MAN, "Error shutting down harvester scheduler");
         }
 	}
@@ -128,8 +160,15 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public Element get(String id, String sort) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param id
+     * @param sort
+     * @return
+     * @throws Exception
+     */
+	public Element get(String id, String sort) throws Exception {
 		Element result = (id == null)
 									? settingMan.get("harvesting", -1)
 									: settingMan.get("harvesting/id:"+id, -1);
@@ -166,10 +205,15 @@ public class HarvestManager
 		return result;
 	}
 
-	//---------------------------------------------------------------------------
-
-	public String add(Dbms dbms, Element node) throws JeevesException, SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param node
+     * @return
+     * @throws Exception
+     */
+	public synchronized String add(Dbms dbms, Element node)  throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
@@ -183,11 +227,33 @@ public class HarvestManager
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
 
+        dbms.commit();
+
+        if(ClusterConfig.isEnabled()) {
+            try {
+                HarvesterMessage message = new HarvesterMessage();
+                message.setSenderClientID(ClusterConfig.getClientID());
+                Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                harvesterProducer.produce(message);      
+            } 
+            catch (ClusterException x) {
+                System.err.println(x.getMessage());
+                x.printStackTrace();
+                throw new Exception(x.getMessage(), x);
+            }
+        }
 		return ah.getID();
 	}
 
-	public String add2(Dbms dbms, Element node) throws JeevesException, SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param node
+     * @return
+     * @throws Exception
+     */
+	public synchronized String add2(Dbms dbms, Element node) throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
 
@@ -200,13 +266,35 @@ public class HarvestManager
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "HarvestManager added node with id: "+ ah.getID() + " and uuid: " + ah.getParams().uuid);
+
+        dbms.commit();
+
+        if(ClusterConfig.isEnabled()) {
+            try {
+                HarvesterMessage message = new HarvesterMessage();
+                message.setSenderClientID(ClusterConfig.getClientID());
+                Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                harvesterProducer.produce(message);
+            }
+            catch (ClusterException x) {
+                System.err.println(x.getMessage());
+                x.printStackTrace();
+                throw new Exception(x.getMessage(), x);
+            }
+        }        
 		return ah.getParams().uuid;
 	}
 
-	//---------------------------------------------------------------------------
 
-	public synchronized String createClone(Dbms dbms, String id) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public synchronized String createClone(Dbms dbms, String id) throws Exception {
 		// get the specified harvester from the settings table
 		Element node = get(id, null);
 		if (node == null) return null;
@@ -230,10 +318,15 @@ public class HarvestManager
 		return add(dbms, node);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException
-	{
+    /**
+     * TODO javadoc.
+     * @param dbms
+     * @param node
+     * @return
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException, Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
 
@@ -248,17 +341,38 @@ public class HarvestManager
 			return false;
 
 		ah.update(dbms, node);
+
+        dbms.commit();
+
+        if(ClusterConfig.isEnabled()) {
+            try {
+                HarvesterMessage message = new HarvesterMessage();
+                message.setSenderClientID(ClusterConfig.getClientID());
+                Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                harvesterProducer.produce(message);
+            }
+            catch (ClusterException x) {
+                System.err.println(x.getMessage());
+                x.printStackTrace();
+                throw new Exception(x.getMessage(), x);
+            }
+	}
+
 		return true;
 	}
 
-	//---------------------------------------------------------------------------
-	/** This method must be synchronized because it cannot run if we are updating some entries */
-
-	public synchronized OperResult remove(Dbms dbms, String id) throws Exception
-	{
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+    /**
+     * This method must be synchronized because it cannot run if we are updating some entries.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws Exception
+     */
+	public synchronized OperResult remove(Dbms dbms, String id) throws Exception {
+		if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
-
+        }
 		AbstractHarvester ah = hmHarvesters.get(id);
 
 		if (ah == null)
@@ -272,13 +386,34 @@ public class HarvestManager
 		// set deleted status in harvest history table to 'y'
 		HarvesterHistoryDao.setDeleted(dbms, ah.getParams().uuid);
 
+        dbms.commit();
+
+        if(ClusterConfig.isEnabled()) {
+            try {
+                HarvesterMessage message = new HarvesterMessage();
+                message.setSenderClientID(ClusterConfig.getClientID());
+                Producer harvesterProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.HARVESTER);
+                harvesterProducer.produce(message);
+            }
+            catch (ClusterException x) {
+                System.err.println(x.getMessage());
+                x.printStackTrace();
+                throw new Exception(x.getMessage(), x);
+            }
+	}
+
 		return OperResult.OK;
 	}
 
-	//---------------------------------------------------------------------------
-
-	public OperResult start(Dbms dbms, String id) throws SQLException, SchedulerException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+	public synchronized OperResult start(Dbms dbms, String id) throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
 
@@ -290,10 +425,15 @@ public class HarvestManager
 		return ah.start(dbms);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public OperResult stop(Dbms dbms, String id) throws SQLException, SchedulerException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+	public synchronized OperResult stop(Dbms dbms, String id) throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
 
@@ -305,39 +445,56 @@ public class HarvestManager
 		return ah.stop(dbms);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public OperResult run(Dbms dbms, String id) throws SQLException, SchedulerException {
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+	public OperResult run(Dbms dbms, String id) throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
             Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (ah == null)
+		if (ah == null)  {
+            Log.warning(Geonet.HARVEST_MAN, "harvester not found");
 			return OperResult.NOT_FOUND;
-
+        }
 		return ah.run(dbms);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public OperResult invoke(ResourceManager resourceManager, String id)
-	{
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+    /**
+     * TODO javadoc.
+     *
+     * @param resourceManager
+     * @param id
+     * @return
+     */
+	public OperResult invoke(ResourceManager resourceManager, String id) {
+		if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id : "+ id);
+        }
 
 		AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (ah == null)
+		if (ah == null) {
 			return OperResult.NOT_FOUND;
-
+        }
 		return ah.invoke(resourceManager);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public Element getHarvestInfo(String harvestUuid, String id, String uuid)
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param harvestUuid
+     * @param id
+     * @param uuid
+     * @return
+     */
+	public Element getHarvestInfo(String harvestUuid, String id, String uuid) {
 		Element info = new Element(Edit.Info.Elem.HARVEST_INFO);
 
 		AbstractHarvester ah = hmHarvestLookup.get(harvestUuid);
@@ -348,10 +505,13 @@ public class HarvestManager
 		return info;
 	}
 
-	//---------------------------------------------------------------------------
-
-	public AbstractHarvester getHarvester(String harvestUuid)
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param harvestUuid
+     * @return
+     */
+	public AbstractHarvester getHarvester(String harvestUuid) {
 		return hmHarvestLookup.get(harvestUuid);
 	}
 
@@ -361,8 +521,13 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	private void addInfo(Element node)
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param node
+     */
+	private void addInfo(Element node) {
+
 		String id = node.getAttributeValue("id");
 		hmHarvesters.get(id).addInfo(node);
 	}
@@ -381,6 +546,3 @@ public class HarvestManager
 	private HashMap<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
 	private HashMap<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
 }
-
-//=============================================================================
-

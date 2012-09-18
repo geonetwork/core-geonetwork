@@ -102,7 +102,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -148,16 +148,16 @@ public class OgcWxSHarvester extends AbstractHarvester
 	{
 		OgcWxSParams params = (OgcWxSParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+siteId, "ogctype", params.ogctype);
-		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
-		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic);
-		settingMan.add(dbms, "id:"+optionsId, "createThumbnails",  params.createThumbnails);
-		settingMan.add(dbms, "id:"+optionsId, "useLayer",  params.useLayer);
-		settingMan.add(dbms, "id:"+optionsId, "useLayerMd",  params.useLayerMd);
-		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url, false);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon, false);
+		settingMan.add(dbms, "id:"+siteId, "ogctype", params.ogctype, false);
+		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang, false);
+		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic, false);
+		settingMan.add(dbms, "id:"+optionsId, "createThumbnails",  params.createThumbnails, false);
+		settingMan.add(dbms, "id:"+optionsId, "useLayer",  params.useLayer, false);
+		settingMan.add(dbms, "id:"+optionsId, "useLayerMd",  params.useLayerMd, false);
+		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory, false);
+		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema, false);
 	}
 
 	//---------------------------------------------------------------------------

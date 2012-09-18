@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.IDFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -91,7 +92,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-    * Create subtemplates/metadata from fragments read from WFS
+    * Creates subtemplates/metadata from fragments read from WFS.
     * 
 	* Typical response expected:
 
@@ -144,7 +145,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-    * Load metadata template to be used to generate metadata
+    * Loads metadata template to be used to generate metadata.
     * 
     */
 	private void loadTemplate() {
@@ -180,7 +181,7 @@ public class FragmentHarvester {
 	
 	//---------------------------------------------------------------------------
 	/** 
-     * Add subtemplates and/or metadata using fragments and metadata template 
+     * Adds subtemplates and/or metadata using fragments and metadata template.
      *   
      * @param rec		record containing fragments to add to GeoNetwork database
      * 
@@ -239,7 +240,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Add fragment metadata to the fragment   
+     * Adds fragment metadata to the fragment.
      *   
      * @param fragment		fragment to which metadata should be added
      * 
@@ -257,8 +258,8 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Add a random uuid to the xml fragment if one hasn't been provided and 
-		 * the schema of the xml fragment  
+     * Adds a random uuid to the xml fragment if one hasn't been provided and
+		 * the schema of the xml fragment.
      *   
      * @param fragment		fragment to which metadata should be added 
      * 
@@ -288,7 +289,7 @@ public class FragmentHarvester {
 	
 	//---------------------------------------------------------------------------
 	/** 
-     * Create a sub-templates for the provided fragment 
+     * Creates a sub-templates for the provided fragment.
      *   
      * @param fragment		fragment for which sub-templates should be created
      * 
@@ -306,7 +307,7 @@ public class FragmentHarvester {
 	    
 	//---------------------------------------------------------------------------
 	/** 
-     * Create or update a sub-template for an xml fragment 
+     * Creates or update a sub-template for an xml fragment.
      *   
      * @param fragment		fragment for which a sub-template should be created
      * 
@@ -333,7 +334,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Update a sub-template for an xml fragment 
+     * Updates a sub-template for an xml fragment.
      *   
      * @param id        id of subtemplate to update
      * @param uuid      uuid of subtemplate being updated
@@ -353,18 +354,17 @@ public class FragmentHarvester {
                 boolean index = false;
                 String language = context.getLanguage();
         dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false);
-				int iId = Integer.parseInt(id);
-	
 
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
         addPrivileges(id);
 
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
         addCategories(id);
 
-				dataMan.setTemplateExt(dbms, iId, "s", title);
-				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadataGroup(dbms, id);
+				dataMan.setTemplateExt(dbms, id, "s", title);
+				dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
+                                boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
         dbms.commit();
 
@@ -374,7 +374,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Create a sub-template for an xml fragment 
+     * Creates a sub-template for an xml fragment.
      *   
      * @param schema		Schema to which the sub-template belongs
      * @param md				Subtemplate
@@ -391,20 +391,20 @@ public class FragmentHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group= null, isTemplate= null, docType= null, category= null;
         boolean ufo= false, indexImmediate= false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
-                         isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
-
-		int iId = Integer.parseInt(id);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, uuid, userid, group, params.uuid, isTemplate, docType,
+                title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		addPrivileges(id);
 		addCategories(id);
 	
-		dataMan.setTemplateExt(dbms, iId, "s", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.setTemplateExt(dbms, id, "s", null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
 		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
@@ -412,8 +412,8 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Update references in the template to the fragment with the fragment or an xlink to the 
-     * sub-template created for it 
+     * Updates references in the template to the fragment with the fragment or an xlink to the
+     * sub-template created for it.
      *   
      * @param template		template to update
      * @param templateRefs names of id attributes in template
@@ -496,7 +496,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Create a metadata record from the filled in template
+     * Creates a metadata record from the filled in template.
      *   
      * @param reference
      * @param fragment filled in template
@@ -560,15 +560,14 @@ public class FragmentHarvester {
                 String language = context.getLanguage();
         dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
 
-				int iId = Integer.parseInt(id);
-
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
         addPrivileges(id);
 
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
         addCategories(id);
 
-        dataMan.indexMetadataGroup(dbms, id);	
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
         dbms.commit();
 				harvestSummary.recordsUpdated++;
@@ -577,7 +576,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Create a metadata record from the filled in template
+     * Creates a metadata record from the filled in template.
      *   
      * @param template		filled in template
      * 
@@ -593,22 +592,22 @@ public class FragmentHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, params.outputSchema, template, id, recUuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
-
-		int iId = Integer.parseInt(id);
 
         if(log.isDebugEnabled())
             log.debug("	- Set privileges, category, template and harvested");
 		addPrivileges(id);
 		dataMan.setCategory (context, dbms, id, params.isoCategory);
 		
-		dataMan.setTemplateExt(dbms, iId, "n", null); 
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.setTemplateExt(dbms, id, "n", null); 
+		dataMan.setHarvestedExt(dbms, id, params.uuid, harvestUri);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 
         if(log.isDebugEnabled())
             log.debug("	- Commit "+id);
@@ -618,7 +617,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Add categories according to harvesting configuration
+     * Adds categories according to harvesting configuration.
      *   
      * @param id		GeoNetwork internal identifier
      * 
@@ -638,7 +637,7 @@ public class FragmentHarvester {
 
 	//---------------------------------------------------------------------------
 	/** 
-     * Add privileges according to harvesting configuration
+     * Adds privileges according to harvesting configuration.
      *   
      * @param id		GeoNetwork internal identifier
      * 
@@ -651,11 +650,11 @@ public class FragmentHarvester {
                 if(log.isDebugEnabled())
                     log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
 			} else {
-				for (int opId: priv.getOperations ()) {
+				for (String opId: priv.getOperations ()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6")) {
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
 					} else {
                         if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");

@@ -40,7 +40,8 @@ public class LuceneQueryInput extends UserQueryInput {
 
     private String owner;
     private Set<String> groups;
-    private Set<String> groupOwners;
+    //***
+    // private Set<String> groupOwners;
     private boolean isReviewer;
     private boolean isUserAdmin;
     private boolean isAdmin;
@@ -76,12 +77,13 @@ public class LuceneQueryInput extends UserQueryInput {
             setGroups(groups);
         }
         @SuppressWarnings("unchecked")
-        List<Element> groupOwnersE = (List<Element>)jdom.getChildren(SearchParameter.GROUPOWNER);
-        Set<String> groupOwners = new HashSet<String>();
-        for(Element groupOwnerE : groupOwnersE) {
-            groupOwners.add(groupOwnerE.getText());
-        }
-        setGroupOwners(groupOwners);
+        //***
+        // List<Element> groupOwnersE = (List<Element>)jdom.getChildren(SearchParameter.GROUPOWNER);
+        //Set<String> groupOwners = new HashSet<String>();
+        //for(Element groupOwnerE : groupOwnersE) {
+        //    groupOwners.add(groupOwnerE.getText());
+        //}
+        //setGroupOwners(groupOwners);
 
         Element isReviewerE = jdom.getChild(SearchParameter.ISREVIEWER);
         setReviewer(isReviewerE != null);
@@ -112,13 +114,14 @@ public class LuceneQueryInput extends UserQueryInput {
         for(String group : groups) {
             groupsToString.append(" group: " + group);
         }
-        StringBuffer groupOwnersToString = new StringBuffer();
-        for(String groupOwner : groupOwners) {
-            groupOwnersToString.append(" groupOwner: " + groupOwner);
-        }
+        //***
+        // StringBuffer groupOwnersToString = new StringBuffer();
+        //for(String groupOwner : groupOwners) {
+        //    groupOwnersToString.append(" groupOwner: " + groupOwner);
+        //}
         return new StringBuilder().append("owner:").append(owner)
                 .append(groupsToString)
-                .append(groupOwnersToString)
+        //        .append(groupOwnersToString)
                 .append(" isReviewer:").append(isReviewer)
                 .append(" isUserAdmin:").append(isUserAdmin)
                 .append(" isAdmin:").append(isAdmin)
@@ -168,14 +171,15 @@ public class LuceneQueryInput extends UserQueryInput {
         isAdmin = admin;
     }
 
-    public Set<String> getGroupOwners() {
-        return groupOwners;
-    }
-
-    public void setGroupOwners(Set<String> groupOwners) {
-        if(this.groupOwners == null) {
-            this.groupOwners = new HashSet<String>();
-        }
-        this.groupOwners = groupOwners;
-    }
+    //***
+    // public Set<String> getGroupOwners() {
+    //    return groupOwners;
+    //}
+    //***
+    //public void setGroupOwners(Set<String> groupOwners) {
+    //    if(this.groupOwners == null) {
+    //        this.groupOwners = new HashSet<String>();
+    //    }
+    //    this.groupOwners = groupOwners;
+    //}
 }

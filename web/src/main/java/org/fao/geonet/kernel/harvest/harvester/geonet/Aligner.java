@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -314,27 +315,26 @@ public class Aligner
         md = processMetadata(ri, md);
         
         // insert metadata
-        int userid = 1;
+        String userid = "1";
         String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, ri.schema, md, id, ri.uuid, userid, group, siteId, isTemplate, docType, 
+                title, category, createDate, changeDate, ufo, indexImmediate);
 
-		int iId = Integer.parseInt(id);
-
-		dataMan.setTemplateExt(dbms, iId, isTemplate, null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(dbms, id, isTemplate, null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid);
 		
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), id);
 		}
 		
 		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), id);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -352,7 +352,8 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		result.addedMetadata++;
 
 		return id;
@@ -369,9 +370,7 @@ public class Aligner
 			String name = localCateg.getName(catId);
 
 			if (name == null)
-			{
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
@@ -463,19 +462,25 @@ public class Aligner
 		return map;
 	}
 
-	//--------------------------------------------------------------------------
-
-	private void addOperations(String id, String groupId, Set<String> oper) throws Exception
-	{
-		for (String opName : oper)
-		{
-			int opId = dataMan.getAccessManager().getPrivilegeId(opName);
+    /**
+     *
+     * @param id
+     * @param groupId
+     * @param oper
+     * @throws Exception
+     */
+	private void addOperations(String id, String groupId, Set<String> oper) throws Exception {
+		for (String opName : oper) {
+			String opId = dataMan.getAccessManager().getPrivilegeId(opName);
 
 			//--- allow only: view, download, dynamic, featured
-			if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {
-                if(log.isDebugEnabled()) log.debug("       --> "+ opName);
+			if (opId.equals("0") || opId.equals("1") || opId.equals("5") || opId.equals("6")) {
+			    if(log.isDebugEnabled()) {
+                    log.debug("       --> "+ opName);
+                }
 				dataMan.setOperation(context, dbms, id, groupId, opId +"");
-			} else {
+			}
+            else {
                 if(log.isDebugEnabled()) log.debug("       --> "+ opName +" (skipped)");
             }
 		}
@@ -490,7 +495,7 @@ public class Aligner
 		if (hm == null)
 			return null;
 
-		int id = context.getSerialFactory().getSerial(dbms, "Groups");
+		String id = IDFactory.newID();
 
 		dbms.execute("INSERT INTO Groups(id, name) VALUES (?, ?)", id, name);
 		Lib.local.insert(dbms, "Groups", id, hm, "<"+name+">");
@@ -624,7 +629,7 @@ public class Aligner
 		if (popularity != null)
 			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), new Integer(id));
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
 		addCategories(id);
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
@@ -633,11 +638,12 @@ public class Aligner
             }
         }
 		
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 	}
 
 	/**
@@ -678,9 +684,7 @@ public class Aligner
 									InputStream is, Element files) throws IOException
 	{
 		if (files == null)
-		{
             if(log.isDebugEnabled()) log.debug("  - No file found in info.xml. Cannot update file:" + file);
-		}
 		else
 		{
 			removeOldFile(id, files, dir);

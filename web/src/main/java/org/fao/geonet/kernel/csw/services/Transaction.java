@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.IDFactory;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.jdom.JDOMXPath;
@@ -162,7 +163,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 		finally
 		{
             try {
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null);
+                boolean workspace = false;
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, workspace, true);
             } catch (SQLException e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -232,7 +234,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 				&& !profile.equals(Geonet.Profile.USER_ADMIN) && !profile.equals(Geonet.Profile.ADMINISTRATOR))
 			throw new NoApplicableCodeEx("User not allowed to insert metadata.");
 		
-		int userId = us.getUserIdAsInt();
+		String userId = us.getUserId();
 
         AccessManager am = gc.getAccessManager();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -246,8 +248,9 @@ public class Transaction extends AbstractOperation implements CatalogService
         //
         String docType = null, title = null, isTemplate = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, xml, id, uuid, userId, group, source, isTemplate, docType, title,
+                category, createDate, changeDate, ufo, indexImmediate);
 
 		if( id == null )
 			return false;
@@ -260,8 +263,8 @@ public class Transaction extends AbstractOperation implements CatalogService
             dataMan.setOperation(context, dbms, id, "1", AccessManager.OPER_VIEW);
         }
 
-
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		
 		fileIds.add( uuid );
 		

@@ -56,7 +56,7 @@ public class XmlUpdate implements Service
 			String  id    = Util.getAttrib(categ, Params.ID);
 			Element label = Util.getChild (categ, "label");
 
-			Lib.local.update(dbms, "Categories", Integer.parseInt(id), label);
+			Lib.local.update(dbms, "Categories", id, label);
 		}
 
 		return new Element("ok");

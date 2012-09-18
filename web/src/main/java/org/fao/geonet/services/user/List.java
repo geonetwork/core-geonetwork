@@ -29,7 +29,10 @@ import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -98,6 +101,15 @@ public class List implements Service
 
 		//--- return result
 
+        //Element result = new Element(Jeeves.Elem.RESPONSE) ;
+
+        String id = Util.getParam(params, Params.ID, null);
+        if(StringUtils.isNotEmpty(id)) {
+            //result.addContent(new Element(Geonet.Elem.ID).setText(id));
+            elUsers.addContent(new Element(Geonet.Elem.ID).setText(id));
+        }
+        //result.addContent(elUsers);
+        //return result;
 		return elUsers;
 	}
 
@@ -107,26 +119,20 @@ public class List implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Set<String> getGroups(Dbms dbms, String id, String profile) throws Exception
-	{
+	private Set<String> getGroups(Dbms dbms, String id, String profile) throws Exception {
 		Element groups;
 		if (profile.equals(ProfileManager.ADMIN)) {
 			groups = dbms.select("SELECT id FROM Groups");
-		} else {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
 		}
-
+        else {
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", id);
+		}
 		java.util.List<Element> list = groups.getChildren();
 
 		Set<String> hs = new HashSet<String>();
-
 		for(Element el : list) {
 			hs.add(el.getChildText("id"));
 		}
-
 		return hs;
 	}
 }
-
-//=============================================================================
-

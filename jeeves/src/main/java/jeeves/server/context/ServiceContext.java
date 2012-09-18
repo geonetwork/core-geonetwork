@@ -32,7 +32,6 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -87,9 +86,9 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, ProfileManager p, Hashtable<String, Object> contexts)
 	{
-		super(mm, pm, sf, contexts);
+		super(mm, pm, contexts);
 
 		profilMan    = p;
 		setService(service);

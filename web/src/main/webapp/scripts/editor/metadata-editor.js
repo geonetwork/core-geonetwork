@@ -483,7 +483,7 @@ function doSaveAction(action,validateAction)
 					}
 					
 					setBunload(false);
-					location.replace(getGNServiceURL('metadata.show?id='+metadataId+'&skipPopularity=y'));
+                    location.replace(getGNServiceURL('metadata.show?id='+metadataId+'&fromWorkspace=true&skipPopularity=y'));
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));

@@ -6,8 +6,8 @@
 
 CREATE TABLE Relations
   (
-    id         int,
-    relatedId  int,
+    id         varchar(36),
+    relatedId  varchar(36),
 
     primary key(id,relatedId)
   );
@@ -16,7 +16,7 @@ CREATE TABLE Relations
 
 CREATE TABLE Categories
   (
-    id    int,
+    id    varchar(36),
     name  varchar(255)   not null,
 
     primary key(id),
@@ -124,7 +124,7 @@ CREATE TABLE RegionsDes
 
 CREATE TABLE Users
   (
-    id            int,
+    id            varchar(36),
     username      varchar(256)    not null,
     password      varchar(40)    not null,
     surname       varchar(32),
@@ -147,7 +147,7 @@ CREATE TABLE Users
 
 CREATE TABLE Operations
   (
-    id        int,
+    id        varchar(36),
     name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
 
@@ -158,7 +158,7 @@ CREATE TABLE Operations
 
 CREATE TABLE OperationsDes
   (
-    idDes   int,
+    idDes   varchar(36),
     langId  varchar(5),
     label   varchar(96)   not null,
 
@@ -172,7 +172,7 @@ CREATE TABLE OperationsDes
 
 CREATE TABLE Requests
   (
-    id             int,
+    id             varchar(36),
     requestDate    varchar(30),
     ip             varchar(128),
     query          varchar(4000),
@@ -197,8 +197,8 @@ CREATE INDEX RequestsNDX4 ON Requests(lang);
 
 CREATE TABLE Params
   (
-    id          int,
-    requestId   int,
+    id          varchar(36),
+    requestId   varchar(36),
     queryType   varchar(128),
     termField   varchar(128),
     termText    varchar(128),
@@ -221,11 +221,11 @@ CREATE INDEX ParamsNDX4 ON Params(termText);
 
 CREATE TABLE HarvestHistory
   (
-    id             int not null,
+    id             varchar(36) not null,
     harvestDate    varchar(30),
-		harvesterUuid  varchar(250),
-		harvesterName  varchar(128),
-		harvesterType  varchar(128),
+	harvesterUuid  varchar(250),
+	harvesterName  varchar(128),
+	harvesterType  varchar(128),
     deleted        char(1) default 'n' not null,
     info           longvarchar,
     params         longvarchar,
@@ -240,11 +240,12 @@ CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
 
 CREATE TABLE Groups
   (
-    id           int,
+    id           varchar(36),
     name         varchar(32)    not null,
     description  varchar(255),
     email        varchar(32),
-    referrer     int,
+    referrer     varchar(36),
+    internal     char(1) default 'n' not null,
 
     primary key(id),
     unique(name),
@@ -256,7 +257,7 @@ CREATE TABLE Groups
 
 CREATE TABLE GroupsDes
   (
-    idDes   int,
+    idDes   varchar(36),
     langId  varchar(5),
     label   varchar(96)   not null,
 
@@ -270,8 +271,8 @@ CREATE TABLE GroupsDes
 
 CREATE TABLE UserGroups
   (
-    userId   int,
-    groupId  int,
+    userId   varchar(36),
+    groupId  varchar(36),
 
     primary key(userId,groupId),
 
@@ -283,7 +284,7 @@ CREATE TABLE UserGroups
 
 CREATE TABLE CategoriesDes
   (
-    idDes   int,
+    idDes   varchar(36),
     langId  varchar(5),
     label   varchar(255)   not null,
 
@@ -295,13 +296,43 @@ CREATE TABLE CategoriesDes
 
 -- ======================================================================
 
-CREATE TABLE Metadata
+CREATE TABLE Workspace
   (
-    id           int,
+    id           varchar(36),
     uuid         varchar(250)   not null,
     schemaId     varchar(32)    not null,
     isTemplate   char(1)        default 'n' not null,
     isHarvested  char(1)        default 'n' not null,
+    createDate   varchar(30)    not null,
+    changeDate   varchar(30)    not null,
+    isLocked     char(1)        default 'n' not null,
+    lockedBy     varchar(36),
+    data         longvarchar    not null,
+    source       varchar(250)   not null,
+    title        varchar(255),
+    root         varchar(255),
+    harvestUuid  varchar(250)   default null,
+    owner        varchar(36)    not null,
+    doctype      varchar(255),
+    harvestUri   varchar(255)   default null,
+    rating       int            default 0 not null,
+    popularity   int            default 0 not null,
+		displayorder int,
+
+    primary key(id),
+    unique(uuid)
+  );
+
+
+CREATE TABLE Metadata
+  (
+    id           varchar(36),
+    uuid         varchar(250)   not null,
+    schemaId     varchar(32)    not null,
+    isTemplate   char(1)        default 'n' not null,
+    isHarvested  char(1)        default 'n' not null,
+    isLocked     char(1)        default 'n' not null,
+    lockedBy     varchar(36),
     createDate   varchar(30)    not null,
     changeDate   varchar(30)    not null,
     data         longvarchar    not null,
@@ -309,9 +340,8 @@ CREATE TABLE Metadata
     title        varchar(255),
     root         varchar(255),
     harvestUuid  varchar(250)   default null,
-    owner        int            not null,
+    owner        varchar(36)    not null,
     doctype      varchar(255),
-    groupOwner   int            default null,
     harvestUri   varchar(255)   default null,
     rating       int            default 0 not null,
     popularity   int            default 0 not null,
@@ -320,9 +350,8 @@ CREATE TABLE Metadata
     primary key(id),
     unique(uuid),
 
-    foreign key(owner) references Users(id),
-    foreign key(groupOwner) references Groups(id)
-  );
+    foreign key(owner) references Users(id)
+      );
 
 CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
@@ -330,7 +359,7 @@ CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
 CREATE TABLE Validation
   (
-    metadataId   int,
+    metadataId   varchar(36),
     valType      varchar(40),
     status       int,
     tested       int,
@@ -341,12 +370,24 @@ CREATE TABLE Validation
     foreign key(metadataId) references Metadata(id)
 );
 
+CREATE TABLE ValidationWorkspace
+  (
+    metadataId   varchar(36),
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+
+    primary key(metadataId, valType),
+);
+
 -- ======================================================================
 
 CREATE TABLE MetadataCateg
   (
-    metadataId  int,
-    categoryId  int,
+    metadataId  varchar(36),
+    categoryId  varchar(36),
 
     primary key(metadataId,categoryId),
 
@@ -358,7 +399,7 @@ CREATE TABLE MetadataCateg
 
 CREATE TABLE StatusValues
   (
-    id        int not null,
+    id        varchar(36) not null,
     name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
     primary key(id)
@@ -368,7 +409,7 @@ CREATE TABLE StatusValues
 
 CREATE TABLE StatusValuesDes
   (
-    idDes   int not null,
+    idDes   varchar(36) not null,
     langId  varchar(5) not null,
     label   varchar(96)   not null,
     primary key(idDes,langId)
@@ -378,9 +419,9 @@ CREATE TABLE StatusValuesDes
 
 CREATE TABLE MetadataStatus
   (
-    metadataId  int not null,
-    statusId    int default 0 not null,
-    userId      int not null,
+    metadataId  varchar(36) not null,
+    statusId    varchar(36) default 0 not null,
+    userId      varchar(36) not null,
     changeDate   varchar(30)    not null,
     changeMessage   varchar(2048) not null,
     primary key(metadataId,statusId,userId,changeDate),
@@ -394,9 +435,9 @@ CREATE TABLE MetadataStatus
 
 CREATE TABLE OperationAllowed
   (
-    groupId      int,
-    metadataId   int,
-    operationId  int,
+    groupId      varchar(36),
+    metadataId   varchar(36),
+    operationId  varchar(36),
 
     primary key(groupId,metadataId,operationId),
 
@@ -411,7 +452,7 @@ CREATE INDEX OperationAllowedNDX1 ON OperationAllowed(metadataId);
 
 CREATE TABLE MetadataRating
   (
-    metadataId  int,
+    metadataId  varchar(36),
     ipAddress   varchar(32),
     rating      int           not null,
 
@@ -424,7 +465,7 @@ CREATE TABLE MetadataRating
 
 CREATE TABLE MetadataNotifiers
   (
-    id         int,
+    id         varchar(36),
     name       varchar(32)    not null,
     url        varchar(255)   not null,
     enabled    char(1)        default 'n' not null,
@@ -439,8 +480,8 @@ CREATE TABLE MetadataNotifiers
 
 CREATE TABLE MetadataNotifications
   (
-    metadataId         int,
-    notifierId         int,
+    metadataId         varchar(36),
+    notifierId         varchar(36),
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
@@ -455,7 +496,7 @@ CREATE TABLE MetadataNotifications
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
-    idField   int,
+    idField   varchar(36),
     langId    varchar(5)    not null,
     field     varchar(32)   not null,
     label     text,

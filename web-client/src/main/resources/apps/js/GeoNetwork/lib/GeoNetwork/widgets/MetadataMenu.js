@@ -63,11 +63,19 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     duplicateAction: undefined,
     createChildAction: undefined,
     statusAction: undefined,
+    cancelEditSessionAction: undefined,
+    changeEditSessionOwnerAction: undefined,
     versioningAction: undefined,
     adminAction: undefined,
     categoryAction: undefined,
     viewAction: undefined,
+    viewWorkspaceCopyAction: undefined,
+    diffWorkspaceCopyAction: undefined,
+    viewOriginalCopyAction: undefined,
+    diffOriginalCopyAction: undefined,
+    diffOriginalCopyEditModeAction: undefined,
     printAction: undefined,
+    printWorkspaceCopyAction: undefined,
     viewXMLAction: undefined,
     getMEFAction: undefined,
     ratingWidget: undefined,
@@ -130,6 +138,28 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.cancelEditSessionAction = new Ext.Action({
+            text: OpenLayers.i18n('cancelEditSession'),
+            tooltip: OpenLayers.i18n('cancelEditSessionTT'),
+            iconCls : 'unlockIcon',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataCancelEditSession(id);
+            },
+            scope: this
+        });
+        this.changeEditSessionOwnerAction = new Ext.Action({
+            text: OpenLayers.i18n('changeEditSessionOwner'),
+            tooltip: OpenLayers.i18n('changeEditSessionOwnerTT'),
+            iconCls : '',
+            handler: function(){
+                var id = this.record.get('id');
+                var lockedBy = this.record.get('lockedBy');
+                this.catalogue.metadataChangeEditSessionOwner(id, lockedBy);
+            },
+            scope: this
+        });
+
         this.statusAction = new Ext.Action({
             text: OpenLayers.i18n('status'),
             tooltip: OpenLayers.i18n('statusTT'),
@@ -164,7 +194,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.cancelEditSessionAction, this.changeEditSessionOwnerAction, this.statusAction, this.versioningAction, this.categoryAction]
             }
         });
         this.add(this.otherActions);
@@ -184,6 +214,69 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.add(this.viewAction);
         
+        this.viewWorkspaceCopyAction = new Ext.Action({
+            text: OpenLayers.i18n('viewWorkspaceCopy'),
+            tooltip: OpenLayers.i18n('viewWorkspaceCopyTT'),
+            iconCls : 'md-mn-view',
+            handler: function(){
+                var id = this.record.get('uuid');
+                this.catalogue.metadataWorkspaceCopyShow(id);
+            },
+            scope: this
+        });
+        this.add(this.viewWorkspaceCopyAction);
+        
+
+        this.diffWorkspaceCopyAction = new Ext.Action({
+            text: OpenLayers.i18n('diffWorkspaceCopy'),
+            tooltip: OpenLayers.i18n('diffWorkspaceCopyTT'),
+            iconCls : 'md-mn-view',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataWorkspaceCopyDiff(id);
+            },
+            scope: this
+        });
+        this.add(this.diffWorkspaceCopyAction);
+
+        this.viewOriginalCopyAction = new Ext.Action({
+            text: OpenLayers.i18n('viewOriginalCopy'),
+            tooltip: OpenLayers.i18n('viewOriginalCopyTT'),
+            iconCls : 'md-mn-view',
+            handler: function(){
+                var id = this.record.get('uuid');
+                this.catalogue.metadataShow(id);
+            },
+            scope: this
+        });
+        this.add(this.viewOriginalCopyAction);
+
+        this.diffOriginalCopyAction = new Ext.Action({
+            text: OpenLayers.i18n('diffOriginalCopy'),
+            tooltip: OpenLayers.i18n('diffOriginalCopyTT'),
+            iconCls : 'md-mn-view',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataWorkspaceCopyDiff(id,false);
+            },
+            scope: this
+        });
+
+        this.add(this.diffOriginalCopyAction);
+
+        this.diffOriginalCopyEditModeAction = new Ext.Action({
+            text: OpenLayers.i18n('diffOriginalCopyEditMode'),
+            tooltip: OpenLayers.i18n('diffOriginalCopyEditModeTT'),
+            iconCls : 'md-mn-view',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataWorkspaceCopyDiff(id,true);
+            },
+            scope: this
+        });
+
+        this.add(this.diffOriginalCopyEditModeAction);
+
         this.zoomToAction = new Ext.Action({
             text: OpenLayers.i18n('zoomTo'),
             iconCls: 'zoomlayer',
@@ -211,12 +304,22 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 text: OpenLayers.i18n('printSel'),
                 iconCls: 'md-mn-pdf',
                 handler: function(){
-                    this.catalogue.metadataPrint(this.record.get('uuid'));
+                    this.catalogue.metadataPrint(this.record.get('uuid'), false);
                 },
                 scope: this
             });
         this.add(this.printAction);
         
+        this.printWorkspaceCopyAction = new Ext.Action({
+            text: OpenLayers.i18n('printSelWorkspaceCopy'),
+            iconCls: 'md-mn-pdf',
+            handler: function(){
+                this.catalogue.metadataPrint(this.record.get('uuid'), true);
+            },
+            scope: this
+        });
+        this.add(this.printWorkspaceCopyAction);
+
         this.getMEFAction = new Ext.Action({
             text: OpenLayers.i18n('getMEF'),
             iconCls: 'md-mn-zip',
@@ -274,24 +377,91 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified();
 
+        var isSymbolicLocking  = this.record.get('symbolicLocking') === 'y';
+        var isLocked = this.record.get('locked') === 'y';
+        var isWorkspace = this.record.get('workspace') === 'true';
+        var isOwner = this.record.get('owner') === 'true';
+        var sameOwnerName = (this.catalogue.identifiedUser) && (this.record.get('ownername') === this.catalogue.identifiedUser.username);
+
+        var sameLockedByAndLoggedUser = (this.catalogue.identifiedUser) && (this.record.get('lockedBy') === this.catalogue.identifiedUser.id);
+
+        var isReviewer = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Reviewer');
+        var isAdmin = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Administrator');
+        var isUserAdmin = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'UserAdmin');
+        var isEditor = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'Editor');
+        var isUserRegistered = (this.catalogue.identifiedUser) && (this.catalogue.identifiedUser.role === 'RegisteredUser');
+
         /* Actions and menu visibility for logged in user */
-        if (!identified) {
+        if (!identified || isUserRegistered) {
             this.editAction.hide();
             this.deleteAction.hide();
+            this.viewWorkspaceCopyAction.hide();
+            this.printWorkspaceCopyAction.hide();
+            this.diffWorkspaceCopyAction.hide();
+            this.viewOriginalCopyAction.hide();
+            this.diffOriginalCopyAction.hide();
+            this.diffOriginalCopyEditModeAction.hide();
         } else {
             this.editAction.show();
             this.deleteAction.show();
+            this.viewAction.show();
+
+            if (!isLocked) {
+                this.viewWorkspaceCopyAction.hide();
+                this.printWorkspaceCopyAction.hide();
+                this.diffWorkspaceCopyAction.hide();
+
+                this.viewOriginalCopyAction.hide();
+                this.diffOriginalCopyAction.hide();
+                this.diffOriginalCopyEditModeAction.hide();
+            } else {
+                if(!isWorkspace) {
+                    this.viewOriginalCopyAction.hide();
+                    this.diffOriginalCopyAction.hide();
+                    this.diffOriginalCopyEditModeAction.hide();
+                    this.viewWorkspaceCopyAction.show();
+                    this.printWorkspaceCopyAction.show();
+                    this.diffWorkspaceCopyAction.show();
+                }
+                else {
+                    this.viewAction.hide();
+                    //this.viewWorkspaceCopyAction.hide();
+                    this.printWorkspaceCopyAction.hide();
+                    this.diffWorkspaceCopyAction.hide();
+
+                    this.viewWorkspaceCopyAction.show();
+                    this.viewOriginalCopyAction.show();
+                    this.diffOriginalCopyAction.show();
+                    this.diffOriginalCopyEditModeAction.show();
+                }
+            }
         }
-        this.otherActions.setVisible(identified);
-        this.adminMenuSeparator.setVisible(identified);
+
+        if (isReviewer || isAdmin || isUserAdmin || (isEditor && isSymbolicLocking)) {
+            this.changeEditSessionOwnerAction.show();
+        } else {
+            this.changeEditSessionOwnerAction.hide();
+        }
+
+        this.otherActions.setVisible(identified && !isUserRegistered);
+        this.adminMenuSeparator.setVisible(identified && !isUserRegistered);
+
         
         /* Actions status depend on records */
-        this.editAction.setDisabled(!isEditable);
-        this.adminAction.setDisabled(!isEditable && !isHarvested);
-        this.statusAction.setDisabled(!isEditable && !isHarvested);
-        this.versioningAction.setDisabled(!isEditable && !isHarvested);
-        this.categoryAction.setDisabled(!isEditable && !isHarvested);
-        this.deleteAction.setDisabled(!isEditable && !isHarvested);
+        this.editAction.setDisabled(!((isLocked && sameLockedByAndLoggedUser) || (!isLocked && isEditable)));
+        this.adminAction.setDisabled(!(!isLocked || sameLockedByAndLoggedUser));
+        this.statusAction.setDisabled(!(isOwner && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
+        this.cancelEditSessionAction.setDisabled(!(isLocked && (isAdmin || sameLockedByAndLoggedUser)));
+        this.changeEditSessionOwnerAction.setDisabled(!(isLocked && (isOwner || (isEditable && isSymbolicLocking))));
+        this.viewWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
+        this.diffWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
+        this.viewOriginalCopyAction.setDisabled(!(isLocked && isEditable));
+        this.diffOriginalCopyAction.setDisabled(!(isLocked && isEditable));
+        this.diffOriginalCopyEditModeAction.setDisabled(!(isLocked && isEditable));
+        this.printWorkspaceCopyAction.setDisabled(!(isLocked && isEditable));
+        this.versioningAction.setDisabled(!((!isLocked || sameLockedByAndLoggedUser)  && (!isHarvested || GeoNetwork.Settings.editor.editHarvested)));
+
+        this.deleteAction.setDisabled(!((isLocked && sameLockedByAndLoggedUser) || (!isLocked && isEditable)));
         
         if (this.ratingWidget) {
             this.ratingWidget.reset();

@@ -384,3 +384,9 @@ div.help ul li {
   list-style-type : circle !important;
   margin-left : 10px !important;
 }
+
+img.md_status {
+    position:relative;
+    top:10px;
+    left:5px;"
+}

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.servlet.ServletContext;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
@@ -209,6 +212,9 @@ public class GeonetworkDataDirectory {
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_data",
 				Geonet.Config.DATA_DIR);
+        setResourceDir(webappName, handlerConfig, systemDataDir, ".clusterconfig" + KEY_SUFFIX,
+                "config" + File.separator + "cluster",
+                Geonet.Config.CLUSTER_CONFIG);
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_subversion",
 				Geonet.Config.SUBVERSION_PATH);
@@ -231,8 +237,8 @@ public class GeonetworkDataDirectory {
 	 * Checks if data directory is empty or not. If empty, add mandatory
 	 * elements (ie. codelist).
 	 * 
-	 * @param dataSystemDir
 	 * @param path
+     * @param handlerConfig
 	 */
 	private void initDataDirectory(String path, ServiceConfig handlerConfig) {
 		Log.info(Geonet.DATA_DIRECTORY,
@@ -273,6 +279,26 @@ public class GeonetworkDataDirectory {
 								+ e.getMessage());
 			}
 		}
+
+        String configClusterPath = handlerConfig.getValue(Geonet.Config.CLUSTER_CONFIG)
+                + File.separator + "config-cluster.xml";
+        File configClusterFile = new File(configClusterPath);
+        if (!configClusterFile.exists()) {
+            Log.info(Geonet.DATA_DIRECTORY,
+                    "     - Copying cluster config catalogue ...");
+            try {
+                FileInputStream in = new FileInputStream(path + "WEB-INF"
+                        + File.separator + "config-cluster.xml");
+                FileOutputStream out = new FileOutputStream(configClusterFile);
+
+                BinaryFile.copy(in, out, true, true);
+            } catch (IOException e) {
+                Log.info(
+                        Geonet.DATA_DIRECTORY,
+                        "      - Error copying cluster config catalogue: "
+                                + e.getMessage());
+            }
+        }
 
 	}
 

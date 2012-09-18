@@ -30,6 +30,9 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.reindex.ReloadLuceneConfigMessage;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -45,11 +48,9 @@ public class Reload implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		String status = "true";
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig handlerConfig = gc.getHandlerConfig();
-		String luceneConfigXmlFile = handlerConfig
-				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
+		String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 		String path = context.getAppPath();
 
         ServletContext servletContext = null;
@@ -67,6 +68,13 @@ public class Reload implements Service {
 		// CatalogueDispatcher
 		CatalogDispatcher cd = gc.getCatalogDispatcher();
 		cd.reloadLuceneConfiguration(lc);
+
+        if (ClusterConfig.isEnabled()) {
+            ReloadLuceneConfigMessage message = new ReloadLuceneConfigMessage();
+            message.setSenderClientID(ClusterConfig.getClientID());
+            Producer reloadLuceneConfigProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.RELOADINDEXCONF);
+            reloadLuceneConfigProducer.produce(message);
+        }
 
 		Logger logger = context.getLogger();
 		logger.info("  - Lucene configuration is:");

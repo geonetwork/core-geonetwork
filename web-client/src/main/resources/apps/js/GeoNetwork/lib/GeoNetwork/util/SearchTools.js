@@ -90,7 +90,36 @@ GeoNetwork.util.SearchTools = {
                     	isCatalogueSStore = cat.summaryStore === summaryStore;
 
                     if (values.length > 0) {
+
+                        metadataStore.on('load', function(store, records){
+                            Ext.each(records, function(r, idx){
+
+                                // Check if better place for this??
+                                var isAdmin = (cat.identifiedUser) && (cat.identifiedUser.role === 'Administrator');
+                                var sameLockedByAndLoggedUser = (cat.identifiedUser) && (r.get('lockedBy') === cat.identifiedUser.id);
+                                var isLocked = (r.get('locked') == 'y');
+                                var canUnlock = (isLocked && (isAdmin || sameLockedByAndLoggedUser)) ;
+
+                                var isEditable = r.get('edit') === 'true' ? 
+                                // do not allow edit on harvested records by default
+                                (r.get('isharvested') === 'y' ? GeoNetwork.Settings.editor.editHarvested || false : true) 
+                                : 
+                                false;
+
+                                var canEdit = ((isLocked && sameLockedByAndLoggedUser) || (!isLocked && isEditable));
+
+                                r.set('userauthenticated', (cat.identifiedUser?'y':'n'));
+
+                                r.set('canunlock', (canUnlock?'y':'n'));
+                                r.set('canedit', (canEdit?'y':'n'));
+     
+                            }, this);
+
+                        });
+
                         metadataStore.loadData(currentRecords);
+
+
                     }
                     
                     if (isCatalogueSStore) {
@@ -135,6 +164,7 @@ GeoNetwork.util.SearchTools = {
      *
      */
     doQueryFromForm: function(formId, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async){
+    
         var query = GeoNetwork.util.SearchTools.buildQueryFromForm(Ext.getCmp(formId), startRecord, GeoNetwork.util.SearchTools.sortBy, metadataStore.fast);
         GeoNetwork.util.SearchTools.doQuery(query, cat, startRecord, onSuccess, onFailure, updateStore, metadataStore, summaryStore, async);
     },
@@ -167,6 +197,7 @@ GeoNetwork.util.SearchTools = {
     buildQueryFromForm: function(form, startRecord, sortBy, fast){
         var values = GeoNetwork.util.SearchTools.getFormValues(form);
         var filters = [];
+        
         GeoNetwork.util.SearchTools.addFiltersFromPropertyMap(values, filters, startRecord);
         
         
@@ -359,6 +390,27 @@ GeoNetwork.util.SearchTools = {
                 if (cur.isXType('boxselect') || cur.isXType('combo')) {
                     if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
+                    }
+                } else if (cur.isXType('combo')) {
+                    if (cur.getValue && cur.getValue()) {
+                        if (cur.id === "E_any") {
+                            result[cur.getName()] = cur.getValue();
+
+                        } else {
+                            var value = cur.getValue();
+                            // Check if value is a string or an array
+                            if (value.split) {
+                                // Use phase query
+                                if (value.split(" ").length > 1) {
+                                    result[cur.getName()] = '"' + value + '"';
+                                } else {
+                                    result[cur.getName()] = value;
+                                }
+                            } else {
+                                result[cur.getName()] = value;
+                            }
+                        }
+
                     }
                 } else if (cur.isXType('fieldset')) {
                     if (cur.checkbox) {

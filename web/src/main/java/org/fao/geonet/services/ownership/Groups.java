@@ -32,7 +32,6 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -51,15 +50,12 @@ public class Groups implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		int id = Util.getParamAsInt(params, "id");
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		String id = Util.getParam(params, "id");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
 		UserSession   us = context.getUserSession();
 		AccessManager am = gc.getAccessManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Set<String> userGroups = am.getVisibleGroups(dbms, id);
@@ -71,36 +67,27 @@ public class Groups implements Service
 
 		Element response = new Element("response");
 
-		for (String groupId : userGroups)
-		{
-			String query = "SELECT count(*) as cnt "+
-								"FROM OperationAllowed, Metadata "+
-								"WHERE metadataId = id AND groupId=? AND owner=?";
+		for (String groupId : userGroups) {
+			String query = "SELECT count(*) as cnt FROM OperationAllowed, Metadata WHERE metadataId = id AND groupId=? AND owner=?";
 
-			List   list  = dbms.select(query, new Integer(groupId), id).getChildren();
+			List list = dbms.select(query, groupId, id).getChildren();
 			String size  = ((Element)list.get(0)).getChildText("cnt");
 
-			if (Integer.parseInt(size) != 0)
-			{
+			if (Integer.parseInt(size) != 0) {
 				List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
 
-				if (records.size() != 0)
-				{
+				if (records.size() != 0) {
 					Element record  = (Element) records.get(0);
 					record.detach();
 					record.setName("group");
-
 					response.addContent(record);
 				}
 			}
 		}
 
-		for (String groupId : myGroups)
-		{
+		for (String groupId : myGroups) {
 			List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
-
-			if (records.size() != 0)
-			{
+			if (records.size() != 0) {
 				Element record  = (Element) records.get(0);
 				record.detach();
 				record.setName("targetGroup");
@@ -109,10 +96,8 @@ public class Groups implements Service
 				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
 									" WHERE (groupId=? AND profile != 'RegisteredUser') OR profile = 'Administrator'";
 
-				Element editors = dbms.select(query, new Integer(groupId));
-
-				for (Object o : editors.getChildren())
-				{
+				Element editors = dbms.select(query, groupId);
+				for (Object o : editors.getChildren()) {
 					Element editor = (Element) o;
 					editor = (Element) editor.clone();
 					editor.removeChild("password");
@@ -126,6 +111,3 @@ public class Groups implements Service
 		return response;
 	}
 }
-
-//=============================================================================
-

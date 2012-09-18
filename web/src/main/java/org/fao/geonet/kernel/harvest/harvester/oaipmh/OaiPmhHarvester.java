@@ -101,7 +101,7 @@ public class OaiPmhHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add(dbms, "harvesting", "node", getType(), false);
 
 		storeNode(dbms, params, "id:"+id);
 		Lib.sources.update(dbms, params.uuid, params.name, true);
@@ -147,22 +147,22 @@ public class OaiPmhHarvester extends AbstractHarvester
 	{
 		OaiPmhParams params = (OaiPmhParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
+		settingMan.add(dbms, "id:"+siteId, "url",  params.url, false);
+		settingMan.add(dbms, "id:"+siteId, "icon", params.icon, false);
 
-		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
+		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate, false);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(dbms, path, "search", "", false);
 
-			settingMan.add(dbms, "id:"+searchID, "from",       s.from);
-			settingMan.add(dbms, "id:"+searchID, "until",      s.until);
-			settingMan.add(dbms, "id:"+searchID, "set",        s.set);
-			settingMan.add(dbms, "id:"+searchID, "prefix",     s.prefix);
-			settingMan.add(dbms, "id:"+searchID, "stylesheet", s.stylesheet);
+			settingMan.add(dbms, "id:"+searchID, "from",       s.from, false);
+			settingMan.add(dbms, "id:"+searchID, "until",      s.until, false);
+			settingMan.add(dbms, "id:"+searchID, "set",        s.set, false);
+			settingMan.add(dbms, "id:"+searchID, "prefix",     s.prefix, false);
+			settingMan.add(dbms, "id:"+searchID, "stylesheet", s.stylesheet, false);
 		}
 	}
 

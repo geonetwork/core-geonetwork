@@ -38,7 +38,7 @@ public class SearchResult
 	//---------------------------------------------------------------------------
 	
 	public String        prefix;
-	public List<Integer> ids;
+	public List<String> ids;
 	
 	private String token;
 	
@@ -92,21 +92,21 @@ public class SearchResult
 	/**
 	 * @return the ids
 	 */
-	public List<Integer> getIds() {
+	public List<String> getIds() {
 		return ids;
 	}
 
 	/**
 	 * @param ids the ids to set
 	 */
-	public void setIds(List<Integer> ids) {
+	public void setIds(List<String> ids) {
 		this.ids = ids;
 	}
 
 	/**
 	 * @param ids the ids to add
 	 */
-	public void addIds(List<Integer> ids) {
+	public void addIds(List<String> ids) {
 		if (this.ids == null) this.ids = ids;
 		else this.ids.addAll(ids);
 	}

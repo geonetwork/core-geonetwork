@@ -101,6 +101,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     newMetadataWindow: undefined,
     
+    diffAction: undefined,
+    
     mdImportAction: undefined,
     
     adminAction: undefined,
@@ -247,8 +249,19 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
+
+        this.diffAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('diffMetadata'),
+            id: 'diffAction',
+            iconCls : 'md-mn-view',
+            handler: function(){
+                this.catalogue.metadataDiff();
+            },
+            scope: this
+        });
+
         this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
-                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
+                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction, this.diffAction);
         
         this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
@@ -256,6 +269,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.actionMenu.addItem(this.updatePrivilegesAction);
         this.actionMenu.addItem(this.updateStatusAction);
         this.actionMenu.addItem(this.updateVersionAction);
+        this.actionMenu.addItem(this.diffAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -413,6 +427,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         // text : 'Display selection only'
         // }
         );
+        
         this.createMassiveActionMenu(!this.catalogue.isIdentified());
         this.createAdminMenu(!this.catalogue.isIdentified());
         
@@ -497,7 +512,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         }
         
         Ext.each(this.selectionActions, function(e){
-            if (nb === 0) {
+            if (e.id == 'diffAction') {
+                if (nb === 2) {
+                    e.enable();
+                } else {
+                    e.disable();
+                }
+            } else if (nb === 0) {
                 e.disable();
             } else {
                 e.enable();

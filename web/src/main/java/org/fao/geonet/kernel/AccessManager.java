@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -87,8 +88,8 @@ public class AccessManager {
 
 			//--- build Hashset of all operations
 			hsAllOps.add(id);
-			hmIdToName.put(Integer.parseInt(id), name);
-			hmNameToId.put(name, Integer.parseInt(id));
+			hmIdToName.put(id, name);
+			hmNameToId.put(name, id);
 		}
 	}
 
@@ -125,13 +126,24 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
-		UserSession us = context.getUserSession();
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
 			return hsAllOps;
 		}
-
 		// otherwise build result
+		Element ops;
+		if (operations == null) {
+			ops = getAllOperations(context, mdId, ip);
+		}
+        else {
+			ops = operations;
+		}
+        Set<String> out = getAllOperationsSet(context, mdId, ip, ops);
+		return out;
+	}
+
+    public Set<String> getAllOperationsSet(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
+        UserSession us = context.getUserSession();
 		Set<String> out = new HashSet<String>();
 
 		Element ops;
@@ -173,10 +185,11 @@ public class AccessManager {
 
 		for (Iterator i = groups.iterator(); i.hasNext(); ) {
 			String groupId = (String) i.next();
-			groupList.append(groupId);
+			groupList.append('\'' + groupId + '\'');
 
-			if (i.hasNext())
+            if(i.hasNext()) {
 				groupList.append(", ");
+		}
 		}
 		// get allowed operations
 		StringBuffer query = new StringBuffer();
@@ -187,17 +200,17 @@ public class AccessManager {
 		query.append(groupList.toString());
 		query.append(") AND    metadataId = ?");
 		
-		Element operations = dbms.select(query.toString(), new Integer(mdId));
+		Element operations = dbms.select(query.toString(), mdId);
 
 		// find out what they could do if they registered and offer that as as a separate element
 		if (!usrSess.isAuthenticated()) {
 			query = new StringBuffer();
 			query.append("SELECT operationId, groupId ");
 			query.append("FROM   OperationAllowed ");
-			query.append("WHERE  groupId = -1 ");
+			query.append("WHERE  groupId = '-1' ");
 			query.append("AND    metadataId = ?");
 			
-			Element therecords = dbms.select(query.toString(), new Integer(mdId));
+			Element therecords = dbms.select(query.toString(), mdId);
 			if (therecords != null) {
 				Element guestOperations = new Element("guestoperations");
 				guestOperations.addContent(therecords.cloneContent());
@@ -222,8 +235,9 @@ public class AccessManager {
 		// add All (1) network group
 		hs.add("1");
 
-		if (ip != null && isIntranet(ip))
+        if(ip != null && isIntranet(ip)) {
 			hs.add("0");
+        }
 
 		// get other groups
 		if (usrSess.isAuthenticated()) {
@@ -242,7 +256,7 @@ public class AccessManager {
                 }
 			}
 			else {
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",usrSess.getUserIdAsInt());
+				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", usrSess.getUserId());
 
 				List list = elUserGrp.getChildren();
 
@@ -265,28 +279,16 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
-		int id = Integer.parseInt(userId);
-		return getVisibleGroups(dbms,id);
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-	public Set<String> getVisibleGroups(Dbms dbms, int userId) throws Exception {
 		Set<String> hs = new HashSet<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
-		List   list = dbms.select(query, new Integer(userId)).getChildren();
+		List   list = dbms.select(query, userId).getChildren();
 
 		//--- return an empty list if the user does not exist
 
-		if (list.size() == 0)
+        if(list.size() == 0) {
 			return hs;
+        }
 
 		Element user    = (Element) list.get(0);
 		String  profile = user.getChildText("profile");
@@ -296,7 +298,7 @@ public class AccessManager {
 			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
 		}
         else {
-			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", new Integer(userId));
+			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", userId);
 		}
 
 		for(Object o : elUserGrp.getChildren()) {
@@ -313,8 +315,7 @@ public class AccessManager {
      *  - The user is the metadata owner
      *  - The user is an Administrator
      *	 - The user has edit rights over the metadata
-     *  - The user is a Reviewer and/or UserAdmin and the metadata groupOwner
-     *    is one of his groups.
+     *  - The user is a Reviewer and/or UserAdmin and the metadata has edit rights for one of his groups.
      *
      * @param context
      * @param id
@@ -348,22 +349,26 @@ public class AccessManager {
 		//--- harvested metadata cannot be edited
 
 //		if (info == null || info.isHarvested)
-		if (info == null)
+        if(info == null) {
 			return false;
+        }
 
 		//--- check if the user is an administrator
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+        if(us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 			return true;
+        }
 
 		//--- check if the user is the metadata owner
 		//
-		if (us.getUserId().equals(info.owner))
+        if(us.getUserId().equals(info.owner)) {
 			return true;
+        }
 
 		//--- check if the user is a reviewer or useradmin
-		if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN))
+        if(! us.getProfile().equals(Geonet.Profile.REVIEWER) && ! us.getProfile().equals(Geonet.Profile.USER_ADMIN)) {
 			return false;
-
+        }
+        /*
 		//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
 		if (info.groupOwner == null)
 			return false;
@@ -372,6 +377,14 @@ public class AccessManager {
 			if (userGroup.equals(info.groupOwner))
 				return true;
 		}
+         */
+
+        // check if the user's groups are in operationallowed/editing for this md
+        Set<String> hsOper = getAllOperationsSet(context, id, context.getIpAddress(), null);
+        if (hsOper.contains(OPER_EDITING)) {
+            return true;
+        }
+
 		return false;
 	}
 
@@ -382,10 +395,10 @@ public class AccessManager {
      * @param delim
      * @return
      */
-	private String join(Set<Integer> set, String delim) {
+	private String join(Set<String> set, String delim) {
     	StringBuilder sb = new StringBuilder();
     	String loopDelim = "";
-    	for(Integer s : set) {
+    	for(String s : set) {
         sb.append(loopDelim);
         sb.append(s+"");            
         loopDelim = delim;
@@ -401,11 +414,22 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public Element getOwners(Dbms dbms, Set<Integer> metadataIds) throws Exception {
+    public Element getOwners(Dbms dbms, Set<String> metadataIds) throws Exception {
+
+        StringBuffer metadataIdsList = new StringBuffer();
+        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
+            String metadataId = (String) i.next();
+            metadataIdsList.append('\'' + metadataId + '\'');
+
+            if(i.hasNext()) {
+                metadataIdsList.append(", ");
+            }
+        }
+
 				String query=
 				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
 				"JOIN Users u on u.id = m.owner "+
-				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
+            "WHERE m.id IN (" + metadataIdsList + ") "+
 				"ORDER BY u.id";
 
         return dbms.select(query);
@@ -419,12 +443,29 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public Element getContentReviewers(Dbms dbms, Set<Integer> metadataIds) throws Exception {
+    public Element getContentReviewers(Dbms dbms, Set<String> metadataIds) throws Exception {
+
+        StringBuffer metadataIdsList = new StringBuffer();
+        for (Iterator i = metadataIds.iterator(); i.hasNext(); ) {
+            String metadataId = (String) i.next();
+            metadataIdsList.append('\'' + metadataId + '\'');
+
+            if(i.hasNext()) {
+                metadataIdsList.append(", ");
+            }
+        }
+
 				String query=
-				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
-				"JOIN UserGroups ug on m.groupOwner = ug.groupId "+
+          /*  "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
 				"JOIN Users u on u.id = ug.userId "+
-				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
+            "WHERE m.id IN (" + metadataIdsList + ") "+
+            "AND m.id IN (SELECT metadataid FROM OperationAllowed WHERE operationid = 2 AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=u.id)) "+
+            "AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
+            "ORDER BY u.id";
+            */
+        "SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m, Users u "+
+                "WHERE m.id IN (" + metadataIdsList + ") "+
+                "AND m.id IN (SELECT metadataid FROM OperationAllowed WHERE operationid = '2' AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=u.id)) "+
 				"AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
 				"ORDER BY u.id";
 
@@ -441,8 +482,8 @@ public class AccessManager {
      */
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
         // group 'all' has the magic id 1.
-        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
-        Element result = dbms.select(query, new Integer(metadataId));
+        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = '1' AND metadataId = ?";
+        Element result = dbms.select(query, metadataId);
         if(result == null) {
             return false;
         }
@@ -468,12 +509,15 @@ public class AccessManager {
      */
 	public boolean hasEditPermission(ServiceContext context, String id) throws Exception {
 		UserSession us = context.getUserSession();
-		if (!us.isAuthenticated())
+        if(! us.isAuthenticated()) {
 			return false;
+        }
 		//--- check if the user is an editor and has edit rights over the metadata record
 		if (us.getProfile().equals(Geonet.Profile.EDITOR)) {
 			Set<String> hsOper = getOperations(context, id, context.getIpAddress());
-			if (hsOper.contains(OPER_EDITING)) return true;
+            if(hsOper.contains(OPER_EDITING)) {
+                return true;
+            }
 		}
 		return false;
 	}
@@ -484,8 +528,8 @@ public class AccessManager {
      * @param descr
      * @return
      */
-	public int getPrivilegeId(String descr) {
-		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
+	public String getPrivilegeId(String descr) {
+		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : "-1";
 	}
 
     /**
@@ -494,9 +538,103 @@ public class AccessManager {
      * @param id
      * @return
      */
-	public String getPrivilegeName(int id) {
+	public String getPrivilegeName(String id) {
 		return hmIdToName.get(id);
 	}
+
+    //
+    // access for lock operations
+    //
+
+    /**
+     * Whether the current user is allowed to reassign a metadata's lock to a particular other user.
+     *
+     * @param userProfile profile of current user
+     * @param userId id of current user
+     * @param targetUserId id of user to assign lock to
+     * @param metadataId id of metadata
+     * @param dbms dbms
+     * @param symbolicLocking whether symbolic locking is enabled
+     * @return true or false
+     * @throws Exception hmm
+     */
+    public boolean grabLockAllowed(String userProfile, String userId, String targetUserId, String metadataId, Dbms dbms, boolean symbolicLocking) throws Exception {
+        // if the user is an admin, just allow
+        if(userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            return true;
+        }
+        // if the user is a reviewer or useradmin, allow grabbing lock from metadata that has edit permission for the user's groups, and
+        // reassign it to another user in the user's groups
+        else if(userProfile.equals(Geonet.Profile.REVIEWER) || userProfile.equals(Geonet.Profile.USER_ADMIN)) {
+            return grabLockAllowed(userId, targetUserId, metadataId, dbms);
+        }
+        // if the user is an editor
+        else if(userProfile.equals(Geonet.Profile.EDITOR) && symbolicLocking) {
+            return grabLockAllowed(userId, targetUserId, metadataId, dbms);
+        }
+        return false;
+    }
+
+    /**
+     * Whether the current user is allow to grab a metadata's lock and assign it to another user. Returns true if the
+     * metadata has Edit privilege in at least one of the current user's groups, and the targeted user is member of at
+     * least one of the current user's groups.
+     *
+     * @param userId
+     * @param targetUserId
+     * @param metadataId
+     * @param dbms
+     * @return
+     * @throws Exception
+     */
+    private boolean grabLockAllowed(String userId, String targetUserId, String metadataId, Dbms dbms) throws Exception {
+        // check md has edit permission for at least one of the user's groups
+        String query = "SELECT count(*) as numr FROM OperationAllowed " +
+                "WHERE operationid = '2' AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=?) " +
+                "AND metadataid=?" ;
+        List result = dbms.select(query, userId, metadataId).getChildren();
+        int count = Integer.parseInt(((Element) result.get(0)).getChildText("numr"));
+        if(count == 0) {
+            throw new OperationNotAllowedEx("User " + userId + " attempted to grab lock of metadata " + metadataId + " that has no edit privilege for any of his groups");
+        }
+        // check targeted user is in at least one of this user's groups
+        query = "SELECT count(*) as numr FROM UserGroups " +
+                "WHERE userid=? AND groupid IN (SELECT groupid FROM UserGroups WHERE userid=?)";
+        result = dbms.select(query, targetUserId, userId).getChildren();
+        count = Integer.parseInt(((Element) result.get(0)).getChildText("numr"));
+        if(count == 0) {
+            throw new OperationNotAllowedEx("User " + userId + " attempted to grab lock of metadata and assign it to user " + targetUserId + "  that is not in any of his groups");
+        }
+
+        // if you got here it's OK
+        return true;
+    }
+
+    /**
+     * Whether the current user is allowed to unlock this metadata. It's only allowed if this user owns the lock.
+     *
+     * @param userId
+     * @param metadataId
+     * @param dbms
+     * @return
+     * @throws Exception
+     */
+    public boolean unlockAllowed(String userId, String metadataId, Dbms dbms) throws Exception {
+        String query = "SELECT lockedBy from Metadata WHERE id=?";
+        Element resultList = dbms.select(query, metadataId);
+        if(resultList.getChildren().size() == 0) {
+            throw new OperationNotAllowedEx("User " + userId + " attempted to unlock metadata " + metadataId + " which can't be found");
+        }
+        Element result = (Element)resultList.getChildren().get(0);
+        String lockedBy = result.getChildText("lockedby");
+        if(lockedBy.equals(userId)) {
+            return true;
+        }
+        else {
+            throw new OperationNotAllowedEx("User " + userId + " attempted to unlock metadata " + metadataId + " but doesn't own the lock");
+        }
+    }
+
 
 	//--------------------------------------------------------------------------
 	//---
@@ -514,7 +652,9 @@ public class AccessManager {
 		//--- consider IPv4 & IPv6 loopback
 		//--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
 
-		if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) return true;
+        if(ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) {
+            return true;
+        }
 
         // IPv6 link-local
         String ipv6LinkLocalPrefix = "fe80:";
@@ -565,6 +705,6 @@ public class AccessManager {
 
 	private SettingManager  settMan;
 	private Set<String> hsAllOps = new HashSet<String>();
-	private Map<Integer, String> hmIdToName = new HashMap<Integer, String>();
-	private Map<String, Integer> hmNameToId = new HashMap<String, Integer>();
+	private Map<String, String> hmIdToName = new HashMap<String, String>();
+	private Map<String, String> hmNameToId = new HashMap<String, String>();
 }

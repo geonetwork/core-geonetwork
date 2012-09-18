@@ -79,17 +79,9 @@ public class InfoUpdate implements Service
 			throw new UserNotFoundEx(null);
 
 		// change profile
-		String query = "UPDATE Users SET surname=?, name=?, "+
-							"address=?, city=?, state=?, zip=?, country=?, email=?," +
-							"organisation=?, kind=? WHERE id=?";
+		String query = "UPDATE Users SET surname=?, name=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 
-		dbms.execute (query, surname, name,
-									address, city, state, zip, country, email,
-									organ, kind, new Integer(userId));
-
+		dbms.execute (query, surname, name, address, city, state, zip, country, email, organ, kind, userId);
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

@@ -72,7 +72,7 @@ public class UserGroups implements Service
 
 			// -- get the profile of the user id supplied
 			String query= "SELECT * FROM Users WHERE id=?";
-			List<Element>  uList = dbms.select(query, new Integer(id)).getChildren();
+			List<Element>  uList = dbms.select(query, id).getChildren();
 
 			if (uList.size() == 0)
 				throw new IllegalArgumentException("user "+id+" doesn't exist");
@@ -87,7 +87,7 @@ public class UserGroups implements Service
 			if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
 				theGroups = dbms.select("SELECT id, name, description FROM Groups");
 			} else {
-				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=?",new Integer(id));
+				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=?", id);
 			}
 
 			List<Element> list = theGroups.getChildren();
@@ -101,7 +101,8 @@ public class UserGroups implements Service
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info
 
-				List<Element> adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId =?  group by groupId having count(*) > 1", new Integer(myUserId),new Integer(id)).getChildren();
+				List<Element> adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId =?  group by groupId having count(*) > 1",
+                        myUserId, id).getChildren();
 				if (adminlist.size() == 0) {
 					throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
 				}

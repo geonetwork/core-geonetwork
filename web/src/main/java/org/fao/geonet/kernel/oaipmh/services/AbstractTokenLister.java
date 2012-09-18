@@ -136,7 +136,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 					params.addContent(new Element("_schema").setText(schema));
 					result.addIds(Lib.search(context, (Element)params.clone()));
 				}
-				if (schemas.size() == 0) result.setIds(new ArrayList<Integer>());
+				if (schemas.size() == 0) result.setIds(new ArrayList<String>());
 			}
 
 			if (result.getIds().size() == 0)

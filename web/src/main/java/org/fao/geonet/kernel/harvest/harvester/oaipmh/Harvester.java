@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.IDFactory;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.GetRecordRequest;
@@ -253,22 +254,22 @@ class Harvester
         //
         // insert metadata
         //
-        int userid = 1;
+        String userid = "1";
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, userid, group, params.uuid,
-                         isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
+        String id = IDFactory.newID();
+        dataMan.insertMetadata(context, dbms, schema, md, id, ri.id, userid, group, params.uuid, isTemplate, docType,
+                title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
-		int iId = Integer.parseInt(id);
-
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(dbms, id, "n", null);
+		dataMan.setHarvestedExt(dbms, id, params.uuid);
 
 		addPrivileges(id);
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+        boolean workspace = false;
+        dataMan.indexMetadataGroup(dbms, id, workspace, true);
 		result.added++;
 	}
 
@@ -385,9 +386,7 @@ class Harvester
 			String name = localCateg.getName(catId);
 
 			if (name == null)
-			{
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
@@ -407,19 +406,16 @@ class Harvester
 			String name = localGroups.getName(priv.getGroupId());
 
 			if (name == null) 
-			{
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-			}
 			else
 			{
                 if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
 
-				for (int opId: priv.getOperations())
-				{
+				for (String opId: priv.getOperations()) {
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
+					if (opId.equals("0") || opId.equals("5") || opId.equals("6"))
 					{
                         if(log.isDebugEnabled()) log.debug("       --> "+ name);
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
@@ -467,14 +463,15 @@ class Harvester
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", id);
 			addPrivileges(id);
 
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
+			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", id);
 			addCategories(id);
 
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, id);
+            boolean workspace = false;
+            dataMan.indexMetadataGroup(dbms, id, workspace, true);
 			result.updated++;
 		}
 	}

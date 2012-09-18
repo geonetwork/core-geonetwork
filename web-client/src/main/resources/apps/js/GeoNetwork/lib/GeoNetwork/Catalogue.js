@@ -277,6 +277,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             //mdEdit : serviceUrl + 'metadata.edit',
             mdEdit: serviceUrl + 'edit',
             mdCreate: serviceUrl + 'metadata.create.new',
+            mdDiff: serviceUrl + 'diff',
             mdUpdate: serviceUrl + 'metadata.update.new',
             mdProcessingXml: serviceUrl + 'xml.metadata.processing',
             mdProcessing: serviceUrl + 'metadata.processing.new',
@@ -293,6 +294,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdUnsetThumbnail: serviceUrl + 'metadata.thumbnail.unset.new',
             mdImport: serviceUrl + 'metadata.xmlinsert.form',
             mdStatus: serviceUrl + 'metadata.status.form',
+            mdCancelEditSession: serviceUrl + 'metadata.unlock',
+            mdChangeEditSessionOwner: serviceUrl + 'metadata.grab.lock.form',
             mdVersioning: serviceUrl + 'metadata.version',
             subTemplateType: serviceUrl + 'subtemplate.types',
             subTemplate: serviceUrl + 'subtemplate',
@@ -378,7 +381,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         /** private: event[afterBadLogout] 
          *  Fires after bad user logged out.
          */
-        this.addEvents('selectionchange', 'afterLogin', 'afterLogout', 'afterBadLogin', 'afterBadLogout', 'afterDelete');
+        /** private: event[afterUnlock]
+         *  Fires after unlock a metadata.
+         */
+        this.addEvents('selectionchange', 'afterLogin', 'afterLogout', 'afterBadLogin', 'afterBadLogout', 'afterDelete', 'afterUnlock', 'afterStatusChange', 'afterGrabEditSession');
         
         GeoNetwork.Catalogue.superclass.constructor.call(this, config);
     },
@@ -463,6 +469,45 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     onAfterRating: function(){
         this.fireEvent('afterRating', this);
+    },
+    /** api: method[onAfterUnlock]
+     *  :param e: ``Object``
+     *
+     *  The "onAfterUnlock" listener.
+     *
+     *  Listeners will be called with the following arguments:
+     *
+     *    * ``this`` : GeoNetwork.Catalogue
+     *
+     */
+    onAfterUnlock: function(){
+        this.fireEvent('afterUnlock', this);
+    },
+    /** api: method[onAfterGrabEditSession]
+     *  :param e: ``Object``
+     *
+     *  The "onAfterGrabEditSession" listener.
+     *
+     *  Listeners will be called with the following arguments:
+     *
+     *    * ``this`` : GeoNetwork.Catalogue
+     *
+     */
+    onAfterGrabEditSession: function(){
+        this.fireEvent('afterGrabEditSession', this);
+    },
+    /** api: method[onAfterStatusChange]
+     *  :param e: ``Object``
+     *
+     *  The "onAfterStatusChange" listener.
+     *
+     *  Listeners will be called with the following arguments:
+     *
+     *    * ``this`` : GeoNetwork.Catalogue
+     *
+     */
+    onAfterStatusChange: function(){
+        this.fireEvent('afterStatusChange', this);
     },
     /** private: method[setSelectedRecords]
      *  :param nb: ``Number``
@@ -858,6 +903,104 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         }
     },
+    metadataWorkspaceCopyShow: function(uuid, maximized, width, height){
+        // UUID may contains special character like #
+        var url = this.services.mdView + '?uuid=' + escape(uuid) + '&fromWorkspace=true';
+        var bd = Ext.getBody();
+
+        if (this.resultsView) {
+            var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
+
+            // No current search available with this record information
+            if (!record) {
+                // Retrieve information in synchrone mode
+                var store = GeoNetwork.data.MetadataResultsFastStore();
+                this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('uuid', uuid));
+            }
+
+            var win = new GeoNetwork.view.ViewWindow({
+                serviceUrl: url,
+                lang: this.lang,
+                currTab: GeoNetwork.defaultViewMode || 'simple',
+                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                catalogue: this,
+                maximized: maximized || false,
+                metadataUuid: uuid,
+                record: record,
+                resultsView: this.resultsView,
+                workspaceCopy: true
+            });
+            win.show(this.resultsView);
+            win.alignTo(bd, 'tr-tr');
+        } else {
+            // Not really used - use old service
+            window.open( this.services.mdView + '?uuid=' + escape(uuid) + '&fromWorkspace=true',
+                this.windowName, this.windowOption);
+        }
+    },
+    metadataDiff: function(maximized, width, height){
+        var url = this.services.mdDiff ;
+        var bd = Ext.getBody();
+
+        if (this.resultsView) {
+            var win = new GeoNetwork.view.DiffWindow({
+                serviceUrl: url,
+                title: OpenLayers.i18n('diffMetadata'),
+                lang: this.lang,
+                currTab: GeoNetwork.defaultViewMode || 'simple',
+                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                catalogue: this,
+                resultsView: this.resultsView
+            });
+            win.show(this.resultsView);
+            win.alignTo(bd, 'tr-tr');
+        } else {
+            // Not really used - use old service
+            window.open( this.services.mdDiff,
+                this.windowName, this.windowOption);
+        }
+    }
+    ,metadataWorkspaceCopyDiff: function(id, edit, maximized, width, height){
+        // UUID may contains special character like #
+        var url;
+        if (!edit) {
+            url = this.services.mdDiff + '?first=' + escape(id);
+        } else {
+            url = this.services.mdDiff + '.edit?editmode=true&first=' + escape(id);
+        }
+        var bd = Ext.getBody();
+
+        if (this.resultsView) {
+            var record = this.metadataStore.getAt(this.metadataStore.find('id', id));
+
+            // No current search available with this record information
+            if (!record) {
+                // Retrieve information in synchrone mode
+                var store = GeoNetwork.data.MetadataResultsFastStore();
+                this.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
+                record = store.getAt(store.find('id', id));
+            }
+
+            var win = new GeoNetwork.view.DiffWindow({
+                edit:edit,
+                serviceUrl: url,
+                title: OpenLayers.i18n('diffWorkspaceCopy'),
+                lang: this.lang,
+                currTab: GeoNetwork.defaultViewMode || 'simple',
+                printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                catalogue: this,
+                record: record,
+                resultsView: this.resultsView
+            });
+            win.show(this.resultsView);
+            win.alignTo(bd, 'tr-tr');
+        } else {
+            // Not really used - use old service
+            window.open( this.services.mdDiff + '?first=' + escape(id),
+                this.windowName, this.windowOption);
+        }
+    },
      metadataShowById: function(id, maximized, width, height){
         var url = this.services.mdView + '?id=' + id, record;
         
@@ -914,8 +1057,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Display a metadata record in a new window in XML format
      *
      */
-    metadataPrint: function(uuid){
-        var url = this.services.mdPrint + '?uuid=' + uuid;
+    metadataPrint: function(uuid, fromWorkspace){
+        var url = this.services.mdPrint + '?uuid=' + uuid + '&fromWorkspace=' + fromWorkspace;
         location.replace(url);
     },
     /** api: method[metadataMEF]
@@ -1107,6 +1250,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 user = response.responseXML.getElementsByTagName('record')[0];
                 
                 app.identifiedUser = {
+                    id: user ? user.getElementsByTagName('id')[0].firstChild.nodeValue : '-',
                     username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '-',
                     name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '-',
                     surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '-',
@@ -1228,7 +1372,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, url, cb){
+    modalAction: function(title, url, cb, onClose){
         if (url) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
@@ -1260,6 +1404,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             win.show(this);
             win.alignTo(Ext.getBody(), 't-t');
             
+
+            if (onClose) {
+                win.on('close',function(){
+                    onClose();
+                });
+            }
+
         }
     },
     /** api: method[metadataAdmin]
@@ -1274,7 +1425,28 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     metadataStatus: function(id){
         var url = this.services.mdStatus + "?id=" + id;
-        this.modalAction(OpenLayers.i18n('setStatus'), url);
+        this.modalAction(OpenLayers.i18n('setStatus'), url, undefined, catalogue.onAfterStatusChange.bind(catalogue));
+    },
+    /** api: method[cancelEditSession]
+     *  Cancels an edit session for a metadata record, unlocking it
+     */
+    metadataCancelEditSession: function(id){
+        var params = {
+            id: id
+        };
+
+        catalogue.doAction(catalogue.services.mdCancelEditSession, params,
+            OpenLayers.i18n('unlockRecordSuccess'),
+            OpenLayers.i18n('unlockRecordFailure'),
+            catalogue.onAfterUnlock.bind(catalogue));
+    },
+    /** api: method[cancelEditSession]
+     *  Cancels an edit session for a metadata record, unlocking it
+     */
+    metadataChangeEditSessionOwner: function(id, lockOwner){
+        var url = this.services.mdChangeEditSessionOwner + '?id=' + id + '&currentLockOwner=' + lockOwner;
+        this.modalAction(OpenLayers.i18n('changeEditSessionOwner'), url, undefined, catalogue.onAfterGrabEditSession.bind(catalogue));
+
     },
     /** api: method[metadataVersioning]
      *  Active versioning for this metadata

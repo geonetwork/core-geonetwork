@@ -72,9 +72,9 @@ public class BatchDelete implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<String>();
+		Set<String> notFound = new HashSet<String>();
+		Set<String> notOwner = new HashSet<String>();
 
         if(context.isDebug())
             context.debug("Get selected metadata");
@@ -95,9 +95,9 @@ public class BatchDelete implements Service
 				MdInfo info = dataMan.getMetadataInfo(dbms, id);
 	
 				if (info == null) {
-					notFound.add(new Integer(id));
+					notFound.add(id);
 				} else if (!accessMan.isOwner(context, id)) {
-					notOwner.add(new Integer(id));
+					notOwner.add(id);
 				} else {
 	
 					//--- backup metadata in 'removed' folder
@@ -113,7 +113,7 @@ public class BatchDelete implements Service
 					dataMan.deleteMetadata(context, dbms, id);
                     if(context.isDebug())
                         context.debug("  Metadata with id " + id + " deleted.");
-					metadata.add(new Integer(id));
+					metadata.add(id);
 				}
 			} else
             if(context.isDebug())

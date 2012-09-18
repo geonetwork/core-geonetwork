@@ -37,6 +37,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.util.IDFactory;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Element;
 
@@ -45,9 +46,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -405,8 +404,9 @@ public class ImportFromDir implements Service
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+        dm.insertMetadata(context, dbms, schema, xml, IDFactory.newID(), uuid,
+                context.getUserSession().getUserId(), group, gc.getSiteId(), isTemplate, docType, title, category,
+                createDate, changeDate, ufo, indexImmediate);
 
 	}
 

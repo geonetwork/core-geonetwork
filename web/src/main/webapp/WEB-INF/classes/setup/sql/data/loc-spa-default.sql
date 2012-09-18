@@ -1,29 +1,30 @@
 INSERT INTO Languages VALUES ('spa','español', 'y', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (5, 'spa', 'title', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (6, 'spa', 'abstract', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (7, 'spa', 'fees', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (8, 'spa', 'accessConstraints', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('5', 'spa', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('6', 'spa', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('7', 'spa', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ('8', 'spa', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (2,'spa','Conjuntos de datos');
-INSERT INTO CategoriesDes VALUES (3,'spa','Recursos interactivos');
-INSERT INTO CategoriesDes VALUES (5,'spa','Casos de Uso, buenas prácticas');
-INSERT INTO CategoriesDes VALUES (4,'spa','Aplicaciones');
-INSERT INTO CategoriesDes VALUES (6,'spa','Resúmenes de conferencias');
-INSERT INTO CategoriesDes VALUES (7,'spa','Fotografías');
-INSERT INTO CategoriesDes VALUES (9,'spa','Directorios');
-INSERT INTO CategoriesDes VALUES (8,'spa','Audio/Vídeo');
-INSERT INTO CategoriesDes VALUES (10,'spa','Otros recursos de información');
-INSERT INTO CategoriesDes VALUES (1,'spa','Mapas & gráficos');
-INSERT INTO CategoriesDes VALUES (11,'spa','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'spa','Registers');
-INSERT INTO CategoriesDes VALUES (13,'spa','Muestras físicas');
+INSERT INTO CategoriesDes VALUES ('2','spa','Conjuntos de datos');
+INSERT INTO CategoriesDes VALUES ('3','spa','Recursos interactivos');
+INSERT INTO CategoriesDes VALUES ('5','spa','Casos de Uso, buenas prácticas');
+INSERT INTO CategoriesDes VALUES ('4','spa','Aplicaciones');
+INSERT INTO CategoriesDes VALUES ('6','spa','Resúmenes de conferencias');
+INSERT INTO CategoriesDes VALUES ('7','spa','Fotografías');
+INSERT INTO CategoriesDes VALUES ('9','spa','Directorios');
+INSERT INTO CategoriesDes VALUES ('8','spa','Audio/Vídeo');
+INSERT INTO CategoriesDes VALUES ('10','spa','Otros recursos de información');
+INSERT INTO CategoriesDes VALUES ('1','spa','Mapas & gráficos');
+INSERT INTO CategoriesDes VALUES ('11','spa','Z3950 Servers');
+INSERT INTO CategoriesDes VALUES ('12','spa','Registers');
+INSERT INTO CategoriesDes VALUES ('13','spa','Muestras físicas');
 
-INSERT INTO GroupsDes VALUES (-1,'spa','Guest');
-INSERT INTO GroupsDes VALUES (0,'spa','Intranet');
-INSERT INTO GroupsDes VALUES (1,'spa','Todos');
-INSERT INTO GroupsDes VALUES (2,'spa','Grupo de ejemplo');
+INSERT INTO GroupsDes VALUES ('-1','spa','Guest');
+INSERT INTO GroupsDes VALUES ('0','spa','Intranet');
+INSERT INTO GroupsDes VALUES ('1','spa','Todos');
+INSERT INTO GroupsDes VALUES ('2','spa','Grupo de ejemplo');
+
 
 INSERT INTO IsoLanguagesDes VALUES (1,'spa','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'spa','Abkhazian');
@@ -510,19 +511,20 @@ INSERT INTO IsoLanguagesDes VALUES (482,'spa','No linguistic content');
 INSERT INTO IsoLanguagesDes VALUES (483,'spa','N''Ko');
 INSERT INTO IsoLanguagesDes VALUES (484,'spa','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes VALUES (0,'spa','Publicar');
-INSERT INTO OperationsDes VALUES (1,'spa','Descargar');
-INSERT INTO OperationsDes VALUES (2,'spa','Editar');
-INSERT INTO OperationsDes VALUES (3,'spa','Notificar');
-INSERT INTO OperationsDes VALUES (5,'spa','Mapa interactivo');
-INSERT INTO OperationsDes VALUES (6,'spa','Featured');
+INSERT INTO OperationsDes VALUES ('0','spa','Publicar');
+INSERT INTO OperationsDes VALUES ('1','spa','Descargar');
+INSERT INTO OperationsDes VALUES ('2','spa','Editar');
+INSERT INTO OperationsDes VALUES ('3','spa','Notificar');
+INSERT INTO OperationsDes VALUES ('5','spa','Mapa interactivo');
+INSERT INTO OperationsDes VALUES ('6','spa','Featured');
 
-INSERT INTO StatusValuesDes VALUES (0,'spa','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'spa','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'spa','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'spa','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'spa','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'spa','Rejected');
+INSERT INTO StatusValuesDes VALUES ('0','spa','Unknown');
+INSERT INTO StatusValuesDes VALUES ('1','spa','Draft');
+INSERT INTO StatusValuesDes VALUES ('2','spa','Approved');
+INSERT INTO StatusValuesDes VALUES ('3','spa','Retired');
+INSERT INTO StatusValuesDes VALUES ('4','spa','Submitted');
+INSERT INTO StatusValuesDes VALUES ('5','spa','Rejected');
+INSERT INTO StatusValuesDes VALUES ('6','spa','Just created');
 
 INSERT INTO RegionsDes VALUES (1,'spa','Armenia');
 INSERT INTO RegionsDes VALUES (2,'spa','Afghanistan');
@@ -812,4 +814,5 @@ INSERT INTO RegionsDes VALUES (1024,'spa','Pacific, Southwest');
 INSERT INTO RegionsDes VALUES (1025,'spa','Pacific, Southeast');
 INSERT INTO RegionsDes VALUES (1026,'spa','Pacific, Antarctic');
 INSERT INTO RegionsDes VALUES (1220,'spa','All fishing areas');
-INSERT INTO RegionsDes VALUES (9999,'spa','World');						
+INSERT INTO RegionsDes VALUES (9999,'spa','World');
+						

@@ -406,7 +406,8 @@
     <xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
-	<xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
+    <xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:inserted|@geonet:deleted|@geonet:class|@class" priority="2"/>
+
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->
@@ -765,8 +766,85 @@
 
 		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 		<xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
+        <xsl:variable name="className" select=".//@class"/>
+        <xsl:variable name="pairClassName" select=".//@geonet:class"/>
+        <xsl:variable name="prefixedClassName" select="concat('diff-',$pairClassName)"/>
 
-		<tr id="{$id}" type="metadata">
+        <script>
+            function findContainerId(node) {
+            if(node == null) {
+            console.log('container id not found');
+            return null;
+            }
+            if(node.parentNode.tagName == 'DIV' &amp;&amp; node.parentNode.id) {
+            console.log('found container id: ' + node.parentNode.id);
+            return node.parentNode.id;
+            }
+            return findContainerId(node.parentNode);
+            }
+        </script>
+        <tr id="{$id}" class="{$pairClassName}" type="metadata">
+            <xsl:if test="$pairClassName != ''">
+
+                <xsl:attribute name="onclick">
+                    // to know whether we're on source or target doc
+                    var containerId = findContainerId(this);
+                    var id = this.id;
+                    console.log('this ' + id + ' containerId: ' +  containerId);
+                    var selected = $$('.<xsl:value-of select="$pairClassName"/>');
+                    var correspondingElement;
+                    var thisTop;
+                    var correspondingElementTop;
+                    for(var i = 0; i &lt; selected.length; i++) {
+                    // the element being hovered
+                    if(selected[i].id == id) {
+                    thisTop = selected[i].positionedOffset()[1];
+                    }
+                    // the corresponding element in the other doc
+                    else {
+                    correspondingElementTop = selected[i].positionedOffset()[1];
+                    }
+                    }
+                    if(containerId == 'source-container') {
+                    $('target-container').scrollTop = correspondingElementTop;
+                    //$('source-container').scrollTop = thisTop;
+                    }
+                    else if(containerId == 'target-container') {
+                    $('source-container').scrollTop = correspondingElementTop;
+                    //$('target-container').scrollTop = thisTop;
+
+                    }
+                </xsl:attribute>
+            </xsl:if>
+
+            <xsl:if test=".//@geonet:updatedText or .//@geonet:updatedAttribute or .//@geonet:updatedElement">
+                <xsl:attribute name="style">
+                    border:solid #0741e0 1px;
+                    background:#668fff;
+                </xsl:attribute>
+
+                <xsl:attribute name="onmouseout">
+                    var selected = $$('.<xsl:value-of select="$prefixedClassName"/>');
+                    for(var i = 0; i &lt; selected.length; i++) {
+                    // TODO in Chrome (19, Windows7) the border is not (completely) removed !
+                    // I think that's bug http://code.google.com/p/chromium/issues/detail?id=101150.
+                    selected[i].style.border = '0px white';
+                    selected[i].style.border.style = 'none';
+                    }
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:if test=".//@geonet:deletedText or .//@geonet:deleted">
+                <xsl:attribute name="style">
+                    border:solid red 1px;
+                    background:#fe5555;
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:if test=".//@geonet:insertedText or .//@geonet:inserted">
+                <xsl:attribute name="style">
+                    border:solid green 1px;
+                    background:lightgreen;
+                </xsl:attribute>
+            </xsl:if>
 			<xsl:if test="not($visible)">
 				<xsl:attribute name="style">
 					display:none;
@@ -881,7 +959,7 @@
 							</xsl:call-template>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="not($edit) and @*">
+                    <xsl:when test="not($edit) and @* except @geonet:*">
 						<xsl:apply-templates mode="simpleAttribute" select="@*">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
@@ -938,6 +1016,25 @@
 		<xsl:variable name="isXLinked" select="count(ancestor::node()[@xlink:href]) > 0" />
 
 		<tr id="{$id}" type="metadata">
+            <xsl:if test="@geonet:xxxupdatedText or @geonet:xxxupdatedAttribute">
+                <xsl:attribute name="style">
+                    border:solid #0741e0 1px;
+                    background:#668fff;
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@geonet:deleted">
+                <xsl:attribute name="style">
+                    border:solid red 1px;
+                    background:#fe5555;
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@geonet:inserted">
+                <xsl:attribute name="style">
+                    border:solid green 1px;
+                    background:lightgreen;
+                </xsl:attribute>
+            </xsl:if>
+
 			<td class="padded-content" width="100%" colspan="2">
 				<fieldset class="metadata-block">
 					<legend class="block-legend">
@@ -1224,6 +1321,7 @@
 					</xsl:for-each>
 				</select>
 			</xsl:when>
+            <!-- text input (single line) -->
 			<xsl:when test="$edit=true() and $rows=1">
 				<xsl:choose>					
 					<!-- heikki doeleman: for gco:Boolean, use checkbox.
@@ -1260,9 +1358,22 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-
+                    <!-- not a boolean -->
 					<xsl:otherwise>
 						<input class="md" type="{$input_type}" value="{text()}" size="{$cols}">
+                            <!-- ugly hack to make the coords inputs for bbox smaller, to get a smaller width map in diff view -->
+                            <xsl:choose>
+                                <xsl:when test="$cols = 'smaller-map-for-diff-view'">
+                                    <xsl:attribute name="style">
+                                        <xsl:text>width:40px;</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="size">
+                                        <xsl:value-of select="$cols"/>
+                                    </xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
 							<xsl:if test="$isXLinked">
 								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>						
@@ -1318,6 +1429,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
+            <!-- textarea input (multiple lines) -->
 			<xsl:when test="$edit=true()">
 				<textarea class="md" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}" rows="{$rows}" cols="{$cols}">
 					<xsl:if test="$isXLinked">
@@ -1335,6 +1447,7 @@
 					<xsl:value-of select="text()"/>
 				</textarea>
 			</xsl:when>
+            <!-- not editing, multi-line text -->
 			<xsl:when test="$edit=false() and $rows!=1">
 				<xsl:choose>
 					<xsl:when test="starts-with($schema,'iso19139')">
@@ -1930,6 +2043,7 @@
           <xsl:with-param name="edit" select="$edit" />
           <xsl:with-param name="validator" select="'validateNumber(this, false)'" />
           <xsl:with-param name="no_name" select="true()" />
+                    <xsl:with-param name="cols" select="'smaller-map-for-diff-view'" />
         </xsl:call-template>
         <xsl:call-template name="getElementText">
           <xsl:with-param name="schema" select="$schema" />

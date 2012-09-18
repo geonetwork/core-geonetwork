@@ -67,8 +67,7 @@ public class Transform {
 				Element record = (Element)records.get(i);
 
 				// get id
-				String sId = record.getChildText("id");
-				int id = Integer.parseInt(sId);
+				String id = record.getChildText("id");
 
 				// get and transform field
 				String sField = record.getChildText(field);
@@ -77,7 +76,7 @@ public class Transform {
 
 				// save transformed field
 
-				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = ?", newField, new Integer(id));
+				dbms.execute("UPDATE " + table + " SET " + field + " = ? WHERE id = ?", newField, id);
 				System.out.println("- record " + id + " saved"); // DEBUG
 			}
 			// commit changes

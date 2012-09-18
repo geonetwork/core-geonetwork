@@ -24,36 +24,43 @@
 package org.fao.geonet.kernel;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
-import jeeves.server.UserSession;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.jms.ClusterConfig;
+import org.fao.geonet.jms.Producer;
+import org.fao.geonet.jms.message.versioning.MetadataVersioningMessage;
 import org.fao.geonet.kernel.setting.SettingManager;
-
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
-import org.tmatesoft.svn.core.io.ISVNEditor;
-import org.tmatesoft.svn.core.io.SVNRepository;
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.jdom.Element;
 import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.SVNURL;
-
-import org.jdom.Element;
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.io.ISVNEditor;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SvnManager {
@@ -197,7 +204,7 @@ public class SvnManager {
 	private String sessionToLogMessage(ServiceContext context) {
 		UserSession session = context.getUserSession();
 		if (session == null) session = getDefaultSession();
-		String result = "GeoNetwork service: "+context.getService()+" GeoNetwork User "+session.getUserIdAsInt()+" (Username: "+session.getUsername()+" Name: "+session.getName()+" "+session.getSurname()+") Executed from IP address "+context.getIpAddress();
+		String result = "GeoNetwork service: "+context.getService()+" GeoNetwork User "+session.getUserId()+" (Username: "+session.getUsername()+" Name: "+session.getName()+" "+session.getSurname()+") Executed from IP address "+context.getIpAddress();
 		return result;
 	}
 
@@ -290,6 +297,27 @@ public class SvnManager {
      * @throws Exception
      */
 	public void createMetadataDir(String id, ServiceContext context, Element md) throws Exception {
+        if (exists(id)) return; // already in repo so exit
+
+        String sessionLogMessage = sessionToLogMessage(context)+" adding directory for metadata "+id;
+
+        if(ClusterConfig.isEnabled()) {
+            MetadataVersioningMessage message = new MetadataVersioningMessage();
+            Set<String> ids =  new HashSet<String>();
+            ids.add(id);
+            message.setIds(ids);
+            message.setMetadataContent(Xml.getString(md));
+            message.setMetadataLogMessage(sessionLogMessage);
+            message.setAction(MetadataVersioningMessage.VersioningAction.VERSION_MD);
+            message.setSenderClientID(ClusterConfig.getClientID());
+            Producer metadataVersioningProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.MD_VERSIONING);
+            metadataVersioningProducer.produce(message);
+        }
+
+        createMetadataDirWithouSendingTopic(id,  md, sessionLogMessage);
+    }
+
+	public void createMetadataDirWithouSendingTopic(String id, Element md, String sessionLogMessage) throws Exception {
 
 		if (exists(id)) return; // already in repo so exit
 
@@ -345,6 +373,26 @@ public class SvnManager {
      * @throws Exception when something goes wrong
      */
 	public void deleteDir(String id, ServiceContext context) throws Exception {
+        if (!exists(id)) return; // not in repo so exit
+
+        String sessionLogMessage = sessionToLogMessage(context)+" deleting directory for metadata "+id;
+        
+        if(ClusterConfig.isEnabled()) {
+            MetadataVersioningMessage message = new MetadataVersioningMessage();
+            Set<String> ids =  new HashSet<String>();
+            ids.add(id);
+            message.setIds(ids);
+            message.setAction(MetadataVersioningMessage.VersioningAction.DELETE_MD);
+            message.setMetadataLogMessage(sessionLogMessage);
+            message.setSenderClientID(ClusterConfig.getClientID());
+            Producer metadataVersioningProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.MD_VERSIONING);
+            metadataVersioningProducer.produce(message);
+        }
+
+        deleteDirWithoutSendingTopic(id, sessionLogMessage);
+    }
+
+	public void deleteDirWithoutSendingTopic(String id, String sessionLogMessage) throws Exception {
 		
 		if (!exists(id)) return; // not in repo so exit
 
@@ -382,8 +430,42 @@ public class SvnManager {
 		/**
      * Commit changes to the subversion repository.
      *
-		 * @param resource The resource being committed that we're listening too
+	 * @param dbms
+     * @param ids
+     * @param sessionLogMessage
+     *
      */
+    public void commitWithoutSendingTopic(Dbms dbms, Set<String> ids, String sessionLogMessage) {
+        ISVNEditor editor = null;
+         try {
+             editor = getEditor(sessionLogMessage);
+             editor.openRoot(-1); // open the root directory.
+             for (Iterator<String> it = ids.iterator(); it.hasNext();) {
+                 String id = it.next();
+                 commitMetadata(dbms, id, editor);
+                 it.remove();
+             }
+
+             editor.closeDir(); // close the root directory.
+             SVNCommitInfo commitInfo = editor.closeEdit();
+             Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+ids);
+
+         } catch (Exception e) {
+             Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids "+ids);
+             e.printStackTrace();
+             if (editor != null) {
+                 try {
+                     editor.abortEdit();
+                 } catch (Exception ex) {
+                     Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor");
+                     ex.printStackTrace();
+                 }
+             }
+         }
+        
+    }
+    
+    
 	private void commit(Object resource) {
 		Dbms dbms = (Dbms)resource;
 
@@ -404,6 +486,17 @@ public class SvnManager {
 				SVNCommitInfo commitInfo = editor.closeEdit();
                 if(Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids "+task.ids);
+
+                if(ClusterConfig.isEnabled()) {
+                    MetadataVersioningMessage message = new MetadataVersioningMessage();
+                    message.setIds(task.ids);
+                    message.setMetadataLogMessage(task.sessionLogMessage);
+                    message.setAction(MetadataVersioningMessage.VersioningAction.ADD_HISTORY);
+                    message.setSenderClientID(ClusterConfig.getClientID());
+                    Producer metadataVersioningProducer = ClusterConfig.get(Geonet.ClusterMessageTopic.MD_VERSIONING);
+                    metadataVersioningProducer.produce(message);
+                }
+                
 			} catch (Exception e) {
        	        Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids "+task.ids);
 				e.printStackTrace();
@@ -574,7 +667,7 @@ public class SvnManager {
 	private void commitMetadataStatus(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
 
 		// get current status from the database
-		Element status = dataMan.getStatus(dbms, new Integer(id));
+		Element status = dataMan.getStatus(dbms, id);
 		if (status == null) return;
 		List<Element> statusKids = status.getChildren();
 		if (statusKids.size() == 0) return;
@@ -651,8 +744,8 @@ public class SvnManager {
 	private void commitMetadataOwner(ISVNEditor editor, String id, Dbms dbms, AccessManager accessMan) throws Exception {
 
 		// get owner from the database
-		Set<Integer> ids = new HashSet<Integer>();
-		ids.add(new Integer(id));
+		Set<String> ids = new HashSet<String>();
+		ids.add(id);
 		Element owner = accessMan.getOwners(dbms, ids);
 		String now = Xml.getString(owner);
 
@@ -699,7 +792,7 @@ public class SvnManager {
     query.append("WHERE oa.metadataId = ?                                 ");
     query.append("ORDER BY o.id                                           ");
 
-    Element privs = dbms.select(query.toString(), new Integer(id));	
+        Element privs = dbms.select(query.toString(), id);	
 		String now = Xml.getString(privs);
 
 		if (exists(id+"/privileges.xml")) {
