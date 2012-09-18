@@ -321,7 +321,7 @@ public class Geonetwork implements ApplicationHandler {
 		
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
-				dataStore, maxWritesInTransaction, 
+				createShapefileDatastore(luceneDir), maxWritesInTransaction, 
 				new SettingInfo(settingMan), schemaMan, servletContext);
 
 		//------------------------------------------------------------------------
