@@ -847,6 +847,12 @@
         <module>web-itest</module>
       </modules>
     </profile>
+    <profile>
+      <id>jmeter</id>
+      <modules>
+        <module>jmeter</module>
+      </modules>
+    </profile>
   </profiles>
 
   <distributionManagement>
