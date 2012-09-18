@@ -172,7 +172,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setDefinition(note, lang)
             .setValue(label, lang);
         
-        writableThesaurus.updateElement(keyword, false);
+        writableThesaurus.updateElement(keyword, keyword.getCode(), keyword.getNameSpaceCode(), false);
         keyword = assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
         assertEquals("labelf", keyword.getValues().get("fre"));
         assertEquals("deff", keyword.getDefinitions().get("fre"));
@@ -188,7 +188,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setDefinition(note, lang)
             .setValue(label, lang);
         
-        writableThesaurus.updateElement(keyword, false);
+        writableThesaurus.updateElement(keyword, keyword.getCode(), keyword.getNameSpaceCode(), false);
         keyword = assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
         assertEquals("labelf", keyword.getValues().get("fre"));
         assertEquals("deff", keyword.getDefinitions().get("fre"));
@@ -204,7 +204,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setDefinition(note, lang)
             .setValue(label, lang);
         
-        writableThesaurus.updateElement(keyword, true);
+        writableThesaurus.updateElement(keyword, keyword.getCode(), keyword.getNameSpaceCode(), true);
         keyword = assertElement(1, code, label, note, "", "", "", "");
         assertEquals("", keyword.getValues().get("fre"));
         assertEquals("", keyword.getDefinitions().get("fre"));
@@ -220,7 +220,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setDefinition(note, lang)
             .setValue(label, lang);
         
-        writableThesaurus.updateElement(keyword, true);
+        writableThesaurus.updateElement(keyword, keyword.getCode(), keyword.getNameSpaceCode(), true);
         keyword = assertElement(1, code, label, note, "", "", "", "");
     }
 
