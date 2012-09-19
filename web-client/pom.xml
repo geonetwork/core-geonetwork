@@ -87,9 +87,28 @@
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
             <exclude>**/ext-4.0-pr1/**/*.js</exclude>
-            <exclude>**/*.css</exclude>
-          </excludes>
+<!--            <exclude>**/*.css</exclude>
+-->          </excludes>
           <aggregations>
+            <aggregation>
+              <output>src/main/resources/apps/css/geonetwork.css</output>
+              <includes>
+                <include>${project.build.directory}/classes/apps/css/gndefault.css</include>
+                <include>${project.build.directory}/classes/apps/css/gnmapdefault.css</include>
+                <include>${project.build.directory}/classes/apps/css/gnmetadatadefault.css</include>
+                <include>${project.build.directory}/classes/apps/css/metadata-view.css</include>
+              </includes>
+            </aggregation>
+           <aggregation>
+              <output>src/main/resources/apps/js/ext-ux/css/ext-ux.css</output>
+              <includes>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/Rating/rating.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/SuperBoxSelect/superboxselect.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/LightBox/lightbox.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/FileUploadField/file-upload.css</include>
+              </includes>
+            </aggregation>
             <aggregation>
               <output>src/main/resources/apps/js/GeoNetwork-mini-nomap.js</output>
               <includes>

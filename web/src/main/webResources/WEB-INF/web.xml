@@ -145,6 +145,11 @@
     
     <filter-mapping>
         <filter-name>resources</filter-name>
+        <url-pattern>/images/statTmp/*</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>resources</filter-name>
         <url-pattern>/htmlcache/*</url-pattern>
     </filter-mapping>
     

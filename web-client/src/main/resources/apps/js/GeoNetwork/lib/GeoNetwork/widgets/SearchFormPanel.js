@@ -48,7 +48,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
             iconCls : 'md-mn-find',
             iconAlign: 'right'
         }),
-        resetCb: function() {
+        resetCb: function () {
             this.getForm().reset();
         },
         resetBt: new Ext.Button({
@@ -60,7 +60,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
          */
 
     },
-    getSearchBt: function() {
+    getSearchBt: function () {
         return this.searchBt;
     },
     /** private: property[stateEvents]
@@ -74,20 +74,20 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
      *  Apply the state provided as an argument.
      *  It does not trigger the search.
      */
-    applyState: function(state) {
-       this.on('afterrender', function() {
-           // Force layout in order to render all form fields
-           // If not, superboxselect field are not initialized
-           this.doLayout(false, true);
-           GeoNetwork.util.SearchTools.populateFormFromParams(this, state);
+    applyState: function (state) {
+        this.on('afterrender', function () {
+            // Force layout in order to render all form fields
+            // If not, superboxselect field are not initialized
+            this.doLayout(false, true);
+            GeoNetwork.util.SearchTools.populateFormFromParams(this, state);
            
-           // We can't really trigger fire event yet
-           // Add this to your app to trigger the search when ready - FIXME
+            // We can't really trigger fire event yet
+            // Add this to your app to trigger the search when ready - FIXME
 //           if (urlParameters.s_search !== undefined) {
 //               setTimeout(function(){searchForm.fireEvent('search');}, 500);
 //           }
            //this.fireEvent("search");
-       }, this);
+        }, this);
     },
 
     /** private: method[getState]
@@ -95,7 +95,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
      *
      *  Returns the current state for the search form panel.
      */
-    getState: function() {
+    getState: function () {
         var state = {};
         if (this.searchTriggered) {
             state.search = '';
@@ -106,12 +106,12 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
         
         return state;
     },
-    search: function() {
-        this.searchTriggered = true,
+    search: function () {
+        this.searchTriggered = true;
         this.searchCb();
         this.fireEvent('onsearch');
     },
-    reset: function() {
+    reset: function () {
         this.searchTriggered = false;
         this.resetCb();
         this.fireEvent('onreset');
@@ -119,7 +119,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
     /** private: method[initComponent] 
      *  Initializes the search form panel.
      */
-    initComponent: function(){
+    initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
         GeoNetwork.SearchFormPanel.superclass.initComponent.call(this);
         
