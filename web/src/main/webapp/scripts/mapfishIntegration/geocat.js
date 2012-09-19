@@ -1311,8 +1311,8 @@ var geocat = {
             data: {
                 root: [
                     {name: translate('any'), value: '', bbox: null},
-                    {name: 'CH', value: "Schweiz", bbox: new OpenLayers.Bounds(485000, 73000, 836000, 297000)},
-                    {name: 'LI', value: "Liechtenstein", bbox: new OpenLayers.Bounds(754500, 213000, 767000, 237500)}
+                    {name: 'CH', value: "0", bbox: new OpenLayers.Bounds(485000, 73000, 836000, 297000)},
+                    {name: 'LI', value: "1", bbox: new OpenLayers.Bounds(754500, 213000, 767000, 237500)}
                 ]
             }
         });
