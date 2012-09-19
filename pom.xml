@@ -5,7 +5,7 @@
   <groupId>ch.geocat</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and 
     Open Source catalog application to manage spatially referenced 
@@ -206,12 +206,6 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-        <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-          <version>r08</version>
-        </dependency>
-
         <!-- rewrite url servletfilter -->
         <dependency>
             <groupId>org.tuckey</groupId>
@@ -590,6 +584,11 @@
         <artifactId>jaxen</artifactId>
         <version>1.1.1</version>
       </dependency>
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>2.1.4</version>
+      </dependency>
 
       <!-- Security stuff -->
       <dependency>
@@ -632,7 +631,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>r08</version>
+            <version>13.0</version>
         </dependency>
 
         <!-- Monitoring libraries -->
@@ -693,11 +692,13 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.12</version>
       </dependency>
+			<!-- Not permitted under oracle licensing rules
       <dependency>
         <groupId>ojdbc</groupId>
         <artifactId>ojdbc</artifactId>
         <version>14</version>
       </dependency>
+			-->
       <dependency>
         <groupId>org.codehaus.izpack</groupId>
         <artifactId>izpack-standalone-compiler</artifactId>
@@ -866,7 +867,9 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>2.6.5</geotools.version>
+    <geotools.version>2.7.4</geotools.version>
     <lucene.version>3.0.2</lucene.version>
+    <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
+    <build.timestamp>${maven.build.timestamp}</build.timestamp>
   </properties>
 </project>

@@ -4,7 +4,7 @@
   <parent>
     <groupId>ch.geocat</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>geonetwork-itest</artifactId>
   <packaging>pom</packaging>
@@ -31,8 +31,8 @@
             Plugins
             TextResponse -->
     <logLevel>Error,Warning</logLevel>
-    <jettyPort>9624</jettyPort>
-    <jetty.stop.port>9620</jetty.stop.port>
+    <jettyPort>9625</jettyPort>
+    <jetty.stop.port>9621</jetty.stop.port>
     <testServer>localhost:${jettyPort}</testServer>
     <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     <webspecsDir>${basedir}/webspecs</webspecsDir>
