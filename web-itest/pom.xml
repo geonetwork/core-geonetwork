@@ -31,8 +31,8 @@
             Plugins
             TextResponse -->
     <logLevel>Error,Warning</logLevel>
-    <jettyPort>9624</jettyPort>
-    <jetty.stop.port>9620</jetty.stop.port>
+    <jettyPort>9625</jettyPort>
+    <jetty.stop.port>9621</jetty.stop.port>
     <testServer>localhost:${jettyPort}</testServer>
     <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     <webspecsDir>${basedir}/webspecs</webspecsDir>
