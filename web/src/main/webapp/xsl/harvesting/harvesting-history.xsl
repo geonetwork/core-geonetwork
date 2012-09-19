@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:include href="../main.xsl"/>
 
@@ -167,7 +167,10 @@
 								<td class="padded" style="text-align:center">
 									<abbr title="{harvestdate}"><xsl:value-of select="harvestdate" /></abbr>
 								</td>
-								<td class="padded" style="text-align:center"><xsl:value-of select="elapsedtime" /></td>
+								<td class="padded" style="text-align:center">
+									<xsl:value-of select="if (elapsedtime &lt; 60) then 
+										concat(elapsedtime, ' s') else concat((elapsedtime div 60), ' min')" />
+								</td>
 							
 								<!-- column: ok? -->
 								<td class="padded" align="center">

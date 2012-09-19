@@ -343,7 +343,7 @@
   <noHistory>Aucun historique</noHistory>
   <dateDesc>Date (le plus récent d'abord)</dateDesc>
   <date>Date</date>
-  <elapsedTime>Temps (en s)</elapsedTime>
+  <elapsedTime>Temps</elapsedTime>
   <detail>Détails</detail>
   <grandTotal>Total</grandTotal>
   <counter>sur</counter>

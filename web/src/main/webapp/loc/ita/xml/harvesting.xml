@@ -293,7 +293,7 @@
 	<noHistory>Disattiva cronologia</noHistory>
 	<dateDesc>Data (più recente per primo)</dateDesc>
 	<date>Data</date>
-	<elapsedTime>Time (in s)</elapsedTime>
+	<elapsedTime>Time</elapsedTime>
 	<detail>Dettagli</detail>
 	<grandTotal>Totale</grandTotal>
 	<counter>su</counter>
