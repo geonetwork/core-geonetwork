@@ -281,12 +281,14 @@ public class DataManager {
         else perThread = ids.size() / threadCount;
         int index = 0;
 
+        boolean performValidation = true;
+        boolean processSharedObjects = true;
+
         while(index < ids.size()) {
             int start = index;
             int count = Math.min(perThread,ids.size()-start);
             // create threads to process this chunk of ids
-            boolean performValidation = true;
-            Runnable worker = new IndexMetadataTask(context, true, ids, start, count, performValidation);
+            Runnable worker = new IndexMetadataTask(context, processSharedObjects, ids, start, count, performValidation);
             executor.execute(worker);
             index += count;
         }
@@ -521,13 +523,13 @@ public class DataManager {
                  * This transformation ensures this property
                  */
                 md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+                String parentUuid = null;
+                md = updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms);
                 xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
 
             }
              if("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
             	try {
-            	    String parentUuid = null;
-                    updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms);
 	                ProcessParams processParameters = new ProcessParams(dbms, ReusableObjectLogger.THREAD_SAFE_LOGGER, id, md, md, thesaurusMan, extentMan, baseURL, settingMan, false, null,servContext);
 	                List<Element> modified = reusableObjMan.process(processParameters);
 

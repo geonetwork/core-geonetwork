@@ -756,7 +756,7 @@
       </snapshots>
       <id>geotools</id>
       <name>Geotools repository</name>
-      <url>http://download.osgeo.org/webdav/geotools/</url>
+      <url>http://repo.opengeo.org/</url>
     </repository>
     <repository>
       <snapshots>
@@ -847,6 +847,12 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>jmeter</id>
+      <modules>
+        <module>jmeter</module>
       </modules>
     </profile>
   </profiles>

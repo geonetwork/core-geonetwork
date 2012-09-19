@@ -486,7 +486,7 @@ public final class XslUtil {
                         if (next2 instanceof NodeInfo & ((NodeInfo)next2).getNodeKind() == Type.ELEMENT) {
                             NodeInfo info = (NodeInfo) next2;
 
-                            String nodeXml = writeXml(info);
+                            String nodeXml = writeXml(info).replace("srsDimension=\"2\"", "");
                             builder.append(nodeXml);
                         }
                         next2 = iter2.next();

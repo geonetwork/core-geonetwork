@@ -93,6 +93,7 @@
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-non_validated-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-xlinks-"/>
+    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-search-"/>		    
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>		    
         </addXml>
     </file>
@@ -243,7 +244,7 @@
             <serverStage>${serverStage}</serverStage>
         </addXml>
         <addXml xpath="">
-            <geoserver.url>http://${wfs.host}:${wfs.port}/geoserver</geoserver.url>
+            <geoserver.url>http://${wfs.host}:${wfs.port}/geoserver/</geoserver.url>
         </addXml>
         <replaceAtt xpath="mapSearch" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>
         <replaceAtt xpath="mapViewer" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>

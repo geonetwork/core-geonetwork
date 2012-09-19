@@ -150,8 +150,8 @@
   <condition/>
  </element>
  <element name="che:legislationInformation" id="505.0">
-  <label>Ordonnance légale</label>
-  <description>Informations sur les ordonnances légales concernant les ressources</description>
+  <label>Informations sur la législation</label>
+  <description>Informations sur les lois et ordonnances légales concernant les ressources</description>
   <help>Informations relatives à des aspects juridiques concernant la ou les ressources. Ces informations sont gérées dans la classe MD_Legislation.</help>
  </element>
  <element name="che:CHE_MD_Metadata" id="1.0">

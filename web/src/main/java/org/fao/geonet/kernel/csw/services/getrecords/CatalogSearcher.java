@@ -99,6 +99,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.Or;
+import org.opengis.filter.identity.Identifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -736,14 +737,13 @@ public class CatalogSearcher {
     {
         FeatureIterator<SimpleFeature> iter;
         String[] ids = gmlId.split(":", 2)[1].split(",");
-        List<org.opengis.filter.Filter> filters = new ArrayList<org.opengis.filter.Filter>(ids.length);
+        Set<Identifier> identifiers = new HashSet<Identifier>();
         for (String id : ids) {
-            filters.add(filterFactory.equals(filterFactory.property(idField), filterFactory.literal(id)));
+        	identifiers.add(filterFactory.featureId(typeName+"."+id));
         }
-        Or equalFilter = filterFactory.or(filters);
-        DefaultQuery query = new DefaultQuery(typeName, equalFilter, new String[]{idField,"the_geom"});
+        DefaultQuery query = new DefaultQuery(typeName, filterFactory.id(identifiers), new String[]{"the_geom"});
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = _datastore.getFeatureSource(typeName).getFeatures(
-                equalFilter);
+        		query);
         iter = features.features();
         return iter;
     }

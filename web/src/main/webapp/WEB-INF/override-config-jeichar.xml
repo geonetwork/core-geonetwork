@@ -13,7 +13,7 @@
         <port>8190</port>
     </properties>
     <file name=".*/WEB-INF/config-gui.xml">
-        <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver</replaceText>
+        <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver/</replaceText>
         <replaceXML xpath="mapSearch/layers">
                 <layer server="http://tc-geocat0i.bgdi.admin.ch/geoserver/wms" tocName="Kantone"  params="{layers: 'gn:kantoneBB', transparent: 'true', format: 'image/png'}"  options="{isBaseLayer: true}" />
         </replaceXML>

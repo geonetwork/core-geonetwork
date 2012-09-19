@@ -392,17 +392,49 @@ ALTER TABLE ONLY xlinks ALTER COLUMN gid SET DEFAULT nextval('xlinks_gid_seq'::r
 ALTER TABLE ONLY xlinks
     ADD CONSTRAINT xlinks_pkey PRIMARY KEY (gid);
 
-create table countries_search as select "ID","LAND",ST_Buffer(ST_Transform(the_geom, 4326), .001) from countries;
-ALTER TABLE countries_search RENAME st_buffer TO the_geom;
-alter TABLE countries_search OWNER TO "www-data";
 
-create table kantone_search as select "KANTONSNR","NAME",ST_Buffer(ST_Transform(the_geom, 4326), .001) from "kantoneBB";
-ALTER TABLE kantone_search RENAME st_buffer TO the_geom;
-alter TABLE kantone_search OWNER TO "www-data";
+--
+-- Name: countries_search; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
+--
 
-create table gemeinden_search as select "OBJECTVAL","GEMNAME",ST_Buffer(ST_Transform(the_geom, 4326), .001) from "gemeindenBB";
-ALTER TABLE gemeinden_search RENAME st_buffer TO the_geom;
-alter TABLE gemeinden_search OWNER TO "www-data";
+CREATE TABLE countries_search (
+    "ID" integer,
+    "LAND" character varying(254),
+    the_geom geometry
+);
+
+
+ALTER TABLE public.countries_search OWNER TO "www-data";
+
+--
+-- Name: gemeinden_search; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
+--
+
+CREATE TABLE gemeinden_search (
+    "OBJECTVAL" numeric(40,0),
+    "GEMNAME" character varying(254),
+    the_geom geometry
+);
+
+
+ALTER TABLE public.gemeinden_search OWNER TO "www-data";
+
+--
+-- Name: kantone_search; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
+--
+
+CREATE TABLE kantone_search (
+    "KANTONSNR" smallint,
+    "NAME" character varying(254),
+    the_geom geometry
+);
+
+
+ALTER TABLE public.kantone_search OWNER TO "www-data";
+
+alter table kantone_search add PRIMARY KEY ("KANTONSNR");
+alter table countries_search add PRIMARY KEY ("ID");
+alter table gemeinden_search add PRIMARY KEY ("OBJECTVAL");
 
 DELETE FROM geometry_columns where f_table_name='countriesBB' OR f_table_name='countries' OR f_table_name='non_validated' OR 
     f_table_name='xlinks' OR f_table_name='spatialIndex' OR f_table_name='gemeindenBB' OR f_table_name='kantoneBB' OR 

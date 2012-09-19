@@ -468,6 +468,7 @@ public class LuceneSearcher extends MetaSearcher {
                 if (_reader != null) {
                     _sm.releaseIndexReader(_reader);
                 }
+                _reader = null;
             } catch (IOException e) {
                 Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
                 e.printStackTrace();
