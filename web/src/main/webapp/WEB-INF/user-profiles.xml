@@ -144,18 +144,8 @@
 		<allow service="logo.delete"/>
 		<allow service="logo.set"/>
 
-    <allow service="debug.openconnection.accessors"/>
-    <allow service="debug.filehandles"/>
-    
-    <!-- Allow a user to specify a XSL -->
-    <allow service="metadata.formatter.register"/>
-    <allow service="metadata.formatter.remove"/>
-    <allow service="metadata.formatter.download"/>
-    <allow service="metadata.formatter.admin"/>
-    <allow service="metadata.formatter.update"/>
-    <allow service="metadata.formatter.files"/>
-    <allow service="metadata.formatter.edit"/>
-
+        <allow service="debug.openconnection.accessors"/>
+        <allow service="debug.filehandles"/>
 	</profile>
 
 	<!-- ====================================================================== -->
@@ -182,6 +172,17 @@
 		<allow service="xml.usergroups.list"/>
 		
 		<allow service="metadata.batch.processing"/>
+
+        <!-- Allow a user to specify a XSL -->
+        <allow service="metadata.formatter.register"/>
+        <allow service="metadata.formatter.remove"/>
+        <allow service="metadata.formatter.download"/>
+        <allow service="metadata.formatter.admin"/>
+        <allow service="metadata.formatter.update"/>
+        <allow service="metadata.formatter.files"/>
+        <allow service="metadata.formatter.edit"/>
+
+    </profile>
 
 	<!-- ====================================================================== -->
 

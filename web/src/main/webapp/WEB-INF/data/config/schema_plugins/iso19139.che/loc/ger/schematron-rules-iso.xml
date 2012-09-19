@@ -48,7 +48,7 @@
     <alert.M19><div>Es ist entweder das Datenformat beim Vertrieb (MD_Distribution.distributionFormat) oder
         bei der Vertriebsstelle (MD_Distributor.distributorFormat) anzugeben.</div></alert.M19>
     <alert.M20><div>count(description + geographicElement + temporalElement + verticalElement) &gt; 0.</div></alert.M20>
-    <alert.M21><div>Es muss entweder description, geographicElement, temporalElement oder verticalElement ausgefüllt sein</div></alert.M21>
+    <alert.M21><div>Wenn MD_Metadata.hierarchyLevel = 'dataset' (Defaultwert "Datenbestand") muss folgende Bedingung erfüllt sein: count (extent.geographicElement.EX_GeographicBoundingBox) + count (extent.geographicElement.EX_GeographicDescription) &gt;=1. D.h. es braucht entweder eine BBOX oder eine geografische Beschreibung.</div></alert.M21>
     <alert.M22><div>Datenbestand und Serie müssen ein Thema (topicCategory) haben.</div></alert.M22>
     <alert.M23><div>Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</div></alert.M23>
     <alert.M26.obligation><div>Angabe der Verbindlichkeit ist obligatorisch ausser: Datentyp = "codelist", "enumeration" oder "codelistElement"</div></alert.M26.obligation>
