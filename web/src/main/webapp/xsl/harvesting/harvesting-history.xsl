@@ -168,8 +168,10 @@
 									<abbr title="{harvestdate}"><xsl:value-of select="harvestdate" /></abbr>
 								</td>
 								<td class="padded" style="text-align:center">
-									<xsl:value-of select="if (elapsedtime &lt; 60) then 
-										concat(elapsedtime, ' s') else concat((elapsedtime div 60), ' min')" />
+									<xsl:variable name="minutes" select="floor(elapsedtime div 60)" />
+									<xsl:variable name="seconds" select="elapsedtime mod 60" />
+									<xsl:value-of select="if ($minutes &lt; 1) then 
+										concat($seconds, 's') else concat($minutes, 'min ', $seconds, 's')" />
 								</td>
 							
 								<!-- column: ok? -->
