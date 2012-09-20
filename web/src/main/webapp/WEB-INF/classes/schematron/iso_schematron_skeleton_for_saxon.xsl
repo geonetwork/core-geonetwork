@@ -557,12 +557,12 @@ which require a preprocess.
 	     @queryBinding='xslt1' or @queryBinding='XSLT' or @queryBinding='XSLT1'">
 	     <xsl:message><xsl:call-template name="outputLocalizedMessage" ><xsl:with-param name="number">2</xsl:with-param></xsl:call-template></xsl:message>
 	</xsl:if>
-	<axsl:stylesheet>
+	<axsl:stylesheet exclude-result-prefixes="#all">
 	    <xsl:apply-templates 
 		select="iso:ns" />
 
 	    <!-- Handle the namespaces before the version attribute: reported to help SAXON -->
-	    <xsl:attribute name="version">1.0</xsl:attribute>
+	    <xsl:attribute name="version">2.0</xsl:attribute>
 	    
 		<xsl:apply-templates select="." mode="stylesheetbody"/>
 		<!-- was xsl:call-template name="stylesheetbody"/ -->

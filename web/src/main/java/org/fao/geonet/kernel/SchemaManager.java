@@ -856,7 +856,7 @@ public class SchemaManager {
 		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
 		mds.setName(name);
 		mds.setSchemaDir(path);
-		mds.loadSchematronRules();
+		mds.loadSchematronRules(basePath);
 
 		// -- add cached xml files (schema codelists and label files) 
 		// -- as Jeeves XmlFile objects (they need not exist)
