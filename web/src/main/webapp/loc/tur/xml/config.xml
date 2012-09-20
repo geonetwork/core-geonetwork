@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<strings>
+	<site>Site</site>
+	<name>İsim</name>
+	<organ>Organizasyon</organ>
+	
+	<server>Sunucu(Server)</server>
+	<host>Ana sistem(Host)</host>
+	<port>Bağlantı Noktası(Port)</port>
+	
+	<intranet>Intranet</intranet>
+	<network>Ağ (Network)</network>
+	<netmask>Netmask***</netmask>
+	
+	<z3950>Z39.50 Sunucu</z3950>
+	<enable>İzin ver</enable>
+
+	<oai>OAI Sağlayıcı</oai>
+		<datesearch>Veri arama</datesearch>
+		<datesearchopt>
+			<dsopt label="geçici alan">1</dsopt>
+			<dsopt label="değiştirme tarihi">2</dsopt>
+		</datesearchopt>
+	
+		<tokentimeout>ResumptionToken*** Zaman Aşımı </tokentimeout>
+		<cachesize>Önbellek boyu(Cachesize)</cachesize>
+
+	<xlinkResolver>XLink Çözücü</xlinkResolver>
+
+    <inspire>INSPIRE***</inspire>
+		
+	<downloadservice>İndirme Verisi Servisi</downloadservice>
+	<leave>Üstveri bağlantısını kullanınız - bağlantı için değişiklik yok</leave>
+	<simple>GeoNetwork basit dosya indirme servisini kullanınız(resources.get)</simple>
+	<withdisclaimer>GeoNetwork feragat ve kısıt servisini kullanınız(file.disclaimer)</withdisclaimer>
+
+	<selectionmanager>Üstveri Arama Sonuçları</selectionmanager>
+	<maxrecords>Ençok seçilen kayıtlar</maxrecords>
+
+	<indexoptimizer>Lucene*** İçerik İyileyici</indexoptimizer>
+		<at>Çalıştır</at>
+		<atSpec>( saat: örneğin 23:15 )</atSpec>
+		<interval>Aşağıdaki zaman dilimlerinde yeniden çalışacak</interval>
+		<hourintervals>
+			<hour label="1 saat (önerilmez)">1</hour>
+			<hour label="3 saat">3</hour>
+			<hour label="6 saat">6</hour>
+			<hour label="12 saat">12</hour>
+			<hour label="1 gün">24</hour>
+			<hour label="2 gün">48</hour>
+			<hour label="3 gün">72</hour>
+			<hour label="4 gün">96</hour>
+		</hourintervals>
+		<hours>
+			<hour label="0">0</hour>
+			<hour label="1">1</hour>
+			<hour label="2">2</hour>
+			<hour label="3">3</hour>
+			<hour label="4">4</hour>
+			<hour label="5">5</hour>
+			<hour label="6">6</hour>
+			<hour label="7">7</hour>
+			<hour label="8">8</hour>
+			<hour label="9">9</hour>
+			<hour label="10">10</hour>
+			<hour label="11">11</hour>
+			<hour label="12">12</hour>
+			<hour label="13">13</hour>
+			<hour label="14">14</hour>
+			<hour label="15">15</hour>
+			<hour label="16">16</hour>
+			<hour label="17">17</hour>
+			<hour label="18">18</hour>
+			<hour label="19">19</hour>
+			<hour label="20">20</hour>
+			<hour label="21">21</hour>
+			<hour label="22">22</hour>
+			<hour label="23">23</hour>
+		</hours>
+		<minutes>
+			<minute label="0">0</minute>
+			<minute label="15">15</minute>
+			<minute label="30">30</minute>
+			<minute label="45">45</minute>
+		</minutes>
+
+	<csw>CSW ISO Profil</csw>
+	<contactId>Bağlantı</contactId>
+	<title>Başlık</title>
+	<abstract>Özet</abstract>
+	<fees>Ücret</fees>
+	<accessConstraints>Erişim Kısıtları</accessConstraints>
+    <cswMetadataPublic>Eklenen üstveri genedir.</cswMetadataPublic>
+    
+	<clickablehyperlinks>Tıklanabilir üstbağ</clickablehyperlinks>
+
+	<localrating>Yerel Değerlendirme</localrating>
+    <autofixing>Otomatik Düzeltmeler</autofixing>
+	
+	<proxy>Proxy</proxy>
+	<use>Kullan</use>
+	<username>Kullanıcı adı</username>
+	
+	<feedback>Geribildirim</feedback>
+	<email>EMail</email>
+	<smtpHost>SMTP Ana sistem (Host) </smtpHost>
+	<smtpPort>SMTP Bağlantı noktası (Port)</smtpPort>
+
+	<userSelfRegistration>Kullanıcı kaydı</userSelfRegistration>
+	
+	<removedMetadata>Silinmiş üstveri</removedMetadata>
+	<dir>Altdizin</dir>
+		
+	<authentication>Kimlik denetleme</authentication>
+	
+	<loginuses>Oturum açma kullanımı</loginuses>
+	<otherlogins>Diğer kullanıcıların oturum açmasına izin ver</otherlogins>
+
+	<geonetworkdb>GeoNetwork kimlik denetleme</geonetworkdb>
+
+	<ldap>LDAP</ldap>
+	<defProfile>Varsayılan profil</defProfile>
+    <uidAttr>Uid*** özellik</uidAttr>
+	<login>Oturum aç</login>
+	<userDN>Kullanıcı DN</userDN>
+	<distNames>Görülebilir isim</distNames>
+	<baseDN>Base</baseDN>
+	<usersDN>Kullanıcılar</usersDN>
+	<userAttribs>Kullanıcı özelikleri</userAttribs>
+	<password>Şifre</password>
+	<profile>Profil</profile>
+
+	<shib>Shibboleth***</shib>
+	<path>Yol</path>
+	<attributes>Shibboleth*** özellik haritası</attributes>
+	<surname>Soyadı</surname>
+	<firstname>Adı</firstname>
+		
+	<!-- Buttons -->
+	
+	<save>Kaydet</save>
+	<refresh>Yenile</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>'{NAME}' alanı boş olamaz</cannotBeEmpty>
+			<invalidMinSize>'{NAME}' alanı en az {VALUE} karakter uzunluğunda olmalıdır.</invalidMinSize>
+			<invalidMaxSize>'{NAME}' alanı en fazla {VALUE} karakter uzunluğunda olmalıdır.</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>'{NAME}' alanı tam sayı olmalıdır.</notInt>
+			<invalidMinValue>'{NAME}' alanı &gt;= {VALUE} olmalıdır.</invalidMinValue>
+			<invalidMaxValue>'{NAME}' alanı &lt;= {VALUE} olmalıdır.</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>'{NAME}' alanı alfanumerik (bir harf ile başlamalıdır) olmalıdır.</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>'{NAME}' alanı uygun bir ana sistem (host) adı değildir.</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>'{NAME}' alanı uygun bir URL değildir.</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>'{NAME}' alanı uygun bir IP adresi değildir.</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Sistem konfigürasyonu alınamamıştır</cannotGet>
+	<cannotSave>Sistem konfigürasyonu kaydedilememiştir</cannotSave>
+	<saveOk>Sistem konfigürasyonu kaydedilmiştir.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.name">
+			Kurulumun tanımlanması için kullanılmıştır.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			Sunucunun <b>ana sistem (host)</b> ve <b>bağlantı noktası (port)</b> GeoNetwork sunucusuna URL yaratmak için kullanılmaktadır. Örneğin, üst veri düzenlemesi boyunca kaynak bağlantılarını oluşturmak için ve CS/W talebi süresince sunucunun kapasitesini geri vermek için kullanılır.
+			
+			<br/>
+			<b>Not:</b> bu değişikliği üstveriye aktarmak için GAST aracını kullanmalısınız.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			<b>Ağ(network)</b> ve <b>netmask</b>*** parametreleri GeoNetwork'ün dahili bağlantılarını tanımlamak için kullanılmaktadır, bu da intranet grubunun tanımlanabilmesini sağlar.
+	
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Başlangıç süresince GeoNetwor Z39.50 sunucu bileşeninde başlayacaktır.
+			Bu bileşen ISO23950 protokolünü kullanır.
+			<br/>
+			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
+		</tip>
+		
+		<tip id="z3950.port">
+			Z39.50 dinleme bağlantı noktasını (port) değiştiriniz.
+			
+			<br/>
+			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
+		</tip>
+	
+		<!-- oai  -->
+		
+		<tip id="oai.mdmode">
+			Parametreler elde edildikten itibaren OAI davranışlarını etkiler.
+			Eğer geçici alan ayarlanmış ise, üstveri tarafından tarif edilen geçici alan tarihi araştırılır.
+			Eğer değiştirme tarihi ayarlanmış ise, üstverinin en son dğiştirildiği tarih araştırılır.
+	
+			<br/>
+			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
+		</tip>
+		
+		<tip id="oai.tokentimeout">
+			Bir OAI sonuç grubunun önbellekte kaldığı saniye sayısı.
+		
+			<br/>
+			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
+		</tip>
+		
+		<tip id="oai.cachesize">
+			Önbellekte saklanabilen OAI sonuç grubu sayısı.
+			
+		</tip>
+
+		<!-- CSW ISO Profile -->
+		<tip id="csw.enable">
+			Eğer ayarlanmış ise, bu özellik CSW ISO Profil sunucusunun işlevselliğini sağlar. Diğer katalogların onu harmanlamasına izin verecektir.
+			<br/>
+			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
+		</tip>
+		<tip id="csw.contactId">
+			GetCapabilities işlemleri için CSW ISO Profil bağlantısını konfigüre ediniz.
+		
+		</tip>
+		<tip id="csw.title">Başlık</tip>
+		<tip id="csw.abstract">Özet</tip>
+		<tip id="csw.fees">Ücret</tip>
+		<tip id="csw.accessConstraints">Erişim Kısıtları</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Eğer ayarlanmış ise, GeoNetwork tıklanabilir üstbağları üstveri içerisinde gösterecektir.
+		</tip>
+
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Eğer ayarlanmış ise, GeoNetwork kullanıcı değerlendirmelerini bu ağdan elde edilen üstveriler için hesaplayacaktır. (diğer GeoNetwork ağların arasında dağıtılmış olanlar değil)
+
+		</tip>
+
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+			Etkinleştirildiği zaman, üstveriler kaydedildiğinde GeoNetwork otomatik olarak verileri üzerindeki belirli düzeltme işlemlerini uygulayacaktır.
+
+		</tip>
+
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Eğer ayarlanmış ise, GeoNetwork uzak ağlara erişirken sağlanmış proxy parametrelerini kullanacaktır. Örneğin, harmanlama boyunca kullanılır.
+			
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			Geribildirim göndermek için kullanılan yönetici email adresidir.
+
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			Bir kaynak indirildiğinde GeoNetwork kullanıcılarına email gönderileceği zaman, SMTP <b>ana sistem(host)</b> ve <b>bağlantı noktası (port)</b> parametreleri kullanılır.
+			
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Üstveriler silindikleri zaman altdizinde saklanırlar (MEF formatında)
+			
+		</tip>
+
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			Eğer ayarlanmış ise, kullanıcılar kendi kendilerine kayıt olabileceklerdir. Kendi kendilerine kayıt olmuş kullanıcılar KONUK (GUEST) grubuna eklenirler. Bu kullanıcılara, geribildirim email bilgileri kullanılarak
+			kullanıcı adları ve şifrelerinin bulunduğu bir email gönderilir.
+		
+			<br/>
+		</tip>
+		
+		<tip id="downloadservice.simple">
+				Eğer üstveri protokolü "İndirmek için uygun veri" ise, bu servis daha fazla kullanıcı girdisine gerek duymadan kullanıcıların GeoNetwork'den kaynak indirmelerine izin verir - bu en basit dosya indirme arayüzüdür.
+				
+		</tip>
+		<tip id="downloadservice.withdisclaimer">
+				Eğer üstveri protokolü "İndirmek için uygun veri" ise, bu servis kullanıcılar üstveri kısıt/genel feragatını kabul etmeyi onayladıktan sonra kullanıcıların GeoNetwork'den kaynak indirmelerine izin verir. Bu kaynaklar bir zip arşivi olarak üstveri kısıtlarının html tanımı ve üstveri kaydının bellek kopyası ile birlikte paketlenmiştir. (MEF olarak)
+			
+		</tip>
+		<tip id="downloadservice.leave">
+				Bu opsiyonun seçilmesi, GeoNetwork'ün dosya indirilmesi işlemini yapmayacağı anlamına gelir.
+				
+		</tip>
+
+		<!-- xlinkResolver -->
+
+		<tip id="xlinkResolver.enable">
+			Eğer ayarlanmış ise, kayıtlardaki üstveri parçaları XLink çözücü ile çözülür.
+		
+		</tip>
+	</tips>
+	
+</strings>
+
