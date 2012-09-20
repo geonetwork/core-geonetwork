@@ -13,6 +13,7 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
+    <tur>Türkçe</tur> <!-- Do not translate! -->
     
     <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
     <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
