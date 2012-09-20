@@ -1180,6 +1180,9 @@ public class LuceneSearcher extends MetaSearcher {
                 }
             } catch (Exception e) {
                 Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc,e);
+                if(e instanceof org.apache.lucene.store.AlreadyClosedException) {
+                	break;
+                }
             }
 
         }
