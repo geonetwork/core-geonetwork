@@ -38,7 +38,7 @@ GeoNetwork.data.ValidationRuleStore = function(url, params, grouping){
 
     function getStatusIcon(v, record){
         var status = record.getAttribute('type');
-        return '<span class="' + status + '">&#160;</span>';
+        return '<span class="badge badge-' + status + '">&#160;</span>';
     }
     
     var fields = [{
