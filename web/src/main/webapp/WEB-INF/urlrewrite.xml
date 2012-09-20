@@ -66,6 +66,14 @@
         <from>^(.*)/en/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
+    <rule>
+        <from>^(.*)/tr/(.*)$</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/tur/$2</to>
+    </rule>
+    <rule>
+        <from>^(.*)/it/(.*)$</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/ita/$2</to>
+    </rule>
 
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
