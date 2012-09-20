@@ -692,7 +692,7 @@ public class ConfigurationOverrides {
             for (Content c : contentToAdd)
             {
                 if(c instanceof Element) {
-                	Element e = (Element) c.detach();
+                    Element e = (Element) c.detach();
                     if(mergeTarget.getChild(e.getName()) == null) {
                         toAdd.add(e);
                     }

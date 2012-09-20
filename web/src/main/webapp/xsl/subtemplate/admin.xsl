@@ -14,7 +14,7 @@
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmapdefault.css"/>
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmetadatadefault.css"/>
-		<link rel="stylesheet" type="text/css" href="{$widgetPath}/js/GeoNetwork/resources/css/metadata-view.css"/>
+		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/metadata-view.css"/>
 	</xsl:template>
 
 	<xsl:template mode="script" match="/" priority="2">
@@ -34,7 +34,7 @@
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/LightBox/lightbox.js"/>
 
-				<script type="text/javascript" src="{$widgetPath}/js/OpenLayers/OpenLayers.js"/>
+				<script type="text/javascript" src="{$widgetPath}/js/OpenLayers/lib/OpenLayers.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoExt/script/GeoExt.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork.js"/>
 			</xsl:when>

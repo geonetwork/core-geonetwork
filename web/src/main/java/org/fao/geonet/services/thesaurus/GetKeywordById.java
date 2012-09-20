@@ -50,6 +50,7 @@ public class GetKeywordById implements Service {
 	private enum Formats {
 	    iso,raw
 	}
+
 	// --------------------------------------------------------------------------
 	// ---
 	// --- Service
@@ -60,7 +61,7 @@ public class GetKeywordById implements Service {
 			throws Exception {
 		String sThesaurusName = Util.getParam(params, "thesaurus");
 		String uri = Util.getParam(params, "id");
-        String lang = Util.getParam(params, "lang", context.getLanguage());
+		String lang = Util.getParam(params, "lang", context.getLanguage());
         Formats format = Formats.valueOf(Util.getParam(params, "format", Formats.iso.toString()));
         String langForThesaurus = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
         
@@ -74,24 +75,28 @@ public class GetKeywordById implements Service {
 		ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 		
 		searcher = new KeywordsSearcher(thesaurusMan);
-        if (!multiple) {
-            KeywordBean kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
+		KeywordBean kb = null;
+		if (!multiple) {
+			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
 			if (kb == null) {
-				return new Element ("<null/>");
+                switch (format) {
+        		    case iso: new Element ("null");
+        		    case raw: new Element("descKeys");
+    		    }
 			} else {
-			    switch (format) {
-			    case iso: return kb.getIso19139();
-			    case raw: return KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
-			    }
-			}
+                switch (format) {
+        		    case iso: return kb.getIso19139();
+        		    case raw: return KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
+    		    }
+	        }
 		} else {
 			String[] url = uri.split(",");
 			List<KeywordBean> kbList = new ArrayList<KeywordBean>();
 			for (int i = 0; i < url.length; i++) {
 				String currentUri = url[i];
-				KeywordBean kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
+				kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
 				if (kb == null) {
-					return new Element ("<null/>");
+					return new Element ("null");
 				} else {
 					kbList.add(kb);
 					kb = null;
@@ -108,11 +113,10 @@ public class GetKeywordById implements Service {
                 }
 			    return root;
 			}
-			
+
 		}
-			
+
         return new Element ("<null/>");
-		
 	}
 }
 

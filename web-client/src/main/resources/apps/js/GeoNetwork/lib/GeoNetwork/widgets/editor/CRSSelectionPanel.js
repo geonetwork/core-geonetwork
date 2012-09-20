@@ -256,7 +256,7 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/MultiselectItemSelector-3.0/icons',
+            imagePath: '../js/ext-ux/images',
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){

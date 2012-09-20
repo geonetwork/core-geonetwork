@@ -800,5 +800,4 @@ public class KeywordBean {
         definitions.remove(lang);
         return this;
     }
-
 }

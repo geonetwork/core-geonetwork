@@ -27,11 +27,14 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
-import org.jdom.Element;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 //==============================================================================
 
@@ -233,7 +236,7 @@ class ElementEntry
         for (Object aChildren : children) {
 
             if (groupElem) {
-                System.out.println("WARNING found element children for group in element " + name + " " + ref);
+                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING found element children for group in element " + name + " " + ref);
             }
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();

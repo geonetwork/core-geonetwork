@@ -25,6 +25,7 @@ package org.fao.geonet.languages;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,18 +76,21 @@ public class IsoLanguagesMapper {
      * Creates mapping to of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      *
      * @param dbms
-     * @throws Exception hmm
      */
-    public void init(Dbms dbms) throws Exception {
+    public void init(Dbms dbms) {
         String query = "SELECT code, shortcode FROM IsoLanguages";
-        @SuppressWarnings("unchecked")
-		List<Element> records = dbms.select(query).getChildren();
-        for(Element record : records) {
-            final String shortcode = record.getChildText("shortcode");
-            final String code = record.getChildText("code");
-            iso639_2_to_iso639_1IsoLanguagesMap.put(code, shortcode);
-            if(!iso639_1_to_iso639_2IsoLanguagesMap.containsKey(shortcode))
-                iso639_1_to_iso639_2IsoLanguagesMap.put(shortcode, code);
+        try {
+        	@SuppressWarnings("unchecked")
+			List<Element> records = dbms.select(query).getChildren();
+    	    for(Element record : records) {
+        	    final String shortcode = record.getChildText("shortcode");
+            	final String code = record.getChildText("code");
+	            iso639_2_to_iso639_1IsoLanguagesMap.put(code, shortcode);
+    	        if(!iso639_1_to_iso639_2IsoLanguagesMap.containsKey(shortcode))
+        	        iso639_1_to_iso639_2IsoLanguagesMap.put(shortcode, code);
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -178,10 +178,11 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     decomposeNestingPath: function(nPath){
         var a = [];
-        if (nPath instanceof Array) {
-            while (nPath.length > 0) {
-                a.push(nPath.slice());
-                nPath.pop();
+        if (OpenLayers.Util.isArray(nPath)) {
+            var path = nPath.slice();
+            while (path.length > 0) {
+                a.push(path.slice());
+                path.pop();
             }
             a.reverse();
         }
@@ -227,7 +228,7 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
      *
      * Parameters:
      * layerArray - {Array({Object})} Array of layerContext objects
-     * layerContext - {Object} layerContext object
+     * layer - {Object} layerContext object
      */
     processLayer: function(layerArray, layer) {
         if (layer.layersContext) {
@@ -440,7 +441,9 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
                 var node = this.createElementNSPlus("Style");
                 this.writeNode("Name", style, node);
                 this.writeNode("Title", style, node);
-                this.writeNode("LegendURL", style, node);
+                if (style.legend) {
+                    this.writeNode("LegendURL", style, node);
+                }
                 return node;
             },
             "Name": function(obj) {
@@ -463,7 +466,7 @@ OpenLayers.Format.OWSContext.v0_3_1 = OpenLayers.Class(OpenLayers.Format.XML, {
                     name: layer.params.LAYERS,
                     queryable: layer.queryable ? "1" : "0",
                     hidden: layer.visibility ? "0" : "1",
-                    opacity: layer.opacity ? layer.opacity: null}
+                    opacity: layer.hasOwnProperty("opacity") ? layer.opacity : null}
                 });
                 this.writeNode("ows:Title", layer.name, node);
                 this.writeNode("ows:OutputFormat", layer.params.FORMAT, node);

@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0" exclude-result-prefixes="exslt">
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+  version="2.0" exclude-result-prefixes="exslt">
 
   <xsl:import href="process-utility.xsl"/>
 
@@ -18,7 +19,7 @@
   <xsl:param name="gurl" select="'http://localhost:8080/geonetwork'"/>
 
   <!-- The UI language. Thesaurus search is made according to GUI language -->
-  <xsl:param name="lang" select="'en'"/>
+  <xsl:param name="lang" select="'eng'"/>
 
   <!-- Replace or not existing extent -->
   <xsl:param name="replace" select="'0'"/>
@@ -48,11 +49,12 @@
     <xsl:variable name="geoKeywords"
       select="$root//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
                       not(gco:CharacterString/@gco:nilReason) 
-                      and not(contains($extentDescription, gco:CharacterString))
+                      and (not(contains($extentDescription, gco:CharacterString))
+                      or not(contains($extentDescription, gmx:Anchor)))
                       and ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']"/>
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
-        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords, ', ')"/>
+        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/*, ', ')"/>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/></name>
         <operational>true</operational>
         <params>{gurl:{type:'string', defaultValue:'<xsl:value-of select="$gurl"/>'},
@@ -187,7 +189,7 @@
       select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(gco:CharacterString/@gco:nilReason)]">
 
       <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="gco:CharacterString"/>
+        <xsl:with-param name="word" select="*[normalize-space(.)!='']"/>
         <xsl:with-param name="srv" select="$srv"/>
       </xsl:call-template>
 
@@ -199,29 +201,31 @@
   <xsl:template name="get-bbox">
     <xsl:param name="word"/>
     <xsl:param name="srv" select="false()"/>
-
-    <!-- Get keyword information -->
-    <xsl:variable name="keyword" select="document(concat($serviceUrl, gco:CharacterString))"/>
-    <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
-
-    <!-- It should be one but if one keyword is found in more
-        thant one thesaurus, then each will be processed.-->
-    <xsl:for-each select="$knode/response/descKeys/keyword">
-      <xsl:if test="geo">
-        <xsl:choose>
-          <xsl:when test="$srv">
-            <srv:extent>
-              <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
-            </srv:extent>
-          </xsl:when>
-          <xsl:otherwise>
-            <gmd:extent>
-              <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
-            </gmd:extent>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
-    </xsl:for-each>
+    
+    <xsl:if test="normalize-space($word)!=''">
+      <!-- Get keyword information -->
+      <xsl:variable name="keyword" select="document(concat($serviceUrl, $word))"/>
+      <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
+  
+      <!-- It should be one but if one keyword is found in more
+          thant one thesaurus, then each will be processed.-->
+      <xsl:for-each select="$knode/response/descKeys/keyword">
+        <xsl:if test="geo">
+          <xsl:choose>
+            <xsl:when test="$srv">
+              <srv:extent>
+                <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
+              </srv:extent>
+            </xsl:when>
+            <xsl:otherwise>
+              <gmd:extent>
+                <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, $word)"/>
+              </gmd:extent>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:if>
   </xsl:template>
   
 </xsl:stylesheet>

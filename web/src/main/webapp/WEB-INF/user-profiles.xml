@@ -129,9 +129,6 @@
         <allow service="csw.config.get"/>
         <allow service="csw.config.set"/>
 
-        <!-- csw publication -->
-        <allow service="csw-publication"/>
-
         <allow service="csw.customelementset.get"/>
         <allow service="csw.customelementset.set"/>
 
@@ -306,6 +303,10 @@
 		<!-- Subtemplate -->
 	  <allow service="subtemplate.types"/>
 	  <allow service="subtemplate.admin"/>
+	    
+	    
+	    <!-- csw publication -->
+	    <allow service="csw-publication"/>
 	</profile>
 
 	<!-- ====================================================================== -->
