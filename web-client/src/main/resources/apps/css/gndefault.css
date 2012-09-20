@@ -274,6 +274,9 @@ table.related * a:hover,
 .xmlIcon {
   background-image : url(../images/default/page_code.png);
 }
+.rdfIcon {
+  background-image : url(../images/default/sw-cube.png);
+}
 .addIcon {
   background-image : url(../images/default/add.png) !important;
 }

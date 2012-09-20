@@ -267,6 +267,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdShow: serviceUrl + 'metadata.show.embedded',
             mdMEF: serviceUrl + 'mef.export',
             mdXMLGet: serviceUrl + 'xml.metadata.get',
+            mdRDFGet: serviceUrl + 'rdf.metadata.get',
             mdXMLGet19139: serviceUrl + 'xml_iso19139',
             mdXMLGetDC: serviceUrl + 'xml_dublin-core',
             mdXMLGetFGDC: serviceUrl + 'xml_fgdc-std',
