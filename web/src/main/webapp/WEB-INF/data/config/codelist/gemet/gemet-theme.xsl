@@ -26,7 +26,7 @@ managed by GeoNetwork opensource.
             </dc:creator>
             <dc:uri>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:uri>
             <dc:rights>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:rights>
-            <dcterms:issued>Fry Sep 22 07:57:15 CEST 2009</dcterms:issued>
+            <dcterms:issued>Fri Sep 22 07:57:15 CEST 2009</dcterms:issued>
             <dcterms:modified>2009-09-22 07:57:15</dcterms:modified>
         </skos:ConceptScheme>
     </xsl:template>
