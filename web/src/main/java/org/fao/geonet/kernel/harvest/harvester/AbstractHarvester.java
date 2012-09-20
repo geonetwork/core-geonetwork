@@ -60,8 +60,10 @@ import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -401,6 +403,7 @@ public abstract class AbstractHarvester
 	void harvest()
 	{
 	    running = true;
+	    long startTime = System.currentTimeMillis();
 	    try {
 		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
 
@@ -410,8 +413,7 @@ public abstract class AbstractHarvester
 
 		error = null;
 
-		String lastRun = new ISODate(System.currentTimeMillis()).toString();
-
+		String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
 		try
 		{
 			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
@@ -452,6 +454,7 @@ public abstract class AbstractHarvester
 				logger.warning(" (C) Exc : "+ ex);
 			}
 		}
+        long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
 		// record the results/errors for this harvest in the database 
 		Dbms dbms = null;
@@ -459,7 +462,7 @@ public abstract class AbstractHarvester
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 			Element result = getResult();
 			if (error != null) result = JeevesException.toElement(error);
-			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, lastRun, getParams().node, result);
+			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, elapsedTime, lastRun, getParams().node, result);
 		} catch (Exception e) {
 			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
 			e.printStackTrace();
