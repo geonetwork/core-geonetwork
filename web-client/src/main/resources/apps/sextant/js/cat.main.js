@@ -499,13 +499,12 @@ cat.app = function() {
 	return {
 		init : function() {
 			
-			if(window.location.href.indexOf('https') == 0 ){
-				GeoNetwork.URL = 'https://localhost:8443/geonetwork';
+			var gnUrlElt = Ext.query('input[id*=configgeonetwork]');
+			if(gnUrlElt && gnUrlElt.length==1) {
+				GeoNetwork.URL=Ext.get(gnUrlElt[0]).getValue();
 			}
-			else if (window.location.href.indexOf('http') == 0 ){
-				GeoNetwork.URL = 'http://localhost:8080/geonetwork';
-			}
-			geonetworkUrl= GeoNetwork.URL;
+			geonetworkUrl = GeoNetwork.URL || window.location.href.match(/((http).*\/.*)\/apps\/sextant.*/, '')[1];
+			
 			urlParameters = GeoNetwork.Util.getParameters(location.href);
 			
 			var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
