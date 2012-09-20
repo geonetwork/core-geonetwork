@@ -25,12 +25,32 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	menuElt.on('click', function(){
 
         		if(this.curMenu) this.curMenu.destroy();
-	            this.curMenu = this.createLinksMenu(idx, this, node, type);
-	            if(this.curMenu) {
-	            	this.curMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
-	            }
+        		
+        		//don't create a menu if only 1 element
+        		var a = Ext.DomQuery.jsSelect('div.'+type+'Link', node);
+        		if(a && a.length==1 && a[0].firstChild){
+        			this.menuAction(a[0].firstChild.wholeText);
+        		}
+        		else {
+		            this.curMenu = this.createLinksMenu(idx, this, node, type);
+		            if(this.curMenu) {
+		            	this.curMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
+		            }
+        		}
 	        }.bind(this));
         }
+    },
+    
+    menuAction: function(action) {
+    	var txt='';
+    	if(typeof(action) == 'object'){
+    		txt=action.text;
+    	}
+    	else {
+    		txt= action
+    	}
+    	
+    	return alert(txt);
     },
     
     /**
@@ -44,9 +64,10 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	
     	for (var i=0;i<a.length;i++) {
     		if(a[i].firstChild) {
-    			its.push({
-    				text: a[i].firstChild.wholeText
-    			});
+    			its.push(new Ext.Action({
+    				text: a[i].firstChild.wholeText,
+    				handler: this.menuAction
+    			}));
     		}
     	}
     	if(its.length == 0) {

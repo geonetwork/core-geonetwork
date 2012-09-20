@@ -41,7 +41,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         root: new Ext.tree.TreeNode({
             expanded: true,
             text: 'Categories'
-        }),
+        })
     },
    
     /** private: method[initComponent] 
