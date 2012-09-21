@@ -45,7 +45,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
 import org.apache.lucene.util.OpenBitSet;
 import org.fao.geonet.constants.Geonet;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
@@ -185,7 +184,7 @@ public abstract class SpatialFilter extends Filter
         String ftn = _featureSource.getSchema().getName().getLocalPart();
         String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
-                .getFeatures(new DefaultQuery(ftn, fidFilter,geomAtt));
+                .getFeatures(new org.geotools.data.Query(ftn, fidFilter,geomAtt));
         FeatureIterator<SimpleFeature> iterator = features.features();
 
         
