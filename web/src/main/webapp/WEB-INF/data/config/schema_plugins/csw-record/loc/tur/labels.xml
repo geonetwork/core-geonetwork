@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows"
+	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="csw:Record">
+		<label>ÜstVeri</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Başlık</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Oluşturan</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Konu ve Kısaltmalar</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Açıklama</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Yayımlayan</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Contributor</label>
+		<label>İştirakçi***</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Tarih</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Kaynak Tipi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Kaynak Tanımlayıcı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Kod</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Dil</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>İlişki</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Coverage</label>
+		<label>Konum***</label>
+		<description>Örneğin: "Kuzey 90, Güney -90, Doğu 180, Batı -180. Global"</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Rights Management</label>
+		<label>Doğruluk Kriterleri***</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Değiştirilme Tarihi</label>
+		<description>Veri üstverisi değiştirilmiştir</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Özet</label>
+		<description>Kaynak içeriklerinin özetlenmesi.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Mekansal</label>
+		<description>Kaynağın akıllı içeriklerinin mekansal özellikleri.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Audience</label>
+		<label>Audience***</label>
+		<description>A class of entity for whom the resource is intended or useful.</description>
+		<description>A class of entity for whom the resource is intended or useful.***</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Artış Metodu</label>
+		<description>Kütüphaneye hangi öğelerin eklendiğini gösteren metod.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Artış Peryodu</label>
+		<description>Kütüphaneye eklenen öğelerin eklenme sıklığı.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Artış Güvenliği</label>
+		<description>Kütüphaneye eklenen öğelerin güvenlik yönetimi.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Eğitmen Metodu</label>
+		<description>A process, used to engender knowledge, attitudes and skills, that the resource is designed to support.</description>
+		<description>A process, used to engender knowledge, attitudes and skills, that the resource is designed to support.***</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Provenance</label>
+		<description>A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity and interpretation.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Rights Holder</label>
+		<description>A person or organization owning or managing rights over the resource.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ows:BoundingBox">
+		<label>Seçim Alanı</label>
+	</element>
+	<element name="ows:UpperCorner">
+		<label>Üst Köşe</label>
+	</element>
+	<element name="ows:LowerCorner">
+		<label>Alt Köşe</label>
+	</element>
+	<element name="crs">
+		<label>CRS***</label>
+	</element>
+</labels>
