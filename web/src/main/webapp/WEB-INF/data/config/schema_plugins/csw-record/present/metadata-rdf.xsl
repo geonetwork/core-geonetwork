@@ -9,6 +9,7 @@
 
   <xsl:template match="csw:Record|csw:SummaryRecord|csw:BriefRecord" mode="record-reference"/>
   <xsl:template match="csw:Record|csw:SummaryRecord|csw:BriefRecord" mode="to-dcat"/>
+  <xsl:template match="csw:Record|csw:SummaryRecord|csw:BriefRecord" mode="references"/>
   <xsl:template mode="metadata" match="csw:Record|csw:SummaryRecord|csw:BriefRecord"/>
   
 </xsl:stylesheet>

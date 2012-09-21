@@ -12,12 +12,12 @@
 	xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="#all">
 
-	<xsl:include href="metadata-iso19139-utils.xsl"/>
-	<xsl:include href="metadata-iso19139-geo.xsl"/>
-	<xsl:include href="metadata-iso19139-inspire.xsl"/>
-	<xsl:include href="metadata-iso19139-fop.xsl"/>
-	<xsl:include href="metadata-iso19139-subtemplates.xsl"/>
-
+	<xsl:include href="metadata-utils.xsl"/>
+	<xsl:include href="metadata-geo.xsl"/>
+  <xsl:include href="metadata-inspire.xsl"/>
+  <xsl:include href="metadata-fop.xsl"/>
+  <xsl:include href="metadata-subtemplates.xsl"/>
+  
 	<!-- main template - the way into processing iso19139 -->
 	<xsl:template name="metadata-iso19139">
 		<xsl:param name="schema"/>

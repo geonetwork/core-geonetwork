@@ -7,7 +7,7 @@
 	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
-  <xsl:include href="metadata-dublin-core-fop.xsl"/>
+  <xsl:include href="metadata-fop.xsl"/>
   
 	<!-- main template - the way into processing dublin-core -->
   <xsl:template name="metadata-dublin-core">

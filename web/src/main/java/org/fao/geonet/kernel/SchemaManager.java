@@ -78,8 +78,7 @@ import java.util.zip.ZipInputStream;
 public class SchemaManager {
 	private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
-    private String[] xslUriSuffix = { "", "-edit", "-rdf"};
-	private String   schemaPluginsDir;
+    private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
 	private String	 defaultLang;
 	private String	 defaultSchema;
@@ -939,18 +938,15 @@ public class SchemaManager {
         return Xml.loadFile(schemaPluginsCat);
 	}
 
-
-	/**
-     * Build a path to the schema plugin presentation xslt.
-	 *
-	 * @param name the name of the schema to use
-     * @param suffix
+    /**
+     * Build a path to the schema plugin folder
+     *
+     * @param name the name of the schema to use
      * @return
-	 */
-	private String buildSchemaPresentXslt(String name, String suffix) {
-		return "" + schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl";
-	}
-
+     */
+    private String buildSchemaFolderPath(String name) {
+        return "" + schemaPluginsDir + "/" + name;
+    }
 	/**
      * Deletes the presentation xslt from the schemaplugin oasis catalog.
 	 *
@@ -963,28 +959,26 @@ public class SchemaManager {
         @SuppressWarnings(value = "unchecked")
 		List<Content> contents = root.getContent();
 
-		for (String suffix : xslUriSuffix) {
-        		String ourUri =  buildSchemaPresentXslt(name, suffix);
-        
-        		int index = -1;
-        		for (Content content : contents) {
-        			Element uri = null;
-        
-        			if (content instanceof Element) uri = (Element)content;
-        			else continue; // skip this
-        
-        		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
-                      if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
-                          Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
-        				continue;
-        			}
-        
-        			// -- if already mapped then exit
-        			if (uri.getAttributeValue("uri").equals(ourUri)) index = root.indexOf(uri); 
-        		}
+		String ourUri =  buildSchemaFolderPath(name);
 
-        		if (index != -1) root.removeContent(index);
+		int index = -1;
+		for (Content content : contents) {
+			Element uri = null;
+
+			if (content instanceof Element) uri = (Element)content;
+			else continue; // skip this
+
+		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
+              if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                  Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
+				continue;
+			}
+
+			// -- if already mapped then exit
+			if (uri.getAttributeValue("uri").equals(ourUri)) index = root.indexOf(uri); 
 		}
+
+		if (index != -1) root.removeContent(index);
 		return root;
 	}
 
@@ -1003,7 +997,7 @@ public class SchemaManager {
 		List<Content> contents = root.getContent();
 
 		String baseBlank = Geonet.File.METADATA_BASEBLANK;
-		String ourUri =  buildSchemaPresentXslt(name, "");
+		String ourUri =  buildSchemaFolderPath(name);
 
 		for (Content content : contents) {
 			Element uri = null;
@@ -1011,16 +1005,16 @@ public class SchemaManager {
 			if (content instanceof Element) uri = (Element)content;
 			else continue; // skip this
 
-		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
+		  if (!uri.getName().equals("rewriteURI") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
               if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                   Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
 				continue;
 			}
 
 			// -- if already mapped then exit
-			if (uri.getAttributeValue("uri").equals(ourUri)) return -1; 
+			if (uri.getAttributeValue("rewritePrefix").equals(ourUri)) return -1; 
 			
-			String nameAttr = uri.getAttributeValue("name");
+			String nameAttr = uri.getAttributeValue("uriStartString");
 			if (nameAttr.startsWith(Geonet.File.METADATA_BLANK)) {
 				if (nameAttr.compareTo(baseBlank) > 0) baseBlank = nameAttr;
 			}
@@ -1028,7 +1022,6 @@ public class SchemaManager {
 
 		// -- get highest appropriate number
 		String baseNr = baseBlank.replace(Geonet.File.METADATA_BLANK,""); 
-		baseNr = baseNr.replace(".xsl",""); 
 		int baseNrInt = 0;
 		try {
 			baseNrInt = Integer.parseInt(baseNr);
@@ -1051,22 +1044,21 @@ public class SchemaManager {
 
 		baseNrInt = baseNrInt + 1;
 		
-		for (String suffix : xslUriSuffix) {
-        		Element newBlank = new Element("uri", Geonet.OASIS_CATALOG_NAMESPACE);
-        		if (baseNrInt <= Geonet.File.METADATA_MAX_BLANKS) {
-        			String zero = "";
-        			if (baseNrInt < 10) zero = "0";
-        			newBlank.setAttribute("name", Geonet.File.METADATA_BLANK + zero + baseNrInt + suffix + ".xsl");
-        			newBlank.setAttribute("uri",  buildSchemaPresentXslt(name, suffix)); // main presentation xslt
-        		} else {
-        			throw new IllegalArgumentException("Exceeded maximum number of plugin schemas "+Geonet.File.METADATA_MAX_BLANKS);
-        		}
-        
-        		// -- write out new schemaPlugins catalog and re-init the resolvers that
-        		// -- use this catalog
-        
-        		root.addContent(newBlank);
-		}
+	    Element newBlank = new Element("rewriteURI", Geonet.OASIS_CATALOG_NAMESPACE);
+        //Element newBlank = new Element("uri", Geonet.OASIS_CATALOG_NAMESPACE);
+    		if (baseNrInt <= Geonet.File.METADATA_MAX_BLANKS) {
+    			String zero = "";
+    			if (baseNrInt < 10) zero = "0";
+                newBlank.setAttribute("uriStartString", Geonet.File.METADATA_BLANK + zero + baseNrInt);
+                newBlank.setAttribute("rewritePrefix",  buildSchemaFolderPath(name));
+    		} else {
+    			throw new IllegalArgumentException("Exceeded maximum number of plugin schemas "+Geonet.File.METADATA_MAX_BLANKS);
+    		}
+    
+    		// -- write out new schemaPlugins catalog and re-init the resolvers that
+    		// -- use this catalog
+    
+    		root.addContent(newBlank);
 	}
 
 

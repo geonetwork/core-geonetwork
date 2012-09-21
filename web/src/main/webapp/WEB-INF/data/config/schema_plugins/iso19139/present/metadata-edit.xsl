@@ -13,10 +13,10 @@
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="#all">
 
-  <xsl:include href="metadata-iso19139-utils.xsl"/>
-  <xsl:include href="metadata-iso19139-geo.xsl"/>
-  <xsl:include href="metadata-iso19139-inspire.xsl"/>
-  <xsl:include href="metadata-iso19139-view.xsl"/>
+  <xsl:include href="metadata-utils.xsl"/>
+  <xsl:include href="metadata-geo.xsl"/>
+  <xsl:include href="metadata-inspire.xsl"/>
+  <xsl:include href="metadata-view.xsl"/>
 
   <!-- Use this mode on the root element to add hidden fields to the editor -->
   <xsl:template mode="schema-hidden-fields" match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="2">
