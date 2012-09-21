@@ -25,6 +25,8 @@
 					localized="false" />
 				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />
+				<xml name="strings.tur" file="loc/tur/xml/strings.xml"
+					localized="false" />
 				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
 					localized="false" />
                 <xml name="strings.fin" file="loc/fin/xml/strings.xml"
@@ -52,6 +54,8 @@
 					localized="false" />
 				<xml name="about.por" file="loc/por/xml/about.xml"
 					localized="false" />
+				<xml name="about.tur" file="loc/tur/xml/about.xml"
+					localized="false" />					
 				<xml name="about.cat" file="loc/cat/xml/about.xml"
 					localized="false" />
                 <xml name="about.fin" file="loc/fin/xml/about.xml"
@@ -79,6 +83,8 @@
 					localized="false" />
 				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
+				<xml name="config.tur" file="loc/tur/xml/config.xml"
+					localized="false" />					
 				<xml name="config.cat" file="loc/cat/xml/config.xml"
 					localized="false" />
                 <xml name="config.fin" file="loc/fin/xml/config.xml"
@@ -105,13 +111,15 @@
 				<xml name="harvesting.dut"
 					file="loc/dut/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.por"
-					file="loc/por/xml/harvesting.xml" localized="false" />	
+					file="loc/por/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.cat"
 					file="loc/cat/xml/harvesting.xml" localized="false" />
                 <xml name="harvesting.fin"
                      file="loc/fin/xml/harvesting.xml" localized="false" />
                 <xml name="harvesting.nor"
                      file="loc/nor/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.tur"
+					file="loc/tur/xml/harvesting.xml" localized="false" />
                 <!-- TODO : add other loc files -->
 			</output>
 		</service>
@@ -141,6 +149,8 @@
 					localized="false" />
 				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />	
+				<xml name="strings.tur" file="loc/tur/xml/strings.xml"
+					localized="false" />					
 				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
 					localized="false" />
                 <xml name="strings.fin" file="loc/fin/xml/strings.xml"
@@ -168,6 +178,8 @@
 					localized="false" />
 				<xml name="about.por" file="loc/por/xml/about.xml"
 					localized="false" />
+				<xml name="about.tur" file="loc/tur/xml/about.xml"
+					localized="false" />					
 				<xml name="about.cat" file="loc/cat/xml/about.xml"
 					localized="false" />
                 <xml name="about.fin" file="loc/fin/xml/about.xml"
@@ -195,6 +207,8 @@
 					localized="false" />
 				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
+				<xml name="config.tur" file="loc/tur/xml/config.xml"
+					localized="false" />					
 				<xml name="config.cat" file="loc/cat/xml/config.xml"
 					localized="false" />
                 <xml name="config.fin" file="loc/fin/xml/config.xml"
@@ -228,6 +242,8 @@
                      file="loc/fin/xml/harvesting.xml" localized="false" />
                 <xml name="harvesting.nor"
                      file="loc/nor/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.tur"
+					file="loc/tur/xml/harvesting.xml" localized="false" />
                 <!-- TODO : add other loc files -->
 			</output>
 		</service>

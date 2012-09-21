@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<entity>Varlık</entity>
+	
+	<entityType>
+		<type id="groups">Gruplar</type>
+		<type id="categories">Kategoriler</type>
+		<type id="operations">Operasyonlar</type>
+		<type id="regions">Bölgeler</type>
+	</entityType>
+	
+	<srcLang>Kaynak Dil</srcLang>
+	<desLang>Hedef Dil</desLang>
+	
+			<!-- Buttons -->
+	
+	<save>Kaydet</save>
+	<refresh>Yenile</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Lokalize metin boş olamaz</cannotBeEmpty>
+			<invalidMaxSize>Lokalize metin en fazla {VALUE} karakter olabilir</invalidMaxSize>
+		</length>		
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGetList>Varlık listesi alınamadı</cannotGetList>
+	<cannotSave>Kayıt işlemi sırasında hata oluştu</cannotSave>
+	
+	<!-- tooltips -->
+	
+	<tips>
+	</tips>
+	
+</strings>
+

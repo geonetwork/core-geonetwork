@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+	<delUserConf>Kullanıcıyı veritabanından sil ?</delUserConf>
+    <delUserCsw>Bu kullanıcı sizin CSW ISO profil bağlantınız, devam etmek istiyor musunuz?</delUserCsw>
+</strings>
