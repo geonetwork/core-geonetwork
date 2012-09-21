@@ -433,3 +433,50 @@ dl.xml * dd {
 .gn-bt-main * button {
     font-weight: bold;
 }
+.alert {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    color: #C09853;
+    font-weight: normal;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.alert * h2 {
+    color: #C09853;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.label, .badge {
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #999;
+}
+.label {
+    padding: 1px 4px 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.badge {
+    padding: 1px 9px 2px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+}
+.label-warning, .badge-warning, .badge-error {
+    background-color: #F89406;
+}
+.label-success, .badge-success {
+    background-color: #468847;
+}

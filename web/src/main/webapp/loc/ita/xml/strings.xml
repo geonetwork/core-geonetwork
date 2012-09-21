@@ -15,6 +15,7 @@
 	<spa>Español</spa> <!-- Do not translate! -->
 	<tur>Türkçe</tur> <!-- Do not translate! -->
 	
+	<warning>Warning</warning>
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>

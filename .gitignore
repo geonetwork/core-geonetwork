@@ -1,5 +1,5 @@
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/loc/*/schematron*
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron*
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
 web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
 web/src/main/webapp/scripts/lib/*

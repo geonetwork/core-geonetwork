@@ -889,60 +889,60 @@ public class DataManager {
 		// for each set of rules.
 		Element schemaTronXmlOut = new Element("schematronerrors",
 				Edit.NAMESPACE);
-
-		for (String rule : rules) {
-			// -- create a report for current rules.
-			// Identified by a rule attribute set to shematron file name
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
-			String ruleId = rule.substring(0, rule.indexOf(".xsl"));
-			Element report = new Element("report", Edit.NAMESPACE);
-			report.setAttribute("rule", ruleId,
-					Edit.NAMESPACE);
-
-			String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
-					+ rule;
-			try {
-				Map<String,String> params = new HashMap<String,String>();
-				params.put("lang", lang);
-				params.put("rule", rule);
-				params.put("thesaurusDir", this.thesaurusDir);
-				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
-				if (xmlReport != null) {
-					report.addContent(xmlReport);
-				}
-				// add results to persitent validation information
-				int firedRules = 0;
-				Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-				while (i.hasNext()) {
-                    i.next();
-                    firedRules ++;
-                }
-				int invalidRules = 0;
-                i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                while (i.hasNext()) {
-                    i.next();
-                    invalidRules ++;
-                }
-				Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
-				if (valTypeAndStatus != null) {
-				    valTypeAndStatus.put(ruleId, results);
-				}
-			} catch (Exception e) {
-				Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
-
-                // If an error occurs that prevents to verify schematron rules, add to show in report
-                Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-                errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-                report.addContent(errorReport);
-
-				e.printStackTrace();
-			}
-
-			// -- append report to main XML report.
-			schemaTronXmlOut.addContent(report);
+		if (rules != null) {
+    		for (String rule : rules) {
+    			// -- create a report for current rules.
+    			// Identified by a rule attribute set to shematron file name
+                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                    Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+    			String ruleId = rule.substring(0, rule.indexOf(".xsl"));
+    			Element report = new Element("report", Edit.NAMESPACE);
+    			report.setAttribute("rule", ruleId,
+    					Edit.NAMESPACE);
+    
+    			String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
+    					+ "schematron" + File.separator + rule;
+    			try {
+    				Map<String,String> params = new HashMap<String,String>();
+    				params.put("lang", lang);
+    				params.put("rule", rule);
+    				params.put("thesaurusDir", this.thesaurusDir);
+    				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
+    				if (xmlReport != null) {
+    					report.addContent(xmlReport);
+    				}
+    				// add results to persitent validation information
+    				int firedRules = 0;
+    				Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+    				while (i.hasNext()) {
+                        i.next();
+                        firedRules ++;
+                    }
+    				int invalidRules = 0;
+                    i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                    while (i.hasNext()) {
+                        i.next();
+                        invalidRules ++;
+                    }
+    				Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
+    				if (valTypeAndStatus != null) {
+    				    valTypeAndStatus.put(ruleId, results);
+    				}
+    			} catch (Exception e) {
+    				Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
+    
+                    // If an error occurs that prevents to verify schematron rules, add to show in report
+                    Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+                    errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+                    report.addContent(errorReport);
+    
+    				e.printStackTrace();
+    			}
+    
+    			// -- append report to main XML report.
+    			schemaTronXmlOut.addContent(report);
+    		}
 		}
-
 		return schemaTronXmlOut;
 	}
 

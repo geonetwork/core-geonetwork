@@ -723,42 +723,6 @@
           </aggregations>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <id>ant-schematrons-clean</id>
-            <phase>clean</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <commandlineArgs>clean</commandlineArgs> 
-              <environmentVariables>
-                <ANT_OPTS>-client</ANT_OPTS>
-              </environmentVariables>
-              <workingDirectory>${basedir}/../schematrons</workingDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>ant-schematrons</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <environmentVariables>
-                <ANT_OPTS>-client</ANT_OPTS>
-              </environmentVariables>
-              <workingDirectory>${basedir}/../schematrons</workingDirectory>
-            </configuration>
-          </execution>
-        </executions>      
-      </plugin>
 
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
