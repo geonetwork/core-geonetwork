@@ -58,8 +58,7 @@
 								<div class="result-metadata-modal-content">
 									<p></p>
 									<ul>
-										<xsl:apply-templates mode="iso19139"
-											select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" />
+										<xsl:call-template name="contact"/>
 									</ul>
 								</div>
 							</div>
@@ -149,6 +148,28 @@
 		
 		<p><b><xsl:value-of select="$title" /></b></p>
 		<ul><xsl:apply-templates mode="iso19139" /></ul>
+		
+	</xsl:template>
+	
+	<xsl:template name="contact" mode="iso19139"
+		match="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" priority="3">
+		
+		<xsl:for-each select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty">
+			<xsl:apply-templates mode="iso19139"
+					select="gmd:individualName" />
+			<xsl:apply-templates mode="iso19139"
+					select="gmd:organisationName" />
+			<xsl:apply-templates mode="iso19139"
+					select="gmd:contactInfo//gmd:electronicMailAddress" />
+			
+			<li>
+				<b><xsl:value-of select="/root/schemas/iso19139.sextant/strings/role" /> : </b>
+				<xsl:variable name="choiceValue" select="gmd:role/gmd:CI_RoleCode/@codeListValue" />
+				<xsl:variable name="name" select="'gmd:CI_RoleCode'" />
+				<xsl:value-of select="string($label/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label)" />
+			</li>
+			<br/>
+		</xsl:for-each>
 		
 	</xsl:template>
 

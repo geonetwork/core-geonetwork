@@ -15,4 +15,5 @@
     <inspireTheme>Inspire theme</inspireTheme>
     <accessUseConstraints>Condition to access and use</accessUseConstraints>
     <publicAccessConstraints>Limitation on public access</publicAccessConstraints>
+    <role>Role</role>
 </strings>

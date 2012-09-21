@@ -31,6 +31,7 @@ cat.app = function() {
 
 	function search() {
 		searching = true;
+		Ext.get('load-spinner').show();
 		catalogue.search('searchForm', app.loadResults, null,
 				catalogue.startRecord, true);
 	}
@@ -420,6 +421,8 @@ cat.app = function() {
 				this.getForm().reset();
 				var elt = this.findByType('gn_categorytree', true);
 				elt[0].reset();
+				catalogue.metadataStore.removeAll();
+				tBar.setVisible(false);
 			},
 			resetBt : new Ext.Button({
 				text : OpenLayers.i18n('reset'),
@@ -432,9 +435,11 @@ cat.app = function() {
 						buttonSelector: '.btnText',
 				}),
 			searchCb : function() {
+
 				if (metadataResultsView && Ext.getCmp('geometryMap')) {
 					metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
 				}
+				
 				var any = Ext.get('E_any');
 				if (any) {
 					if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
@@ -443,6 +448,7 @@ cat.app = function() {
 				}
 				catalogue.startRecord = 1; // Reset start record
 				search();
+				tBar.setVisible(true);
 			},
 			padding : 5,
 			//height: Ext.getBody().getViewSize().height-120,
@@ -542,10 +548,10 @@ cat.app = function() {
 			// tagCloudViewPanel = createTagCloud();
 
 			// set a permalink provider
-			permalinkProvider = new GeoExt.state.PermalinkProvider({
-				encodeType : false
-			});
-			Ext.state.Manager.setProvider(permalinkProvider);
+//			permalinkProvider = new GeoExt.state.PermalinkProvider({
+//				encodeType : false
+//			});
+//			Ext.state.Manager.setProvider(permalinkProvider);
 			//            
 			// createHeader();
 
@@ -556,7 +562,7 @@ cat.app = function() {
 
 			edit();
 			// Search result
-			resultsPanel = createResultsPanel(permalinkProvider);
+			resultsPanel = createResultsPanel();
 
 			var viewport = new Ext.Panel({
 				renderTo: 'main-viewport',
@@ -587,7 +593,14 @@ cat.app = function() {
 					id : 'center',
 					split : true,
 					//margins : '40 30 20 0',
-					items : [ infoPanel, resultsPanel ]
+					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
+						autoEl : {
+							tag : 'img',
+							src : 'images/spinner-large.gif',
+							cls : 'spinner',
+							id : 'load-spinner'
+						}
+					})]
 				} ],
 				listeners: {
 					afterrender: {
@@ -690,7 +703,8 @@ cat.app = function() {
 			Ext.getCmp('west').syncSize();
 			Ext.getCmp('center').syncSize();
 			Ext.ux.Lightbox.register('a[rel^=lightbox]');
-
+			
+			Ext.get('load-spinner').hide();
 		},
 	}
 }

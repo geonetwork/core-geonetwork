@@ -15,4 +15,5 @@
     <inspireTheme>Thème Inspire</inspireTheme>
     <accessUseConstraints>Conditions applicables à l’accès et à l’utilisation//Contraintes légales</accessUseConstraints>
     <publicAccessConstraints>Restrictions concernant l’accès public//Contraintes sur la ressource</publicAccessConstraints>
+    <role>Rôle</role>
 </strings>

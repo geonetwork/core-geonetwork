@@ -22,6 +22,15 @@ body {
 .bg_logo_container {
 	text-align: center;
 }
+.spinner {
+	width:48px;
+	height:48px;
+	z-index: 100000;
+	left: 46%;
+	top:48%;
+	position:absolute;
+	visibility:hidden;
+}
 .search-panel .search-panel-header {
 	border: none;
 	background-color: #DEDEDE;
@@ -472,6 +481,7 @@ div.no-icon-menu a.x-menu-item {
 	font-size:12px;
 	font-weight:700px;
 	color: #444444;
+	padding-left: 10px;
 }
 .x-window-header .x-tool {
     float: right;
