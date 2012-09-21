@@ -75,6 +75,9 @@ import com.vividsolutions.jts.io.WKTWriter;
 public final class XslUtil {
 
     private static final GMLConfiguration GML3_CONFIG = new org.geotools.gml3.GMLConfiguration();
+    static{
+    	GML3_CONFIG.getProperties().add(org.geotools.gml3.GMLConfiguration.NO_SRS_DIMENSION);
+    }
     private static final org.geotools.gml2.GMLConfiguration GML2_CONFIG = new org.geotools.gml2.GMLConfiguration();
     private static final Random RANDOM = new Random();
 
@@ -461,6 +464,7 @@ public final class XslUtil {
         return combineAndWriteGeom(description, SingletonIterator.makeIterator(ni), new GeomWriter() {
 
             public Object write(ExtentTypeCode code, MultiPolygon geometry) throws Exception {
+            	geometry.setUserData(null);
                 final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 final Encoder encoder = new Encoder(GML3_CONFIG);
                 encoder.setIndenting(false);
@@ -486,7 +490,7 @@ public final class XslUtil {
                         if (next2 instanceof NodeInfo & ((NodeInfo)next2).getNodeKind() == Type.ELEMENT) {
                             NodeInfo info = (NodeInfo) next2;
 
-                            String nodeXml = writeXml(info).replace("srsDimension=\"2\"", "");
+                            String nodeXml = writeXml(info).replaceAll("LinearRing srsDimension=\"\\d\"", "LinearRing");
                             builder.append(nodeXml);
                         }
                         next2 = iter2.next();

@@ -436,6 +436,6 @@ alter table kantone_search add PRIMARY KEY ("KANTONSNR");
 alter table countries_search add PRIMARY KEY ("ID");
 alter table gemeinden_search add PRIMARY KEY ("OBJECTVAL");
 
-DELETE FROM geometry_columns where f_table_name='countriesBB' OR f_table_name='countries' OR f_table_name='non_validated' OR 
-    f_table_name='xlinks' OR f_table_name='spatialIndex' OR f_table_name='gemeindenBB' OR f_table_name='kantoneBB' OR 
-    f_table_name='countries_search' OR f_table_name='kantone_search' OR f_table_name='gemeinden_search';
+-- DELETE FROM geometry_columns where f_table_name='countriesBB' OR f_table_name='countries' OR f_table_name='non_validated' OR 
+--    f_table_name='xlinks' OR f_table_name='gemeindenBB' OR f_table_name='kantoneBB' OR 
+--    f_table_name='countries_search' OR f_table_name='kantone_search' OR f_table_name='gemeinden_search';

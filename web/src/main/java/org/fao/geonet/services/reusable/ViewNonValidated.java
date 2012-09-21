@@ -45,7 +45,7 @@ public class ViewNonValidated implements Service
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
-        String type = Util.getParam(params, "type");
+        String type = Util.getParam(params, "type", "contacts");
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);

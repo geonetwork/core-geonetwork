@@ -44,7 +44,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
@@ -173,6 +172,9 @@ public class Get implements Service
     private static final Namespace GCO_NAMESPACE    = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 
     private final GMLConfiguration gmlConfiguration = new GMLConfiguration();
+    {
+    	gmlConfiguration.getProperties().add(GMLConfiguration.NO_SRS_DIMENSION);
+    }
     private String                 _appPath;
 
     public Element exec(Element params, ServiceContext context) throws Exception
@@ -228,7 +230,7 @@ public class Get implements Service
         final Filter filter = filterFactory2.equals(filterFactory2.property(featureType.idColumn), filterFactory2
                 .literal(id));
 
-        final DefaultQuery q = featureType.createQuery(filter,properties);
+        final Query q = featureType.createQuery(filter,properties);
 
         final Element xml = resolve(format, id, featureSource, q, featureType, wfs, extentTypeCode, crs);
         return xml;
@@ -511,7 +513,8 @@ public class Get implements Service
 
         ExtentHelper.addGmlId(transformed);
         encoder.encode(transformed, org.geotools.gml3.GML.geometryMember, outputStream);
-        Element geometryMembers = Xml.loadString(outputStream.toString(), false);
+        String gmlString = outputStream.toString();
+		Element geometryMembers = Xml.loadString(gmlString, false);
         Iterator iter = geometryMembers.getChildren().iterator();
         do {
             Object next = iter.next();

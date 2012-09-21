@@ -24,11 +24,9 @@
 package org.fao.geonet.services.extent;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,9 +34,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.geotools.data.*;
-import org.geotools.data.postgis.PostgisDataStore;
-import org.geotools.data.postgis.PostgisDataStoreFactory;
-import org.geotools.data.wfs.WFSDataStoreFactory;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.referencing.CRS;
@@ -144,13 +139,13 @@ public class Source
         public Query createQuery(String id, String[] properties)
         {
             final Filter filter = createFilter(id);
-            final DefaultQuery query = new DefaultQuery(pgTypeName, filter, properties);
+            final Query query = new Query(pgTypeName, filter, properties);
             return query;
         }
-        public DefaultQuery createQuery(Filter filter, String[] properties) {
-            return new DefaultQuery(pgTypeName, filter, properties);
+        public Query createQuery(Filter filter, String[] properties) {
+            return new Query(pgTypeName, filter, properties);
         }
-        public DefaultQuery createQuery(String[] properties) {
+        public Query createQuery(String[] properties) {
             return createQuery(Filter.INCLUDE,properties);
         }
         public Filter createFilter(String id)

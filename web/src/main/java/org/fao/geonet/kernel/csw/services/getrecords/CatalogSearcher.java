@@ -82,7 +82,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.geotools.data.DataStore;
-import org.geotools.data.DefaultQuery;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
@@ -447,23 +446,12 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		UserSession session = context.getUserSession();
 
-		// if this is a new search or request has changed them release indexreader and get a (reopened) indexreader
-		QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-		QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
-
-		if (sessionQueryReprentation == null ||
-		        !requestQueryReprentation.equals(sessionQueryReprentation) ||
-		        !sm.isUpToDateReader(_reader)) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
-			synchronized(this) {
-				if (_reader != null) {
-                    sm.releaseIndexReader(_reader);
-                }
-                _reader = sm.getIndexReader(context.getLanguage());
-			}
+		synchronized(this) {
+			if (_reader != null) {
+                sm.releaseIndexReader(_reader);
+            }
+            _reader = sm.getIndexReader(context.getLanguage());
 		}
 
 		if (luceneExpr != null) {
@@ -741,7 +729,7 @@ public class CatalogSearcher {
         for (String id : ids) {
         	identifiers.add(filterFactory.featureId(typeName+"."+id));
         }
-        DefaultQuery query = new DefaultQuery(typeName, filterFactory.id(identifiers), new String[]{"the_geom"});
+        org.geotools.data.Query query = new org.geotools.data.Query(typeName, filterFactory.id(identifiers), new String[]{"the_geom"});
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = _datastore.getFeatureSource(typeName).getFeatures(
         		query);
         iter = features.features();

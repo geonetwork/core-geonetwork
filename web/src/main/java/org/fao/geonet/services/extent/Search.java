@@ -35,7 +35,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
@@ -128,7 +127,7 @@ public class Search extends List
             throws Exception
     {
         final String xml = Util.getParamText(params, "xml");
-        DefaultQuery query;
+        Query query;
         if (xml != null) {
             final String version = Util.getParamText(params, "version");
             query = xmlFilterQuery(xml, version, featureType, properties);
@@ -160,7 +159,7 @@ public class Search extends List
         return filterFactory.within(geomAtt, filterFactory.literal(geometry));
     }
 
-    private DefaultQuery xmlFilterQuery(String xml, String version, FeatureType featureType, String[] properties)
+    private Query xmlFilterQuery(String xml, String version, FeatureType featureType, String[] properties)
             throws Exception
     {
         Filter filter;
@@ -172,7 +171,7 @@ public class Search extends List
         return featureType.createQuery(filter, properties);
     }
 
-    private DefaultQuery likeQuery(Element params, FeatureType featureType, String[] properties) throws IOException
+    private Query likeQuery(Element params, FeatureType featureType, String[] properties) throws IOException
     {
         String pattern = Util.getParamText(params, "pattern") + "";
         final String method = Util.getParamText(params, "method");
