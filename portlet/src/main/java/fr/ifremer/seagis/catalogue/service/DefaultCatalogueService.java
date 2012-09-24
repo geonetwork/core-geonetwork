@@ -16,9 +16,7 @@ public class DefaultCatalogueService extends DefaultCommonService implements Cat
     private static final String GEOVIEWER_KEY = "LIFERAY_SHARED_GEOVIEWER";
   
     public void sendLayerToGeoviewer(final FacesContext context, final String wmsurl, final String wmsversion, final String layername, final String layergroup) {
-        
-    	System.out.println("-- sendLayerToGeoviewer"+ layername + " " + wmsurl);
-    	if ((wmsurl == null) || (wmsversion == null) || (layername == null)) return;
+        if ((wmsurl == null) || (wmsversion == null) || (layername == null)) return;
         final String currentCommunity = getCurrentCommunity(context);
         Map<String, List<Map<String, String>>> geoviewerIpc = (Map<String, List<Map<String, String>>>) FacesPortletUtils.getPublicPortletSessionAttribute(context, GEOVIEWER_KEY);
 
@@ -59,9 +57,7 @@ public class DefaultCatalogueService extends DefaultCommonService implements Cat
     }
     
     public void sendLayerToPanier(final FacesContext context, final String layername, final String getrecordbyidurl) {
-    	System.out.println("-- sendLayerToPanier" + layername + " " + getrecordbyidurl);
-    	
-    	if ((layername == null) || (getrecordbyidurl == null)) return;
+        if ((layername == null) || (getrecordbyidurl == null)) return;
         final String currentCommunity = getCurrentCommunity(context);
         if (currentCommunity == null) return;
         Map<String, Map<String, List<String>>> panier = (Map<String, Map<String, List<String>>>) FacesPortletUtils.getPublicPortletSessionAttribute(context, PANIERKEY);
@@ -89,7 +85,6 @@ public class DefaultCatalogueService extends DefaultCommonService implements Cat
     
     public int getNbPanierLayers(final FacesContext context) {
         int count = 0;
-        System.out.println(" -- MISE A JOUR COMPOSANT JSF ");
         final String currentCommunity = getCurrentCommunity(context);
         if (currentCommunity != null) {
             final Map<String, List<String>> panier = getItemsFromBasketForCommunity(context, currentCommunity);
@@ -99,13 +94,10 @@ public class DefaultCatalogueService extends DefaultCommonService implements Cat
                 }
             }
         }
-        System.out.println(count);
         return count;
     }
 
     public int getNbViewerLayers(final FacesContext context) {
-        System.out.println(" -- MISE A JOUR COMPOSANT JSF ");
-
         int count = 0;
         final Map<String, List<Map<String, String>>> globalGeoviewer = (Map<String, List<Map<String, String>>>) FacesPortletUtils.getPublicPortletSessionAttribute(context, "LIFERAY_SHARED_GEOVIEWER");
         final String currentCommunity = getCurrentCommunity(context);
@@ -113,8 +105,6 @@ public class DefaultCatalogueService extends DefaultCommonService implements Cat
             final List<Map<String, String>> geoviewer = globalGeoviewer.get(currentCommunity);
             count = geoviewer.size();
         }
-        System.out.println(count);
-
         return count;
     }
 }

@@ -52,7 +52,6 @@ public class CatalogueController implements Serializable {
     }
     
     private void makeConfig() {
-        System.out.println("---------- BLOOOOOOOOOOOOOOOOOOWWWWWWWWWWWWWWWWWWWWWWW");
         final SextantConfig sextantConfig = CATALOGUESERVICE.getConfiguration(FacesContext.getCurrentInstance());
         
     	if (sextantConfig != null) {
@@ -61,9 +60,13 @@ public class CatalogueController implements Serializable {
             cswurl = sextantConfig.getCatalogueCsw();
             what = sextantConfig.getCatalogueWhat();
             who = sextantConfig.getCatalogueWho();
-            mdviewerurl = "Url de Flow";
-            geoviewerurl = "Url de Flow";
-            panierurl = "Url de Flow";
+            System.out.println("------ TODO : Change portlet url");
+            mdviewerurl = "mdviewerurl";
+            geoviewerurl = "geoviewerurl";
+            panierurl = "panierurl";
+//            mdviewerurl = sextantConfig.getMdViewerUrl();
+//            geoviewerurl = sextantConfig.getGeoviewerUrl();
+//            panierurl = sextantConfig.getPanierUrl();
             
         } else {
             maxextent = null;
