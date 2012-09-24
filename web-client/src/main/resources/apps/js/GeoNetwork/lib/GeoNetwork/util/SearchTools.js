@@ -183,12 +183,14 @@ GeoNetwork.util.SearchTools = {
      *  Search field may not be visible if in a collapsed fieldset (TODO)
      *  Test with radio, dates and geometry (TODO)
      */
-    populateFormFromParams: function(form, map){
+    populateFormFromParams: function(form, map, createNewField){
         form.cascade(function(cur){
             if (cur.getName) {
                 var name = cur.getName();
                 if (map[name]) {
                     var value = map[name];
+                    delete map[name];
+                    
                     if (cur.getXType() === 'superboxselect') {
                         if(value.indexOf(' or ') !== -1) {
                             value = value.split(' or ');
@@ -233,6 +235,21 @@ GeoNetwork.util.SearchTools = {
                 }
             }
         });
+        
+        // Populate the search form with simple text input ...
+        if (createNewField) {
+            for (var searchCriteria in map) {
+                if (map.hasOwnProperty(searchCriteria) && map[searchCriteria] !== '') {
+                    form.insert(form.items.length ++, new Ext.form.TextField({
+                        name: searchCriteria,
+                        fieldLabel: OpenLayers.i18n(searchCriteria.substring(searchCriteria.indexOf('_') + 1)),
+                        value: map[searchCriteria],
+                        // Switch to text for debugging
+                        inputType: 'text'
+                    }));
+                }
+            }
+        }
     },
     
     /** private: method[addFiltersFromPropertyMap]

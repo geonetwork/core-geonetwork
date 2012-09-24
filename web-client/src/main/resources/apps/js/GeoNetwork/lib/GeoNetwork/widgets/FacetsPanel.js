@@ -183,7 +183,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         Ext.getDom('facets').innerHTML = zappette;
         
         // Register click event
-        var items = Ext.DomQuery.select('a.facet');
+        var items = Ext.DomQuery.select('a.facet-link');
         var scope = this;
         Ext.each(items, function (input) {
             Ext.get(input).on('click', function () {
@@ -224,8 +224,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 var recId = this.facetsStore.getCount() + 1,
                      r = new this.facetsStore.recordType(data, recId); 
                 this.facetsStore.add(r);
-                return "<h2><a href='javascript:void(0);' class='facet' id='" + recId + "'>" + 
-                              data.node + "&nbsp;(" + data.count + ")</a></h2>";
+                return "<h2><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
+                              data.node + "<span class='facet-count'>(" + data.count + ")</span></a></h2>";
             }
         }
         return "";
