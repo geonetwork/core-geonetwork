@@ -5,21 +5,21 @@
 	<codelist name="gmd:CI_DateTypeCode">
 		<entry>
 			<code>creation</code>
-			<label>Creation</label>
-			<description>Date identifies when the resource was brought into existence</description>
+			<label>Creación</label>
+			<description>Fecha que identifica cuando el recurso fue creado u originado </description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>publication</code>
-			<label>Publication</label>
-			<description>Date identifies when the resource was issued</description>
+			<label>Publicación</label>
+			<description>Fecha que identifica cuando el recurso se emitió</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>revision</code>
 			<label>Revision</label>
-			<description>Date identifies when the resource was examined or re-examined and improved or
-				amended</description>
+			<description>Fecha que identifica cuando el producto fue examinado, mejorado o
+				modificado</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -70,11 +70,11 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageDigital</code>
-			<label>Digital image</label>
-			<description>Likeness of natural or man-made features, objects, and activities acquired
-				through the sensing of visual or any other segment of the electromagnetic spectrum by
-				sensors, such as thermal infrared, and high resolution radar and stored in digital
-				format</description>
+			<label>Imagen Digital</label>
+			<description>Imagen de cosas construidas por el hombre, objetos o acciones, adquiridas por
+				medio de la percepción visual o por medio de sensores en cualquier segmento del especto
+				electromagnético (infrarrojo térmico, radar de alta resolución, foto aérea) y almacenados
+				 en formato digital.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -95,8 +95,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>mapDigital</code>
-			<label>Digital map</label>
-			<description>Map represented in raster or vector form</description>
+			<label>Mapa digital</label>
+			<description>Mapa representado en forma de mapa de bits o vectores</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -133,16 +133,16 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tableDigital</code>
-			<label>Digital table</label>
-			<description>Digital representation of facts or figures systematically displayed,
-				especially in columns</description>
+			<label>Tabla digital</label>
+			<description>Representación digital de hechos o figuras sistemáticamente presentadas,
+				especialmente en columnas.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tableHardcopy</code>
 			<label>Hardcopy table</label>
-			<description>Representation of facts or figures systematically displayed, especially in
-				columns, printed onpapers, photographic material, or other media</description>
+			<description>Representation of facts or figures systematically displayed,
+				especially in columns, printed onpapers, photographic material, or other media</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -193,15 +193,15 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>originator</code>
-			<label>Originator</label>
-			<description>Party who created the resource</description>
+			<label>Creador</label>
+			<description>Persona u oficina que ha creado u originado los datos.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>pointOfContact</code>
-			<label>Point of contact</label>
-			<description>Party who can be contacted for acquiring knowledge about or acquisition of the
-				resource</description>
+			<label>Punto de contacto</label>
+			<description>Quien puede ser contactado para la adquisición de más informacón u obtención
+				del recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -226,8 +226,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>author</code>
-			<label>Author</label>
-			<description>Party who authored the resource</description>
+			<label>Autor</label>
+			<description>Parte autor del recurso</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -922,33 +922,35 @@
 	<codelist name="gmd:MD_KeywordTypeCode">
 		<entry>
 			<code>discipline</code>
-			<label>Discipline</label>
-			<description>Keyword identifies a branch of instruction or specialized
-			learning</description>
+			<label>Disciplina</label>
+			<description>La palabra clave identifica una rama de la enseñanza o formación
+				especializada</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>place</code>
-			<label>Place</label>
-			<description>Keyword identifies a location</description>
+			<label>Lugar</label>
+			<description>La palabra clave identifica un lugar</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stratum</code>
-			<label>Stratum</label>
-			<description>Keyword identifies the layer(s) of any deposited substance</description>
+			<label>Estrato</label>
+			<description>La palabra clave identifica la capa(s) de una superficie cualquiera de
+				depósito</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>temporal</code>
 			<label>Temporal</label>
-			<description>Keyword identifies a time period related to the dataset</description>
+			<description>La palabra clave identifica un periodo de tiempo relacionado con el
+				conjunto de datos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>theme</code>
-			<label>Theme</label>
-			<description>Keyword identifies a particular subject or topic</description>
+			<label>Tema</label>
+			<description>La palabra clave que identifica un tema o materia particular.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -956,74 +958,74 @@
 	<codelist name="gmd:MD_MaintenanceFrequencyCode">
 		<entry>
 			<code>continual</code>
-			<label>Continual</label>
-			<description>Data is repeatedly and frequently updated</description>
+			<label>Continuo</label>
+			<description>Los datos se actualizan con frecuencia y en repetidas ocasiones</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>daily</code>
-			<label>Daily</label>
-			<description>Data is updated each day</description>
+			<label>Diario</label>
+			<description>El dato es actualizado diariamente</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>weekly</code>
-			<label>Weekly</label>
-			<description>Data is updated on a weekly basis</description>
+			<label>Semanal</label>
+			<description>Los datos se actualizan una vez por semana</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>fortnightly</code>
-			<label>Fortnightly</label>
-			<description>Data is updated every two weeks</description>
+			<label>Quincenal</label>
+			<description>Los datos se actualizan cada dos semanas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>monthly</code>
-			<label>Monthly</label>
-			<description>Data is updated each month</description>
+			<label>Mensual</label>
+			<description>Los datos se actualizan cada mes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>quarterly</code>
-			<label>Quarterly</label>
-			<description>Data is updated every three months</description>
+			<label>Trimestral</label>
+			<description>Los datos se actualizan cada tres meses</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biannually</code>
-			<label>Biannually</label>
-			<description>Data is updated twice each year</description>
+			<label>Dos veces al año</label>
+			<description>Los datos se actualizan dos veces al año</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>annually</code>
-			<label>Annually</label>
-			<description>Data is updated every year</description>
+			<label>Anualmente</label>
+			<description>Los datos se actualizan una vez al año</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>asNeeded</code>
-			<label>As needed</label>
-			<description>Data is updated as deemed necessary</description>
+			<label>Según sea necesario</label>
+			<description>Los datos se actualizan según sea necesario</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>irregular</code>
 			<label>Irregular</label>
-			<description>Data is updated in intervals that are uneven in duration</description>
+			<description>Los datos se actualizan en intervalos que son desiguales en duración</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>notPlanned</code>
-			<label>Not planned</label>
-			<description>There are no plans to update the data</description>
+			<label>No planificado</label>
+			<description>No se ha planificado la actualización de los datos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>unknown</code>
-			<label>Unknown</label>
-			<description>Frequency of maintenance for the data is not known</description>
+			<label>Desconocido</label>
+			<description>Frecuencia del mantenimiento de los datos no se conoce</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1237,8 +1239,8 @@
 	<codelist name="gmd:MD_ProgressCode">
 		<entry>
 			<code>completed</code>
-			<label>Completed</label>
-			<description>Production of the data has been completed</description>
+			<label>Completo</label>
+			<description>La producción de los datos se ha completado</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1255,8 +1257,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onGoing</code>
-			<label>Ongoing</label>
-			<description>Data is continually being updated</description>
+			<label>En curso</label>
+			<description>Los datos están siendo continuamente actualizados</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1331,8 +1333,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>otherRestrictions</code>
-			<label>Other restrictions</label>
-			<description>Limitation not listed</description>
+			<label>Otras restricciones</label>
+			<description>Limitaciones no listadas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1340,8 +1342,8 @@
 	<codelist name="gmd:MD_ScopeCode">
 		<entry>
 			<code>attribute</code>
-			<label>Attribute</label>
-			<description>Information applies to the attribute class</description>
+			<label>Atributo</label>
+			<description>Que información se aplica a esta clase de atributo</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1364,8 +1366,8 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>dataset</code>
-			<label>Dataset</label>
-			<description>Information applies to the dataset</description>
+			<label>Conjunto de datos</label>
+			<description>Información aplicada al conjunto de datos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1443,20 +1445,23 @@
 	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
 		<entry>
 			<code>vector</code>
-			<label>Vector</label>
-			<description>Vector data is used to represent geographic data</description>
+			<label>Vectorial</label>
+			<description>Se utilizan datos vectoriales para la representación de datos
+				geográficos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>grid</code>
-			<label>Grid</label>
-			<description>Grid data is used to represent geographic data</description>
+			<label>Raster</label>
+			<description>Cuadrícula de datos que se utiliza para representar datos
+				geográficos (imagenes en formato Raster)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>textTable</code>
-			<label>Text table</label>
-			<description>Textual or tabular data is used to represent geographic data</description>
+			<label>Tabla de Texto</label>
+			<description>Los datos de texto o tabuladores que se utilizan para representar
+				datos geográficos</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1467,9 +1472,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereoModel</code>
-			<label>Stereo model</label>
-			<description>Three-dimensional view formed by the intersecting homologous rays of an
-				overlapping pair of images</description>
+			<label>Modelo estéreo</label>
+			<description>Visión tridimensional formada por la intersección de los rayos
+				homólogos de encadenamiento de una pareja de imágenes</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1498,9 +1503,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>boundaries</code>
-			<label>Boundaries</label>
-			<description>Legal land descriptions. Examples: political and administrative
-			boundaries</description>
+			<label>Límites</label>
+			<description>Descripciones legales del terreno. Ejemplos: límites administrativos
+			y políticos.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1553,9 +1558,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>Imagery base maps earth cover</label>
-			<description>Base maps. Examples: land cover, topographic maps, imagery, unclassified
-				images, annotations</description>
+			<label>Mapas de base, cobertura de la tierra</label>
+			<description>Mapas base. Ejemplos: la cobertura del suelo, mapas topográficos, imágenes,
+				imágenes sin clasificar, anotaciones</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
