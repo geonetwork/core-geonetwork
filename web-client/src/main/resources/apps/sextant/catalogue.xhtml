@@ -121,7 +121,8 @@
     <script type="text/javascript" src="#{contextPath}/js/cat.main.js"></script>
 
     <script type="text/javascript">
-    	cat.imgPath = '#{contextPath}';
+    	cat.imgPath = '#{contextPath}'+'/';
+    	Ext.BLANK_IMAGE_URL = cat.imgPath+'images/s.gif';
     	cat.lang = ("#{facesContext.externalContext.requestLocale}").split('_')[0];
     </script>
     

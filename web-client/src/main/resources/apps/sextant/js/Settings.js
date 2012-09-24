@@ -74,4 +74,5 @@ GeoNetwork.WMSList = [['Geoserver', 'http://localhost/geoserver/wms?']];
 
 GeoNetwork.defaultViewMode = 'view-simple';
 
-Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
+//Overloaded in catalogue.xhtml
+Ext.BLANK_IMAGE_URL = 'images/s.gif';

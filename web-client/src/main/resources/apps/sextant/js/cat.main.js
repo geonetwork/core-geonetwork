@@ -194,7 +194,7 @@ cat.app = function() {
 		var box = new Ext.BoxComponent({
 			autoEl : {
 				tag : 'img',
-				src : 'images/logo-sextant-big.png',
+				src : cat.imgPath+'images/logo-sextant-big.png',
 				cls : 'bg_logo'
 			}
 		});
@@ -595,7 +595,7 @@ cat.app = function() {
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
 							tag : 'img',
-							src : 'images/spinner-large.gif',
+							src : cat.imgPath+'images/spinner-large.gif',
 							cls : 'spinner',
 							id : 'load-spinner'
 						}
