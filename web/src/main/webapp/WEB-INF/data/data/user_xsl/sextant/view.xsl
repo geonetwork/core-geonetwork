@@ -43,7 +43,7 @@
 										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
 								</div>
 								
-								<h5>Conditions d'accès</h5>
+								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
 								<div class="result-metadata-modal-content">
 								
 									<xsl:apply-templates mode="iso19139"
@@ -54,7 +54,7 @@
 										<p></p>
 								</div>
 								
-								<h5>Contact</h5>
+								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
 								<div class="result-metadata-modal-content">
 									<p></p>
 									<ul>
@@ -105,7 +105,7 @@
 	</xsl:template>
 	
 	<!--  Abstract & Statement : Display Title and <p> with text -->
-	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement"
+	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement|gmd:supplementalInformation"
 		priority="3">
 		<xsl:variable name="name" select="name(.)" />
 		<xsl:variable name="title">

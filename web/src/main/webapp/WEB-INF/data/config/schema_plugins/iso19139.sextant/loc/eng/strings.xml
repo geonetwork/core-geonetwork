@@ -16,4 +16,15 @@
     <accessUseConstraints>Condition to access and use</accessUseConstraints>
     <publicAccessConstraints>Limitation on public access</publicAccessConstraints>
     <role>Role</role>
+    <keywords>Keywords</keywords>
+    <full_description>Full description</full_description>
+    <purpose>Purpose</purpose>
+    <origin>Origin</origin>
+    <access_constraints>Access constraints</access_constraints>
+    <constraints_use_restrictions>Use restrictions</constraints_use_restrictions>
+    <constraints_access>Access constraints</constraints_access>
+    <constraints_other>Other constraints</constraints_other>
+    <constraints_information>Constraints information</constraints_information>
+    <abstract>Abstract</abstract>
+    <contact>Contact</contact>
 </strings>
