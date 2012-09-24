@@ -49,6 +49,7 @@ body {
     font-weight: normal;
     float: right;
     padding-right: 25px;
+    text-decoration:underline;
 }
 .search-panel .x-panel-header-text a:hover{
 	color: #FF7930;
@@ -174,6 +175,8 @@ body {
 	font-size: 12px;
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight:700;
+	text-shadow:inherit;
+	background-image:none;
 }
 .x-panel-tbar {
 	height:32px;
@@ -326,6 +329,7 @@ body {
     padding-left: 12px;
     padding-right: 12px;
     font-family: Arial,Helvetica,sans-serif;
+    vertical-align: inherit;
 }
 .result-list li .content div.md-contact {
     text-align: left;
@@ -436,7 +440,9 @@ body {
 .result-list li.md-full div.unabled:hover span.icon {
 	background-position: 0 0 !important;
 }
-
+.result-list li.md-full tbody{
+	vertical-align:inherit;
+}
 div.no-icon-menu a.x-menu-item {
     padding-left: 3px;
 }

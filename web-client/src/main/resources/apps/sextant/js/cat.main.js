@@ -121,8 +121,7 @@ cat.app = function() {
             cls: 'view-win',
             bodyStyle:'padding:10px'
             });
-        win.show(this.resultsView);
-        //win.alignTo(bd, 'tl-br',[30,30,30,30]);
+        win.show();
 	}
 	
 	function edit(metadataId, create, group, child) {
@@ -607,9 +606,9 @@ cat.app = function() {
 						fn: function(o) {
 							var portletContainer = Ext.Element.select('.portlet-content');
 							var height=0
-							if(portletContainer.getCount()==1) {
+							if(portletContainer.getCount()==2) {
 								var d = Ext.get('main-viewport');
-								height=Ext.getBody().getViewSize().height -d.getY() - 100;
+								height=Ext.getBody().getViewSize().height -d.getY();
 							}
 							else if (portletContainer.getCount()>1) {
 								height=400;
