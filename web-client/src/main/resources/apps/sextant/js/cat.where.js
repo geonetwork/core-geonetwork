@@ -13,7 +13,6 @@ cat.where = function() {
 				collapsed : false,
 				defaultType : 'checkbox',
 				layout: 'fit',
-				bodyStyle: 'padding: 15px 40px 15px',
 				items : GeoNetwork.util.SearchFormTools.getSimpleMap(
 						GeoNetwork.map.BACKGROUND_LAYERS,
 						GeoNetwork.map.MAP_OPTIONS, true, {
@@ -27,7 +26,7 @@ cat.where = function() {
 							mousePosition: false,
 							bodyStyle: 'border: 1px solid #D0D0D0',
 							width : 300,
-							height : 227
+							height : 280
 						})
 			});
 		}
