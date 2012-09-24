@@ -670,7 +670,7 @@ Ihr geocat.ch-Team</msg>
 	<confirmBatchDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmBatchDelete>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
 	<confirmPassword>Passwort bestätigen</confirmPassword>
-	<constraintsTab>Grenzen</constraintsTab>
+	<constraintsTab>Metadateneinschränkungen</constraintsTab>
 	<contactUs>Kontakt</contactUs>
 	<contains>Enthält</contains>
 	<contentInfoTab>Dateninhalt</contentInfoTab>
@@ -955,7 +955,7 @@ Ihr geocat.ch-Team</msg>
   <indexConfiguration>Index-Einstellungen</indexConfiguration>
   <io>Import, Export &amp; Harvesting</io>
   <placeKeyword>örtliches Schlüsselwort</placeKeyword>
-	<porCatInfoTab>Katalog</porCatInfoTab>
+	<porCatInfoTab>Darstellungskatalog</porCatInfoTab>
 	<poweredBy>Powered by </poweredBy>
 	<previous>Zurück</previous>
 	<privileges>Privilegien</privileges>
