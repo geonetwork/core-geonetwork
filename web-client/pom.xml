@@ -61,7 +61,7 @@
                 This phase does not belong to the default lifecycle for a jar/war packaging.
                 It has to be run explicitely as mvn command argument for generating obfuscated js. 
              -->
-            <phase>initialize</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>compress</goal>
             </goals>
