@@ -263,7 +263,7 @@ public class SelectionManager {
 				if (searcher instanceof LuceneSearcher)
 					uuidList = ((LuceneSearcher) searcher).getAllUuids(maxhits);
 				else if (searcher instanceof CatalogSearcher)
-					uuidList = ((CatalogSearcher) searcher).getAllUuids(maxhits);
+					uuidList = ((CatalogSearcher) searcher).getAllUuids(maxhits, context);
 				else
 					return;
 

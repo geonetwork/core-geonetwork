@@ -506,7 +506,7 @@
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-postgis</artifactId>
+        <artifactId>gt-wfs</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -665,7 +665,7 @@
       <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>8.4-701.jdbc3</version>
+        <version>9.1-901.jdbc3</version>
       </dependency>
       <dependency>
         <groupId>org.postgis</groupId>
@@ -676,7 +676,7 @@
       <!--dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>8.4-701.jdbc4</version>
+        <version>9.1-901.jdbc4</version>
       </dependency-->
       <dependency>
         <groupId>mysql</groupId>
@@ -874,7 +874,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>2.7.4</geotools.version>
+    <geotools.version>8.1</geotools.version>
     <lucene.version>3.0.2</lucene.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
