@@ -23,11 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -61,6 +56,8 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import org.geotools.gml2.GMLConfiguration;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -79,6 +76,8 @@ public class SearchController {
 	private LuceneConfig _luceneConfig;
 	private final FieldSelector _selector;
 	private final FieldSelector _uuidselector;
+	private DataStore _datastore;
+	private GMLConfiguration _gmlConfiguration;
 
 	public SearchController(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
 		this._datastore = ds;
@@ -157,7 +156,7 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_datastore, _gmlConfiguration, _summaryConfig, _luceneConfig, _selector, _uuidselector);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
