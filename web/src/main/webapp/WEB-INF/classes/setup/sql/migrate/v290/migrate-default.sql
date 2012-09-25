@@ -116,6 +116,7 @@ ALTER TABLE Metadata ADD COLUMN owner2 varchar(36);
 UPDATE Metadata SET owner2 = owner;
 ALTER TABLE Metadata DROP COLUMN owner CASCADE;
 ALTER TABLE Metadata RENAME COLUMN owner2 TO owner;
+ALTER TABLE Metadata ADD CONSTRAINT metadata_owner_fkey FOREIGN KEY (owner) REFERENCES Users (id);
 
 ALTER TABLE Validation ADD COLUMN metadataId2 varchar(36);
 UPDATE Validation SET metadataId2 = metadataId;
