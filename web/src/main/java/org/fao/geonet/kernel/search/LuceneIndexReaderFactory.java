@@ -74,7 +74,7 @@ public class LuceneIndexReaderFactory {
                 {
                     if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
                         id = UUID.randomUUID().toString();
-                         Log.debug(Geonet.LUCENE_TRACKING, "opening lucene reader "+id);
+                        Log.debug(Geonet.LUCENE_TRACKING, "opening lucene reader "+id);
                     }
                 }
                 @Override
@@ -91,6 +91,14 @@ public class LuceneIndexReaderFactory {
                         } else {
                             Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
                         }
+                    }
+                }
+                @Override
+                public String toString() {
+                	if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
+                		return "MultiReader "+id+": "+super.subReaders;
+                    } else {
+                	return super.toString();
                     }
                 }
             };
