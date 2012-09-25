@@ -154,6 +154,9 @@ public class SearchController {
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
+        // store search results in user session
+        storeInUserSession(searcher, context, filterExpr);
+
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
                 outSchema, elemNames, typeName, resultType, strategy);
@@ -222,6 +225,37 @@ public class SearchController {
         }
         return counter;
     }
+    /**
+     * Stores searcher (with results) in user session.
+     * @param searcher 
+     *
+     * @param context service context
+     * @param filterExpr FilterExpression
+     */
+    private void storeInUserSession(CatalogSearcher searcher, ServiceContext context, Element filterExpr)  {
+        //
+        // keep results in user session
+        //
+        UserSession session = context.getUserSession();
+        session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        //
+        // clear selection from session when query filter change
+        //
+    QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+    QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
+
+    if (sessionQueryReprentation == null ||
+            !requestQueryReprentation.equals(sessionQueryReprentation)) {
+            // possibly close old selection
+            SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
+		    if (oldSelection != null){
+                oldSelection.close();
+                oldSelection = null;
+            }
+        }
+        session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestQueryReprentation);
+    }
+
     /**
      * Retrieves metadata from the database. Conversion between metadata record and output schema are defined in
      * xml/csw/schemas/ directory.
