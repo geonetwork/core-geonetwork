@@ -96,7 +96,7 @@ public class LuceneIndexReaderFactory {
                 @Override
                 public String toString() {
                 	if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
-                		return "MultiReader "+id+": "+super.subReaders;
+                		return "MultiReader id:"+id+": "+Arrays.toString(super.subReaders);
                     } else {
                 	return super.toString();
                     }

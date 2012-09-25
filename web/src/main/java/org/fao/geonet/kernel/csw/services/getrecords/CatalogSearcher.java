@@ -446,12 +446,23 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
+		UserSession session = context.getUserSession();
 
-		synchronized(this) {
-			if (_reader != null) {
-                sm.releaseIndexReader(_reader);
-            }
-            _reader = sm.getIndexReader(context.getLanguage());
+		// if this is a new search or request has changed them release indexreader and get a (reopened) indexreader
+		QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+		QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
+
+		if (sessionQueryReprentation == null ||
+		        !requestQueryReprentation.equals(sessionQueryReprentation) ||
+		        !sm.isUpToDateReader(_reader)) {
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
+			synchronized(this) {
+				if (_reader != null) {
+                    sm.releaseIndexReader(_reader);
+                }
+                _reader = sm.getIndexReader(context.getLanguage());
+			}
 		}
 
 		if (luceneExpr != null) {
