@@ -198,6 +198,7 @@ CREATE TABLE HarvestHistory
   (
     id             varchar(36) not null,
     harvestDate    varchar(30),
+    elapsedTime    int,
 		harvesterUuid  varchar(250),
 		harvesterName  varchar(128),
 		harvesterType  varchar(128),
@@ -302,7 +303,7 @@ CREATE TABLE Metadata
     title        varchar(255),
     root         varchar(255),
     harvestUuid  varchar(250)   default null,
-    owner        int            not null,
+    owner        varchar(36)    not null,
     doctype      varchar(255),
     harvestUri   varchar(255)   default null,
     rating       int            default 0 not null,

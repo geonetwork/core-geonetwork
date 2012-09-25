@@ -56,7 +56,7 @@ public class MigrationTask implements DatabaseMigrationTask {
 	}
 	private void handleOption(SettingManager settings, Dbms dbms, Element el) throws SQLException {
 		if(parentValue(el, "webdav") && child(el,"subtype") == null) {
-			settings.add(dbms, idPath(el), "subtype", "webdav", true);
+			settings.add(dbms, idPath(el), "subtype", "webdav");
 		}
 	}
 
