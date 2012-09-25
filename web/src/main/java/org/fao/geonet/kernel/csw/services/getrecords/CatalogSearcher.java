@@ -73,9 +73,11 @@ import java.util.StringTokenizer;
 
 public class CatalogSearcher {
 	private final Element _summaryConfig;
-	private final LuceneConfig	_luceneConfig;
-	private final Set<String> _tokenizedFieldSet;
-	private final Map<String, LuceneConfigNumericField> _numericFieldSet;
+	private final HashSet<String> _tokenizedFieldSet;
+    private final Set<String> _integerFieldSet;
+    private final Set<String> _longFieldSet;
+    private final Set<String> _floatFieldSet;
+    private final Set<String> _doubleFieldSet;
 	private final FieldSelector _selector;
 	private final FieldSelector _uuidselector;
 	private Query         _query;
@@ -83,11 +85,15 @@ public class CatalogSearcher {
 	private Sort          _sort;
 	private String        _lang;
 	
-	public CatalogSearcher(Element summaryConfig,
-			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
-		_luceneConfig = luceneConfig;
-		_tokenizedFieldSet = luceneConfig.getTokenizedField();
-		_numericFieldSet = luceneConfig.getNumericFields();
+	public CatalogSearcher(Element summaryConfig, FieldSelector selector,
+			FieldSelector uuidselector, HashSet<String> tokenizedFieldSet,
+			Set<String> longFieldSet, Set<String> integerFieldSet,
+			Set<String> floatFieldSet, Set<String> doubleFieldSet) {
+		_tokenizedFieldSet = tokenizedFieldSet;
+		_longFieldSet = longFieldSet;
+		_integerFieldSet = integerFieldSet;
+		_floatFieldSet = floatFieldSet;
+		_doubleFieldSet = doubleFieldSet;
 		_selector = selector;
 		_uuidselector = uuidselector;
 		_summaryConfig = summaryConfig;
@@ -151,7 +157,7 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
-		IndexReader _reader = sm.getIndexReader(context.getLanguage());
+		IndexReader _reader = sm.getIndexReader();
 		try {
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
@@ -301,9 +307,8 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		UserSession session = context.getUserSession();
 
-         IndexReader indexReader = sm.getIndexReader(context.getLanguage());
+         IndexReader indexReader = sm.getIndexReader();
          try {
 		if (luceneExpr != null) {
 			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));

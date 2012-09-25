@@ -51,8 +51,10 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -63,11 +65,15 @@ public class SearchController
 {
     
     private final Element _summaryConfig;
-	private LuceneConfig _luceneConfig;
 	private final FieldSelector _selector;
 	private final FieldSelector _uuidselector;
+	private HashSet<String> _tokenizedFieldSet;
+	private HashSet<String> _integerFieldSet;
+	private HashSet<String> _longFieldSet;
+	private HashSet<String> _floatFieldSet;
+	private HashSet<String> _doubleFieldSet;
 
-	public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
+	public SearchController(File summaryConfig, File luceneConfig) {
 		try {
 			if (summaryConfig != null) {
 				_summaryConfig = Xml.loadStream(new FileInputStream(
@@ -80,7 +86,56 @@ public class SearchController
 					"Error reading summary configuration file", e);
 		}
 
-		_luceneConfig = luceneConfig;
+		_tokenizedFieldSet = new HashSet<String>();
+		try {
+			if (luceneConfig != null) {
+				Element config = Xml.loadStream(new FileInputStream(luceneConfig));
+				Element fields = config.getChild("tokenized");
+				for ( int i = 0; i < fields.getContentSize(); i++ ) {
+					Object o = fields.getContent(i);
+					if (o instanceof Element) {
+						Element elem = (Element)o;
+						_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
+					}
+				}
+                Element numericFields = config.getChild("numeric");
+                // build numeric field sets
+                for ( int i = 0; i < numericFields.getContentSize(); i++ ) {
+                    Object o = numericFields.getContent(i);
+                    if (o instanceof Element) {
+                        Element elem = (Element)o;
+                        if(elem.getAttributeValue("type").equals("integer")) {
+                            if(_integerFieldSet == null) {
+                                _integerFieldSet = new HashSet<String>();
+                            }
+                            _integerFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("long")) {
+                            if(_longFieldSet == null) {
+                                _longFieldSet = new HashSet<String>();
+                            }
+                            _longFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("float")) {
+                            if(_floatFieldSet == null) {
+                                _floatFieldSet = new HashSet<String>();
+                            }
+                            _floatFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                        if(elem.getAttributeValue("type").equals("double")) {
+                            if(_doubleFieldSet == null) {
+                                _doubleFieldSet = new HashSet<String>();
+                            }
+                            _doubleFieldSet.add(elem.getAttributeValue("name"));
+                        }
+                    }
+                }
+
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"Error reading tokenized fields file", e);
+		}
 		
 		_selector = new FieldSelector() {
 			private static final long serialVersionUID = 1L;
@@ -131,13 +186,13 @@ public class SearchController
                                          Element filterExpr, String filterVersion, Sort sort,
                                          Set<String> elemNames, int maxHitsFromSummary) throws CatalogException {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
-	CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _luceneConfig, _selector, _uuidselector);
+	CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _selector, _uuidselector, _tokenizedFieldSet, _longFieldSet, _integerFieldSet, _floatFieldSet, _doubleFieldSet);
         
-    context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+    UserSession session = context.getUserSession();
+	session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
 	// search for results, filtered and sorted
-    Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
-            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
+    Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
 
 	// clear selection from session when query filter change
 	String requestId = Util.scramble(Xml.getString(filterExpr));
