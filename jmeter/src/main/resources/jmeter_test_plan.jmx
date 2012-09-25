@@ -15,8 +15,8 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(testserver.host,tc-geocat0i.bgdi.admin.ch)}</stringProp>
-        <stringProp name="HTTPSampler.port">${__P(testserver.port,80)}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(testserver.host,localhost)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(testserver.port,8080)}</stringProp>
         <stringProp name="HTTPSampler.connect_timeout">1000</stringProp>
         <stringProp name="HTTPSampler.response_timeout">30000</stringProp>
         <stringProp name="HTTPSampler.protocol">${__P(testserver.protocol,http)}</stringProp>
@@ -259,7 +259,7 @@
         </collectionProp>
       </Arguments>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Quick Search Group" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Quick Search Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -348,7 +348,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">10</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">2</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1348572243000</longProp>
         <longProp name="ThreadGroup.end_time">1348572243000</longProp>
@@ -412,7 +412,7 @@
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CSW BBox Search Group" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="CSW BBox Search Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
