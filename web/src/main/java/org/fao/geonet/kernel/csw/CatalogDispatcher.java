@@ -213,6 +213,6 @@ public class CatalogDispatcher
 
 	public void reloadLuceneConfiguration(LuceneConfig lc) {
 		GetRecords op = (GetRecords) hmServices.get("GetRecords");
-		op.getSearchController().getSearcher().reloadLuceneConfiguration(lc);
+		op.getSearchController().setLuceneConfig(lc);
 	}
 }
