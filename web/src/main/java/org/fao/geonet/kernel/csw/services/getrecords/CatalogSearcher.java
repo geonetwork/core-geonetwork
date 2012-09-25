@@ -72,86 +72,25 @@ import java.util.StringTokenizer;
 //=============================================================================
 
 public class CatalogSearcher {
-	private Element _summaryConfig;
-	private HashSet<String> _tokenizedFieldSet;
-    private Set<String> _integerFieldSet;
-    private Set<String> _longFieldSet;
-    private Set<String> _floatFieldSet;
-    private Set<String> _doubleFieldSet;
-	private FieldSelector _selector;
+	private final Element _summaryConfig;
+	private final LuceneConfig	_luceneConfig;
+	private final Set<String> _tokenizedFieldSet;
+	private final Map<String, LuceneConfigNumericField> _numericFieldSet;
+	private final FieldSelector _selector;
+	private final FieldSelector _uuidselector;
 	private Query         _query;
-	private IndexReader   _reader;
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
-
-	public CatalogSearcher(File summaryConfig, File luceneConfig) {
-		try {
-			if (summaryConfig != null)
-				_summaryConfig = Xml.loadStream(new FileInputStream(
-						summaryConfig));
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading summary configuration file", e);
-		}
-
-		_tokenizedFieldSet = new HashSet<String>();
-		try {
-			if (luceneConfig != null) {
-				Element config = Xml.loadStream(new FileInputStream(luceneConfig));
-				Element fields = config.getChild("tokenized");
-				for ( int i = 0; i < fields.getContentSize(); i++ ) {
-					Object o = fields.getContent(i);
-					if (o instanceof Element) {
-						Element elem = (Element)o;
-						_tokenizedFieldSet.add(elem.getAttributeValue("name")); 
-					}
-				}
-                Element numericFields = config.getChild("numeric");
-                // build numeric field sets
-                for ( int i = 0; i < numericFields.getContentSize(); i++ ) {
-                    Object o = numericFields.getContent(i);
-                    if (o instanceof Element) {
-                        Element elem = (Element)o;
-                        if(elem.getAttributeValue("type").equals("integer")) {
-                            if(_integerFieldSet == null) {
-                                _integerFieldSet = new HashSet<String>();
-                            }
-                            _integerFieldSet.add(elem.getAttributeValue("name"));
-                        }
-                        if(elem.getAttributeValue("type").equals("long")) {
-                            if(_longFieldSet == null) {
-                                _longFieldSet = new HashSet<String>();
-                            }
-                            _longFieldSet.add(elem.getAttributeValue("name"));
-                        }
-                        if(elem.getAttributeValue("type").equals("float")) {
-                            if(_floatFieldSet == null) {
-                                _floatFieldSet = new HashSet<String>();
-                            }
-                            _floatFieldSet.add(elem.getAttributeValue("name"));
-                        }
-                        if(elem.getAttributeValue("type").equals("double")) {
-                            if(_doubleFieldSet == null) {
-                                _doubleFieldSet = new HashSet<String>();
-                            }
-                            _doubleFieldSet.add(elem.getAttributeValue("name"));
-                        }
-                    }
-                }
-
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading tokenized fields file", e);
-		}
-
-		_selector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
+	
+	public CatalogSearcher(Element summaryConfig,
+			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
+		_luceneConfig = luceneConfig;
+		_tokenizedFieldSet = luceneConfig.getTokenizedField();
+		_numericFieldSet = luceneConfig.getNumericFields();
+		_selector = selector;
+		_uuidselector = uuidselector;
+		_summaryConfig = summaryConfig;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -200,21 +139,20 @@ public class CatalogSearcher {
 	 * <p>
 	 * Gets results in current searcher
 	 * </p>
+	 * @param context 
 	 * 
 	 * @return current searcher result in "fast" mode
 	 * 
 	 * @throws IOException
 	 * @throws CorruptIndexException
 	 */
-	public List<String> getAllUuids(int maxHits) throws Exception {
+	public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
 
-		FieldSelector uuidselector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
 
+		IndexReader _reader = sm.getIndexReader(context.getLanguage());
+		try {
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
 					maxHits, 0, maxHits, Integer.MAX_VALUE, _lang, ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false);
@@ -229,11 +167,14 @@ public class CatalogSearcher {
 		List<String> response = new ArrayList<String>();
 		
 		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-			Document doc = _reader.document(sdoc.doc, uuidselector);
+			Document doc = _reader.document(sdoc.doc, _uuidselector);
 			String uuid = doc.get("_uuid");
 			if (uuid != null) response.add(uuid);
 		}
 		return response;
+		} finally {
+			sm.releaseIndexReader(_reader);
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -362,16 +303,8 @@ public class CatalogSearcher {
 		SearchManager sm = gc.getSearchmanager();
 		UserSession session = context.getUserSession();
 
-		// if this is a new search or request has changed them release indexreader
-		// and get a (reopened) indexreader
-		String requestId = Util.scramble(Xml.getString(filterExpr));
-		String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-		if ((sessionRequestId != null && !sessionRequestId.equals(requestId)) || sessionRequestId == null) {
-			Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
-			if (_reader != null) sm.releaseIndexReader(_reader);
-			_reader = sm.getIndexReader();
-		}
-
+         IndexReader indexReader = sm.getIndexReader(context.getLanguage());
+         try {
 		if (luceneExpr != null) {
 			Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
         }
@@ -426,7 +359,10 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 	
-		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1, maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, _reader, query, cFilter, sort, buildSummary);
+		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
+                maxRecords, Integer.MAX_VALUE, context.getLanguage(), resultType.toString(), _summaryConfig, indexReader, query, cFilter,
+                sort, buildSummary
+		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();
 
@@ -448,7 +384,7 @@ public class CatalogSearcher {
 		}
 		
 		for (;i < iMax; i++) {
-			Document doc = _reader.document(hits.scoreDocs[i].doc, _selector);
+			Document doc = indexReader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");
 	
 			ResultItem ri = new ResultItem(id);
@@ -465,6 +401,9 @@ public class CatalogSearcher {
 		summary.setName("Summary");
 		summary.setNamespace(Csw.NAMESPACE_GEONET);
 		return Pair.read(summary, results);
+         } finally {
+        	 sm.releaseIndexReader(indexReader);
+         }
 	}
 
 	// ---------------------------------------------------------------------------

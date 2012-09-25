@@ -27,6 +27,9 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -47,7 +50,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -58,10 +62,45 @@ import java.util.Set;
 public class SearchController
 {
     
-	private final CatalogSearcher _searcher;
-    public SearchController(File summaryConfig, File luceneConfig)
-    {
-        _searcher = new CatalogSearcher(summaryConfig, luceneConfig);
+    private final Element _summaryConfig;
+	private LuceneConfig _luceneConfig;
+	private final FieldSelector _selector;
+	private final FieldSelector _uuidselector;
+
+	public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
+		try {
+			if (summaryConfig != null) {
+				_summaryConfig = Xml.loadStream(new FileInputStream(
+						summaryConfig));
+			} else {
+				_summaryConfig = null;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"Error reading summary configuration file", e);
+		}
+
+		_luceneConfig = luceneConfig;
+		
+		_selector = new FieldSelector() {
+			private static final long serialVersionUID = 1L;
+
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_id")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
+		
+
+		_uuidselector = new FieldSelector() {
+			private static final long serialVersionUID = 1L;
+
+			public final FieldSelectorResult accept(String name) {
+				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
+				else return FieldSelectorResult.NO_LOAD;
+			}
+		};
+		
     }
 	
 	//---------------------------------------------------------------------------
@@ -92,11 +131,13 @@ public class SearchController
                                          Element filterExpr, String filterVersion, Sort sort,
                                          Set<String> elemNames, int maxHitsFromSummary) throws CatalogException {
 	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
-
-	Pair<Element, List<ResultItem>> summaryAndSearchResults = _searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
-	
-	UserSession session = context.getUserSession();
-	session.setProperty(Geonet.Session.SEARCH_RESULT, _searcher);
+	CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _luceneConfig, _selector, _uuidselector);
+        
+    context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        
+	// search for results, filtered and sorted
+    Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
+            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
 	// clear selection from session when query filter change
 	String requestId = Util.scramble(Xml.getString(filterExpr));
