@@ -8,15 +8,5 @@
         <ogc:SortOrder>DESC</ogc:SortOrder>
       </ogc:SortProperty>
     </ogc:SortBy>
-    <csw:Constraint version="1.0.0">
-      <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-          <ogc:Within>
-            <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
-            <gml:Box xmlns:gml="http://www.opengis.net/gml">
-              <gml:coordinates decimal="." cs="," ts=" ">-180,-180 180,180</gml:coordinates>
-            </gml:Box>
-          </ogc:Within>
-      </ogc:Filter>
-    </csw:Constraint>
   </csw:Query>
 </csw:GetRecords>

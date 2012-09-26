@@ -24,18 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
@@ -60,7 +49,6 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
@@ -82,7 +70,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.geotools.data.DataStore;
-import org.geotools.data.DefaultQuery;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
@@ -110,6 +97,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -138,47 +126,29 @@ public class CatalogSearcher {
      */
     private String                         _geomWKT          = null;
     private boolean                        _logSpatialObjects = false;
-	private Element _summaryConfig;
-	private LuceneConfig	_luceneConfig;
-	private Set<String> _tokenizedFieldSet;
-	private Map<String, LuceneConfigNumericField> _numericFieldSet;
-	private FieldSelector _selector;
+	private final Element _summaryConfig;
+	private final LuceneConfig	_luceneConfig;
+	private final Set<String> _tokenizedFieldSet;
+	private final Map<String, LuceneConfigNumericField> _numericFieldSet;
+	private final FieldSelector _selector;
+	private final FieldSelector _uuidselector;
 	private Query         _query;
-	private volatile IndexReader   _reader;
 	private Filter _filter;
 	private Sort          _sort;
 	private String        _lang;
-
-	public CatalogSearcher(DataStore datastore, File summaryConfig, LuceneConfig luceneConfig) {
-        _datastore = datastore;
-        _configuration = new GMLConfiguration();
-
-		try {
-			if (summaryConfig != null)
-				_summaryConfig = Xml.loadStream(new FileInputStream(
-						summaryConfig));
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading summary configuration file", e);
-		}
-
+	
+	public CatalogSearcher(DataStore datastore, GMLConfiguration  configuration, Element summaryConfig,
+			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
+		_datastore = datastore;
+		this._configuration = configuration;
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_numericFieldSet = luceneConfig.getNumericFields();
-
-		_selector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
+		_selector = selector;
+		_uuidselector = uuidselector;
+		_summaryConfig = summaryConfig;
 	}
-
-	public void reloadLuceneConfiguration(LuceneConfig lc) {
-		_tokenizedFieldSet = lc.getTokenizedField();
-		_numericFieldSet = lc.getNumericFields();
-	}
-
+	
 	// ---------------------------------------------------------------------------
 	// ---
 	// --- Main search method
@@ -243,25 +213,24 @@ public class CatalogSearcher {
 	 * <p>
 	 * Gets results in current searcher
 	 * </p>
-	 *
+	 * @param context 
+	 * 
 	 * @return current searcher result in "fast" mode
-	 *
+	 * 
 	 * @throws IOException
 	 * @throws CorruptIndexException
 	 */
-	public List<String> getAllUuids(int maxHits) throws Exception {
+	public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
 
-		FieldSelector uuidselector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
+
+		IndexReader _reader = sm.getIndexReader(context.getLanguage());
+		try {
         Pair<TopDocs, Element> searchResults =
-			LuceneSearcher.doSearchAndMakeSummary(
-					maxHits, 0, maxHits, Integer.MAX_VALUE,
-					_lang, ResultType.RESULTS.toString(), _summaryConfig,
+			LuceneSearcher.doSearchAndMakeSummary( 
+					maxHits, 0, maxHits, Integer.MAX_VALUE, 
+					_lang, ResultType.RESULTS.toString(), _summaryConfig, 
 					_reader, _query, _filter, _sort, false,
 					_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 			);
@@ -275,13 +244,16 @@ public class CatalogSearcher {
 
 		// --- retrieve results
 		List<String> response = new ArrayList<String>();
-
+		
 		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-			Document doc = _reader.document(sdoc.doc, uuidselector);
+			Document doc = _reader.document(sdoc.doc, _uuidselector);
 			String uuid = doc.get("_uuid");
 			if (uuid != null) response.add(uuid);
 		}
 		return response;
+		} finally {
+			sm.releaseIndexReader(_reader);
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -293,7 +265,7 @@ public class CatalogSearcher {
 	/**
 	 * Use filter-to-lucene stylesheet to create a Lucene search query to be
 	 * used by LuceneSearcher.
-	 *
+	 * 
 	 * @return XML representation of Lucene query
 	 */
 	private Element filterToLucene(ServiceContext context, Element filterExpr)
@@ -386,7 +358,7 @@ public class CatalogSearcher {
 	 * Map OGC CSW search field names to Lucene field names using
 	 * {@link FieldMapper}. If a field name is not defined then the any (ie.
 	 * full text) criteria is used.
-	 *
+	 * 
 	 */
 	private void remapFields(Element elem) {
 		String field = elem.getAttributeValue("fld");
@@ -449,23 +421,8 @@ public class CatalogSearcher {
 		SearchManager sm = gc.getSearchmanager();
 		UserSession session = context.getUserSession();
 
-		// if this is a new search or request has changed them release indexreader and get a (reopened) indexreader
-		QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-		QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
-
-		if (sessionQueryReprentation == null ||
-		        !requestQueryReprentation.equals(sessionQueryReprentation) ||
-		        !sm.isUpToDateReader(_reader)) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "Query changed, reopening IndexReader");
-			synchronized(this) {
-				if (_reader != null) {
-                    sm.releaseIndexReader(_reader);
-                }
-                _reader = sm.getIndexReader(context.getLanguage());
-			}
-		}
-
+         IndexReader indexReader = sm.getIndexReader(context.getLanguage());
+         try {
 		if (luceneExpr != null) {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
@@ -548,7 +505,7 @@ public class CatalogSearcher {
 		_lang = context.getLanguage();
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, _reader, query, _filter,
+                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, indexReader, query, _filter,
                 sort, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
@@ -569,10 +526,10 @@ public class CatalogSearcher {
 		int iMax = hits.scoreDocs.length;
 		if (buildSummary) {
 			i = startPosition -1;
-			iMax = Math.min(hits.scoreDocs.length, i + maxRecords);
+			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
 		}
 		for (;i < iMax; i++) {
-			Document doc = _reader.document(hits.scoreDocs[i].doc, _selector);
+			Document doc = indexReader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");
 			ResultItem ri = new ResultItem(id);
 			results.add(ri);
@@ -586,6 +543,9 @@ public class CatalogSearcher {
 		summary.setName("Summary");
 		summary.setNamespace(Csw.NAMESPACE_GEONET);
 		return Pair.read(summary, results);
+         } finally {
+        	 sm.releaseIndexReader(indexReader);
+         }
 	}
 
 	// ---------------------------------------------------------------------------
@@ -741,7 +701,7 @@ public class CatalogSearcher {
         for (String id : ids) {
         	identifiers.add(filterFactory.featureId(typeName+"."+id));
         }
-        DefaultQuery query = new DefaultQuery(typeName, filterFactory.id(identifiers), new String[]{"the_geom"});
+        org.geotools.data.Query query = new org.geotools.data.Query(typeName, filterFactory.id(identifiers), new String[]{"the_geom"});
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = _datastore.getFeatureSource(typeName).getFeatures(
         		query);
         iter = features.features();

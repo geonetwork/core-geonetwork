@@ -62,7 +62,6 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Get.Format;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.geotools.data.DataStore;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.feature.FeatureIterator;
@@ -284,7 +283,7 @@ public class List implements Service
     protected Query createQuery(Element params, FeatureType featureType, String[] properties, int maxFeatures)
             throws Exception
     {
-        final DefaultQuery defaultQuery = featureType.createQuery(properties);
+        final Query defaultQuery = featureType.createQuery(properties);
         defaultQuery.setMaxFeatures(maxFeatures);
         return defaultQuery;
     }

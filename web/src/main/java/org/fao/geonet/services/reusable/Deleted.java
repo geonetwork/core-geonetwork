@@ -44,6 +44,9 @@ public class Deleted implements Service
     public Element exec(Element params, ServiceContext context) throws Exception
     {
         String id = Util.getParamText(params, "id");
+        if(id == null || id.trim().isEmpty()){
+        	return new Element("none");
+        }
         
         // PMT c2c : fixing potential SQL injection, user input sanitization
 

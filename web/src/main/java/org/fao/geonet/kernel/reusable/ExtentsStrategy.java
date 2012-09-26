@@ -58,7 +58,6 @@ import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.XslUtil;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Query;
@@ -588,7 +587,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 .getFeatureSource();
 
         org.opengis.filter.Filter filter = createFilter(ids, from);
-        Query query = new DefaultQuery(from.pgTypeName, filter);
+        Query query = new Query(from.pgTypeName, filter);
         FeatureIterator<SimpleFeature> features = fromSource.getFeatures(query).features();
         Map<String, String> idMap = new HashMap<String, String>();
 

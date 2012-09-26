@@ -478,7 +478,7 @@ Ihr geocat.ch-Team</msg>
 	<updateChildrenFailed>Aktualisierung der Kinder fehlgeschlagen</updateChildrenFailed>
 	<batchUpdateChildrenTitle>Kinder aktualisieren</batchUpdateChildrenTitle>
 	<updateMode>Eine Strategie für das Update der Kinder auf Grund des Elterndatensatzes wählen: </updateMode>
-	<addMode>Pakete wählen</addMode>
+	<addMode>Pakete hinzufügen</addMode>
 	<replaceMode>Pakete ersetzen</replaceMode>
 	<updateChildrenHelp>
 		<div>
@@ -496,7 +496,7 @@ Ihr geocat.ch-Team</msg>
 			Spracheinstellungen des Elternmetadatensatzes werden immer ersetzt.
 			<br/>
 			<b>Vertrieb und Aktualisierungsinformation</b> werden immer ersetzt, da es nach
-			ISO 19115 nich erlaubt ist, mehr als eine zu erfassen.
+			ISO 19115 nicht erlaubt ist, mehr als eine zu erfassen.
 		</div>
 	</updateChildrenHelp>
 	<otherActions>Weitere Aktionen</otherActions>
@@ -682,7 +682,7 @@ Ihr geocat.ch-Team</msg>
 	<confirmBatchDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmBatchDelete>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
 	<confirmPassword>Passwort bestätigen</confirmPassword>
-	<constraintsTab>Grenzen</constraintsTab>
+	<constraintsTab>Metadateneinschränkungen</constraintsTab>
 	<contactUs>Kontakt</contactUs>
 	<contains>Enthält</contains>
 	<contentInfoTab>Dateninhalt</contentInfoTab>
@@ -967,7 +967,7 @@ Ihr geocat.ch-Team</msg>
   <indexConfiguration>Index-Einstellungen</indexConfiguration>
   <io>Import, Export &amp; Harvesting</io>
   <placeKeyword>örtliches Schlüsselwort</placeKeyword>
-	<porCatInfoTab>Katalog</porCatInfoTab>
+	<porCatInfoTab>Darstellungskatalog</porCatInfoTab>
 	<poweredBy>Powered by </poweredBy>
 	<previous>Zurück</previous>
 	<privileges>Privilegien</privileges>

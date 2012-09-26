@@ -13,8 +13,8 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.XslUtil;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureStore;
+import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureIterator;
@@ -150,7 +150,7 @@ public class ExtentHelper
     public static String findNextId(FeatureStore<SimpleFeatureType, SimpleFeature> store, FeatureType featureType)
             throws IOException
     {
-        final DefaultQuery query = featureType.createQuery(new String[] { featureType.idColumn });
+        final Query query = featureType.createQuery(new String[] { featureType.idColumn });
         final FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
         final SortBy[] sortBy = { new SortByImpl(filterFactory.property(featureType.idColumn), SortOrder.ASCENDING) };
         query.setSortBy(sortBy);
@@ -298,7 +298,7 @@ public class ExtentHelper
         for (Coordinate coord : coords) {
             coord.x = reducePrecision(coord.x, decimals);
             coord.y = reducePrecision(coord.y, decimals);
-            coord.z = reducePrecision(coord.z, decimals);
+            coord.z = Double.NaN;
         }
 
         return geometry;

@@ -1,11 +1,9 @@
 package org.fao.geonet.services.extent;
 
 import jeeves.utils.Log;
-import jeeves.utils.Util;
 import org.apache.log4j.Logger;
 import org.fao.geonet.constants.Geocat;
 import org.geotools.data.DataStore;
-import org.geotools.data.postgis.PostgisDataStoreFactory;
 import org.geotools.util.logging.Logging;
 import org.jdom.Element;
 

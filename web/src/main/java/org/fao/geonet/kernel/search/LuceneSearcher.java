@@ -23,23 +23,10 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ranges;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -48,7 +35,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -99,7 +85,6 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
@@ -107,8 +92,6 @@ import bak.pcj.map.ObjectKeyIntMap;
 import bak.pcj.map.ObjectKeyIntMapIterator;
 import bak.pcj.map.ObjectKeyIntOpenHashMap;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ranges;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import java.io.File;
@@ -119,6 +102,7 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1282,9 +1266,6 @@ public class LuceneSearcher extends MetaSearcher {
                 int id = Integer.parseInt(_id);
                 if(read.contains(id)) continue;
                 read.add(id);
-            } catch (Exception e) {
-                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc, e);
-            }
 
                 for (String key : summaryMaps.keySet()) {
                     Set<String> alreadyFound = new HashSet<String>();
@@ -1305,6 +1286,13 @@ public class LuceneSearcher extends MetaSearcher {
                         }
                     }
                 }
+            } catch (Exception e) {
+            	Log.error(Geonet.SEARCH_ENGINE, "Error with Lucene Reader: " + reader +" while loading document: "+ sdoc.doc, e);
+                if(e instanceof org.apache.lucene.store.AlreadyClosedException) {
+                	break;
+                }
+            }
+
         }
 
 		return summaryMaps;

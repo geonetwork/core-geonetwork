@@ -514,11 +514,6 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.geotools</groupId>
-        <artifactId>gt-postgis</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.geotools.jdbc</groupId>
         <artifactId>gt-jdbc-postgis</artifactId>
         <version>${geotools.version}</version>
@@ -674,7 +669,7 @@
       <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>8.4-701.jdbc3</version>
+        <version>9.1-901.jdbc3</version>
       </dependency>
       <dependency>
         <groupId>org.postgis</groupId>
@@ -685,7 +680,7 @@
       <!--dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>8.4-701.jdbc4</version>
+        <version>9.1-901.jdbc4</version>
       </dependency-->
       <dependency>
         <groupId>mysql</groupId>
@@ -756,7 +751,7 @@
       </snapshots>
       <id>geotools</id>
       <name>Geotools repository</name>
-      <url>http://repo.opengeo.org/</url>
+      <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
     <repository>
       <snapshots>
@@ -867,7 +862,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>2.7.4</geotools.version>
+    <geotools.version>8.1</geotools.version>
     <lucene.version>3.0.2</lucene.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
