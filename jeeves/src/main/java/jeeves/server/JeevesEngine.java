@@ -533,6 +533,7 @@ public class JeevesEngine
 			srvContext.setLanguage(defaultLang);
 			srvContext.setLogger(appHandLogger);
 			srvContext.setServlet(servlet);
+			srvContext.setAsThreadLocal();
 
 			try
 			{
