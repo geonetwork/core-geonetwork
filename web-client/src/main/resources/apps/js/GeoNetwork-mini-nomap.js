@@ -158,17 +158,20 @@ this.el.setWidth(w)
 },alignErrorIcon:function(){this.errorIcon.alignTo(this.wrap,"tl-tr",[2,0])
 }});
 Ext.reg("fileuploadfield",Ext.form.FileUploadField);Ext.ns("Ext.ux.form");
-Ext.ux.form.DateTime=Ext.extend(Ext.form.Field,{defaultAutoCreate:{tag:"input",type:"hidden"},timeWidth:100,dtSeparator:" ",hiddenFormat:"Y-m-d H:i:s",otherToNow:true,timePosition:"right",dateFormat:"m/d/y",timeFormat:"g:i A",initComponent:function(){Ext.ux.form.DateTime.superclass.initComponent.call(this);
-var dateConfig=Ext.apply({},{id:this.id+"-date",format:this.dateFormat||Ext.form.DateField.prototype.format,width:this.timeWidth,selectOnFocus:this.selectOnFocus,listeners:{blur:{scope:this,fn:this.onBlur},focus:{scope:this,fn:this.onFocus}}},this.dateConfig);
+Ext.ux.form.DateTime=Ext.extend(Ext.form.Field,{dateValidator:null,defaultAutoCreate:{tag:"input",type:"hidden"},dtSeparator:" ",hiddenFormat:"Y-m-d H:i:s",otherToNow:true,timePosition:"right",timeValidator:null,timeWidth:100,dateFormat:"m/d/y",dateAltFormats:Ext.form.DateField.prototype.altFormats,timeFormat:"g:i A",timeAltFormats:Ext.form.TimeField.prototype.altFormats,initComponent:function(){Ext.ux.form.DateTime.superclass.initComponent.call(this);
+var dateConfig=Ext.apply({},{id:this.id+"-date",format:this.dateFormat||Ext.form.DateField.prototype.format,altFormats:this.dateAltFormats||Ext.form.DateField.prototype.altFormats,width:this.timeWidth,selectOnFocus:this.selectOnFocus,validator:this.dateValidator,beforeBlur:function(){},listeners:{blur:{scope:this,fn:this.onBlur},focus:{scope:this,fn:this.onFocus}}},this.dateConfig);
 this.df=new Ext.form.DateField(dateConfig);
 this.df.ownerCt=this;
 delete (this.dateFormat);
-var timeConfig=Ext.apply({},{id:this.id+"-time",format:this.timeFormat||Ext.form.TimeField.prototype.format,width:this.timeWidth,selectOnFocus:this.selectOnFocus,listeners:{blur:{scope:this,fn:this.onBlur},focus:{scope:this,fn:this.onFocus}}},this.timeConfig);
+delete (this.dateAltFormats);
+var timeConfig=Ext.apply({},{id:this.id+"-time",format:this.timeFormat||Ext.form.TimeField.prototype.format,altFormats:this.timeAltFormats||Ext.form.TimeField.prototype.altFormats,width:this.timeWidth,selectOnFocus:this.selectOnFocus,validator:this.timeValidator,listeners:{blur:{scope:this,fn:this.onBlur},focus:{scope:this,fn:this.onFocus}}},this.timeConfig);
 this.tf=new Ext.form.TimeField(timeConfig);
 this.tf.ownerCt=this;
 delete (this.timeFormat);
+delete (this.timeAltFormats);
 this.relayEvents(this.df,["focus","specialkey","invalid","valid"]);
-this.relayEvents(this.tf,["focus","specialkey","invalid","valid"])
+this.relayEvents(this.tf,["focus","specialkey","invalid","valid"]);
+this.on("specialkey",this.onSpecialKey,this)
 },onRender:function(ct,position){if(this.isRendered){return
 }Ext.ux.form.DateTime.superclass.onRender.call(this,ct,position);
 var t;
@@ -179,14 +182,13 @@ this.wrap=t.wrap({cls:"x-form-field-wrap"});
 this.wrap.on("mousedown",this.onMouseDown,this,{delay:10});
 this.df.render(t.child("td.ux-datetime-date"));
 this.tf.render(t.child("td.ux-datetime-time"));
-if(Ext.isIE&&Ext.isStrict){t.select("input").applyStyles({top:0})
-}this.on("specialkey",this.onSpecialKey,this);
 this.df.el.swallowEvent(["keydown","keypress"]);
 this.tf.el.swallowEvent(["keydown","keypress"]);
 if("side"===this.msgTarget){var elp=this.el.findParent(".x-form-element",10,true);
-this.errorIcon=elp.createChild({cls:"x-form-invalid-icon"});
-this.df.errorIcon=this.errorIcon;
-this.tf.errorIcon=this.errorIcon
+if(elp){this.errorIcon=elp.createChild({cls:"x-form-invalid-icon"})
+}var o={errorIcon:this.errorIcon,msgTarget:"side",alignErrorIcon:this.alignErrorIcon.createDelegate(this)};
+Ext.apply(this.df,o);
+Ext.apply(this.tf,o)
 }this.el.dom.name=this.hiddenName||this.name||this.id;
 this.df.el.dom.removeAttribute("name");
 this.tf.el.dom.removeAttribute("name");
@@ -229,6 +231,7 @@ this.wrapClick=false
 }if(f===this.df){this.updateDate()
 }else{this.updateTime()
 }this.updateHidden();
+this.validate();
 (function(){if(!this.df.hasFocus&&!this.tf.hasFocus){var v=this.getValue();
 if(String(v)!==String(this.startValue)){this.fireEvent("change",this,v,this.startValue)
 }this.hasFocus=false;
@@ -243,8 +246,11 @@ if(key===e.TAB){if(t===this.df&&!e.shiftKey){e.stopEvent();
 this.tf.focus()
 }if(t===this.tf&&e.shiftKey){e.stopEvent();
 this.df.focus()
-}}if(key===e.ENTER){this.updateValue()
-}},setDate:function(date){this.df.setValue(date)
+}this.updateValue()
+}if(key===e.ENTER){this.updateValue()
+}},reset:function(){this.df.setValue(this.originalValue);
+this.tf.setValue(this.originalValue)
+},setDate:function(date){this.df.setValue(date)
 },setTime:function(date){this.tf.setValue(date)
 },setSize:function(w,h){if(!w){return
 }if("below"===this.timePosition){this.df.setSize(w,h);
@@ -255,23 +261,39 @@ this.tf.el.up("td").setWidth(w)
 this.tf.setSize(this.timeWidth,h);
 if(Ext.isIE){this.df.el.up("td").setWidth(w-this.timeWidth-4);
 this.tf.el.up("td").setWidth(this.timeWidth)
-}}},setValue:function(val){if(!val&&true===this.emptyToNow){this.setValue(new Date());
+}}},setValue:function(val){var newDateVal=val;
+if(!val&&true===this.emptyToNow){this.setValue(new Date());
 return
 }else{if(!val){this.setDate("");
 this.setTime("");
 this.updateValue();
 return
-}}if("number"===typeof val){val=new Date(val)
-}else{if("string"===typeof val&&this.hiddenFormat){val=Date.parseDate(val,this.hiddenFormat)
+}}if("number"===typeof val){newDateVal=new Date(newDateVal)
+}else{if("string"===typeof val&&this.hiddenFormat){newDateVal=Date.parseDate(newDateVal,this.hiddenFormat)
 }}val=val?val:new Date(1970,0,1,0,0,0);
-var da,time;
-if(val instanceof Date){this.setDate(val);
-this.setTime(val);
-this.dateValue=new Date(val)
+var da;
+if(newDateVal&&newDateVal instanceof Date){this.setDate(newDateVal);
+this.setTime(newDateVal);
+this.dateValue=new Date(Ext.isIE?val.getTime():val)
 }else{da=val.split(this.dtSeparator);
-this.setDate(da[0]);
-if(da[1]){if(da[2]){da[1]+=da[2]
-}this.setTime(da[1])
+var d=Date.parseDate(da[0],this.df.format),af=this.df.altFormats,afa=this.df.altFormatsArray;
+if(!d&&af){afa=afa||af.split("|");
+for(var i=0,len=afa.length;
+i<len&&!d;
+i++){d=Date.parseDate(da[0],afa[i])
+}}var t;
+if(d&&da[1]){if(da[2]){da[1]+=da[2]
+}da[1]=da[1];
+t=Date.parseDate(da[1],this.tf.format);
+var af=this.tf.altFormats,afa=this.tf.altFormatsArray;
+if(!t&&af){afa=afa||af.split("|");
+for(var i=0,len=afa.length;
+i<len&&!t;
+i++){t=Date.parseDate(da[1],afa[i])
+}}}if(d&&t){this.setDate(da[0]);
+this.setTime(da[1])
+}else{this.setDate("");
+Ext.form.DateField.superclass.setValue.call(this.df,val)
 }}this.updateValue()
 },setVisible:function(visible){if(visible){this.df.show();
 this.tf.show()
@@ -281,15 +303,24 @@ this.tf.hide()
 },show:function(){return this.setVisible(true)
 },hide:function(){return this.setVisible(false)
 },updateDate:function(){var d=this.df.getValue();
-if(d){if(!(this.dateValue instanceof Date)){this.initDateValue();
-if(!this.tf.getValue()){this.setTime(this.dateValue)
-}}this.dateValue.setMonth(0);
+if(d){var t=this.tf.getValue();
+if(this.df.formatDate(this.df.parseDate(d))!==this.df.getRawValue()){this.dateValue=this.df.getRawValue()
+}if(!(this.dateValue instanceof Date)&&t){if(d instanceof Date){this.dateValue=d
+}else{this.initDateValue()
+}if(!(t instanceof Date)){t=Date.parseDate(t,this.tf.format)
+}this.dateValue.setHours(t.getHours());
+this.dateValue.setMinutes(t.getMinutes());
+this.dateValue.setSeconds(t.getSeconds());
+this.setDate(this.dateValue);
+this.setTime(this.dateValue)
+}if((this.dateValue instanceof Date)){this.dateValue.setMonth(0);
 this.dateValue.setFullYear(d.getFullYear());
 this.dateValue.setMonth(d.getMonth(),d.getDate())
-}else{this.dateValue="";
+}}else{this.dateValue="";
 this.setTime("")
 }},updateTime:function(){var t=this.tf.getValue();
-if(t&&!(t instanceof Date)){t=Date.parseDate(t,this.tf.format)
+if(t&&t!==null&&t.trim()!=""&&!(this.dateValue instanceof Date)&&t){this.updateDate()
+}if(t&&!(t instanceof Date)){t=Date.parseDate(t,this.tf.format)
 }if(t&&!this.df.getValue()){this.initDateValue();
 this.setDate(this.dateValue)
 }if(this.dateValue instanceof Date){if(t){this.dateValue.setHours(t.getHours());
@@ -299,8 +330,11 @@ this.dateValue.setSeconds(t.getSeconds())
 this.dateValue.setMinutes(0);
 this.dateValue.setSeconds(0)
 }}},updateHidden:function(){if(this.isRendered){var value=this.dateValue instanceof Date?this.dateValue.format(this.hiddenFormat):"";
+if((this.dateValue instanceof Date)&&this.df.getRawValue()!==null&&this.tf.getRawValue()!==null&&this.df.getRawValue().trim()!==""&&this.tf.getRawValue().trim()!==""){var value=this.dateValue instanceof Date?this.dateValue.format(this.hiddenFormat):"";
 this.el.dom.value=value
-}},updateValue:function(){this.updateDate();
+}else{this.el.dom.value=this.df.getRawValue().trim();
+if(this.el.dom.value!==null&&this.el.dom.value!==""&&this.tf.getValue()!==null&&this.tf.getValue().trim()!==""){this.el.dom.value+=this.dtSeparator+this.tf.getValue().trim()
+}}}},updateValue:function(){this.updateDate();
 this.updateTime();
 this.updateHidden();
 return
@@ -3416,29 +3450,271 @@ if(Math.abs(arg)>1){arg=1
 p.x=lon;
 p.y=lat;
 return p
-}};var OpenLayers={singleFile:true};(function(){var singleFile=(typeof OpenLayers=="object"&&OpenLayers.singleFile);
-var scriptLocation;
-window.OpenLayers={_scriptName:(!singleFile)?"lib/OpenLayers.js":"OpenLayers.js",_getScriptLocation:function(){if(scriptLocation!=undefined){return scriptLocation
-}scriptLocation="";
-var isOL=new RegExp("(^|(.*?\\/))("+OpenLayers._scriptName+")(\\?|$)");
-var scripts=document.getElementsByTagName("script");
+}};var OpenLayers={VERSION_NUMBER:"Release 2.12",singleFile:true,_getScriptLocation:(function(){var r=new RegExp("(^|(.*?\\/))(OpenLayers[^\\/]*?\\.js)(\\?|$)"),s=document.getElementsByTagName("script"),src,m,l="";
+for(var i=0,len=s.length;
+i<len;
+i++){src=s[i].getAttribute("src");
+if(src){m=src.match(r);
+if(m){l=m[1];
+break
+}}}return(function(){return l
+})
+})(),ImgPath:""};(function(){var singleFile=(typeof OpenLayers=="object"&&OpenLayers.singleFile);
+var scriptName=(!singleFile)?"lib/OpenLayers.js":"OpenLayers.js";
+var jsFiles=window.OpenLayers;
+window.OpenLayers={_getScriptLocation:(function(){var r=new RegExp("(^|(.*?\\/))("+scriptName+")(\\?|$)"),s=document.getElementsByTagName("script"),src,m,l="";
+for(var i=0,len=s.length;
+i<len;
+i++){src=s[i].getAttribute("src");
+if(src){m=src.match(r);
+if(m){l=m[1];
+break
+}}}return(function(){return l
+})
+})(),ImgPath:""};
+if(!singleFile){if(!jsFiles){jsFiles=["OpenLayers/BaseTypes/Class.js","OpenLayers/Util.js","OpenLayers/Animation.js","OpenLayers/BaseTypes.js","OpenLayers/BaseTypes/Bounds.js","OpenLayers/BaseTypes/Date.js","OpenLayers/BaseTypes/Element.js","OpenLayers/BaseTypes/LonLat.js","OpenLayers/BaseTypes/Pixel.js","OpenLayers/BaseTypes/Size.js","OpenLayers/Console.js","OpenLayers/Tween.js","OpenLayers/Kinetic.js","Rico/Corner.js","Rico/Color.js","OpenLayers/Events.js","OpenLayers/Events/buttonclick.js","OpenLayers/Request.js","OpenLayers/Request/XMLHttpRequest.js","OpenLayers/Projection.js","OpenLayers/Map.js","OpenLayers/Layer.js","OpenLayers/Icon.js","OpenLayers/Marker.js","OpenLayers/Marker/Box.js","OpenLayers/Popup.js","OpenLayers/Tile.js","OpenLayers/Tile/Image.js","OpenLayers/Tile/Image/IFrame.js","OpenLayers/Tile/UTFGrid.js","OpenLayers/Layer/Image.js","OpenLayers/Layer/SphericalMercator.js","OpenLayers/Layer/EventPane.js","OpenLayers/Layer/FixedZoomLevels.js","OpenLayers/Layer/Google.js","OpenLayers/Layer/Google/v3.js","OpenLayers/Layer/HTTPRequest.js","OpenLayers/Layer/Grid.js","OpenLayers/Layer/MapGuide.js","OpenLayers/Layer/MapServer.js","OpenLayers/Layer/KaMap.js","OpenLayers/Layer/KaMapCache.js","OpenLayers/Layer/Markers.js","OpenLayers/Layer/Text.js","OpenLayers/Layer/WorldWind.js","OpenLayers/Layer/ArcGIS93Rest.js","OpenLayers/Layer/WMS.js","OpenLayers/Layer/WMTS.js","OpenLayers/Layer/ArcIMS.js","OpenLayers/Layer/GeoRSS.js","OpenLayers/Layer/Boxes.js","OpenLayers/Layer/XYZ.js","OpenLayers/Layer/UTFGrid.js","OpenLayers/Layer/OSM.js","OpenLayers/Layer/Bing.js","OpenLayers/Layer/TMS.js","OpenLayers/Layer/TileCache.js","OpenLayers/Layer/Zoomify.js","OpenLayers/Layer/ArcGISCache.js","OpenLayers/Popup/Anchored.js","OpenLayers/Popup/AnchoredBubble.js","OpenLayers/Popup/Framed.js","OpenLayers/Popup/FramedCloud.js","OpenLayers/Feature.js","OpenLayers/Feature/Vector.js","OpenLayers/Handler.js","OpenLayers/Handler/Click.js","OpenLayers/Handler/Hover.js","OpenLayers/Handler/Point.js","OpenLayers/Handler/Path.js","OpenLayers/Handler/Polygon.js","OpenLayers/Handler/Feature.js","OpenLayers/Handler/Drag.js","OpenLayers/Handler/Pinch.js","OpenLayers/Handler/RegularPolygon.js","OpenLayers/Handler/Box.js","OpenLayers/Handler/MouseWheel.js","OpenLayers/Handler/Keyboard.js","OpenLayers/Control.js","OpenLayers/Control/Attribution.js","OpenLayers/Control/Button.js","OpenLayers/Control/CacheRead.js","OpenLayers/Control/CacheWrite.js","OpenLayers/Control/ZoomBox.js","OpenLayers/Control/ZoomToMaxExtent.js","OpenLayers/Control/DragPan.js","OpenLayers/Control/Navigation.js","OpenLayers/Control/PinchZoom.js","OpenLayers/Control/TouchNavigation.js","OpenLayers/Control/MousePosition.js","OpenLayers/Control/OverviewMap.js","OpenLayers/Control/KeyboardDefaults.js","OpenLayers/Control/PanZoom.js","OpenLayers/Control/PanZoomBar.js","OpenLayers/Control/ArgParser.js","OpenLayers/Control/Permalink.js","OpenLayers/Control/Scale.js","OpenLayers/Control/ScaleLine.js","OpenLayers/Control/Snapping.js","OpenLayers/Control/Split.js","OpenLayers/Control/LayerSwitcher.js","OpenLayers/Control/DrawFeature.js","OpenLayers/Control/DragFeature.js","OpenLayers/Control/ModifyFeature.js","OpenLayers/Control/Panel.js","OpenLayers/Control/SelectFeature.js","OpenLayers/Control/NavigationHistory.js","OpenLayers/Control/Measure.js","OpenLayers/Control/WMSGetFeatureInfo.js","OpenLayers/Control/WMTSGetFeatureInfo.js","OpenLayers/Control/Graticule.js","OpenLayers/Control/TransformFeature.js","OpenLayers/Control/UTFGrid.js","OpenLayers/Control/SLDSelect.js","OpenLayers/Control/Zoom.js","OpenLayers/Geometry.js","OpenLayers/Geometry/Collection.js","OpenLayers/Geometry/Point.js","OpenLayers/Geometry/MultiPoint.js","OpenLayers/Geometry/Curve.js","OpenLayers/Geometry/LineString.js","OpenLayers/Geometry/LinearRing.js","OpenLayers/Geometry/Polygon.js","OpenLayers/Geometry/MultiLineString.js","OpenLayers/Geometry/MultiPolygon.js","OpenLayers/Renderer.js","OpenLayers/Renderer/Elements.js","OpenLayers/Renderer/SVG.js","OpenLayers/Renderer/Canvas.js","OpenLayers/Renderer/VML.js","OpenLayers/Layer/Vector.js","OpenLayers/Layer/PointGrid.js","OpenLayers/Layer/Vector/RootContainer.js","OpenLayers/Strategy.js","OpenLayers/Strategy/Filter.js","OpenLayers/Strategy/Fixed.js","OpenLayers/Strategy/Cluster.js","OpenLayers/Strategy/Paging.js","OpenLayers/Strategy/BBOX.js","OpenLayers/Strategy/Save.js","OpenLayers/Strategy/Refresh.js","OpenLayers/Filter.js","OpenLayers/Filter/FeatureId.js","OpenLayers/Filter/Logical.js","OpenLayers/Filter/Comparison.js","OpenLayers/Filter/Spatial.js","OpenLayers/Filter/Function.js","OpenLayers/Protocol.js","OpenLayers/Protocol/HTTP.js","OpenLayers/Protocol/WFS.js","OpenLayers/Protocol/WFS/v1.js","OpenLayers/Protocol/WFS/v1_0_0.js","OpenLayers/Protocol/WFS/v1_1_0.js","OpenLayers/Protocol/CSW.js","OpenLayers/Protocol/CSW/v2_0_2.js","OpenLayers/Protocol/Script.js","OpenLayers/Protocol/SOS.js","OpenLayers/Protocol/SOS/v1_0_0.js","OpenLayers/Layer/PointTrack.js","OpenLayers/Style.js","OpenLayers/Style2.js","OpenLayers/StyleMap.js","OpenLayers/Rule.js","OpenLayers/Format.js","OpenLayers/Format/QueryStringFilter.js","OpenLayers/Format/XML.js","OpenLayers/Format/XML/VersionedOGC.js","OpenLayers/Format/Context.js","OpenLayers/Format/ArcXML.js","OpenLayers/Format/ArcXML/Features.js","OpenLayers/Format/GML.js","OpenLayers/Format/GML/Base.js","OpenLayers/Format/GML/v2.js","OpenLayers/Format/GML/v3.js","OpenLayers/Format/Atom.js","OpenLayers/Format/KML.js","OpenLayers/Format/GeoRSS.js","OpenLayers/Format/WFS.js","OpenLayers/Format/OWSCommon.js","OpenLayers/Format/OWSCommon/v1.js","OpenLayers/Format/OWSCommon/v1_0_0.js","OpenLayers/Format/OWSCommon/v1_1_0.js","OpenLayers/Format/WFSCapabilities.js","OpenLayers/Format/WFSCapabilities/v1.js","OpenLayers/Format/WFSCapabilities/v1_0_0.js","OpenLayers/Format/WFSCapabilities/v1_1_0.js","OpenLayers/Format/WFSDescribeFeatureType.js","OpenLayers/Format/WMSDescribeLayer.js","OpenLayers/Format/WMSDescribeLayer/v1_1.js","OpenLayers/Format/WKT.js","OpenLayers/Format/CQL.js","OpenLayers/Format/OSM.js","OpenLayers/Format/GPX.js","OpenLayers/Format/Filter.js","OpenLayers/Format/Filter/v1.js","OpenLayers/Format/Filter/v1_0_0.js","OpenLayers/Format/Filter/v1_1_0.js","OpenLayers/Format/SLD.js","OpenLayers/Format/SLD/v1.js","OpenLayers/Format/SLD/v1_0_0.js","OpenLayers/Format/SLD/v1_0_0_GeoServer.js","OpenLayers/Format/OWSCommon.js","OpenLayers/Format/OWSCommon/v1.js","OpenLayers/Format/OWSCommon/v1_0_0.js","OpenLayers/Format/OWSCommon/v1_1_0.js","OpenLayers/Format/CSWGetDomain.js","OpenLayers/Format/CSWGetDomain/v2_0_2.js","OpenLayers/Format/CSWGetRecords.js","OpenLayers/Format/CSWGetRecords/v2_0_2.js","OpenLayers/Format/WFST.js","OpenLayers/Format/WFST/v1.js","OpenLayers/Format/WFST/v1_0_0.js","OpenLayers/Format/WFST/v1_1_0.js","OpenLayers/Format/Text.js","OpenLayers/Format/JSON.js","OpenLayers/Format/GeoJSON.js","OpenLayers/Format/WMC.js","OpenLayers/Format/WMC/v1.js","OpenLayers/Format/WMC/v1_0_0.js","OpenLayers/Format/WMC/v1_1_0.js","OpenLayers/Format/WCSGetCoverage.js","OpenLayers/Format/WMSCapabilities.js","OpenLayers/Format/WMSCapabilities/v1.js","OpenLayers/Format/WMSCapabilities/v1_1.js","OpenLayers/Format/WMSCapabilities/v1_1_0.js","OpenLayers/Format/WMSCapabilities/v1_1_1.js","OpenLayers/Format/WMSCapabilities/v1_3.js","OpenLayers/Format/WMSCapabilities/v1_3_0.js","OpenLayers/Format/WMSCapabilities/v1_1_1_WMSC.js","OpenLayers/Format/WMSGetFeatureInfo.js","OpenLayers/Format/SOSCapabilities.js","OpenLayers/Format/SOSCapabilities/v1_0_0.js","OpenLayers/Format/SOSGetFeatureOfInterest.js","OpenLayers/Format/SOSGetObservation.js","OpenLayers/Format/OWSContext.js","OpenLayers/Format/OWSContext/v0_3_1.js","OpenLayers/Format/WMTSCapabilities.js","OpenLayers/Format/WMTSCapabilities/v1_0_0.js","OpenLayers/Format/WPSCapabilities.js","OpenLayers/Format/WPSCapabilities/v1_0_0.js","OpenLayers/Format/WPSDescribeProcess.js","OpenLayers/Format/WPSExecute.js","OpenLayers/Format/XLS.js","OpenLayers/Format/XLS/v1.js","OpenLayers/Format/XLS/v1_1_0.js","OpenLayers/Format/OGCExceptionReport.js","OpenLayers/Control/GetFeature.js","OpenLayers/Control/NavToolbar.js","OpenLayers/Control/PanPanel.js","OpenLayers/Control/Pan.js","OpenLayers/Control/ZoomIn.js","OpenLayers/Control/ZoomOut.js","OpenLayers/Control/ZoomPanel.js","OpenLayers/Control/EditingToolbar.js","OpenLayers/Control/Geolocate.js","OpenLayers/Symbolizer.js","OpenLayers/Symbolizer/Point.js","OpenLayers/Symbolizer/Line.js","OpenLayers/Symbolizer/Polygon.js","OpenLayers/Symbolizer/Text.js","OpenLayers/Symbolizer/Raster.js","OpenLayers/Lang.js","OpenLayers/Lang/en.js","OpenLayers/Spherical.js"]
+}var scriptTags=new Array(jsFiles.length);
+var host=OpenLayers._getScriptLocation()+"lib/";
+for(var i=0,len=jsFiles.length;
+i<len;
+i++){scriptTags[i]="<script src='"+host+jsFiles[i]+"'><\/script>"
+}if(scriptTags.length>0){document.write(scriptTags.join(""))
+}}})();
+OpenLayers.VERSION_NUMBER="Release 2.12";OpenLayers.String={startsWith:function(str,sub){return(str.indexOf(sub)==0)
+},contains:function(str,sub){return(str.indexOf(sub)!=-1)
+},trim:function(str){return str.replace(/^\s\s*/,"").replace(/\s\s*$/,"")
+},camelize:function(str){var oStringList=str.split("-");
+var camelizedString=oStringList[0];
+for(var i=1,len=oStringList.length;
+i<len;
+i++){var s=oStringList[i];
+camelizedString+=s.charAt(0).toUpperCase()+s.substring(1)
+}return camelizedString
+},format:function(template,context,args){if(!context){context=window
+}var replacer=function(str,match){var replacement;
+var subs=match.split(/\.+/);
+for(var i=0;
+i<subs.length;
+i++){if(i==0){replacement=context
+}replacement=replacement[subs[i]]
+}if(typeof replacement=="function"){replacement=args?replacement.apply(null,args):replacement()
+}if(typeof replacement=="undefined"){return"undefined"
+}else{return replacement
+}};
+return template.replace(OpenLayers.String.tokenRegEx,replacer)
+},tokenRegEx:/\$\{([\w.]+?)\}/g,numberRegEx:/^([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?$/,isNumeric:function(value){return OpenLayers.String.numberRegEx.test(value)
+},numericIf:function(value){return OpenLayers.String.isNumeric(value)?parseFloat(value):value
+}};
+OpenLayers.Number={decimalSeparator:".",thousandsSeparator:",",limitSigDigs:function(num,sig){var fig=0;
+if(sig>0){fig=parseFloat(num.toPrecision(sig))
+}return fig
+},format:function(num,dec,tsep,dsep){dec=(typeof dec!="undefined")?dec:0;
+tsep=(typeof tsep!="undefined")?tsep:OpenLayers.Number.thousandsSeparator;
+dsep=(typeof dsep!="undefined")?dsep:OpenLayers.Number.decimalSeparator;
+if(dec!=null){num=parseFloat(num.toFixed(dec))
+}var parts=num.toString().split(".");
+if(parts.length==1&&dec==null){dec=0
+}var integer=parts[0];
+if(tsep){var thousands=/(-?[0-9]+)([0-9]{3})/;
+while(thousands.test(integer)){integer=integer.replace(thousands,"$1"+tsep+"$2")
+}}var str;
+if(dec==0){str=integer
+}else{var rem=parts.length>1?parts[1]:"0";
+if(dec!=null){rem=rem+new Array(dec-rem.length+1).join("0")
+}str=integer+dsep+rem
+}return str
+}};
+OpenLayers.Function={bind:function(func,object){var args=Array.prototype.slice.apply(arguments,[2]);
+return function(){var newArgs=args.concat(Array.prototype.slice.apply(arguments,[0]));
+return func.apply(object,newArgs)
+}
+},bindAsEventListener:function(func,object){return function(event){return func.call(object,event||window.event)
+}
+},False:function(){return false
+},True:function(){return true
+},Void:function(){}};
+OpenLayers.Array={filter:function(array,callback,caller){var selected=[];
+if(Array.prototype.filter){selected=array.filter(callback,caller)
+}else{var len=array.length;
+if(typeof callback!="function"){throw new TypeError()
+}for(var i=0;
+i<len;
+i++){if(i in array){var val=array[i];
+if(callback.call(caller,val,i,array)){selected.push(val)
+}}}}return selected
+}};OpenLayers.Class=function(){var len=arguments.length;
+var P=arguments[0];
+var F=arguments[len-1];
+var C=typeof F.initialize=="function"?F.initialize:function(){P.prototype.initialize.apply(this,arguments)
+};
+if(len>1){var newArgs=[C,P].concat(Array.prototype.slice.call(arguments).slice(1,len-1),F);
+OpenLayers.inherit.apply(null,newArgs)
+}else{C.prototype=F
+}return C
+};
+OpenLayers.inherit=function(C,P){var F=function(){};
+F.prototype=P.prototype;
+C.prototype=new F;
+var i,l,o;
+for(i=2,l=arguments.length;
+i<l;
+i++){o=arguments[i];
+if(typeof o==="function"){o=o.prototype
+}OpenLayers.Util.extend(C.prototype,o)
+}};
+OpenLayers.Util=OpenLayers.Util||{};
+OpenLayers.Util.extend=function(destination,source){destination=destination||{};
+if(source){for(var property in source){var value=source[property];
+if(value!==undefined){destination[property]=value
+}}var sourceIsEvt=typeof window.Event=="function"&&source instanceof window.Event;
+if(!sourceIsEvt&&source.hasOwnProperty&&source.hasOwnProperty("toString")){destination.toString=source.toString
+}}return destination
+};OpenLayers.Bounds=OpenLayers.Class({left:null,bottom:null,right:null,top:null,centerLonLat:null,initialize:function(left,bottom,right,top){if(OpenLayers.Util.isArray(left)){top=left[3];
+right=left[2];
+bottom=left[1];
+left=left[0]
+}if(left!=null){this.left=OpenLayers.Util.toFloat(left)
+}if(bottom!=null){this.bottom=OpenLayers.Util.toFloat(bottom)
+}if(right!=null){this.right=OpenLayers.Util.toFloat(right)
+}if(top!=null){this.top=OpenLayers.Util.toFloat(top)
+}},clone:function(){return new OpenLayers.Bounds(this.left,this.bottom,this.right,this.top)
+},equals:function(bounds){var equals=false;
+if(bounds!=null){equals=((this.left==bounds.left)&&(this.right==bounds.right)&&(this.top==bounds.top)&&(this.bottom==bounds.bottom))
+}return equals
+},toString:function(){return[this.left,this.bottom,this.right,this.top].join(",")
+},toArray:function(reverseAxisOrder){if(reverseAxisOrder===true){return[this.bottom,this.left,this.top,this.right]
+}else{return[this.left,this.bottom,this.right,this.top]
+}},toBBOX:function(decimal,reverseAxisOrder){if(decimal==null){decimal=6
+}var mult=Math.pow(10,decimal);
+var xmin=Math.round(this.left*mult)/mult;
+var ymin=Math.round(this.bottom*mult)/mult;
+var xmax=Math.round(this.right*mult)/mult;
+var ymax=Math.round(this.top*mult)/mult;
+if(reverseAxisOrder===true){return ymin+","+xmin+","+ymax+","+xmax
+}else{return xmin+","+ymin+","+xmax+","+ymax
+}},toGeometry:function(){return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(this.left,this.bottom),new OpenLayers.Geometry.Point(this.right,this.bottom),new OpenLayers.Geometry.Point(this.right,this.top),new OpenLayers.Geometry.Point(this.left,this.top)])])
+},getWidth:function(){return(this.right-this.left)
+},getHeight:function(){return(this.top-this.bottom)
+},getSize:function(){return new OpenLayers.Size(this.getWidth(),this.getHeight())
+},getCenterPixel:function(){return new OpenLayers.Pixel((this.left+this.right)/2,(this.bottom+this.top)/2)
+},getCenterLonLat:function(){if(!this.centerLonLat){this.centerLonLat=new OpenLayers.LonLat((this.left+this.right)/2,(this.bottom+this.top)/2)
+}return this.centerLonLat
+},scale:function(ratio,origin){if(origin==null){origin=this.getCenterLonLat()
+}var origx,origy;
+if(origin.CLASS_NAME=="OpenLayers.LonLat"){origx=origin.lon;
+origy=origin.lat
+}else{origx=origin.x;
+origy=origin.y
+}var left=(this.left-origx)*ratio+origx;
+var bottom=(this.bottom-origy)*ratio+origy;
+var right=(this.right-origx)*ratio+origx;
+var top=(this.top-origy)*ratio+origy;
+return new OpenLayers.Bounds(left,bottom,right,top)
+},add:function(x,y){if((x==null)||(y==null)){throw new TypeError("Bounds.add cannot receive null values")
+}return new OpenLayers.Bounds(this.left+x,this.bottom+y,this.right+x,this.top+y)
+},extend:function(object){var bounds=null;
+if(object){switch(object.CLASS_NAME){case"OpenLayers.LonLat":bounds=new OpenLayers.Bounds(object.lon,object.lat,object.lon,object.lat);
+break;
+case"OpenLayers.Geometry.Point":bounds=new OpenLayers.Bounds(object.x,object.y,object.x,object.y);
+break;
+case"OpenLayers.Bounds":bounds=object;
+break
+}if(bounds){this.centerLonLat=null;
+if((this.left==null)||(bounds.left<this.left)){this.left=bounds.left
+}if((this.bottom==null)||(bounds.bottom<this.bottom)){this.bottom=bounds.bottom
+}if((this.right==null)||(bounds.right>this.right)){this.right=bounds.right
+}if((this.top==null)||(bounds.top>this.top)){this.top=bounds.top
+}}}},containsLonLat:function(ll,options){if(typeof options==="boolean"){options={inclusive:options}
+}options=options||{};
+var contains=this.contains(ll.lon,ll.lat,options.inclusive),worldBounds=options.worldBounds;
+if(worldBounds&&!contains){var worldWidth=worldBounds.getWidth();
+var worldCenterX=(worldBounds.left+worldBounds.right)/2;
+var worldsAway=Math.round((ll.lon-worldCenterX)/worldWidth);
+contains=this.containsLonLat({lon:ll.lon-worldsAway*worldWidth,lat:ll.lat},{inclusive:options.inclusive})
+}return contains
+},containsPixel:function(px,inclusive){return this.contains(px.x,px.y,inclusive)
+},contains:function(x,y,inclusive){if(inclusive==null){inclusive=true
+}if(x==null||y==null){return false
+}x=OpenLayers.Util.toFloat(x);
+y=OpenLayers.Util.toFloat(y);
+var contains=false;
+if(inclusive){contains=((x>=this.left)&&(x<=this.right)&&(y>=this.bottom)&&(y<=this.top))
+}else{contains=((x>this.left)&&(x<this.right)&&(y>this.bottom)&&(y<this.top))
+}return contains
+},intersectsBounds:function(bounds,options){if(typeof options==="boolean"){options={inclusive:options}
+}options=options||{};
+if(options.worldBounds){var self=this.wrapDateLine(options.worldBounds);
+bounds=bounds.wrapDateLine(options.worldBounds)
+}else{self=this
+}if(options.inclusive==null){options.inclusive=true
+}var intersects=false;
+var mightTouch=(self.left==bounds.right||self.right==bounds.left||self.top==bounds.bottom||self.bottom==bounds.top);
+if(options.inclusive||!mightTouch){var inBottom=(((bounds.bottom>=self.bottom)&&(bounds.bottom<=self.top))||((self.bottom>=bounds.bottom)&&(self.bottom<=bounds.top)));
+var inTop=(((bounds.top>=self.bottom)&&(bounds.top<=self.top))||((self.top>bounds.bottom)&&(self.top<bounds.top)));
+var inLeft=(((bounds.left>=self.left)&&(bounds.left<=self.right))||((self.left>=bounds.left)&&(self.left<=bounds.right)));
+var inRight=(((bounds.right>=self.left)&&(bounds.right<=self.right))||((self.right>=bounds.left)&&(self.right<=bounds.right)));
+intersects=((inBottom||inTop)&&(inLeft||inRight))
+}if(options.worldBounds&&!intersects){var world=options.worldBounds;
+var width=world.getWidth();
+var selfCrosses=!world.containsBounds(self);
+var boundsCrosses=!world.containsBounds(bounds);
+if(selfCrosses&&!boundsCrosses){bounds=bounds.add(-width,0);
+intersects=self.intersectsBounds(bounds,{inclusive:options.inclusive})
+}else{if(boundsCrosses&&!selfCrosses){self=self.add(-width,0);
+intersects=bounds.intersectsBounds(self,{inclusive:options.inclusive})
+}}}return intersects
+},containsBounds:function(bounds,partial,inclusive){if(partial==null){partial=false
+}if(inclusive==null){inclusive=true
+}var bottomLeft=this.contains(bounds.left,bounds.bottom,inclusive);
+var bottomRight=this.contains(bounds.right,bounds.bottom,inclusive);
+var topLeft=this.contains(bounds.left,bounds.top,inclusive);
+var topRight=this.contains(bounds.right,bounds.top,inclusive);
+return(partial)?(bottomLeft||bottomRight||topLeft||topRight):(bottomLeft&&bottomRight&&topLeft&&topRight)
+},determineQuadrant:function(lonlat){var quadrant="";
+var center=this.getCenterLonLat();
+quadrant+=(lonlat.lat<center.lat)?"b":"t";
+quadrant+=(lonlat.lon<center.lon)?"l":"r";
+return quadrant
+},transform:function(source,dest){this.centerLonLat=null;
+var ll=OpenLayers.Projection.transform({x:this.left,y:this.bottom},source,dest);
+var lr=OpenLayers.Projection.transform({x:this.right,y:this.bottom},source,dest);
+var ul=OpenLayers.Projection.transform({x:this.left,y:this.top},source,dest);
+var ur=OpenLayers.Projection.transform({x:this.right,y:this.top},source,dest);
+this.left=Math.min(ll.x,ul.x);
+this.bottom=Math.min(ll.y,lr.y);
+this.right=Math.max(lr.x,ur.x);
+this.top=Math.max(ul.y,ur.y);
+return this
+},wrapDateLine:function(maxExtent,options){options=options||{};
+var leftTolerance=options.leftTolerance||0;
+var rightTolerance=options.rightTolerance||0;
+var newBounds=this.clone();
+if(maxExtent){var width=maxExtent.getWidth();
+while(newBounds.left<maxExtent.left&&newBounds.right-rightTolerance<=maxExtent.left){newBounds=newBounds.add(width,0)
+}while(newBounds.left+leftTolerance>=maxExtent.right&&newBounds.right>maxExtent.right){newBounds=newBounds.add(-width,0)
+}var newLeft=newBounds.left+leftTolerance;
+if(newLeft<maxExtent.right&&newLeft>maxExtent.left&&newBounds.right-rightTolerance>maxExtent.right){newBounds=newBounds.add(-width,0)
+}}return newBounds
+},CLASS_NAME:"OpenLayers.Bounds"});
+OpenLayers.Bounds.fromString=function(str,reverseAxisOrder){var bounds=str.split(",");
+return OpenLayers.Bounds.fromArray(bounds,reverseAxisOrder)
+};
+OpenLayers.Bounds.fromArray=function(bbox,reverseAxisOrder){return reverseAxisOrder===true?new OpenLayers.Bounds(bbox[1],bbox[0],bbox[3],bbox[2]):new OpenLayers.Bounds(bbox[0],bbox[1],bbox[2],bbox[3])
+};
+OpenLayers.Bounds.fromSize=function(size){return new OpenLayers.Bounds(0,size.h,size.w,0)
+};
+OpenLayers.Bounds.oppositeQuadrant=function(quadrant){var opp="";
+opp+=(quadrant.charAt(0)=="t")?"b":"t";
+opp+=(quadrant.charAt(1)=="l")?"r":"l";
+return opp
+};OpenLayers.Console={log:function(){},debug:function(){},info:function(){},warn:function(){},error:function(){},userError:function(error){alert(error)
+},assert:function(){},dir:function(){},dirxml:function(){},trace:function(){},group:function(){},groupEnd:function(){},time:function(){},timeEnd:function(){},profile:function(){},profileEnd:function(){},count:function(){},CLASS_NAME:"OpenLayers.Console"};
+(function(){var scripts=document.getElementsByTagName("script");
 for(var i=0,len=scripts.length;
 i<len;
-i++){var src=scripts[i].getAttribute("src");
-if(src){var match=src.match(isOL);
-if(match){scriptLocation=match[1];
+++i){if(scripts[i].src.indexOf("firebug.js")!=-1){if(console){OpenLayers.Util.extend(OpenLayers.Console,console);
 break
-}}}return scriptLocation
-}};
-if(!singleFile){var jsfiles=new Array("OpenLayers/Util.js","OpenLayers/BaseTypes.js","OpenLayers/BaseTypes/Class.js","OpenLayers/BaseTypes/Bounds.js","OpenLayers/BaseTypes/Element.js","OpenLayers/BaseTypes/LonLat.js","OpenLayers/BaseTypes/Pixel.js","OpenLayers/BaseTypes/Size.js","OpenLayers/Console.js","OpenLayers/Tween.js","Rico/Corner.js","Rico/Color.js","OpenLayers/Ajax.js","OpenLayers/Events.js","OpenLayers/Request.js","OpenLayers/Request/XMLHttpRequest.js","OpenLayers/Projection.js","OpenLayers/Map.js","OpenLayers/Layer.js","OpenLayers/Icon.js","OpenLayers/Marker.js","OpenLayers/Marker/Box.js","OpenLayers/Popup.js","OpenLayers/Tile.js","OpenLayers/Tile/Image.js","OpenLayers/Tile/Image/IFrame.js","OpenLayers/Tile/WFS.js","OpenLayers/Layer/Image.js","OpenLayers/Layer/SphericalMercator.js","OpenLayers/Layer/EventPane.js","OpenLayers/Layer/FixedZoomLevels.js","OpenLayers/Layer/Google.js","OpenLayers/Layer/Google/v3.js","OpenLayers/Layer/VirtualEarth.js","OpenLayers/Layer/Yahoo.js","OpenLayers/Layer/HTTPRequest.js","OpenLayers/Layer/Grid.js","OpenLayers/Layer/MapGuide.js","OpenLayers/Layer/MapServer.js","OpenLayers/Layer/MapServer/Untiled.js","OpenLayers/Layer/KaMap.js","OpenLayers/Layer/KaMapCache.js","OpenLayers/Layer/MultiMap.js","OpenLayers/Layer/Markers.js","OpenLayers/Layer/Text.js","OpenLayers/Layer/WorldWind.js","OpenLayers/Layer/ArcGIS93Rest.js","OpenLayers/Layer/WMS.js","OpenLayers/Layer/WMS/Untiled.js","OpenLayers/Layer/WMS/Post.js","OpenLayers/Layer/WMTS.js","OpenLayers/Layer/ArcIMS.js","OpenLayers/Layer/GeoRSS.js","OpenLayers/Layer/Boxes.js","OpenLayers/Layer/XYZ.js","OpenLayers/Layer/TMS.js","OpenLayers/Layer/TileCache.js","OpenLayers/Layer/Zoomify.js","OpenLayers/Popup/Anchored.js","OpenLayers/Popup/AnchoredBubble.js","OpenLayers/Popup/Framed.js","OpenLayers/Popup/FramedCloud.js","OpenLayers/Feature.js","OpenLayers/Feature/Vector.js","OpenLayers/Feature/WFS.js","OpenLayers/Handler.js","OpenLayers/Handler/Click.js","OpenLayers/Handler/Hover.js","OpenLayers/Handler/Point.js","OpenLayers/Handler/Path.js","OpenLayers/Handler/Polygon.js","OpenLayers/Handler/Feature.js","OpenLayers/Handler/Drag.js","OpenLayers/Handler/RegularPolygon.js","OpenLayers/Handler/Box.js","OpenLayers/Handler/MouseWheel.js","OpenLayers/Handler/Keyboard.js","OpenLayers/Control.js","OpenLayers/Control/Attribution.js","OpenLayers/Control/Button.js","OpenLayers/Control/ZoomBox.js","OpenLayers/Control/ZoomToMaxExtent.js","OpenLayers/Control/DragPan.js","OpenLayers/Control/Navigation.js","OpenLayers/Control/MouseDefaults.js","OpenLayers/Control/MousePosition.js","OpenLayers/Control/OverviewMap.js","OpenLayers/Control/KeyboardDefaults.js","OpenLayers/Control/PanZoom.js","OpenLayers/Control/PanZoomBar.js","OpenLayers/Control/ArgParser.js","OpenLayers/Control/Permalink.js","OpenLayers/Control/Scale.js","OpenLayers/Control/ScaleLine.js","OpenLayers/Control/Snapping.js","OpenLayers/Control/Split.js","OpenLayers/Control/LayerSwitcher.js","OpenLayers/Control/DrawFeature.js","OpenLayers/Control/DragFeature.js","OpenLayers/Control/ModifyFeature.js","OpenLayers/Control/Panel.js","OpenLayers/Control/SelectFeature.js","OpenLayers/Control/NavigationHistory.js","OpenLayers/Control/Measure.js","OpenLayers/Control/WMSGetFeatureInfo.js","OpenLayers/Control/WMTSGetFeatureInfo.js","OpenLayers/Control/Graticule.js","OpenLayers/Control/TransformFeature.js","OpenLayers/Control/SLDSelect.js","OpenLayers/Geometry.js","OpenLayers/Geometry/Rectangle.js","OpenLayers/Geometry/Collection.js","OpenLayers/Geometry/Point.js","OpenLayers/Geometry/MultiPoint.js","OpenLayers/Geometry/Curve.js","OpenLayers/Geometry/LineString.js","OpenLayers/Geometry/LinearRing.js","OpenLayers/Geometry/Polygon.js","OpenLayers/Geometry/MultiLineString.js","OpenLayers/Geometry/MultiPolygon.js","OpenLayers/Geometry/Surface.js","OpenLayers/Renderer.js","OpenLayers/Renderer/Elements.js","OpenLayers/Renderer/SVG.js","OpenLayers/Renderer/Canvas.js","OpenLayers/Renderer/VML.js","OpenLayers/Layer/Vector.js","OpenLayers/Layer/Vector/RootContainer.js","OpenLayers/Strategy.js","OpenLayers/Strategy/Filter.js","OpenLayers/Strategy/Fixed.js","OpenLayers/Strategy/Cluster.js","OpenLayers/Strategy/Paging.js","OpenLayers/Strategy/BBOX.js","OpenLayers/Strategy/Save.js","OpenLayers/Strategy/Refresh.js","OpenLayers/Filter.js","OpenLayers/Filter/FeatureId.js","OpenLayers/Filter/Logical.js","OpenLayers/Filter/Comparison.js","OpenLayers/Filter/Spatial.js","OpenLayers/Protocol.js","OpenLayers/Protocol/HTTP.js","OpenLayers/Protocol/SQL.js","OpenLayers/Protocol/SQL/Gears.js","OpenLayers/Protocol/WFS.js","OpenLayers/Protocol/WFS/v1.js","OpenLayers/Protocol/WFS/v1_0_0.js","OpenLayers/Protocol/WFS/v1_1_0.js","OpenLayers/Protocol/SOS.js","OpenLayers/Protocol/SOS/v1_0_0.js","OpenLayers/Layer/PointTrack.js","OpenLayers/Layer/GML.js","OpenLayers/Style.js","OpenLayers/Style2.js","OpenLayers/StyleMap.js","OpenLayers/Rule.js","OpenLayers/Format.js","OpenLayers/Format/XML.js","OpenLayers/Format/Context.js","OpenLayers/Format/ArcXML.js","OpenLayers/Format/ArcXML/Features.js","OpenLayers/Format/GML.js","OpenLayers/Format/GML/Base.js","OpenLayers/Format/GML/v2.js","OpenLayers/Format/GML/v3.js","OpenLayers/Format/Atom.js","OpenLayers/Format/KML.js","OpenLayers/Format/GeoRSS.js","OpenLayers/Format/WFS.js","OpenLayers/Format/WFSCapabilities.js","OpenLayers/Format/WFSCapabilities/v1.js","OpenLayers/Format/WFSCapabilities/v1_0_0.js","OpenLayers/Format/WFSCapabilities/v1_1_0.js","OpenLayers/Format/WFSDescribeFeatureType.js","OpenLayers/Format/WMSDescribeLayer.js","OpenLayers/Format/WMSDescribeLayer/v1_1.js","OpenLayers/Format/WKT.js","OpenLayers/Format/OSM.js","OpenLayers/Format/GPX.js","OpenLayers/Format/Filter.js","OpenLayers/Format/Filter/v1.js","OpenLayers/Format/Filter/v1_0_0.js","OpenLayers/Format/Filter/v1_1_0.js","OpenLayers/Format/SLD.js","OpenLayers/Format/SLD/v1.js","OpenLayers/Format/SLD/v1_0_0.js","OpenLayers/Format/OWSCommon/v1.js","OpenLayers/Format/OWSCommon/v1_0_0.js","OpenLayers/Format/OWSCommon/v1_1_0.js","OpenLayers/Format/CSWGetDomain.js","OpenLayers/Format/CSWGetDomain/v2_0_2.js","OpenLayers/Format/CSWGetRecords.js","OpenLayers/Format/CSWGetRecords/v2_0_2.js","OpenLayers/Format/WFST.js","OpenLayers/Format/WFST/v1.js","OpenLayers/Format/WFST/v1_0_0.js","OpenLayers/Format/WFST/v1_1_0.js","OpenLayers/Format/Text.js","OpenLayers/Format/JSON.js","OpenLayers/Format/GeoJSON.js","OpenLayers/Format/WMC.js","OpenLayers/Format/WMC/v1.js","OpenLayers/Format/WMC/v1_0_0.js","OpenLayers/Format/WMC/v1_1_0.js","OpenLayers/Format/WMSCapabilities.js","OpenLayers/Format/WMSCapabilities/v1.js","OpenLayers/Format/WMSCapabilities/v1_1.js","OpenLayers/Format/WMSCapabilities/v1_1_0.js","OpenLayers/Format/WMSCapabilities/v1_1_1.js","OpenLayers/Format/WMSCapabilities/v1_3.js","OpenLayers/Format/WMSCapabilities/v1_3_0.js","OpenLayers/Format/WMSGetFeatureInfo.js","OpenLayers/Format/SOSCapabilities.js","OpenLayers/Format/SOSCapabilities/v1_0_0.js","OpenLayers/Format/SOSGetObservation.js","OpenLayers/Format/SOSGetFeatureOfInterest.js","OpenLayers/Format/OWSContext.js","OpenLayers/Format/OWSContext/v0_3_1.js","OpenLayers/Format/WMTSCapabilities.js","OpenLayers/Format/WMTSCapabilities/v1_0_0.js","OpenLayers/Layer/WFS.js","OpenLayers/Control/GetFeature.js","OpenLayers/Control/MouseToolbar.js","OpenLayers/Control/NavToolbar.js","OpenLayers/Control/PanPanel.js","OpenLayers/Control/Pan.js","OpenLayers/Control/ZoomIn.js","OpenLayers/Control/ZoomOut.js","OpenLayers/Control/ZoomPanel.js","OpenLayers/Control/EditingToolbar.js","OpenLayers/Symbolizer.js","OpenLayers/Symbolizer/Point.js","OpenLayers/Symbolizer/Line.js","OpenLayers/Symbolizer/Polygon.js","OpenLayers/Symbolizer/Text.js","OpenLayers/Symbolizer/Raster.js","OpenLayers/Lang.js","OpenLayers/Lang/en.js","OpenLayers/Lang/fr.js");
-var allScriptTags=new Array(jsfiles.length);
-var host=OpenLayers._getScriptLocation()+"lib/";
-for(var i=0,len=jsfiles.length;
-i<len;
-i++){allScriptTags[i]="<script src='"+host+jsfiles[i]+"'><\/script>"
-}document.write(allScriptTags.join(""))
-}})();
-OpenLayers.VERSION_NUMBER="OpenLayers 2.10 -- $Revision: 10721 $";OpenLayers.Util={};
+}}}})();OpenLayers.Util=OpenLayers.Util||{};
 OpenLayers.Util.getElement=function(){var elements=[];
 for(var i=0,len=arguments.length;
 i<len;
@@ -3450,21 +3726,13 @@ if(typeof element=="string"){element=document.getElementById(element)
 };
 OpenLayers.Util.isElement=function(o){return !!(o&&o.nodeType===1)
 };
-if(typeof window.$==="undefined"){window.$=OpenLayers.Util.getElement
-}OpenLayers.Util.extend=function(destination,source){destination=destination||{};
-if(source){for(var property in source){var value=source[property];
-if(value!==undefined){destination[property]=value
-}}var sourceIsEvt=typeof window.Event=="function"&&source instanceof window.Event;
-if(!sourceIsEvt&&source.hasOwnProperty&&source.hasOwnProperty("toString")){destination.toString=source.toString
-}}return destination
+OpenLayers.Util.isArray=function(a){return(Object.prototype.toString.call(a)==="[object Array]")
 };
-OpenLayers.Util.removeItem=function(array,item){for(var i=array.length-1;
+if(typeof window.$==="undefined"){window.$=OpenLayers.Util.getElement
+}OpenLayers.Util.removeItem=function(array,item){for(var i=array.length-1;
 i>=0;
 i--){if(array[i]==item){array.splice(i,1)
 }}return array
-};
-OpenLayers.Util.clearArray=function(array){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"array = []"}));
-array.length=0
 };
 OpenLayers.Util.indexOf=function(array,obj){if(typeof array.indexOf=="function"){return array.indexOf(obj)
 }else{for(var i=0,len=array.length;
@@ -3497,36 +3765,16 @@ if(!id){id=OpenLayers.Util.createUniqueID("OpenLayersDiv")
 }if(!position){position="relative"
 }OpenLayers.Util.modifyDOMElement(image,id,px,sz,position,border,null,opacity);
 if(delayDisplay){image.style.display="none";
-OpenLayers.Event.observe(image,"load",OpenLayers.Function.bind(OpenLayers.Util.onImageLoad,image));
-OpenLayers.Event.observe(image,"error",OpenLayers.Function.bind(OpenLayers.Util.onImageLoadError,image))
+function display(){image.style.display="";
+OpenLayers.Event.stopObservingElement(image)
+}OpenLayers.Event.observe(image,"load",display);
+OpenLayers.Event.observe(image,"error",display)
 }image.style.alt=id;
 image.galleryImg="no";
 if(imgURL){image.src=imgURL
 }return image
 };
-OpenLayers.Util.setOpacity=function(element,opacity){OpenLayers.Util.modifyDOMElement(element,null,null,null,null,null,null,opacity)
-};
-OpenLayers.Util.onImageLoad=function(){if(!this.viewRequestID||(this.map&&this.viewRequestID==this.map.viewRequestID)){this.style.display=""
-}OpenLayers.Element.removeClass(this,"olImageLoadError")
-};
 OpenLayers.IMAGE_RELOAD_ATTEMPTS=0;
-OpenLayers.Util.onImageLoadError=function(){this._attempts=(this._attempts)?(this._attempts+1):1;
-if(this._attempts<=OpenLayers.IMAGE_RELOAD_ATTEMPTS){var urls=this.urls;
-if(urls&&urls instanceof Array&&urls.length>1){var src=this.src.toString();
-var current_url,k;
-for(k=0;
-current_url=urls[k];
-k++){if(src.indexOf(current_url)!=-1){break
-}}var guess=Math.floor(urls.length*Math.random());
-var new_url=urls[guess];
-k=0;
-while(new_url==current_url&&k++<4){guess=Math.floor(urls.length*Math.random());
-new_url=urls[guess]
-}this.src=src.replace(current_url,new_url)
-}else{this.src=this.src
-}}else{OpenLayers.Element.addClass(this,"olImageLoadError")
-}this.style.display=""
-};
 OpenLayers.Util.alphaHackNeeded=null;
 OpenLayers.Util.alphaHack=function(){if(OpenLayers.Util.alphaHackNeeded==null){var arVersion=navigator.appVersion.split("MSIE");
 var version=parseFloat(arVersion[1]);
@@ -3546,12 +3794,10 @@ if(parseFloat(div.style.opacity)>=0&&parseFloat(div.style.opacity)<1){div.style.
 }img.style.filter="alpha(opacity=0)"
 }};
 OpenLayers.Util.createAlphaImageDiv=function(id,px,sz,imgURL,position,border,sizing,opacity,delayDisplay){var div=OpenLayers.Util.createDiv();
-var img=OpenLayers.Util.createImage(null,null,null,null,null,null,null,false);
+var img=OpenLayers.Util.createImage(null,null,null,null,null,null,null,delayDisplay);
+img.className="olAlphaImg";
 div.appendChild(img);
-if(delayDisplay){img.style.display="none";
-OpenLayers.Event.observe(img,"load",OpenLayers.Function.bind(OpenLayers.Util.onImageLoad,div));
-OpenLayers.Event.observe(img,"error",OpenLayers.Function.bind(OpenLayers.Util.onImageLoadError,div))
-}OpenLayers.Util.modifyAlphaImageDiv(div,id,px,sz,imgURL,position,border,sizing,opacity);
+OpenLayers.Util.modifyAlphaImageDiv(div,id,px,sz,imgURL,position,border,sizing,opacity);
 return div
 };
 OpenLayers.Util.upperCaseObject=function(object){var uObject={};
@@ -3583,8 +3829,9 @@ if(paramStr){var parts=(url+" ").split(/[?&]/);
 newUrl+=(parts.pop()===" "?paramStr:parts.length?"&"+paramStr:"?"+paramStr)
 }return newUrl
 };
-OpenLayers.ImgPath="";
 OpenLayers.Util.getImagesLocation=function(){return OpenLayers.ImgPath||(OpenLayers._getScriptLocation()+"img/")
+};
+OpenLayers.Util.getImageLocation=function(image){return OpenLayers.Util.getImagesLocation()+image
 };
 OpenLayers.Util.Try=function(){var returnValue=null;
 for(var i=0,len=arguments.length;
@@ -3594,23 +3841,6 @@ try{returnValue=lambda();
 break
 }catch(e){}}return returnValue
 };
-OpenLayers.Util.getNodes=function(p,tagName){var nodes=OpenLayers.Util.Try(function(){return OpenLayers.Util._getNodes(p.documentElement.childNodes,tagName)
-},function(){return OpenLayers.Util._getNodes(p.childNodes,tagName)
-});
-return nodes
-};
-OpenLayers.Util._getNodes=function(nodes,tagName){var retArray=[];
-for(var i=0,len=nodes.length;
-i<len;
-i++){if(nodes[i].nodeName==tagName){retArray.push(nodes[i])
-}}return retArray
-};
-OpenLayers.Util.getTagText=function(parent,item,index){var result=OpenLayers.Util.getNodes(parent,item);
-if(result&&(result.length>0)){if(!index){index=0
-}if(result[index].childNodes.length>1){return result.childNodes[1].nodeValue
-}else{if(result[index].childNodes.length==1){return result[index].firstChild.nodeValue
-}}}else{return""
-}};
 OpenLayers.Util.getXmlNodeValue=function(node){var val=null;
 OpenLayers.Util.Try(function(){val=node.text;
 if(!val){val=node.textContent
@@ -3625,10 +3855,8 @@ while(target!=div&&target!=null){target=target.parentNode
 };
 OpenLayers.Util.DEFAULT_PRECISION=14;
 OpenLayers.Util.toFloat=function(number,precision){if(precision==null){precision=OpenLayers.Util.DEFAULT_PRECISION
-}var number;
-if(precision==0){number=parseFloat(number)
-}else{number=parseFloat(parseFloat(number).toPrecision(precision))
-}return number
+}if(typeof number!=="number"){number=parseFloat(number)
+}return precision===0?number:parseFloat(number.toPrecision(precision))
 };
 OpenLayers.Util.rad=function(x){return x*Math.PI/180
 };
@@ -3696,7 +3924,7 @@ var L=lambda-(1-C)*f*sinAlpha*(sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos
 var revAz=Math.atan2(sinAlpha,-tmp);
 return new OpenLayers.LonLat(lon1+u.deg(L),u.deg(lat2))
 };
-OpenLayers.Util.getParameters=function(url){url=url||window.location.href;
+OpenLayers.Util.getParameters=function(url){url=(url===null||url===undefined)?window.location.href:url;
 var paramsString="";
 if(OpenLayers.String.contains(url,"?")){var start=url.indexOf("?")+1;
 var end=OpenLayers.String.contains(url,"#")?url.indexOf("#"):url.length;
@@ -3706,15 +3934,16 @@ var pairs=paramsString.split(/[&;]/);
 for(var i=0,len=pairs.length;
 i<len;
 ++i){var keyValue=pairs[i].split("=");
-if(keyValue[0]){var key=decodeURIComponent(keyValue[0]);
-var value=keyValue[1]||"";
-value=decodeURIComponent(value.replace(/\+/g," ")).split(",");
+if(keyValue[0]){var key=keyValue[0];
+try{key=decodeURIComponent(key)
+}catch(err){key=unescape(key)
+}var value=(keyValue[1]||"").replace(/\+/g," ");
+try{value=decodeURIComponent(value)
+}catch(err){value=unescape(value)
+}value=value.split(",");
 if(value.length==1){value=value[0]
 }parameters[key]=value
 }}return parameters
-};
-OpenLayers.Util.getArgs=function(url){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.Util.getParameters"}));
-return OpenLayers.Util.getParameters(url)
 };
 OpenLayers.Util.lastSeqID=0;
 OpenLayers.Util.createUniqueID=function(prefix){if(prefix==null){prefix="id_"
@@ -3742,23 +3971,39 @@ OpenLayers.Util.getScaleFromResolution=function(resolution,units){if(units==null
 }var scale=resolution*OpenLayers.INCHES_PER_UNIT[units]*OpenLayers.DOTS_PER_INCH;
 return scale
 };
-OpenLayers.Util.safeStopPropagation=function(evt){OpenLayers.Event.stop(evt,true)
+OpenLayers.Util.pagePosition=function(forElement){var pos=[0,0];
+var viewportElement=OpenLayers.Util.getViewportElement();
+if(!forElement||forElement==window||forElement==viewportElement){return pos
+}var BUGGY_GECKO_BOX_OBJECT=OpenLayers.IS_GECKO&&document.getBoxObjectFor&&OpenLayers.Element.getStyle(forElement,"position")=="absolute"&&(forElement.style.top==""||forElement.style.left=="");
+var parent=null;
+var box;
+if(forElement.getBoundingClientRect){box=forElement.getBoundingClientRect();
+var scrollTop=viewportElement.scrollTop;
+var scrollLeft=viewportElement.scrollLeft;
+pos[0]=box.left+scrollLeft;
+pos[1]=box.top+scrollTop
+}else{if(document.getBoxObjectFor&&!BUGGY_GECKO_BOX_OBJECT){box=document.getBoxObjectFor(forElement);
+var vpBox=document.getBoxObjectFor(viewportElement);
+pos[0]=box.screenX-vpBox.screenX;
+pos[1]=box.screenY-vpBox.screenY
+}else{pos[0]=forElement.offsetLeft;
+pos[1]=forElement.offsetTop;
+parent=forElement.offsetParent;
+if(parent!=forElement){while(parent){pos[0]+=parent.offsetLeft;
+pos[1]+=parent.offsetTop;
+parent=parent.offsetParent
+}}var browser=OpenLayers.BROWSER_NAME;
+if(browser=="opera"||(browser=="safari"&&OpenLayers.Element.getStyle(forElement,"position")=="absolute")){pos[1]-=document.body.offsetTop
+}parent=forElement.offsetParent;
+while(parent&&parent!=document.body){pos[0]-=parent.scrollLeft;
+if(browser!="opera"||parent.tagName!="TR"){pos[1]-=parent.scrollTop
+}parent=parent.offsetParent
+}}}return pos
 };
-OpenLayers.Util.pagePosition=function(forElement){var valueT=0,valueL=0;
-var element=forElement;
-var child=forElement;
-while(element){if(element==document.body){if(OpenLayers.Element.getStyle(child,"position")=="absolute"){break
-}}valueT+=element.offsetTop||0;
-valueL+=element.offsetLeft||0;
-child=element;
-try{element=element.offsetParent
-}catch(e){OpenLayers.Console.error(OpenLayers.i18n("pagePositionFailed",{elemId:element.id}));
-break
-}}element=forElement;
-while(element){valueT-=element.scrollTop||0;
-valueL-=element.scrollLeft||0;
-element=element.parentNode
-}return[valueL,valueT]
+OpenLayers.Util.getViewportElement=function(){var viewportElement=arguments.callee.viewportElement;
+if(viewportElement==undefined){viewportElement=(OpenLayers.BROWSER_NAME=="msie"&&document.compatMode!="CSS1Compat")?document.body:document.documentElement;
+arguments.callee.viewportElement=viewportElement
+}return viewportElement
 };
 OpenLayers.Util.isEquivalentUrl=function(url1,url2,options){options=options||{};
 OpenLayers.Util.applyDefaults(options,{ignoreCase:true,ignorePort80:true,ignoreHash:true});
@@ -3801,19 +4046,43 @@ if(qMark==-1){head=(hashMark!=-1)?url.substr(0,hashMark):url
 }else{head=(hashMark!=-1)?url.substr(0,Math.min(qMark,hashMark)):url.substr(0,qMark)
 }return head
 };
-OpenLayers.Util.getBrowserName=function(){var browserName="";
+OpenLayers.IS_GECKO=(function(){var ua=navigator.userAgent.toLowerCase();
+return ua.indexOf("webkit")==-1&&ua.indexOf("gecko")!=-1
+})();
+OpenLayers.CANVAS_SUPPORTED=(function(){var elem=document.createElement("canvas");
+return !!(elem.getContext&&elem.getContext("2d"))
+})();
+OpenLayers.BROWSER_NAME=(function(){var name="";
 var ua=navigator.userAgent.toLowerCase();
-if(ua.indexOf("opera")!=-1){browserName="opera"
-}else{if(ua.indexOf("msie")!=-1){browserName="msie"
-}else{if(ua.indexOf("safari")!=-1){browserName="safari"
-}else{if(ua.indexOf("mozilla")!=-1){if(ua.indexOf("firefox")!=-1){browserName="firefox"
-}else{browserName="mozilla"
-}}}}}return browserName
+if(ua.indexOf("opera")!=-1){name="opera"
+}else{if(ua.indexOf("msie")!=-1){name="msie"
+}else{if(ua.indexOf("safari")!=-1){name="safari"
+}else{if(ua.indexOf("mozilla")!=-1){if(ua.indexOf("firefox")!=-1){name="firefox"
+}else{name="mozilla"
+}}}}}return name
+})();
+OpenLayers.Util.getBrowserName=function(){return OpenLayers.BROWSER_NAME
 };
 OpenLayers.Util.getRenderedDimensions=function(contentHTML,size,options){var w,h;
 var container=document.createElement("div");
 container.style.visibility="hidden";
 var containerElement=(options&&options.containerElement)?options.containerElement:document.body;
+var parentHasPositionAbsolute=false;
+var superContainer=null;
+var parent=containerElement;
+while(parent&&parent.tagName.toLowerCase()!="body"){var parentPosition=OpenLayers.Element.getStyle(parent,"position");
+if(parentPosition=="absolute"){parentHasPositionAbsolute=true;
+break
+}else{if(parentPosition&&parentPosition!="static"){break
+}}parent=parent.parentNode
+}if(parentHasPositionAbsolute&&(containerElement.clientHeight===0||containerElement.clientWidth===0)){superContainer=document.createElement("div");
+superContainer.style.visibility="hidden";
+superContainer.style.position="absolute";
+superContainer.style.overflow="visible";
+superContainer.style.width=document.body.clientWidth+"px";
+superContainer.style.height=document.body.clientHeight+"px";
+superContainer.appendChild(container)
+}container.style.position="absolute";
 if(size){if(size.w){w=size.w;
 container.style.width=w+"px"
 }else{if(size.h){h=size.h;
@@ -3827,21 +4096,16 @@ i<l;
 i++){if(!content.childNodes[i].style){continue
 }content.childNodes[i].style.overflow="visible"
 }}container.appendChild(content);
-containerElement.appendChild(container);
-var parentHasPositionAbsolute=false;
-var parent=container.parentNode;
-while(parent&&parent.tagName.toLowerCase()!="body"){var parentPosition=OpenLayers.Element.getStyle(parent,"position");
-if(parentPosition=="absolute"){parentHasPositionAbsolute=true;
-break
-}else{if(parentPosition&&parentPosition!="static"){break
-}}parent=parent.parentNode
-}if(!parentHasPositionAbsolute){container.style.position="absolute"
+if(superContainer){containerElement.appendChild(superContainer)
+}else{containerElement.appendChild(container)
 }if(!w){w=parseInt(content.scrollWidth);
 container.style.width=w+"px"
 }if(!h){h=parseInt(content.scrollHeight)
 }container.removeChild(content);
-containerElement.removeChild(container);
-return new OpenLayers.Size(w,h)
+if(superContainer){superContainer.removeChild(container);
+containerElement.removeChild(superContainer)
+}else{containerElement.removeChild(container)
+}return new OpenLayers.Size(w,h)
 };
 OpenLayers.Util.getScrollbarWidth=function(){var scrollbarWidth=OpenLayers.Util._scrollbarWidth;
 if(scrollbarWidth==null){var scr=null;
@@ -3869,7 +4133,8 @@ scrollbarWidth=OpenLayers.Util._scrollbarWidth
 }return scrollbarWidth
 };
 OpenLayers.Util.getFormattedLonLat=function(coordinate,axis,dmsOption){if(!dmsOption){dmsOption="dms"
-}var abscoordinate=Math.abs(coordinate);
+}coordinate=(coordinate+540)%360-180;
+var abscoordinate=Math.abs(coordinate);
 var coordinatedegrees=Math.floor(abscoordinate);
 var coordinateminutes=(abscoordinate-coordinatedegrees)/(1/60);
 var tempcoordinateminutes=coordinateminutes;
@@ -3877,7 +4142,11 @@ coordinateminutes=Math.floor(coordinateminutes);
 var coordinateseconds=(tempcoordinateminutes-coordinateminutes)/(1/60);
 coordinateseconds=Math.round(coordinateseconds*10);
 coordinateseconds/=10;
-if(coordinatedegrees<10){coordinatedegrees="0"+coordinatedegrees
+if(coordinateseconds>=60){coordinateseconds-=60;
+coordinateminutes+=1;
+if(coordinateminutes>=60){coordinateminutes-=60;
+coordinatedegrees+=1
+}}if(coordinatedegrees<10){coordinatedegrees="0"+coordinatedegrees
 }var str=coordinatedegrees+"\u00B0";
 if(dmsOption.indexOf("dm")>=0){if(coordinateminutes<10){coordinateminutes="0"+coordinateminutes
 }str+=coordinateminutes+"'";
@@ -3886,267 +4155,8 @@ if(dmsOption.indexOf("dms")>=0){if(coordinateseconds<10){coordinateseconds="0"+c
 }}if(axis=="lon"){str+=coordinate<0?OpenLayers.i18n("W"):OpenLayers.i18n("E")
 }else{str+=coordinate<0?OpenLayers.i18n("S"):OpenLayers.i18n("N")
 }return str
-};OpenLayers.String={startsWith:function(str,sub){return(str.indexOf(sub)==0)
-},contains:function(str,sub){return(str.indexOf(sub)!=-1)
-},trim:function(str){return str.replace(/^\s\s*/,"").replace(/\s\s*$/,"")
-},camelize:function(str){var oStringList=str.split("-");
-var camelizedString=oStringList[0];
-for(var i=1,len=oStringList.length;
-i<len;
-i++){var s=oStringList[i];
-camelizedString+=s.charAt(0).toUpperCase()+s.substring(1)
-}return camelizedString
-},format:function(template,context,args){if(!context){context=window
-}var replacer=function(str,match){var replacement;
-var subs=match.split(/\.+/);
-for(var i=0;
-i<subs.length;
-i++){if(i==0){replacement=context
-}replacement=replacement[subs[i]]
-}if(typeof replacement=="function"){replacement=args?replacement.apply(null,args):replacement()
-}if(typeof replacement=="undefined"){return"undefined"
-}else{return replacement
-}};
-return template.replace(OpenLayers.String.tokenRegEx,replacer)
-},tokenRegEx:/\$\{([\w.]+?)\}/g,numberRegEx:/^([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?$/,isNumeric:function(value){return OpenLayers.String.numberRegEx.test(value)
-},numericIf:function(value){return OpenLayers.String.isNumeric(value)?parseFloat(value):value
-}};
-if(!String.prototype.startsWith){String.prototype.startsWith=function(sStart){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.String.startsWith"}));
-return OpenLayers.String.startsWith(this,sStart)
-}
-}if(!String.prototype.contains){String.prototype.contains=function(str){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.String.contains"}));
-return OpenLayers.String.contains(this,str)
-}
-}if(!String.prototype.trim){String.prototype.trim=function(){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.String.trim"}));
-return OpenLayers.String.trim(this)
-}
-}if(!String.prototype.camelize){String.prototype.camelize=function(){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.String.camelize"}));
-return OpenLayers.String.camelize(this)
-}
-}OpenLayers.Number={decimalSeparator:".",thousandsSeparator:",",limitSigDigs:function(num,sig){var fig=0;
-if(sig>0){fig=parseFloat(num.toPrecision(sig))
-}return fig
-},format:function(num,dec,tsep,dsep){dec=(typeof dec!="undefined")?dec:0;
-tsep=(typeof tsep!="undefined")?tsep:OpenLayers.Number.thousandsSeparator;
-dsep=(typeof dsep!="undefined")?dsep:OpenLayers.Number.decimalSeparator;
-if(dec!=null){num=parseFloat(num.toFixed(dec))
-}var parts=num.toString().split(".");
-if(parts.length==1&&dec==null){dec=0
-}var integer=parts[0];
-if(tsep){var thousands=/(-?[0-9]+)([0-9]{3})/;
-while(thousands.test(integer)){integer=integer.replace(thousands,"$1"+tsep+"$2")
-}}var str;
-if(dec==0){str=integer
-}else{var rem=parts.length>1?parts[1]:"0";
-if(dec!=null){rem=rem+new Array(dec-rem.length+1).join("0")
-}str=integer+dsep+rem
-}return str
-}};
-if(!Number.prototype.limitSigDigs){Number.prototype.limitSigDigs=function(sig){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.Number.limitSigDigs"}));
-return OpenLayers.Number.limitSigDigs(this,sig)
-}
-}OpenLayers.Function={bind:function(func,object){var args=Array.prototype.slice.apply(arguments,[2]);
-return function(){var newArgs=args.concat(Array.prototype.slice.apply(arguments,[0]));
-return func.apply(object,newArgs)
-}
-},bindAsEventListener:function(func,object){return function(event){return func.call(object,event||window.event)
-}
-},False:function(){return false
-},True:function(){return true
-}};
-if(!Function.prototype.bind){Function.prototype.bind=function(){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.Function.bind"}));
-Array.prototype.unshift.apply(arguments,[this]);
-return OpenLayers.Function.bind.apply(null,arguments)
-}
-}if(!Function.prototype.bindAsEventListener){Function.prototype.bindAsEventListener=function(object){OpenLayers.Console.warn(OpenLayers.i18n("methodDeprecated",{newMethod:"OpenLayers.Function.bindAsEventListener"}));
-return OpenLayers.Function.bindAsEventListener(this,object)
-}
-}OpenLayers.Array={filter:function(array,callback,caller){var selected=[];
-if(Array.prototype.filter){selected=array.filter(callback,caller)
-}else{var len=array.length;
-if(typeof callback!="function"){throw new TypeError()
-}for(var i=0;
-i<len;
-i++){if(i in array){var val=array[i];
-if(callback.call(caller,val,i,array)){selected.push(val)
-}}}}return selected
-}};
-OpenLayers.Date={toISOString:(function(){if("toISOString" in Date.prototype){return function(date){return date.toISOString()
-}
-}else{function pad(num,len){var str=num+"";
-while(str.length<len){str="0"+str
-}return str
-}return function(date){var str;
-if(isNaN(date.getTime())){str="Invalid Date"
-}else{str=date.getUTCFullYear()+"-"+pad(date.getUTCMonth()+1,2)+"-"+pad(date.getUTCDate(),2)+"T"+pad(date.getUTCHours(),2)+":"+pad(date.getUTCMinutes(),2)+":"+pad(date.getUTCSeconds(),2)+"."+pad(date.getUTCMilliseconds(),3)+"Z"
-}return str
-}
-}})(),parse:function(str){var date;
-var elapsed=Date.parse(str);
-if(!isNaN(elapsed)){date=new Date(elapsed)
-}else{var match=str.match(/^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{1,2}):(\d{2}):(\d{2}(?:\.\d+)?)(Z|(?:[+-]\d{1,2}(?::(\d{2}))?)))?$/);
-var date;
-if(match&&(match[1]||match[7])){var year=parseInt(match[1],10)||0;
-var month=(parseInt(match[2],10)-1)||0;
-var day=parseInt(match[3],10)||1;
-date=new Date(Date.UTC(year,month,day));
-var type=match[7];
-if(type){var hours=parseInt(match[4],10);
-var minutes=parseInt(match[5],10);
-var secFrac=parseFloat(match[6]);
-var seconds=secFrac|0;
-var milliseconds=Math.round(1000*(secFrac-seconds));
-date.setUTCHours(hours,minutes,seconds,milliseconds);
-if(type!=="Z"){var hoursOffset=parseInt(type,10);
-var minutesOffset=parseInt(match[8])||0;
-var offset=-1000*(60*(hoursOffset*60)+minutesOffset*60);
-date=new Date(date.getTime()+offset)
-}}}else{date=new Date("invalid")
-}}return date
-}};OpenLayers.Class=function(){var Class=function(){if(arguments&&arguments[0]!=OpenLayers.Class.isPrototype){this.initialize.apply(this,arguments)
-}};
-var extended={};
-var parent,initialize,Type;
-for(var i=0,len=arguments.length;
-i<len;
-++i){Type=arguments[i];
-if(typeof Type=="function"){if(i==0&&len>1){initialize=Type.prototype.initialize;
-Type.prototype.initialize=function(){};
-extended=new Type();
-if(initialize===undefined){delete Type.prototype.initialize
-}else{Type.prototype.initialize=initialize
-}}parent=Type.prototype
-}else{parent=Type
-}OpenLayers.Util.extend(extended,parent)
-}Class.prototype=extended;
-return Class
-};
-OpenLayers.Class.isPrototype=function(){};
-OpenLayers.Class.create=function(){return function(){if(arguments&&arguments[0]!=OpenLayers.Class.isPrototype){this.initialize.apply(this,arguments)
-}}
-};
-OpenLayers.Class.inherit=function(){var superClass=arguments[0];
-var proto=new superClass(OpenLayers.Class.isPrototype);
-for(var i=1,len=arguments.length;
-i<len;
-i++){if(typeof arguments[i]=="function"){var mixin=arguments[i];
-arguments[i]=new mixin(OpenLayers.Class.isPrototype)
-}OpenLayers.Util.extend(proto,arguments[i])
-}return proto
-};OpenLayers.Bounds=OpenLayers.Class({left:null,bottom:null,right:null,top:null,centerLonLat:null,initialize:function(left,bottom,right,top){if(left!=null){this.left=OpenLayers.Util.toFloat(left)
-}if(bottom!=null){this.bottom=OpenLayers.Util.toFloat(bottom)
-}if(right!=null){this.right=OpenLayers.Util.toFloat(right)
-}if(top!=null){this.top=OpenLayers.Util.toFloat(top)
-}},clone:function(){return new OpenLayers.Bounds(this.left,this.bottom,this.right,this.top)
-},equals:function(bounds){var equals=false;
-if(bounds!=null){equals=((this.left==bounds.left)&&(this.right==bounds.right)&&(this.top==bounds.top)&&(this.bottom==bounds.bottom))
-}return equals
-},toString:function(){return("left-bottom=("+this.left+","+this.bottom+") right-top=("+this.right+","+this.top+")")
-},toArray:function(reverseAxisOrder){if(reverseAxisOrder===true){return[this.bottom,this.left,this.top,this.right]
-}else{return[this.left,this.bottom,this.right,this.top]
-}},toBBOX:function(decimal,reverseAxisOrder){if(decimal==null){decimal=6
-}var mult=Math.pow(10,decimal);
-var xmin=Math.round(this.left*mult)/mult;
-var ymin=Math.round(this.bottom*mult)/mult;
-var xmax=Math.round(this.right*mult)/mult;
-var ymax=Math.round(this.top*mult)/mult;
-if(reverseAxisOrder===true){return ymin+","+xmin+","+ymax+","+xmax
-}else{return xmin+","+ymin+","+xmax+","+ymax
-}},toGeometry:function(){return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(this.left,this.bottom),new OpenLayers.Geometry.Point(this.right,this.bottom),new OpenLayers.Geometry.Point(this.right,this.top),new OpenLayers.Geometry.Point(this.left,this.top)])])
-},getWidth:function(){return(this.right-this.left)
-},getHeight:function(){return(this.top-this.bottom)
-},getSize:function(){return new OpenLayers.Size(this.getWidth(),this.getHeight())
-},getCenterPixel:function(){return new OpenLayers.Pixel((this.left+this.right)/2,(this.bottom+this.top)/2)
-},getCenterLonLat:function(){if(!this.centerLonLat){this.centerLonLat=new OpenLayers.LonLat((this.left+this.right)/2,(this.bottom+this.top)/2)
-}return this.centerLonLat
-},scale:function(ratio,origin){if(origin==null){origin=this.getCenterLonLat()
-}var origx,origy;
-if(origin.CLASS_NAME=="OpenLayers.LonLat"){origx=origin.lon;
-origy=origin.lat
-}else{origx=origin.x;
-origy=origin.y
-}var left=(this.left-origx)*ratio+origx;
-var bottom=(this.bottom-origy)*ratio+origy;
-var right=(this.right-origx)*ratio+origx;
-var top=(this.top-origy)*ratio+origy;
-return new OpenLayers.Bounds(left,bottom,right,top)
-},add:function(x,y){if((x==null)||(y==null)){var msg=OpenLayers.i18n("boundsAddError");
-OpenLayers.Console.error(msg);
-return null
-}return new OpenLayers.Bounds(this.left+x,this.bottom+y,this.right+x,this.top+y)
-},extend:function(object){var bounds=null;
-if(object){switch(object.CLASS_NAME){case"OpenLayers.LonLat":bounds=new OpenLayers.Bounds(object.lon,object.lat,object.lon,object.lat);
-break;
-case"OpenLayers.Geometry.Point":bounds=new OpenLayers.Bounds(object.x,object.y,object.x,object.y);
-break;
-case"OpenLayers.Bounds":bounds=object;
-break
-}if(bounds){this.centerLonLat=null;
-if((this.left==null)||(bounds.left<this.left)){this.left=bounds.left
-}if((this.bottom==null)||(bounds.bottom<this.bottom)){this.bottom=bounds.bottom
-}if((this.right==null)||(bounds.right>this.right)){this.right=bounds.right
-}if((this.top==null)||(bounds.top>this.top)){this.top=bounds.top
-}}}},containsLonLat:function(ll,inclusive){return this.contains(ll.lon,ll.lat,inclusive)
-},containsPixel:function(px,inclusive){return this.contains(px.x,px.y,inclusive)
-},contains:function(x,y,inclusive){if(inclusive==null){inclusive=true
-}if(x==null||y==null){return false
-}x=OpenLayers.Util.toFloat(x);
-y=OpenLayers.Util.toFloat(y);
-var contains=false;
-if(inclusive){contains=((x>=this.left)&&(x<=this.right)&&(y>=this.bottom)&&(y<=this.top))
-}else{contains=((x>this.left)&&(x<this.right)&&(y>this.bottom)&&(y<this.top))
-}return contains
-},intersectsBounds:function(bounds,inclusive){if(inclusive==null){inclusive=true
-}var intersects=false;
-var mightTouch=(this.left==bounds.right||this.right==bounds.left||this.top==bounds.bottom||this.bottom==bounds.top);
-if(inclusive||!mightTouch){var inBottom=(((bounds.bottom>=this.bottom)&&(bounds.bottom<=this.top))||((this.bottom>=bounds.bottom)&&(this.bottom<=bounds.top)));
-var inTop=(((bounds.top>=this.bottom)&&(bounds.top<=this.top))||((this.top>bounds.bottom)&&(this.top<bounds.top)));
-var inLeft=(((bounds.left>=this.left)&&(bounds.left<=this.right))||((this.left>=bounds.left)&&(this.left<=bounds.right)));
-var inRight=(((bounds.right>=this.left)&&(bounds.right<=this.right))||((this.right>=bounds.left)&&(this.right<=bounds.right)));
-intersects=((inBottom||inTop)&&(inLeft||inRight))
-}return intersects
-},containsBounds:function(bounds,partial,inclusive){if(partial==null){partial=false
-}if(inclusive==null){inclusive=true
-}var bottomLeft=this.contains(bounds.left,bounds.bottom,inclusive);
-var bottomRight=this.contains(bounds.right,bounds.bottom,inclusive);
-var topLeft=this.contains(bounds.left,bounds.top,inclusive);
-var topRight=this.contains(bounds.right,bounds.top,inclusive);
-return(partial)?(bottomLeft||bottomRight||topLeft||topRight):(bottomLeft&&bottomRight&&topLeft&&topRight)
-},determineQuadrant:function(lonlat){var quadrant="";
-var center=this.getCenterLonLat();
-quadrant+=(lonlat.lat<center.lat)?"b":"t";
-quadrant+=(lonlat.lon<center.lon)?"l":"r";
-return quadrant
-},transform:function(source,dest){this.centerLonLat=null;
-var ll=OpenLayers.Projection.transform({x:this.left,y:this.bottom},source,dest);
-var lr=OpenLayers.Projection.transform({x:this.right,y:this.bottom},source,dest);
-var ul=OpenLayers.Projection.transform({x:this.left,y:this.top},source,dest);
-var ur=OpenLayers.Projection.transform({x:this.right,y:this.top},source,dest);
-this.left=Math.min(ll.x,ul.x);
-this.bottom=Math.min(ll.y,lr.y);
-this.right=Math.max(lr.x,ur.x);
-this.top=Math.max(ul.y,ur.y);
-return this
-},wrapDateLine:function(maxExtent,options){options=options||{};
-var leftTolerance=options.leftTolerance||0;
-var rightTolerance=options.rightTolerance||0;
-var newBounds=this.clone();
-if(maxExtent){while(newBounds.left<maxExtent.left&&(newBounds.right-rightTolerance)<=maxExtent.left){newBounds=newBounds.add(maxExtent.getWidth(),0)
-}while((newBounds.left+leftTolerance)>=maxExtent.right&&newBounds.right>maxExtent.right){newBounds=newBounds.add(-maxExtent.getWidth(),0)
-}}return newBounds
-},CLASS_NAME:"OpenLayers.Bounds"});
-OpenLayers.Bounds.fromString=function(str){var bounds=str.split(",");
-return OpenLayers.Bounds.fromArray(bounds)
-};
-OpenLayers.Bounds.fromArray=function(bbox){return new OpenLayers.Bounds(parseFloat(bbox[0]),parseFloat(bbox[1]),parseFloat(bbox[2]),parseFloat(bbox[3]))
-};
-OpenLayers.Bounds.fromSize=function(size){return new OpenLayers.Bounds(0,size.h,size.w,0)
-};
-OpenLayers.Bounds.oppositeQuadrant=function(quadrant){var opp="";
-opp+=(quadrant.charAt(0)=="t")?"b":"t";
-opp+=(quadrant.charAt(1)=="l")?"r":"l";
-return opp
-};OpenLayers.Rico=new Object();
+};OpenLayers.Console.warn("OpenLayers.Rico is deprecated");
+OpenLayers.Rico=OpenLayers.Rico||{};
 OpenLayers.Rico.Corner={round:function(e,options){e=OpenLayers.Util.getElement(e);
 this._setOptions(options);
 var color=this.options.color;
@@ -4286,23 +4296,18 @@ return cc1
 },_isTopRounded:function(){return this._hasString(this.options.corners,"all","top","tl","tr")
 },_isBottomRounded:function(){return this._hasString(this.options.corners,"all","bottom","bl","br")
 },_hasSingleTextChild:function(el){return el.childNodes.length==1&&el.childNodes[0].nodeType==3
-}};OpenLayers.Console={log:function(){},debug:function(){},info:function(){},warn:function(){},error:function(){},userError:function(error){alert(error)
-},assert:function(){},dir:function(){},dirxml:function(){},trace:function(){},group:function(){},groupEnd:function(){},time:function(){},timeEnd:function(){},profile:function(){},profileEnd:function(){},count:function(){},CLASS_NAME:"OpenLayers.Console"};
-(function(){var scripts=document.getElementsByTagName("script");
-for(var i=0,len=scripts.length;
-i<len;
-++i){if(scripts[i].src.indexOf("firebug.js")!=-1){if(console){OpenLayers.Util.extend(OpenLayers.Console,console);
-break
-}}}})();OpenLayers.Format=OpenLayers.Class({options:null,externalProjection:null,internalProjection:null,data:null,keepData:false,initialize:function(options){OpenLayers.Util.extend(this,options);
+}};OpenLayers.Format=OpenLayers.Class({options:null,externalProjection:null,internalProjection:null,data:null,keepData:false,initialize:function(options){OpenLayers.Util.extend(this,options);
 this.options=options
-},destroy:function(){},read:function(data){OpenLayers.Console.userError(OpenLayers.i18n("readNotImplemented"))
-},write:function(object){OpenLayers.Console.userError(OpenLayers.i18n("writeNotImplemented"))
+},destroy:function(){},read:function(data){throw new Error("Read not implemented.")
+},write:function(object){throw new Error("Write not implemented.")
 },CLASS_NAME:"OpenLayers.Format"});OpenLayers.Format.CSWGetRecords=function(options){options=OpenLayers.Util.applyDefaults(options,OpenLayers.Format.CSWGetRecords.DEFAULTS);
 var cls=OpenLayers.Format.CSWGetRecords["v"+options.version.replace(/\./g,"_")];
 if(!cls){throw"Unsupported CSWGetRecords version: "+options.version
 }return new cls(options)
 };
-OpenLayers.Format.CSWGetRecords.DEFAULTS={version:"2.0.2"};OpenLayers.Event={observers:false,KEY_BACKSPACE:8,KEY_TAB:9,KEY_RETURN:13,KEY_ESC:27,KEY_LEFT:37,KEY_UP:38,KEY_RIGHT:39,KEY_DOWN:40,KEY_DELETE:46,element:function(event){return event.target||event.srcElement
+OpenLayers.Format.CSWGetRecords.DEFAULTS={version:"2.0.2"};OpenLayers.Event={observers:false,KEY_SPACE:32,KEY_BACKSPACE:8,KEY_TAB:9,KEY_RETURN:13,KEY_ESC:27,KEY_LEFT:37,KEY_UP:38,KEY_RIGHT:39,KEY_DOWN:40,KEY_DELETE:46,element:function(event){return event.target||event.srcElement
+},isSingleTouch:function(event){return event.touches&&event.touches.length==1
+},isMultiTouch:function(event){return event.touches&&event.touches.length>1
 },isLeftClick:function(event){return(((event.which)&&(event.which==1))||((event.button)&&(event.button==1)))
 },isRightClick:function(event){return(((event.which)&&(event.which==3))||((event.button)&&(event.button==2)))
 },stop:function(event,allowDefault){if(!allowDefault){if(event.preventDefault){event.preventDefault()
@@ -4353,45 +4358,43 @@ OpenLayers.Event._removeElementObservers.apply(this,[elementObservers])
 }OpenLayers.Event.observers=false
 }},CLASS_NAME:"OpenLayers.Event"};
 OpenLayers.Event.observe(window,"unload",OpenLayers.Event.unloadCache,false);
-if(window.Event){OpenLayers.Util.applyDefaults(window.Event,OpenLayers.Event)
-}else{var Event=OpenLayers.Event
-}OpenLayers.Events=OpenLayers.Class({BROWSER_EVENTS:["mouseover","mouseout","mousedown","mouseup","mousemove","click","dblclick","rightclick","dblrightclick","resize","focus","blur"],listeners:null,object:null,element:null,eventTypes:null,eventHandler:null,fallThrough:null,includeXY:false,clearMouseListener:null,initialize:function(object,element,eventTypes,fallThrough,options){OpenLayers.Util.extend(this,options);
+OpenLayers.Events=OpenLayers.Class({BROWSER_EVENTS:["mouseover","mouseout","mousedown","mouseup","mousemove","click","dblclick","rightclick","dblrightclick","resize","focus","blur","touchstart","touchmove","touchend","keydown"],listeners:null,object:null,element:null,eventHandler:null,fallThrough:null,includeXY:false,extensions:null,extensionCount:null,clearMouseListener:null,initialize:function(object,element,eventTypes,fallThrough,options){OpenLayers.Util.extend(this,options);
 this.object=object;
 this.fallThrough=fallThrough;
 this.listeners={};
-this.eventHandler=OpenLayers.Function.bindAsEventListener(this.handleBrowserEvent,this);
-this.clearMouseListener=OpenLayers.Function.bind(this.clearMouseCache,this);
-this.eventTypes=[];
-if(eventTypes!=null){for(var i=0,len=eventTypes.length;
-i<len;
-i++){this.addEventType(eventTypes[i])
-}}if(element!=null){this.attachToElement(element)
-}},destroy:function(){if(this.element){OpenLayers.Event.stopObservingElement(this.element);
+this.extensions={};
+this.extensionCount={};
+if(element!=null){this.attachToElement(element)
+}},destroy:function(){for(var e in this.extensions){if(typeof this.extensions[e]!=="boolean"){this.extensions[e].destroy()
+}}this.extensions=null;
+if(this.element){OpenLayers.Event.stopObservingElement(this.element);
 if(this.element.hasScrollEvent){OpenLayers.Event.stopObserving(window,"scroll",this.clearMouseListener)
 }}this.element=null;
 this.listeners=null;
 this.object=null;
-this.eventTypes=null;
 this.fallThrough=null;
 this.eventHandler=null
-},addEventType:function(eventName){if(!this.listeners[eventName]){this.eventTypes.push(eventName);
-this.listeners[eventName]=[]
-}},attachToElement:function(element){if(this.element){OpenLayers.Event.stopObservingElement(this.element)
+},addEventType:function(eventName){},attachToElement:function(element){if(this.element){OpenLayers.Event.stopObservingElement(this.element)
+}else{this.eventHandler=OpenLayers.Function.bindAsEventListener(this.handleBrowserEvent,this);
+this.clearMouseListener=OpenLayers.Function.bind(this.clearMouseCache,this)
 }this.element=element;
 for(var i=0,len=this.BROWSER_EVENTS.length;
 i<len;
-i++){var eventType=this.BROWSER_EVENTS[i];
-this.addEventType(eventType);
-OpenLayers.Event.observe(element,eventType,this.eventHandler)
+i++){OpenLayers.Event.observe(element,this.BROWSER_EVENTS[i],this.eventHandler)
 }OpenLayers.Event.observe(element,"dragstart",OpenLayers.Event.stop)
-},on:function(object){for(var type in object){if(type!="scope"){this.register(type,object.scope,object[type])
-}}},register:function(type,obj,func){if((func!=null)&&(OpenLayers.Util.indexOf(this.eventTypes,type)!=-1)){if(obj==null){obj=this.object
+},on:function(object){for(var type in object){if(type!="scope"&&object.hasOwnProperty(type)){this.register(type,object.scope,object[type])
+}}},register:function(type,obj,func,priority){if(type in OpenLayers.Events&&!this.extensions[type]){this.extensions[type]=new OpenLayers.Events[type](this)
+}if(func!=null){if(obj==null){obj=this.object
 }var listeners=this.listeners[type];
-listeners.push({obj:obj,func:func})
-}},registerPriority:function(type,obj,func){if(func!=null){if(obj==null){obj=this.object
-}var listeners=this.listeners[type];
-if(listeners!=null){listeners.unshift({obj:obj,func:func})
-}}},un:function(object){for(var type in object){if(type!="scope"){this.unregister(type,object.scope,object[type])
+if(!listeners){listeners=[];
+this.listeners[type]=listeners;
+this.extensionCount[type]=0
+}var listener={obj:obj,func:func};
+if(priority){listeners.splice(this.extensionCount[type],0,listener);
+if(typeof priority==="object"&&priority.extension){this.extensionCount[type]++
+}}else{listeners.push(listener)
+}}},registerPriority:function(type,obj,func){this.register(type,obj,func,true)
+},un:function(object){for(var type in object){if(type!="scope"&&object.hasOwnProperty(type)){this.unregister(type,object.scope,object[type])
 }}},unregister:function(type,obj,func){if(obj==null){obj=this.object
 }var listeners=this.listeners[type];
 if(listeners!=null){for(var i=0,len=listeners.length;
@@ -4400,12 +4403,13 @@ i++){if(listeners[i].obj==obj&&listeners[i].func==func){listeners.splice(i,1);
 break
 }}}},remove:function(type){if(this.listeners[type]!=null){this.listeners[type]=[]
 }},triggerEvent:function(type,evt){var listeners=this.listeners[type];
-if(!listeners||listeners.length==0){return
+if(!listeners||listeners.length==0){return undefined
 }if(evt==null){evt={}
 }evt.object=this.object;
 evt.element=this.element;
 if(!evt.type){evt.type=type
-}var listeners=listeners.slice(),continueChain;
+}listeners=listeners.slice();
+var continueChain;
 for(var i=0,len=listeners.length;
 i<len;
 i++){var callback=listeners[i];
@@ -4413,23 +4417,37 @@ continueChain=callback.func.apply(callback.obj,[evt]);
 if((continueChain!=undefined)&&(continueChain==false)){break
 }}if(!this.fallThrough){OpenLayers.Event.stop(evt,true)
 }return continueChain
-},handleBrowserEvent:function(evt){if(this.includeXY){evt.xy=this.getMousePosition(evt)
-}this.triggerEvent(evt.type,evt)
+},handleBrowserEvent:function(evt){var type=evt.type,listeners=this.listeners[type];
+if(!listeners||listeners.length==0){return
+}var touches=evt.touches;
+if(touches&&touches[0]){var x=0;
+var y=0;
+var num=touches.length;
+var touch;
+for(var i=0;
+i<num;
+++i){touch=touches[i];
+x+=touch.clientX;
+y+=touch.clientY
+}evt.clientX=x/num;
+evt.clientY=y/num
+}if(this.includeXY){evt.xy=this.getMousePosition(evt)
+}this.triggerEvent(type,evt)
 },clearMouseCache:function(){this.element.scrolls=null;
 this.element.lefttop=null;
-this.element.offsets=null
-},getMousePosition:function(evt){if(!this.includeXY){this.clearMouseCache()
+var body=document.body;
+if(body&&!((body.scrollTop!=0||body.scrollLeft!=0)&&navigator.userAgent.match(/iPhone/i))){this.element.offsets=null
+}},getMousePosition:function(evt){if(!this.includeXY){this.clearMouseCache()
 }else{if(!this.element.hasScrollEvent){OpenLayers.Event.observe(window,"scroll",this.clearMouseListener);
 this.element.hasScrollEvent=true
-}}if(!this.element.scrolls){this.element.scrolls=[(document.documentElement.scrollLeft||document.body.scrollLeft),(document.documentElement.scrollTop||document.body.scrollTop)]
+}}if(!this.element.scrolls){var viewportElement=OpenLayers.Util.getViewportElement();
+this.element.scrolls=[viewportElement.scrollLeft,viewportElement.scrollTop]
 }if(!this.element.lefttop){this.element.lefttop=[(document.documentElement.clientLeft||0),(document.documentElement.clientTop||0)]
-}if(!this.element.offsets){this.element.offsets=OpenLayers.Util.pagePosition(this.element);
-this.element.offsets[0]+=this.element.scrolls[0];
-this.element.offsets[1]+=this.element.scrolls[1]
+}if(!this.element.offsets){this.element.offsets=OpenLayers.Util.pagePosition(this.element)
 }return new OpenLayers.Pixel((evt.clientX+this.element.scrolls[0])-this.element.offsets[0]-this.element.lefttop[0],(evt.clientY+this.element.scrolls[1])-this.element.offsets[1]-this.element.lefttop[1])
 },CLASS_NAME:"OpenLayers.Events"});OpenLayers.Icon=OpenLayers.Class({url:null,size:null,offset:null,calculateOffset:null,imageDiv:null,px:null,initialize:function(url,size,offset,calculateOffset){this.url=url;
-this.size=(size)?size:new OpenLayers.Size(20,20);
-this.offset=offset?offset:new OpenLayers.Pixel(-(this.size.w/2),-(this.size.h/2));
+this.size=size||{w:20,h:20};
+this.offset=offset||{x:-(this.size.w/2),y:-(this.size.h/2)};
 this.calculateOffset=calculateOffset;
 var id=OpenLayers.Util.createUniqueID("OL_Icon_");
 this.imageDiv=OpenLayers.Util.createAlphaImageDiv(id)
@@ -4450,19 +4468,37 @@ return this.imageDiv
 },moveTo:function(px){if(px!=null){this.px=px
 }if(this.imageDiv!=null){if(this.px==null){this.display(false)
 }else{if(this.calculateOffset){this.offset=this.calculateOffset(this.size)
-}var offsetPx=this.px.offset(this.offset);
-OpenLayers.Util.modifyAlphaImageDiv(this.imageDiv,null,offsetPx)
+}OpenLayers.Util.modifyAlphaImageDiv(this.imageDiv,null,{x:this.px.x+this.offset.x,y:this.px.y+this.offset.y})
 }}},display:function(display){this.imageDiv.style.display=(display)?"":"none"
 },isDrawn:function(){var isDrawn=(this.imageDiv&&this.imageDiv.parentNode&&(this.imageDiv.parentNode.nodeType!=11));
 return isDrawn
-},CLASS_NAME:"OpenLayers.Icon"});OpenLayers.Marker=OpenLayers.Class({icon:null,lonlat:null,events:null,map:null,initialize:function(lonlat,icon){this.lonlat=lonlat;
+},CLASS_NAME:"OpenLayers.Icon"});OpenLayers.Animation=(function(window){var isNative=!!(window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame);
+var requestFrame=(function(){var request=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(callback,element){window.setTimeout(callback,16)
+};
+return function(callback,element){request.apply(window,[callback,element])
+}
+})();
+var counter=0;
+var loops={};
+function start(callback,duration,element){duration=duration>0?duration:Number.POSITIVE_INFINITY;
+var id=++counter;
+var start=+new Date;
+loops[id]=function(){if(loops[id]&&+new Date-start<=duration){callback();
+if(loops[id]){requestFrame(loops[id],element)
+}}else{delete loops[id]
+}};
+requestFrame(loops[id],element);
+return id
+}function stop(id){delete loops[id]
+}return{isNative:isNative,requestFrame:requestFrame,start:start,stop:stop}
+})(window);OpenLayers.Marker=OpenLayers.Class({icon:null,lonlat:null,events:null,map:null,initialize:function(lonlat,icon){this.lonlat=lonlat;
 var newIcon=(icon)?icon:OpenLayers.Marker.defaultIcon();
 if(this.icon==null){this.icon=newIcon
 }else{this.icon.url=newIcon.url;
 this.icon.size=newIcon.size;
 this.icon.offset=newIcon.offset;
 this.icon.calculateOffset=newIcon.calculateOffset
-}this.events=new OpenLayers.Events(this,this.icon.imageDiv,null)
+}this.events=new OpenLayers.Events(this,this.icon.imageDiv)
 },destroy:function(){this.erase();
 this.map=null;
 this.events.destroy();
@@ -4479,17 +4515,12 @@ return isDrawn
 if(this.map){var screenBounds=this.map.getExtent();
 onScreen=screenBounds.containsLonLat(this.lonlat)
 }return onScreen
-},inflate:function(inflate){if(this.icon){var newSize=new OpenLayers.Size(this.icon.size.w*inflate,this.icon.size.h*inflate);
-this.icon.setSize(newSize)
+},inflate:function(inflate){if(this.icon){this.icon.setSize({w:this.icon.size.w*inflate,h:this.icon.size.h*inflate})
 }},setOpacity:function(opacity){this.icon.setOpacity(opacity)
 },setUrl:function(url){this.icon.setUrl(url)
 },display:function(display){this.icon.display(display)
 },CLASS_NAME:"OpenLayers.Marker"});
-OpenLayers.Marker.defaultIcon=function(){var url=OpenLayers.Util.getImagesLocation()+"marker.png";
-var size=new OpenLayers.Size(21,25);
-var calculateOffset=function(size){return new OpenLayers.Pixel(-(size.w/2),-size.h)
-};
-return new OpenLayers.Icon(url,size,null,calculateOffset)
+OpenLayers.Marker.defaultIcon=function(){return new OpenLayers.Icon(OpenLayers.Util.getImageLocation("marker.png"),{w:21,h:25},{x:-10.5,y:-25})
 };OpenLayers.Popup=OpenLayers.Class({events:null,id:"",lonlat:null,div:null,contentSize:null,size:null,contentHTML:null,backgroundColor:"",opacity:"",border:"",contentDiv:null,groupDiv:null,closeDiv:null,autoSize:false,minSize:null,maxSize:null,displayClass:"olPopup",contentDisplayClass:"olPopupContent",padding:0,disableFirefoxOverflowHack:false,fixPadding:function(){if(typeof this.padding=="number"){this.padding=new OpenLayers.Bounds(this.padding,this.padding,this.padding,this.padding)
 }},panMapIfOutOfView:false,keepInMap:false,closeOnMove:false,map:null,initialize:function(id,lonlat,contentSize,contentHTML,closeBox,closeBoxCallback){if(id==null){id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_")
 }this.id=id;
@@ -4535,7 +4566,7 @@ this.padding=null;
 this.panMapIfOutOfView=null
 },draw:function(px){if(px==null){if((this.lonlat!=null)&&(this.map!=null)){px=this.map.getLayerPxFromLonLat(this.lonlat)
 }}if(this.closeOnMove){this.map.events.register("movestart",this,this.hide)
-}if(!this.disableFirefoxOverflowHack&&OpenLayers.Util.getBrowserName()=="firefox"){this.map.events.register("movestart",this,function(){var style=document.defaultView.getComputedStyle(this.contentDiv,null);
+}if(!this.disableFirefoxOverflowHack&&OpenLayers.BROWSER_NAME=="firefox"){this.map.events.register("movestart",this,function(){var style=document.defaultView.getComputedStyle(this.contentDiv,null);
 var currentOverflow=style.getPropertyValue("overflow");
 if(currentOverflow!="hidden"){this.contentDiv._oldOverflow=currentOverflow;
 this.contentDiv.style.overflow="hidden"
@@ -4559,9 +4590,9 @@ this.div.style.top=px.y+"px"
 }},visible:function(){return OpenLayers.Element.visible(this.div)
 },toggle:function(){if(this.visible()){this.hide()
 }else{this.show()
-}},show:function(){OpenLayers.Element.show(this.div);
+}},show:function(){this.div.style.display="";
 if(this.panMapIfOutOfView){this.panIntoView()
-}},hide:function(){OpenLayers.Element.hide(this.div)
+}},hide:function(){this.div.style.display="none"
 },setSize:function(contentSize){this.size=contentSize.clone();
 var contentDivPadding=this.getContentDivPadding();
 var wPadding=contentDivPadding.left+contentDivPadding.right;
@@ -4573,21 +4604,19 @@ if(this.closeDiv){var closeDivWidth=parseInt(this.closeDiv.style.width);
 wPadding+=closeDivWidth+contentDivPadding.right
 }this.size.w+=wPadding;
 this.size.h+=hPadding;
-if(OpenLayers.Util.getBrowserName()=="msie"){this.contentSize.w+=contentDivPadding.left+contentDivPadding.right;
+if(OpenLayers.BROWSER_NAME=="msie"){this.contentSize.w+=contentDivPadding.left+contentDivPadding.right;
 this.contentSize.h+=contentDivPadding.bottom+contentDivPadding.top
 }if(this.div!=null){this.div.style.width=this.size.w+"px";
 this.div.style.height=this.size.h+"px"
 }if(this.contentDiv!=null){this.contentDiv.style.width=contentSize.w+"px";
 this.contentDiv.style.height=contentSize.h+"px"
 }},updateSize:function(){var preparedHTML="<div class='"+this.contentDisplayClass+"'>"+this.contentDiv.innerHTML+"</div>";
-var containerElement=(this.map)?this.map.layerContainerDiv:document.body;
+var containerElement=(this.map)?this.map.div:document.body;
 var realSize=OpenLayers.Util.getRenderedDimensions(preparedHTML,null,{displayClass:this.displayClass,containerElement:containerElement});
 var safeSize=this.getSafeContentSize(realSize);
 var newSize=null;
 if(safeSize.equals(realSize)){newSize=realSize
-}else{var fixedSize=new OpenLayers.Size();
-fixedSize.w=(safeSize.w<realSize.w)?safeSize.w:null;
-fixedSize.h=(safeSize.h<realSize.h)?safeSize.h:null;
+}else{var fixedSize={w:(safeSize.w<realSize.w)?safeSize.w:null,h:(safeSize.h<realSize.h)?safeSize.h:null};
 if(fixedSize.w&&fixedSize.h){newSize=safeSize
 }else{var clippedSize=OpenLayers.Util.getRenderedDimensions(preparedHTML,fixedSize,{displayClass:this.contentDisplayClass,containerElement:containerElement});
 var currentOverflow=OpenLayers.Element.getStyle(this.contentDiv,"overflow");
@@ -4607,7 +4636,8 @@ this.div.style.filter="alpha(opacity="+this.opacity*100+")"
 }if((this.contentDiv!=null)&&(this.contentHTML!=null)&&(this.contentHTML!=this.contentDiv.innerHTML)){this.contentDiv.innerHTML=this.contentHTML;
 if(this.autoSize){this.registerImageListeners();
 this.updateSize()
-}}},registerImageListeners:function(){var onImgLoad=function(){this.popup.updateSize();
+}}},registerImageListeners:function(){var onImgLoad=function(){if(this.popup.id===null){return
+}this.popup.updateSize();
 if(this.popup.visible()&&this.popup.panMapIfOutOfView){this.popup.panIntoView()
 }OpenLayers.Event.stopObserving(this.img,"load",this.img._onImageLoad)
 };
@@ -4661,7 +4691,7 @@ this._contentDivPadding=contentDivPadding;
 if(this.div.parentNode==document.body){document.body.removeChild(this.div);
 this.div.style.display=""
 }}return contentDivPadding
-},addCloseBox:function(callback){this.closeDiv=OpenLayers.Util.createDiv(this.id+"_close",null,new OpenLayers.Size(17,17));
+},addCloseBox:function(callback){this.closeDiv=OpenLayers.Util.createDiv(this.id+"_close",null,{w:17,h:17});
 this.closeDiv.className="olPopupCloseBox";
 var contentDivPadding=this.getContentDivPadding();
 this.closeDiv.style.right=contentDivPadding.right+"px";
@@ -4670,6 +4700,7 @@ this.groupDiv.appendChild(this.closeDiv);
 var closePopup=callback||function(e){this.hide();
 OpenLayers.Event.stop(e)
 };
+OpenLayers.Event.observe(this.closeDiv,"touchend",OpenLayers.Function.bindAsEventListener(closePopup,this));
 OpenLayers.Event.observe(this.closeDiv,"click",OpenLayers.Function.bindAsEventListener(closePopup,this))
 },panIntoView:function(){var mapSize=this.map.getSize();
 var origTL=this.map.getViewPortPxFromLayerPx(new OpenLayers.Pixel(parseInt(this.div.style.left),parseInt(this.div.style.top)));
@@ -4682,7 +4713,8 @@ if(origTL.x<this.map.paddingForPopups.left){newTL.x=this.map.paddingForPopups.le
 var dy=origTL.y-newTL.y;
 this.map.pan(dx,dy)
 },registerEvents:function(){this.events=new OpenLayers.Events(this,this.div,null,true);
-this.events.on({mousedown:this.onmousedown,mousemove:this.onmousemove,mouseup:this.onmouseup,click:this.onclick,mouseout:this.onmouseout,dblclick:this.ondblclick,scope:this})
+function onTouchstart(evt){OpenLayers.Event.stop(evt,true)
+}this.events.on({mousedown:this.onmousedown,mousemove:this.onmousemove,mouseup:this.onmouseup,click:this.onclick,mouseout:this.onmouseout,dblclick:this.ondblclick,touchstart:onTouchstart,scope:this})
 },onmousedown:function(evt){this.mousedown=true;
 OpenLayers.Event.stop(evt,true)
 },onmousemove:function(evt){if(this.mousedown){OpenLayers.Event.stop(evt,true)
@@ -4720,11 +4752,12 @@ return OpenLayers.Bounds.oppositeQuadrant(quadrant)
 },updateRelativePosition:function(){},calculateNewPx:function(px){var newPx=px.offset(this.anchor.offset);
 var size=this.size||this.contentSize;
 var top=(this.relativePosition.charAt(0)=="t");
-newPx.y+=(top)?-(size.h+this.anchor.size.h):this.anchor.size.h;
+newPx.y+=(top)?-size.h:this.anchor.size.h;
 var left=(this.relativePosition.charAt(1)=="l");
-newPx.x+=(left)?-(size.w+this.anchor.size.w):this.anchor.size.w;
+newPx.x+=(left)?-size.w:this.anchor.size.w;
 return newPx
-},CLASS_NAME:"OpenLayers.Popup.Anchored"});OpenLayers.Popup.AnchoredBubble=OpenLayers.Class(OpenLayers.Popup.Anchored,{rounded:false,initialize:function(id,lonlat,contentSize,contentHTML,anchor,closeBox,closeBoxCallback){this.padding=new OpenLayers.Bounds(0,OpenLayers.Popup.AnchoredBubble.CORNER_SIZE,0,OpenLayers.Popup.AnchoredBubble.CORNER_SIZE);
+},CLASS_NAME:"OpenLayers.Popup.Anchored"});OpenLayers.Popup.AnchoredBubble=OpenLayers.Class(OpenLayers.Popup.Anchored,{rounded:false,initialize:function(id,lonlat,contentSize,contentHTML,anchor,closeBox,closeBoxCallback){OpenLayers.Console.warn("AnchoredBubble is deprecated");
+this.padding=new OpenLayers.Bounds(0,OpenLayers.Popup.AnchoredBubble.CORNER_SIZE,0,OpenLayers.Popup.AnchoredBubble.CORNER_SIZE);
 OpenLayers.Popup.Anchored.prototype.initialize.apply(this,arguments)
 },draw:function(px){OpenLayers.Popup.Anchored.prototype.draw.apply(this,arguments);
 this.setContentHTML();
@@ -4752,7 +4785,7 @@ var corner=OpenLayers.Bounds.oppositeQuadrant(this.relativePosition);
 OpenLayers.Util.removeItem(corners,corner);
 return corners.join(" ")
 },CLASS_NAME:"OpenLayers.Popup.AnchoredBubble"});
-OpenLayers.Popup.AnchoredBubble.CORNER_SIZE=5;OpenLayers.Feature=OpenLayers.Class({layer:null,id:null,lonlat:null,data:null,marker:null,popupClass:OpenLayers.Popup.AnchoredBubble,popup:null,initialize:function(layer,lonlat,data){this.layer=layer;
+OpenLayers.Popup.AnchoredBubble.CORNER_SIZE=5;OpenLayers.Feature=OpenLayers.Class({layer:null,id:null,lonlat:null,data:null,marker:null,popupClass:null,popup:null,initialize:function(layer,lonlat,data){this.layer=layer;
 this.lonlat=lonlat;
 this.data=(data!=null)?data:{};
 this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_")
@@ -4773,9 +4806,9 @@ onScreen=screenBounds.containsLonLat(this.lonlat)
 },createMarker:function(){if(this.lonlat!=null){this.marker=new OpenLayers.Marker(this.lonlat,this.data.icon)
 }return this.marker
 },destroyMarker:function(){this.marker.destroy()
-},createPopup:function(closeBox){if(this.lonlat!=null){var id=this.id+"_popup";
-var anchor=(this.marker)?this.marker.icon:null;
-if(!this.popup){this.popup=new this.popupClass(id,this.lonlat,this.data.popupSize,this.data.popupContentHTML,anchor,closeBox)
+},createPopup:function(closeBox){if(this.lonlat!=null){if(!this.popup){var anchor=(this.marker)?this.marker.icon:null;
+var popupClass=this.popupClass?this.popupClass:OpenLayers.Popup.Anchored;
+this.popup=new popupClass(this.id+"_popup",this.lonlat,this.data.popupSize,this.data.popupContentHTML,anchor,closeBox)
 }if(this.data.overflow!=null){this.popup.contentDiv.style.overflow=this.data.overflow
 }this.popup.feature=this
 }return this.popup
@@ -4783,7 +4816,7 @@ if(!this.popup){this.popup=new this.popupClass(id,this.lonlat,this.data.popupSiz
 this.popup.destroy();
 this.popup=null
 }},CLASS_NAME:"OpenLayers.Feature"});OpenLayers.State={UNKNOWN:"Unknown",INSERT:"Insert",UPDATE:"Update",DELETE:"Delete"};
-OpenLayers.Feature.Vector=OpenLayers.Class(OpenLayers.Feature,{fid:null,geometry:null,attributes:null,bounds:null,state:null,style:null,url:null,renderIntent:"default",initialize:function(geometry,attributes,style){OpenLayers.Feature.prototype.initialize.apply(this,[null,null,attributes]);
+OpenLayers.Feature.Vector=OpenLayers.Class(OpenLayers.Feature,{fid:null,geometry:null,attributes:null,bounds:null,state:null,style:null,url:null,renderIntent:"default",modified:null,initialize:function(geometry,attributes,style){OpenLayers.Feature.prototype.initialize.apply(this,[null,null,attributes]);
 this.lonlat=null;
 this.geometry=geometry?geometry:null;
 this.state=null;
@@ -4793,6 +4826,7 @@ if(attributes){this.attributes=OpenLayers.Util.extend(this.attributes,attributes
 },destroy:function(){if(this.layer){this.layer.removeFeatures(this);
 this.layer=null
 }this.geometry=null;
+this.modified=null;
 OpenLayers.Feature.prototype.destroy.apply(this,arguments)
 },clone:function(){return new OpenLayers.Feature.Vector(this.geometry?this.geometry.clone():null,this.attributes,this.style)
 },onScreen:function(boundsOnly){var onScreen=false;
@@ -4808,7 +4842,7 @@ onScreen=screenPoly.intersects(this.geometry)
 },atPoint:function(lonlat,toleranceLon,toleranceLat){var atPoint=false;
 if(this.geometry){atPoint=this.geometry.atPoint(lonlat,toleranceLon,toleranceLat)
 }return atPoint
-},destroyPopup:function(){},move:function(location){if(!this.layer||!this.geometry.move){return
+},destroyPopup:function(){},move:function(location){if(!this.layer||!this.geometry.move){return undefined
 }var pixel;
 if(location.CLASS_NAME=="OpenLayers.LonLat"){pixel=this.layer.getViewPortPxFromLonLat(location)
 }else{pixel=location
@@ -4829,7 +4863,7 @@ case OpenLayers.State.UNKNOWN:case OpenLayers.State.UPDATE:this.state=state;
 break
 }}else{if(state==OpenLayers.State.UNKNOWN){this.state=state
 }}}}},CLASS_NAME:"OpenLayers.Feature.Vector"});
-OpenLayers.Feature.Vector.style={"default":{fillColor:"#ee9900",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#ee9900",strokeOpacity:1,strokeWidth:1,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit"},select:{fillColor:"blue",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"blue",strokeOpacity:1,strokeWidth:2,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"pointer"},temporary:{fillColor:"#66cccc",fillOpacity:0.2,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#66cccc",strokeOpacity:1,strokeLinecap:"round",strokeWidth:2,strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit"},"delete":{display:"none"}};OpenLayers.Format.XML=OpenLayers.Class(OpenLayers.Format,{namespaces:null,namespaceAlias:null,defaultPrefix:null,readers:{},writers:{},xmldom:null,initialize:function(options){if(window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM")
+OpenLayers.Feature.Vector.style={"default":{fillColor:"#ee9900",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#ee9900",strokeOpacity:1,strokeWidth:1,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},select:{fillColor:"blue",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"blue",strokeOpacity:1,strokeWidth:2,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"pointer",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},temporary:{fillColor:"#66cccc",fillOpacity:0.2,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#66cccc",strokeOpacity:1,strokeLinecap:"round",strokeWidth:2,strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},"delete":{display:"none"}};OpenLayers.Format.XML=OpenLayers.Class(OpenLayers.Format,{namespaces:null,namespaceAlias:null,defaultPrefix:null,readers:{},writers:{},xmldom:null,initialize:function(options){if(window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM")
 }OpenLayers.Format.prototype.initialize.apply(this,[options]);
 this.namespaces=OpenLayers.Util.extend({},this.namespaces);
 this.namespaceAlias={};
@@ -4904,14 +4938,6 @@ if(node){for(var child=node.firstChild;
 child;
 child=child.nextSibling){switch(child.nodeType){case 3:case 4:value+=child.nodeValue
 }}}return value
-},concatChildValues:function(node,def){var value="";
-var child=node.firstChild;
-var childValue;
-while(child){childValue=child.nodeValue;
-if(childValue){value+=childValue
-}child=child.nextSibling
-}if(value==""&&def!=undefined){value=def
-}return value
 },isSimpleContent:function(node){var simple=true;
 for(var child=node.firstChild;
 child;
@@ -5013,10 +5039,351 @@ case 6:case 12:case 10:case 11:break outer;
 default:uri=this.lookupNamespaceURI(node.parentNode,prefix);
 break outer
 }}}return uri
+},getXMLDoc:function(){if(!OpenLayers.Format.XML.document&&!this.xmldom){if(document.implementation&&document.implementation.createDocument){OpenLayers.Format.XML.document=document.implementation.createDocument("","",null)
+}else{if(!this.xmldom&&window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM")
+}}}return OpenLayers.Format.XML.document||this.xmldom
 },CLASS_NAME:"OpenLayers.Format.XML"});
 OpenLayers.Format.XML.CONTENT_TYPE={EMPTY:0,SIMPLE:1,COMPLEX:2,MIXED:3};
-OpenLayers.Format.XML.lookupNamespaceURI=OpenLayers.Function.bind(OpenLayers.Format.XML.prototype.lookupNamespaceURI,OpenLayers.Format.XML.prototype);if(!OpenLayers.Format.OWSCommon){OpenLayers.Format.OWSCommon={}
-}OpenLayers.Format.OWSCommon.v1=OpenLayers.Class(OpenLayers.Format.XML,{regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},readers:{ows:{ServiceIdentification:function(node,obj){obj.serviceIdentification={};
+OpenLayers.Format.XML.lookupNamespaceURI=OpenLayers.Function.bind(OpenLayers.Format.XML.prototype.lookupNamespaceURI,OpenLayers.Format.XML.prototype);
+OpenLayers.Format.XML.document=null;OpenLayers.Format.XML.VersionedOGC=OpenLayers.Class(OpenLayers.Format.XML,{defaultVersion:null,version:null,profile:null,errorProperty:null,name:null,stringifyOutput:false,parser:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);
+var className=this.CLASS_NAME;
+this.name=className.substring(className.lastIndexOf(".")+1)
+},getVersion:function(root,options){var version;
+if(root){version=this.version;
+if(!version){version=root.getAttribute("version");
+if(!version){version=this.defaultVersion
+}}}else{version=(options&&options.version)||this.version||this.defaultVersion
+}return version
+},getParser:function(version){version=version||this.defaultVersion;
+var profile=this.profile?"_"+this.profile:"";
+if(!this.parser||this.parser.VERSION!=version){var format=OpenLayers.Format[this.name]["v"+version.replace(/\./g,"_")+profile];
+if(!format){throw"Can't find a "+this.name+" parser for version "+version+profile
+}this.parser=new format(this.options)
+}return this.parser
+},write:function(obj,options){var version=this.getVersion(null,options);
+this.parser=this.getParser(version);
+var root=this.parser.write(obj,options);
+if(this.stringifyOutput===false){return root
+}else{return OpenLayers.Format.XML.prototype.write.apply(this,[root])
+}},read:function(data,options){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
+}var root=data.documentElement;
+var version=this.getVersion(root);
+this.parser=this.getParser(version);
+var obj=this.parser.read(data,options);
+if(this.errorProperty!==null&&obj[this.errorProperty]===undefined){var format=new OpenLayers.Format.OGCExceptionReport();
+obj.error=format.read(data)
+}obj.version=version;
+return obj
+},CLASS_NAME:"OpenLayers.Format.XML.VersionedOGC"});OpenLayers.Format.JSON=OpenLayers.Class(OpenLayers.Format,{indent:"    ",space:" ",newline:"\n",level:0,pretty:false,nativeJSON:(function(){return !!(window.JSON&&typeof JSON.parse=="function"&&typeof JSON.stringify=="function")
+})(),read:function(json,filter){var object;
+if(this.nativeJSON){object=JSON.parse(json,filter)
+}else{try{if(/^[\],:{}\s]*$/.test(json.replace(/\\["\\\/bfnrtu]/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){object=eval("("+json+")");
+if(typeof filter==="function"){function walk(k,v){if(v&&typeof v==="object"){for(var i in v){if(v.hasOwnProperty(i)){v[i]=walk(i,v[i])
+}}}return filter(k,v)
+}object=walk("",object)
+}}}catch(e){}}if(this.keepData){this.data=object
+}return object
+},write:function(value,pretty){this.pretty=!!pretty;
+var json=null;
+var type=typeof value;
+if(this.serialize[type]){try{json=(!this.pretty&&this.nativeJSON)?JSON.stringify(value):this.serialize[type].apply(this,[value])
+}catch(err){OpenLayers.Console.error("Trouble serializing: "+err)
+}}return json
+},writeIndent:function(){var pieces=[];
+if(this.pretty){for(var i=0;
+i<this.level;
+++i){pieces.push(this.indent)
+}}return pieces.join("")
+},writeNewline:function(){return(this.pretty)?this.newline:""
+},writeSpace:function(){return(this.pretty)?this.space:""
+},serialize:{object:function(object){if(object==null){return"null"
+}if(object.constructor==Date){return this.serialize.date.apply(this,[object])
+}if(object.constructor==Array){return this.serialize.array.apply(this,[object])
+}var pieces=["{"];
+this.level+=1;
+var key,keyJSON,valueJSON;
+var addComma=false;
+for(key in object){if(object.hasOwnProperty(key)){keyJSON=OpenLayers.Format.JSON.prototype.write.apply(this,[key,this.pretty]);
+valueJSON=OpenLayers.Format.JSON.prototype.write.apply(this,[object[key],this.pretty]);
+if(keyJSON!=null&&valueJSON!=null){if(addComma){pieces.push(",")
+}pieces.push(this.writeNewline(),this.writeIndent(),keyJSON,":",this.writeSpace(),valueJSON);
+addComma=true
+}}}this.level-=1;
+pieces.push(this.writeNewline(),this.writeIndent(),"}");
+return pieces.join("")
+},array:function(array){var json;
+var pieces=["["];
+this.level+=1;
+for(var i=0,len=array.length;
+i<len;
+++i){json=OpenLayers.Format.JSON.prototype.write.apply(this,[array[i],this.pretty]);
+if(json!=null){if(i>0){pieces.push(",")
+}pieces.push(this.writeNewline(),this.writeIndent(),json)
+}}this.level-=1;
+pieces.push(this.writeNewline(),this.writeIndent(),"]");
+return pieces.join("")
+},string:function(string){var m={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"};
+if(/["\\\x00-\x1f]/.test(string)){return'"'+string.replace(/([\x00-\x1f\\"])/g,function(a,b){var c=m[b];
+if(c){return c
+}c=b.charCodeAt();
+return"\\u00"+Math.floor(c/16).toString(16)+(c%16).toString(16)
+})+'"'
+}return'"'+string+'"'
+},number:function(number){return isFinite(number)?String(number):"null"
+},"boolean":function(bool){return String(bool)
+},date:function(date){function format(number){return(number<10)?"0"+number:number
+}return'"'+date.getFullYear()+"-"+format(date.getMonth()+1)+"-"+format(date.getDate())+"T"+format(date.getHours())+":"+format(date.getMinutes())+":"+format(date.getSeconds())+'"'
+}},CLASS_NAME:"OpenLayers.Format.JSON"});OpenLayers.Format.GeoJSON=OpenLayers.Class(OpenLayers.Format.JSON,{ignoreExtraDims:false,read:function(json,type,filter){type=(type)?type:"FeatureCollection";
+var results=null;
+var obj=null;
+if(typeof json=="string"){obj=OpenLayers.Format.JSON.prototype.read.apply(this,[json,filter])
+}else{obj=json
+}if(!obj){OpenLayers.Console.error("Bad JSON: "+json)
+}else{if(typeof(obj.type)!="string"){OpenLayers.Console.error("Bad GeoJSON - no type: "+json)
+}else{if(this.isValidType(obj,type)){switch(type){case"Geometry":try{results=this.parseGeometry(obj)
+}catch(err){OpenLayers.Console.error(err)
+}break;
+case"Feature":try{results=this.parseFeature(obj);
+results.type="Feature"
+}catch(err){OpenLayers.Console.error(err)
+}break;
+case"FeatureCollection":results=[];
+switch(obj.type){case"Feature":try{results.push(this.parseFeature(obj))
+}catch(err){results=null;
+OpenLayers.Console.error(err)
+}break;
+case"FeatureCollection":for(var i=0,len=obj.features.length;
+i<len;
+++i){try{results.push(this.parseFeature(obj.features[i]))
+}catch(err){results=null;
+OpenLayers.Console.error(err)
+}}break;
+default:try{var geom=this.parseGeometry(obj);
+results.push(new OpenLayers.Feature.Vector(geom))
+}catch(err){results=null;
+OpenLayers.Console.error(err)
+}}break
+}}}}return results
+},isValidType:function(obj,type){var valid=false;
+switch(type){case"Geometry":if(OpenLayers.Util.indexOf(["Point","MultiPoint","LineString","MultiLineString","Polygon","MultiPolygon","Box","GeometryCollection"],obj.type)==-1){OpenLayers.Console.error("Unsupported geometry type: "+obj.type)
+}else{valid=true
+}break;
+case"FeatureCollection":valid=true;
+break;
+default:if(obj.type==type){valid=true
+}else{OpenLayers.Console.error("Cannot convert types from "+obj.type+" to "+type)
+}}return valid
+},parseFeature:function(obj){var feature,geometry,attributes,bbox;
+attributes=(obj.properties)?obj.properties:{};
+bbox=(obj.geometry&&obj.geometry.bbox)||obj.bbox;
+try{geometry=this.parseGeometry(obj.geometry)
+}catch(err){throw err
+}feature=new OpenLayers.Feature.Vector(geometry,attributes);
+if(bbox){feature.bounds=OpenLayers.Bounds.fromArray(bbox)
+}if(obj.id){feature.fid=obj.id
+}return feature
+},parseGeometry:function(obj){if(obj==null){return null
+}var geometry,collection=false;
+if(obj.type=="GeometryCollection"){if(!(OpenLayers.Util.isArray(obj.geometries))){throw"GeometryCollection must have geometries array: "+obj
+}var numGeom=obj.geometries.length;
+var components=new Array(numGeom);
+for(var i=0;
+i<numGeom;
+++i){components[i]=this.parseGeometry.apply(this,[obj.geometries[i]])
+}geometry=new OpenLayers.Geometry.Collection(components);
+collection=true
+}else{if(!(OpenLayers.Util.isArray(obj.coordinates))){throw"Geometry must have coordinates array: "+obj
+}if(!this.parseCoords[obj.type.toLowerCase()]){throw"Unsupported geometry type: "+obj.type
+}try{geometry=this.parseCoords[obj.type.toLowerCase()].apply(this,[obj.coordinates])
+}catch(err){throw err
+}}if(this.internalProjection&&this.externalProjection&&!collection){geometry.transform(this.externalProjection,this.internalProjection)
+}return geometry
+},parseCoords:{point:function(array){if(this.ignoreExtraDims==false&&array.length!=2){throw"Only 2D points are supported: "+array
+}return new OpenLayers.Geometry.Point(array[0],array[1])
+},multipoint:function(array){var points=[];
+var p=null;
+for(var i=0,len=array.length;
+i<len;
+++i){try{p=this.parseCoords.point.apply(this,[array[i]])
+}catch(err){throw err
+}points.push(p)
+}return new OpenLayers.Geometry.MultiPoint(points)
+},linestring:function(array){var points=[];
+var p=null;
+for(var i=0,len=array.length;
+i<len;
+++i){try{p=this.parseCoords.point.apply(this,[array[i]])
+}catch(err){throw err
+}points.push(p)
+}return new OpenLayers.Geometry.LineString(points)
+},multilinestring:function(array){var lines=[];
+var l=null;
+for(var i=0,len=array.length;
+i<len;
+++i){try{l=this.parseCoords.linestring.apply(this,[array[i]])
+}catch(err){throw err
+}lines.push(l)
+}return new OpenLayers.Geometry.MultiLineString(lines)
+},polygon:function(array){var rings=[];
+var r,l;
+for(var i=0,len=array.length;
+i<len;
+++i){try{l=this.parseCoords.linestring.apply(this,[array[i]])
+}catch(err){throw err
+}r=new OpenLayers.Geometry.LinearRing(l.components);
+rings.push(r)
+}return new OpenLayers.Geometry.Polygon(rings)
+},multipolygon:function(array){var polys=[];
+var p=null;
+for(var i=0,len=array.length;
+i<len;
+++i){try{p=this.parseCoords.polygon.apply(this,[array[i]])
+}catch(err){throw err
+}polys.push(p)
+}return new OpenLayers.Geometry.MultiPolygon(polys)
+},box:function(array){if(array.length!=2){throw"GeoJSON box coordinates must have 2 elements"
+}return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(array[0][0],array[0][1]),new OpenLayers.Geometry.Point(array[1][0],array[0][1]),new OpenLayers.Geometry.Point(array[1][0],array[1][1]),new OpenLayers.Geometry.Point(array[0][0],array[1][1]),new OpenLayers.Geometry.Point(array[0][0],array[0][1])])])
+}},write:function(obj,pretty){var geojson={type:null};
+if(OpenLayers.Util.isArray(obj)){geojson.type="FeatureCollection";
+var numFeatures=obj.length;
+geojson.features=new Array(numFeatures);
+for(var i=0;
+i<numFeatures;
+++i){var element=obj[i];
+if(!element instanceof OpenLayers.Feature.Vector){var msg="FeatureCollection only supports collections of features: "+element;
+throw msg
+}geojson.features[i]=this.extract.feature.apply(this,[element])
+}}else{if(obj.CLASS_NAME.indexOf("OpenLayers.Geometry")==0){geojson=this.extract.geometry.apply(this,[obj])
+}else{if(obj instanceof OpenLayers.Feature.Vector){geojson=this.extract.feature.apply(this,[obj]);
+if(obj.layer&&obj.layer.projection){geojson.crs=this.createCRSObject(obj)
+}}}}return OpenLayers.Format.JSON.prototype.write.apply(this,[geojson,pretty])
+},createCRSObject:function(object){var proj=object.layer.projection.toString();
+var crs={};
+if(proj.match(/epsg:/i)){var code=parseInt(proj.substring(proj.indexOf(":")+1));
+if(code==4326){crs={type:"name",properties:{name:"urn:ogc:def:crs:OGC:1.3:CRS84"}}
+}else{crs={type:"name",properties:{name:"EPSG:"+code}}
+}}return crs
+},extract:{feature:function(feature){var geom=this.extract.geometry.apply(this,[feature.geometry]);
+var json={type:"Feature",properties:feature.attributes,geometry:geom};
+if(feature.fid!=null){json.id=feature.fid
+}return json
+},geometry:function(geometry){if(geometry==null){return null
+}if(this.internalProjection&&this.externalProjection){geometry=geometry.clone();
+geometry.transform(this.internalProjection,this.externalProjection)
+}var geometryType=geometry.CLASS_NAME.split(".")[2];
+var data=this.extract[geometryType.toLowerCase()].apply(this,[geometry]);
+var json;
+if(geometryType=="Collection"){json={type:"GeometryCollection",geometries:data}
+}else{json={type:geometryType,coordinates:data}
+}return json
+},point:function(point){return[point.x,point.y]
+},multipoint:function(multipoint){var array=[];
+for(var i=0,len=multipoint.components.length;
+i<len;
+++i){array.push(this.extract.point.apply(this,[multipoint.components[i]]))
+}return array
+},linestring:function(linestring){var array=[];
+for(var i=0,len=linestring.components.length;
+i<len;
+++i){array.push(this.extract.point.apply(this,[linestring.components[i]]))
+}return array
+},multilinestring:function(multilinestring){var array=[];
+for(var i=0,len=multilinestring.components.length;
+i<len;
+++i){array.push(this.extract.linestring.apply(this,[multilinestring.components[i]]))
+}return array
+},polygon:function(polygon){var array=[];
+for(var i=0,len=polygon.components.length;
+i<len;
+++i){array.push(this.extract.linestring.apply(this,[polygon.components[i]]))
+}return array
+},multipolygon:function(multipolygon){var array=[];
+for(var i=0,len=multipolygon.components.length;
+i<len;
+++i){array.push(this.extract.polygon.apply(this,[multipolygon.components[i]]))
+}return array
+},collection:function(collection){var len=collection.components.length;
+var array=new Array(len);
+for(var i=0;
+i<len;
+++i){array[i]=this.extract.geometry.apply(this,[collection.components[i]])
+}return array
+}},CLASS_NAME:"OpenLayers.Format.GeoJSON"});OpenLayers.Format.Context=OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC,{layerOptions:null,layerParams:null,read:function(data,options){var context=OpenLayers.Format.XML.VersionedOGC.prototype.read.apply(this,arguments);
+var map;
+if(options&&options.map){this.context=context;
+if(options.map instanceof OpenLayers.Map){map=this.mergeContextToMap(context,options.map)
+}else{var mapOptions=options.map;
+if(OpenLayers.Util.isElement(mapOptions)||typeof mapOptions=="string"){mapOptions={div:mapOptions}
+}map=this.contextToMap(context,mapOptions)
+}}else{map=context
+}return map
+},getLayerFromContext:function(layerContext){var i,len;
+var options={queryable:layerContext.queryable,visibility:layerContext.visibility,maxExtent:layerContext.maxExtent,metadata:OpenLayers.Util.applyDefaults(layerContext.metadata,{styles:layerContext.styles,formats:layerContext.formats,"abstract":layerContext["abstract"],dataURL:layerContext.dataURL}),numZoomLevels:layerContext.numZoomLevels,units:layerContext.units,isBaseLayer:layerContext.isBaseLayer,opacity:layerContext.opacity,displayInLayerSwitcher:layerContext.displayInLayerSwitcher,singleTile:layerContext.singleTile,tileSize:(layerContext.tileSize)?new OpenLayers.Size(layerContext.tileSize.width,layerContext.tileSize.height):undefined,minScale:layerContext.minScale||layerContext.maxScaleDenominator,maxScale:layerContext.maxScale||layerContext.minScaleDenominator,srs:layerContext.srs,dimensions:layerContext.dimensions,metadataURL:layerContext.metadataURL};
+if(this.layerOptions){OpenLayers.Util.applyDefaults(options,this.layerOptions)
+}var params={layers:layerContext.name,transparent:layerContext.transparent,version:layerContext.version};
+if(layerContext.formats&&layerContext.formats.length>0){params.format=layerContext.formats[0].value;
+for(i=0,len=layerContext.formats.length;
+i<len;
+i++){var format=layerContext.formats[i];
+if(format.current==true){params.format=format.value;
+break
+}}}if(layerContext.styles&&layerContext.styles.length>0){for(i=0,len=layerContext.styles.length;
+i<len;
+i++){var style=layerContext.styles[i];
+if(style.current==true){if(style.href){params.sld=style.href
+}else{if(style.body){params.sld_body=style.body
+}else{params.styles=style.name
+}}break
+}}}if(this.layerParams){OpenLayers.Util.applyDefaults(params,this.layerParams)
+}var layer=null;
+var service=layerContext.service;
+if(service==OpenLayers.Format.Context.serviceTypes.WFS){options.strategies=[new OpenLayers.Strategy.BBOX()];
+options.protocol=new OpenLayers.Protocol.WFS({url:layerContext.url,featurePrefix:layerContext.name.split(":")[0],featureType:layerContext.name.split(":").pop()});
+layer=new OpenLayers.Layer.Vector(layerContext.title||layerContext.name,options)
+}else{if(service==OpenLayers.Format.Context.serviceTypes.KML){options.strategies=[new OpenLayers.Strategy.Fixed()];
+options.protocol=new OpenLayers.Protocol.HTTP({url:layerContext.url,format:new OpenLayers.Format.KML()});
+layer=new OpenLayers.Layer.Vector(layerContext.title||layerContext.name,options)
+}else{if(service==OpenLayers.Format.Context.serviceTypes.GML){options.strategies=[new OpenLayers.Strategy.Fixed()];
+options.protocol=new OpenLayers.Protocol.HTTP({url:layerContext.url,format:new OpenLayers.Format.GML()});
+layer=new OpenLayers.Layer.Vector(layerContext.title||layerContext.name,options)
+}else{if(layerContext.features){layer=new OpenLayers.Layer.Vector(layerContext.title||layerContext.name,options);
+layer.addFeatures(layerContext.features)
+}else{if(layerContext.categoryLayer!==true){layer=new OpenLayers.Layer.WMS(layerContext.title||layerContext.name,layerContext.url,params,options)
+}}}}}return layer
+},getLayersFromContext:function(layersContext){var layers=[];
+for(var i=0,len=layersContext.length;
+i<len;
+i++){var layer=this.getLayerFromContext(layersContext[i]);
+if(layer!==null){layers.push(layer)
+}}return layers
+},contextToMap:function(context,options){options=OpenLayers.Util.applyDefaults({maxExtent:context.maxExtent,projection:context.projection,units:context.units},options);
+if(options.maxExtent){options.maxResolution=options.maxExtent.getWidth()/OpenLayers.Map.TILE_WIDTH
+}var metadata={contactInformation:context.contactInformation,"abstract":context["abstract"],keywords:context.keywords,logo:context.logo,descriptionURL:context.descriptionURL};
+options.metadata=metadata;
+var map=new OpenLayers.Map(options);
+map.addLayers(this.getLayersFromContext(context.layersContext));
+map.setCenter(context.bounds.getCenterLonLat(),map.getZoomForExtent(context.bounds,true));
+return map
+},mergeContextToMap:function(context,map){map.addLayers(this.getLayersFromContext(context.layersContext));
+return map
+},write:function(obj,options){obj=this.toContext(obj);
+return OpenLayers.Format.XML.VersionedOGC.prototype.write.apply(this,arguments)
+},CLASS_NAME:"OpenLayers.Format.Context"});
+OpenLayers.Format.Context.serviceTypes={WMS:"urn:ogc:serviceType:WMS",WFS:"urn:ogc:serviceType:WFS",WCS:"urn:ogc:serviceType:WCS",GML:"urn:ogc:serviceType:GML",SLD:"urn:ogc:serviceType:SLD",FES:"urn:ogc:serviceType:FES",KML:"urn:ogc:serviceType:KML"};OpenLayers.Format.OWSCommon=OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC,{defaultVersion:"1.0.0",getVersion:function(root,options){var version=this.version;
+if(!version){var uri=root.getAttribute("xmlns:ows");
+if(uri&&uri.substring(uri.lastIndexOf("/")+1)==="1.1"){version="1.1.0"
+}if(!version){version=this.defaultVersion
+}}return version
+},CLASS_NAME:"OpenLayers.Format.OWSCommon"});OpenLayers.Format.OWSCommon.v1=OpenLayers.Class(OpenLayers.Format.XML,{regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},read:function(data,options){options=OpenLayers.Util.applyDefaults(options,this.options);
+var ows={};
+this.readChildNodes(data,ows);
+return ows
+},readers:{ows:{Exception:function(node,exceptionReport){var exception={code:node.getAttribute("exceptionCode"),locator:node.getAttribute("locator"),texts:[]};
+exceptionReport.exceptions.push(exception);
+this.readChildNodes(node,exception)
+},ExceptionText:function(node,exception){var text=this.getChildValue(node);
+exception.texts.push(text)
+},ServiceIdentification:function(node,obj){obj.serviceIdentification={};
 this.readChildNodes(node,obj.serviceIdentification)
 },Title:function(node,obj){obj.title=this.getChildValue(node)
 },Abstract:function(node,serviceIdentification){serviceIdentification["abstract"]=this.getChildValue(node)
@@ -5058,12 +5425,22 @@ this.readChildNodes(node,operationsMetadata[name])
 this.readChildNodes(node,operation.dcp)
 },HTTP:function(node,dcp){dcp.http={};
 this.readChildNodes(node,dcp.http)
-},Get:function(node,http){http.get=this.getAttributeNS(node,this.namespaces.xlink,"href")
-},Post:function(node,http){http.post=this.getAttributeNS(node,this.namespaces.xlink,"href")
+},Get:function(node,http){if(!http.get){http.get=[]
+}var obj={url:this.getAttributeNS(node,this.namespaces.xlink,"href")};
+this.readChildNodes(node,obj);
+http.get.push(obj)
+},Post:function(node,http){if(!http.post){http.post=[]
+}var obj={url:this.getAttributeNS(node,this.namespaces.xlink,"href")};
+this.readChildNodes(node,obj);
+http.post.push(obj)
 },Parameter:function(node,operation){if(!operation.parameters){operation.parameters={}
 }var name=node.getAttribute("name");
 operation.parameters[name]={};
 this.readChildNodes(node,operation.parameters[name])
+},Constraint:function(node,obj){if(!obj.constraints){obj.constraints={}
+}var name=node.getAttribute("name");
+obj.constraints[name]={};
+this.readChildNodes(node,obj.constraints[name])
 },Value:function(node,allowedValues){allowedValues[this.getChildValue(node)]=true
 },OutputFormat:function(node,obj){obj.formats.push({value:this.getChildValue(node)});
 this.readChildNodes(node,obj)
@@ -5089,6 +5466,7 @@ delete obj.left;
 delete obj.bottom;
 delete obj.right;
 delete obj.top
+},Language:function(node,obj){obj.language=this.getChildValue(node)
 }}},writers:{ows:{BoundingBox:function(options){var node=this.createElementNSPlus("ows:BoundingBox",{attributes:{crs:options.projection}});
 this.writeNode("ows:LowerCorner",options,node);
 this.writeNode("ows:UpperCorner",options,node);
@@ -5097,28 +5475,50 @@ return node
 return node
 },UpperCorner:function(options){var node=this.createElementNSPlus("ows:UpperCorner",{value:options.bounds.right+" "+options.bounds.top});
 return node
+},Identifier:function(identifier){var node=this.createElementNSPlus("ows:Identifier",{value:identifier});
+return node
 },Title:function(title){var node=this.createElementNSPlus("ows:Title",{value:title});
+return node
+},Abstract:function(abstractValue){var node=this.createElementNSPlus("ows:Abstract",{value:abstractValue});
 return node
 },OutputFormat:function(format){var node=this.createElementNSPlus("ows:OutputFormat",{value:format});
 return node
-}}},CLASS_NAME:"OpenLayers.Format.OWSCommon.v1"});OpenLayers.Format.OWSCommon.v1_0_0=OpenLayers.Class(OpenLayers.Format.OWSCommon.v1,{namespaces:{ows:"http://www.opengis.net/ows/1.0",xlink:"http://www.w3.org/1999/xlink"},readers:{ows:OpenLayers.Format.OWSCommon.v1.prototype.readers.ows},writers:{ows:OpenLayers.Format.OWSCommon.v1.prototype.writers.ows},CLASS_NAME:"OpenLayers.Format.OWSCommon.v1_1_0"});OpenLayers.Format.WMC=OpenLayers.Class(OpenLayers.Format.Context,{defaultVersion:"1.1.0",getParser:function(version){var v=version||this.version||this.defaultVersion;
-if(!this.parser||this.parser.VERSION!=v){var format=OpenLayers.Format.WMC["v"+v.replace(/\./g,"_")];
-if(!format){throw"Can't find a WMC parser for version "+v
-}this.parser=new format(this.options)
-}return this.parser
-},layerToContext:function(layer){var parser=this.getParser();
-var layerContext={queryable:layer.queryable,visibility:layer.visibility,name:layer.params.LAYERS,title:layer.name,metadataURL:layer.metadataURL,version:layer.params.VERSION,url:layer.url,maxExtent:layer.maxExtent,transparent:layer.params.TRANSPARENT,numZoomLevels:layer.numZoomLevels,units:layer.units,isBaseLayer:layer.isBaseLayer,opacity:layer.opacity,displayInLayerSwitcher:layer.displayInLayerSwitcher,singleTile:layer.singleTile,tileSize:(layer.singleTile||!layer.tileSize)?undefined:{width:layer.tileSize.w,height:layer.tileSize.h},minScale:(layer.options.resolutions||layer.options.scales||layer.options.maxResolution||layer.options.minScale)?layer.minScale:undefined,maxScale:(layer.options.resolutions||layer.options.scales||layer.options.minResolution||layer.options.maxScale)?layer.maxScale:undefined,formats:[{value:layer.params.FORMAT,current:true}],styles:[{href:layer.params.SLD,body:layer.params.SLD_BODY,name:layer.params.STYLES||parser.defaultStyleName,title:parser.defaultStyleTitle,current:true}]};
-return layerContext
+}}},CLASS_NAME:"OpenLayers.Format.OWSCommon.v1"});OpenLayers.Format.OWSCommon.v1_0_0=OpenLayers.Class(OpenLayers.Format.OWSCommon.v1,{namespaces:{ows:"http://www.opengis.net/ows",xlink:"http://www.w3.org/1999/xlink"},readers:{ows:OpenLayers.Util.applyDefaults({ExceptionReport:function(node,obj){obj.success=false;
+obj.exceptionReport={version:node.getAttribute("version"),language:node.getAttribute("language"),exceptions:[]};
+this.readChildNodes(node,obj.exceptionReport)
+}},OpenLayers.Format.OWSCommon.v1.prototype.readers.ows)},writers:{ows:OpenLayers.Format.OWSCommon.v1.prototype.writers.ows},CLASS_NAME:"OpenLayers.Format.OWSCommon.v1_0_0"});OpenLayers.Format.WMC=OpenLayers.Class(OpenLayers.Format.Context,{defaultVersion:"1.1.0",layerToContext:function(layer){var parser=this.getParser();
+var layerContext={queryable:layer.queryable,visibility:layer.visibility,name:layer.params.LAYERS,title:layer.name,"abstract":layer.metadata["abstract"],dataURL:layer.metadata.dataURL,metadataURL:layer.metadataURL,server:{version:layer.params.VERSION,url:layer.url},maxExtent:layer.maxExtent,transparent:layer.params.TRANSPARENT,numZoomLevels:layer.numZoomLevels,units:layer.units,isBaseLayer:layer.isBaseLayer,opacity:layer.opacity==1?undefined:layer.opacity,displayInLayerSwitcher:layer.displayInLayerSwitcher,singleTile:layer.singleTile,tileSize:(layer.singleTile||!layer.tileSize)?undefined:{width:layer.tileSize.w,height:layer.tileSize.h},minScale:(layer.options.resolutions||layer.options.scales||layer.options.maxResolution||layer.options.minScale)?layer.minScale:undefined,maxScale:(layer.options.resolutions||layer.options.scales||layer.options.minResolution||layer.options.maxScale)?layer.maxScale:undefined,formats:[],styles:[],srs:layer.srs,dimensions:layer.dimensions};
+if(layer.metadata.servertitle){layerContext.server.title=layer.metadata.servertitle
+}if(layer.metadata.formats&&layer.metadata.formats.length>0){for(var i=0,len=layer.metadata.formats.length;
+i<len;
+i++){var format=layer.metadata.formats[i];
+layerContext.formats.push({value:format.value,current:(format.value==layer.params.FORMAT)})
+}}else{layerContext.formats.push({value:layer.params.FORMAT,current:true})
+}if(layer.metadata.styles&&layer.metadata.styles.length>0){for(var i=0,len=layer.metadata.styles.length;
+i<len;
+i++){var style=layer.metadata.styles[i];
+if((style.href==layer.params.SLD)||(style.body==layer.params.SLD_BODY)||(style.name==layer.params.STYLES)){style.current=true
+}else{style.current=false
+}layerContext.styles.push(style)
+}}else{layerContext.styles.push({href:layer.params.SLD,body:layer.params.SLD_BODY,name:layer.params.STYLES||parser.defaultStyleName,title:parser.defaultStyleTitle,current:true})
+}return layerContext
 },toContext:function(obj){var context={};
 var layers=obj.layers;
-if(obj.CLASS_NAME=="OpenLayers.Map"){context.bounds=obj.getExtent();
-context.maxExtent=obj.maxExtent;
+if(obj.CLASS_NAME=="OpenLayers.Map"){var metadata=obj.metadata||{};
+context.size=obj.getSize();
+context.bounds=obj.getExtent();
 context.projection=obj.projection;
-context.size=obj.getSize()
+context.title=obj.title;
+context.keywords=metadata.keywords;
+context["abstract"]=metadata["abstract"];
+context.logo=metadata.logo;
+context.descriptionURL=metadata.descriptionURL;
+context.contactInformation=metadata.contactInformation;
+context.maxExtent=obj.maxExtent
 }else{OpenLayers.Util.applyDefaults(context,obj);
 if(context.layers!=undefined){delete (context.layers)
 }}if(context.layersContext==undefined){context.layersContext=[]
-}if(layers!=undefined&&layers instanceof Array){for(var i=0,len=layers.length;
+}if(layers!=undefined&&OpenLayers.Util.isArray(layers)){for(var i=0,len=layers.length;
 i<len;
 i++){var layer=layers[i];
 if(layer instanceof OpenLayers.Layer.WMS){context.layersContext.push(this.layerToContext(layer))
@@ -5145,10 +5545,10 @@ processor=this["read_"+prefix+"_"+local];
 if(processor){processor.apply(this,[obj,childNode])
 }}}},read_wmc_General:function(context,node){this.runChildNodes(context,node)
 },read_wmc_BoundingBox:function(context,node){context.projection=node.getAttribute("SRS");
-context.bounds=new OpenLayers.Bounds(parseFloat(node.getAttribute("minx")),parseFloat(node.getAttribute("miny")),parseFloat(node.getAttribute("maxx")),parseFloat(node.getAttribute("maxy")))
+context.bounds=new OpenLayers.Bounds(node.getAttribute("minx"),node.getAttribute("miny"),node.getAttribute("maxx"),node.getAttribute("maxy"))
 },read_wmc_LayerList:function(context,node){context.layersContext=[];
 this.runChildNodes(context,node)
-},read_wmc_Layer:function(context,node){var layerContext={visibility:(node.getAttribute("hidden")!="1"),queryable:(node.getAttribute("queryable")=="1"),formats:[],styles:[]};
+},read_wmc_Layer:function(context,node){var layerContext={visibility:(node.getAttribute("hidden")!="1"),queryable:(node.getAttribute("queryable")=="1"),formats:[],styles:[],metadata:{}};
 this.runChildNodes(layerContext,node);
 context.layersContext.push(layerContext)
 },read_wmc_Extension:function(obj,node){this.runChildNodes(obj,node)
@@ -5164,10 +5564,8 @@ layerContext.tileSize=obj
 },read_ol_isBaseLayer:function(layerContext,node){layerContext.isBaseLayer=(this.getChildValue(node)=="true")
 },read_ol_displayInLayerSwitcher:function(layerContext,node){layerContext.displayInLayerSwitcher=(this.getChildValue(node)=="true")
 },read_wmc_Server:function(layerContext,node){layerContext.version=node.getAttribute("version");
-var server={};
-var links=node.getElementsByTagName("OnlineResource");
-if(links.length>0){this.read_wmc_OnlineResource(server,links[0])
-}layerContext.url=server.href
+layerContext.url=this.getOnlineResource_href(node);
+layerContext.metadata.servertitle=node.getAttribute("title")
 },read_wmc_FormatList:function(layerContext,node){this.runChildNodes(layerContext,node)
 },read_wmc_Format:function(layerContext,node){var format={value:this.getChildValue(node)};
 if(node.getAttribute("current")=="1"){format.current=true
@@ -5180,21 +5578,64 @@ if(node.getAttribute("current")=="1"){style.current=true
 },read_wmc_SLD:function(style,node){this.runChildNodes(style,node)
 },read_sld_StyledLayerDescriptor:function(sld,node){var xml=OpenLayers.Format.XML.prototype.write.apply(this,[node]);
 sld.body=xml
+},read_sld_FeatureTypeStyle:function(sld,node){var xml=OpenLayers.Format.XML.prototype.write.apply(this,[node]);
+sld.body=xml
 },read_wmc_OnlineResource:function(obj,node){obj.href=this.getAttributeNS(node,this.namespaces.xlink,"href")
 },read_wmc_Name:function(obj,node){var name=this.getChildValue(node);
 if(name){obj.name=name
 }},read_wmc_Title:function(obj,node){var title=this.getChildValue(node);
 if(title){obj.title=title
-}},read_wmc_MetadataURL:function(layerContext,node){var metadataURL={};
-var links=node.getElementsByTagName("OnlineResource");
-if(links.length>0){this.read_wmc_OnlineResource(metadataURL,links[0])
-}layerContext.metadataURL=metadataURL.href
+}},read_wmc_MetadataURL:function(layerContext,node){layerContext.metadataURL=this.getOnlineResource_href(node)
+},read_wmc_KeywordList:function(context,node){context.keywords=[];
+this.runChildNodes(context.keywords,node)
+},read_wmc_Keyword:function(keywords,node){keywords.push(this.getChildValue(node))
 },read_wmc_Abstract:function(obj,node){var abst=this.getChildValue(node);
 if(abst){obj["abstract"]=abst
-}},read_wmc_LegendURL:function(style,node){var legend={width:node.getAttribute("width"),height:node.getAttribute("height")};
-var links=node.getElementsByTagName("OnlineResource");
-if(links.length>0){this.read_wmc_OnlineResource(legend,links[0])
-}style.legend=legend
+}},read_wmc_LogoURL:function(context,node){context.logo={width:node.getAttribute("width"),height:node.getAttribute("height"),format:node.getAttribute("format"),href:this.getOnlineResource_href(node)}
+},read_wmc_DescriptionURL:function(context,node){context.descriptionURL=this.getOnlineResource_href(node)
+},read_wmc_ContactInformation:function(obj,node){var contact={};
+this.runChildNodes(contact,node);
+obj.contactInformation=contact
+},read_wmc_ContactPersonPrimary:function(contact,node){var personPrimary={};
+this.runChildNodes(personPrimary,node);
+contact.personPrimary=personPrimary
+},read_wmc_ContactPerson:function(primaryPerson,node){var person=this.getChildValue(node);
+if(person){primaryPerson.person=person
+}},read_wmc_ContactOrganization:function(primaryPerson,node){var organization=this.getChildValue(node);
+if(organization){primaryPerson.organization=organization
+}},read_wmc_ContactPosition:function(contact,node){var position=this.getChildValue(node);
+if(position){contact.position=position
+}},read_wmc_ContactAddress:function(contact,node){var contactAddress={};
+this.runChildNodes(contactAddress,node);
+contact.contactAddress=contactAddress
+},read_wmc_AddressType:function(contactAddress,node){var type=this.getChildValue(node);
+if(type){contactAddress.type=type
+}},read_wmc_Address:function(contactAddress,node){var address=this.getChildValue(node);
+if(address){contactAddress.address=address
+}},read_wmc_City:function(contactAddress,node){var city=this.getChildValue(node);
+if(city){contactAddress.city=city
+}},read_wmc_StateOrProvince:function(contactAddress,node){var stateOrProvince=this.getChildValue(node);
+if(stateOrProvince){contactAddress.stateOrProvince=stateOrProvince
+}},read_wmc_PostCode:function(contactAddress,node){var postcode=this.getChildValue(node);
+if(postcode){contactAddress.postcode=postcode
+}},read_wmc_Country:function(contactAddress,node){var country=this.getChildValue(node);
+if(country){contactAddress.country=country
+}},read_wmc_ContactVoiceTelephone:function(contact,node){var phone=this.getChildValue(node);
+if(phone){contact.phone=phone
+}},read_wmc_ContactFacsimileTelephone:function(contact,node){var fax=this.getChildValue(node);
+if(fax){contact.fax=fax
+}},read_wmc_ContactElectronicMailAddress:function(contact,node){var email=this.getChildValue(node);
+if(email){contact.email=email
+}},read_wmc_DataURL:function(layerContext,node){layerContext.dataURL=this.getOnlineResource_href(node)
+},read_wmc_LegendURL:function(style,node){var legend={width:node.getAttribute("width"),height:node.getAttribute("height"),format:node.getAttribute("format"),href:this.getOnlineResource_href(node)};
+style.legend=legend
+},read_wmc_DimensionList:function(layerContext,node){layerContext.dimensions={};
+this.runChildNodes(layerContext.dimensions,node)
+},read_wmc_Dimension:function(dimensions,node){var name=node.getAttribute("name").toLowerCase();
+var dim={name:name,units:node.getAttribute("units")||"",unitSymbol:node.getAttribute("unitSymbol")||"",userValue:node.getAttribute("userValue")||"",nearestValue:node.getAttribute("nearestValue")==="1",multipleValues:node.getAttribute("multipleValues")==="1",current:node.getAttribute("current")==="1","default":node.getAttribute("default")||""};
+var values=this.getChildValue(node);
+dim.values=values.split(",");
+dimensions[dim.name]=dim
 },write:function(context,options){var root=this.createElementDefaultNS("ViewContext");
 this.setAttributes(root,{version:this.VERSION,id:(options&&typeof options.id=="string")?options.id:OpenLayers.Util.createUniqueID("OpenLayers_Context_")});
 this.setAttributeNS(root,this.namespaces.xsi,"xsi:schemaLocation",this.schemaLocation);
@@ -5214,8 +5655,38 @@ if(context.size){node.appendChild(this.createElementDefaultNS("Window",null,{wid
 }var bounds=context.bounds;
 node.appendChild(this.createElementDefaultNS("BoundingBox",null,{minx:bounds.left.toPrecision(18),miny:bounds.bottom.toPrecision(18),maxx:bounds.right.toPrecision(18),maxy:bounds.top.toPrecision(18),SRS:context.projection}));
 node.appendChild(this.createElementDefaultNS("Title",context.title));
-node.appendChild(this.write_ol_MapExtension(context));
+if(context.keywords){node.appendChild(this.write_wmc_KeywordList(context.keywords))
+}if(context["abstract"]){node.appendChild(this.createElementDefaultNS("Abstract",context["abstract"]))
+}if(context.logo){node.appendChild(this.write_wmc_URLType("LogoURL",context.logo.href,context.logo))
+}if(context.descriptionURL){node.appendChild(this.write_wmc_URLType("DescriptionURL",context.descriptionURL))
+}if(context.contactInformation){node.appendChild(this.write_wmc_ContactInformation(context.contactInformation))
+}node.appendChild(this.write_ol_MapExtension(context));
 return node
+},write_wmc_KeywordList:function(keywords){var node=this.createElementDefaultNS("KeywordList");
+for(var i=0,len=keywords.length;
+i<len;
+i++){node.appendChild(this.createElementDefaultNS("Keyword",keywords[i]))
+}return node
+},write_wmc_ContactInformation:function(contact){var node=this.createElementDefaultNS("ContactInformation");
+if(contact.personPrimary){node.appendChild(this.write_wmc_ContactPersonPrimary(contact.personPrimary))
+}if(contact.position){node.appendChild(this.createElementDefaultNS("ContactPosition",contact.position))
+}if(contact.contactAddress){node.appendChild(this.write_wmc_ContactAddress(contact.contactAddress))
+}if(contact.phone){node.appendChild(this.createElementDefaultNS("ContactVoiceTelephone",contact.phone))
+}if(contact.fax){node.appendChild(this.createElementDefaultNS("ContactFacsimileTelephone",contact.fax))
+}if(contact.email){node.appendChild(this.createElementDefaultNS("ContactElectronicMailAddress",contact.email))
+}return node
+},write_wmc_ContactPersonPrimary:function(personPrimary){var node=this.createElementDefaultNS("ContactPersonPrimary");
+if(personPrimary.person){node.appendChild(this.createElementDefaultNS("ContactPerson",personPrimary.person))
+}if(personPrimary.organization){node.appendChild(this.createElementDefaultNS("ContactOrganization",personPrimary.organization))
+}return node
+},write_wmc_ContactAddress:function(contactAddress){var node=this.createElementDefaultNS("ContactAddress");
+if(contactAddress.type){node.appendChild(this.createElementDefaultNS("AddressType",contactAddress.type))
+}if(contactAddress.address){node.appendChild(this.createElementDefaultNS("Address",contactAddress.address))
+}if(contactAddress.city){node.appendChild(this.createElementDefaultNS("City",contactAddress.city))
+}if(contactAddress.stateOrProvince){node.appendChild(this.createElementDefaultNS("StateOrProvince",contactAddress.stateOrProvince))
+}if(contactAddress.postcode){node.appendChild(this.createElementDefaultNS("PostCode",contactAddress.postcode))
+}if(contactAddress.country){node.appendChild(this.createElementDefaultNS("Country",contactAddress.country))
+}return node
 },write_ol_MapExtension:function(context){var node=this.createElementDefaultNS("Extension");
 var bounds=context.maxExtent;
 if(bounds){var maxExtent=this.createElementNS(this.namespaces.ol,"ol:maxExtent");
@@ -5231,7 +5702,9 @@ i<len;
 node.appendChild(this.write_wmc_Server(context));
 node.appendChild(this.createElementDefaultNS("Name",context.name));
 node.appendChild(this.createElementDefaultNS("Title",context.title));
-if(context.metadataURL){node.appendChild(this.write_wmc_MetadataURL(context.metadataURL))
+if(context["abstract"]){node.appendChild(this.createElementDefaultNS("Abstract",context["abstract"]))
+}if(context.dataURL){node.appendChild(this.write_wmc_URLType("DataURL",context.dataURL))
+}if(context.metadataURL){node.appendChild(this.write_wmc_URLType("MetadataURL",context.metadataURL))
 }return node
 },write_wmc_LayerExtension:function(context){var node=this.createElementDefaultNS("Extension");
 var bounds=context.maxExtent;
@@ -5252,13 +5725,31 @@ if(child){node.appendChild(child)
 if(obj[prop]!=null){node=this.createElementNS(this.namespaces.ol,"ol:"+prop);
 node.appendChild(this.createTextNode(obj[prop].toString()))
 }return node
-},write_wmc_Server:function(context){var node=this.createElementDefaultNS("Server");
-this.setAttributes(node,{service:"OGC:WMS",version:context.version});
-node.appendChild(this.write_wmc_OnlineResource(context.url));
+},write_wmc_Server:function(context){var server=context.server;
+var node=this.createElementDefaultNS("Server");
+var attributes={service:"OGC:WMS",version:server.version};
+if(server.title){attributes.title=server.title
+}this.setAttributes(node,attributes);
+node.appendChild(this.write_wmc_OnlineResource(server.url));
 return node
-},write_wmc_MetadataURL:function(metadataURL){var node=this.createElementDefaultNS("MetadataURL");
-node.appendChild(this.write_wmc_OnlineResource(metadataURL));
-return node
+},write_wmc_URLType:function(elName,url,attr){var node=this.createElementDefaultNS(elName);
+node.appendChild(this.write_wmc_OnlineResource(url));
+if(attr){var optionalAttributes=["width","height","format"];
+for(var i=0;
+i<optionalAttributes.length;
+i++){if(optionalAttributes[i] in attr){node.setAttribute(optionalAttributes[i],attr[optionalAttributes[i]])
+}}}return node
+},write_wmc_DimensionList:function(context){var node=this.createElementDefaultNS("DimensionList");
+var required_attributes={name:true,units:true,unitSymbol:true,userValue:true};
+for(var dim in context.dimensions){var attributes={};
+var dimension=context.dimensions[dim];
+for(var name in dimension){if(typeof dimension[name]=="boolean"){attributes[name]=Number(dimension[name])
+}else{attributes[name]=dimension[name]
+}}var values="";
+if(attributes.values){values=attributes.values.join(",");
+delete attributes.values
+}node.appendChild(this.createElementDefaultNS("Dimension",values,attributes))
+}return node
 },write_wmc_FormatList:function(context){var node=this.createElementDefaultNS("FormatList");
 for(var i=0,len=context.formats.length;
 i<len;
@@ -5267,43 +5758,62 @@ node.appendChild(this.createElementDefaultNS("Format",format.value,(format.curre
 }return node
 },write_wmc_StyleList:function(layer){var node=this.createElementDefaultNS("StyleList");
 var styles=layer.styles;
-if(styles&&styles instanceof Array){var sld;
+if(styles&&OpenLayers.Util.isArray(styles)){var sld;
 for(var i=0,len=styles.length;
 i<len;
 i++){var s=styles[i];
 var style=this.createElementDefaultNS("Style",null,(s.current&&s.current==true)?{current:"1"}:null);
 if(s.href){sld=this.createElementDefaultNS("SLD");
-var link=this.write_wmc_OnlineResource(s.href);
+if(s.name){sld.appendChild(this.createElementDefaultNS("Name",s.name))
+}if(s.title){sld.appendChild(this.createElementDefaultNS("Title",s.title))
+}if(s.legend){sld.appendChild(this.write_wmc_URLType("LegendURL",s.legend.href,s.legend))
+}var link=this.write_wmc_OnlineResource(s.href);
 sld.appendChild(link);
-sld.appendChild(this.createElementDefaultNS("Name",s.name));
-if(s.title){sld.appendChild(this.createElementDefaultNS("Title",s.title))
-}style.appendChild(sld)
+style.appendChild(sld)
 }else{if(s.body){sld=this.createElementDefaultNS("SLD");
-var doc=OpenLayers.Format.XML.prototype.read.apply(this,[s.body]);
+if(s.name){sld.appendChild(this.createElementDefaultNS("Name",s.name))
+}if(s.title){sld.appendChild(this.createElementDefaultNS("Title",s.title))
+}if(s.legend){sld.appendChild(this.write_wmc_URLType("LegendURL",s.legend.href,s.legend))
+}var doc=OpenLayers.Format.XML.prototype.read.apply(this,[s.body]);
 var imported=doc.documentElement;
 if(sld.ownerDocument&&sld.ownerDocument.importNode){imported=sld.ownerDocument.importNode(imported,true)
 }sld.appendChild(imported);
-sld.appendChild(this.createElementDefaultNS("Name",s.name));
-if(s.title){sld.appendChild(this.createElementDefaultNS("Title",s.title))
-}style.appendChild(sld)
+style.appendChild(sld)
 }else{style.appendChild(this.createElementDefaultNS("Name",s.name));
 style.appendChild(this.createElementDefaultNS("Title",s.title));
 if(s["abstract"]){style.appendChild(this.createElementDefaultNS("Abstract",s["abstract"]))
+}if(s.legend){style.appendChild(this.write_wmc_URLType("LegendURL",s.legend.href,s.legend))
 }}}node.appendChild(style)
 }}return node
 },write_wmc_OnlineResource:function(href){var node=this.createElementDefaultNS("OnlineResource");
 this.setAttributeNS(node,this.namespaces.xlink,"xlink:type","simple");
 this.setAttributeNS(node,this.namespaces.xlink,"xlink:href",href);
 return node
+},getOnlineResource_href:function(node){var object={};
+var links=node.getElementsByTagName("OnlineResource");
+if(links.length>0){this.read_wmc_OnlineResource(object,links[0])
+}return object.href
 },CLASS_NAME:"OpenLayers.Format.WMC.v1"});OpenLayers.Format.WMC.v1_0_0=OpenLayers.Class(OpenLayers.Format.WMC.v1,{VERSION:"1.0.0",schemaLocation:"http://www.opengis.net/context http://schemas.opengis.net/context/1.0.0/context.xsd",initialize:function(options){OpenLayers.Format.WMC.v1.prototype.initialize.apply(this,[options])
-},write_wmc_Layer:function(context){var node=OpenLayers.Format.WMC.v1.prototype.write_wmc_Layer.apply(this,[context]);
-node.appendChild(this.write_wmc_FormatList(context));
+},read_wmc_SRS:function(layerContext,node){var srs=this.getChildValue(node);
+if(typeof layerContext.projections!="object"){layerContext.projections={}
+}var values=srs.split(/ +/);
+for(var i=0,len=values.length;
+i<len;
+i++){layerContext.projections[values[i]]=true
+}},write_wmc_Layer:function(context){var node=OpenLayers.Format.WMC.v1.prototype.write_wmc_Layer.apply(this,[context]);
+if(context.srs){var projections=[];
+for(var name in context.srs){projections.push(name)
+}node.appendChild(this.createElementDefaultNS("SRS",projections.join(" ")))
+}node.appendChild(this.write_wmc_FormatList(context));
 node.appendChild(this.write_wmc_StyleList(context));
-node.appendChild(this.write_wmc_LayerExtension(context))
+if(context.dimensions){node.appendChild(this.write_wmc_DimensionList(context))
+}node.appendChild(this.write_wmc_LayerExtension(context))
 },CLASS_NAME:"OpenLayers.Format.WMC.v1_0_0"});OpenLayers.Format.WMC.v1_1_0=OpenLayers.Class(OpenLayers.Format.WMC.v1,{VERSION:"1.1.0",schemaLocation:"http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd",initialize:function(options){OpenLayers.Format.WMC.v1.prototype.initialize.apply(this,[options])
 },read_sld_MinScaleDenominator:function(layerContext,node){var minScaleDenominator=parseFloat(this.getChildValue(node));
 if(minScaleDenominator>0){layerContext.maxScale=minScaleDenominator
 }},read_sld_MaxScaleDenominator:function(layerContext,node){layerContext.minScale=parseFloat(this.getChildValue(node))
+},read_wmc_SRS:function(layerContext,node){if(!("srs" in layerContext)){layerContext.srs={}
+}layerContext.srs[this.getChildValue(node)]=true
 },write_wmc_Layer:function(context){var node=OpenLayers.Format.WMC.v1.prototype.write_wmc_Layer.apply(this,[context]);
 if(context.maxScale){var minSD=this.createElementNS(this.namespaces.sld,"sld:MinScaleDenominator");
 minSD.appendChild(this.createTextNode(context.maxScale.toPrecision(16)));
@@ -5311,13 +5821,16 @@ node.appendChild(minSD)
 }if(context.minScale){var maxSD=this.createElementNS(this.namespaces.sld,"sld:MaxScaleDenominator");
 maxSD.appendChild(this.createTextNode(context.minScale.toPrecision(16)));
 node.appendChild(maxSD)
-}node.appendChild(this.write_wmc_FormatList(context));
+}if(context.srs){for(var name in context.srs){node.appendChild(this.createElementDefaultNS("SRS",name))
+}}node.appendChild(this.write_wmc_FormatList(context));
 node.appendChild(this.write_wmc_StyleList(context));
-node.appendChild(this.write_wmc_LayerExtension(context));
+if(context.dimensions){node.appendChild(this.write_wmc_DimensionList(context))
+}node.appendChild(this.write_wmc_LayerExtension(context));
 return node
 },CLASS_NAME:"OpenLayers.Format.WMC.v1_1_0"});OpenLayers.Format.WKT=OpenLayers.Class(OpenLayers.Format,{initialize:function(options){this.regExes={typeStr:/^\s*(\w+)\s*\(\s*(.*)\s*\)\s*$/,spaces:/\s+/,parenComma:/\)\s*,\s*\(/,doubleParenComma:/\)\s*\)\s*,\s*\(\s*\(/,trimParens:/^\s*\(?(.*?)\)?\s*$/};
 OpenLayers.Format.prototype.initialize.apply(this,[options])
 },read:function(wkt){var features,type,str;
+wkt=wkt.replace(/[\n\r]/g," ");
 var matches=this.regExes.typeStr.exec(wkt);
 if(matches){type=matches[1].toLowerCase();
 str=matches[2];
@@ -5339,14 +5852,16 @@ if(isCollection){pieces.push("GEOMETRYCOLLECTION(")
 i<len;
 ++i){if(isCollection&&i>0){pieces.push(",")
 }geometry=collection[i].geometry;
-type=geometry.CLASS_NAME.split(".")[2].toLowerCase();
+pieces.push(this.extractGeometry(geometry))
+}if(isCollection){pieces.push(")")
+}return pieces.join("")
+},extractGeometry:function(geometry){var type=geometry.CLASS_NAME.split(".")[2].toLowerCase();
 if(!this.extract[type]){return null
 }if(this.internalProjection&&this.externalProjection){geometry=geometry.clone();
 geometry.transform(this.internalProjection,this.externalProjection)
-}data=this.extract[type].apply(this,[geometry]);
-pieces.push(type.toUpperCase()+"("+data+")")
-}if(isCollection){pieces.push(")")
-}return pieces.join("")
+}var wktType=type=="collection"?"GEOMETRYCOLLECTION":type.toUpperCase();
+var data=wktType+"("+this.extract[type].apply(this,[geometry])+")";
+return data
 },extract:{point:function(point){return point.x+" "+point.y
 },multipoint:function(multipoint){var array=[];
 for(var i=0,len=multipoint.components.length;
@@ -5373,10 +5888,15 @@ for(var i=0,len=multipolygon.components.length;
 i<len;
 ++i){array.push("("+this.extract.polygon.apply(this,[multipolygon.components[i]])+")")
 }return array.join(",")
+},collection:function(collection){var array=[];
+for(var i=0,len=collection.components.length;
+i<len;
+++i){array.push(this.extractGeometry.apply(this,[collection.components[i]]))
+}return array.join(",")
 }},parse:{point:function(str){var coords=OpenLayers.String.trim(str).split(this.regExes.spaces);
 return new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(coords[0],coords[1]))
 },multipoint:function(str){var point;
-var points=OpenLayers.String.trim(str).split(this.regExes.parenComma);
+var points=OpenLayers.String.trim(str).split(",");
 var components=[];
 for(var i=0,len=points.length;
 i<len;
@@ -5422,10 +5942,7 @@ for(var i=0,len=wktArray.length;
 i<len;
 ++i){components.push(OpenLayers.Format.WKT.prototype.read.apply(this,[wktArray[i]]))
 }return components
-}},CLASS_NAME:"OpenLayers.Format.WKT"});OpenLayers.Format.WMSGetFeatureInfo=OpenLayers.Class(OpenLayers.Format.XML,{layerIdentifier:"_layer",featureIdentifier:"_feature",regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},gmlFormat:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,arguments);
-OpenLayers.Util.extend(this,options);
-this.options=options
-},read:function(data){var result;
+}},CLASS_NAME:"OpenLayers.Format.WKT"});OpenLayers.Format.WMSGetFeatureInfo=OpenLayers.Class(OpenLayers.Format.XML,{layerIdentifier:"_layer",featureIdentifier:"_feature",regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},gmlFormat:null,read:function(data){var result;
 if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
 }var root=data.documentElement;
 if(root){var scope=this;
@@ -5460,11 +5977,18 @@ i<len;
 i++){var featureNode=featureNodes[i];
 var geom=null;
 var attributes={};
-for(var j=0,jlen=featureNode.attributes.length;
+var j;
+var jlen=featureNode.attributes.length;
+if(jlen>0){for(j=0;
 j<jlen;
 j++){var attribute=featureNode.attributes[j];
 attributes[attribute.nodeName]=attribute.nodeValue
-}response.push(new OpenLayers.Feature.Vector(geom,attributes,null))
+}}else{var nodes=featureNode.childNodes;
+for(j=0,jlen=nodes.length;
+j<jlen;
+++j){var node=nodes[j];
+if(node.nodeType!=3){attributes[node.getAttribute("name")]=node.getAttribute("value")
+}}}response.push(new OpenLayers.Feature.Vector(geom,attributes,null))
 }return response
 },getSiblingNodesByTagCriteria:function(node,criteria){var nodes=[];
 var children,tagName,n,matchNodes,child;
@@ -5487,11 +6011,12 @@ for(var i=0;
 i<n;
 ++i){var child=children[i];
 if(child.nodeType==1){var grandchildren=child.childNodes;
-if(grandchildren.length==1){var grandchild=grandchildren[0];
-if(grandchild.nodeType==3||grandchild.nodeType==4){var name=(child.prefix)?child.nodeName.split(":")[1]:child.nodeName;
-var value=grandchild.nodeValue.replace(this.regExes.trimSpace,"");
+var name=(child.prefix)?child.nodeName.split(":")[1]:child.nodeName;
+if(grandchildren.length==0){attributes[name]=null
+}else{if(grandchildren.length==1){var grandchild=grandchildren[0];
+if(grandchild.nodeType==3||grandchild.nodeType==4){var value=grandchild.nodeValue.replace(this.regExes.trimSpace,"");
 attributes[name]=value
-}}}}}return attributes
+}}}}}}return attributes
 },parseGeometry:function(node){if(!this.gmlFormat){this.gmlFormat=new OpenLayers.Format.GML()
 }var feature=this.gmlFormat.parseFeature(node);
 var geometry,bounds=null;
@@ -5521,21 +6046,24 @@ atPoint=toleranceBounds.containsLonLat(lonlat)
 },getLength:function(){return 0
 },getArea:function(){return 0
 },getCentroid:function(){return null
-},toString:function(){return OpenLayers.Format.WKT.prototype.write(new OpenLayers.Feature.Vector(this))
+},toString:function(){var string;
+if(OpenLayers.Format&&OpenLayers.Format.WKT){string=OpenLayers.Format.WKT.prototype.write(new OpenLayers.Feature.Vector(this))
+}else{string=Object.prototype.toString.call(this)
+}return string
 },CLASS_NAME:"OpenLayers.Geometry"});
-OpenLayers.Geometry.fromWKT=function(wkt){var format=arguments.callee.format;
+OpenLayers.Geometry.fromWKT=function(wkt){var geom;
+if(OpenLayers.Format&&OpenLayers.Format.WKT){var format=OpenLayers.Geometry.fromWKT.format;
 if(!format){format=new OpenLayers.Format.WKT();
-arguments.callee.format=format
-}var geom;
-var result=format.read(wkt);
+OpenLayers.Geometry.fromWKT.format=format
+}var result=format.read(wkt);
 if(result instanceof OpenLayers.Feature.Vector){geom=result.geometry
-}else{if(result instanceof Array){var len=result.length;
+}else{if(OpenLayers.Util.isArray(result)){var len=result.length;
 var components=new Array(len);
 for(var i=0;
 i<len;
 ++i){components[i]=result[i].geometry
 }geom=new OpenLayers.Geometry.Collection(components)
-}}return geom
+}}}return geom
 };
 OpenLayers.Geometry.segmentsIntersect=function(seg1,seg2,options){var point=options&&options.point;
 var tolerance=options&&options.tolerance;
@@ -5602,9 +6130,9 @@ y=y2
 }else{x=x1+along*dx;
 y=y1+along*dy
 }}return{distance:Math.sqrt(Math.pow(x-x0,2)+Math.pow(y-y0,2)),x:x,y:y}
-};OpenLayers.Control=OpenLayers.Class({id:null,map:null,div:null,type:null,allowSelection:false,displayClass:"",title:"",autoActivate:false,active:null,handler:null,eventListeners:null,events:null,EVENT_TYPES:["activate","deactivate"],initialize:function(options){this.displayClass=this.CLASS_NAME.replace("OpenLayers.","ol").replace(/\./g,"");
+};OpenLayers.Control=OpenLayers.Class({id:null,map:null,div:null,type:null,allowSelection:false,displayClass:"",title:"",autoActivate:false,active:null,handler:null,eventListeners:null,events:null,initialize:function(options){this.displayClass=this.CLASS_NAME.replace("OpenLayers.","ol").replace(/\./g,"");
 OpenLayers.Util.extend(this,options);
-this.events=new OpenLayers.Events(this,null,this.EVENT_TYPES);
+this.events=new OpenLayers.Events(this);
 if(this.eventListeners instanceof Object){this.events.on(this.eventListeners)
 }if(this.id==null){this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_")
 }},destroy:function(){if(this.events){if(this.eventListeners){this.events.un(this.eventListeners)
@@ -5617,7 +6145,8 @@ this.handler=null
 }}this.handlers=null
 }if(this.map){this.map.removeControl(this);
 this.map=null
-}},setMap:function(map){this.map=map;
+}this.div=null
+},setMap:function(map){this.map=map;
 if(this.handler){this.handler.setMap(map)
 }},draw:function(px){if(this.div==null){this.div=OpenLayers.Util.createDiv(this.id);
 this.div.className=this.displayClass;
@@ -5647,14 +6176,17 @@ OpenLayers.Control.TYPE_BUTTON=1;
 OpenLayers.Control.TYPE_TOGGLE=2;
 OpenLayers.Control.TYPE_TOOL=3;OpenLayers.Control.PanZoom=OpenLayers.Class(OpenLayers.Control,{slideFactor:50,slideRatio:null,buttons:null,position:null,initialize:function(options){this.position=new OpenLayers.Pixel(OpenLayers.Control.PanZoom.X,OpenLayers.Control.PanZoom.Y);
 OpenLayers.Control.prototype.initialize.apply(this,arguments)
-},destroy:function(){OpenLayers.Control.prototype.destroy.apply(this,arguments);
-this.removeButtons();
+},destroy:function(){if(this.map){this.map.events.unregister("buttonclick",this,this.onButtonClick)
+}this.removeButtons();
 this.buttons=null;
-this.position=null
+this.position=null;
+OpenLayers.Control.prototype.destroy.apply(this,arguments)
+},setMap:function(map){OpenLayers.Control.prototype.setMap.apply(this,arguments);
+this.map.events.register("buttonclick",this,this.onButtonClick)
 },draw:function(px){OpenLayers.Control.prototype.draw.apply(this,arguments);
 px=this.position;
 this.buttons=[];
-var sz=new OpenLayers.Size(18,18);
+var sz={w:18,h:18};
 var centered=new OpenLayers.Pixel(px.x+sz.w/2,px.y);
 this._addButton("panup","north-mini.png",centered,sz);
 px.y=centered.y+sz.h;
@@ -5665,35 +6197,21 @@ this._addButton("zoomin","zoom-plus-mini.png",centered.add(0,sz.h*3+5),sz);
 this._addButton("zoomworld","zoom-world-mini.png",centered.add(0,sz.h*4+5),sz);
 this._addButton("zoomout","zoom-minus-mini.png",centered.add(0,sz.h*5+5),sz);
 return this.div
-},_addButton:function(id,img,xy,sz){var imgLocation=OpenLayers.Util.getImagesLocation()+img;
+},_addButton:function(id,img,xy,sz){var imgLocation=OpenLayers.Util.getImageLocation(img);
 var btn=OpenLayers.Util.createAlphaImageDiv(this.id+"_"+id,xy,sz,imgLocation,"absolute");
+btn.style.cursor="pointer";
 this.div.appendChild(btn);
-OpenLayers.Event.observe(btn,"mousedown",OpenLayers.Function.bindAsEventListener(this.buttonDown,btn));
-OpenLayers.Event.observe(btn,"dblclick",OpenLayers.Function.bindAsEventListener(this.doubleClick,btn));
-OpenLayers.Event.observe(btn,"click",OpenLayers.Function.bindAsEventListener(this.doubleClick,btn));
 btn.action=id;
-btn.map=this.map;
-if(!this.slideRatio){var slideFactorPixels=this.slideFactor;
-var getSlideFactor=function(){return slideFactorPixels
-}
-}else{var slideRatio=this.slideRatio;
-var getSlideFactor=function(dim){return this.map.getSize()[dim]*slideRatio
-}
-}btn.getSlideFactor=getSlideFactor;
+btn.className="olButton";
 this.buttons.push(btn);
 return btn
-},_removeButton:function(btn){OpenLayers.Event.stopObservingElement(btn);
-btn.map=null;
-btn.getSlideFactor=null;
-this.div.removeChild(btn);
+},_removeButton:function(btn){this.div.removeChild(btn);
 OpenLayers.Util.removeItem(this.buttons,btn)
 },removeButtons:function(){for(var i=this.buttons.length-1;
 i>=0;
 --i){this._removeButton(this.buttons[i])
-}},doubleClick:function(evt){OpenLayers.Event.stop(evt);
-return false
-},buttonDown:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}switch(this.action){case"panup":this.map.pan(0,-this.getSlideFactor("h"));
+}},onButtonClick:function(evt){var btn=evt.buttonElement;
+switch(btn.action){case"panup":this.map.pan(0,-this.getSlideFactor("h"));
 break;
 case"pandown":this.map.pan(0,this.getSlideFactor("h"));
 break;
@@ -5707,11 +6225,10 @@ case"zoomout":this.map.zoomOut();
 break;
 case"zoomworld":this.map.zoomToMaxExtent();
 break
-}OpenLayers.Event.stop(evt)
+}},getSlideFactor:function(dim){return this.slideRatio?this.map.getSize()[dim]*this.slideRatio:this.slideFactor
 },CLASS_NAME:"OpenLayers.Control.PanZoom"});
 OpenLayers.Control.PanZoom.X=4;
-OpenLayers.Control.PanZoom.Y=4;OpenLayers.Control.PanZoomBar=OpenLayers.Class(OpenLayers.Control.PanZoom,{zoomStopWidth:18,zoomStopHeight:11,slider:null,sliderEvents:null,zoombarDiv:null,divEvents:null,zoomWorldIcon:false,forceFixedZoomLevel:false,mouseDragStart:null,zoomStart:null,initialize:function(){OpenLayers.Control.PanZoom.prototype.initialize.apply(this,arguments)
-},destroy:function(){this._removeZoomBar();
+OpenLayers.Control.PanZoom.Y=4;OpenLayers.Control.PanZoomBar=OpenLayers.Class(OpenLayers.Control.PanZoom,{zoomStopWidth:18,zoomStopHeight:11,slider:null,sliderEvents:null,zoombarDiv:null,zoomWorldIcon:false,panIcons:true,forceFixedZoomLevel:false,mouseDragStart:null,deltaY:null,zoomStart:null,destroy:function(){this._removeZoomBar();
 this.map.events.un({changebaselayer:this.redraw,scope:this});
 OpenLayers.Control.PanZoom.prototype.destroy.apply(this,arguments);
 delete this.mouseDragStart;
@@ -5724,8 +6241,8 @@ this._removeZoomBar()
 },draw:function(px){OpenLayers.Control.prototype.draw.apply(this,arguments);
 px=this.position.clone();
 this.buttons=[];
-var sz=new OpenLayers.Size(18,18);
-var centered=new OpenLayers.Pixel(px.x+sz.w/2,px.y);
+var sz={w:18,h:18};
+if(this.panIcons){var centered=new OpenLayers.Pixel(px.x+sz.w/2,px.y);
 var wposition=sz.w;
 if(this.zoomWorldIcon){centered=new OpenLayers.Pixel(px.x+sz.w,px.y)
 }this._addButton("panup","north-mini.png",centered,sz);
@@ -5737,53 +6254,53 @@ wposition*=2
 this._addButton("pandown","south-mini.png",centered.add(0,sz.h*2),sz);
 this._addButton("zoomin","zoom-plus-mini.png",centered.add(0,sz.h*3+5),sz);
 centered=this._addZoomBar(centered.add(0,sz.h*4+5));
+this._addButton("zoomout","zoom-minus-mini.png",centered,sz)
+}else{this._addButton("zoomin","zoom-plus-mini.png",px,sz);
+centered=this._addZoomBar(px.add(0,sz.h));
 this._addButton("zoomout","zoom-minus-mini.png",centered,sz);
-return this.div
-},_addZoomBar:function(centered){var imgLocation=OpenLayers.Util.getImagesLocation();
+if(this.zoomWorldIcon){centered=centered.add(0,sz.h+3);
+this._addButton("zoomworld","zoom-world-mini.png",centered,sz)
+}}return this.div
+},_addZoomBar:function(centered){var imgLocation=OpenLayers.Util.getImageLocation("slider.png");
 var id=this.id+"_"+this.map.id;
 var zoomsToEnd=this.map.getNumZoomLevels()-1-this.map.getZoom();
-var slider=OpenLayers.Util.createAlphaImageDiv(id,centered.add(-1,zoomsToEnd*this.zoomStopHeight),new OpenLayers.Size(20,9),imgLocation+"slider.png","absolute");
+var slider=OpenLayers.Util.createAlphaImageDiv(id,centered.add(-1,zoomsToEnd*this.zoomStopHeight),{w:20,h:9},imgLocation,"absolute");
+slider.style.cursor="move";
 this.slider=slider;
 this.sliderEvents=new OpenLayers.Events(this,slider,null,true,{includeXY:true});
-this.sliderEvents.on({mousedown:this.zoomBarDown,mousemove:this.zoomBarDrag,mouseup:this.zoomBarUp,dblclick:this.doubleClick,click:this.doubleClick});
-var sz=new OpenLayers.Size();
-sz.h=this.zoomStopHeight*this.map.getNumZoomLevels();
-sz.w=this.zoomStopWidth;
+this.sliderEvents.on({touchstart:this.zoomBarDown,touchmove:this.zoomBarDrag,touchend:this.zoomBarUp,mousedown:this.zoomBarDown,mousemove:this.zoomBarDrag,mouseup:this.zoomBarUp});
+var sz={w:this.zoomStopWidth,h:this.zoomStopHeight*this.map.getNumZoomLevels()};
+var imgLocation=OpenLayers.Util.getImageLocation("zoombar.png");
 var div=null;
 if(OpenLayers.Util.alphaHack()){var id=this.id+"_"+this.map.id;
-div=OpenLayers.Util.createAlphaImageDiv(id,centered,new OpenLayers.Size(sz.w,this.zoomStopHeight),imgLocation+"zoombar.png","absolute",null,"crop");
+div=OpenLayers.Util.createAlphaImageDiv(id,centered,{w:sz.w,h:this.zoomStopHeight},imgLocation,"absolute",null,"crop");
 div.style.height=sz.h+"px"
-}else{div=OpenLayers.Util.createDiv("OpenLayers_Control_PanZoomBar_Zoombar"+this.map.id,centered,sz,imgLocation+"zoombar.png")
-}this.zoombarDiv=div;
-this.divEvents=new OpenLayers.Events(this,div,null,true,{includeXY:true});
-this.divEvents.on({mousedown:this.divClick,mousemove:this.passEventToSlider,dblclick:this.doubleClick,click:this.doubleClick});
+}else{div=OpenLayers.Util.createDiv("OpenLayers_Control_PanZoomBar_Zoombar"+this.map.id,centered,sz,imgLocation)
+}div.style.cursor="pointer";
+div.className="olButton";
+this.zoombarDiv=div;
 this.div.appendChild(div);
 this.startTop=parseInt(div.style.top);
 this.div.appendChild(slider);
 this.map.events.register("zoomend",this,this.moveZoomBar);
 centered=centered.add(0,this.zoomStopHeight*this.map.getNumZoomLevels());
 return centered
-},_removeZoomBar:function(){this.sliderEvents.un({mousedown:this.zoomBarDown,mousemove:this.zoomBarDrag,mouseup:this.zoomBarUp,dblclick:this.doubleClick,click:this.doubleClick});
+},_removeZoomBar:function(){this.sliderEvents.un({touchstart:this.zoomBarDown,touchmove:this.zoomBarDrag,touchend:this.zoomBarUp,mousedown:this.zoomBarDown,mousemove:this.zoomBarDrag,mouseup:this.zoomBarUp});
 this.sliderEvents.destroy();
-this.divEvents.un({mousedown:this.divClick,mousemove:this.passEventToSlider,dblclick:this.doubleClick,click:this.doubleClick});
-this.divEvents.destroy();
 this.div.removeChild(this.zoombarDiv);
 this.zoombarDiv=null;
 this.div.removeChild(this.slider);
 this.slider=null;
 this.map.events.unregister("zoomend",this,this.moveZoomBar)
-},passEventToSlider:function(evt){this.sliderEvents.handleBrowserEvent(evt)
-},divClick:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}var y=evt.xy.y;
-var top=OpenLayers.Util.pagePosition(evt.object)[1];
-var levels=(y-top)/this.zoomStopHeight;
+},onButtonClick:function(evt){OpenLayers.Control.PanZoom.prototype.onButtonClick.apply(this,arguments);
+if(evt.buttonElement===this.zoombarDiv){var levels=evt.buttonXY.y/this.zoomStopHeight;
 if(this.forceFixedZoomLevel||!this.map.fractionalZoom){levels=Math.floor(levels)
 }var zoom=(this.map.getNumZoomLevels()-1)-levels;
 zoom=Math.min(Math.max(zoom,0),this.map.getNumZoomLevels()-1);
-this.map.zoomTo(zoom);
-OpenLayers.Event.stop(evt)
-},zoomBarDown:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}this.map.events.on({mousemove:this.passEventToSlider,mouseup:this.passEventToSlider,scope:this});
+this.map.zoomTo(zoom)
+}},passEventToSlider:function(evt){this.sliderEvents.handleBrowserEvent(evt)
+},zoomBarDown:function(evt){if(!OpenLayers.Event.isLeftClick(evt)&&!OpenLayers.Event.isSingleTouch(evt)){return
+}this.map.events.on({touchmove:this.passEventToSlider,mousemove:this.passEventToSlider,mouseup:this.passEventToSlider,scope:this});
 this.mouseDragStart=evt.xy.clone();
 this.zoomStart=evt.xy.clone();
 this.div.style.cursor="move";
@@ -5794,41 +6311,43 @@ var offsets=OpenLayers.Util.pagePosition(this.zoombarDiv);
 if((evt.clientY-offsets[1])>0&&(evt.clientY-offsets[1])<parseInt(this.zoombarDiv.style.height)-2){var newTop=parseInt(this.slider.style.top)-deltaY;
 this.slider.style.top=newTop+"px";
 this.mouseDragStart=evt.xy.clone()
-}OpenLayers.Event.stop(evt)
-}},zoomBarUp:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
+}this.deltaY=this.zoomStart.y-evt.xy.y;
+OpenLayers.Event.stop(evt)
+}},zoomBarUp:function(evt){if(!OpenLayers.Event.isLeftClick(evt)&&evt.type!=="touchend"){return
 }if(this.mouseDragStart){this.div.style.cursor="";
-this.map.events.un({mouseup:this.passEventToSlider,mousemove:this.passEventToSlider,scope:this});
-var deltaY=this.zoomStart.y-evt.xy.y;
+this.map.events.un({touchmove:this.passEventToSlider,mouseup:this.passEventToSlider,mousemove:this.passEventToSlider,scope:this});
 var zoomLevel=this.map.zoom;
-if(!this.forceFixedZoomLevel&&this.map.fractionalZoom){zoomLevel+=deltaY/this.zoomStopHeight;
+if(!this.forceFixedZoomLevel&&this.map.fractionalZoom){zoomLevel+=this.deltaY/this.zoomStopHeight;
 zoomLevel=Math.min(Math.max(zoomLevel,0),this.map.getNumZoomLevels()-1)
-}else{zoomLevel+=Math.round(deltaY/this.zoomStopHeight)
+}else{zoomLevel+=this.deltaY/this.zoomStopHeight;
+zoomLevel=Math.max(Math.round(zoomLevel),0)
 }this.map.zoomTo(zoomLevel);
 this.mouseDragStart=null;
 this.zoomStart=null;
+this.deltaY=0;
 OpenLayers.Event.stop(evt)
 }},moveZoomBar:function(){var newTop=((this.map.getNumZoomLevels()-1)-this.map.getZoom())*this.zoomStopHeight+this.startTop+1;
 this.slider.style.top=newTop+"px"
-},CLASS_NAME:"OpenLayers.Control.PanZoomBar"});OpenLayers.Tween=OpenLayers.Class({INTERVAL:10,easing:null,begin:null,finish:null,duration:null,callbacks:null,time:null,interval:null,playing:false,initialize:function(easing){this.easing=(easing)?easing:OpenLayers.Easing.Expo.easeOut
+},CLASS_NAME:"OpenLayers.Control.PanZoomBar"});OpenLayers.Tween=OpenLayers.Class({easing:null,begin:null,finish:null,duration:null,callbacks:null,time:null,animationId:null,playing:false,initialize:function(easing){this.easing=(easing)?easing:OpenLayers.Easing.Expo.easeOut
 },start:function(begin,finish,duration,options){this.playing=true;
 this.begin=begin;
 this.finish=finish;
 this.duration=duration;
 this.callbacks=options.callbacks;
 this.time=0;
-if(this.interval){window.clearInterval(this.interval);
-this.interval=null
-}if(this.callbacks&&this.callbacks.start){this.callbacks.start.call(this,this.begin)
-}this.interval=window.setInterval(OpenLayers.Function.bind(this.play,this),this.INTERVAL)
+OpenLayers.Animation.stop(this.animationId);
+this.animationId=null;
+if(this.callbacks&&this.callbacks.start){this.callbacks.start.call(this,this.begin)
+}this.animationId=OpenLayers.Animation.start(OpenLayers.Function.bind(this.play,this))
 },stop:function(){if(!this.playing){return
 }if(this.callbacks&&this.callbacks.done){this.callbacks.done.call(this,this.finish)
-}window.clearInterval(this.interval);
-this.interval=null;
+}OpenLayers.Animation.stop(this.animationId);
+this.animationId=null;
 this.playing=false
 },play:function(){var value={};
 for(var i in this.begin){var b=this.begin[i];
 var f=this.finish[i];
-if(b==null||f==null||isNaN(b)||isNaN(f)){OpenLayers.Console.error("invalid value for Tween")
+if(b==null||f==null||isNaN(b)||isNaN(f)){throw new TypeError("invalid value for Tween")
 }var c=f-b;
 value[i]=this.easing.apply(this,[this.time,b,c,this.duration])
 }this.time++;
@@ -5851,14 +6370,20 @@ OpenLayers.Easing.Quad={easeIn:function(t,b,c,d){return c*(t/=d)*t+b
 },easeOut:function(t,b,c,d){return -c*(t/=d)*(t-2)+b
 },easeInOut:function(t,b,c,d){if((t/=d/2)<1){return c/2*t*t+b
 }return -c/2*((--t)*(t-2)-1)+b
-},CLASS_NAME:"OpenLayers.Easing.Quad"};OpenLayers.Map=OpenLayers.Class({Z_INDEX_BASE:{BaseLayer:100,Overlay:325,Feature:725,Popup:750,Control:1000},EVENT_TYPES:["preaddlayer","addlayer","removelayer","changelayer","movestart","move","moveend","zoomend","popupopen","popupclose","addmarker","removemarker","clearmarkers","mouseover","mouseout","mousemove","dragstart","drag","dragend","changebaselayer"],id:null,fractionalZoom:false,events:null,allOverlays:false,div:null,dragging:false,size:null,viewPortDiv:null,layerContainerOrigin:null,layerContainerDiv:null,layers:null,controls:null,popups:null,baseLayer:null,center:null,resolution:null,zoom:0,panRatio:1.5,viewRequestID:0,tileSize:null,projection:"EPSG:4326",units:"degrees",resolutions:null,maxResolution:1.40625,minResolution:null,maxScale:null,minScale:null,maxExtent:null,minExtent:null,restrictedExtent:null,numZoomLevels:16,theme:null,displayProjection:null,fallThrough:true,panTween:null,eventListeners:null,panMethod:OpenLayers.Easing.Expo.easeOut,panDuration:50,paddingForPopups:null,initialize:function(div,options){if(arguments.length===1&&typeof div==="object"){options=div;
+},CLASS_NAME:"OpenLayers.Easing.Quad"};OpenLayers.Map=OpenLayers.Class({Z_INDEX_BASE:{BaseLayer:100,Overlay:325,Feature:725,Popup:750,Control:1000},id:null,fractionalZoom:false,events:null,allOverlays:false,div:null,dragging:false,size:null,viewPortDiv:null,layerContainerOrigin:null,layerContainerDiv:null,layers:null,controls:null,popups:null,baseLayer:null,center:null,resolution:null,zoom:0,panRatio:1.5,options:null,tileSize:null,projection:"EPSG:4326",units:null,resolutions:null,maxResolution:null,minResolution:null,maxScale:null,minScale:null,maxExtent:null,minExtent:null,restrictedExtent:null,numZoomLevels:16,theme:null,displayProjection:null,fallThrough:true,panTween:null,eventListeners:null,panMethod:OpenLayers.Easing.Expo.easeOut,panDuration:50,paddingForPopups:null,minPx:null,maxPx:null,initialize:function(div,options){if(arguments.length===1&&typeof div==="object"){options=div;
 div=options&&options.div
 }this.tileSize=new OpenLayers.Size(OpenLayers.Map.TILE_WIDTH,OpenLayers.Map.TILE_HEIGHT);
-this.maxExtent=new OpenLayers.Bounds(-180,-90,180,90);
 this.paddingForPopups=new OpenLayers.Bounds(15,15,15,15);
 this.theme=OpenLayers._getScriptLocation()+"theme/default/style.css";
+this.options=OpenLayers.Util.extend({},options);
 OpenLayers.Util.extend(this,options);
-this.layers=[];
+var projCode=this.projection instanceof OpenLayers.Projection?this.projection.projCode:this.projection;
+OpenLayers.Util.applyDefaults(this,OpenLayers.Projection.defaults[projCode]);
+if(this.maxExtent&&!(this.maxExtent instanceof OpenLayers.Bounds)){this.maxExtent=new OpenLayers.Bounds(this.maxExtent)
+}if(this.minExtent&&!(this.minExtent instanceof OpenLayers.Bounds)){this.minExtent=new OpenLayers.Bounds(this.minExtent)
+}if(this.restrictedExtent&&!(this.restrictedExtent instanceof OpenLayers.Bounds)){this.restrictedExtent=new OpenLayers.Bounds(this.restrictedExtent)
+}if(this.center&&!(this.center instanceof OpenLayers.LonLat)){this.center=new OpenLayers.LonLat(this.center)
+}this.layers=[];
 this.id=OpenLayers.Util.createUniqueID("OpenLayers.Map_");
 this.div=OpenLayers.Util.getElement(div);
 if(!this.div){this.div=document.createElement("div");
@@ -5871,15 +6396,16 @@ this.viewPortDiv.style.width="100%";
 this.viewPortDiv.style.height="100%";
 this.viewPortDiv.className="olMapViewport";
 this.div.appendChild(this.viewPortDiv);
+this.events=new OpenLayers.Events(this,this.viewPortDiv,null,this.fallThrough,{includeXY:true});
 id=this.id+"_OpenLayers_Container";
 this.layerContainerDiv=OpenLayers.Util.createDiv(id);
+this.layerContainerDiv.style.width="100px";
+this.layerContainerDiv.style.height="100px";
 this.layerContainerDiv.style.zIndex=this.Z_INDEX_BASE.Popup-1;
 this.viewPortDiv.appendChild(this.layerContainerDiv);
-this.events=new OpenLayers.Events(this,this.div,this.EVENT_TYPES,this.fallThrough,{includeXY:true});
 this.updateSize();
 if(this.eventListeners instanceof Object){this.events.on(this.eventListeners)
-}this.events.register("movestart",this,this.updateSize);
-if(OpenLayers.String.contains(navigator.appName,"Microsoft")){this.events.register("resize",this,this.updateSize)
+}if(parseFloat(navigator.appVersion.split("MSIE")[1])<9){this.events.register("resize",this,this.updateSize)
 }else{this.updateSizeDestroy=OpenLayers.Function.bind(this.updateSize,this);
 OpenLayers.Event.observe(window,"resize",this.updateSizeDestroy)
 }if(this.theme){var addNode=true;
@@ -5893,19 +6419,25 @@ cssNode.setAttribute("rel","stylesheet");
 cssNode.setAttribute("type","text/css");
 cssNode.setAttribute("href",this.theme);
 document.getElementsByTagName("head")[0].appendChild(cssNode)
-}}if(this.controls==null){if(OpenLayers.Control!=null){this.controls=[new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(),new OpenLayers.Control.ArgParser(),new OpenLayers.Control.Attribution()]
-}else{this.controls=[]
-}}for(var i=0,len=this.controls.length;
+}}if(this.controls==null){this.controls=[];
+if(OpenLayers.Control!=null){if(OpenLayers.Control.Navigation){this.controls.push(new OpenLayers.Control.Navigation())
+}else{if(OpenLayers.Control.TouchNavigation){this.controls.push(new OpenLayers.Control.TouchNavigation())
+}}if(OpenLayers.Control.Zoom){this.controls.push(new OpenLayers.Control.Zoom())
+}else{if(OpenLayers.Control.PanZoom){this.controls.push(new OpenLayers.Control.PanZoom())
+}}if(OpenLayers.Control.ArgParser){this.controls.push(new OpenLayers.Control.ArgParser())
+}if(OpenLayers.Control.Attribution){this.controls.push(new OpenLayers.Control.Attribution())
+}}}for(var i=0,len=this.controls.length;
 i<len;
 i++){this.addControlToMap(this.controls[i])
 }this.popups=[];
 this.unloadDestroy=OpenLayers.Function.bind(this.destroy,this);
 OpenLayers.Event.observe(window,"unload",this.unloadDestroy);
-if(options&&options.layers){this.addLayers(options.layers);
-if(options.center){this.setCenter(options.center,options.zoom)
-}}},render:function(div){this.div=OpenLayers.Util.getElement(div);
+if(options&&options.layers){delete this.center;
+this.addLayers(options.layers);
+if(options.center&&!this.getCenter()){this.setCenter(options.center,options.zoom)
+}}},getViewport:function(){return this.viewPortDiv
+},render:function(div){this.div=OpenLayers.Util.getElement(div);
 OpenLayers.Element.addClass(this.div,"olMap");
-this.events.attachToElement(this.div);
 this.viewPortDiv.parentNode.removeChild(this.viewPortDiv);
 this.div.appendChild(this.viewPortDiv);
 this.updateSize()
@@ -5930,8 +6462,11 @@ i>=0;
 if(this.eventListeners){this.events.un(this.eventListeners);
 this.eventListeners=null
 }this.events.destroy();
-this.events=null
-},setOptions:function(options){OpenLayers.Util.extend(this,options)
+this.events=null;
+this.options=null
+},setOptions:function(options){var updatePxExtent=this.minPx&&options.restrictedExtent!=this.restrictedExtent;
+OpenLayers.Util.extend(this,options);
+updatePxExtent&&this.moveTo(this.getCachedCenter(),this.zoom,{forceZoomChange:true})
 },getTileSize:function(){return this.tileSize
 },getBy:function(array,property,match){var test=(typeof match.test=="function");
 var found=OpenLayers.Array.filter(this[array],function(item){return item[property]==match||(test&&match.test(item[property]))
@@ -5956,11 +6491,9 @@ i++){var layer=this.layers[i];
 this.setLayerZIndex(layer,i)
 }},addLayer:function(layer){for(var i=0,len=this.layers.length;
 i<len;
-i++){if(this.layers[i]==layer){var msg=OpenLayers.i18n("layerAlreadyAdded",{layerName:layer.name});
-OpenLayers.Console.warn(msg);
-return false
-}}if(this.allOverlays){layer.isBaseLayer=false
-}if(this.events.triggerEvent("preaddlayer",{layer:layer})===false){return
+i++){if(this.layers[i]==layer){return false
+}}if(this.events.triggerEvent("preaddlayer",{layer:layer})===false){return false
+}if(this.allOverlays){layer.isBaseLayer=false
 }layer.div.className="olLayerDiv";
 layer.div.style.overflow="";
 this.setLayerZIndex(layer,this.layers.length);
@@ -5972,11 +6505,14 @@ if(layer.isBaseLayer||(this.allOverlays&&!this.baseLayer)){if(this.baseLayer==nu
 }else{layer.setVisibility(false)
 }}else{layer.redraw()
 }this.events.triggerEvent("addlayer",{layer:layer});
-layer.afterAdd()
+layer.events.triggerEvent("added",{map:this,layer:layer});
+layer.afterAdd();
+return true
 },addLayers:function(layers){for(var i=0,len=layers.length;
 i<len;
 i++){this.addLayer(layers[i])
-}},removeLayer:function(layer,setNewBaseLayer){if(setNewBaseLayer==null){setNewBaseLayer=true
+}},removeLayer:function(layer,setNewBaseLayer){if(this.events.triggerEvent("preremovelayer",{layer:layer})===false){return
+}if(setNewBaseLayer==null){setNewBaseLayer=true
 }if(layer.isFixed){this.viewPortDiv.removeChild(layer.div)
 }else{this.layerContainerDiv.removeChild(layer.div)
 }OpenLayers.Util.removeItem(this.layers,layer);
@@ -5989,7 +6525,8 @@ i++){var iLayer=this.layers[i];
 if(iLayer.isBaseLayer||this.allOverlays){this.setBaseLayer(iLayer);
 break
 }}}}this.resetLayersZIndex();
-this.events.triggerEvent("removelayer",{layer:layer})
+this.events.triggerEvent("removelayer",{layer:layer});
+layer.events.triggerEvent("removed",{map:this,layer:layer})
 },getNumLayers:function(){return this.layers.length
 },getLayerIndex:function(layer){return OpenLayers.Util.indexOf(this.layers,layer)
 },setLayerIndex:function(layer,idx){var base=this.getLayerIndex(layer);
@@ -6005,13 +6542,13 @@ if(this.allOverlays){if(idx===0){this.setBaseLayer(layer)
 }else{if(this.baseLayer!==this.layers[0]){this.setBaseLayer(this.layers[0])
 }}}}},raiseLayer:function(layer,delta){var idx=this.getLayerIndex(layer)+delta;
 this.setLayerIndex(layer,idx)
-},setBaseLayer:function(newBaseLayer){if(newBaseLayer!=this.baseLayer){if(OpenLayers.Util.indexOf(this.layers,newBaseLayer)!=-1){var center=this.getCenter();
+},setBaseLayer:function(newBaseLayer){if(newBaseLayer!=this.baseLayer){if(OpenLayers.Util.indexOf(this.layers,newBaseLayer)!=-1){var center=this.getCachedCenter();
 var newResolution=OpenLayers.Util.getResolutionFromScale(this.getScale(),newBaseLayer.units);
 if(this.baseLayer!=null&&!this.allOverlays){this.baseLayer.setVisibility(false)
 }this.baseLayer=newBaseLayer;
-this.viewRequestID++;
-if(!this.allOverlays||this.baseLayer.visibility){this.baseLayer.setVisibility(true)
-}if(center!=null){var newZoom=this.getZoomForResolution(newResolution||this.resolution,true);
+if(!this.allOverlays||this.baseLayer.visibility){this.baseLayer.setVisibility(true);
+if(this.baseLayer.inRange===false){this.baseLayer.redraw()
+}}if(center!=null){var newZoom=this.getZoomForResolution(newResolution||this.resolution,true);
 this.setCenter(center,newZoom,false,true)
 }this.events.triggerEvent("changebaselayer",{layer:this.baseLayer})
 }}},addControl:function(control,px){this.controls.push(control);
@@ -6060,7 +6597,7 @@ if(oldSize==null){this.size=oldSize=newSize
 for(var i=0,len=this.layers.length;
 i<len;
 i++){this.layers[i].onMapResize()
-}var center=this.getCenter();
+}var center=this.getCachedCenter();
 if(this.baseLayer!=null&&center!=null){var zoom=this.getZoom();
 this.zoom=null;
 this.setCenter(center,zoom)
@@ -6071,46 +6608,92 @@ size.h=this.div.offsetHeight
 size.h=parseInt(this.div.style.height)
 }return size
 },calculateBounds:function(center,resolution){var extent=null;
-if(center==null){center=this.getCenter()
+if(center==null){center=this.getCachedCenter()
 }if(resolution==null){resolution=this.getResolution()
-}if((center!=null)&&(resolution!=null)){var size=this.getSize();
-var w_deg=size.w*resolution;
-var h_deg=size.h*resolution;
-extent=new OpenLayers.Bounds(center.lon-w_deg/2,center.lat-h_deg/2,center.lon+w_deg/2,center.lat+h_deg/2)
+}if((center!=null)&&(resolution!=null)){var halfWDeg=(this.size.w*resolution)/2;
+var halfHDeg=(this.size.h*resolution)/2;
+extent=new OpenLayers.Bounds(center.lon-halfWDeg,center.lat-halfHDeg,center.lon+halfWDeg,center.lat+halfHDeg)
 }return extent
 },getCenter:function(){var center=null;
-if(this.center){center=this.center.clone()
+var cachedCenter=this.getCachedCenter();
+if(cachedCenter){center=cachedCenter.clone()
 }return center
+},getCachedCenter:function(){if(!this.center&&this.size){this.center=this.getLonLatFromViewPortPx({x:this.size.w/2,y:this.size.h/2})
+}return this.center
 },getZoom:function(){return this.zoom
 },pan:function(dx,dy,options){options=OpenLayers.Util.applyDefaults(options,{animate:true,dragging:false});
-var centerPx=this.getViewPortPxFromLonLat(this.getCenter());
+if(options.dragging){if(dx!=0||dy!=0){this.moveByPx(dx,dy)
+}}else{var centerPx=this.getViewPortPxFromLonLat(this.getCachedCenter());
 var newCenterPx=centerPx.add(dx,dy);
-if(!options.dragging||!newCenterPx.equals(centerPx)){var newCenterLonLat=this.getLonLatFromViewPortPx(newCenterPx);
+if(this.dragging||!newCenterPx.equals(centerPx)){var newCenterLonLat=this.getLonLatFromViewPortPx(newCenterPx);
 if(options.animate){this.panTo(newCenterLonLat)
-}else{this.setCenter(newCenterLonLat,null,options.dragging)
-}}},panTo:function(lonlat){if(this.panMethod&&this.getExtent().scale(this.panRatio).containsLonLat(lonlat)){if(!this.panTween){this.panTween=new OpenLayers.Tween(this.panMethod)
-}var center=this.getCenter();
-if(lonlat.lon==center.lon&&lonlat.lat==center.lat){return
-}var from={lon:center.lon,lat:center.lat};
-var to={lon:lonlat.lon,lat:lonlat.lat};
-this.panTween.start(from,to,this.panDuration,{callbacks:{start:OpenLayers.Function.bind(function(lonlat){this.events.triggerEvent("movestart")
-},this),eachStep:OpenLayers.Function.bind(function(lonlat){lonlat=new OpenLayers.LonLat(lonlat.lon,lonlat.lat);
-this.moveTo(lonlat,this.zoom,{dragging:true,noEvent:true})
-},this),done:OpenLayers.Function.bind(function(lonlat){lonlat=new OpenLayers.LonLat(lonlat.lon,lonlat.lat);
-this.moveTo(lonlat,this.zoom,{noEvent:true});
+}else{this.moveTo(newCenterLonLat);
+if(this.dragging){this.dragging=false;
+this.events.triggerEvent("moveend")
+}}}}},panTo:function(lonlat){if(this.panMethod&&this.getExtent().scale(this.panRatio).containsLonLat(lonlat)){if(!this.panTween){this.panTween=new OpenLayers.Tween(this.panMethod)
+}var center=this.getCachedCenter();
+if(lonlat.equals(center)){return
+}var from=this.getPixelFromLonLat(center);
+var to=this.getPixelFromLonLat(lonlat);
+var vector={x:to.x-from.x,y:to.y-from.y};
+var last={x:0,y:0};
+this.panTween.start({x:0,y:0},vector,this.panDuration,{callbacks:{eachStep:OpenLayers.Function.bind(function(px){var x=px.x-last.x,y=px.y-last.y;
+this.moveByPx(x,y);
+last.x=Math.round(px.x);
+last.y=Math.round(px.y)
+},this),done:OpenLayers.Function.bind(function(px){this.moveTo(lonlat);
+this.dragging=false;
 this.events.triggerEvent("moveend")
 },this)}})
 }else{this.setCenter(lonlat)
-}},setCenter:function(lonlat,zoom,dragging,forceZoomChange){this.moveTo(lonlat,zoom,{dragging:dragging,forceZoomChange:forceZoomChange,caller:"setCenter"})
-},moveTo:function(lonlat,zoom,options){if(!options){options={}
+}},setCenter:function(lonlat,zoom,dragging,forceZoomChange){this.panTween&&this.panTween.stop();
+this.moveTo(lonlat,zoom,{dragging:dragging,forceZoomChange:forceZoomChange})
+},moveByPx:function(dx,dy){var hw=this.size.w/2;
+var hh=this.size.h/2;
+var x=hw+dx;
+var y=hh+dy;
+var wrapDateLine=this.baseLayer.wrapDateLine;
+var xRestriction=0;
+var yRestriction=0;
+if(this.restrictedExtent){xRestriction=hw;
+yRestriction=hh;
+wrapDateLine=false
+}dx=wrapDateLine||x<=this.maxPx.x-xRestriction&&x>=this.minPx.x+xRestriction?Math.round(dx):0;
+dy=y<=this.maxPx.y-yRestriction&&y>=this.minPx.y+yRestriction?Math.round(dy):0;
+if(dx||dy){if(!this.dragging){this.dragging=true;
+this.events.triggerEvent("movestart")
+}this.center=null;
+if(dx){this.layerContainerDiv.style.left=parseInt(this.layerContainerDiv.style.left)-dx+"px";
+this.minPx.x-=dx;
+this.maxPx.x-=dx
+}if(dy){this.layerContainerDiv.style.top=parseInt(this.layerContainerDiv.style.top)-dy+"px";
+this.minPx.y-=dy;
+this.maxPx.y-=dy
+}var layer,i,len;
+for(i=0,len=this.layers.length;
+i<len;
+++i){layer=this.layers[i];
+if(layer.visibility&&(layer===this.baseLayer||layer.inRange)){layer.moveByPx(dx,dy);
+layer.events.triggerEvent("move")
+}}this.events.triggerEvent("move")
+}},adjustZoom:function(zoom){var resolution,resolutions=this.baseLayer.resolutions,maxResolution=this.getMaxExtent().getWidth()/this.size.w;
+if(this.getResolutionForZoom(zoom)>maxResolution){for(var i=zoom|0,ii=resolutions.length;
+i<ii;
+++i){if(resolutions[i]<=maxResolution){zoom=i;
+break
+}}}return zoom
+},moveTo:function(lonlat,zoom,options){if(lonlat!=null&&!(lonlat instanceof OpenLayers.LonLat)){lonlat=new OpenLayers.LonLat(lonlat)
+}if(!options){options={}
 }if(zoom!=null){zoom=parseFloat(zoom);
 if(!this.fractionalZoom){zoom=Math.round(zoom)
-}}var dragging=options.dragging;
+}}if(this.baseLayer.wrapDateLine){var requestedZoom=zoom;
+zoom=this.adjustZoom(zoom);
+if(zoom!==requestedZoom){lonlat=this.getCenter()
+}}var dragging=options.dragging||this.dragging;
 var forceZoomChange=options.forceZoomChange;
-var noEvent=options.noEvent;
-if(this.panTween&&options.caller=="setCenter"){this.panTween.stop()
-}if(!this.center&&!this.isValidLonLat(lonlat)){lonlat=this.maxExtent.getCenterLonLat()
-}if(this.restrictedExtent!=null){if(lonlat==null){lonlat=this.getCenter()
+if(!this.getCachedCenter()&&!this.isValidLonLat(lonlat)){lonlat=this.maxExtent.getCenterLonLat();
+this.center=lonlat.clone()
+}if(this.restrictedExtent!=null){if(lonlat==null){lonlat=this.center
 }if(zoom==null){zoom=this.getZoom()
 }var resolution=this.getResolutionForZoom(zoom);
 var extent=this.calculateBounds(lonlat,resolution);
@@ -6123,45 +6706,61 @@ if(extent.getWidth()>this.restrictedExtent.getWidth()){lonlat=new OpenLayers.Lon
 }else{if(extent.top>this.restrictedExtent.top){lonlat=lonlat.add(0,this.restrictedExtent.top-extent.top)
 }}}}}var zoomChanged=forceZoomChange||((this.isValidZoomLevel(zoom))&&(zoom!=this.getZoom()));
 var centerChanged=(this.isValidLonLat(lonlat))&&(!lonlat.equals(this.center));
-if(zoomChanged||centerChanged||!dragging){if(!this.dragging&&!noEvent){this.events.triggerEvent("movestart")
-}if(centerChanged){if((!zoomChanged)&&(this.center)){this.centerLayerContainer(lonlat)
+if(zoomChanged||centerChanged||dragging){dragging||this.events.triggerEvent("movestart");
+if(centerChanged){if(!zoomChanged&&this.center){this.centerLayerContainer(lonlat)
 }this.center=lonlat.clone()
-}if((zoomChanged)||(this.layerContainerOrigin==null)){this.layerContainerOrigin=this.center.clone();
+}var res=zoomChanged?this.getResolutionForZoom(zoom):this.getResolution();
+if(zoomChanged||this.layerContainerOrigin==null){this.layerContainerOrigin=this.getCachedCenter();
 this.layerContainerDiv.style.left="0px";
-this.layerContainerDiv.style.top="0px"
+this.layerContainerDiv.style.top="0px";
+var maxExtent=this.getMaxExtent({restricted:true});
+var maxExtentCenter=maxExtent.getCenterLonLat();
+var lonDelta=this.center.lon-maxExtentCenter.lon;
+var latDelta=maxExtentCenter.lat-this.center.lat;
+var extentWidth=Math.round(maxExtent.getWidth()/res);
+var extentHeight=Math.round(maxExtent.getHeight()/res);
+this.minPx={x:(this.size.w-extentWidth)/2-lonDelta/res,y:(this.size.h-extentHeight)/2-latDelta/res};
+this.maxPx={x:this.minPx.x+Math.round(maxExtent.getWidth()/res),y:this.minPx.y+Math.round(maxExtent.getHeight()/res)}
 }if(zoomChanged){this.zoom=zoom;
-this.resolution=this.getResolutionForZoom(zoom);
-this.viewRequestID++
+this.resolution=res
 }var bounds=this.getExtent();
-if(this.baseLayer.visibility){this.baseLayer.moveTo(bounds,zoomChanged,dragging);
-if(dragging){this.baseLayer.events.triggerEvent("move")
-}else{this.baseLayer.events.triggerEvent("moveend",{zoomChanged:zoomChanged})
-}}bounds=this.baseLayer.getExtent();
-for(var i=0,len=this.layers.length;
-i<len;
-i++){var layer=this.layers[i];
+if(this.baseLayer.visibility){this.baseLayer.moveTo(bounds,zoomChanged,options.dragging);
+options.dragging||this.baseLayer.events.triggerEvent("moveend",{zoomChanged:zoomChanged})
+}bounds=this.baseLayer.getExtent();
+for(var i=this.layers.length-1;
+i>=0;
+--i){var layer=this.layers[i];
 if(layer!==this.baseLayer&&!layer.isBaseLayer){var inRange=layer.calculateInRange();
 if(layer.inRange!=inRange){layer.inRange=inRange;
 if(!inRange){layer.display(false)
 }this.events.triggerEvent("changelayer",{layer:layer,property:"visibility"})
-}if(inRange&&layer.visibility){layer.moveTo(bounds,zoomChanged,dragging);
-if(dragging){layer.events.triggerEvent("move")
-}else{layer.events.triggerEvent("moveend",{zoomChanged:zoomChanged})
-}}}}if(zoomChanged){for(var i=0,len=this.popups.length;
+}if(inRange&&layer.visibility){layer.moveTo(bounds,zoomChanged,options.dragging);
+options.dragging||layer.events.triggerEvent("moveend",{zoomChanged:zoomChanged})
+}}}this.events.triggerEvent("move");
+dragging||this.events.triggerEvent("moveend");
+if(zoomChanged){for(var i=0,len=this.popups.length;
 i<len;
 i++){this.popups[i].updatePosition()
-}}this.events.triggerEvent("move");
-if(zoomChanged){this.events.triggerEvent("zoomend")
-}}if(!dragging&&!noEvent){this.events.triggerEvent("moveend")
-}this.dragging=!!dragging
-},centerLayerContainer:function(lonlat){var originPx=this.getViewPortPxFromLonLat(this.layerContainerOrigin);
+}this.events.triggerEvent("zoomend")
+}}},centerLayerContainer:function(lonlat){var originPx=this.getViewPortPxFromLonLat(this.layerContainerOrigin);
 var newPx=this.getViewPortPxFromLonLat(lonlat);
-if((originPx!=null)&&(newPx!=null)){this.layerContainerDiv.style.left=Math.round(originPx.x-newPx.x)+"px";
-this.layerContainerDiv.style.top=Math.round(originPx.y-newPx.y)+"px"
+if((originPx!=null)&&(newPx!=null)){var oldLeft=parseInt(this.layerContainerDiv.style.left);
+var oldTop=parseInt(this.layerContainerDiv.style.top);
+var newLeft=Math.round(originPx.x-newPx.x);
+var newTop=Math.round(originPx.y-newPx.y);
+this.layerContainerDiv.style.left=newLeft+"px";
+this.layerContainerDiv.style.top=newTop+"px";
+var dx=oldLeft-newLeft;
+var dy=oldTop-newTop;
+this.minPx.x-=dx;
+this.maxPx.x-=dx;
+this.minPx.y-=dy;
+this.maxPx.y-=dy
 }},isValidZoomLevel:function(zoomLevel){return((zoomLevel!=null)&&(zoomLevel>=0)&&(zoomLevel<this.getNumZoomLevels()))
 },isValidLonLat:function(lonlat){var valid=false;
 if(lonlat!=null){var maxExtent=this.getMaxExtent();
-valid=maxExtent.containsLonLat(lonlat)
+var worldBounds=this.baseLayer.wrapDateLine&&maxExtent;
+valid=maxExtent.containsLonLat(lonlat,{worldBounds:worldBounds})
 }return valid
 },getProjection:function(){var projection=this.getProjectionObject();
 return projection?projection.getCode():null
@@ -6205,7 +6804,8 @@ if(this.baseLayer!=null){zoom=this.baseLayer.getZoomForResolution(resolution,clo
 },zoomTo:function(zoom){if(this.isValidZoomLevel(zoom)){this.setCenter(null,zoom)
 }},zoomIn:function(){this.zoomTo(this.getZoom()+1)
 },zoomOut:function(){this.zoomTo(this.getZoom()-1)
-},zoomToExtent:function(bounds,closest){var center=bounds.getCenterLonLat();
+},zoomToExtent:function(bounds,closest){if(!(bounds instanceof OpenLayers.Bounds)){bounds=new OpenLayers.Bounds(bounds)
+}var center=bounds.getCenterLonLat();
 if(this.baseLayer.wrapDateLine){var maxExtent=this.getMaxExtent();
 bounds=bounds.clone();
 while(bounds.right<bounds.left){bounds.right+=maxExtent.getWidth()
@@ -6215,11 +6815,10 @@ while(bounds.right<bounds.left){bounds.right+=maxExtent.getWidth()
 var maxExtent=this.getMaxExtent({restricted:restricted});
 this.zoomToExtent(maxExtent)
 },zoomToScale:function(scale,closest){var res=OpenLayers.Util.getResolutionFromScale(scale,this.baseLayer.units);
-var size=this.getSize();
-var w_deg=size.w*res;
-var h_deg=size.h*res;
-var center=this.getCenter();
-var extent=new OpenLayers.Bounds(center.lon-w_deg/2,center.lat-h_deg/2,center.lon+w_deg/2,center.lat+h_deg/2);
+var halfWDeg=(this.size.w*res)/2;
+var halfHDeg=(this.size.h*res)/2;
+var center=this.getCachedCenter();
+var extent=new OpenLayers.Bounds(center.lon-halfWDeg,center.lat-halfHDeg,center.lon+halfWDeg,center.lat+halfHDeg);
 this.zoomToExtent(extent,closest)
 },getLonLatFromViewPortPx:function(viewPortPx){var lonlat=null;
 if(this.baseLayer!=null){lonlat=this.baseLayer.getLonLatFromViewPortPx(viewPortPx)
@@ -6232,7 +6831,7 @@ if(this.baseLayer!=null){px=this.baseLayer.getViewPortPxFromLonLat(lonlat)
 px.x=Math.round(px.x);
 px.y=Math.round(px.y);
 return px
-},getGeodesicPixelSize:function(px){var lonlat=px?this.getLonLatFromPixel(px):(this.getCenter()||new OpenLayers.LonLat(0,0));
+},getGeodesicPixelSize:function(px){var lonlat=px?this.getLonLatFromPixel(px):(this.getCachedCenter()||new OpenLayers.LonLat(0,0));
 var res=this.getResolution();
 var left=lonlat.add(-res/2,0);
 var right=lonlat.add(res/2,0);
@@ -6262,35 +6861,77 @@ return this.getLonLatFromViewPortPx(px)
 return this.getLayerPxFromViewPortPx(px)
 },CLASS_NAME:"OpenLayers.Map"});
 OpenLayers.Map.TILE_WIDTH=256;
-OpenLayers.Map.TILE_HEIGHT=256;OpenLayers.Projection=OpenLayers.Class({proj:null,projCode:null,initialize:function(projCode,options){OpenLayers.Util.extend(this,options);
+OpenLayers.Map.TILE_HEIGHT=256;OpenLayers.Projection=OpenLayers.Class({proj:null,projCode:null,titleRegEx:/\+title=[^\+]*/,initialize:function(projCode,options){OpenLayers.Util.extend(this,options);
 this.projCode=projCode;
 if(window.Proj4js){this.proj=new Proj4js.Proj(projCode)
 }},getCode:function(){return this.proj?this.proj.srsCode:this.projCode
 },getUnits:function(){return this.proj?this.proj.units:null
 },toString:function(){return this.getCode()
-},equals:function(projection){if(projection&&projection.getCode){return this.getCode()==projection.getCode()
-}else{return false
-}},destroy:function(){delete this.proj;
+},equals:function(projection){var p=projection,equals=false;
+if(p){if(!(p instanceof OpenLayers.Projection)){p=new OpenLayers.Projection(p)
+}if(window.Proj4js&&this.proj.defData&&p.proj.defData){equals=this.proj.defData.replace(this.titleRegEx,"")==p.proj.defData.replace(this.titleRegEx,"")
+}else{if(p.getCode){var source=this.getCode(),target=p.getCode();
+equals=source==target||!!OpenLayers.Projection.transforms[source]&&OpenLayers.Projection.transforms[source][target]===OpenLayers.Projection.nullTransform
+}}}return equals
+},destroy:function(){delete this.proj;
 delete this.projCode
 },CLASS_NAME:"OpenLayers.Projection"});
 OpenLayers.Projection.transforms={};
-OpenLayers.Projection.addTransform=function(from,to,method){if(!OpenLayers.Projection.transforms[from]){OpenLayers.Projection.transforms[from]={}
+OpenLayers.Projection.defaults={"EPSG:4326":{units:"degrees",maxExtent:[-180,-90,180,90],yx:true},"CRS:84":{units:"degrees",maxExtent:[-180,-90,180,90]},"EPSG:900913":{units:"m",maxExtent:[-20037508.34,-20037508.34,20037508.34,20037508.34]}};
+OpenLayers.Projection.addTransform=function(from,to,method){if(method===OpenLayers.Projection.nullTransform){var defaults=OpenLayers.Projection.defaults[from];
+if(defaults&&!OpenLayers.Projection.defaults[to]){OpenLayers.Projection.defaults[to]=defaults
+}}if(!OpenLayers.Projection.transforms[from]){OpenLayers.Projection.transforms[from]={}
 }OpenLayers.Projection.transforms[from][to]=method
 };
-OpenLayers.Projection.transform=function(point,source,dest){if(source.proj&&dest.proj){point=Proj4js.transform(source.proj,dest.proj,point)
-}else{if(source&&dest&&OpenLayers.Projection.transforms[source.getCode()]&&OpenLayers.Projection.transforms[source.getCode()][dest.getCode()]){OpenLayers.Projection.transforms[source.getCode()][dest.getCode()](point)
-}}return point
-};OpenLayers.Layer=OpenLayers.Class({id:null,name:null,div:null,opacity:null,alwaysInRange:null,EVENT_TYPES:["loadstart","loadend","loadcancel","visibilitychanged","move","moveend"],RESOLUTION_PROPERTIES:["scales","resolutions","maxScale","minScale","maxResolution","minResolution","numZoomLevels","maxZoomLevel"],events:null,map:null,isBaseLayer:false,alpha:false,displayInLayerSwitcher:true,visibility:true,attribution:null,inRange:false,imageSize:null,imageOffset:null,options:null,eventListeners:null,gutter:0,projection:null,units:null,scales:null,resolutions:null,maxExtent:null,minExtent:null,maxResolution:null,minResolution:null,numZoomLevels:null,minScale:null,maxScale:null,displayOutsideMaxExtent:false,wrapDateLine:false,transitionEffect:null,SUPPORTED_TRANSITIONS:["resize"],metadata:{},initialize:function(name,options){this.addOptions(options);
+OpenLayers.Projection.transform=function(point,source,dest){if(source&&dest){if(!(source instanceof OpenLayers.Projection)){source=new OpenLayers.Projection(source)
+}if(!(dest instanceof OpenLayers.Projection)){dest=new OpenLayers.Projection(dest)
+}if(source.proj&&dest.proj){point=Proj4js.transform(source.proj,dest.proj,point)
+}else{var sourceCode=source.getCode();
+var destCode=dest.getCode();
+var transforms=OpenLayers.Projection.transforms;
+if(transforms[sourceCode]&&transforms[sourceCode][destCode]){transforms[sourceCode][destCode](point)
+}}}return point
+};
+OpenLayers.Projection.nullTransform=function(point){return point
+};
+(function(){var pole=20037508.34;
+function inverseMercator(xy){xy.x=180*xy.x/pole;
+xy.y=180/Math.PI*(2*Math.atan(Math.exp((xy.y/pole)*Math.PI))-Math.PI/2);
+return xy
+}function forwardMercator(xy){xy.x=xy.x*pole/180;
+xy.y=Math.log(Math.tan((90+xy.y)*Math.PI/360))/Math.PI*pole;
+return xy
+}function map(base,codes){var add=OpenLayers.Projection.addTransform;
+var same=OpenLayers.Projection.nullTransform;
+var i,len,code,other,j;
+for(i=0,len=codes.length;
+i<len;
+++i){code=codes[i];
+add(base,code,forwardMercator);
+add(code,base,inverseMercator);
+for(j=i+1;
+j<len;
+++j){other=codes[j];
+add(code,other,same);
+add(other,code,same)
+}}}var mercator=["EPSG:900913","EPSG:3857","EPSG:102113","EPSG:102100"],geographic=["CRS:84","urn:ogc:def:crs:EPSG:6.6:4326","EPSG:4326"],i;
+for(i=mercator.length-1;
+i>=0;
+--i){map(mercator[i],geographic)
+}for(i=geographic.length-1;
+i>=0;
+--i){map(geographic[i],mercator)
+}})();OpenLayers.Layer=OpenLayers.Class({id:null,name:null,div:null,opacity:1,alwaysInRange:null,RESOLUTION_PROPERTIES:["scales","resolutions","maxScale","minScale","maxResolution","minResolution","numZoomLevels","maxZoomLevel"],events:null,map:null,isBaseLayer:false,alpha:false,displayInLayerSwitcher:true,visibility:true,attribution:null,inRange:false,imageSize:null,options:null,eventListeners:null,gutter:0,projection:null,units:null,scales:null,resolutions:null,maxExtent:null,minExtent:null,maxResolution:null,minResolution:null,numZoomLevels:null,minScale:null,maxScale:null,displayOutsideMaxExtent:false,wrapDateLine:false,metadata:null,initialize:function(name,options){this.metadata={};
+this.addOptions(options);
 this.name=name;
 if(this.id==null){this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_");
 this.div=OpenLayers.Util.createDiv(this.id);
 this.div.style.width="100%";
 this.div.style.height="100%";
 this.div.dir="ltr";
-this.events=new OpenLayers.Events(this,this.div,this.EVENT_TYPES);
+this.events=new OpenLayers.Events(this,this.div);
 if(this.eventListeners instanceof Object){this.events.on(this.eventListeners)
-}}if(this.wrapDateLine){this.displayOutsideMaxExtent=true
-}},destroy:function(setNewBaseLayer){if(setNewBaseLayer==null){setNewBaseLayer=true
+}}},destroy:function(setNewBaseLayer){if(setNewBaseLayer==null){setNewBaseLayer=true
 }if(this.map!=null){this.map.removeLayer(this,setNewBaseLayer)
 }this.projection=null;
 this.map=null;
@@ -6310,14 +6951,20 @@ for(var o in this.options){options[o]=this[o]
 }return options
 },setName:function(newName){if(newName!=this.name){this.name=newName;
 if(this.map!=null){this.map.events.triggerEvent("changelayer",{layer:this,property:"name"})
-}}},addOptions:function(newOptions){if(this.options==null){this.options={}
-}OpenLayers.Util.extend(this.options,newOptions);
+}}},addOptions:function(newOptions,reinitialize){if(this.options==null){this.options={}
+}if(newOptions){if(typeof newOptions.projection=="string"){newOptions.projection=new OpenLayers.Projection(newOptions.projection)
+}if(newOptions.projection){OpenLayers.Util.applyDefaults(newOptions,OpenLayers.Projection.defaults[newOptions.projection.getCode()])
+}if(newOptions.maxExtent&&!(newOptions.maxExtent instanceof OpenLayers.Bounds)){newOptions.maxExtent=new OpenLayers.Bounds(newOptions.maxExtent)
+}if(newOptions.minExtent&&!(newOptions.minExtent instanceof OpenLayers.Bounds)){newOptions.minExtent=new OpenLayers.Bounds(newOptions.minExtent)
+}}OpenLayers.Util.extend(this.options,newOptions);
 OpenLayers.Util.extend(this,newOptions);
-if(typeof this.projection=="string"){this.projection=new OpenLayers.Projection(this.projection)
-}if(this.projection&&this.projection.getUnits()){this.units=this.projection.getUnits()
-}if(this.map){var properties=this.RESOLUTION_PROPERTIES.concat(["projection","units","minExtent","maxExtent"]);
+if(this.projection&&this.projection.getUnits()){this.units=this.projection.getUnits()
+}if(this.map){var resolution=this.map.getResolution();
+var properties=this.RESOLUTION_PROPERTIES.concat(["projection","units","minExtent","maxExtent"]);
 for(var o in newOptions){if(newOptions.hasOwnProperty(o)&&OpenLayers.Util.indexOf(properties,o)>=0){this.initResolutions();
-break
+if(reinitialize&&this.map.baseLayer===this){this.map.setCenter(this.map.getCenter(),this.map.getZoomForResolution(resolution),false,true);
+this.map.events.triggerEvent("changebaselayer",{layer:this})
+}break
 }}}},onMapResize:function(){},redraw:function(){var redrawn=false;
 if(this.map){this.inRange=this.calculateInRange();
 var extent=this.getExtent();
@@ -6329,7 +6976,7 @@ redrawn=true
 },moveTo:function(bounds,zoomChanged,dragging){var display=this.visibility;
 if(!this.isBaseLayer){display=display&&this.inRange
 }this.display(display)
-},setMap:function(map){if(this.map==null){this.map=map;
+},moveByPx:function(dx,dy){},setMap:function(map){if(this.map==null){this.map=map;
 this.maxExtent=this.maxExtent||this.map.maxExtent;
 this.minExtent=this.minExtent||this.map.minExtent;
 this.projection=this.projection||this.map.projection;
@@ -6343,8 +6990,7 @@ this.div.style.display=show?"":"none"
 }},afterAdd:function(){},removeMap:function(map){},getImageSize:function(bounds){return(this.imageSize||this.tileSize)
 },setTileSize:function(size){var tileSize=(size)?size:((this.tileSize)?this.tileSize:this.map.getTileSize());
 this.tileSize=tileSize;
-if(this.gutter){this.imageOffset=new OpenLayers.Pixel(-this.gutter,-this.gutter);
-this.imageSize=new OpenLayers.Size(tileSize.w+(2*this.gutter),tileSize.h+(2*this.gutter))
+if(this.gutter){this.imageSize=new OpenLayers.Size(tileSize.w+(2*this.gutter),tileSize.h+(2*this.gutter))
 }},getVisibility:function(){return this.visibility
 },setVisibility:function(visibility){if(visibility!=this.visibility){this.visibility=visibility;
 this.display(visibility);
@@ -6359,11 +7005,11 @@ inRange=((resolution>=this.minResolution)&&(resolution<=this.maxResolution))
 }}return inRange
 },setIsBaseLayer:function(isBaseLayer){if(isBaseLayer!=this.isBaseLayer){this.isBaseLayer=isBaseLayer;
 if(this.map!=null){this.map.events.triggerEvent("changebaselayer",{layer:this})
-}}},initResolutions:function(){var i,len;
+}}},initResolutions:function(){var i,len,p;
 var props={},alwaysInRange=true;
 for(i=0,len=this.RESOLUTION_PROPERTIES.length;
 i<len;
-i++){var p=this.RESOLUTION_PROPERTIES[i];
+i++){p=this.RESOLUTION_PROPERTIES[i];
 props[p]=this.options[p];
 if(alwaysInRange&&this.options[p]){alwaysInRange=false
 }}if(this.alwaysInRange==null){this.alwaysInRange=alwaysInRange
@@ -6371,7 +7017,7 @@ if(alwaysInRange&&this.options[p]){alwaysInRange=false
 }if(props.resolutions==null){props.resolutions=this.calculateResolutions(props)
 }if(props.resolutions==null){for(i=0,len=this.RESOLUTION_PROPERTIES.length;
 i<len;
-i++){var p=this.RESOLUTION_PROPERTIES[i];
+i++){p=this.RESOLUTION_PROPERTIES[i];
 props[p]=this.options[p]!=null?this.options[p]:this.map[p]
 }if(props.resolutions==null){props.resolutions=this.resolutionsFromScales(props.scales)
 }if(props.resolutions==null){props.resolutions=this.calculateResolutions(props)
@@ -6405,19 +7051,22 @@ for(i=0;
 i<len;
 i++){resolutions[i]=OpenLayers.Util.getResolutionFromScale(scales[i],this.units)
 }return resolutions
-},calculateResolutions:function(props){var maxResolution=props.maxResolution;
+},calculateResolutions:function(props){var viewSize,wRes,hRes;
+var maxResolution=props.maxResolution;
 if(props.minScale!=null){maxResolution=OpenLayers.Util.getResolutionFromScale(props.minScale,this.units)
-}else{if(maxResolution=="auto"&&this.maxExtent!=null){var viewSize=this.map.getSize();
-var wRes=this.maxExtent.getWidth()/viewSize.w;
-var hRes=this.maxExtent.getHeight()/viewSize.h;
+}else{if(maxResolution=="auto"&&this.maxExtent!=null){viewSize=this.map.getSize();
+wRes=this.maxExtent.getWidth()/viewSize.w;
+hRes=this.maxExtent.getHeight()/viewSize.h;
 maxResolution=Math.max(wRes,hRes)
 }}var minResolution=props.minResolution;
 if(props.maxScale!=null){minResolution=OpenLayers.Util.getResolutionFromScale(props.maxScale,this.units)
-}else{if(props.minResolution=="auto"&&this.minExtent!=null){var viewSize=this.map.getSize();
-var wRes=this.minExtent.getWidth()/viewSize.w;
-var hRes=this.minExtent.getHeight()/viewSize.h;
+}else{if(props.minResolution=="auto"&&this.minExtent!=null){viewSize=this.map.getSize();
+wRes=this.minExtent.getWidth()/viewSize.w;
+hRes=this.minExtent.getHeight()/viewSize.h;
 minResolution=Math.max(wRes,hRes)
-}}var maxZoomLevel=props.maxZoomLevel;
+}}if(typeof maxResolution!=="number"&&typeof minResolution!=="number"&&this.maxExtent!=null){var tileSize=this.map.getTileSize();
+maxResolution=Math.max(this.maxExtent.getWidth()/tileSize.w,this.maxExtent.getHeight()/tileSize.h)
+}var maxZoomLevel=props.maxZoomLevel;
 var numZoomLevels=props.numZoomLevels;
 if(typeof minResolution==="number"&&typeof maxResolution==="number"&&numZoomLevels===undefined){var ratio=maxResolution/minResolution;
 numZoomLevels=Math.floor(Math.log(ratio)/Math.log(2))+1
@@ -6447,13 +7096,13 @@ var high=Math.ceil(zoom);
 resolution=this.resolutions[low]-((zoom-low)*(this.resolutions[low]-this.resolutions[high]))
 }else{resolution=this.resolutions[Math.round(zoom)]
 }return resolution
-},getZoomForResolution:function(resolution,closest){var zoom;
+},getZoomForResolution:function(resolution,closest){var zoom,i,len;
 if(this.map.fractionalZoom){var lowZoom=0;
 var highZoom=this.resolutions.length-1;
 var highRes=this.resolutions[lowZoom];
 var lowRes=this.resolutions[highZoom];
 var res;
-for(var i=0,len=this.resolutions.length;
+for(i=0,len=this.resolutions.length;
 i<len;
 ++i){res=this.resolutions[i];
 if(res>=resolution){highRes=res;
@@ -6466,7 +7115,7 @@ if(dRes>0){zoom=lowZoom+((highRes-resolution)/dRes)
 }else{zoom=lowZoom
 }}else{var diff;
 var minDiff=Number.POSITIVE_INFINITY;
-for(var i=0,len=this.resolutions.length;
+for(i=0,len=this.resolutions.length;
 i<len;
 i++){if(closest){diff=Math.abs(this.resolutions[i]-resolution);
 if(diff>minDiff){break
@@ -6475,178 +7124,188 @@ if(diff>minDiff){break
 }}}zoom=Math.max(0,i-1)
 }return zoom
 },getLonLatFromViewPortPx:function(viewPortPx){var lonlat=null;
-if(viewPortPx!=null){var size=this.map.getSize();
-var center=this.map.getCenter();
-if(center){var res=this.map.getResolution();
-var delta_x=viewPortPx.x-(size.w/2);
-var delta_y=viewPortPx.y-(size.h/2);
-lonlat=new OpenLayers.LonLat(center.lon+delta_x*res,center.lat-delta_y*res);
+var map=this.map;
+if(viewPortPx!=null&&map.minPx){var res=map.getResolution();
+var maxExtent=map.getMaxExtent({restricted:true});
+var lon=(viewPortPx.x-map.minPx.x)*res+maxExtent.left;
+var lat=(map.minPx.y-viewPortPx.y)*res+maxExtent.top;
+lonlat=new OpenLayers.LonLat(lon,lat);
 if(this.wrapDateLine){lonlat=lonlat.wrapDateLine(this.maxExtent)
-}}}return lonlat
-},getViewPortPxFromLonLat:function(lonlat){var px=null;
-if(lonlat!=null){var resolution=this.map.getResolution();
-var extent=this.map.getExtent();
+}}return lonlat
+},getViewPortPxFromLonLat:function(lonlat,resolution){var px=null;
+if(lonlat!=null){resolution=resolution||this.map.getResolution();
+var extent=this.map.calculateBounds(null,resolution);
 px=new OpenLayers.Pixel((1/resolution*(lonlat.lon-extent.left)),(1/resolution*(extent.top-lonlat.lat)))
 }return px
 },setOpacity:function(opacity){if(opacity!=this.opacity){this.opacity=opacity;
-for(var i=0,len=this.div.childNodes.length;
+var childNodes=this.div.childNodes;
+for(var i=0,len=childNodes.length;
 i<len;
-++i){var element=this.div.childNodes[i].firstChild;
-OpenLayers.Util.modifyDOMElement(element,null,null,null,null,null,null,opacity)
+++i){var element=childNodes[i].firstChild||childNodes[i];
+var lastChild=childNodes[i].lastChild;
+if(lastChild&&lastChild.nodeName.toLowerCase()==="iframe"){element=lastChild.parentNode
+}OpenLayers.Util.modifyDOMElement(element,null,null,null,null,null,null,opacity)
 }if(this.map!=null){this.map.events.triggerEvent("changelayer",{layer:this,property:"opacity"})
 }}},getZIndex:function(){return this.div.style.zIndex
 },setZIndex:function(zIndex){this.div.style.zIndex=zIndex
 },adjustBounds:function(bounds){if(this.gutter){var mapGutter=this.gutter*this.map.getResolution();
 bounds=new OpenLayers.Bounds(bounds.left-mapGutter,bounds.bottom-mapGutter,bounds.right+mapGutter,bounds.top+mapGutter)
-}if(this.wrapDateLine){var wrappingOptions={rightTolerance:this.getResolution()};
+}if(this.wrapDateLine){var wrappingOptions={rightTolerance:this.getResolution(),leftTolerance:this.getResolution()};
 bounds=bounds.wrapDateLine(this.maxExtent,wrappingOptions)
 }return bounds
-},CLASS_NAME:"OpenLayers.Layer"});OpenLayers.Tile=OpenLayers.Class({EVENT_TYPES:["loadstart","loadend","reload","unload"],events:null,id:null,layer:null,url:null,bounds:null,size:null,position:null,isLoading:false,initialize:function(layer,position,bounds,url,size){this.layer=layer;
+},CLASS_NAME:"OpenLayers.Layer"});OpenLayers.Tile=OpenLayers.Class({events:null,eventListeners:null,id:null,layer:null,url:null,bounds:null,size:null,position:null,isLoading:false,initialize:function(layer,position,bounds,url,size,options){this.layer=layer;
 this.position=position.clone();
-this.bounds=bounds.clone();
+this.setBounds(bounds);
 this.url=url;
-this.size=size.clone();
-this.id=OpenLayers.Util.createUniqueID("Tile_");
-this.events=new OpenLayers.Events(this,null,this.EVENT_TYPES)
-},unload:function(){if(this.isLoading){this.isLoading=false;
+if(size){this.size=size.clone()
+}this.id=OpenLayers.Util.createUniqueID("Tile_");
+OpenLayers.Util.extend(this,options);
+this.events=new OpenLayers.Events(this);
+if(this.eventListeners instanceof Object){this.events.on(this.eventListeners)
+}},unload:function(){if(this.isLoading){this.isLoading=false;
 this.events.triggerEvent("unload")
 }},destroy:function(){this.layer=null;
 this.bounds=null;
 this.size=null;
 this.position=null;
-this.events.destroy();
+if(this.eventListeners){this.events.un(this.eventListeners)
+}this.events.destroy();
+this.eventListeners=null;
 this.events=null
-},clone:function(obj){if(obj==null){obj=new OpenLayers.Tile(this.layer,this.position,this.bounds,this.url,this.size)
-}OpenLayers.Util.applyDefaults(obj,this);
-return obj
-},draw:function(){var maxExtent=this.layer.maxExtent;
-var withinMaxExtent=(maxExtent&&this.bounds.intersectsBounds(maxExtent,false));
-this.shouldDraw=(withinMaxExtent||this.layer.displayOutsideMaxExtent);
-this.clear();
-return this.shouldDraw
+},draw:function(deferred){if(!deferred){this.clear()
+}var draw=this.shouldDraw();
+if(draw&&!deferred){draw=this.events.triggerEvent("beforedraw")!==false
+}return draw
+},shouldDraw:function(){var withinMaxExtent=false,maxExtent=this.layer.maxExtent;
+if(maxExtent){var map=this.layer.map;
+var worldBounds=map.baseLayer.wrapDateLine&&map.getMaxExtent();
+if(this.bounds.intersectsBounds(maxExtent,{inclusive:false,worldBounds:worldBounds})){withinMaxExtent=true
+}}return withinMaxExtent||this.layer.displayOutsideMaxExtent
+},setBounds:function(bounds){bounds=bounds.clone();
+if(this.layer.map.baseLayer.wrapDateLine){var worldExtent=this.layer.map.getMaxExtent(),tolerance=this.layer.map.getResolution();
+bounds=bounds.wrapDateLine(worldExtent,{leftTolerance:tolerance,rightTolerance:tolerance})
+}this.bounds=bounds
 },moveTo:function(bounds,position,redraw){if(redraw==null){redraw=true
-}this.bounds=bounds.clone();
+}this.setBounds(bounds);
 this.position=position.clone();
 if(redraw){this.draw()
-}},clear:function(){},getBoundsFromBaseLayer:function(position){var msg=OpenLayers.i18n("reprojectDeprecated",{layerName:this.layer.name});
-OpenLayers.Console.warn(msg);
-var topLeft=this.layer.map.getLonLatFromLayerPx(position);
-var bottomRightPx=position.clone();
-bottomRightPx.x+=this.size.w;
-bottomRightPx.y+=this.size.h;
-var bottomRight=this.layer.map.getLonLatFromLayerPx(bottomRightPx);
-if(topLeft.lon>bottomRight.lon){if(topLeft.lon<0){topLeft.lon=-180-(topLeft.lon+180)
-}else{bottomRight.lon=180+bottomRight.lon+180
-}}var bounds=new OpenLayers.Bounds(topLeft.lon,bottomRight.lat,bottomRight.lon,topLeft.lat);
-return bounds
-},showTile:function(){if(this.shouldDraw){this.show()
-}},show:function(){},hide:function(){},CLASS_NAME:"OpenLayers.Tile"});OpenLayers.Tile.Image=OpenLayers.Class(OpenLayers.Tile,{url:null,imgDiv:null,frame:null,layerAlphaHack:null,isBackBuffer:false,lastRatio:1,isFirstDraw:true,backBufferTile:null,initialize:function(layer,position,bounds,url,size){OpenLayers.Tile.prototype.initialize.apply(this,arguments);
+}},clear:function(draw){},CLASS_NAME:"OpenLayers.Tile"});OpenLayers.Tile.Image=OpenLayers.Class(OpenLayers.Tile,{url:null,imgDiv:null,frame:null,imageReloadAttempts:null,layerAlphaHack:null,asyncRequestId:null,blankImageUrl:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAQAIBRAA7",maxGetUrlLength:null,canvasContext:null,crossOriginKeyword:null,initialize:function(layer,position,bounds,url,size,options){OpenLayers.Tile.prototype.initialize.apply(this,arguments);
 this.url=url;
-this.frame=document.createElement("div");
-this.frame.style.overflow="hidden";
+this.layerAlphaHack=this.layer.alpha&&OpenLayers.Util.alphaHack();
+if(this.maxGetUrlLength!=null||this.layer.gutter||this.layerAlphaHack){this.frame=document.createElement("div");
 this.frame.style.position="absolute";
-this.layerAlphaHack=this.layer.alpha&&OpenLayers.Util.alphaHack()
-},destroy:function(){if(this.imgDiv!=null){if(this.layerAlphaHack){OpenLayers.Event.stopObservingElement(this.imgDiv.childNodes[0])
-}OpenLayers.Event.stopObservingElement(this.imgDiv);
-if(this.imgDiv.parentNode==this.frame){this.frame.removeChild(this.imgDiv);
-this.imgDiv.map=null
-}this.imgDiv.urls=null;
-this.imgDiv.src=OpenLayers.Util.getImagesLocation()+"blank.gif"
-}this.imgDiv=null;
-if((this.frame!=null)&&(this.frame.parentNode==this.layer.div)){this.layer.div.removeChild(this.frame)
-}this.frame=null;
-if(this.backBufferTile){this.backBufferTile.destroy();
-this.backBufferTile=null
-}this.layer.events.unregister("loadend",this,this.resetBackBuffer);
+this.frame.style.overflow="hidden"
+}if(this.maxGetUrlLength!=null){OpenLayers.Util.extend(this,OpenLayers.Tile.Image.IFrame)
+}},destroy:function(){if(this.imgDiv){this.clear();
+this.imgDiv=null;
+this.frame=null
+}this.asyncRequestId=null;
 OpenLayers.Tile.prototype.destroy.apply(this,arguments)
-},clone:function(obj){if(obj==null){obj=new OpenLayers.Tile.Image(this.layer,this.position,this.bounds,this.url,this.size)
-}obj=OpenLayers.Tile.prototype.clone.apply(this,[obj]);
-obj.imgDiv=null;
-return obj
-},draw:function(){if(this.layer!=this.layer.map.baseLayer&&this.layer.reproject){this.bounds=this.getBoundsFromBaseLayer(this.position)
-}var drawTile=OpenLayers.Tile.prototype.draw.apply(this,arguments);
-if((OpenLayers.Util.indexOf(this.layer.SUPPORTED_TRANSITIONS,this.layer.transitionEffect)!=-1)||this.layer.singleTile){if(drawTile){if(!this.backBufferTile){this.backBufferTile=this.clone();
-this.backBufferTile.hide();
-this.backBufferTile.isBackBuffer=true;
-this.events.register("loadend",this,this.resetBackBuffer);
-this.layer.events.register("loadend",this,this.resetBackBuffer)
-}this.startTransition()
-}else{if(this.backBufferTile){this.backBufferTile.clear()
-}}}else{if(drawTile&&this.isFirstDraw){this.events.register("loadend",this,this.showTile);
-this.isFirstDraw=false
-}}if(!drawTile){return false
-}if(this.isLoading){this.events.triggerEvent("reload")
+},draw:function(){var drawn=OpenLayers.Tile.prototype.draw.apply(this,arguments);
+if(drawn){if(this.layer!=this.layer.map.baseLayer&&this.layer.reproject){this.bounds=this.getBoundsFromBaseLayer(this.position)
+}if(this.isLoading){this._loadEvent="reload"
 }else{this.isLoading=true;
-this.events.triggerEvent("loadstart")
-}return this.renderTile()
-},resetBackBuffer:function(){this.showTile();
-if(this.backBufferTile&&(this.isFirstDraw||!this.layer.numLoadingTiles)){this.isFirstDraw=false;
-var maxExtent=this.layer.maxExtent;
-var withinMaxExtent=(maxExtent&&this.bounds.intersectsBounds(maxExtent,false));
-if(withinMaxExtent){this.backBufferTile.position=this.position;
-this.backBufferTile.bounds=this.bounds;
-this.backBufferTile.size=this.size;
-this.backBufferTile.imageSize=this.layer.getImageSize(this.bounds)||this.size;
-this.backBufferTile.imageOffset=this.layer.imageOffset;
-this.backBufferTile.resolution=this.layer.getResolution();
-this.backBufferTile.renderTile()
-}this.backBufferTile.hide()
-}},renderTile:function(){if(this.imgDiv==null){this.initImgDiv()
-}this.imgDiv.viewRequestID=this.layer.map.viewRequestID;
-if(this.layer.async){this.layer.getURLasync(this.bounds,this,"url",this.positionImage)
-}else{if(this.layer.url instanceof Array){this.imgDiv.urls=this.layer.url.slice()
-}this.url=this.layer.getURL(this.bounds);
-this.positionImage()
-}return true
-},positionImage:function(){if(this.layer===null){return
-}OpenLayers.Util.modifyDOMElement(this.frame,null,this.position,this.size);
-var imageSize=this.layer.getImageSize(this.bounds);
-if(this.layerAlphaHack){OpenLayers.Util.modifyAlphaImageDiv(this.imgDiv,null,null,imageSize,this.url)
-}else{OpenLayers.Util.modifyDOMElement(this.imgDiv,null,null,imageSize);
-this.imgDiv.src=this.url
-}},clear:function(){if(this.imgDiv){this.hide();
-if(OpenLayers.Tile.Image.useBlankTile){this.imgDiv.src=OpenLayers.Util.getImagesLocation()+"blank.gif"
-}}},initImgDiv:function(){var offset=this.layer.imageOffset;
-var size=this.layer.getImageSize(this.bounds);
-if(this.layerAlphaHack){this.imgDiv=OpenLayers.Util.createAlphaImageDiv(null,offset,size,null,"relative",null,null,null,true)
-}else{this.imgDiv=OpenLayers.Util.createImage(null,offset,size,null,"relative",null,null,true)
-}this.imgDiv.className="olTileImage";
-this.frame.style.zIndex=this.isBackBuffer?0:1;
-this.frame.appendChild(this.imgDiv);
-this.layer.div.appendChild(this.frame);
-if(this.layer.opacity!=null){OpenLayers.Util.modifyDOMElement(this.imgDiv,null,null,null,null,null,null,this.layer.opacity)
-}this.imgDiv.map=this.layer.map;
-var onload=function(){if(this.isLoading){this.isLoading=false;
-this.events.triggerEvent("loadend")
-}};
-if(this.layerAlphaHack){OpenLayers.Event.observe(this.imgDiv.childNodes[0],"load",OpenLayers.Function.bind(onload,this))
-}else{OpenLayers.Event.observe(this.imgDiv,"load",OpenLayers.Function.bind(onload,this))
-}var onerror=function(){if(this.imgDiv._attempts>OpenLayers.IMAGE_RELOAD_ATTEMPTS){onload.call(this)
-}};
-OpenLayers.Event.observe(this.imgDiv,"error",OpenLayers.Function.bind(onerror,this))
-},checkImgURL:function(){if(this.layer){var loaded=this.layerAlphaHack?this.imgDiv.firstChild.src:this.imgDiv.src;
-if(!OpenLayers.Util.isEquivalentUrl(loaded,this.url)){this.hide()
-}}},startTransition:function(){if(!this.backBufferTile||!this.backBufferTile.imgDiv){return
-}var ratio=1;
-if(this.backBufferTile.resolution){ratio=this.backBufferTile.resolution/this.layer.getResolution()
-}if(ratio!=this.lastRatio){if(this.layer.transitionEffect=="resize"){var upperLeft=new OpenLayers.LonLat(this.backBufferTile.bounds.left,this.backBufferTile.bounds.top);
-var size=new OpenLayers.Size(this.backBufferTile.size.w*ratio,this.backBufferTile.size.h*ratio);
-var px=this.layer.map.getLayerPxFromLonLat(upperLeft);
-OpenLayers.Util.modifyDOMElement(this.backBufferTile.frame,null,px,size);
-var imageSize=this.backBufferTile.imageSize;
-imageSize=new OpenLayers.Size(imageSize.w*ratio,imageSize.h*ratio);
-var imageOffset=this.backBufferTile.imageOffset;
-if(imageOffset){imageOffset=new OpenLayers.Pixel(imageOffset.x*ratio,imageOffset.y*ratio)
-}OpenLayers.Util.modifyDOMElement(this.backBufferTile.imgDiv,null,imageOffset,imageSize);
-this.backBufferTile.show()
-}}else{if(this.layer.singleTile){this.backBufferTile.show()
-}else{this.backBufferTile.hide()
-}}this.lastRatio=ratio
-},show:function(){this.frame.style.display="";
-if(OpenLayers.Util.indexOf(this.layer.SUPPORTED_TRANSITIONS,this.layer.transitionEffect)!=-1){if(navigator.userAgent.toLowerCase().indexOf("gecko")!=-1){this.frame.scrollLeft=this.frame.scrollLeft
-}}},hide:function(){this.frame.style.display="none"
-},CLASS_NAME:"OpenLayers.Tile.Image"});
-OpenLayers.Tile.Image.useBlankTile=(OpenLayers.Util.getBrowserName()=="safari"||OpenLayers.Util.getBrowserName()=="opera");OpenLayers.Layer.Image=OpenLayers.Class(OpenLayers.Layer,{isBaseLayer:true,url:null,extent:null,size:null,tile:null,aspectRatio:null,initialize:function(name,url,extent,size,options){this.url=url;
+this._loadEvent="loadstart"
+}this.positionTile();
+this.renderTile()
+}else{this.unload()
+}return drawn
+},renderTile:function(){this.layer.div.appendChild(this.getTile());
+if(this.layer.async){var id=this.asyncRequestId=(this.asyncRequestId||0)+1;
+this.layer.getURLasync(this.bounds,function(url){if(id==this.asyncRequestId){this.url=url;
+this.initImage()
+}},this)
+}else{this.url=this.layer.getURL(this.bounds);
+this.initImage()
+}},positionTile:function(){var style=this.getTile().style,size=this.frame?this.size:this.layer.getImageSize(this.bounds);
+style.left=this.position.x+"%";
+style.top=this.position.y+"%";
+style.width=size.w+"%";
+style.height=size.h+"%"
+},clear:function(){OpenLayers.Tile.prototype.clear.apply(this,arguments);
+var img=this.imgDiv;
+if(img){OpenLayers.Event.stopObservingElement(img);
+var tile=this.getTile();
+if(tile.parentNode===this.layer.div){this.layer.div.removeChild(tile)
+}this.setImgSrc();
+if(this.layerAlphaHack===true){img.style.filter=""
+}OpenLayers.Element.removeClass(img,"olImageLoadError")
+}this.canvasContext=null
+},getImage:function(){if(!this.imgDiv){this.imgDiv=document.createElement("img");
+this.imgDiv.className="olTileImage";
+this.imgDiv.galleryImg="no";
+var style=this.imgDiv.style;
+if(this.frame){var left=0,top=0;
+if(this.layer.gutter){left=this.layer.gutter/this.layer.tileSize.w*100;
+top=this.layer.gutter/this.layer.tileSize.h*100
+}style.left=-left+"%";
+style.top=-top+"%";
+style.width=(2*left+100)+"%";
+style.height=(2*top+100)+"%"
+}style.visibility="hidden";
+style.opacity=0;
+if(this.layer.opacity<1){style.filter="alpha(opacity="+(this.layer.opacity*100)+")"
+}style.position="absolute";
+if(this.layerAlphaHack){style.paddingTop=style.height;
+style.height="0";
+style.width="100%"
+}if(this.frame){this.frame.appendChild(this.imgDiv)
+}}return this.imgDiv
+},initImage:function(){this.events.triggerEvent(this._loadEvent);
+var img=this.getImage();
+if(this.url&&img.getAttribute("src")==this.url){this.onImageLoad()
+}else{var load=OpenLayers.Function.bind(function(){OpenLayers.Event.stopObservingElement(img);
+OpenLayers.Event.observe(img,"load",OpenLayers.Function.bind(this.onImageLoad,this));
+OpenLayers.Event.observe(img,"error",OpenLayers.Function.bind(this.onImageError,this));
+this.imageReloadAttempts=0;
+this.setImgSrc(this.url)
+},this);
+if(img.getAttribute("src")==this.blankImageUrl){load()
+}else{OpenLayers.Event.observe(img,"load",load);
+OpenLayers.Event.observe(img,"error",load);
+if(this.crossOriginKeyword){img.removeAttribute("crossorigin")
+}img.src=this.blankImageUrl
+}}},setImgSrc:function(url){var img=this.imgDiv;
+img.style.visibility="hidden";
+img.style.opacity=0;
+if(url){if(this.crossOriginKeyword){if(url.substr(0,5)!=="data:"){img.setAttribute("crossorigin",this.crossOriginKeyword)
+}else{img.removeAttribute("crossorigin")
+}}img.src=url
+}},getTile:function(){return this.frame?this.frame:this.getImage()
+},createBackBuffer:function(){if(!this.imgDiv||this.isLoading){return
+}var backBuffer;
+if(this.frame){backBuffer=this.frame.cloneNode(false);
+backBuffer.appendChild(this.imgDiv)
+}else{backBuffer=this.imgDiv
+}this.imgDiv=null;
+return backBuffer
+},onImageLoad:function(){var img=this.imgDiv;
+OpenLayers.Event.stopObservingElement(img);
+img.style.visibility="inherit";
+img.style.opacity=this.layer.opacity;
+this.isLoading=false;
+this.canvasContext=null;
+this.events.triggerEvent("loadend");
+if(parseFloat(navigator.appVersion.split("MSIE")[1])<7&&this.layer&&this.layer.div){var span=document.createElement("span");
+span.style.display="none";
+var layerDiv=this.layer.div;
+layerDiv.appendChild(span);
+window.setTimeout(function(){span.parentNode===layerDiv&&span.parentNode.removeChild(span)
+},0)
+}if(this.layerAlphaHack===true){img.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+img.src+"', sizingMethod='scale')"
+}},onImageError:function(){var img=this.imgDiv;
+if(img.src!=null){this.imageReloadAttempts++;
+if(this.imageReloadAttempts<=OpenLayers.IMAGE_RELOAD_ATTEMPTS){this.setImgSrc(this.layer.getURL(this.bounds))
+}else{OpenLayers.Element.addClass(img,"olImageLoadError");
+this.events.triggerEvent("loaderror");
+this.onImageLoad()
+}}},getCanvasContext:function(){if(OpenLayers.CANVAS_SUPPORTED&&this.imgDiv&&!this.isLoading){if(!this.canvasContext){var canvas=document.createElement("canvas");
+canvas.width=this.size.w;
+canvas.height=this.size.h;
+this.canvasContext=canvas.getContext("2d");
+this.canvasContext.drawImage(this.imgDiv,0,0)
+}return this.canvasContext
+}},CLASS_NAME:"OpenLayers.Tile.Image"});OpenLayers.Layer.Image=OpenLayers.Class(OpenLayers.Layer,{isBaseLayer:true,url:null,extent:null,size:null,tile:null,aspectRatio:null,initialize:function(name,url,extent,size,options){this.url=url;
 this.extent=extent;
 this.maxExtent=extent;
 this.size=size;
@@ -6664,8 +7323,7 @@ return obj
 },moveTo:function(bounds,zoomChanged,dragging){OpenLayers.Layer.prototype.moveTo.apply(this,arguments);
 var firstRendering=(this.tile==null);
 if(zoomChanged||firstRendering){this.setTileSize();
-var ul=new OpenLayers.LonLat(this.extent.left,this.extent.top);
-var ulPx=this.map.getLayerPxFromLonLat(ul);
+var ulPx=this.map.getLayerPxFromLonLat({lon:this.extent.left,lat:this.extent.top});
 if(firstRendering){this.tile=new OpenLayers.Tile.Image(this,ulPx,this.extent,null,this.tileSize);
 this.addTileMonitoringHooks(this.tile)
 }else{this.tile.size=this.tileSize.clone();
@@ -6704,11 +7362,13 @@ i<len;
 i++){strings.push(this.components[i].toShortString())
 }return strings.join(",")
 },calculateBounds:function(){this.bounds=null;
-if(this.components&&this.components.length>0){this.setBounds(this.components[0].getBounds());
-for(var i=1,len=this.components.length;
+var bounds=new OpenLayers.Bounds();
+var components=this.components;
+if(components){for(var i=0,len=components.length;
 i<len;
-i++){this.extendBounds(this.components[i].getBounds())
-}}},addComponents:function(components){if(!(components instanceof Array)){components=[components]
+i++){bounds.extend(components[i].getBounds())
+}}if(bounds.left!=null&&bounds.bottom!=null&&bounds.right!=null&&bounds.top!=null){this.setBounds(bounds)
+}},addComponents:function(components){if(!(OpenLayers.Util.isArray(components))){components=[components]
 }for(var i=0,len=components.length;
 i<len;
 i++){this.addComponent(components[i])
@@ -6722,12 +7382,15 @@ this.components=components1.concat(components2)
 this.clearBounds();
 added=true
 }}return added
-},removeComponents:function(components){if(!(components instanceof Array)){components=[components]
+},removeComponents:function(components){var removed=false;
+if(!(OpenLayers.Util.isArray(components))){components=[components]
 }for(var i=components.length-1;
 i>=0;
---i){this.removeComponent(components[i])
-}},removeComponent:function(component){OpenLayers.Util.removeItem(this.components,component);
-this.clearBounds()
+--i){removed=this.removeComponent(components[i])||removed
+}return removed
+},removeComponent:function(component){OpenLayers.Util.removeItem(this.components,component);
+this.clearBounds();
+return true
 },getLength:function(){var length=0;
 for(var i=0,len=this.components.length;
 i<len;
@@ -6807,7 +7470,7 @@ if(min==0){break
 }}}return best
 },equals:function(geometry){var equivalent=true;
 if(!geometry||!geometry.CLASS_NAME||(this.CLASS_NAME!=geometry.CLASS_NAME)){equivalent=false
-}else{if(!(geometry.components instanceof Array)||(geometry.components.length!=this.components.length)){equivalent=false
+}else{if(!(OpenLayers.Util.isArray(geometry.components))||(geometry.components.length!=this.components.length)){equivalent=false
 }else{for(var i=0,len=this.components.length;
 i<len;
 ++i){if(!this.components[i].equals(geometry.components[i])){equivalent=false;
@@ -6876,11 +7539,9 @@ if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.equals(geome
 this.bounds=null
 }return this
 },getVertices:function(nodes){return[this]
-},CLASS_NAME:"OpenLayers.Geometry.Point"});OpenLayers.Geometry.MultiPoint=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Point"],initialize:function(components){OpenLayers.Geometry.Collection.prototype.initialize.apply(this,arguments)
-},addPoint:function(point,index){this.addComponent(point,index)
+},CLASS_NAME:"OpenLayers.Geometry.Point"});OpenLayers.Geometry.MultiPoint=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Point"],addPoint:function(point,index){this.addComponent(point,index)
 },removePoint:function(point){this.removeComponent(point)
-},CLASS_NAME:"OpenLayers.Geometry.MultiPoint"});OpenLayers.Geometry.Curve=OpenLayers.Class(OpenLayers.Geometry.MultiPoint,{componentTypes:["OpenLayers.Geometry.Point"],initialize:function(points){OpenLayers.Geometry.MultiPoint.prototype.initialize.apply(this,arguments)
-},getLength:function(){var length=0;
+},CLASS_NAME:"OpenLayers.Geometry.MultiPoint"});OpenLayers.Geometry.Curve=OpenLayers.Class(OpenLayers.Geometry.MultiPoint,{componentTypes:["OpenLayers.Geometry.Point"],getLength:function(){var length=0;
 if(this.components&&(this.components.length>1)){for(var i=1,len=this.components.length;
 i<len;
 i++){length+=this.components[i-1].distanceTo(this.components[i])
@@ -6896,9 +7557,10 @@ i++){p1=geom.components[i-1];
 p2=geom.components[i];
 length+=OpenLayers.Util.distVincenty({lon:p1.x,lat:p1.y},{lon:p2.x,lat:p2.y})
 }}return length*1000
-},CLASS_NAME:"OpenLayers.Geometry.Curve"});OpenLayers.Geometry.LineString=OpenLayers.Class(OpenLayers.Geometry.Curve,{initialize:function(points){OpenLayers.Geometry.Curve.prototype.initialize.apply(this,arguments)
-},removeComponent:function(point){if(this.components&&(this.components.length>2)){OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments)
-}},intersects:function(geometry){var intersect=false;
+},CLASS_NAME:"OpenLayers.Geometry.Curve"});OpenLayers.Geometry.LineString=OpenLayers.Class(OpenLayers.Geometry.Curve,{removeComponent:function(point){var removed=this.components&&(this.components.length>2);
+if(removed){OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments)
+}return removed
+},intersects:function(geometry){var intersect=false;
 var type=geometry.CLASS_NAME;
 if(type=="OpenLayers.Geometry.LineString"||type=="OpenLayers.Geometry.LinearRing"||type=="OpenLayers.Geometry.Point"){var segs1=this.getSortedSegments();
 var segs2;
@@ -7059,18 +7721,54 @@ if(dist<min){if(details){best={distance:min,x0:result.x1,y0:result.y1,x1:result.
 }}}}}else{best=geometry.distanceTo(this,options);
 if(details){best={distance:best.distance,x0:best.x1,y0:best.y1,x1:best.x0,y1:best.y0}
 }}}return best
-},CLASS_NAME:"OpenLayers.Geometry.LineString"});OpenLayers.Geometry.LinearRing=OpenLayers.Class(OpenLayers.Geometry.LineString,{componentTypes:["OpenLayers.Geometry.Point"],initialize:function(points){OpenLayers.Geometry.LineString.prototype.initialize.apply(this,arguments)
-},addComponent:function(point,index){var added=false;
+},simplify:function(tolerance){if(this&&this!==null){var points=this.getVertices();
+if(points.length<3){return this
+}var compareNumbers=function(a,b){return(a-b)
+};
+var douglasPeuckerReduction=function(points,firstPoint,lastPoint,tolerance){var maxDistance=0;
+var indexFarthest=0;
+for(var index=firstPoint,distance;
+index<lastPoint;
+index++){distance=perpendicularDistance(points[firstPoint],points[lastPoint],points[index]);
+if(distance>maxDistance){maxDistance=distance;
+indexFarthest=index
+}}if(maxDistance>tolerance&&indexFarthest!=firstPoint){pointIndexsToKeep.push(indexFarthest);
+douglasPeuckerReduction(points,firstPoint,indexFarthest,tolerance);
+douglasPeuckerReduction(points,indexFarthest,lastPoint,tolerance)
+}};
+var perpendicularDistance=function(point1,point2,point){var area=Math.abs(0.5*(point1.x*point2.y+point2.x*point.y+point.x*point1.y-point2.x*point1.y-point.x*point2.y-point1.x*point.y));
+var bottom=Math.sqrt(Math.pow(point1.x-point2.x,2)+Math.pow(point1.y-point2.y,2));
+var height=area/bottom*2;
+return height
+};
+var firstPoint=0;
+var lastPoint=points.length-1;
+var pointIndexsToKeep=[];
+pointIndexsToKeep.push(firstPoint);
+pointIndexsToKeep.push(lastPoint);
+while(points[firstPoint].equals(points[lastPoint])){lastPoint--;
+pointIndexsToKeep.push(lastPoint)
+}douglasPeuckerReduction(points,firstPoint,lastPoint,tolerance);
+var returnPoints=[];
+pointIndexsToKeep.sort(compareNumbers);
+for(var index=0;
+index<pointIndexsToKeep.length;
+index++){returnPoints.push(points[pointIndexsToKeep[index]])
+}return new OpenLayers.Geometry.LineString(returnPoints)
+}else{return this
+}},CLASS_NAME:"OpenLayers.Geometry.LineString"});OpenLayers.Geometry.LinearRing=OpenLayers.Class(OpenLayers.Geometry.LineString,{componentTypes:["OpenLayers.Geometry.Point"],addComponent:function(point,index){var added=false;
 var lastPoint=this.components.pop();
 if(index!=null||!point.equals(lastPoint)){added=OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,arguments)
 }var firstPoint=this.components[0];
 OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint]);
 return added
-},removeComponent:function(point){if(this.components.length>4){this.components.pop();
+},removeComponent:function(point){var removed=this.components&&(this.components.length>3);
+if(removed){this.components.pop();
 OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments);
 var firstPoint=this.components[0];
 OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint])
-}},move:function(x,y){for(var i=0,len=this.components.length;
+}return removed
+},move:function(x,y){for(var i=0,len=this.components.length;
 i<len-1;
 i++){this.components[i].move(x,y)
 }},rotate:function(angle,origin){for(var i=0,len=this.components.length;
@@ -7125,7 +7823,7 @@ area+=OpenLayers.Util.rad(p2.x-p1.x)*(2+Math.sin(OpenLayers.Util.rad(p1.y))+Math
 var digs=14;
 var px=approx(point.x,digs);
 var py=approx(point.y,digs);
-function getX(y,x1,y1,x2,y2){return(((x1-x2)*y)+((x2*y1)-(x1*y2)))/(y1-y2)
+function getX(y,x1,y1,x2,y2){return(y-y2)*((x2-x1)/(y2-y1))+x2
 }var numSeg=this.components.length-1;
 var start,end,x1,y1,x2,y2,cx,cy;
 var crosses=0;
@@ -7195,42 +7893,47 @@ this.control=this.map=null
 OpenLayers.Handler.MOD_NONE=0;
 OpenLayers.Handler.MOD_SHIFT=1;
 OpenLayers.Handler.MOD_CTRL=2;
-OpenLayers.Handler.MOD_ALT=4;OpenLayers.Handler.Point=OpenLayers.Class(OpenLayers.Handler,{point:null,layer:null,multi:false,drawing:false,mouseDown:false,lastDown:null,lastUp:null,persist:false,layerOptions:null,initialize:function(control,callbacks,options){if(!(options&&options.layerOptions&&options.layerOptions.styleMap)){this.style=OpenLayers.Util.extend(OpenLayers.Feature.Vector.style["default"],{})
+OpenLayers.Handler.MOD_ALT=4;OpenLayers.Handler.Point=OpenLayers.Class(OpenLayers.Handler,{point:null,layer:null,multi:false,citeCompliant:false,mouseDown:false,stoppedDown:null,lastDown:null,lastUp:null,persist:false,stopDown:false,stopUp:false,layerOptions:null,pixelTolerance:5,touch:false,lastTouchPx:null,initialize:function(control,callbacks,options){if(!(options&&options.layerOptions&&options.layerOptions.styleMap)){this.style=OpenLayers.Util.extend(OpenLayers.Feature.Vector.style["default"],{})
 }OpenLayers.Handler.prototype.initialize.apply(this,arguments)
 },activate:function(){if(!OpenLayers.Handler.prototype.activate.apply(this,arguments)){return false
-}var options=OpenLayers.Util.extend({displayInLayerSwitcher:false,calculateInRange:OpenLayers.Function.True},this.layerOptions);
+}var options=OpenLayers.Util.extend({displayInLayerSwitcher:false,calculateInRange:OpenLayers.Function.True,wrapDateLine:this.citeCompliant},this.layerOptions);
 this.layer=new OpenLayers.Layer.Vector(this.CLASS_NAME,options);
 this.map.addLayer(this.layer);
 return true
-},createFeature:function(pixel){var lonlat=this.map.getLonLatFromPixel(pixel);
-this.point=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat));
+},createFeature:function(pixel){var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
+var geometry=new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+this.point=new OpenLayers.Feature.Vector(geometry);
 this.callback("create",[this.point.geometry,this.point]);
 this.point.geometry.clearBounds();
 this.layer.addFeatures([this.point],{silent:true})
 },deactivate:function(){if(!OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){return false
-}if(this.drawing){this.cancel()
-}this.destroyFeature();
-if(this.layer.map!=null){this.layer.destroy(false)
+}this.cancel();
+if(this.layer.map!=null){this.destroyFeature(true);
+this.layer.destroy(false)
 }this.layer=null;
+this.touch=false;
 return true
-},destroyFeature:function(){if(this.layer){this.layer.destroyFeatures()
+},destroyFeature:function(force){if(this.layer&&(force||!this.persist)){this.layer.destroyFeatures()
 }this.point=null
-},finalize:function(cancel){var key=cancel?"cancel":"done";
-this.drawing=false;
+},destroyPersistedFeature:function(){var layer=this.layer;
+if(layer&&layer.features.length>1){this.layer.features[0].destroy()
+}},finalize:function(cancel){var key=cancel?"cancel":"done";
 this.mouseDown=false;
 this.lastDown=null;
 this.lastUp=null;
+this.lastTouchPx=null;
 this.callback(key,[this.geometryClone()]);
-if(cancel||!this.persist){this.destroyFeature()
-}},cancel:function(){this.finalize(true)
+this.destroyFeature(cancel)
+},cancel:function(){this.finalize(true)
 },click:function(evt){OpenLayers.Event.stop(evt);
 return false
 },dblclick:function(evt){OpenLayers.Event.stop(evt);
 return false
-},modifyFeature:function(pixel){var lonlat=this.map.getLonLatFromPixel(pixel);
+},modifyFeature:function(pixel){if(!this.point){this.createFeature(pixel)
+}var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
 this.point.geometry.x=lonlat.lon;
 this.point.geometry.y=lonlat.lat;
-this.callback("modify",[this.point.geometry,this.point]);
+this.callback("modify",[this.point.geometry,this.point,false]);
 this.point.geometry.clearBounds();
 this.drawFeature()
 },drawFeature:function(){this.layer.drawFeature(this.point,this.style)
@@ -7239,41 +7942,96 @@ if(geometry&&this.multi){geometry=new OpenLayers.Geometry.MultiPoint([geometry])
 }return geometry
 },geometryClone:function(){var geom=this.getGeometry();
 return geom&&geom.clone()
-},mousedown:function(evt){if(!this.checkModifiers(evt)){return true
-}if(this.lastDown&&this.lastDown.equals(evt.xy)){return true
-}this.drawing=true;
-if(this.lastDown==null){if(this.persist){this.destroyFeature()
-}this.createFeature(evt.xy)
-}else{this.modifyFeature(evt.xy)
-}this.lastDown=evt.xy;
-return false
-},mousemove:function(evt){if(this.drawing){this.modifyFeature(evt.xy)
+},mousedown:function(evt){return this.down(evt)
+},touchstart:function(evt){if(!this.touch){this.touch=true;
+this.map.events.un({mousedown:this.mousedown,mouseup:this.mouseup,mousemove:this.mousemove,click:this.click,dblclick:this.dblclick,scope:this})
+}this.lastTouchPx=evt.xy;
+return this.down(evt)
+},mousemove:function(evt){return this.move(evt)
+},touchmove:function(evt){this.lastTouchPx=evt.xy;
+return this.move(evt)
+},mouseup:function(evt){return this.up(evt)
+},touchend:function(evt){evt.xy=this.lastTouchPx;
+return this.up(evt)
+},down:function(evt){this.mouseDown=true;
+this.lastDown=evt.xy;
+if(!this.touch){this.modifyFeature(evt.xy)
+}this.stoppedDown=this.stopDown;
+return !this.stopDown
+},move:function(evt){if(!this.touch&&(!this.mouseDown||this.stoppedDown)){this.modifyFeature(evt.xy)
 }return true
-},mouseup:function(evt){if(this.drawing){this.finalize();
-return false
+},up:function(evt){this.mouseDown=false;
+this.stoppedDown=this.stopDown;
+if(!this.checkModifiers(evt)){return true
+}if(this.lastUp&&this.lastUp.equals(evt.xy)){return true
+}if(this.lastDown&&this.passesTolerance(this.lastDown,evt.xy,this.pixelTolerance)){if(this.touch){this.modifyFeature(evt.xy)
+}if(this.persist){this.destroyPersistedFeature()
+}this.lastUp=evt.xy;
+this.finalize();
+return !this.stopUp
 }else{return true
-}},CLASS_NAME:"OpenLayers.Handler.Point"});OpenLayers.Handler.Path=OpenLayers.Class(OpenLayers.Handler.Point,{line:null,freehand:false,freehandToggle:"shiftKey",initialize:function(control,callbacks,options){OpenLayers.Handler.Point.prototype.initialize.apply(this,arguments)
-},createFeature:function(pixel){var lonlat=this.control.map.getLonLatFromPixel(pixel);
-this.point=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat));
+}},mouseout:function(evt){if(OpenLayers.Util.mouseLeft(evt,this.map.viewPortDiv)){this.stoppedDown=this.stopDown;
+this.mouseDown=false
+}},passesTolerance:function(pixel1,pixel2,tolerance){var passes=true;
+if(tolerance!=null&&pixel1&&pixel2){var dist=pixel1.distanceTo(pixel2);
+if(dist>tolerance){passes=false
+}}return passes
+},CLASS_NAME:"OpenLayers.Handler.Point"});OpenLayers.Handler.Path=OpenLayers.Class(OpenLayers.Handler.Point,{line:null,maxVertices:null,doubleTouchTolerance:20,freehand:false,freehandToggle:"shiftKey",timerId:null,redoStack:null,createFeature:function(pixel){var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
+var geometry=new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+this.point=new OpenLayers.Feature.Vector(geometry);
 this.line=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString([this.point.geometry]));
 this.callback("create",[this.point.geometry,this.getSketch()]);
 this.point.geometry.clearBounds();
 this.layer.addFeatures([this.line,this.point],{silent:true})
-},destroyFeature:function(){OpenLayers.Handler.Point.prototype.destroyFeature.apply(this);
+},destroyFeature:function(force){OpenLayers.Handler.Point.prototype.destroyFeature.call(this,force);
 this.line=null
-},removePoint:function(){if(this.point){this.layer.removeFeatures([this.point])
+},destroyPersistedFeature:function(){var layer=this.layer;
+if(layer&&layer.features.length>2){this.layer.features[0].destroy()
+}},removePoint:function(){if(this.point){this.layer.removeFeatures([this.point])
 }},addPoint:function(pixel){this.layer.removeFeatures([this.point]);
-var lonlat=this.control.map.getLonLatFromPixel(pixel);
+var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
 this.point=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat));
 this.line.geometry.addComponent(this.point.geometry,this.line.geometry.components.length);
+this.layer.addFeatures([this.point]);
 this.callback("point",[this.point.geometry,this.getGeometry()]);
 this.callback("modify",[this.point.geometry,this.getSketch()]);
+this.drawFeature();
+delete this.redoStack
+},insertXY:function(x,y){this.line.geometry.addComponent(new OpenLayers.Geometry.Point(x,y),this.getCurrentPointIndex());
+this.drawFeature();
+delete this.redoStack
+},insertDeltaXY:function(dx,dy){var previousIndex=this.getCurrentPointIndex()-1;
+var p0=this.line.geometry.components[previousIndex];
+if(p0&&!isNaN(p0.x)&&!isNaN(p0.y)){this.insertXY(p0.x+dx,p0.y+dy)
+}},insertDirectionLength:function(direction,length){direction*=Math.PI/180;
+var dx=length*Math.cos(direction);
+var dy=length*Math.sin(direction);
+this.insertDeltaXY(dx,dy)
+},insertDeflectionLength:function(deflection,length){var previousIndex=this.getCurrentPointIndex()-1;
+if(previousIndex>0){var p1=this.line.geometry.components[previousIndex];
+var p0=this.line.geometry.components[previousIndex-1];
+var theta=Math.atan2(p1.y-p0.y,p1.x-p0.x);
+this.insertDirectionLength((theta*180/Math.PI)+deflection,length)
+}},getCurrentPointIndex:function(){return this.line.geometry.components.length-1
+},undo:function(){var geometry=this.line.geometry;
+var components=geometry.components;
+var index=this.getCurrentPointIndex()-1;
+var target=components[index];
+var undone=geometry.removeComponent(target);
+if(undone){if(!this.redoStack){this.redoStack=[]
+}this.redoStack.push(target);
 this.drawFeature()
+}return undone
+},redo:function(){var target=this.redoStack&&this.redoStack.pop();
+if(target){this.line.geometry.addComponent(target,this.getCurrentPointIndex());
+this.drawFeature()
+}return !!target
 },freehandMode:function(evt){return(this.freehandToggle&&evt[this.freehandToggle])?!this.freehand:this.freehand
-},modifyFeature:function(pixel){var lonlat=this.control.map.getLonLatFromPixel(pixel);
+},modifyFeature:function(pixel,drawing){if(!this.line){this.createFeature(pixel)
+}var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
 this.point.geometry.x=lonlat.lon;
 this.point.geometry.y=lonlat.lat;
-this.callback("modify",[this.point.geometry,this.getSketch()]);
+this.callback("modify",[this.point.geometry,this.getSketch(),drawing]);
 this.point.geometry.clearBounds();
 this.drawFeature()
 },drawFeature:function(){this.layer.drawFeature(this.line,this.style);
@@ -7282,31 +8040,49 @@ this.layer.drawFeature(this.point,this.style)
 },getGeometry:function(){var geometry=this.line&&this.line.geometry;
 if(geometry&&this.multi){geometry=new OpenLayers.Geometry.MultiLineString([geometry])
 }return geometry
-},mousedown:function(evt){if(this.lastDown&&this.lastDown.equals(evt.xy)){return false
-}if(this.lastDown==null){if(this.persist){this.destroyFeature()
-}this.createFeature(evt.xy)
-}else{if((this.lastUp==null)||!this.lastUp.equals(evt.xy)){this.addPoint(evt.xy)
-}}this.mouseDown=true;
-this.lastDown=evt.xy;
-this.drawing=true;
+},touchstart:function(evt){if(this.timerId&&this.passesTolerance(this.lastTouchPx,evt.xy,this.doubleTouchTolerance)){this.finishGeometry();
+window.clearTimeout(this.timerId);
+this.timerId=null;
 return false
-},mousemove:function(evt){if(this.drawing){if(this.mouseDown&&this.freehandMode(evt)){this.addPoint(evt.xy)
-}else{this.modifyFeature(evt.xy)
-}}return true
-},mouseup:function(evt){this.mouseDown=false;
-if(this.drawing){if(this.freehandMode(evt)){this.removePoint();
+}else{if(this.timerId){window.clearTimeout(this.timerId);
+this.timerId=null
+}this.timerId=window.setTimeout(OpenLayers.Function.bind(function(){this.timerId=null
+},this),300);
+return OpenLayers.Handler.Point.prototype.touchstart.call(this,evt)
+}},down:function(evt){var stopDown=this.stopDown;
+if(this.freehandMode(evt)){stopDown=true;
+if(this.touch){this.modifyFeature(evt.xy,!!this.lastUp);
+OpenLayers.Event.stop(evt)
+}}if(!this.touch&&(!this.lastDown||!this.passesTolerance(this.lastDown,evt.xy,this.pixelTolerance))){this.modifyFeature(evt.xy,!!this.lastUp)
+}this.mouseDown=true;
+this.lastDown=evt.xy;
+this.stoppedDown=stopDown;
+return !stopDown
+},move:function(evt){if(this.stoppedDown&&this.freehandMode(evt)){if(this.persist){this.destroyPersistedFeature()
+}if(this.maxVertices&&this.line&&this.line.geometry.components.length===this.maxVertices){this.removePoint();
 this.finalize()
-}else{if(this.lastUp==null){this.addPoint(evt.xy)
-}this.lastUp=evt.xy
+}else{this.addPoint(evt.xy)
 }return false
+}if(!this.touch&&(!this.mouseDown||this.stoppedDown)){this.modifyFeature(evt.xy,!!this.lastUp)
 }return true
-},dblclick:function(evt){if(!this.freehandMode(evt)){var index=this.line.geometry.components.length-1;
+},up:function(evt){if(this.mouseDown&&(!this.lastUp||!this.lastUp.equals(evt.xy))){if(this.stoppedDown&&this.freehandMode(evt)){if(this.persist){this.destroyPersistedFeature()
+}this.removePoint();
+this.finalize()
+}else{if(this.passesTolerance(this.lastDown,evt.xy,this.pixelTolerance)){if(this.touch){this.modifyFeature(evt.xy)
+}if(this.lastUp==null&&this.persist){this.destroyPersistedFeature()
+}this.addPoint(evt.xy);
+this.lastUp=evt.xy;
+if(this.line.geometry.components.length===this.maxVertices+1){this.finishGeometry()
+}}}}this.stoppedDown=this.stopDown;
+this.mouseDown=false;
+return !this.stopUp
+},finishGeometry:function(){var index=this.line.geometry.components.length-1;
 this.line.geometry.removeComponent(this.line.geometry.components[index]);
 this.removePoint();
 this.finalize()
+},dblclick:function(evt){if(!this.freehandMode(evt)){this.finishGeometry()
 }return false
-},CLASS_NAME:"OpenLayers.Handler.Path"});OpenLayers.Geometry.Polygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LinearRing"],initialize:function(components){OpenLayers.Geometry.Collection.prototype.initialize.apply(this,arguments)
-},getArea:function(){var area=0;
+},CLASS_NAME:"OpenLayers.Handler.Path"});OpenLayers.Geometry.Polygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LinearRing"],getArea:function(){var area=0;
 if(this.components&&(this.components.length>0)){area+=Math.abs(this.components[0].getArea());
 for(var i=1,len=this.components.length;
 i<len;
@@ -7368,15 +8144,68 @@ y=origin.y+(radius*Math.sin(rotatedAngle));
 points.push(new OpenLayers.Geometry.Point(x,y))
 }var ring=new OpenLayers.Geometry.LinearRing(points);
 return new OpenLayers.Geometry.Polygon([ring])
-};OpenLayers.Handler.Polygon=OpenLayers.Class(OpenLayers.Handler.Path,{polygon:null,initialize:function(control,callbacks,options){OpenLayers.Handler.Path.prototype.initialize.apply(this,arguments)
-},createFeature:function(pixel){var lonlat=this.control.map.getLonLatFromPixel(pixel);
-this.point=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat));
+};OpenLayers.Handler.Polygon=OpenLayers.Class(OpenLayers.Handler.Path,{holeModifier:null,drawingHole:false,polygon:null,createFeature:function(pixel){var lonlat=this.layer.getLonLatFromViewPortPx(pixel);
+var geometry=new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
+this.point=new OpenLayers.Feature.Vector(geometry);
 this.line=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LinearRing([this.point.geometry]));
 this.polygon=new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([this.line.geometry]));
 this.callback("create",[this.point.geometry,this.getSketch()]);
 this.point.geometry.clearBounds();
 this.layer.addFeatures([this.polygon,this.point],{silent:true})
-},destroyFeature:function(){OpenLayers.Handler.Path.prototype.destroyFeature.apply(this);
+},addPoint:function(pixel){if(!this.drawingHole&&this.holeModifier&&this.evt&&this.evt[this.holeModifier]){var geometry=this.point.geometry;
+var features=this.control.layer.features;
+var candidate,polygon;
+for(var i=features.length-1;
+i>=0;
+--i){candidate=features[i].geometry;
+if((candidate instanceof OpenLayers.Geometry.Polygon||candidate instanceof OpenLayers.Geometry.MultiPolygon)&&candidate.intersects(geometry)){polygon=features[i];
+this.control.layer.removeFeatures([polygon],{silent:true});
+this.control.layer.events.registerPriority("sketchcomplete",this,this.finalizeInteriorRing);
+this.control.layer.events.registerPriority("sketchmodified",this,this.enforceTopology);
+polygon.geometry.addComponent(this.line.geometry);
+this.polygon=polygon;
+this.drawingHole=true;
+break
+}}}OpenLayers.Handler.Path.prototype.addPoint.apply(this,arguments)
+},getCurrentPointIndex:function(){return this.line.geometry.components.length-2
+},enforceTopology:function(event){var point=event.vertex;
+var components=this.line.geometry.components;
+if(!this.polygon.geometry.intersects(point)){var last=components[components.length-3];
+point.x=last.x;
+point.y=last.y
+}},finishGeometry:function(){var index=this.line.geometry.components.length-2;
+this.line.geometry.removeComponent(this.line.geometry.components[index]);
+this.removePoint();
+this.finalize()
+},finalizeInteriorRing:function(){var ring=this.line.geometry;
+var modified=(ring.getArea()!==0);
+if(modified){var rings=this.polygon.geometry.components;
+for(var i=rings.length-2;
+i>=0;
+--i){if(ring.intersects(rings[i])){modified=false;
+break
+}}if(modified){var target;
+outer:for(var i=rings.length-2;
+i>0;
+--i){var points=rings[i].components;
+for(var j=0,jj=points.length;
+j<jj;
+++j){if(ring.containsPoint(points[j])){modified=false;
+break outer
+}}}}}if(modified){if(this.polygon.state!==OpenLayers.State.INSERT){this.polygon.state=OpenLayers.State.UPDATE
+}}else{this.polygon.geometry.removeComponent(ring)
+}this.restoreFeature();
+return false
+},cancel:function(){if(this.drawingHole){this.polygon.geometry.removeComponent(this.line.geometry);
+this.restoreFeature(true)
+}return OpenLayers.Handler.Path.prototype.cancel.apply(this,arguments)
+},restoreFeature:function(cancel){this.control.layer.events.unregister("sketchcomplete",this,this.finalizeInteriorRing);
+this.control.layer.events.unregister("sketchmodified",this,this.enforceTopology);
+this.layer.removeFeatures([this.polygon],{silent:true});
+this.control.layer.addFeatures([this.polygon],{silent:true});
+this.drawingHole=false;
+if(!cancel){this.control.layer.events.triggerEvent("sketchcomplete",{feature:this.polygon})
+}},destroyFeature:function(force){OpenLayers.Handler.Path.prototype.destroyFeature.call(this,force);
 this.polygon=null
 },drawFeature:function(){this.layer.drawFeature(this.polygon,this.style);
 this.layer.drawFeature(this.point,this.style)
@@ -7384,13 +8213,7 @@ this.layer.drawFeature(this.point,this.style)
 },getGeometry:function(){var geometry=this.polygon&&this.polygon.geometry;
 if(geometry&&this.multi){geometry=new OpenLayers.Geometry.MultiPolygon([geometry])
 }return geometry
-},dblclick:function(evt){if(!this.freehandMode(evt)){var index=this.line.geometry.components.length-2;
-this.line.geometry.removeComponent(this.line.geometry.components[index]);
-this.removePoint();
-this.finalize()
-}return false
-},CLASS_NAME:"OpenLayers.Handler.Polygon"});OpenLayers.Geometry.MultiLineString=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LineString"],initialize:function(components){OpenLayers.Geometry.Collection.prototype.initialize.apply(this,arguments)
-},split:function(geometry,options){var results=null;
+},CLASS_NAME:"OpenLayers.Handler.Polygon"});OpenLayers.Geometry.MultiLineString=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LineString"],split:function(geometry,options){var results=null;
 var mutual=options&&options.mutual;
 var splits,sourceLine,sourceLines,sourceSplit,targetSplit;
 var sourceParts=[];
@@ -7454,182 +8277,7 @@ k<klen;
 }if(sourceSplit||targetSplit){if(mutual){results=[sourceParts,targetParts]
 }else{results=targetParts
 }}return results
-},CLASS_NAME:"OpenLayers.Geometry.MultiLineString"});OpenLayers.Geometry.MultiPolygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Polygon"],initialize:function(components){OpenLayers.Geometry.Collection.prototype.initialize.apply(this,arguments)
-},CLASS_NAME:"OpenLayers.Geometry.MultiPolygon"});OpenLayers.Format.GeoJSON=OpenLayers.Class(OpenLayers.Format.JSON,{ignoreExtraDims:false,initialize:function(options){OpenLayers.Format.JSON.prototype.initialize.apply(this,[options])
-},read:function(json,type,filter){type=(type)?type:"FeatureCollection";
-var results=null;
-var obj=null;
-if(typeof json=="string"){obj=OpenLayers.Format.JSON.prototype.read.apply(this,[json,filter])
-}else{obj=json
-}if(!obj){OpenLayers.Console.error("Bad JSON: "+json)
-}else{if(typeof(obj.type)!="string"){OpenLayers.Console.error("Bad GeoJSON - no type: "+json)
-}else{if(this.isValidType(obj,type)){switch(type){case"Geometry":try{results=this.parseGeometry(obj)
-}catch(err){OpenLayers.Console.error(err)
-}break;
-case"Feature":try{results=this.parseFeature(obj);
-results.type="Feature"
-}catch(err){OpenLayers.Console.error(err)
-}break;
-case"FeatureCollection":results=[];
-switch(obj.type){case"Feature":try{results.push(this.parseFeature(obj))
-}catch(err){results=null;
-OpenLayers.Console.error(err)
-}break;
-case"FeatureCollection":for(var i=0,len=obj.features.length;
-i<len;
-++i){try{results.push(this.parseFeature(obj.features[i]))
-}catch(err){results=null;
-OpenLayers.Console.error(err)
-}}break;
-default:try{var geom=this.parseGeometry(obj);
-results.push(new OpenLayers.Feature.Vector(geom))
-}catch(err){results=null;
-OpenLayers.Console.error(err)
-}}break
-}}}}return results
-},isValidType:function(obj,type){var valid=false;
-switch(type){case"Geometry":if(OpenLayers.Util.indexOf(["Point","MultiPoint","LineString","MultiLineString","Polygon","MultiPolygon","Box","GeometryCollection"],obj.type)==-1){OpenLayers.Console.error("Unsupported geometry type: "+obj.type)
-}else{valid=true
-}break;
-case"FeatureCollection":valid=true;
-break;
-default:if(obj.type==type){valid=true
-}else{OpenLayers.Console.error("Cannot convert types from "+obj.type+" to "+type)
-}}return valid
-},parseFeature:function(obj){var feature,geometry,attributes,bbox;
-attributes=(obj.properties)?obj.properties:{};
-bbox=(obj.geometry&&obj.geometry.bbox)||obj.bbox;
-try{geometry=this.parseGeometry(obj.geometry)
-}catch(err){throw err
-}feature=new OpenLayers.Feature.Vector(geometry,attributes);
-if(bbox){feature.bounds=OpenLayers.Bounds.fromArray(bbox)
-}if(obj.id){feature.fid=obj.id
-}return feature
-},parseGeometry:function(obj){if(obj==null){return null
-}var geometry,collection=false;
-if(obj.type=="GeometryCollection"){if(!(obj.geometries instanceof Array)){throw"GeometryCollection must have geometries array: "+obj
-}var numGeom=obj.geometries.length;
-var components=new Array(numGeom);
-for(var i=0;
-i<numGeom;
-++i){components[i]=this.parseGeometry.apply(this,[obj.geometries[i]])
-}geometry=new OpenLayers.Geometry.Collection(components);
-collection=true
-}else{if(!(obj.coordinates instanceof Array)){throw"Geometry must have coordinates array: "+obj
-}if(!this.parseCoords[obj.type.toLowerCase()]){throw"Unsupported geometry type: "+obj.type
-}try{geometry=this.parseCoords[obj.type.toLowerCase()].apply(this,[obj.coordinates])
-}catch(err){throw err
-}}if(this.internalProjection&&this.externalProjection&&!collection){geometry.transform(this.externalProjection,this.internalProjection)
-}return geometry
-},parseCoords:{point:function(array){if(this.ignoreExtraDims==false&&array.length!=2){throw"Only 2D points are supported: "+array
-}return new OpenLayers.Geometry.Point(array[0],array[1])
-},multipoint:function(array){var points=[];
-var p=null;
-for(var i=0,len=array.length;
-i<len;
-++i){try{p=this.parseCoords.point.apply(this,[array[i]])
-}catch(err){throw err
-}points.push(p)
-}return new OpenLayers.Geometry.MultiPoint(points)
-},linestring:function(array){var points=[];
-var p=null;
-for(var i=0,len=array.length;
-i<len;
-++i){try{p=this.parseCoords.point.apply(this,[array[i]])
-}catch(err){throw err
-}points.push(p)
-}return new OpenLayers.Geometry.LineString(points)
-},multilinestring:function(array){var lines=[];
-var l=null;
-for(var i=0,len=array.length;
-i<len;
-++i){try{l=this.parseCoords.linestring.apply(this,[array[i]])
-}catch(err){throw err
-}lines.push(l)
-}return new OpenLayers.Geometry.MultiLineString(lines)
-},polygon:function(array){var rings=[];
-var r,l;
-for(var i=0,len=array.length;
-i<len;
-++i){try{l=this.parseCoords.linestring.apply(this,[array[i]])
-}catch(err){throw err
-}r=new OpenLayers.Geometry.LinearRing(l.components);
-rings.push(r)
-}return new OpenLayers.Geometry.Polygon(rings)
-},multipolygon:function(array){var polys=[];
-var p=null;
-for(var i=0,len=array.length;
-i<len;
-++i){try{p=this.parseCoords.polygon.apply(this,[array[i]])
-}catch(err){throw err
-}polys.push(p)
-}return new OpenLayers.Geometry.MultiPolygon(polys)
-},box:function(array){if(array.length!=2){throw"GeoJSON box coordinates must have 2 elements"
-}return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(array[0][0],array[0][1]),new OpenLayers.Geometry.Point(array[1][0],array[0][1]),new OpenLayers.Geometry.Point(array[1][0],array[1][1]),new OpenLayers.Geometry.Point(array[0][0],array[1][1]),new OpenLayers.Geometry.Point(array[0][0],array[0][1])])])
-}},write:function(obj,pretty){var geojson={type:null};
-if(obj instanceof Array){geojson.type="FeatureCollection";
-var numFeatures=obj.length;
-geojson.features=new Array(numFeatures);
-for(var i=0;
-i<numFeatures;
-++i){var element=obj[i];
-if(!element instanceof OpenLayers.Feature.Vector){var msg="FeatureCollection only supports collections of features: "+element;
-throw msg
-}geojson.features[i]=this.extract.feature.apply(this,[element])
-}}else{if(obj.CLASS_NAME.indexOf("OpenLayers.Geometry")==0){geojson=this.extract.geometry.apply(this,[obj])
-}else{if(obj instanceof OpenLayers.Feature.Vector){geojson=this.extract.feature.apply(this,[obj]);
-if(obj.layer&&obj.layer.projection){geojson.crs=this.createCRSObject(obj)
-}}}}return OpenLayers.Format.JSON.prototype.write.apply(this,[geojson,pretty])
-},createCRSObject:function(object){var proj=object.layer.projection.toString();
-var crs={};
-if(proj.match(/epsg:/i)){var code=parseInt(proj.substring(proj.indexOf(":")+1));
-if(code==4326){crs={type:"OGC",properties:{urn:"urn:ogc:def:crs:OGC:1.3:CRS84"}}
-}else{crs={type:"EPSG",properties:{code:code}}
-}}return crs
-},extract:{feature:function(feature){var geom=this.extract.geometry.apply(this,[feature.geometry]);
-return{type:"Feature",id:feature.fid==null?feature.id:feature.fid,properties:feature.attributes,geometry:geom}
-},geometry:function(geometry){if(geometry==null){return null
-}if(this.internalProjection&&this.externalProjection){geometry=geometry.clone();
-geometry.transform(this.internalProjection,this.externalProjection)
-}var geometryType=geometry.CLASS_NAME.split(".")[2];
-var data=this.extract[geometryType.toLowerCase()].apply(this,[geometry]);
-var json;
-if(geometryType=="Collection"){json={type:"GeometryCollection",geometries:data}
-}else{json={type:geometryType,coordinates:data}
-}return json
-},point:function(point){return[point.x,point.y]
-},multipoint:function(multipoint){var array=[];
-for(var i=0,len=multipoint.components.length;
-i<len;
-++i){array.push(this.extract.point.apply(this,[multipoint.components[i]]))
-}return array
-},linestring:function(linestring){var array=[];
-for(var i=0,len=linestring.components.length;
-i<len;
-++i){array.push(this.extract.point.apply(this,[linestring.components[i]]))
-}return array
-},multilinestring:function(multilinestring){var array=[];
-for(var i=0,len=multilinestring.components.length;
-i<len;
-++i){array.push(this.extract.linestring.apply(this,[multilinestring.components[i]]))
-}return array
-},polygon:function(polygon){var array=[];
-for(var i=0,len=polygon.components.length;
-i<len;
-++i){array.push(this.extract.linestring.apply(this,[polygon.components[i]]))
-}return array
-},multipolygon:function(multipolygon){var array=[];
-for(var i=0,len=multipolygon.components.length;
-i<len;
-++i){array.push(this.extract.polygon.apply(this,[multipolygon.components[i]]))
-}return array
-},collection:function(collection){var len=collection.components.length;
-var array=new Array(len);
-for(var i=0;
-i<len;
-++i){array[i]=this.extract.geometry.apply(this,[collection.components[i]])
-}return array
-}},CLASS_NAME:"OpenLayers.Format.GeoJSON"});OpenLayers.Format.GML=OpenLayers.Class(OpenLayers.Format.XML,{featureNS:"http://mapserver.gis.umn.edu/mapserver",featurePrefix:"feature",featureName:"featureMember",layerName:"features",geometryName:"geometry",collectionName:"FeatureCollection",gmlns:"http://www.opengis.net/gml",extractAttributes:true,xy:true,initialize:function(options){this.regExes={trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)};
+},CLASS_NAME:"OpenLayers.Geometry.MultiLineString"});OpenLayers.Geometry.MultiPolygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Polygon"],CLASS_NAME:"OpenLayers.Geometry.MultiPolygon"});OpenLayers.Format.GML=OpenLayers.Class(OpenLayers.Format.XML,{featureNS:"http://mapserver.gis.umn.edu/mapserver",featurePrefix:"feature",featureName:"featureMember",layerName:"features",geometryName:"geometry",collectionName:"FeatureCollection",gmlns:"http://www.opengis.net/gml",extractAttributes:true,xy:true,initialize:function(options){this.regExes={trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)};
 OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
 },read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
 }var featureNodes=this.getElementsByTagNameNS(data.documentElement,this.gmlns,this.featureName);
@@ -7648,7 +8296,7 @@ nodeList=this.getElementsByTagNameNS(node,this.gmlns,type);
 if(nodeList.length>0){parser=this.parseGeometry[type.toLowerCase()];
 if(parser){geometry=parser.apply(this,[nodeList[0]]);
 if(this.internalProjection&&this.externalProjection){geometry.transform(this.externalProjection,this.internalProjection)
-}}else{OpenLayers.Console.error(OpenLayers.i18n("unsupportedGeometryType",{geomType:type}))
+}}else{throw new TypeError("Unsupported geometry type: "+type)
 }break
 }}var bounds;
 var boxNodes=this.getElementsByTagNameNS(node,this.gmlns,"Box");
@@ -7804,7 +8452,7 @@ attributes[name]=value
 }}}break
 }childNode=childNode.nextSibling
 }return attributes
-},write:function(features){if(!(features instanceof Array)){features=[features]
+},write:function(features){if(!(OpenLayers.Util.isArray(features))){features=[features]
 }var gml=this.createElementNS("http://www.opengis.net/wfs","wfs:"+this.collectionName);
 for(var i=0;
 i<features.length;
@@ -7900,21 +8548,30 @@ i++){parts.push(points[i].x+","+points[i].y)
 coordinatesNode.appendChild(txtNode);
 return coordinatesNode
 },CLASS_NAME:"OpenLayers.Format.GML"});if(!OpenLayers.Format.GML){OpenLayers.Format.GML={}
-}OpenLayers.Format.GML.Base=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{gml:"http://www.opengis.net/gml",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance",wfs:"http://www.opengis.net/wfs"},defaultPrefix:"gml",schemaLocation:null,featureType:null,featureNS:null,geometryName:"geometry",extractAttributes:true,srsName:null,xy:true,geometryTypes:null,singleFeatureType:null,regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);
+}OpenLayers.Format.GML.Base=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{gml:"http://www.opengis.net/gml",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance",wfs:"http://www.opengis.net/wfs"},defaultPrefix:"gml",schemaLocation:null,featureType:null,featureNS:null,geometryName:"geometry",extractAttributes:true,srsName:null,xy:true,geometryTypes:null,singleFeatureType:null,regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g),featureMember:(/^(.*:)?featureMembers?$/)},initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);
 this.setGeometryTypes();
 if(options&&options.featureNS){this.setNamespace("feature",options.featureNS)
 }this.singleFeatureType=!options||(typeof options.featureType==="string")
 },read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
 }if(data&&data.nodeType==9){data=data.documentElement
 }var features=[];
-this.readNode(data,{features:features});
+this.readNode(data,{features:features},true);
 if(features.length==0){var elements=this.getElementsByTagNameNS(data,this.namespaces.gml,"featureMember");
 if(elements.length){for(var i=0,len=elements.length;
 i<len;
-++i){this.readNode(elements[i],{features:features})
+++i){this.readNode(elements[i],{features:features},true)
 }}else{var elements=this.getElementsByTagNameNS(data,this.namespaces.gml,"featureMembers");
-if(elements.length){this.readNode(elements[0],{features:features})
+if(elements.length){this.readNode(elements[0],{features:features},true)
 }}}return features
+},readNode:function(node,obj,first){if(first===true&&this.autoConfig===true){this.featureType=null;
+delete this.namespaceAlias[this.featureNS];
+delete this.namespaces.feature;
+this.featureNS=null
+}if(!this.featureNS&&(!(node.prefix in this.namespaces)&&node.parentNode.namespaceURI==this.namespaces.gml&&this.regExes.featureMember.test(node.parentNode.nodeName))){this.featureType=node.nodeName.split(":").pop();
+this.setNamespace("feature",node.namespaceURI);
+this.featureNS=node.namespaceURI;
+this.autoConfig=true
+}return OpenLayers.Format.XML.prototype.readNode.apply(this,[node,obj])
 },readers:{gml:{featureMember:function(node,obj){this.readChildNodes(node,obj)
 },featureMembers:function(node,obj){this.readChildNodes(node,obj)
 },name:function(node,obj){obj.name=this.getChildValue(node)
@@ -7990,13 +8647,14 @@ if(fid){feature.fid=fid
 }if(this.internalProjection&&this.externalProjection&&feature.geometry){feature.geometry.transform(this.externalProjection,this.internalProjection)
 }if(container.bounds){feature.bounds=container.bounds
 }obj.features.push(feature)
-},_geometry:function(node,obj){this.readChildNodes(node,obj)
+},_geometry:function(node,obj){if(!this.geometryName){this.geometryName=node.nodeName.split(":").pop()
+}this.readChildNodes(node,obj)
 },_attribute:function(node,obj){var local=node.localName||node.nodeName.split(":").pop();
 var value=this.getChildValue(node);
 obj.attributes[local]=value
 }},wfs:{FeatureCollection:function(node,obj){this.readChildNodes(node,obj)
 }}},write:function(features){var name;
-if(features instanceof Array){name="featureMembers"
+if(OpenLayers.Util.isArray(features)){name="featureMembers"
 }else{name="featureMember"
 }var root=this.writeNode("gml:"+name,features);
 this.setAttributeNS(root,this.namespaces.xsi,"xsi:schemaLocation",this.schemaLocation);
@@ -8005,25 +8663,28 @@ return OpenLayers.Format.XML.prototype.write.apply(this,[root])
 this.writeNode("feature:_typeName",feature,node);
 return node
 },MultiPoint:function(geometry){var node=this.createElementNSPlus("gml:MultiPoint");
-for(var i=0;
-i<geometry.components.length;
-++i){this.writeNode("pointMember",geometry.components[i],node)
+var components=geometry.components||[geometry];
+for(var i=0,ii=components.length;
+i<ii;
+++i){this.writeNode("pointMember",components[i],node)
 }return node
 },pointMember:function(geometry){var node=this.createElementNSPlus("gml:pointMember");
 this.writeNode("Point",geometry,node);
 return node
 },MultiLineString:function(geometry){var node=this.createElementNSPlus("gml:MultiLineString");
-for(var i=0;
-i<geometry.components.length;
-++i){this.writeNode("lineStringMember",geometry.components[i],node)
+var components=geometry.components||[geometry];
+for(var i=0,ii=components.length;
+i<ii;
+++i){this.writeNode("lineStringMember",components[i],node)
 }return node
 },lineStringMember:function(geometry){var node=this.createElementNSPlus("gml:lineStringMember");
 this.writeNode("LineString",geometry,node);
 return node
 },MultiPolygon:function(geometry){var node=this.createElementNSPlus("gml:MultiPolygon");
-for(var i=0;
-i<geometry.components.length;
-++i){this.writeNode("polygonMember",geometry.components[i],node)
+var components=geometry.components||[geometry];
+for(var i=0,ii=components.length;
+i<ii;
+++i){this.writeNode("polygonMember",components[i],node)
 }return node
 },polygonMember:function(geometry){var node=this.createElementNSPlus("gml:polygonMember");
 this.writeNode("Polygon",geometry,node);
@@ -8120,7 +8781,7 @@ container.points[0]=obj.points[0]
 this.readers.gml.pos.apply(this,[node,obj]);
 container.points[1]=obj.points[0]
 }},OpenLayers.Format.GML.Base.prototype.readers.gml),feature:OpenLayers.Format.GML.Base.prototype.readers.feature,wfs:OpenLayers.Format.GML.Base.prototype.readers.wfs},write:function(features){var name;
-if(features instanceof Array){name="featureMembers"
+if(OpenLayers.Util.isArray(features)){name="featureMembers"
 }else{name="featureMember"
 }var root=this.writeNode("gml:"+name,features);
 this.setAttributeNS(root,this.namespaces.xsi,"xsi:schemaLocation",this.schemaLocation);
@@ -8184,18 +8845,20 @@ return node
 this.writeNode("posList",ring.components,node);
 return node
 },MultiCurve:function(geometry){var node=this.createElementNSPlus("gml:MultiCurve");
-for(var i=0,len=geometry.components.length;
+var components=geometry.components||[geometry];
+for(var i=0,len=components.length;
 i<len;
-++i){this.writeNode("curveMember",geometry.components[i],node)
+++i){this.writeNode("curveMember",components[i],node)
 }return node
 },curveMember:function(geometry){var node=this.createElementNSPlus("gml:curveMember");
 if(this.curve){this.writeNode("Curve",geometry,node)
 }else{this.writeNode("LineString",geometry,node)
 }return node
 },MultiSurface:function(geometry){var node=this.createElementNSPlus("gml:MultiSurface");
-for(var i=0,len=geometry.components.length;
+var components=geometry.components||[geometry];
+for(var i=0,len=components.length;
 i<len;
-++i){this.writeNode("surfaceMember",geometry.components[i],node)
+++i){this.writeNode("surfaceMember",components[i],node)
 }return node
 },surfaceMember:function(polygon){var node=this.createElementNSPlus("gml:surfaceMember");
 if(this.surface){this.writeNode("Surface",polygon,node)
@@ -8215,35 +8878,12 @@ return this.createElementNSPlus("gml:upperCorner",{value:pos})
 },toggle:function(){for(var i=0,len=arguments.length;
 i<len;
 i++){var element=OpenLayers.Util.getElement(arguments[i]);
-var display=OpenLayers.Element.visible(element)?"hide":"show";
-OpenLayers.Element[display](element)
-}},hide:function(){for(var i=0,len=arguments.length;
-i<len;
-i++){var element=OpenLayers.Util.getElement(arguments[i]);
-if(element){element.style.display="none"
-}}},show:function(){for(var i=0,len=arguments.length;
-i<len;
-i++){var element=OpenLayers.Util.getElement(arguments[i]);
-if(element){element.style.display=""
-}}},remove:function(element){element=OpenLayers.Util.getElement(element);
+var display=OpenLayers.Element.visible(element)?"none":"";
+element.style.display=display
+}},remove:function(element){element=OpenLayers.Util.getElement(element);
 element.parentNode.removeChild(element)
 },getHeight:function(element){element=OpenLayers.Util.getElement(element);
 return element.offsetHeight
-},getDimensions:function(element){element=OpenLayers.Util.getElement(element);
-if(OpenLayers.Element.getStyle(element,"display")!="none"){return{width:element.offsetWidth,height:element.offsetHeight}
-}var els=element.style;
-var originalVisibility=els.visibility;
-var originalPosition=els.position;
-var originalDisplay=els.display;
-els.visibility="hidden";
-els.position="absolute";
-els.display="";
-var originalWidth=element.clientWidth;
-var originalHeight=element.clientHeight;
-els.display=originalDisplay;
-els.position=originalPosition;
-els.visibility=originalVisibility;
-return{width:originalWidth,height:originalHeight}
 },hasClass:function(element,name){var names=element.className;
 return(!!names&&new RegExp("(^|\\s)"+name+"(\\s|$)").test(names))
 },addClass:function(element,name){if(!OpenLayers.Element.hasClass(element,name)){element.className+=(element.className?" ":"")+name
@@ -8341,6 +8981,7 @@ for(var i=0,len=elseRules.length;
 i<len;
 i++){this.applySymbolizer(elseRules[i],style,feature)
 }}if(rules.length>0&&appliedRules==false){style.display="none"
+}if(style.label!=null&&typeof style.label!=="string"){style.label=String(style.label)
 }return style
 },applySymbolizer:function(rule,style,feature){var symbolizerPrefix=feature.geometry?this.getSymbolizerPrefix(feature.geometry):OpenLayers.Style.SYMBOLIZER_PREFIXES[0];
 var symbolizer=rule.symbolizer[symbolizerPrefix]||rule.symbolizer;
@@ -8395,7 +9036,11 @@ value=(isNaN(value)||!value)?value:parseFloat(value)
 OpenLayers.Style.SYMBOLIZER_PREFIXES=["Point","Line","Polygon","Text","Raster"];OpenLayers.Filter=OpenLayers.Class({initialize:function(options){OpenLayers.Util.extend(this,options)
 },destroy:function(){},evaluate:function(context){return true
 },clone:function(){return null
-},CLASS_NAME:"OpenLayers.Filter"});OpenLayers.Filter.FeatureId=OpenLayers.Class(OpenLayers.Filter,{fids:null,initialize:function(options){this.fids=[];
+},toString:function(){var string;
+if(OpenLayers.Format&&OpenLayers.Format.CQL){string=OpenLayers.Format.CQL.prototype.write(this)
+}else{string=Object.prototype.toString.call(this)
+}return string
+},CLASS_NAME:"OpenLayers.Filter"});OpenLayers.Filter.FeatureId=OpenLayers.Class(OpenLayers.Filter,{fids:null,type:"FID",initialize:function(options){this.fids=[];
 OpenLayers.Filter.prototype.initialize.apply(this,[options])
 },evaluate:function(feature){for(var i=0,len=this.fids.length;
 i<len;
@@ -8410,16 +9055,18 @@ return filter
 OpenLayers.Filter.prototype.initialize.apply(this,[options])
 },destroy:function(){this.filters=null;
 OpenLayers.Filter.prototype.destroy.apply(this)
-},evaluate:function(context){switch(this.type){case OpenLayers.Filter.Logical.AND:for(var i=0,len=this.filters.length;
+},evaluate:function(context){var i,len;
+switch(this.type){case OpenLayers.Filter.Logical.AND:for(i=0,len=this.filters.length;
 i<len;
 i++){if(this.filters[i].evaluate(context)==false){return false
 }}return true;
-case OpenLayers.Filter.Logical.OR:for(var i=0,len=this.filters.length;
+case OpenLayers.Filter.Logical.OR:for(i=0,len=this.filters.length;
 i<len;
 i++){if(this.filters[i].evaluate(context)==true){return true
 }}return false;
 case OpenLayers.Filter.Logical.NOT:return(!this.filters[0].evaluate(context))
-}},clone:function(){var filters=[];
+}return undefined
+},clone:function(){var filters=[];
 for(var i=0,len=this.filters.length;
 i<len;
 ++i){filters.push(this.filters[i].clone())
@@ -8427,15 +9074,17 @@ i<len;
 },CLASS_NAME:"OpenLayers.Filter.Logical"});
 OpenLayers.Filter.Logical.AND="&&";
 OpenLayers.Filter.Logical.OR="||";
-OpenLayers.Filter.Logical.NOT="!";OpenLayers.Filter.Comparison=OpenLayers.Class(OpenLayers.Filter,{type:null,property:null,value:null,matchCase:true,lowerBoundary:null,upperBoundary:null,initialize:function(options){OpenLayers.Filter.prototype.initialize.apply(this,[options])
-},evaluate:function(context){if(context instanceof OpenLayers.Feature.Vector){context=context.attributes
+OpenLayers.Filter.Logical.NOT="!";OpenLayers.Filter.Comparison=OpenLayers.Class(OpenLayers.Filter,{type:null,property:null,value:null,matchCase:true,lowerBoundary:null,upperBoundary:null,initialize:function(options){OpenLayers.Filter.prototype.initialize.apply(this,[options]);
+if(this.type===OpenLayers.Filter.Comparison.LIKE&&options.matchCase===undefined){this.matchCase=null
+}},evaluate:function(context){if(context instanceof OpenLayers.Feature.Vector){context=context.attributes
 }var result=false;
 var got=context[this.property];
-switch(this.type){case OpenLayers.Filter.Comparison.EQUAL_TO:var exp=this.value;
+var exp;
+switch(this.type){case OpenLayers.Filter.Comparison.EQUAL_TO:exp=this.value;
 if(!this.matchCase&&typeof got=="string"&&typeof exp=="string"){result=(got.toUpperCase()==exp.toUpperCase())
 }else{result=(got==exp)
 }break;
-case OpenLayers.Filter.Comparison.NOT_EQUAL_TO:var exp=this.value;
+case OpenLayers.Filter.Comparison.NOT_EQUAL_TO:exp=this.value;
 if(!this.matchCase&&typeof got=="string"&&typeof exp=="string"){result=(got.toUpperCase()!=exp.toUpperCase())
 }else{result=(got!=exp)
 }break;
@@ -8453,9 +9102,7 @@ case OpenLayers.Filter.Comparison.LIKE:var regexp=new RegExp(this.value,"gi");
 result=regexp.test(got);
 break
 }return result
-},value2regex:function(wildCard,singleChar,escapeChar){if(wildCard=="."){var msg="'.' is an unsupported wildCard character for OpenLayers.Filter.Comparison";
-OpenLayers.Console.error(msg);
-return null
+},value2regex:function(wildCard,singleChar,escapeChar){if(wildCard=="."){throw new Error("'.' is an unsupported wildCard character for OpenLayers.Filter.Comparison")
 }wildCard=wildCard?wildCard:"*";
 singleChar=singleChar?singleChar:".";
 escapeChar=escapeChar?escapeChar:"!";
@@ -8483,21 +9130,7 @@ OpenLayers.Filter.Comparison.GREATER_THAN=">";
 OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO="<=";
 OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO=">=";
 OpenLayers.Filter.Comparison.BETWEEN="..";
-OpenLayers.Filter.Comparison.LIKE="~";OpenLayers.Format.Filter=OpenLayers.Class(OpenLayers.Format.XML,{defaultVersion:"1.0.0",version:null,parser:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
-},write:function(filter,options){var version=(options&&options.version)||this.version||this.defaultVersion;
-if(!this.parser||this.parser.VERSION!=version){var format=OpenLayers.Format.Filter["v"+version.replace(/\./g,"_")];
-if(!format){throw"Can't find a Filter parser for version "+version
-}this.parser=new format(this.options)
-}return this.parser.write(filter)
-},read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
-}var version=this.version;
-if(!version){version=this.defaultVersion
-}if(!this.parser||this.parser.VERSION!=version){var format=OpenLayers.Format.Filter["v"+version.replace(/\./g,"_")];
-if(!format){throw"Can't find a Filter parser for version "+version
-}this.parser=new format(this.options)
-}var filter=this.parser.read(data);
-return filter
-},CLASS_NAME:"OpenLayers.Format.Filter"});OpenLayers.Protocol=OpenLayers.Class({format:null,options:null,autoDestroy:true,defaultFilter:null,initialize:function(options){options=options||{};
+OpenLayers.Filter.Comparison.LIKE="~";OpenLayers.Format.Filter=OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC,{defaultVersion:"1.0.0",CLASS_NAME:"OpenLayers.Format.Filter"});OpenLayers.Protocol=OpenLayers.Class({format:null,options:null,autoDestroy:true,defaultFilter:null,initialize:function(options){options=options||{};
 OpenLayers.Util.extend(this,options);
 this.options=options
 },mergeWithDefaultFilter:function(filter){var merged;
@@ -8511,66 +9144,33 @@ options.filter=this.mergeWithDefaultFilter(options.filter)
 },create:function(){},update:function(){},"delete":function(){},commit:function(){},abort:function(response){},createCallback:function(method,response,options){return OpenLayers.Function.bind(function(){method.apply(this,[response,options])
 },this)
 },CLASS_NAME:"OpenLayers.Protocol"});
-OpenLayers.Protocol.Response=OpenLayers.Class({code:null,requestType:null,last:true,features:null,reqFeatures:null,priv:null,initialize:function(options){OpenLayers.Util.extend(this,options)
+OpenLayers.Protocol.Response=OpenLayers.Class({code:null,requestType:null,last:true,features:null,data:null,reqFeatures:null,priv:null,error:null,initialize:function(options){OpenLayers.Util.extend(this,options)
 },success:function(){return this.code>0
 },CLASS_NAME:"OpenLayers.Protocol.Response"});
 OpenLayers.Protocol.Response.SUCCESS=1;
-OpenLayers.Protocol.Response.FAILURE=0;OpenLayers.Protocol.HTTP=OpenLayers.Class(OpenLayers.Protocol,{url:null,headers:null,params:null,callback:null,scope:null,readWithPOST:false,wildcarded:false,initialize:function(options){options=options||{};
+OpenLayers.Protocol.Response.FAILURE=0;OpenLayers.Protocol.HTTP=OpenLayers.Class(OpenLayers.Protocol,{url:null,headers:null,params:null,callback:null,scope:null,readWithPOST:false,updateWithPOST:false,deleteWithPOST:false,wildcarded:false,srsInBBOX:false,initialize:function(options){options=options||{};
 this.params={};
 this.headers={};
-OpenLayers.Protocol.prototype.initialize.apply(this,arguments)
-},destroy:function(){this.params=null;
+OpenLayers.Protocol.prototype.initialize.apply(this,arguments);
+if(!this.filterToParams&&OpenLayers.Format.QueryStringFilter){var format=new OpenLayers.Format.QueryStringFilter({wildcarded:this.wildcarded,srsInBBOX:this.srsInBBOX});
+this.filterToParams=function(filter,params){return format.write(filter,params)
+}
+}},destroy:function(){this.params=null;
 this.headers=null;
 OpenLayers.Protocol.prototype.destroy.apply(this)
 },read:function(options){OpenLayers.Protocol.prototype.read.apply(this,arguments);
-options=OpenLayers.Util.applyDefaults(options,this.options);
+options=options||{};
 options.params=OpenLayers.Util.applyDefaults(options.params,this.options.params);
-if(options.filter){options.params=this.filterToParams(options.filter,options.params)
+options=OpenLayers.Util.applyDefaults(options,this.options);
+if(options.filter&&this.filterToParams){options.params=this.filterToParams(options.filter,options.params)
 }var readWithPOST=(options.readWithPOST!==undefined)?options.readWithPOST:this.readWithPOST;
 var resp=new OpenLayers.Protocol.Response({requestType:"read"});
-if(readWithPOST){resp.priv=OpenLayers.Request.POST({url:options.url,callback:this.createCallback(this.handleRead,resp,options),data:OpenLayers.Util.getParameterString(options.params),headers:{"Content-Type":"application/x-www-form-urlencoded"}})
+if(readWithPOST){var headers=options.headers||{};
+headers["Content-Type"]="application/x-www-form-urlencoded";
+resp.priv=OpenLayers.Request.POST({url:options.url,callback:this.createCallback(this.handleRead,resp,options),data:OpenLayers.Util.getParameterString(options.params),headers:headers})
 }else{resp.priv=OpenLayers.Request.GET({url:options.url,callback:this.createCallback(this.handleRead,resp,options),params:options.params,headers:options.headers})
 }return resp
 },handleRead:function(resp,options){this.handleResponse(resp,options)
-},filterToParams:function(filter,params){params=params||{};
-var className=filter.CLASS_NAME;
-var filterType=className.substring(className.lastIndexOf(".")+1);
-switch(filterType){case"Spatial":switch(filter.type){case OpenLayers.Filter.Spatial.BBOX:params.bbox=filter.value.toArray();
-break;
-case OpenLayers.Filter.Spatial.DWITHIN:params.tolerance=filter.distance;
-case OpenLayers.Filter.Spatial.WITHIN:params.lon=filter.value.x;
-params.lat=filter.value.y;
-break;
-default:OpenLayers.Console.warn("Unknown spatial filter type "+filter.type)
-}break;
-case"Comparison":var op=OpenLayers.Protocol.HTTP.COMP_TYPE_TO_OP_STR[filter.type];
-if(op!==undefined){var value=filter.value;
-if(filter.type==OpenLayers.Filter.Comparison.LIKE){value=this.regex2value(value);
-if(this.wildcarded){value="%"+value+"%"
-}}params[filter.property+"__"+op]=value;
-params.queryable=params.queryable||[];
-params.queryable.push(filter.property)
-}else{OpenLayers.Console.warn("Unknown comparison filter type "+filter.type)
-}break;
-case"Logical":if(filter.type===OpenLayers.Filter.Logical.AND){for(var i=0,len=filter.filters.length;
-i<len;
-i++){params=this.filterToParams(filter.filters[i],params)
-}}else{OpenLayers.Console.warn("Unsupported logical filter type "+filter.type)
-}break;
-default:OpenLayers.Console.warn("Unknown filter type "+filterType)
-}return params
-},regex2value:function(value){value=value.replace(/%/g,"\\%");
-value=value.replace(/\\\\\.(\*)?/g,function($0,$1){return $1?$0:"\\\\_"
-});
-value=value.replace(/\\\\\.\*/g,"\\\\%");
-value=value.replace(/(\\)?\.(\*)?/g,function($0,$1,$2){return $1||$2?$0:"_"
-});
-value=value.replace(/(\\)?\.\*/g,function($0,$1){return $1?$0:"%"
-});
-value=value.replace(/\\\./g,".");
-value=value.replace(/(\\)?\\\*/g,function($0,$1){return $1?$0:"*"
-});
-return value
 },create:function(features,options){options=OpenLayers.Util.applyDefaults(options,this.options);
 var resp=new OpenLayers.Protocol.Response({reqFeatures:features,requestType:"create"});
 resp.priv=OpenLayers.Request.POST({url:options.url,callback:this.createCallback(this.handleCreate,resp,options),headers:options.headers,data:this.format.write(features)});
@@ -8580,14 +9180,18 @@ return resp
 var url=options.url||feature.url||this.options.url+"/"+feature.fid;
 options=OpenLayers.Util.applyDefaults(options,this.options);
 var resp=new OpenLayers.Protocol.Response({reqFeatures:feature,requestType:"update"});
-resp.priv=OpenLayers.Request.PUT({url:url,callback:this.createCallback(this.handleUpdate,resp,options),headers:options.headers,data:this.format.write(feature)});
+var method=this.updateWithPOST?"POST":"PUT";
+resp.priv=OpenLayers.Request[method]({url:url,callback:this.createCallback(this.handleUpdate,resp,options),headers:options.headers,data:this.format.write(feature)});
 return resp
 },handleUpdate:function(resp,options){this.handleResponse(resp,options)
 },"delete":function(feature,options){options=options||{};
 var url=options.url||feature.url||this.options.url+"/"+feature.fid;
 options=OpenLayers.Util.applyDefaults(options,this.options);
 var resp=new OpenLayers.Protocol.Response({reqFeatures:feature,requestType:"delete"});
-resp.priv=OpenLayers.Request.DELETE({url:url,callback:this.createCallback(this.handleDelete,resp,options),headers:options.headers});
+var method=this.deleteWithPOST?"POST":"DELETE";
+var requestOptions={url:url,callback:this.createCallback(this.handleDelete,resp,options),headers:options.headers};
+if(this.deleteWithPOST){requestOptions.data=this.format.write(feature)
+}resp.priv=OpenLayers.Request[method](requestOptions);
 return resp
 },handleDelete:function(resp,options){this.handleResponse(resp,options)
 },handleResponse:function(resp,options){var request=resp.priv;
@@ -8641,16 +9245,8 @@ i>=0;
 },abort:function(response){if(response){response.priv.abort()
 }},callUserCallback:function(resp,options){var opt=options[resp.requestType];
 if(opt&&opt.callback){opt.callback.call(opt.scope,resp)
-}},CLASS_NAME:"OpenLayers.Protocol.HTTP"});
-(function(){var o=OpenLayers.Protocol.HTTP.COMP_TYPE_TO_OP_STR={};
-o[OpenLayers.Filter.Comparison.EQUAL_TO]="eq";
-o[OpenLayers.Filter.Comparison.NOT_EQUAL_TO]="ne";
-o[OpenLayers.Filter.Comparison.LESS_THAN]="lt";
-o[OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO]="lte";
-o[OpenLayers.Filter.Comparison.GREATER_THAN]="gt";
-o[OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO]="gte";
-o[OpenLayers.Filter.Comparison.LIKE]="ilike"
-})();OpenLayers.Renderer=OpenLayers.Class({container:null,root:null,extent:null,locked:false,size:null,resolution:null,map:null,initialize:function(containerID,options){this.container=OpenLayers.Util.getElement(containerID)
+}},CLASS_NAME:"OpenLayers.Protocol.HTTP"});OpenLayers.Renderer=OpenLayers.Class({container:null,root:null,extent:null,locked:false,size:null,resolution:null,map:null,featureDx:0,initialize:function(containerID,options){this.container=OpenLayers.Util.getElement(containerID);
+OpenLayers.Util.extend(this,options)
 },destroy:function(){this.container=null;
 this.extent=null;
 this.size=null;
@@ -8658,24 +9254,33 @@ this.resolution=null;
 this.map=null
 },supported:function(){return false
 },setExtent:function(extent,resolutionChanged){this.extent=extent.clone();
-if(resolutionChanged){this.resolution=null
-}},setSize:function(size){this.size=size.clone();
+if(this.map.baseLayer&&this.map.baseLayer.wrapDateLine){var ratio=extent.getWidth()/this.map.getExtent().getWidth(),extent=extent.scale(1/ratio);
+this.extent=extent.wrapDateLine(this.map.getMaxExtent()).scale(ratio)
+}if(resolutionChanged){this.resolution=null
+}return true
+},setSize:function(size){this.size=size.clone();
 this.resolution=null
 },getResolution:function(){this.resolution=this.resolution||this.map.getResolution();
 return this.resolution
 },drawFeature:function(feature,style){if(style==null){style=feature.style
 }if(feature.geometry){var bounds=feature.geometry.getBounds();
-if(bounds){if(!bounds.intersectsBounds(this.extent)){style={display:"none"}
+if(bounds){var worldBounds;
+if(this.map.baseLayer&&this.map.baseLayer.wrapDateLine){worldBounds=this.map.getMaxExtent()
+}if(!bounds.intersectsBounds(this.extent,{worldBounds:worldBounds})){style={display:"none"}
+}else{this.calculateFeatureDx(bounds,worldBounds)
 }var rendered=this.drawGeometry(feature.geometry,style,feature.id);
 if(style.display!="none"&&style.label&&rendered!==false){var location=feature.geometry.getCentroid();
-if(style.labelXOffset||style.labelYOffset){xOffset=isNaN(style.labelXOffset)?0:style.labelXOffset;
-yOffset=isNaN(style.labelYOffset)?0:style.labelYOffset;
+if(style.labelXOffset||style.labelYOffset){var xOffset=isNaN(style.labelXOffset)?0:style.labelXOffset;
+var yOffset=isNaN(style.labelYOffset)?0:style.labelYOffset;
 var res=this.getResolution();
 location.move(xOffset*res,yOffset*res)
 }this.drawText(feature.id,style,location)
 }else{this.removeText(feature.id)
 }return rendered
-}}},drawGeometry:function(geometry,style,featureId){},drawText:function(featureId,style,location){},removeText:function(featureId){},clear:function(){},getFeatureIdFromEvent:function(evt){},eraseFeatures:function(features){if(!(features instanceof Array)){features=[features]
+}}},calculateFeatureDx:function(bounds,worldBounds){this.featureDx=0;
+if(worldBounds){var worldWidth=worldBounds.getWidth(),rendererCenterX=(this.extent.left+this.extent.right)/2,featureCenterX=(bounds.left+bounds.right)/2,worldsAway=Math.round((featureCenterX-rendererCenterX)/worldWidth);
+this.featureDx=worldsAway*worldWidth
+}},drawGeometry:function(geometry,style,featureId){},drawText:function(featureId,style,location){},removeText:function(featureId){},clear:function(){},getFeatureIdFromEvent:function(evt){},eraseFeatures:function(features){if(!(OpenLayers.Util.isArray(features))){features=[features]
 }for(var i=0,len=features.length;
 i<len;
 ++i){var feature=features[i];
@@ -8689,10 +9294,9 @@ delete result.strokeColor
 }OpenLayers.Util.extend(result,symbolizer);
 return result
 },CLASS_NAME:"OpenLayers.Renderer"});
-OpenLayers.Renderer.defaultSymbolizer={fillColor:"#000000",strokeColor:"#000000",strokeWidth:2,fillOpacity:1,strokeOpacity:1,pointRadius:0};OpenLayers.ElementsIndexer=OpenLayers.Class({maxZIndex:null,order:null,indices:null,compare:null,initialize:function(yOrdering){this.compare=yOrdering?OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_Y_ORDER:OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_DRAWING_ORDER;
-this.order=[];
-this.indices={};
-this.maxZIndex=0
+OpenLayers.Renderer.defaultSymbolizer={fillColor:"#000000",strokeColor:"#000000",strokeWidth:2,fillOpacity:1,strokeOpacity:1,pointRadius:0,labelAlign:"cm"};
+OpenLayers.Renderer.symbol={star:[350,75,379,161,469,161,397,215,423,301,350,250,277,301,303,215,231,161,321,161,350,75],cross:[4,0,6,0,6,4,10,4,10,6,6,6,6,10,4,10,4,6,0,6,0,4,4,4,4,0],x:[0,0,25,0,50,35,75,0,100,0,65,50,100,100,75,100,50,65,25,100,0,100,35,50,0,0],square:[0,0,0,1,1,1,1,0,0,0],triangle:[0,10,10,10,5,0,0,10]};OpenLayers.ElementsIndexer=OpenLayers.Class({maxZIndex:null,order:null,indices:null,compare:null,initialize:function(yOrdering){this.compare=yOrdering?OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_Y_ORDER:OpenLayers.ElementsIndexer.IndexingMethods.Z_ORDER_DRAWING_ORDER;
+this.clear()
 },insert:function(newNode){if(this.exists(newNode)){this.remove(newNode)
 }var nodeId=newNode.id;
 this.determineZIndex(newNode);
@@ -8741,7 +9345,7 @@ if(nextNode&&returnVal===0){var result=nextNode._boundsBottom-newNode._boundsBot
 returnVal=(result===0)?1:result
 }return returnVal
 }};
-OpenLayers.Renderer.Elements=OpenLayers.Class(OpenLayers.Renderer,{rendererRoot:null,root:null,vectorRoot:null,textRoot:null,xmlns:null,indexer:null,BACKGROUND_ID_SUFFIX:"_background",LABEL_ID_SUFFIX:"_label",initialize:function(containerID,options){OpenLayers.Renderer.prototype.initialize.apply(this,arguments);
+OpenLayers.Renderer.Elements=OpenLayers.Class(OpenLayers.Renderer,{rendererRoot:null,root:null,vectorRoot:null,textRoot:null,xmlns:null,xOffset:0,indexer:null,BACKGROUND_ID_SUFFIX:"_background",LABEL_ID_SUFFIX:"_label",LABEL_OUTLINE_SUFFIX:"_outline",initialize:function(containerID,options){OpenLayers.Renderer.prototype.initialize.apply(this,arguments);
 this.rendererRoot=this.createRenderRoot();
 this.root=this.createRoot("_root");
 this.vectorRoot=this.createRoot("_vroot");
@@ -8762,18 +9366,31 @@ if(root){while(child=root.firstChild){root.removeChild(child)
 }}root=this.textRoot;
 if(root){while(child=root.firstChild){root.removeChild(child)
 }}if(this.indexer){this.indexer.clear()
-}},getNodeType:function(geometry,style){},drawGeometry:function(geometry,style,featureId){var className=geometry.CLASS_NAME;
+}},setExtent:function(extent,resolutionChanged){var coordSysUnchanged=OpenLayers.Renderer.prototype.setExtent.apply(this,arguments);
+var resolution=this.getResolution();
+if(this.map.baseLayer&&this.map.baseLayer.wrapDateLine){var rightOfDateLine,ratio=extent.getWidth()/this.map.getExtent().getWidth(),extent=extent.scale(1/ratio),world=this.map.getMaxExtent();
+if(world.right>extent.left&&world.right<extent.right){rightOfDateLine=true
+}else{if(world.left>extent.left&&world.left<extent.right){rightOfDateLine=false
+}}if(rightOfDateLine!==this.rightOfDateLine||resolutionChanged){coordSysUnchanged=false;
+this.xOffset=rightOfDateLine===true?world.getWidth()/resolution:0
+}this.rightOfDateLine=rightOfDateLine
+}return coordSysUnchanged
+},getNodeType:function(geometry,style){},drawGeometry:function(geometry,style,featureId){var className=geometry.CLASS_NAME;
 var rendered=true;
 if((className=="OpenLayers.Geometry.Collection")||(className=="OpenLayers.Geometry.MultiPoint")||(className=="OpenLayers.Geometry.MultiLineString")||(className=="OpenLayers.Geometry.MultiPolygon")){for(var i=0,len=geometry.components.length;
 i<len;
 i++){rendered=this.drawGeometry(geometry.components[i],style,featureId)&&rendered
 }return rendered
 }rendered=false;
+var removeBackground=false;
 if(style.display!="none"){if(style.backgroundGraphic){this.redrawBackgroundNode(geometry.id,geometry,style,featureId)
+}else{removeBackground=true
 }rendered=this.redrawNode(geometry.id,geometry,style,featureId)
 }if(rendered==false){var node=document.getElementById(geometry.id);
-if(node){if(node._style.backgroundGraphic){node.parentNode.removeChild(document.getElementById(geometry.id+this.BACKGROUND_ID_SUFFIX))
+if(node){if(node._style.backgroundGraphic){removeBackground=true
 }node.parentNode.removeChild(node)
+}}if(removeBackground){var node=document.getElementById(geometry.id+this.BACKGROUND_ID_SUFFIX);
+if(node){node.parentNode.removeChild(node)
 }}return rendered
 },redrawNode:function(id,geometry,style,featureId){style=this.applyDefaultSymbolizer(style);
 var node=this.nodeFactory(id,this.getNodeType(geometry,style));
@@ -8816,21 +9433,20 @@ case"OpenLayers.Geometry.LinearRing":drawn=this.drawLinearRing(node,geometry);
 break;
 case"OpenLayers.Geometry.Polygon":drawn=this.drawPolygon(node,geometry);
 break;
-case"OpenLayers.Geometry.Surface":drawn=this.drawSurface(node,geometry);
-break;
 case"OpenLayers.Geometry.Rectangle":drawn=this.drawRectangle(node,geometry);
 break;
 default:break
 }node._options=options;
 if(drawn!=false){return{node:this.setStyle(node,style,options,geometry),complete:drawn}
 }else{return false
-}},postDraw:function(node){},drawPoint:function(node,geometry){},drawLineString:function(node,geometry){},drawLinearRing:function(node,geometry){},drawPolygon:function(node,geometry){},drawRectangle:function(node,geometry){},drawCircle:function(node,geometry){},drawSurface:function(node,geometry){},removeText:function(featureId){var label=document.getElementById(featureId+this.LABEL_ID_SUFFIX);
+}},postDraw:function(node){},drawPoint:function(node,geometry){},drawLineString:function(node,geometry){},drawLinearRing:function(node,geometry){},drawPolygon:function(node,geometry){},drawRectangle:function(node,geometry){},drawCircle:function(node,geometry){},removeText:function(featureId){var label=document.getElementById(featureId+this.LABEL_ID_SUFFIX);
 if(label){this.textRoot.removeChild(label)
+}var outline=document.getElementById(featureId+this.LABEL_OUTLINE_SUFFIX);
+if(outline){this.textRoot.removeChild(outline)
 }},getFeatureIdFromEvent:function(evt){var target=evt.target;
 var useElement=target&&target.correspondingUseElement;
 var node=useElement?useElement:(target||evt.srcElement);
-var featureId=node._featureId;
-return featureId
+return node._featureId
 },eraseGeometry:function(geometry,featureId){if((geometry.CLASS_NAME=="OpenLayers.Geometry.MultiPoint")||(geometry.CLASS_NAME=="OpenLayers.Geometry.MultiLineString")||(geometry.CLASS_NAME=="OpenLayers.Geometry.MultiPolygon")||(geometry.CLASS_NAME=="OpenLayers.Geometry.Collection")){for(var i=0,len=geometry.components.length;
 i<len;
 i++){this.eraseGeometry(geometry.components[i],featureId)
@@ -8853,11 +9469,14 @@ if(renderer.root.parentNode==this.rendererRoot){root=renderer.root
 renderer.rendererRoot.appendChild(root)
 },getRenderLayerId:function(){return this.root.parentNode.parentNode.id
 },isComplexSymbol:function(graphicName){return(graphicName!="circle")&&!!graphicName
-},CLASS_NAME:"OpenLayers.Renderer.Elements"});
-OpenLayers.Renderer.symbol={star:[350,75,379,161,469,161,397,215,423,301,350,250,277,301,303,215,231,161,321,161,350,75],cross:[4,0,6,0,6,4,10,4,10,6,6,6,6,10,4,10,4,6,0,6,0,4,4,4,4,0],x:[0,0,25,0,50,35,75,0,100,0,65,50,100,100,75,100,50,65,25,100,0,100,35,50,0,0],square:[0,0,0,1,1,1,1,0,0,0],triangle:[0,10,10,10,5,0,0,10]};OpenLayers.Handler.Feature=OpenLayers.Class(OpenLayers.Handler,{EVENTMAP:{click:{"in":"click",out:"clickout"},mousemove:{"in":"over",out:"out"},dblclick:{"in":"dblclick",out:null},mousedown:{"in":null,out:null},mouseup:{"in":null,out:null}},feature:null,lastFeature:null,down:null,up:null,clickTolerance:4,geometryTypes:null,stopClick:true,stopDown:true,stopUp:false,initialize:function(control,layer,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,[control,callbacks,options]);
+},CLASS_NAME:"OpenLayers.Renderer.Elements"});OpenLayers.Handler.Feature=OpenLayers.Class(OpenLayers.Handler,{EVENTMAP:{click:{"in":"click",out:"clickout"},mousemove:{"in":"over",out:"out"},dblclick:{"in":"dblclick",out:null},mousedown:{"in":null,out:null},mouseup:{"in":null,out:null},touchstart:{"in":"click",out:"clickout"}},feature:null,lastFeature:null,down:null,up:null,touch:false,clickTolerance:4,geometryTypes:null,stopClick:true,stopDown:true,stopUp:false,initialize:function(control,layer,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,[control,callbacks,options]);
 this.layer=layer
-},mousedown:function(evt){this.down=evt.xy;
-return this.handle(evt)?!this.stopDown:true
+},touchstart:function(evt){if(!this.touch){this.touch=true;
+this.map.events.un({mousedown:this.mousedown,mouseup:this.mouseup,mousemove:this.mousemove,click:this.click,dblclick:this.dblclick,scope:this})
+}return OpenLayers.Event.isMultiTouch(evt)?true:this.mousedown(evt)
+},touchmove:function(evt){OpenLayers.Event.stop(evt)
+},mousedown:function(evt){if(OpenLayers.Event.isLeftClick(evt)||OpenLayers.Event.isSingleTouch(evt)){this.down=evt.xy
+}return this.handle(evt)?!this.stopDown:true
 },mouseup:function(evt){this.up=evt.xy;
 return this.handle(evt)?!this.stopUp:true
 },click:function(evt){return this.handle(evt)?!this.stopClick:true
@@ -8870,11 +9489,12 @@ return true
 }var type=evt.type;
 var handled=false;
 var previouslyIn=!!(this.feature);
-var click=(type=="click"||type=="dblclick");
+var click=(type=="click"||type=="dblclick"||type=="touchstart");
 this.feature=this.layer.getFeatureFromEvent(evt);
 if(this.feature&&!this.feature.layer){this.feature=null
 }if(this.lastFeature&&!this.lastFeature.layer){this.lastFeature=null
-}if(this.feature){var inNew=(this.feature!=this.lastFeature);
+}if(this.feature){if(type==="touchstart"){OpenLayers.Event.stop(evt)
+}var inNew=(this.feature!=this.lastFeature);
 if(this.geometryTypeMatches(this.feature)){if(previouslyIn&&inNew){if(this.lastFeature){this.triggerCallback(type,"out",[this.lastFeature])
 }this.triggerCallback(type,"in",[this.feature])
 }else{if(!previouslyIn||click){this.triggerCallback(type,"in",[this.feature])
@@ -8899,10 +9519,11 @@ this.feature=null;
 this.lastFeature=null;
 this.down=null;
 this.up=null;
+this.touch=false;
 this.map.events.un({removelayer:this.handleMapEvents,changelayer:this.handleMapEvents,scope:this});
 deactivated=true
 }return deactivated
-},handleMapEvents:function(evt){if(!evt.property||evt.property=="order"){this.moveLayerToTop()
+},handleMapEvents:function(evt){if(evt.type=="removelayer"||evt.property=="order"){this.moveLayerToTop()
 }},moveLayerToTop:function(){var index=Math.max(this.map.Z_INDEX_BASE.Feature-1,this.layer.getZIndex())+1;
 this.layer.setZIndex(index)
 },moveLayerBack:function(){var index=this.layer.getZIndex()-1;
@@ -8932,8 +9553,7 @@ if(this.extendDefault&&intent!="default"){defaultSymbolizer=this.styles["default
 },addUniqueValueRules:function(renderIntent,property,symbolizers,context){var rules=[];
 for(var value in symbolizers){rules.push(new OpenLayers.Rule({symbolizer:symbolizers[value],context:context,filter:new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.EQUAL_TO,property:property,value:value})}))
 }this.styles[renderIntent].addRules(rules)
-},CLASS_NAME:"OpenLayers.StyleMap"});OpenLayers.Layer.Vector=OpenLayers.Class(OpenLayers.Layer,{EVENT_TYPES:["beforefeatureadded","beforefeaturesadded","featureadded","featuresadded","beforefeatureremoved","beforefeaturesremoved","featureremoved","featuresremoved","beforefeatureselected","featureselected","featureunselected","beforefeaturemodified","featuremodified","afterfeaturemodified","vertexmodified","sketchstarted","sketchmodified","sketchcomplete","refresh"],isBaseLayer:false,isFixed:false,isVector:true,features:null,filter:null,selectedFeatures:null,unrenderedFeatures:null,reportError:true,style:null,styleMap:null,strategies:null,protocol:null,renderers:["SVG","VML","Canvas"],renderer:null,rendererOptions:null,geometryType:null,drawn:false,initialize:function(name,options){this.EVENT_TYPES=OpenLayers.Layer.Vector.prototype.EVENT_TYPES.concat(OpenLayers.Layer.prototype.EVENT_TYPES);
-OpenLayers.Layer.prototype.initialize.apply(this,arguments);
+},CLASS_NAME:"OpenLayers.StyleMap"});OpenLayers.Layer.Vector=OpenLayers.Class(OpenLayers.Layer,{isBaseLayer:false,isFixed:false,features:null,filter:null,selectedFeatures:null,unrenderedFeatures:null,reportError:true,style:null,styleMap:null,strategies:null,protocol:null,renderers:["SVG","VML","Canvas"],renderer:null,rendererOptions:null,geometryType:null,drawn:false,ratio:1,initialize:function(name,options){OpenLayers.Layer.prototype.initialize.apply(this,arguments);
 if(!this.renderer||!this.renderer.supported()){this.assignRenderer()
 }if(!this.renderer||!this.renderer.supported()){this.renderer=null;
 this.displayError()
@@ -8982,7 +9602,10 @@ break
 }},setMap:function(map){OpenLayers.Layer.prototype.setMap.apply(this,arguments);
 if(!this.renderer){this.map.removeLayer(this)
 }else{this.renderer.map=this.map;
-this.renderer.setSize(this.map.getSize())
+var newSize=this.map.getSize();
+newSize.w=newSize.w*this.ratio;
+newSize.h=newSize.h*this.ratio;
+this.renderer.setSize(newSize)
 }},afterAdd:function(){if(this.strategies){var strategy,i,len;
 for(i=0,len=this.strategies.length;
 i<len;
@@ -8995,16 +9618,24 @@ i<len;
 i++){strategy=this.strategies[i];
 if(strategy.autoActivate){strategy.deactivate()
 }}}},onMapResize:function(){OpenLayers.Layer.prototype.onMapResize.apply(this,arguments);
-this.renderer.setSize(this.map.getSize())
+var newSize=this.map.getSize();
+newSize.w=newSize.w*this.ratio;
+newSize.h=newSize.h*this.ratio;
+this.renderer.setSize(newSize)
 },moveTo:function(bounds,zoomChanged,dragging){OpenLayers.Layer.prototype.moveTo.apply(this,arguments);
 var coordSysUnchanged=true;
 if(!dragging){this.renderer.root.style.visibility="hidden";
-this.div.style.left=-parseInt(this.map.layerContainerDiv.style.left)+"px";
-this.div.style.top=-parseInt(this.map.layerContainerDiv.style.top)+"px";
-var extent=this.map.getExtent();
+var viewSize=this.map.getSize(),viewWidth=viewSize.w,viewHeight=viewSize.h,offsetLeft=(viewWidth/2*this.ratio)-viewWidth/2,offsetTop=(viewHeight/2*this.ratio)-viewHeight/2;
+offsetLeft+=parseInt(this.map.layerContainerDiv.style.left,10);
+offsetLeft=-Math.round(offsetLeft);
+offsetTop+=parseInt(this.map.layerContainerDiv.style.top,10);
+offsetTop=-Math.round(offsetTop);
+this.div.style.left=offsetLeft+"px";
+this.div.style.top=offsetTop+"px";
+var extent=this.map.getExtent().scale(this.ratio);
 coordSysUnchanged=this.renderer.setExtent(extent,zoomChanged);
 this.renderer.root.style.visibility="visible";
-if(navigator.userAgent.toLowerCase().indexOf("gecko")!=-1){this.div.scrollLeft=this.div.scrollLeft
+if(OpenLayers.IS_GECKO===true){this.div.scrollLeft=this.div.scrollLeft
 }if(!zoomChanged&&coordSysUnchanged){for(var i in this.unrenderedFeatures){var feature=this.unrenderedFeatures[i];
 this.drawFeature(feature)
 }}}if(!this.drawn||zoomChanged||!coordSysUnchanged){this.drawn=true;
@@ -9017,7 +9648,7 @@ this.drawFeature(feature)
 }}},display:function(display){OpenLayers.Layer.prototype.display.apply(this,arguments);
 var currentDisplay=this.div.style.display;
 if(currentDisplay!=this.renderer.root.style.display){this.renderer.root.style.display=currentDisplay
-}},addFeatures:function(features,options){if(!(features instanceof Array)){features=[features]
+}},addFeatures:function(features,options){if(!(OpenLayers.Util.isArray(features))){features=[features]
 }var notify=!options||!options.silent;
 if(notify){var event={features:features};
 var ret=this.events.triggerEvent("beforefeaturesadded",event);
@@ -9029,8 +9660,7 @@ i<len;
 i++){if(i!=(features.length-1)){this.renderer.locked=true
 }else{this.renderer.locked=false
 }var feature=features[i];
-if(this.geometryType&&!(feature.geometry instanceof this.geometryType)){var throwStr=OpenLayers.i18n("componentShouldBe",{geomType:this.geometryType.prototype.CLASS_NAME});
-throw throwStr
+if(this.geometryType&&!(feature.geometry instanceof this.geometryType)){throw new TypeError("addFeatures: component should be an "+this.geometryType.prototype.CLASS_NAME)
 }feature.layer=this;
 if(!feature.style&&this.style){feature.style=OpenLayers.Util.extend({},this.style)
 }if(notify){if(this.events.triggerEvent("beforefeatureadded",{feature:feature})===false){continue
@@ -9043,7 +9673,7 @@ this.onFeatureInsert(feature)
 }}if(notify){this.events.triggerEvent("featuresadded",{features:featuresAdded})
 }},removeFeatures:function(features,options){if(!features||features.length===0){return
 }if(features===this.features){return this.removeAllFeatures(options)
-}if(!(features instanceof Array)){features=[features]
+}if(!(OpenLayers.Util.isArray(features))){features=[features]
 }if(features===this.selectedFeatures){features=features.slice()
 }var notify=!options||!options.silent;
 if(notify){this.events.triggerEvent("beforefeaturesremoved",{features:features})
@@ -9086,13 +9716,16 @@ i--){features[i].destroy()
 }var renderIntent=style||feature.renderIntent;
 style=feature.style||this.style;
 if(!style){style=this.styleMap.createSymbolizer(feature,renderIntent)
-}}if(!this.renderer.drawFeature(feature,style)){this.unrenderedFeatures[feature.id]=feature
+}}var drawn=this.renderer.drawFeature(feature,style);
+if(drawn===false||drawn===null){this.unrenderedFeatures[feature.id]=feature
 }else{delete this.unrenderedFeatures[feature.id]
 }},eraseFeatures:function(features){this.renderer.eraseFeatures(features)
-},getFeatureFromEvent:function(evt){if(!this.renderer){OpenLayers.Console.error(OpenLayers.i18n("getFeatureError"));
-return null
-}var featureId=this.renderer.getFeatureIdFromEvent(evt);
-return this.getFeatureById(featureId)
+},getFeatureFromEvent:function(evt){if(!this.renderer){throw new Error("getFeatureFromEvent called on layer with no renderer. This usually means you destroyed a layer, but not some handler which is associated with it.")
+}var feature=null;
+var featureId=this.renderer.getFeatureIdFromEvent(evt);
+if(featureId){if(typeof featureId==="string"){feature=this.getFeatureById(featureId)
+}else{feature=featureId
+}}return feature
 },getFeatureBy:function(property,value){var feature=null;
 for(var i=0,len=this.features.length;
 i<len;
@@ -9101,14 +9734,20 @@ break
 }}return feature
 },getFeatureById:function(featureId){return this.getFeatureBy("id",featureId)
 },getFeatureByFid:function(featureFid){return this.getFeatureBy("fid",featureFid)
+},getFeaturesByAttribute:function(attrName,attrValue){var i,feature,len=this.features.length,foundFeatures=[];
+for(i=0;
+i<len;
+i++){feature=this.features[i];
+if(feature&&feature.attributes){if(feature.attributes[attrName]===attrValue){foundFeatures.push(feature)
+}}}return foundFeatures
 },onFeatureInsert:function(feature){},preFeatureInsert:function(feature){},getDataExtent:function(){var maxExtent=null;
 var features=this.features;
-if(features&&(features.length>0)){maxExtent=new OpenLayers.Bounds();
-var geometry=null;
+if(features&&(features.length>0)){var geometry=null;
 for(var i=0,len=features.length;
 i<len;
 i++){geometry=features[i].geometry;
-if(geometry){maxExtent.extend(geometry.getBounds())
+if(geometry){if(maxExtent===null){maxExtent=new OpenLayers.Bounds()
+}maxExtent.extend(geometry.getBounds())
 }}}return maxExtent
 },CLASS_NAME:"OpenLayers.Layer.Vector"});OpenLayers.Layer.Markers=OpenLayers.Class(OpenLayers.Layer,{isBaseLayer:false,markers:null,drawn:false,initialize:function(name,options){OpenLayers.Layer.prototype.initialize.apply(this,arguments);
 this.markers=[]
@@ -9125,7 +9764,7 @@ i<len;
 i++){this.drawMarker(this.markers[i])
 }this.drawn=true
 }},addMarker:function(marker){this.markers.push(marker);
-if(this.opacity!=null){marker.setOpacity(this.opacity)
+if(this.opacity<1){marker.setOpacity(this.opacity)
 }if(this.map&&this.map.getExtent()){marker.map=this.map;
 this.drawMarker(marker)
 }},removeMarker:function(marker){if(this.markers&&this.markers.length){OpenLayers.Util.removeItem(this.markers,marker);
@@ -9143,8 +9782,7 @@ i<len;
 i++){var marker=this.markers[i];
 maxExtent.extend(marker.lonlat)
 }}return maxExtent
-},CLASS_NAME:"OpenLayers.Layer.Markers"});OpenLayers.Layer.Vector.RootContainer=OpenLayers.Class(OpenLayers.Layer.Vector,{displayInLayerSwitcher:false,layers:null,initialize:function(name,options){OpenLayers.Layer.Vector.prototype.initialize.apply(this,arguments)
-},display:function(){},getFeatureFromEvent:function(evt){var layers=this.layers;
+},CLASS_NAME:"OpenLayers.Layer.Markers"});OpenLayers.Layer.Vector.RootContainer=OpenLayers.Class(OpenLayers.Layer.Vector,{displayInLayerSwitcher:false,layers:null,display:function(){},getFeatureFromEvent:function(evt){var layers=this.layers;
 var feature;
 for(var i=0;
 i<layers.length;
@@ -9169,8 +9807,7 @@ if(this.renderer&&layer.renderer.getRenderLayerId()==this.id){this.renderer.move
 }}},handleChangeLayer:function(evt){var layer=evt.layer;
 if(evt.property=="order"&&OpenLayers.Util.indexOf(this.layers,layer)!=-1){this.resetRoots();
 this.collectRoots()
-}},CLASS_NAME:"OpenLayers.Layer.Vector.RootContainer"});OpenLayers.Control.SelectFeature=OpenLayers.Class(OpenLayers.Control,{EVENT_TYPES:["beforefeaturehighlighted","featurehighlighted","featureunhighlighted"],multipleKey:null,toggleKey:null,multiple:false,clickout:true,toggle:false,hover:false,highlightOnly:false,box:false,onBeforeSelect:function(){},onSelect:function(){},onUnselect:function(){},scope:null,geometryTypes:null,layer:null,layers:null,callbacks:null,selectStyle:null,renderIntent:"select",handlers:null,initialize:function(layers,options){this.EVENT_TYPES=OpenLayers.Control.SelectFeature.prototype.EVENT_TYPES.concat(OpenLayers.Control.prototype.EVENT_TYPES);
-OpenLayers.Control.prototype.initialize.apply(this,[options]);
+}},CLASS_NAME:"OpenLayers.Layer.Vector.RootContainer"});OpenLayers.Control.SelectFeature=OpenLayers.Class(OpenLayers.Control,{multipleKey:null,toggleKey:null,multiple:false,clickout:true,toggle:false,hover:false,highlightOnly:false,box:false,onBeforeSelect:function(){},onSelect:function(){},onUnselect:function(){},scope:null,geometryTypes:null,layer:null,layers:null,callbacks:null,selectStyle:null,renderIntent:"select",handlers:null,initialize:function(layers,options){OpenLayers.Control.prototype.initialize.apply(this,[options]);
 if(this.scope===null){this.scope=this
 }this.initLayer(layers);
 var callbacks={click:this.clickFeature,clickout:this.clickoutFeature};
@@ -9179,7 +9816,7 @@ callbacks.out=this.outFeature
 }this.callbacks=OpenLayers.Util.extend(callbacks,this.callbacks);
 this.handlers={feature:new OpenLayers.Handler.Feature(this,this.layer,this.callbacks,{geometryTypes:this.geometryTypes})};
 if(this.box){this.handlers.box=new OpenLayers.Handler.Box(this,{done:this.selectBox},{boxDivClassName:"olHandlerBoxSelectFeature"})
-}},initLayer:function(layers){if(layers instanceof Array){this.layers=layers;
+}},initLayer:function(layers){if(OpenLayers.Util.isArray(layers)){this.layers=layers;
 this.layer=new OpenLayers.Layer.Vector.RootContainer(this.id+"_container",{layers:layers})
 }else{this.layer=layers
 }},destroy:function(){if(this.active&&this.layers){this.map.removeLayer(this.layer)
@@ -9226,9 +9863,11 @@ var style=this.selectStyle||this.renderIntent;
 layer.drawFeature(feature,style);
 this.events.triggerEvent("featurehighlighted",{feature:feature})
 }},unhighlight:function(feature){var layer=feature.layer;
-feature._lastHighlighter=feature._prevHighlighter;
-delete feature._prevHighlighter;
-layer.drawFeature(feature,feature.style||feature.layer.style||"default");
+if(feature._prevHighlighter==undefined){delete feature._lastHighlighter
+}else{if(feature._prevHighlighter==this.id){delete feature._prevHighlighter
+}else{feature._lastHighlighter=feature._prevHighlighter;
+delete feature._prevHighlighter
+}}layer.drawFeature(feature,feature.style||feature.layer.style||"default");
 this.events.triggerEvent("featureunhighlighted",{feature:feature})
 },select:function(feature){var cont=this.onBeforeSelect.call(this.scope,feature);
 var layer=feature.layer;
@@ -9243,13 +9882,14 @@ this.unhighlight(feature);
 OpenLayers.Util.removeItem(layer.selectedFeatures,feature);
 layer.events.triggerEvent("featureunselected",{feature:feature});
 this.onUnselect.call(this.scope,feature)
-},selectBox:function(position){if(position instanceof OpenLayers.Bounds){var minXY=this.map.getLonLatFromPixel(new OpenLayers.Pixel(position.left,position.bottom));
-var maxXY=this.map.getLonLatFromPixel(new OpenLayers.Pixel(position.right,position.top));
+},selectBox:function(position){if(position instanceof OpenLayers.Bounds){var minXY=this.map.getLonLatFromPixel({x:position.left,y:position.bottom});
+var maxXY=this.map.getLonLatFromPixel({x:position.right,y:position.top});
 var bounds=new OpenLayers.Bounds(minXY.lon,minXY.lat,maxXY.lon,maxXY.lat);
 if(!this.multipleSelect()){this.unselectAll()
 }var prevMultiple=this.multiple;
 this.multiple=true;
 var layers=this.layers||[this.layer];
+this.events.triggerEvent("boxselectionstart",{layers:layers});
 var layer;
 for(var l=0;
 l<layers.length;
@@ -9259,7 +9899,8 @@ i<len;
 ++i){var feature=layer.features[i];
 if(!feature.getVisibility()){continue
 }if(this.geometryTypes==null||OpenLayers.Util.indexOf(this.geometryTypes,feature.geometry.CLASS_NAME)>-1){if(bounds.toGeometry().intersects(feature.geometry)){if(OpenLayers.Util.indexOf(layer.selectedFeatures,feature)==-1){this.select(feature)
-}}}}}this.multiple=prevMultiple
+}}}}}this.multiple=prevMultiple;
+this.events.triggerEvent("boxselectionend",{layers:layers})
 }},setMap:function(map){this.handlers.feature.setMap(map);
 if(this.box){this.handlers.box.setMap(map)
 }OpenLayers.Control.prototype.setMap.apply(this,arguments)
@@ -9350,8 +9991,7 @@ if(this.map){if(OpenLayers.Control.prototype.deactivate.apply(this)){for(var typ
 }if(this.clearOnDeactivate){this.clear()
 }deactivated=true
 }}return deactivated
-},CLASS_NAME:"OpenLayers.Control.NavigationHistory"});OpenLayers.Control.Attribution=OpenLayers.Class(OpenLayers.Control,{separator:", ",initialize:function(options){OpenLayers.Control.prototype.initialize.apply(this,arguments)
-},destroy:function(){this.map.events.un({removelayer:this.updateAttribution,addlayer:this.updateAttribution,changelayer:this.updateAttribution,changebaselayer:this.updateAttribution,scope:this});
+},CLASS_NAME:"OpenLayers.Control.NavigationHistory"});OpenLayers.Control.Attribution=OpenLayers.Class(OpenLayers.Control,{separator:", ",template:"${layers}",destroy:function(){this.map.events.un({removelayer:this.updateAttribution,addlayer:this.updateAttribution,changelayer:this.updateAttribution,changebaselayer:this.updateAttribution,scope:this});
 OpenLayers.Control.prototype.destroy.apply(this,arguments)
 },draw:function(){OpenLayers.Control.prototype.draw.apply(this,arguments);
 this.map.events.on({changebaselayer:this.updateAttribution,changelayer:this.updateAttribution,addlayer:this.updateAttribution,removelayer:this.updateAttribution,scope:this});
@@ -9362,9 +10002,8 @@ if(this.map&&this.map.layers){for(var i=0,len=this.map.layers.length;
 i<len;
 i++){var layer=this.map.layers[i];
 if(layer.attribution&&layer.getVisibility()){if(OpenLayers.Util.indexOf(attributions,layer.attribution)===-1){attributions.push(layer.attribution)
-}}}this.div.innerHTML=attributions.join(this.separator)
-}},CLASS_NAME:"OpenLayers.Control.Attribution"});OpenLayers.Control.WMSGetFeatureInfo=OpenLayers.Class(OpenLayers.Control,{hover:false,drillDown:false,maxFeatures:10,clickCallback:"click",layers:null,queryVisible:false,url:null,layerUrls:null,infoFormat:"text/html",vendorParams:{},format:null,formatOptions:null,handlerOptions:null,handler:null,hoverRequest:null,EVENT_TYPES:["beforegetfeatureinfo","nogetfeatureinfo","getfeatureinfo"],initialize:function(options){this.EVENT_TYPES=OpenLayers.Control.WMSGetFeatureInfo.prototype.EVENT_TYPES.concat(OpenLayers.Control.prototype.EVENT_TYPES);
-options=options||{};
+}}}this.div.innerHTML=OpenLayers.String.format(this.template,{layers:attributions.join(this.separator)})
+}},CLASS_NAME:"OpenLayers.Control.Attribution"});OpenLayers.Control.WMSGetFeatureInfo=OpenLayers.Class(OpenLayers.Control,{hover:false,drillDown:false,maxFeatures:10,clickCallback:"click",output:"features",layers:null,queryVisible:false,url:null,layerUrls:null,infoFormat:"text/html",vendorParams:{},format:null,formatOptions:null,handlerOptions:null,handler:null,hoverRequest:null,initialize:function(options){options=options||{};
 options.handlerOptions=options.handlerOptions||{};
 OpenLayers.Control.prototype.initialize.apply(this,[options]);
 if(!this.format){this.format=new OpenLayers.Format.WMSGetFeatureInfo(options.formatOptions)
@@ -9373,10 +10012,7 @@ if(!this.format){this.format=new OpenLayers.Format.WMSGetFeatureInfo(options.for
 }else{var callbacks={};
 callbacks[this.clickCallback]=this.getInfoForClick;
 this.handler=new OpenLayers.Handler.Click(this,callbacks,this.handlerOptions.click||{})
-}},activate:function(){if(!this.active){this.handler.activate()
-}return OpenLayers.Control.prototype.activate.apply(this,arguments)
-},deactivate:function(){return OpenLayers.Control.prototype.deactivate.apply(this,arguments)
-},getInfoForClick:function(evt){this.events.triggerEvent("beforegetfeatureinfo",{xy:evt.xy});
+}},getInfoForClick:function(evt){this.events.triggerEvent("beforegetfeatureinfo",{xy:evt.xy});
 OpenLayers.Element.addClass(this.map.viewPortDiv,"olCursorWait");
 this.request(evt.xy,{})
 },getInfoForHover:function(evt){this.events.triggerEvent("beforegetfeatureinfo",{xy:evt.xy});
@@ -9386,10 +10022,10 @@ this.hoverRequest=null
 }},findLayers:function(){var candidates=this.layers||this.map.layers;
 var layers=[];
 var layer,url;
-for(var i=0,len=candidates.length;
-i<len;
-++i){layer=candidates[i];
-if(layer instanceof OpenLayers.Layer.WMS&&(!this.queryVisible||layer.getVisibility())){url=layer.url instanceof Array?layer.url[0]:layer.url;
+for(var i=candidates.length-1;
+i>=0;
+--i){layer=candidates[i];
+if(layer instanceof OpenLayers.Layer.WMS&&(!this.queryVisible||layer.getVisibility())){url=OpenLayers.Util.isArray(layer.url)?layer.url[0]:layer.url;
 if(this.drillDown===false&&!this.url){this.url=url
 }if(this.drillDown===true||this.urlMatches(url)){layers.push(layer)
 }}}return layers
@@ -9402,15 +10038,20 @@ break
 },buildWMSOptions:function(url,layers,clickPosition,format){var layerNames=[],styleNames=[];
 for(var i=0,len=layers.length;
 i<len;
-i++){layerNames=layerNames.concat(layers[i].params.LAYERS);
+i++){if(layers[i].params.LAYERS!=null){layerNames=layerNames.concat(layers[i].params.LAYERS);
 styleNames=styleNames.concat(this.getStyleNames(layers[i]))
-}var params=OpenLayers.Util.extend({service:"WMS",version:layers[0].params.VERSION,request:"GetFeatureInfo",layers:layerNames,query_layers:layerNames,styles:styleNames,bbox:this.map.getExtent().toBBOX(null,layers[0].reverseAxisOrder()),feature_count:this.maxFeatures,height:this.map.getSize().h,width:this.map.getSize().w,format:format,info_format:this.infoFormat},(parseFloat(layers[0].params.VERSION)>=1.3)?{crs:this.map.getProjection(),i:clickPosition.x,j:clickPosition.y}:{srs:this.map.getProjection(),x:clickPosition.x,y:clickPosition.y});
-OpenLayers.Util.applyDefaults(params,this.vendorParams);
-return{url:url,params:OpenLayers.Util.upperCaseObject(params),callback:function(request){this.handleResponse(clickPosition,request)
+}}var firstLayer=layers[0];
+var projection=this.map.getProjection();
+var layerProj=firstLayer.projection;
+if(layerProj&&layerProj.equals(this.map.getProjectionObject())){projection=layerProj.getCode()
+}var params=OpenLayers.Util.extend({service:"WMS",version:firstLayer.params.VERSION,request:"GetFeatureInfo",exceptions:firstLayer.params.EXCEPTIONS,bbox:this.map.getExtent().toBBOX(null,firstLayer.reverseAxisOrder()),feature_count:this.maxFeatures,height:this.map.getSize().h,width:this.map.getSize().w,format:format,info_format:firstLayer.params.INFO_FORMAT||this.infoFormat},(parseFloat(firstLayer.params.VERSION)>=1.3)?{crs:projection,i:parseInt(clickPosition.x),j:parseInt(clickPosition.y)}:{srs:projection,x:parseInt(clickPosition.x),y:parseInt(clickPosition.y)});
+if(layerNames.length!=0){params=OpenLayers.Util.extend({layers:layerNames,query_layers:layerNames,styles:styleNames},params)
+}OpenLayers.Util.applyDefaults(params,this.vendorParams);
+return{url:url,params:OpenLayers.Util.upperCaseObject(params),callback:function(request){this.handleResponse(clickPosition,request,url)
 },scope:this}
 },getStyleNames:function(layer){var styleNames;
 if(layer.params.STYLES){styleNames=layer.params.STYLES
-}else{if(layer.params.LAYERS instanceof Array){styleNames=new Array(layer.params.LAYERS.length)
+}else{if(OpenLayers.Util.isArray(layer.params.LAYERS)){styleNames=new Array(layer.params.LAYERS.length)
 }else{styleNames=layer.params.LAYERS.replace(/[^,]/g,"")
 }}return styleNames
 },request:function(clickPosition,options){var layers=this.findLayers();
@@ -9429,7 +10070,7 @@ for(var i=0,len=layers.length;
 i<len;
 i++){var layer=layers[i];
 var service,found=false;
-url=layer.url instanceof Array?layer.url[0]:layer.url;
+url=OpenLayers.Util.isArray(layer.url)?layer.url[0]:layer.url;
 if(url in services){services[url].push(layer)
 }else{this._numRequests++;
 services[url]=[layer]
@@ -9439,26 +10080,37 @@ var wmsOptions=this.buildWMSOptions(url,layers,clickPosition,layers[0].params.FO
 OpenLayers.Request.GET(wmsOptions)
 }}},triggerGetFeatureInfo:function(request,xy,features){this.events.triggerEvent("getfeatureinfo",{text:request.responseText,features:features,request:request,xy:xy});
 OpenLayers.Element.removeClass(this.map.viewPortDiv,"olCursorWait")
-},handleResponse:function(xy,request){var doc=request.responseXML;
+},handleResponse:function(xy,request,url){var doc=request.responseXML;
 if(!doc||!doc.documentElement){doc=request.responseText
 }var features=this.format.read(doc);
 if(this.drillDown===false){this.triggerGetFeatureInfo(request,xy,features)
 }else{this._requestCount++;
-this._features=(this._features||[]).concat(features);
-if(this._requestCount===this._numRequests){this.triggerGetFeatureInfo(request,xy,this._features.concat());
+if(this.output==="object"){this._features=(this._features||[]).concat({url:url,features:features})
+}else{this._features=(this._features||[]).concat(features)
+}if(this._requestCount===this._numRequests){this.triggerGetFeatureInfo(request,xy,this._features.concat());
 delete this._features;
 delete this._requestCount;
 delete this._numRequests
-}}},CLASS_NAME:"OpenLayers.Control.WMSGetFeatureInfo"});OpenLayers.Request={DEFAULT_CONFIG:{method:"GET",url:window.location.href,async:true,user:undefined,password:undefined,params:null,proxy:OpenLayers.ProxyHost,headers:{},data:null,callback:function(){},success:null,failure:null,scope:null},events:new OpenLayers.Events(this,null,["complete","success","failure"]),issue:function(config){var defaultConfig=OpenLayers.Util.extend(this.DEFAULT_CONFIG,{proxy:OpenLayers.ProxyHost});
+}}},CLASS_NAME:"OpenLayers.Control.WMSGetFeatureInfo"});OpenLayers.ProxyHost="";
+OpenLayers.Request={DEFAULT_CONFIG:{method:"GET",url:window.location.href,async:true,user:undefined,password:undefined,params:null,proxy:OpenLayers.ProxyHost,headers:{},data:null,callback:function(){},success:null,failure:null,scope:null},URL_SPLIT_REGEX:/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/,events:new OpenLayers.Events(this),makeSameOrigin:function(url,proxy){var sameOrigin=url.indexOf("http")!==0;
+var urlParts=!sameOrigin&&url.match(this.URL_SPLIT_REGEX);
+if(urlParts){var location=window.location;
+sameOrigin=urlParts[1]==location.protocol&&urlParts[3]==location.hostname;
+var uPort=urlParts[4],lPort=location.port;
+if(uPort!=80&&uPort!=""||lPort!="80"&&lPort!=""){sameOrigin=sameOrigin&&uPort==lPort
+}}if(!sameOrigin){if(proxy){if(typeof proxy=="function"){url=proxy(url)
+}else{url=proxy+encodeURIComponent(url)
+}}else{OpenLayers.Console.warn(OpenLayers.i18n("proxyNeeded"),{url:url})
+}}return url
+},issue:function(config){var defaultConfig=OpenLayers.Util.extend(this.DEFAULT_CONFIG,{proxy:OpenLayers.ProxyHost});
 config=OpenLayers.Util.applyDefaults(config,defaultConfig);
-var request=new OpenLayers.Request.XMLHttpRequest();
-var url=config.url;
-if(config.params){var paramString=OpenLayers.Util.getParameterString(config.params);
-if(paramString.length>0){var separator=(url.indexOf("?")>-1)?"&":"?";
-url+=separator+paramString
-}}if(config.proxy&&(url.indexOf("http")==0)){if(typeof config.proxy=="function"){url=config.proxy(url)
-}else{url=config.proxy+encodeURIComponent(url)
-}}request.open(config.method,url,config.async,config.user,config.password);
+var customRequestedWithHeader=false,headerKey;
+for(headerKey in config.headers){if(config.headers.hasOwnProperty(headerKey)){if(headerKey.toLowerCase()==="x-requested-with"){customRequestedWithHeader=true
+}}}if(customRequestedWithHeader===false){config.headers["X-Requested-With"]="XMLHttpRequest"
+}var request=new OpenLayers.Request.XMLHttpRequest();
+var url=OpenLayers.Util.urlAppend(config.url,OpenLayers.Util.getParameterString(config.params||{}));
+url=OpenLayers.Request.makeSameOrigin(url,config.proxy);
+request.open(config.method,url,config.async,config.user,config.password);
 for(var header in config.headers){request.setRequestHeader(header,config.headers[header])
 }var events=this.events;
 var self=this;
@@ -9466,7 +10118,7 @@ request.onreadystatechange=function(){if(request.readyState==OpenLayers.Request.
 if(proceed!==false){self.runCallbacks({request:request,config:config,requestUrl:url})
 }}};
 if(config.async===false){request.send(config.data)
-}else{window.setTimeout(function(){if(request._aborted!==true){request.send(config.data)
+}else{window.setTimeout(function(){if(request.readyState!==0){request.send(config.data)
 }},0)
 }return request
 },runCallbacks:function(options){var request=options.request;
@@ -9476,6 +10128,7 @@ var success;
 if(config.success){success=(config.scope)?OpenLayers.Function.bind(config.success,config.scope):config.success
 }var failure;
 if(config.failure){failure=(config.scope)?OpenLayers.Function.bind(config.failure,config.scope):config.failure
+}if(OpenLayers.Util.createUrlObject(config.url).protocol=="file:"&&request.responseText){request.status=200
 }complete(request);
 if(!request.status||(request.status>=200&&request.status<300)){this.events.triggerEvent("success",options);
 if(success){success(request)
@@ -9498,10 +10151,12 @@ return OpenLayers.Request.issue(config)
 },OPTIONS:function(config){config=OpenLayers.Util.extend(config,{method:"OPTIONS"});
 return OpenLayers.Request.issue(config)
 }};(function(){var oXMLHttpRequest=window.XMLHttpRequest;
-var bGecko=!!window.controllers,bIE=window.document.all&&!window.opera,bIE7=bIE&&window.navigator.userAgent.match(/MSIE ([\.0-9]+)/)&&RegExp.$1==7;
-function cXMLHttpRequest(){this._object=oXMLHttpRequest&&!bIE7?new oXMLHttpRequest:new window.ActiveXObject("Microsoft.XMLHTTP");
+var bGecko=!!window.controllers,bIE=window.document.all&&!window.opera,bIE7=bIE&&window.navigator.userAgent.match(/MSIE 7.0/);
+function fXMLHttpRequest(){this._object=oXMLHttpRequest&&!bIE7?new oXMLHttpRequest:new window.ActiveXObject("Microsoft.XMLHTTP");
 this._listeners=[]
-}if(bGecko&&oXMLHttpRequest.wrapped){cXMLHttpRequest.wrapped=oXMLHttpRequest.wrapped
+}function cXMLHttpRequest(){return new fXMLHttpRequest
+}cXMLHttpRequest.prototype=fXMLHttpRequest.prototype;
+if(bGecko&&oXMLHttpRequest.wrapped){cXMLHttpRequest.wrapped=oXMLHttpRequest.wrapped
 }cXMLHttpRequest.UNSENT=0;
 cXMLHttpRequest.OPENED=1;
 cXMLHttpRequest.HEADERS_RECEIVED=2;
@@ -9512,6 +10167,7 @@ cXMLHttpRequest.prototype.responseText="";
 cXMLHttpRequest.prototype.responseXML=null;
 cXMLHttpRequest.prototype.status=0;
 cXMLHttpRequest.prototype.statusText="";
+cXMLHttpRequest.prototype.priority="NORMAL";
 cXMLHttpRequest.prototype.onreadystatechange=null;
 cXMLHttpRequest.onreadystatechange=null;
 cXMLHttpRequest.onopen=null;
@@ -9529,33 +10185,39 @@ window.attachEvent("onunload",fOnUnload)
 }if(arguments.length>4){this._object.open(sMethod,sUrl,bAsync,sUser,sPassword)
 }else{if(arguments.length>3){this._object.open(sMethod,sUrl,bAsync,sUser)
 }else{this._object.open(sMethod,sUrl,bAsync)
-}}if(!bGecko&&!bIE){this.readyState=cXMLHttpRequest.OPENED;
-fReadyStateChange(this)
-}this._object.onreadystatechange=function(){if(bGecko&&!bAsync){return
+}}this.readyState=cXMLHttpRequest.OPENED;
+fReadyStateChange(this);
+this._object.onreadystatechange=function(){if(bGecko&&!bAsync){return
 }oRequest.readyState=oRequest._object.readyState;
 fSynchronizeValues(oRequest);
 if(oRequest._aborted){oRequest.readyState=cXMLHttpRequest.UNSENT;
 return
-}if(oRequest.readyState==cXMLHttpRequest.DONE){fCleanTransport(oRequest);
+}if(oRequest.readyState==cXMLHttpRequest.DONE){delete oRequest._data;
+fCleanTransport(oRequest);
 if(bIE&&bAsync){window.detachEvent("onunload",fOnUnload)
 }}if(nState!=oRequest.readyState){fReadyStateChange(oRequest)
 }nState=oRequest.readyState
 }
 };
-cXMLHttpRequest.prototype.send=function(vData){if(cXMLHttpRequest.onsend){cXMLHttpRequest.onsend.apply(this,arguments)
+function fXMLHttpRequest_send(oRequest){oRequest._object.send(oRequest._data);
+if(bGecko&&!oRequest._async){oRequest.readyState=cXMLHttpRequest.OPENED;
+fSynchronizeValues(oRequest);
+while(oRequest.readyState<cXMLHttpRequest.DONE){oRequest.readyState++;
+fReadyStateChange(oRequest);
+if(oRequest._aborted){return
+}}}}cXMLHttpRequest.prototype.send=function(vData){if(cXMLHttpRequest.onsend){cXMLHttpRequest.onsend.apply(this,arguments)
+}if(!arguments.length){vData=null
 }if(vData&&vData.nodeType){vData=window.XMLSerializer?new window.XMLSerializer().serializeToString(vData):vData.xml;
 if(!this._headers["Content-Type"]){this._object.setRequestHeader("Content-Type","application/xml")
-}}this._object.send(vData);
-if(bGecko&&!this._async){this.readyState=cXMLHttpRequest.OPENED;
-fSynchronizeValues(this);
-while(this.readyState<cXMLHttpRequest.DONE){this.readyState++;
-fReadyStateChange(this);
-if(this._aborted){return
-}}}};
+}}this._data=vData;
+fXMLHttpRequest_send(this)
+};
 cXMLHttpRequest.prototype.abort=function(){if(cXMLHttpRequest.onabort){cXMLHttpRequest.onabort.apply(this,arguments)
 }if(this.readyState>cXMLHttpRequest.UNSENT){this._aborted=true
 }this._object.abort();
-fCleanTransport(this)
+fCleanTransport(this);
+this.readyState=cXMLHttpRequest.UNSENT;
+delete this._data
 };
 cXMLHttpRequest.prototype.getAllResponseHeaders=function(){return this._object.getAllResponseHeaders()
 };
@@ -9605,142 +10267,14 @@ oRequest.__func(oArguments[0],oArguments[1],oArguments[2],oArguments[3],oArgumen
 delete oRequest.__func
 }
 }OpenLayers.Request.XMLHttpRequest=cXMLHttpRequest
-})();OpenLayers.ProxyHost="";
-OpenLayers.nullHandler=function(request){OpenLayers.Console.userError(OpenLayers.i18n("unhandledRequest",{statusText:request.statusText}))
-};
-OpenLayers.loadURL=function(uri,params,caller,onComplete,onFailure){if(typeof params=="string"){params=OpenLayers.Util.getParameters(params)
-}var success=(onComplete)?onComplete:OpenLayers.nullHandler;
-var failure=(onFailure)?onFailure:OpenLayers.nullHandler;
-return OpenLayers.Request.GET({url:uri,params:params,success:success,failure:failure,scope:caller})
-};
-OpenLayers.parseXMLString=function(text){var index=text.indexOf("<");
-if(index>0){text=text.substring(index)
-}var ajaxResponse=OpenLayers.Util.Try(function(){var xmldom=new ActiveXObject("Microsoft.XMLDOM");
-xmldom.loadXML(text);
-return xmldom
-},function(){return new DOMParser().parseFromString(text,"text/xml")
-},function(){var req=new XMLHttpRequest();
-req.open("GET","data:text/xml;charset=utf-8,"+encodeURIComponent(text),false);
-if(req.overrideMimeType){req.overrideMimeType("text/xml")
-}req.send(null);
-return req.responseXML
-});
-return ajaxResponse
-};
-OpenLayers.Ajax={emptyFunction:function(){},getTransport:function(){return OpenLayers.Util.Try(function(){return new XMLHttpRequest()
-},function(){return new ActiveXObject("Msxml2.XMLHTTP")
-},function(){return new ActiveXObject("Microsoft.XMLHTTP")
-})||false
-},activeRequestCount:0};
-OpenLayers.Ajax.Responders={responders:[],register:function(responderToAdd){for(var i=0;
-i<this.responders.length;
-i++){if(responderToAdd==this.responders[i]){return
-}}this.responders.push(responderToAdd)
-},unregister:function(responderToRemove){OpenLayers.Util.removeItem(this.reponders,responderToRemove)
-},dispatch:function(callback,request,transport){var responder;
-for(var i=0;
-i<this.responders.length;
-i++){responder=this.responders[i];
-if(responder[callback]&&typeof responder[callback]=="function"){try{responder[callback].apply(responder,[request,transport])
-}catch(e){}}}}};
-OpenLayers.Ajax.Responders.register({onCreate:function(){OpenLayers.Ajax.activeRequestCount++
-},onComplete:function(){OpenLayers.Ajax.activeRequestCount--
-}});
-OpenLayers.Ajax.Base=OpenLayers.Class({initialize:function(options){this.options={method:"post",asynchronous:true,contentType:"application/xml",parameters:""};
-OpenLayers.Util.extend(this.options,options||{});
-this.options.method=this.options.method.toLowerCase();
-if(typeof this.options.parameters=="string"){this.options.parameters=OpenLayers.Util.getParameters(this.options.parameters)
-}}});
-OpenLayers.Ajax.Request=OpenLayers.Class(OpenLayers.Ajax.Base,{_complete:false,initialize:function(url,options){OpenLayers.Ajax.Base.prototype.initialize.apply(this,[options]);
-if(OpenLayers.ProxyHost&&OpenLayers.String.startsWith(url,"http")){url=OpenLayers.ProxyHost+encodeURIComponent(url)
-}this.transport=OpenLayers.Ajax.getTransport();
-this.request(url)
-},request:function(url){this.url=url;
-this.method=this.options.method;
-var params=OpenLayers.Util.extend({},this.options.parameters);
-if(this.method!="get"&&this.method!="post"){params._method=this.method;
-this.method="post"
-}this.parameters=params;
-if(params=OpenLayers.Util.getParameterString(params)){if(this.method=="get"){this.url+=((this.url.indexOf("?")>-1)?"&":"?")+params
-}else{if(/Konqueror|Safari|KHTML/.test(navigator.userAgent)){params+="&_="
-}}}try{var response=new OpenLayers.Ajax.Response(this);
-if(this.options.onCreate){this.options.onCreate(response)
-}OpenLayers.Ajax.Responders.dispatch("onCreate",this,response);
-this.transport.open(this.method.toUpperCase(),this.url,this.options.asynchronous);
-if(this.options.asynchronous){window.setTimeout(OpenLayers.Function.bind(this.respondToReadyState,this,1),10)
-}this.transport.onreadystatechange=OpenLayers.Function.bind(this.onStateChange,this);
-this.setRequestHeaders();
-this.body=this.method=="post"?(this.options.postBody||params):null;
-this.transport.send(this.body);
-if(!this.options.asynchronous&&this.transport.overrideMimeType){this.onStateChange()
-}}catch(e){this.dispatchException(e)
-}},onStateChange:function(){var readyState=this.transport.readyState;
-if(readyState>1&&!((readyState==4)&&this._complete)){this.respondToReadyState(this.transport.readyState)
-}},setRequestHeaders:function(){var headers={"X-Requested-With":"XMLHttpRequest",Accept:"text/javascript, text/html, application/xml, text/xml, */*",OpenLayers:true};
-if(this.method=="post"){headers["Content-type"]=this.options.contentType+(this.options.encoding?"; charset="+this.options.encoding:"");
-if(this.transport.overrideMimeType&&(navigator.userAgent.match(/Gecko\/(\d{4})/)||[0,2005])[1]<2005){headers.Connection="close"
-}}if(typeof this.options.requestHeaders=="object"){var extras=this.options.requestHeaders;
-if(typeof extras.push=="function"){for(var i=0,length=extras.length;
-i<length;
-i+=2){headers[extras[i]]=extras[i+1]
-}}else{for(var i in extras){headers[i]=extras[i]
-}}}for(var name in headers){this.transport.setRequestHeader(name,headers[name])
-}},success:function(){var status=this.getStatus();
-return !status||(status>=200&&status<300)
-},getStatus:function(){try{return this.transport.status||0
-}catch(e){return 0
-}},respondToReadyState:function(readyState){var state=OpenLayers.Ajax.Request.Events[readyState];
-var response=new OpenLayers.Ajax.Response(this);
-if(state=="Complete"){try{this._complete=true;
-(this.options["on"+response.status]||this.options["on"+(this.success()?"Success":"Failure")]||OpenLayers.Ajax.emptyFunction)(response)
-}catch(e){this.dispatchException(e)
-}var contentType=response.getHeader("Content-type")
-}try{(this.options["on"+state]||OpenLayers.Ajax.emptyFunction)(response);
-OpenLayers.Ajax.Responders.dispatch("on"+state,this,response)
-}catch(e){this.dispatchException(e)
-}if(state=="Complete"){this.transport.onreadystatechange=OpenLayers.Ajax.emptyFunction
-}},getHeader:function(name){try{return this.transport.getResponseHeader(name)
-}catch(e){return null
-}},dispatchException:function(exception){var handler=this.options.onException;
-if(handler){handler(this,exception);
-OpenLayers.Ajax.Responders.dispatch("onException",this,exception)
-}else{var listener=false;
-var responders=OpenLayers.Ajax.Responders.responders;
-for(var i=0;
-i<responders.length;
-i++){if(responders[i].onException){listener=true;
-break
-}}if(listener){OpenLayers.Ajax.Responders.dispatch("onException",this,exception)
-}else{throw exception
-}}}});
-OpenLayers.Ajax.Request.Events=["Uninitialized","Loading","Loaded","Interactive","Complete"];
-OpenLayers.Ajax.Response=OpenLayers.Class({status:0,statusText:"",initialize:function(request){this.request=request;
-var transport=this.transport=request.transport,readyState=this.readyState=transport.readyState;
-if((readyState>2&&!(!!(window.attachEvent&&!window.opera)))||readyState==4){this.status=this.getStatus();
-this.statusText=this.getStatusText();
-this.responseText=transport.responseText==null?"":String(transport.responseText)
-}if(readyState==4){var xml=transport.responseXML;
-this.responseXML=xml===undefined?null:xml
-}},getStatus:OpenLayers.Ajax.Request.prototype.getStatus,getStatusText:function(){try{return this.transport.statusText||""
-}catch(e){return""
-}},getHeader:OpenLayers.Ajax.Request.prototype.getHeader,getResponseHeader:function(name){return this.transport.getResponseHeader(name)
-}});
-OpenLayers.Ajax.getElementsByTagNameNS=function(parentnode,nsuri,nsprefix,tagname){var elem=null;
-if(parentnode.getElementsByTagNameNS){elem=parentnode.getElementsByTagNameNS(nsuri,tagname)
-}else{elem=parentnode.getElementsByTagName(nsprefix+":"+tagname)
-}return elem
-};
-OpenLayers.Ajax.serializeXMLToString=function(xmldom){var serializer=new XMLSerializer();
-var data=serializer.serializeToString(xmldom);
-return data
-};OpenLayers.LonLat=OpenLayers.Class({lon:0,lat:0,initialize:function(lon,lat){this.lon=OpenLayers.Util.toFloat(lon);
+})();OpenLayers.LonLat=OpenLayers.Class({lon:0,lat:0,initialize:function(lon,lat){if(OpenLayers.Util.isArray(lon)){lat=lon[1];
+lon=lon[0]
+}this.lon=OpenLayers.Util.toFloat(lon);
 this.lat=OpenLayers.Util.toFloat(lat)
 },toString:function(){return("lon="+this.lon+",lat="+this.lat)
 },toShortString:function(){return(this.lon+", "+this.lat)
 },clone:function(){return new OpenLayers.LonLat(this.lon,this.lat)
-},add:function(lon,lat){if((lon==null)||(lat==null)){var msg=OpenLayers.i18n("lonlatAddError");
-OpenLayers.Console.error(msg);
-return null
+},add:function(lon,lat){if((lon==null)||(lat==null)){throw new TypeError("LonLat.add cannot receive null values")
 }return new OpenLayers.LonLat(this.lon+OpenLayers.Util.toFloat(lon),this.lat+OpenLayers.Util.toFloat(lat))
 },equals:function(ll){var equals=false;
 if(ll!=null){equals=((this.lon==ll.lon&&this.lat==ll.lat)||(isNaN(this.lon)&&isNaN(this.lat)&&isNaN(ll.lon)&&isNaN(ll.lat)))
@@ -9756,6 +10290,9 @@ if(maxExtent){while(newLonLat.lon<maxExtent.left){newLonLat.lon+=maxExtent.getWi
 },CLASS_NAME:"OpenLayers.LonLat"});
 OpenLayers.LonLat.fromString=function(str){var pair=str.split(",");
 return new OpenLayers.LonLat(pair[0],pair[1])
+};
+OpenLayers.LonLat.fromArray=function(arr){var gotArr=OpenLayers.Util.isArray(arr),lon=gotArr&&arr[0],lat=gotArr&&arr[1];
+return new OpenLayers.LonLat(lon,lat)
 };OpenLayers.Size=OpenLayers.Class({w:0,h:0,initialize:function(w,h){this.w=parseFloat(w);
 this.h=parseFloat(h)
 },toString:function(){return("w="+this.w+",h="+this.h)
@@ -9770,9 +10307,8 @@ this.y=parseFloat(y)
 },equals:function(px){var equals=false;
 if(px!=null){equals=((this.x==px.x&&this.y==px.y)||(isNaN(this.x)&&isNaN(this.y)&&isNaN(px.x)&&isNaN(px.y)))
 }return equals
-},add:function(x,y){if((x==null)||(y==null)){var msg=OpenLayers.i18n("pixelAddError");
-OpenLayers.Console.error(msg);
-return null
+},distanceTo:function(px){return Math.sqrt(Math.pow(this.x-px.x,2)+Math.pow(this.y-px.y,2))
+},add:function(x,y){if((x==null)||(y==null)){throw new TypeError("Pixel.add cannot receive null values")
 }return new OpenLayers.Pixel(this.x+x,this.y+y)
 },offset:function(px){var newPx=this.clone();
 if(px){newPx=this.add(px.x,px.y)
@@ -9780,7 +10316,7 @@ if(px){newPx=this.add(px.x,px.y)
 },CLASS_NAME:"OpenLayers.Pixel"});OpenLayers.Lang={code:null,defaultCode:"en",getCode:function(){if(!OpenLayers.Lang.code){OpenLayers.Lang.setCode()
 }return OpenLayers.Lang.code
 },setCode:function(code){var lang;
-if(!code){code=(OpenLayers.Util.getBrowserName()=="msie")?navigator.userLanguage:navigator.language
+if(!code){code=(OpenLayers.BROWSER_NAME=="msie")?navigator.userLanguage:navigator.language
 }var parts=code.split("-");
 parts[0]=parts[0].toLowerCase();
 if(typeof OpenLayers.Lang[parts[0]]=="object"){lang=parts[0]
@@ -9790,42 +10326,47 @@ if(typeof OpenLayers.Lang[testLang]=="object"){lang=testLang
 lang=OpenLayers.Lang.defaultCode
 }OpenLayers.Lang.code=lang
 },translate:function(key,context){var dictionary=OpenLayers.Lang[OpenLayers.Lang.getCode()];
-var message=dictionary[key];
+var message=dictionary&&dictionary[key];
 if(!message){message=key
 }if(context){message=OpenLayers.String.format(message,context)
 }return message
 }};
-OpenLayers.i18n=OpenLayers.Lang.translate;OpenLayers.Lang.en={unhandledRequest:"Unhandled request return ${statusText}",permalink:"Permalink",overlays:"Overlays",baseLayer:"Base Layer",sameProjection:"The overview map only works when it is in the same projection as the main map",readNotImplemented:"Read not implemented.",writeNotImplemented:"Write not implemented.",noFID:"Can't update a feature for which there is no FID.",errorLoadingGML:"Error in loading GML file http://geonetwork-opensource.org/geonetwork-client",browserNotSupported:"Your browser does not support vector rendering. Currently supported renderers are:\n${renderers}",componentShouldBe:"addFeatures : component should be an ${geomType}",getFeatureError:"getFeatureFromEvent called on layer with no renderer. This usually means you destroyed a layer, but not some handler which is associated with it.",minZoomLevelError:"The minZoomLevel property is only intended for use with the FixedZoomLevels-descendent layers. That this wfs layer checks for minZoomLevel is a relic of thepast. We cannot, however, remove it without possibly breaking OL based applications that may depend on it. Therefore we are deprecating it -- the minZoomLevel check below will be removed at 3.0. Please instead use min/max resolution setting as described here: http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"WFS Transaction: SUCCESS ${response}",commitFailed:"WFS Transaction: FAILED ${response}",googleWarning:"The Google Layer was unable to load correctly.<br><br>To get rid of this message, select a new BaseLayer in the layer switcher in the upper-right corner.<br><br>Most likely, this is because the Google Maps library script was either not included, or does not contain the correct API key for your site.<br><br>Developers: For help getting this working correctly, <a href='http://trac.openlayers.org/wiki/Google' target='_blank'>click here</a>",getLayerWarning:"The ${layerType} Layer was unable to load correctly.<br><br>To get rid of this message, select a new BaseLayer in the layer switcher in the upper-right corner.<br><br>Most likely, this is because the ${layerLib} library script was not correctly included.<br><br>Developers: For help getting this working correctly, <a href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'>click here</a>",scale:"Scale = 1 : ${scaleDenom}",W:"W",E:"E",N:"N",S:"S",graticule:"Graticule",layerAlreadyAdded:"You tried to add the layer: ${layerName} to the map, but it has already been added",reprojectDeprecated:"You are using the 'reproject' option on the ${layerName} layer. This option is deprecated: its use was designed to support displaying data over commercial basemaps, but that functionality should now be achieved by using Spherical Mercator support. More information is available from http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"This method has been deprecated and will be removed in 3.0. Please use ${newMethod} instead.",boundsAddError:"You must pass both x and y values to the add function.",lonlatAddError:"You must pass both lon and lat values to the add function.",pixelAddError:"You must pass both x and y values to the add function.",unsupportedGeometryType:"Unsupported geometry type: ${geomType}",pagePositionFailed:"OpenLayers.Util.pagePosition failed: element with id ${elemId} may be misplaced.",filterEvaluateNotImplemented:"evaluate is not implemented for this filter type.",end:""};OpenLayers.Lang.fr=OpenLayers.Util.applyDefaults({unhandledRequest:"Requête non gérée, retournant ${statusText}",permalink:"Permalien",overlays:"Calques",baseLayer:"Calque de base",sameProjection:"La carte de situation ne fonctionne que lorsque sa projection est la même que celle de la carte principale",readNotImplemented:"Lecture non implémentée.",writeNotImplemented:"Ecriture non implémentée.",noFID:"Impossible de mettre à jour un objet sans identifiant (fid).",errorLoadingGML:"Erreur au chargement du fichier GML http://geonetwork-opensource.org/geonetwork-client",browserNotSupported:"Votre navigateur ne supporte pas le rendu vectoriel. Les renderers actuellement supportés sont : \n${renderers}",componentShouldBe:"addFeatures : le composant devrait être de type ${geomType}",getFeatureError:"getFeatureFromEvent a été appelé sur un calque sans renderer. Cela signifie généralement que vous avez détruit cette couche, mais que vous avez conservé un handler qui lui était associé.",minZoomLevelError:"La propriété minZoomLevel doit seulement être utilisée pour des couches FixedZoomLevels-descendent. Le fait que cette couche WFS vérifie la présence de minZoomLevel est une relique du passé. Nous ne pouvons toutefois la supprimer sans casser des applications qui pourraient en dépendre. C'est pourquoi nous la déprécions -- la vérification du minZoomLevel sera supprimée en version 3.0. A la place, merci d'utiliser les paramètres de résolutions min/max tel que décrit sur : http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"Transaction WFS : SUCCES ${response}",commitFailed:"Transaction WFS : ECHEC ${response}",googleWarning:"La couche Google n'a pas été en mesure de se charger correctement.\x3cbr\x3e\x3cbr\x3ePour supprimer ce message, choisissez une nouvelle BaseLayer dans le sélecteur de couche en haut à droite.\x3cbr\x3e\x3cbr\x3eCela est possiblement causé par la non-inclusion de la librairie Google Maps, ou alors parce que la clé de l'API ne correspond pas à votre site.\x3cbr\x3e\x3cbr\x3eDéveloppeurs : pour savoir comment corriger ceci, \x3ca href='http://trac.openlayers.org/wiki/Google' target='_blank'\x3ecliquez ici\x3c/a\x3e",getLayerWarning:"La couche ${layerType} n'est pas en mesure de se charger correctement.\x3cbr\x3e\x3cbr\x3ePour supprimer ce message, choisissez une nouvelle BaseLayer dans le sélecteur de couche en haut à droite.\x3cbr\x3e\x3cbr\x3eCela est possiblement causé par la non-inclusion de la librairie ${layerLib}.\x3cbr\x3e\x3cbr\x3eDéveloppeurs : pour savoir comment corriger ceci, \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3ecliquez ici\x3c/a\x3e",scale:"Echelle ~ 1 : ${scaleDenom}",W:"O",E:"E",N:"N",S:"S",layerAlreadyAdded:"Vous avez essayé d'ajouter à la carte le calque : ${layerName}, mais il est déjà présent",reprojectDeprecated:"Vous utilisez l'option 'reproject' sur la couche ${layerName}. Cette option est dépréciée : Son usage permettait d'afficher des données au dessus de couches raster commerciales.Cette fonctionalité est maintenant supportée en utilisant le support de la projection Mercator Sphérique. Plus d'information est disponible sur http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Cette méthode est dépréciée, et sera supprimée à la version 3.0. Merci d'utiliser ${newMethod} à la place.",boundsAddError:"Vous devez passer les deux valeurs x et y à la fonction add.",lonlatAddError:"Vous devez passer les deux valeurs lon et lat à la fonction add.",pixelAddError:"Vous devez passer les deux valeurs x et y à la fonction add.",unsupportedGeometryType:"Type de géométrie non supporté : ${geomType}",pagePositionFailed:"OpenLayers.Util.pagePosition a échoué: l'élément d'id ${elemId} pourrait être mal positionné.",filterEvaluateNotImplemented:"évaluer n'a pas encore été implémenté pour ce type de filtre."});OpenLayers.Lang.de=OpenLayers.Util.applyDefaults({unhandledRequest:"Unbehandelte Anfragerückmeldung ${statusText}",permalink:"Permalink",overlays:"Overlays",baseLayer:"Grundkarte",sameProjection:"Die Übersichtskarte funktioniert nur, wenn sie dieselbe Projektion wie die Hauptkarte verwendet",readNotImplemented:"Lesen nicht implementiert.",writeNotImplemented:"Schreiben nicht implementiert.",noFID:"Ein Feature, für das keine FID existiert, kann nicht aktualisiert werden.",errorLoadingGML:"Fehler beim Laden der GML-Datei http://geonetwork-opensource.org/geonetwork-client",browserNotSupported:"Ihr Browser unterstützt keine Vektordarstellung. Aktuell unterstützte Renderer:\n${renderers}",componentShouldBe:"addFeatures: Komponente muss vom Typ ${geomType} sein",getFeatureError:"getFeatureFromEvent wurde vom einem Layer ohne Renderer aufgerufen. Dies bedeutet normalerweise, dass ein Layer entfernt wurde, aber nicht Handler, die auf ihn verweisen.",minZoomLevelError:"Die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Eigenschaft ist nur für die Verwendung mit \x3ccode\x3eFixedZoomLevels\x3c/code\x3e-untergeordneten Layers vorgesehen. Das dieser \x3ctt\x3ewfs\x3c/tt\x3e-Layer die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Eigenschaft überprüft ist ein Relikt der Vergangenheit. Wir können diese Überprüfung nicht entfernen, ohne das OL basierende Applikationen nicht mehr funktionieren. Daher markieren wir es als veraltet - die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Überprüfung wird in Version 3.0 entfernt werden. Bitte verwenden Sie stattdessen die Min-/Max-Lösung, wie sie unter http://trac.openlayers.org/wiki/SettingZoomLevels beschrieben ist.",commitSuccess:"WFS-Transaktion: Erfolgreich ${response}",commitFailed:"WFS-Transaktion: Fehlgeschlagen ${response}",googleWarning:"Der Google-Layer konnte nicht korrekt geladen werden.\x3cbr\x3e\x3cbr\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\x3cbr\x3e\x3cbr\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der Google-Maps-Bibliothek nicht eingebunden wurde oder keinen gültigen API-Schlüssel für Ihre URL enthält.\x3cbr\x3e\x3cbr\x3eEntwickler: Besuche \x3ca href='http://trac.openlayers.org/wiki/Google' target='_blank'\x3edas Wiki\x3c/a\x3e für Hilfe zum korrekten Einbinden des Google-Layers",getLayerWarning:"Der ${layerType}-Layer konnte nicht korrekt geladen werden.\x3cbr\x3e\x3cbr\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\x3cbr\x3e\x3cbr\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der '${layerLib}'-Bibliothek nicht eingebunden wurde.\x3cbr\x3e\x3cbr\x3eEntwickler: Besuche \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3edas Wiki\x3c/a\x3e für Hilfe zum korrekten Einbinden von Layern",scale:"Maßstab = 1 : ${scaleDenom}",W:"W",E:"O",N:"N",S:"S",layerAlreadyAdded:"Sie versuchen den Layer „${layerName}“ zur Karte hinzuzufügen, er wurde aber bereits hinzugefügt",reprojectDeprecated:"Sie verwenden die „Reproject“-Option des Layers ${layerName}. Diese Option ist veraltet: Sie wurde entwickelt um die Anzeige von Daten auf kommerziellen Basiskarten zu unterstützen, aber diese Funktion sollte jetzt durch Unterstützung der „Spherical Mercator“ erreicht werden. Weitere Informationen sind unter http://trac.openlayers.org/wiki/SphericalMercator verfügbar.",methodDeprecated:"Die Methode ist veraltet und wird in 3.0 entfernt. Bitte verwende stattdessen ${newMethod}.",boundsAddError:"Beide Werte (x und y) müssen der add-Funktion übergeben werden.",lonlatAddError:"Beide Werte (lon und lat) müssen der add-Funktion übergeben werden.",pixelAddError:"Beide Werte (x und y) müssen der add-Funktion übergeben werden.",unsupportedGeometryType:"Nicht unterstützter Geometrie-Typ: ${geomType}",pagePositionFailed:"OpenLayers.Util.pagePosition fehlgeschlagen: Element mit Id ${elemId} möglicherweise falsch platziert.",filterEvaluateNotImplemented:"„evaluate“ ist für diesen Filter-Typ nicht implementiert."});OpenLayers.Lang.es={unhandledRequest:"Respuesta a petición no gestionada ${statusText}",permalink:"Enlace permanente",overlays:"Capas superpuestas",baseLayer:"Capa Base",sameProjection:"El mapa de vista general sólo funciona si está en la misma proyección que el mapa principal",readNotImplemented:"Lectura no implementada.",writeNotImplemented:"Escritura no implementada.",noFID:"No se puede actualizar un elemento para el que no existe FID.",errorLoadingGML:"Error cargando el fichero GML http://geonetwork-opensource.org/geonetwork-client",browserNotSupported:"Su navegador no soporta renderización vectorial. Los renderizadores soportados actualmente son:\n${renderers}",componentShouldBe:"addFeatures : el componente debe ser del tipo ${geomType}",getFeatureError:"getFeatureFromEvent se ha llamado desde una capa sin renderizador. Esto normalmente quiere decir que se ha destruido una capa, pero no el manejador asociado a ella.",minZoomLevelError:"La propiedad minZoomLevel debe sólo utilizarse con las capas que tienen FixedZoomLevels. El hecho de que una capa wfs compruebe minZoomLevel es una reliquia del pasado. Sin embargo, no podemos eliminarla sin discontinuar probablemente las aplicaciones OL que puedan depender de ello. As� pues estamos haciéndolo obsoleto --la comprobación minZoomLevel se eliminará en la versión 3.0. Utilice el ajuste de resolution min/max en su lugar, tal como se describe aqu�: http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"Transacción WFS: ÉXITO ${response}",commitFailed:"Transacción WFS: FALLÓ ${response}",googleWarning:"La capa Google no pudo ser cargada correctamente.<br><br>Para evitar este mensaje, seleccione una nueva Capa Base en el selector de capas en la esquina superior derecha.<br><br>Probablemente, esto se debe a que el script de la biblioteca de Google Maps no fue correctamente incluido en su página, o no contiene la clave del API correcta para su sitio.<br><br>Desarrolladores: Para ayudar a hacer funcionar esto correctamente, <a href='http://trac.openlayers.org/wiki/Google' target='_blank'>haga clic aqu�</a>",getLayerWarning:"La capa ${layerType} no pudo ser cargada correctamente.<br><br>Para evitar este mensaje, seleccione una nueva Capa Base en el selector de capas en la esquina superior derecha.<br><br>Probablemente, esto se debe a que el script de la biblioteca ${layerLib} no fue correctamente incluido en su página.<br><br>Desarrolladores: Para ayudar a hacer funcionar esto correctamente, <a href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'>haga clic aqu�</a>",scale:"Escala = 1 : ${scaleDenom}",W:"O",E:"E",N:"N",S:"S",graticule:"Ret�cula",layerAlreadyAdded:"Intentó añadir la capa: ${layerName} al mapa, pero ya hab�a sido añadida previamente",reprojectDeprecated:"Está usando la opción 'reproject' en la capa ${layerName}. Esta opción es obsoleta: su uso fue diseñado para soportar la visualización de datos sobre mapas base comerciales, pero ahora esa funcionalidad deber�a conseguirse mediante el soporte de la proyección Spherical Mercator. Más información disponible en http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Este método es obsoleto y se eliminará en la versión 3.0. Por favor utilice el método ${newMethod} en su lugar.",boundsAddError:"Debe proporcionar los valores x e y a la función add.",lonlatAddError:"Debe proporcionar los valores lon y lat a la función add.",pixelAddError:"Debe proporcionar los valores x e y a la función add.",unsupportedGeometryType:"Tipo de geometr�a no soportada: ${geomType}",pagePositionFailed:"OpenLayers.Util.pagePosition falló: el elemento con id ${elemId} puede haberse colocado de manera errónea.",filterEvaluateNotImplemented:"evaluate no está implementado para este tipo de filtro.",end:""};OpenLayers.Lang.nl=OpenLayers.Util.applyDefaults({unhandledRequest:"Het verzoek is niet afgehandeld met de volgende melding: ${statusText}",permalink:"Permanente verwijzing",overlays:"Overlays",baseLayer:"Achtergrondkaart",sameProjection:"De overzichtskaart werkt alleen als de projectie gelijk is aan de projectie van de hoofdkaart",readNotImplemented:"Lezen is niet geïmplementeerd.",writeNotImplemented:"Schrijven is niet geïmplementeerd.",noFID:"Een optie die geen FID heeft kan niet bijgewerkt worden.",errorLoadingGML:"Er is een fout opgetreden bij het laden van het GML bestand van http://geonetwork-opensource.org/geonetwork-client",browserNotSupported:"Uw browser ondersteunt het weergeven van vectoren niet.\nMomenteel ondersteunde weergavemogelijkheden:\n${renderers}",componentShouldBe:"addFeatures : component moet van het type ${geomType} zijn",getFeatureError:"getFeatureFromEvent is aangeroepen op een laag zonder rederer.\nDit betekent meestal dat u een laag hebt verwijderd, maar niet een handler die ermee geassocieerd was.",minZoomLevelError:"De eigenschap minZoomLevel is alleen bedoeld voor gebruik lagen met die afstammen van FixedZoomLevels-lagen.\nDat deze WFS-laag minZoomLevel controleert, is een overblijfsel uit het verleden.\nWe kunnen deze controle echter niet verwijderen zonder op OL gebaseerde applicaties die hervan afhankelijk zijn stuk te maken.\nDaarom heeft deze functionaliteit de eigenschap 'deprecated' gekregen - de minZoomLevel wordt verwijderd in versie 3.0.\nGebruik in plaats van deze functie de mogelijkheid om min/max voor resolutie in te stellen zoals op de volgende pagina wordt beschreven:\nhttp://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"WFS-transactie: succesvol ${response}",commitFailed:"WFS-transactie: mislukt ${response}",googleWarning:"De Google-Layer kon niet correct geladen worden.\x3cbr /\x3e\x3cbr /\x3e\nOm deze melding niet meer te krijgen, moet u een andere achtergrondkaart kiezen in de laagwisselaar in de rechterbovenhoek.\x3cbr /\x3e\x3cbr /\x3e\nDit komt waarschijnlijk doordat de bibliotheek ${layerLib} niet correct ingevoegd is.\x3cbr /\x3e\x3cbr /\x3e\nOntwikkelaars: \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3eklik hier\x3c/a\x3e om dit werkend te krijgen.",getLayerWarning:"De laag ${layerType} kon niet goed geladen worden.\x3cbr /\x3e\x3cbr /\x3e\nOm deze melding niet meer te krijgen, moet u een andere achtergrondkaart kiezen in de laagwisselaar in de rechterbovenhoek.\x3cbr /\x3e\x3cbr /\x3e\nDit komt waarschijnlijk doordat de bibliotheek ${layerLib} niet correct is ingevoegd.\x3cbr /\x3e\x3cbr /\x3e\nOntwikkelaars: \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3eklik hier\x3c/a\x3e om dit werkend te krijgen.",scale:"Schaal = 1 : ${scaleDenom}",W:"W",E:"O",N:"N",S:"Z",layerAlreadyAdded:"U hebt geprobeerd om de laag  ${layerName} aan de kaart toe te voegen, maar deze is al toegevoegd",reprojectDeprecated:"U gebruikt de optie 'reproject' op de laag ${layerName}.\nDeze optie is vervallen: deze optie was ontwikkeld om gegevens over commerciële basiskaarten weer te geven, maar deze functionaliteit wordt nu bereikt door ondersteuning van Spherical Mercator.\nMeer informatie is beschikbaar op http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Deze methode is verouderd en wordt verwijderd in versie 3.0.\nGebruik ${newMethod}.",boundsAddError:"U moet zowel de x- als de y-waarde doorgeven aan de toevoegfunctie.",lonlatAddError:"U moet zowel de lengte- als de breedtewaarde doorgeven aan de toevoegfunctie.",pixelAddError:"U moet zowel de x- als de y-waarde doorgeven aan de toevoegfunctie.",unsupportedGeometryType:"Dit geometrietype wordt niet ondersteund: ${geomType}",pagePositionFailed:"OpenLayers.Util.pagePosition is mislukt: het element met id ${elemId} is wellicht onjuist geplaatst.",filterEvaluateNotImplemented:"evalueren is niet geïmplementeerd voor dit filtertype."});OpenLayers.Handler.Drag=OpenLayers.Class(OpenLayers.Handler,{started:false,stopDown:true,dragging:false,last:null,start:null,oldOnselectstart:null,interval:0,timeoutId:null,documentDrag:false,documentEvents:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments)
-},down:function(evt){},move:function(evt){},up:function(evt){},out:function(evt){},mousedown:function(evt){var propagate=true;
+OpenLayers.i18n=OpenLayers.Lang.translate;OpenLayers.Lang.en={unhandledRequest:"Unhandled request return ${statusText}",Permalink:"Permalink",Overlays:"Overlays","Base Layer":"Base Layer",noFID:"Can't update a feature for which there is no FID.",browserNotSupported:"Your browser does not support vector rendering. Currently supported renderers are:\n${renderers}",minZoomLevelError:"The minZoomLevel property is only intended for use with the FixedZoomLevels-descendent layers. That this wfs layer checks for minZoomLevel is a relic of thepast. We cannot, however, remove it without possibly breaking OL based applications that may depend on it. Therefore we are deprecating it -- the minZoomLevel check below will be removed at 3.0. Please instead use min/max resolution setting as described here: http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"WFS Transaction: SUCCESS ${response}",commitFailed:"WFS Transaction: FAILED ${response}",googleWarning:"The Google Layer was unable to load correctly.<br><br>To get rid of this message, select a new BaseLayer in the layer switcher in the upper-right corner.<br><br>Most likely, this is because the Google Maps library script was either not included, or does not contain the correct API key for your site.<br><br>Developers: For help getting this working correctly, <a href='http://trac.openlayers.org/wiki/Google' target='_blank'>click here</a>",getLayerWarning:"The ${layerType} Layer was unable to load correctly.<br><br>To get rid of this message, select a new BaseLayer in the layer switcher in the upper-right corner.<br><br>Most likely, this is because the ${layerLib} library script was not correctly included.<br><br>Developers: For help getting this working correctly, <a href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'>click here</a>","Scale = 1 : ${scaleDenom}":"Scale = 1 : ${scaleDenom}",W:"W",E:"E",N:"N",S:"S",Graticule:"Graticule",reprojectDeprecated:"You are using the 'reproject' option on the ${layerName} layer. This option is deprecated: its use was designed to support displaying data over commercial basemaps, but that functionality should now be achieved by using Spherical Mercator support. More information is available from http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"This method has been deprecated and will be removed in 3.0. Please use ${newMethod} instead.",proxyNeeded:"You probably need to set OpenLayers.ProxyHost to access http://geonetwork-opensource.org/geonetwork-client.See http://trac.osgeo.org/openlayers/wiki/FrequentlyAskedQuestions#ProxyHost",end:""};OpenLayers.Lang.fr=OpenLayers.Util.applyDefaults({unhandledRequest:"Requête non gérée, retournant ${statusText}",Permalink:"Permalien",Overlays:"Calques","Base Layer":"Calque de base",noFID:"Impossible de mettre à jour un objet sans identifiant (fid).",browserNotSupported:"Votre navigateur ne supporte pas le rendu vectoriel. Les renderers actuellement supportés sont : \n${renderers}",minZoomLevelError:"La propriété minZoomLevel doit seulement être utilisée pour des couches FixedZoomLevels-descendent. Le fait que cette couche WFS vérifie la présence de minZoomLevel est une relique du passé. Nous ne pouvons toutefois la supprimer sans casser des applications qui pourraient en dépendre. C'est pourquoi nous la déprécions -- la vérification du minZoomLevel sera supprimée en version 3.0. A la place, merci d'utiliser les paramètres de résolutions min/max tel que décrit sur : http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"Transaction WFS : SUCCES ${response}",commitFailed:"Transaction WFS : ECHEC ${response}",googleWarning:"La couche Google n'a pas été en mesure de se charger correctement.\x3cbr\x3e\x3cbr\x3ePour supprimer ce message, choisissez une nouvelle BaseLayer dans le sélecteur de couche en haut à droite.\x3cbr\x3e\x3cbr\x3eCela est possiblement causé par la non-inclusion de la librairie Google Maps, ou alors parce que la clé de l'API ne correspond pas à votre site.\x3cbr\x3e\x3cbr\x3eDéveloppeurs : pour savoir comment corriger ceci, \x3ca href='http://trac.openlayers.org/wiki/Google' target='_blank'\x3ecliquez ici\x3c/a\x3e",getLayerWarning:"La couche ${layerType} n'est pas en mesure de se charger correctement.\x3cbr\x3e\x3cbr\x3ePour supprimer ce message, choisissez une nouvelle BaseLayer dans le sélecteur de couche en haut à droite.\x3cbr\x3e\x3cbr\x3eCela est possiblement causé par la non-inclusion de la librairie ${layerLib}.\x3cbr\x3e\x3cbr\x3eDéveloppeurs : pour savoir comment corriger ceci, \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3ecliquez ici\x3c/a\x3e","Scale = 1 : ${scaleDenom}":"Echelle ~ 1 : ${scaleDenom}",W:"O",E:"E",N:"N",S:"S",reprojectDeprecated:"Vous utilisez l'option 'reproject' sur la couche ${layerName}. Cette option est dépréciée : Son usage permettait d'afficher des données au dessus de couches raster commerciales.Cette fonctionalité est maintenant supportée en utilisant le support de la projection Mercator Sphérique. Plus d'information est disponible sur http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Cette méthode est dépréciée, et sera supprimée à la version 3.0. Merci d'utiliser ${newMethod} à la place.",proxyNeeded:"Vous avez très probablement besoin de renseigner OpenLayers.ProxyHost pour accéder à http://geonetwork-opensource.org/geonetwork-client. Voir http://trac.osgeo.org/openlayers/wiki/FrequentlyAskedQuestions#ProxyHost"});OpenLayers.Lang.de=OpenLayers.Util.applyDefaults({unhandledRequest:"Unbehandelte Anfragerückmeldung ${statusText}",Permalink:"Permalink",Overlays:"Overlays","Base Layer":"Grundkarte",noFID:"Ein Feature, für das keine FID existiert, kann nicht aktualisiert werden.",browserNotSupported:"Ihr Browser unterstützt keine Vektordarstellung. Aktuell unterstützte Renderer:\n${renderers}",minZoomLevelError:"Die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Eigenschaft ist nur für die Verwendung mit \x3ccode\x3eFixedZoomLevels\x3c/code\x3e-untergeordneten Layers vorgesehen. Das dieser \x3ctt\x3ewfs\x3c/tt\x3e-Layer die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Eigenschaft überprüft ist ein Relikt der Vergangenheit. Wir können diese Überprüfung nicht entfernen, ohne das OL basierende Applikationen nicht mehr funktionieren. Daher markieren wir es als veraltet - die \x3ccode\x3eminZoomLevel\x3c/code\x3e-Überprüfung wird in Version 3.0 entfernt werden. Bitte verwenden Sie stattdessen die Min-/Max-Lösung, wie sie unter http://trac.openlayers.org/wiki/SettingZoomLevels beschrieben ist.",commitSuccess:"WFS-Transaktion: Erfolgreich ${response}",commitFailed:"WFS-Transaktion: Fehlgeschlagen ${response}",googleWarning:"Der Google-Layer konnte nicht korrekt geladen werden.\x3cbr\x3e\x3cbr\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\x3cbr\x3e\x3cbr\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der Google-Maps-Bibliothek nicht eingebunden wurde oder keinen gültigen API-Schlüssel für Ihre URL enthält.\x3cbr\x3e\x3cbr\x3eEntwickler: Besuche \x3ca href='http://trac.openlayers.org/wiki/Google' target='_blank'\x3edas Wiki\x3c/a\x3e für Hilfe zum korrekten Einbinden des Google-Layers",getLayerWarning:"Der ${layerType}-Layer konnte nicht korrekt geladen werden.\x3cbr\x3e\x3cbr\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\x3cbr\x3e\x3cbr\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der '${layerLib}'-Bibliothek nicht eingebunden wurde.\x3cbr\x3e\x3cbr\x3eEntwickler: Besuche \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3edas Wiki\x3c/a\x3e für Hilfe zum korrekten Einbinden von Layern","Scale = 1 : ${scaleDenom}":"Maßstab = 1 : ${scaleDenom}",W:"W",E:"O",N:"N",S:"S",reprojectDeprecated:"Sie verwenden die „Reproject“-Option des Layers ${layerName}. Diese Option ist veraltet: Sie wurde entwickelt um die Anzeige von Daten auf kommerziellen Basiskarten zu unterstützen, aber diese Funktion sollte jetzt durch Unterstützung der „Spherical Mercator“ erreicht werden. Weitere Informationen sind unter http://trac.openlayers.org/wiki/SphericalMercator verfügbar.",methodDeprecated:"Die Methode ist veraltet und wird in 3.0 entfernt. Bitte verwende stattdessen ${newMethod}."});OpenLayers.Lang.es={unhandledRequest:"Respuesta a petición no gestionada ${statusText}",Permalink:"Enlace permanente",Overlays:"Capas superpuestas","Base Layer":"Capa Base",noFID:"No se puede actualizar un elemento para el que no existe FID.",browserNotSupported:"Su navegador no soporta renderización vectorial. Los renderizadores soportados actualmente son:\n${renderers}",minZoomLevelError:"La propiedad minZoomLevel debe sólo utilizarse con las capas que tienen FixedZoomLevels. El hecho de que una capa wfs compruebe minZoomLevel es una reliquia del pasado. Sin embargo, no podemos eliminarla sin discontinuar probablemente las aplicaciones OL que puedan depender de ello. Así pues estamos haciéndolo obsoleto --la comprobación minZoomLevel se eliminará en la versión 3.0. Utilice el ajuste de resolution min/max en su lugar, tal como se describe aquí: http://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"Transacción WFS: ÉXITO ${response}",commitFailed:"Transacción WFS: FALLÓ ${response}",googleWarning:"La capa Google no pudo ser cargada correctamente.<br><br>Para evitar este mensaje, seleccione una nueva Capa Base en el selector de capas en la esquina superior derecha.<br><br>Probablemente, esto se debe a que el script de la biblioteca de Google Maps no fue correctamente incluido en su página, o no contiene la clave del API correcta para su sitio.<br><br>Desarrolladores: Para ayudar a hacer funcionar esto correctamente, <a href='http://trac.openlayers.org/wiki/Google' target='_blank'>haga clic aquí</a>",getLayerWarning:"La capa ${layerType} no pudo ser cargada correctamente.<br><br>Para evitar este mensaje, seleccione una nueva Capa Base en el selector de capas en la esquina superior derecha.<br><br>Probablemente, esto se debe a que el script de la biblioteca ${layerLib} no fue correctamente incluido en su página.<br><br>Desarrolladores: Para ayudar a hacer funcionar esto correctamente, <a href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'>haga clic aquí</a>","Scale = 1 : ${scaleDenom}":"Escala = 1 : ${scaleDenom}",W:"O",E:"E",N:"N",S:"S",Graticule:"Retícula",reprojectDeprecated:"Está usando la opción 'reproject' en la capa ${layerName}. Esta opción es obsoleta: su uso fue diseñado para soportar la visualización de datos sobre mapas base comerciales, pero ahora esa funcionalidad debería conseguirse mediante el soporte de la proyección Spherical Mercator. Más información disponible en http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Este método es obsoleto y se eliminará en la versión 3.0. Por favor utilice el método ${newMethod} en su lugar.",end:""};OpenLayers.Lang.nl=OpenLayers.Util.applyDefaults({unhandledRequest:"Het verzoek is niet afgehandeld met de volgende melding: ${statusText}",Permalink:"Permanente verwijzing",Overlays:"Overlays","Base Layer":"Achtergrondkaart",noFID:"Een optie die geen FID heeft kan niet bijgewerkt worden.",browserNotSupported:"Uw browser ondersteunt het weergeven van vectoren niet.\nMomenteel ondersteunde weergavemogelijkheden:\n${renderers}",minZoomLevelError:"De eigenschap minZoomLevel is alleen bedoeld voor gebruik lagen met die afstammen van FixedZoomLevels-lagen.\nDat deze WFS-laag minZoomLevel controleert, is een overblijfsel uit het verleden.\nWe kunnen deze controle echter niet verwijderen zonder op OL gebaseerde applicaties die hervan afhankelijk zijn stuk te maken.\nDaarom heeft deze functionaliteit de eigenschap 'deprecated' gekregen - de minZoomLevel wordt verwijderd in versie 3.0.\nGebruik in plaats van deze functie de mogelijkheid om min/max voor resolutie in te stellen zoals op de volgende pagina wordt beschreven:\nhttp://trac.openlayers.org/wiki/SettingZoomLevels",commitSuccess:"WFS-transactie: succesvol ${response}",commitFailed:"WFS-transactie: mislukt ${response}",googleWarning:"De Google-Layer kon niet correct geladen worden.\x3cbr /\x3e\x3cbr /\x3e\nOm deze melding niet meer te krijgen, moet u een andere achtergrondkaart kiezen in de laagwisselaar in de rechterbovenhoek.\x3cbr /\x3e\x3cbr /\x3e\nDit komt waarschijnlijk doordat de bibliotheek ${layerLib} niet correct ingevoegd is.\x3cbr /\x3e\x3cbr /\x3e\nOntwikkelaars: \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3eklik hier\x3c/a\x3e om dit werkend te krijgen.",getLayerWarning:"De laag ${layerType} kon niet goed geladen worden.\x3cbr /\x3e\x3cbr /\x3e\nOm deze melding niet meer te krijgen, moet u een andere achtergrondkaart kiezen in de laagwisselaar in de rechterbovenhoek.\x3cbr /\x3e\x3cbr /\x3e\nDit komt waarschijnlijk doordat de bibliotheek ${layerLib} niet correct is ingevoegd.\x3cbr /\x3e\x3cbr /\x3e\nOntwikkelaars: \x3ca href='http://trac.openlayers.org/wiki/${layerLib}' target='_blank'\x3eklik hier\x3c/a\x3e om dit werkend te krijgen.","Scale = 1 : ${scaleDenom}":"Schaal = 1 : ${scaleDenom}",W:"W",E:"O",N:"N",S:"Z",reprojectDeprecated:"U gebruikt de optie 'reproject' op de laag ${layerName}.\nDeze optie is vervallen: deze optie was ontwikkeld om gegevens over commerciële basiskaarten weer te geven, maar deze functionaliteit wordt nu bereikt door ondersteuning van Spherical Mercator.\nMeer informatie is beschikbaar op http://trac.openlayers.org/wiki/SphericalMercator.",methodDeprecated:"Deze methode is verouderd en wordt verwijderd in versie 3.0.\nGebruik ${newMethod}."});OpenLayers.Handler.Drag=OpenLayers.Class(OpenLayers.Handler,{started:false,stopDown:true,dragging:false,touch:false,last:null,start:null,lastMoveEvt:null,oldOnselectstart:null,interval:0,timeoutId:null,documentDrag:false,documentEvents:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments);
+if(this.documentDrag===true){var me=this;
+this._docMove=function(evt){me.mousemove({xy:{x:evt.clientX,y:evt.clientY},element:document})
+};
+this._docUp=function(evt){me.mouseup({xy:{x:evt.clientX,y:evt.clientY}})
+}
+}},dragstart:function(evt){var propagate=true;
 this.dragging=false;
-if(this.checkModifiers(evt)&&OpenLayers.Event.isLeftClick(evt)){this.started=true;
+if(this.checkModifiers(evt)&&(OpenLayers.Event.isLeftClick(evt)||OpenLayers.Event.isSingleTouch(evt))){this.started=true;
 this.start=evt.xy;
 this.last=evt.xy;
 OpenLayers.Element.addClass(this.map.viewPortDiv,"olDragDown");
 this.down(evt);
 this.callback("down",[evt.xy]);
 OpenLayers.Event.stop(evt);
-if(!this.oldOnselectstart){this.oldOnselectstart=(document.onselectstart)?document.onselectstart:OpenLayers.Function.True
+if(!this.oldOnselectstart){this.oldOnselectstart=document.onselectstart?document.onselectstart:OpenLayers.Function.True
 }document.onselectstart=OpenLayers.Function.False;
 propagate=!this.stopDown
 }else{this.started=false;
 this.start=null;
 this.last=null
 }return propagate
-},mousemove:function(evt){if(this.started&&!this.timeoutId&&(evt.xy.x!=this.last.x||evt.xy.y!=this.last.y)){if(this.documentDrag===true&&this.documentEvents){if(evt.element===document){this.adjustXY(evt);
+},dragmove:function(evt){this.lastMoveEvt=evt;
+if(this.started&&!this.timeoutId&&(evt.xy.x!=this.last.x||evt.xy.y!=this.last.y)){if(this.documentDrag===true&&this.documentEvents){if(evt.element===document){this.adjustXY(evt);
 this.setEvent(evt)
-}else{this.destroyDocumentEvents()
+}else{this.removeDocumentEvents()
 }}if(this.interval>0){this.timeoutId=setTimeout(OpenLayers.Function.bind(this.removeTimeout,this),this.interval)
 }this.dragging=true;
 this.move(evt);
 this.callback("move",[evt.xy]);
 if(!this.oldOnselectstart){this.oldOnselectstart=document.onselectstart;
 document.onselectstart=OpenLayers.Function.False
-}this.last=this.evt.xy
+}this.last=evt.xy
 }return true
-},removeTimeout:function(){this.timeoutId=null
-},mouseup:function(evt){if(this.started){if(this.documentDrag===true&&this.documentEvents){this.adjustXY(evt);
-this.destroyDocumentEvents()
+},dragend:function(evt){if(this.started){if(this.documentDrag===true&&this.documentEvents){this.adjustXY(evt);
+this.removeDocumentEvents()
 }var dragged=(this.start!=this.last);
 this.started=false;
 this.dragging=false;
@@ -9835,9 +10376,18 @@ this.callback("up",[evt.xy]);
 if(dragged){this.callback("done",[evt.xy])
 }document.onselectstart=this.oldOnselectstart
 }return true
-},mouseout:function(evt){if(this.started&&OpenLayers.Util.mouseLeft(evt,this.map.div)){if(this.documentDrag===true){this.documentEvents=new OpenLayers.Events(this,document,null,null,{includeXY:true});
-this.documentEvents.on({mousemove:this.mousemove,mouseup:this.mouseup});
-OpenLayers.Element.addClass(document.body,"olDragDown")
+},down:function(evt){},move:function(evt){},up:function(evt){},out:function(evt){},mousedown:function(evt){return this.dragstart(evt)
+},touchstart:function(evt){if(!this.touch){this.touch=true;
+this.map.events.un({mousedown:this.mousedown,mouseup:this.mouseup,mousemove:this.mousemove,click:this.click,scope:this})
+}return this.dragstart(evt)
+},mousemove:function(evt){return this.dragmove(evt)
+},touchmove:function(evt){return this.dragmove(evt)
+},removeTimeout:function(){this.timeoutId=null;
+if(this.dragging){this.mousemove(this.lastMoveEvt)
+}},mouseup:function(evt){return this.dragend(evt)
+},touchend:function(evt){evt.xy=this.last;
+return this.dragend(evt)
+},mouseout:function(evt){if(this.started&&OpenLayers.Util.mouseLeft(evt,this.map.viewPortDiv)){if(this.documentDrag===true){this.addDocumentEvents()
 }else{var dragged=(this.start!=this.last);
 this.started=false;
 this.dragging=false;
@@ -9853,28 +10403,34 @@ if(OpenLayers.Handler.prototype.activate.apply(this,arguments)){this.dragging=fa
 activated=true
 }return activated
 },deactivate:function(){var deactivated=false;
-if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){this.started=false;
+if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){this.touch=false;
+this.started=false;
 this.dragging=false;
 this.start=null;
 this.last=null;
 deactivated=true;
 OpenLayers.Element.removeClass(this.map.viewPortDiv,"olDragDown")
 }return deactivated
-},adjustXY:function(evt){var pos=OpenLayers.Util.pagePosition(this.map.div);
+},adjustXY:function(evt){var pos=OpenLayers.Util.pagePosition(this.map.viewPortDiv);
 evt.xy.x-=pos[0];
 evt.xy.y-=pos[1]
-},destroyDocumentEvents:function(){OpenLayers.Element.removeClass(document.body,"olDragDown");
-this.documentEvents.destroy();
-this.documentEvents=null
-},CLASS_NAME:"OpenLayers.Handler.Drag"});OpenLayers.Handler.Box=OpenLayers.Class(OpenLayers.Handler,{dragHandler:null,boxDivClassName:"olHandlerBoxZoomBox",boxCharacteristics:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments);
-var callbacks={down:this.startBox,move:this.moveBox,out:this.removeBox,up:this.endBox};
-this.dragHandler=new OpenLayers.Handler.Drag(this,callbacks,{keyMask:this.keyMask})
-},destroy:function(){if(this.dragHandler){this.dragHandler.destroy();
+},addDocumentEvents:function(){OpenLayers.Element.addClass(document.body,"olDragDown");
+this.documentEvents=true;
+OpenLayers.Event.observe(document,"mousemove",this._docMove);
+OpenLayers.Event.observe(document,"mouseup",this._docUp)
+},removeDocumentEvents:function(){OpenLayers.Element.removeClass(document.body,"olDragDown");
+this.documentEvents=false;
+OpenLayers.Event.stopObserving(document,"mousemove",this._docMove);
+OpenLayers.Event.stopObserving(document,"mouseup",this._docUp)
+},CLASS_NAME:"OpenLayers.Handler.Drag"});OpenLayers.Handler.Box=OpenLayers.Class(OpenLayers.Handler,{dragHandler:null,boxDivClassName:"olHandlerBoxZoomBox",boxOffsets:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments);
+this.dragHandler=new OpenLayers.Handler.Drag(this,{down:this.startBox,move:this.moveBox,out:this.removeBox,up:this.endBox},{keyMask:this.keyMask})
+},destroy:function(){OpenLayers.Handler.prototype.destroy.apply(this,arguments);
+if(this.dragHandler){this.dragHandler.destroy();
 this.dragHandler=null
-}OpenLayers.Handler.prototype.destroy.apply(this,arguments)
-},setMap:function(map){OpenLayers.Handler.prototype.setMap.apply(this,arguments);
+}},setMap:function(map){OpenLayers.Handler.prototype.setMap.apply(this,arguments);
 if(this.dragHandler){this.dragHandler.setMap(map)
-}},startBox:function(xy){this.zoomBox=OpenLayers.Util.createDiv("zoomBox",this.dragHandler.start);
+}},startBox:function(xy){this.callback("start",[]);
+this.zoomBox=OpenLayers.Util.createDiv("zoomBox",{x:-9999,y:-9999});
 this.zoomBox.className=this.boxDivClassName;
 this.zoomBox.style.zIndex=this.map.Z_INDEX_BASE.Popup-1;
 this.map.viewPortDiv.appendChild(this.zoomBox);
@@ -9883,14 +10439,12 @@ OpenLayers.Element.addClass(this.map.viewPortDiv,"olDrawBox")
 var startY=this.dragHandler.start.y;
 var deltaX=Math.abs(startX-xy.x);
 var deltaY=Math.abs(startY-xy.y);
-this.zoomBox.style.width=Math.max(1,deltaX)+"px";
-this.zoomBox.style.height=Math.max(1,deltaY)+"px";
-this.zoomBox.style.left=xy.x<startX?xy.x+"px":startX+"px";
-this.zoomBox.style.top=xy.y<startY?xy.y+"px":startY+"px";
-var box=this.getBoxCharacteristics();
-if(box.newBoxModel){if(xy.x>startX){this.zoomBox.style.width=Math.max(1,deltaX-box.xOffset)+"px"
-}if(xy.y>startY){this.zoomBox.style.height=Math.max(1,deltaY-box.yOffset)+"px"
-}}},endBox:function(end){var result;
+var offset=this.getBoxOffsets();
+this.zoomBox.style.width=(deltaX+offset.width+1)+"px";
+this.zoomBox.style.height=(deltaY+offset.height+1)+"px";
+this.zoomBox.style.left=(xy.x<startX?startX-deltaX-offset.left:startX-offset.left)+"px";
+this.zoomBox.style.top=(xy.y<startY?startY-deltaY-offset.top:startY-offset.top)+"px"
+},endBox:function(end){var result;
 if(Math.abs(this.dragHandler.start.x-end.x)>5||Math.abs(this.dragHandler.start.y-end.y)>5){var start=this.dragHandler.start;
 var top=Math.min(start.y,end.y);
 var bottom=Math.max(start.y,end.y);
@@ -9902,23 +10456,31 @@ result=new OpenLayers.Bounds(left,bottom,right,top)
 this.callback("done",[result])
 },removeBox:function(){this.map.viewPortDiv.removeChild(this.zoomBox);
 this.zoomBox=null;
-this.boxCharacteristics=null;
+this.boxOffsets=null;
 OpenLayers.Element.removeClass(this.map.viewPortDiv,"olDrawBox")
 },activate:function(){if(OpenLayers.Handler.prototype.activate.apply(this,arguments)){this.dragHandler.activate();
 return true
 }else{return false
-}},deactivate:function(){if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){this.dragHandler.deactivate();
-return true
+}},deactivate:function(){if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){if(this.dragHandler.deactivate()){if(this.zoomBox){this.removeBox()
+}}return true
 }else{return false
-}},getBoxCharacteristics:function(){if(!this.boxCharacteristics){var xOffset=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-left-width"))+parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-right-width"))+1;
-var yOffset=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-top-width"))+parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-bottom-width"))+1;
-var newBoxModel=OpenLayers.Util.getBrowserName()=="msie"?document.compatMode!="BackCompat":true;
-this.boxCharacteristics={xOffset:xOffset,yOffset:yOffset,newBoxModel:newBoxModel}
-}return this.boxCharacteristics
-},CLASS_NAME:"OpenLayers.Handler.Box"});OpenLayers.Control.ZoomBox=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,out:false,alwaysZoom:false,draw:function(){this.handler=new OpenLayers.Handler.Box(this,{done:this.zoomBox},{keyMask:this.keyMask})
+}},getBoxOffsets:function(){if(!this.boxOffsets){var testDiv=document.createElement("div");
+testDiv.style.position="absolute";
+testDiv.style.border="1px solid black";
+testDiv.style.width="3px";
+document.body.appendChild(testDiv);
+var w3cBoxModel=testDiv.clientWidth==3;
+document.body.removeChild(testDiv);
+var left=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-left-width"));
+var right=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-right-width"));
+var top=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-top-width"));
+var bottom=parseInt(OpenLayers.Element.getStyle(this.zoomBox,"border-bottom-width"));
+this.boxOffsets={left:left,right:right,top:top,bottom:bottom,width:w3cBoxModel===false?left+right:0,height:w3cBoxModel===false?top+bottom:0}
+}return this.boxOffsets
+},CLASS_NAME:"OpenLayers.Handler.Box"});OpenLayers.Control.ZoomBox=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,out:false,keyMask:null,alwaysZoom:false,draw:function(){this.handler=new OpenLayers.Handler.Box(this,{done:this.zoomBox},{keyMask:this.keyMask})
 },zoomBox:function(position){if(position instanceof OpenLayers.Bounds){var bounds;
-if(!this.out){var minXY=this.map.getLonLatFromPixel(new OpenLayers.Pixel(position.left,position.bottom));
-var maxXY=this.map.getLonLatFromPixel(new OpenLayers.Pixel(position.right,position.top));
+if(!this.out){var minXY=this.map.getLonLatFromPixel({x:position.left,y:position.bottom});
+var maxXY=this.map.getLonLatFromPixel({x:position.right,y:position.top});
 bounds=new OpenLayers.Bounds(minXY.lon,minXY.lat,maxXY.lon,maxXY.lat)
 }else{var pixWidth=Math.abs(position.right-position.left);
 var pixHeight=Math.abs(position.top-position.bottom);
@@ -9935,16 +10497,38 @@ this.map.zoomToExtent(bounds);
 if(lastZoom==this.map.getZoom()&&this.alwaysZoom==true){this.map.zoomTo(lastZoom+(this.out?-1:1))
 }}else{if(!this.out){this.map.setCenter(this.map.getLonLatFromPixel(position),this.map.getZoom()+1)
 }else{this.map.setCenter(this.map.getLonLatFromPixel(position),this.map.getZoom()-1)
-}}},CLASS_NAME:"OpenLayers.Control.ZoomBox"});OpenLayers.Control.DragPan=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,panned:false,interval:25,documentDrag:false,draw:function(){this.handler=new OpenLayers.Handler.Drag(this,{move:this.panMap,done:this.panMapDone},{interval:this.interval,documentDrag:this.documentDrag})
-},panMap:function(xy){this.panned=true;
-this.map.pan(this.handler.last.x-xy.x,this.handler.last.y-xy.y,{dragging:this.handler.dragging,animate:false})
-},panMapDone:function(xy){if(this.panned){this.panMap(xy);
-this.panned=false
-}},CLASS_NAME:"OpenLayers.Control.DragPan"});OpenLayers.Handler.Click=OpenLayers.Class(OpenLayers.Handler,{delay:300,single:true,"double":false,pixelTolerance:0,stopSingle:false,stopDouble:false,timerId:null,down:null,rightclickTimerId:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments);
-if(this.pixelTolerance!=null){this.mousedown=function(evt){this.down=evt.xy;
+}}},CLASS_NAME:"OpenLayers.Control.ZoomBox"});OpenLayers.Control.DragPan=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_TOOL,panned:false,interval:1,documentDrag:false,kinetic:null,enableKinetic:false,kineticInterval:10,draw:function(){if(this.enableKinetic){var config={interval:this.kineticInterval};
+if(typeof this.enableKinetic==="object"){config=OpenLayers.Util.extend(config,this.enableKinetic)
+}this.kinetic=new OpenLayers.Kinetic(config)
+}this.handler=new OpenLayers.Handler.Drag(this,{move:this.panMap,done:this.panMapDone,down:this.panMapStart},{interval:this.interval,documentDrag:this.documentDrag})
+},panMapStart:function(){if(this.kinetic){this.kinetic.begin()
+}},panMap:function(xy){if(this.kinetic){this.kinetic.update(xy)
+}this.panned=true;
+this.map.pan(this.handler.last.x-xy.x,this.handler.last.y-xy.y,{dragging:true,animate:false})
+},panMapDone:function(xy){if(this.panned){var res=null;
+if(this.kinetic){res=this.kinetic.end(xy)
+}this.map.pan(this.handler.last.x-xy.x,this.handler.last.y-xy.y,{dragging:!!res,animate:false});
+if(res){var self=this;
+this.kinetic.move(res,function(x,y,end){self.map.pan(x,y,{dragging:!end,animate:false})
+})
+}this.panned=false
+}},CLASS_NAME:"OpenLayers.Control.DragPan"});OpenLayers.Handler.Click=OpenLayers.Class(OpenLayers.Handler,{delay:300,single:true,"double":false,pixelTolerance:0,dblclickTolerance:13,stopSingle:false,stopDouble:false,timerId:null,touch:false,down:null,last:null,first:null,rightclickTimerId:null,touchstart:function(evt){if(!this.touch){this.unregisterMouseListeners();
+this.touch=true
+}this.down=this.getEventInfo(evt);
+this.last=this.getEventInfo(evt);
 return true
-}
-}},mousedown:null,mouseup:function(evt){var propagate=true;
+},touchmove:function(evt){this.last=this.getEventInfo(evt);
+return true
+},touchend:function(evt){if(this.down){evt.xy=this.last.xy;
+evt.lastTouches=this.last.touches;
+this.handleSingle(evt);
+this.down=null
+}return true
+},unregisterMouseListeners:function(){this.map.events.un({mousedown:this.mousedown,mouseup:this.mouseup,click:this.click,dblclick:this.dblclick,scope:this})
+},mousedown:function(evt){this.down=this.getEventInfo(evt);
+this.last=this.getEventInfo(evt);
+return true
+},mouseup:function(evt){var propagate=true;
 if(this.checkModifiers(evt)&&this.control.handleRightClicks&&OpenLayers.Event.isRightClick(evt)){propagate=this.rightclick(evt)
 }return propagate
 },rightclick:function(evt){if(this.passesTolerance(evt)){if(this.rightclickTimerId!=null){this.clearTimer();
@@ -9956,57 +10540,88 @@ this.rightclickTimerId=window.setTimeout(delayedRightCall,this.delay)
 }}return !this.stopSingle
 },delayedRightCall:function(evt){this.rightclickTimerId=null;
 if(evt){this.callback("rightclick",[evt])
-}return !this.stopSingle
-},dblclick:function(evt){if(this.passesTolerance(evt)){if(this["double"]){this.callback("dblclick",[evt])
+}},click:function(evt){if(!this.last){this.last=this.getEventInfo(evt)
+}this.handleSingle(evt);
+return !this.stopSingle
+},dblclick:function(evt){this.handleDouble(evt);
+return !this.stopDouble
+},handleDouble:function(evt){if(this.passesDblclickTolerance(evt)){if(this["double"]){this.callback("dblclick",[evt])
 }this.clearTimer()
-}return !this.stopDouble
-},click:function(evt){if(this.passesTolerance(evt)){if(this.timerId!=null){this.clearTimer()
-}else{var clickEvent=this.single?OpenLayers.Util.extend({},evt):null;
-this.timerId=window.setTimeout(OpenLayers.Function.bind(this.delayedCall,this,clickEvent),this.delay)
-}}return !this.stopSingle
+}},handleSingle:function(evt){if(this.passesTolerance(evt)){if(this.timerId!=null){if(this.last.touches&&this.last.touches.length===1){if(this["double"]){OpenLayers.Event.stop(evt)
+}this.handleDouble(evt)
+}if(!this.last.touches||this.last.touches.length!==2){this.clearTimer()
+}}else{this.first=this.getEventInfo(evt);
+var clickEvent=this.single?OpenLayers.Util.extend({},evt):null;
+this.queuePotentialClick(clickEvent)
+}}},queuePotentialClick:function(evt){this.timerId=window.setTimeout(OpenLayers.Function.bind(this.delayedCall,this,evt),this.delay)
 },passesTolerance:function(evt){var passes=true;
-if(this.pixelTolerance!=null&&this.down){var dpx=Math.sqrt(Math.pow(this.down.x-evt.xy.x,2)+Math.pow(this.down.y-evt.xy.y,2));
-if(dpx>this.pixelTolerance){passes=false
-}}return passes
+if(this.pixelTolerance!=null&&this.down&&this.down.xy){passes=this.pixelTolerance>=this.down.xy.distanceTo(evt.xy);
+if(passes&&this.touch&&this.down.touches.length===this.last.touches.length){for(var i=0,ii=this.down.touches.length;
+i<ii;
+++i){if(this.getTouchDistance(this.down.touches[i],this.last.touches[i])>this.pixelTolerance){passes=false;
+break
+}}}}return passes
+},getTouchDistance:function(from,to){return Math.sqrt(Math.pow(from.clientX-to.clientX,2)+Math.pow(from.clientY-to.clientY,2))
+},passesDblclickTolerance:function(evt){var passes=true;
+if(this.down&&this.first){passes=this.down.xy.distanceTo(this.first.xy)<=this.dblclickTolerance
+}return passes
 },clearTimer:function(){if(this.timerId!=null){window.clearTimeout(this.timerId);
 this.timerId=null
 }if(this.rightclickTimerId!=null){window.clearTimeout(this.rightclickTimerId);
 this.rightclickTimerId=null
 }},delayedCall:function(evt){this.timerId=null;
 if(evt){this.callback("click",[evt])
-}},deactivate:function(){var deactivated=false;
+}},getEventInfo:function(evt){var touches;
+if(evt.touches){var len=evt.touches.length;
+touches=new Array(len);
+var touch;
+for(var i=0;
+i<len;
+i++){touch=evt.touches[i];
+touches[i]={clientX:touch.clientX,clientY:touch.clientY}
+}}return{xy:evt.xy,touches:touches}
+},deactivate:function(){var deactivated=false;
 if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){this.clearTimer();
 this.down=null;
+this.first=null;
+this.last=null;
+this.touch=false;
 deactivated=true
 }return deactivated
-},CLASS_NAME:"OpenLayers.Handler.Click"});OpenLayers.Control.Navigation=OpenLayers.Class(OpenLayers.Control,{dragPan:null,dragPanOptions:null,documentDrag:false,zoomBox:null,zoomBoxEnabled:true,zoomWheelEnabled:true,mouseWheelOptions:null,handleRightClicks:false,zoomBoxKeyMask:OpenLayers.Handler.MOD_SHIFT,autoActivate:true,initialize:function(options){this.handlers={};
+},CLASS_NAME:"OpenLayers.Handler.Click"});OpenLayers.Control.Navigation=OpenLayers.Class(OpenLayers.Control,{dragPan:null,dragPanOptions:null,pinchZoom:null,pinchZoomOptions:null,documentDrag:false,zoomBox:null,zoomBoxEnabled:true,zoomWheelEnabled:true,mouseWheelOptions:null,handleRightClicks:false,zoomBoxKeyMask:OpenLayers.Handler.MOD_SHIFT,autoActivate:true,initialize:function(options){this.handlers={};
 OpenLayers.Control.prototype.initialize.apply(this,arguments)
 },destroy:function(){this.deactivate();
 if(this.dragPan){this.dragPan.destroy()
 }this.dragPan=null;
 if(this.zoomBox){this.zoomBox.destroy()
 }this.zoomBox=null;
+if(this.pinchZoom){this.pinchZoom.destroy()
+}this.pinchZoom=null;
 OpenLayers.Control.prototype.destroy.apply(this,arguments)
 },activate:function(){this.dragPan.activate();
 if(this.zoomWheelEnabled){this.handlers.wheel.activate()
 }this.handlers.click.activate();
 if(this.zoomBoxEnabled){this.zoomBox.activate()
+}if(this.pinchZoom){this.pinchZoom.activate()
 }return OpenLayers.Control.prototype.activate.apply(this,arguments)
-},deactivate:function(){this.zoomBox.deactivate();
+},deactivate:function(){if(this.pinchZoom){this.pinchZoom.deactivate()
+}this.zoomBox.deactivate();
 this.dragPan.deactivate();
 this.handlers.click.deactivate();
 this.handlers.wheel.deactivate();
 return OpenLayers.Control.prototype.deactivate.apply(this,arguments)
 },draw:function(){if(this.handleRightClicks){this.map.viewPortDiv.oncontextmenu=OpenLayers.Function.False
-}var clickCallbacks={dblclick:this.defaultDblClick,dblrightclick:this.defaultDblRightClick};
+}var clickCallbacks={click:this.defaultClick,dblclick:this.defaultDblClick,dblrightclick:this.defaultDblRightClick};
 var clickOptions={"double":true,stopDouble:true};
 this.handlers.click=new OpenLayers.Handler.Click(this,clickCallbacks,clickOptions);
 this.dragPan=new OpenLayers.Control.DragPan(OpenLayers.Util.extend({map:this.map,documentDrag:this.documentDrag},this.dragPanOptions));
 this.zoomBox=new OpenLayers.Control.ZoomBox({map:this.map,keyMask:this.zoomBoxKeyMask});
 this.dragPan.draw();
 this.zoomBox.draw();
-this.handlers.wheel=new OpenLayers.Handler.MouseWheel(this,{up:this.wheelUp,down:this.wheelDown},this.mouseWheelOptions)
-},defaultDblClick:function(evt){var newCenter=this.map.getLonLatFromViewPortPx(evt.xy);
+this.handlers.wheel=new OpenLayers.Handler.MouseWheel(this,{up:this.wheelUp,down:this.wheelDown},this.mouseWheelOptions);
+if(OpenLayers.Control.PinchZoom){this.pinchZoom=new OpenLayers.Control.PinchZoom(OpenLayers.Util.extend({map:this.map},this.pinchZoomOptions))
+}},defaultClick:function(evt){if(evt.lastTouches&&evt.lastTouches.length==2){this.map.zoomOut()
+}},defaultDblClick:function(evt){var newCenter=this.map.getLonLatFromViewPortPx(evt.xy);
 this.map.setCenter(newCenter,this.map.zoom+1)
 },defaultDblRightClick:function(evt){var newCenter=this.map.getLonLatFromViewPortPx(evt.xy);
 this.map.setCenter(newCenter,this.map.zoom-1)
@@ -10032,12 +10647,10 @@ if(this.active){this.zoomBox.activate()
 this.handlers.wheel.deactivate()
 },enableZoomWheel:function(){this.zoomWheelEnabled=true;
 if(this.active){this.handlers.wheel.activate()
-}},CLASS_NAME:"OpenLayers.Control.Navigation"});OpenLayers.Layer.HTTPRequest=OpenLayers.Class(OpenLayers.Layer,{URL_HASH_FACTOR:(Math.sqrt(5)-1)/2,url:null,params:null,reproject:false,initialize:function(name,url,params,options){var newArguments=arguments;
-newArguments=[name,options];
-OpenLayers.Layer.prototype.initialize.apply(this,newArguments);
+}},CLASS_NAME:"OpenLayers.Control.Navigation"});OpenLayers.Layer.HTTPRequest=OpenLayers.Class(OpenLayers.Layer,{URL_HASH_FACTOR:(Math.sqrt(5)-1)/2,url:null,params:null,reproject:false,initialize:function(name,url,params,options){OpenLayers.Layer.prototype.initialize.apply(this,[name,options]);
 this.url=url;
-this.params=OpenLayers.Util.extend({},params)
-},destroy:function(){this.url=null;
+if(!this.params){this.params=OpenLayers.Util.extend({},params)
+}},destroy:function(){this.url=null;
 this.params=null;
 OpenLayers.Layer.prototype.destroy.apply(this,arguments)
 },clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.HTTPRequest(this.name,this.url,this.params,this.getOptions())
@@ -10060,59 +10673,173 @@ product-=Math.floor(product)
 var allParams=OpenLayers.Util.extend({},this.params);
 allParams=OpenLayers.Util.extend(allParams,newParams);
 var paramsString=OpenLayers.Util.getParameterString(allParams);
-if(url instanceof Array){url=this.selectUrl(paramsString,url)
+if(OpenLayers.Util.isArray(url)){url=this.selectUrl(paramsString,url)
 }var urlParams=OpenLayers.Util.upperCaseObject(OpenLayers.Util.getParameters(url));
 for(var key in allParams){if(key.toUpperCase() in urlParams){delete allParams[key]
 }}paramsString=OpenLayers.Util.getParameterString(allParams);
 return OpenLayers.Util.urlAppend(url,paramsString)
-},CLASS_NAME:"OpenLayers.Layer.HTTPRequest"});OpenLayers.Layer.Grid=OpenLayers.Class(OpenLayers.Layer.HTTPRequest,{tileSize:null,grid:null,singleTile:false,ratio:1.5,buffer:2,numLoadingTiles:0,initialize:function(name,url,params,options){OpenLayers.Layer.HTTPRequest.prototype.initialize.apply(this,arguments);
-this.events.addEventType("tileloaded");
-this.grid=[]
-},destroy:function(){this.clearGrid();
+},CLASS_NAME:"OpenLayers.Layer.HTTPRequest"});OpenLayers.Layer.Grid=OpenLayers.Class(OpenLayers.Layer.HTTPRequest,{tileSize:null,tileOriginCorner:"bl",tileOrigin:null,tileOptions:null,tileClass:OpenLayers.Tile.Image,grid:null,singleTile:false,ratio:1.5,buffer:0,transitionEffect:null,numLoadingTiles:0,tileLoadingDelay:85,serverResolutions:null,moveTimerId:null,deferMoveGriddedTiles:null,tileQueueId:null,tileQueue:null,loading:false,backBuffer:null,gridResolution:null,backBufferResolution:null,backBufferLonLat:null,backBufferTimerId:null,removeBackBufferDelay:null,className:null,initialize:function(name,url,params,options){OpenLayers.Layer.HTTPRequest.prototype.initialize.apply(this,arguments);
+this.grid=[];
+this.tileQueue=[];
+if(this.removeBackBufferDelay===null){this.removeBackBufferDelay=this.singleTile?0:2500
+}if(this.className===null){this.className=this.singleTile?"olLayerGridSingleTile":"olLayerGrid"
+}if(!OpenLayers.Animation.isNative){this.deferMoveGriddedTiles=OpenLayers.Function.bind(function(){this.moveGriddedTiles(true);
+this.moveTimerId=null
+},this)
+}},setMap:function(map){OpenLayers.Layer.HTTPRequest.prototype.setMap.call(this,map);
+OpenLayers.Element.addClass(this.div,this.className)
+},removeMap:function(map){if(this.moveTimerId!==null){window.clearTimeout(this.moveTimerId);
+this.moveTimerId=null
+}this.clearTileQueue();
+if(this.backBufferTimerId!==null){window.clearTimeout(this.backBufferTimerId);
+this.backBufferTimerId=null
+}},destroy:function(){this.removeBackBuffer();
+this.clearGrid();
 this.grid=null;
 this.tileSize=null;
 OpenLayers.Layer.HTTPRequest.prototype.destroy.apply(this,arguments)
-},clearGrid:function(){if(this.grid){for(var iRow=0,len=this.grid.length;
+},clearGrid:function(){this.clearTileQueue();
+if(this.grid){for(var iRow=0,len=this.grid.length;
 iRow<len;
 iRow++){var row=this.grid[iRow];
 for(var iCol=0,clen=row.length;
 iCol<clen;
 iCol++){var tile=row[iCol];
-this.removeTileMonitoringHooks(tile);
-tile.destroy()
-}}this.grid=[]
+this.destroyTile(tile)
+}}this.grid=[];
+this.gridResolution=null
 }},clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.Grid(this.name,this.url,this.params,this.getOptions())
 }obj=OpenLayers.Layer.HTTPRequest.prototype.clone.apply(this,[obj]);
 if(this.tileSize!=null){obj.tileSize=this.tileSize.clone()
 }obj.grid=[];
+obj.gridResolution=null;
+obj.backBuffer=null;
+obj.backBufferTimerId=null;
+obj.tileQueue=[];
+obj.tileQueueId=null;
+obj.loading=false;
+obj.moveTimerId=null;
 return obj
 },moveTo:function(bounds,zoomChanged,dragging){OpenLayers.Layer.HTTPRequest.prototype.moveTo.apply(this,arguments);
 bounds=bounds||this.map.getExtent();
 if(bounds!=null){var forceReTile=!this.grid.length||zoomChanged;
 var tilesBounds=this.getTilesBounds();
-if(this.singleTile){if(forceReTile||(!dragging&&!tilesBounds.containsBounds(bounds))){this.initSingleTile(bounds)
-}}else{if(forceReTile||!tilesBounds.containsBounds(bounds,true)){this.initGriddedTiles(bounds)
-}else{this.moveGriddedTiles(bounds)
-}}}},setTileSize:function(size){if(this.singleTile){size=this.map.getSize();
+var resolution=this.map.getResolution();
+var serverResolution=this.getServerResolution(resolution);
+if(this.singleTile){if(forceReTile||(!dragging&&!tilesBounds.containsBounds(bounds))){if(zoomChanged&&this.transitionEffect!=="resize"){this.removeBackBuffer()
+}if(!zoomChanged||this.transitionEffect==="resize"){this.applyBackBuffer(serverResolution)
+}this.initSingleTile(bounds)
+}}else{forceReTile=forceReTile||!tilesBounds.intersectsBounds(bounds,{worldBounds:this.map.baseLayer.wrapDateLine&&this.map.getMaxExtent()});
+if(resolution!==serverResolution){bounds=this.map.calculateBounds(null,serverResolution);
+if(forceReTile){var scale=serverResolution/resolution;
+this.transformDiv(scale)
+}}else{this.div.style.width="100%";
+this.div.style.height="100%";
+this.div.style.left="0%";
+this.div.style.top="0%"
+}if(forceReTile){if(zoomChanged&&this.transitionEffect==="resize"){this.applyBackBuffer(serverResolution)
+}this.initGriddedTiles(bounds)
+}else{this.moveGriddedTiles()
+}}}},getTileData:function(loc){var data=null,x=loc.lon,y=loc.lat,numRows=this.grid.length;
+if(this.map&&numRows){var res=this.map.getResolution(),tileWidth=this.tileSize.w,tileHeight=this.tileSize.h,bounds=this.grid[0][0].bounds,left=bounds.left,top=bounds.top;
+if(x<left){if(this.map.baseLayer.wrapDateLine){var worldWidth=this.map.getMaxExtent().getWidth();
+var worldsAway=Math.ceil((left-x)/worldWidth);
+x+=worldWidth*worldsAway
+}}var dtx=(x-left)/(res*tileWidth);
+var dty=(top-y)/(res*tileHeight);
+var col=Math.floor(dtx);
+var row=Math.floor(dty);
+if(row>=0&&row<numRows){var tile=this.grid[row][col];
+if(tile){data={tile:tile,i:Math.floor((dtx-col)*tileWidth),j:Math.floor((dty-row)*tileHeight)}
+}}}return data
+},queueTileDraw:function(evt){var tile=evt.object;
+if(!~OpenLayers.Util.indexOf(this.tileQueue,tile)){this.tileQueue.push(tile)
+}if(!this.tileQueueId){this.tileQueueId=OpenLayers.Animation.start(OpenLayers.Function.bind(this.drawTileFromQueue,this),null,this.div)
+}return false
+},drawTileFromQueue:function(){if(this.tileQueue.length===0){this.clearTileQueue()
+}else{this.tileQueue.shift().draw(true)
+}},clearTileQueue:function(){OpenLayers.Animation.stop(this.tileQueueId);
+this.tileQueueId=null;
+this.tileQueue=[]
+},destroyTile:function(tile){this.removeTileMonitoringHooks(tile);
+tile.destroy()
+},getServerResolution:function(resolution){resolution=resolution||this.map.getResolution();
+if(this.serverResolutions&&OpenLayers.Util.indexOf(this.serverResolutions,resolution)===-1){var i,serverResolution;
+for(i=this.serverResolutions.length-1;
+i>=0;
+i--){serverResolution=this.serverResolutions[i];
+if(serverResolution>resolution){resolution=serverResolution;
+break
+}}if(i===-1){throw"no appropriate resolution in serverResolutions"
+}}return resolution
+},getServerZoom:function(){var resolution=this.getServerResolution();
+return this.serverResolutions?OpenLayers.Util.indexOf(this.serverResolutions,resolution):this.map.getZoomForResolution(resolution)+(this.zoomOffset||0)
+},transformDiv:function(scale){this.div.style.width=100*scale+"%";
+this.div.style.height=100*scale+"%";
+var size=this.map.getSize();
+var lcX=parseInt(this.map.layerContainerDiv.style.left,10);
+var lcY=parseInt(this.map.layerContainerDiv.style.top,10);
+var x=(lcX-(size.w/2))*(scale-1);
+var y=(lcY-(size.h/2))*(scale-1);
+this.div.style.left=x+"%";
+this.div.style.top=y+"%"
+},getResolutionScale:function(){return parseInt(this.div.style.width,10)/100
+},applyBackBuffer:function(resolution){if(this.backBufferTimerId!==null){this.removeBackBuffer()
+}var backBuffer=this.backBuffer;
+if(!backBuffer){backBuffer=this.createBackBuffer();
+if(!backBuffer){return
+}this.div.insertBefore(backBuffer,this.div.firstChild);
+this.backBuffer=backBuffer;
+var topLeftTileBounds=this.grid[0][0].bounds;
+this.backBufferLonLat={lon:topLeftTileBounds.left,lat:topLeftTileBounds.top};
+this.backBufferResolution=this.gridResolution
+}var style=backBuffer.style;
+var ratio=this.backBufferResolution/resolution;
+style.width=100*ratio+"%";
+style.height=100*ratio+"%";
+var position=this.getViewPortPxFromLonLat(this.backBufferLonLat,resolution);
+var leftOffset=parseInt(this.map.layerContainerDiv.style.left,10);
+var topOffset=parseInt(this.map.layerContainerDiv.style.top,10);
+backBuffer.style.left=Math.round(position.x-leftOffset)+"%";
+backBuffer.style.top=Math.round(position.y-topOffset)+"%"
+},createBackBuffer:function(){var backBuffer;
+if(this.grid.length>0){backBuffer=document.createElement("div");
+backBuffer.id=this.div.id+"_bb";
+backBuffer.className="olBackBuffer";
+backBuffer.style.position="absolute";
+backBuffer.style.width="100%";
+backBuffer.style.height="100%";
+for(var i=0,lenI=this.grid.length;
+i<lenI;
+i++){for(var j=0,lenJ=this.grid[i].length;
+j<lenJ;
+j++){var tile=this.grid[i][j].createBackBuffer();
+if(!tile){continue
+}tile.style.top=(i*this.tileSize.h)+"%";
+tile.style.left=(j*this.tileSize.w)+"%";
+backBuffer.appendChild(tile)
+}}}return backBuffer
+},removeBackBuffer:function(){if(this.backBuffer){this.div.removeChild(this.backBuffer);
+this.backBuffer=null;
+this.backBufferResolution=null;
+if(this.backBufferTimerId!==null){window.clearTimeout(this.backBufferTimerId);
+this.backBufferTimerId=null
+}}},moveByPx:function(dx,dy){if(!this.singleTile){this.moveGriddedTiles()
+}},setTileSize:function(size){if(this.singleTile){size=this.map.getSize();
 size.h=parseInt(size.h*this.ratio);
 size.w=parseInt(size.w*this.ratio)
 }OpenLayers.Layer.HTTPRequest.prototype.setTileSize.apply(this,[size])
-},getGridBounds:function(){var msg="The getGridBounds() function is deprecated. It will be removed in 3.0. Please use getTilesBounds() instead.";
-OpenLayers.Console.warn(msg);
-return this.getTilesBounds()
 },getTilesBounds:function(){var bounds=null;
-if(this.grid.length){var bottom=this.grid.length-1;
-var bottomLeftTile=this.grid[bottom][0];
-var right=this.grid[0].length-1;
-var topRightTile=this.grid[0][right];
-bounds=new OpenLayers.Bounds(bottomLeftTile.bounds.left,bottomLeftTile.bounds.bottom,topRightTile.bounds.right,topRightTile.bounds.top)
+var length=this.grid.length;
+if(length){var bottomLeftTileBounds=this.grid[length-1][0].bounds,width=this.grid[0].length*bottomLeftTileBounds.getWidth(),height=this.grid.length*bottomLeftTileBounds.getHeight();
+bounds=new OpenLayers.Bounds(bottomLeftTileBounds.left,bottomLeftTileBounds.bottom,bottomLeftTileBounds.left+width,bottomLeftTileBounds.bottom+height)
 }return bounds
-},initSingleTile:function(bounds){var center=bounds.getCenterLonLat();
+},initSingleTile:function(bounds){this.clearTileQueue();
+var center=bounds.getCenterLonLat();
 var tileWidth=bounds.getWidth()*this.ratio;
 var tileHeight=bounds.getHeight()*this.ratio;
 var tileBounds=new OpenLayers.Bounds(center.lon-(tileWidth/2),center.lat-(tileHeight/2),center.lon+(tileWidth/2),center.lat+(tileHeight/2));
-var ul=new OpenLayers.LonLat(tileBounds.left,tileBounds.top);
-var px=this.map.getLayerPxFromLonLat(ul);
+var px=this.map.getLayerPxFromLonLat({lon:tileBounds.left,lat:tileBounds.top});
 if(!this.grid.length){this.grid[0]=[]
 }var tile=this.grid[0][0];
 if(!tile){tile=this.addTile(tileBounds,px);
@@ -10120,38 +10847,45 @@ this.addTileMonitoringHooks(tile);
 tile.draw();
 this.grid[0][0]=tile
 }else{tile.moveTo(tileBounds,px)
-}this.removeExcessTiles(1,1)
-},calculateGridLayout:function(bounds,extent,resolution){var tilelon=resolution*this.tileSize.w;
+}this.removeExcessTiles(1,1);
+this.gridResolution=this.getServerResolution()
+},calculateGridLayout:function(bounds,origin,resolution){var tilelon=resolution*this.tileSize.w;
 var tilelat=resolution*this.tileSize.h;
-var offsetlon=bounds.left-extent.left;
+var offsetlon=bounds.left-origin.lon;
 var tilecol=Math.floor(offsetlon/tilelon)-this.buffer;
 var tilecolremain=offsetlon/tilelon-tilecol;
 var tileoffsetx=-tilecolremain*this.tileSize.w;
-var tileoffsetlon=extent.left+tilecol*tilelon;
-var offsetlat=bounds.top-(extent.bottom+tilelat);
+var tileoffsetlon=origin.lon+tilecol*tilelon;
+var offsetlat=bounds.top-(origin.lat+tilelat);
 var tilerow=Math.ceil(offsetlat/tilelat)+this.buffer;
 var tilerowremain=tilerow-offsetlat/tilelat;
 var tileoffsety=-tilerowremain*this.tileSize.h;
-var tileoffsetlat=extent.bottom+tilerow*tilelat;
+var tileoffsetlat=origin.lat+tilerow*tilelat;
 return{tilelon:tilelon,tilelat:tilelat,tileoffsetlon:tileoffsetlon,tileoffsetlat:tileoffsetlat,tileoffsetx:tileoffsetx,tileoffsety:tileoffsety}
-},initGriddedTiles:function(bounds){var viewSize=this.map.getSize();
+},getTileOrigin:function(){var origin=this.tileOrigin;
+if(!origin){var extent=this.getMaxExtent();
+var edges=({tl:["left","top"],tr:["right","top"],bl:["left","bottom"],br:["right","bottom"]})[this.tileOriginCorner];
+origin=new OpenLayers.LonLat(extent[edges[0]],extent[edges[1]])
+}return origin
+},initGriddedTiles:function(bounds){this.clearTileQueue();
+var viewSize=this.map.getSize();
 var minRows=Math.ceil(viewSize.h/this.tileSize.h)+Math.max(1,2*this.buffer);
 var minCols=Math.ceil(viewSize.w/this.tileSize.w)+Math.max(1,2*this.buffer);
-var extent=this.getMaxExtent();
-var resolution=this.map.getResolution();
-var tileLayout=this.calculateGridLayout(bounds,extent,resolution);
+var origin=this.getTileOrigin();
+var resolution=this.getServerResolution();
+var tileLayout=this.calculateGridLayout(bounds,origin,resolution);
 var tileoffsetx=Math.round(tileLayout.tileoffsetx);
 var tileoffsety=Math.round(tileLayout.tileoffsety);
 var tileoffsetlon=tileLayout.tileoffsetlon;
 var tileoffsetlat=tileLayout.tileoffsetlat;
 var tilelon=tileLayout.tilelon;
 var tilelat=tileLayout.tilelat;
-this.origin=new OpenLayers.Pixel(tileoffsetx,tileoffsety);
 var startX=tileoffsetx;
 var startLon=tileoffsetlon;
 var rowidx=0;
 var layerContainerDivLeft=parseInt(this.map.layerContainerDiv.style.left);
 var layerContainerDivTop=parseInt(this.map.layerContainerDiv.style.top);
+var tileData=[],center=this.map.getCenter();
 do{var row=this.grid[rowidx++];
 if(!row){row=[];
 this.grid.push(row)
@@ -10169,69 +10903,57 @@ if(!tile){tile=this.addTile(tileBounds,px);
 this.addTileMonitoringHooks(tile);
 row.push(tile)
 }else{tile.moveTo(tileBounds,px,false)
-}tileoffsetlon+=tilelon;
+}var tileCenter=tileBounds.getCenterLonLat();
+tileData.push({tile:tile,distance:Math.pow(tileCenter.lon-center.lon,2)+Math.pow(tileCenter.lat-center.lat,2)});
+tileoffsetlon+=tilelon;
 tileoffsetx+=this.tileSize.w
 }while((tileoffsetlon<=bounds.right+tilelon*this.buffer)||colidx<minCols);
 tileoffsetlat-=tilelat;
 tileoffsety+=this.tileSize.h
 }while((tileoffsetlat>=bounds.bottom-tilelat*this.buffer)||rowidx<minRows);
 this.removeExcessTiles(rowidx,colidx);
-this.spiralTileLoad()
-},getMaxExtent:function(){return this.maxExtent
-},spiralTileLoad:function(){var tileQueue=[];
-var directions=["right","down","left","up"];
-var iRow=0;
-var iCell=-1;
-var direction=OpenLayers.Util.indexOf(directions,"right");
-var directionsTried=0;
-while(directionsTried<directions.length){var testRow=iRow;
-var testCell=iCell;
-switch(directions[direction]){case"right":testCell++;
-break;
-case"down":testRow++;
-break;
-case"left":testCell--;
-break;
-case"up":testRow--;
-break
-}var tile=null;
-if((testRow<this.grid.length)&&(testRow>=0)&&(testCell<this.grid[0].length)&&(testCell>=0)){tile=this.grid[testRow][testCell]
-}if((tile!=null)&&(!tile.queued)){tileQueue.unshift(tile);
-tile.queued=true;
-directionsTried=0;
-iRow=testRow;
-iCell=testCell
-}else{direction=(direction+1)%4;
-directionsTried++
-}}for(var i=0,len=tileQueue.length;
-i<len;
-i++){var tile=tileQueue[i];
-tile.draw();
-tile.queued=false
-}},addTile:function(bounds,position){},addTileMonitoringHooks:function(tile){tile.onLoadStart=function(){if(this.numLoadingTiles==0){this.events.triggerEvent("loadstart")
-}this.numLoadingTiles++
+this.gridResolution=this.getServerResolution();
+tileData.sort(function(a,b){return a.distance-b.distance
+});
+for(var i=0,ii=tileData.length;
+i<ii;
+++i){tileData[i].tile.draw()
+}},getMaxExtent:function(){return this.maxExtent
+},addTile:function(bounds,position){var tile=new this.tileClass(this,position,bounds,null,this.tileSize,this.tileOptions);
+tile.events.register("beforedraw",this,this.queueTileDraw);
+return tile
+},addTileMonitoringHooks:function(tile){tile.onLoadStart=function(){if(this.loading===false){this.loading=true;
+this.events.triggerEvent("loadstart")
+}this.events.triggerEvent("tileloadstart",{tile:tile});
+this.numLoadingTiles++
 };
-tile.events.register("loadstart",this,tile.onLoadStart);
 tile.onLoadEnd=function(){this.numLoadingTiles--;
-this.events.triggerEvent("tileloaded");
-if(this.numLoadingTiles==0){this.events.triggerEvent("loadend")
-}};
-tile.events.register("loadend",this,tile.onLoadEnd);
-tile.events.register("unload",this,tile.onLoadEnd)
+this.events.triggerEvent("tileloaded",{tile:tile});
+if(this.tileQueue.length===0&&this.numLoadingTiles===0){this.loading=false;
+this.events.triggerEvent("loadend");
+if(this.backBuffer){this.backBufferTimerId=window.setTimeout(OpenLayers.Function.bind(this.removeBackBuffer,this),this.removeBackBufferDelay)
+}}};
+tile.onLoadError=function(){this.events.triggerEvent("tileerror",{tile:tile})
+};
+tile.events.on({loadstart:tile.onLoadStart,loadend:tile.onLoadEnd,unload:tile.onLoadEnd,loaderror:tile.onLoadError,scope:this})
 },removeTileMonitoringHooks:function(tile){tile.unload();
-tile.events.un({loadstart:tile.onLoadStart,loadend:tile.onLoadEnd,unload:tile.onLoadEnd,scope:this})
-},moveGriddedTiles:function(bounds){var buffer=this.buffer||1;
-while(true){var tlLayer=this.grid[0][0].position;
-var tlViewPort=this.map.getViewPortPxFromLayerPx(tlLayer);
-if(tlViewPort.x>-this.tileSize.w*(buffer-1)){this.shiftColumn(true)
-}else{if(tlViewPort.x<-this.tileSize.w*buffer){this.shiftColumn(false)
-}else{if(tlViewPort.y>-this.tileSize.h*(buffer-1)){this.shiftRow(true)
-}else{if(tlViewPort.y<-this.tileSize.h*buffer){this.shiftRow(false)
+tile.events.un({loadstart:tile.onLoadStart,loadend:tile.onLoadEnd,unload:tile.onLoadEnd,loaderror:tile.onLoadError,scope:this})
+},moveGriddedTiles:function(deferred){if(!deferred&&!OpenLayers.Animation.isNative){if(this.moveTimerId!=null){window.clearTimeout(this.moveTimerId)
+}this.moveTimerId=window.setTimeout(this.deferMoveGriddedTiles,this.tileLoadingDelay);
+return
+}var buffer=this.buffer||1;
+var scale=this.getResolutionScale();
+while(true){var tlViewPort={x:(this.grid[0][0].position.x*scale)+parseInt(this.div.style.left,10)+parseInt(this.map.layerContainerDiv.style.left),y:(this.grid[0][0].position.y*scale)+parseInt(this.div.style.top,10)+parseInt(this.map.layerContainerDiv.style.top)};
+var tileSize={w:this.tileSize.w*scale,h:this.tileSize.h*scale};
+if(tlViewPort.x>-tileSize.w*(buffer-1)){this.shiftColumn(true)
+}else{if(tlViewPort.x<-tileSize.w*buffer){this.shiftColumn(false)
+}else{if(tlViewPort.y>-tileSize.h*(buffer-1)){this.shiftRow(true)
+}else{if(tlViewPort.y<-tileSize.h*buffer){this.shiftRow(false)
 }else{break
 }}}}}},shiftRow:function(prepend){var modelRowIndex=(prepend)?0:(this.grid.length-1);
 var grid=this.grid;
 var modelRow=grid[modelRowIndex];
-var resolution=this.map.getResolution();
+var resolution=this.getServerResolution();
 var deltaY=(prepend)?-this.tileSize.h:this.tileSize.h;
 var deltaLat=resolution*-deltaY;
 var row=(prepend)?grid.pop():grid.shift();
@@ -10247,7 +10969,7 @@ row[i].moveTo(bounds,position)
 }if(prepend){grid.unshift(row)
 }else{grid.push(row)
 }},shiftColumn:function(prepend){var deltaX=(prepend)?-this.tileSize.w:this.tileSize.w;
-var resolution=this.map.getResolution();
+var resolution=this.getServerResolution();
 var deltaLon=resolution*deltaX;
 for(var i=0,len=this.grid.length;
 i<len;
@@ -10263,18 +10985,17 @@ var tile=prepend?this.grid[i].pop():this.grid[i].shift();
 tile.moveTo(bounds,position);
 if(prepend){row.unshift(tile)
 }else{row.push(tile)
-}}},removeExcessTiles:function(rows,columns){while(this.grid.length>rows){var row=this.grid.pop();
-for(var i=0,l=row.length;
+}}},removeExcessTiles:function(rows,columns){var i,l;
+while(this.grid.length>rows){var row=this.grid.pop();
+for(i=0,l=row.length;
 i<l;
 i++){var tile=row[i];
-this.removeTileMonitoringHooks(tile);
-tile.destroy()
-}}while(this.grid[0].length>columns){for(var i=0,l=this.grid.length;
+this.destroyTile(tile)
+}}for(i=0,l=this.grid.length;
 i<l;
-i++){var row=this.grid[i];
+i++){while(this.grid[i].length>columns){var row=this.grid[i];
 var tile=row.pop();
-this.removeTileMonitoringHooks(tile);
-tile.destroy()
+this.destroyTile(tile)
 }}},onMapResize:function(){if(this.singleTile){this.clearGrid();
 this.setTileSize()
 }},getTileBounds:function(viewPortPx){var maxExtent=this.maxExtent;
@@ -10285,7 +11006,7 @@ var mapPoint=this.getLonLatFromViewPortPx(viewPortPx);
 var tileLeft=maxExtent.left+(tileMapWidth*Math.floor((mapPoint.lon-maxExtent.left)/tileMapWidth));
 var tileBottom=maxExtent.bottom+(tileMapHeight*Math.floor((mapPoint.lat-maxExtent.bottom)/tileMapHeight));
 return new OpenLayers.Bounds(tileLeft,tileBottom,tileLeft+tileMapWidth,tileBottom+tileMapHeight)
-},CLASS_NAME:"OpenLayers.Layer.Grid"});OpenLayers.Layer.WMS=OpenLayers.Class(OpenLayers.Layer.Grid,{DEFAULT_PARAMS:{service:"WMS",version:"1.1.1",request:"GetMap",styles:"",exceptions:"application/vnd.ogc.se_inimage",format:"image/jpeg"},reproject:false,isBaseLayer:true,encodeBBOX:false,noMagic:false,yx:{"EPSG:4326":true},initialize:function(name,url,params,options){var newArguments=[];
+},CLASS_NAME:"OpenLayers.Layer.Grid"});OpenLayers.Layer.WMS=OpenLayers.Class(OpenLayers.Layer.Grid,{DEFAULT_PARAMS:{service:"WMS",version:"1.1.1",request:"GetMap",styles:"",format:"image/jpeg"},isBaseLayer:true,encodeBBOX:false,noMagic:false,yx:{},initialize:function(name,url,params,options){var newArguments=[];
 params=OpenLayers.Util.upperCaseObject(params);
 if(parseFloat(params.VERSION)>=1.3&&!params.EXCEPTIONS){params.EXCEPTIONS="INIMAGE"
 }newArguments.push(name,url,params,options);
@@ -10293,11 +11014,11 @@ OpenLayers.Layer.Grid.prototype.initialize.apply(this,newArguments);
 OpenLayers.Util.applyDefaults(this.params,OpenLayers.Util.upperCaseObject(this.DEFAULT_PARAMS));
 if(!this.noMagic&&this.params.TRANSPARENT&&this.params.TRANSPARENT.toString().toLowerCase()=="true"){if((options==null)||(!options.isBaseLayer)){this.isBaseLayer=false
 }if(this.params.FORMAT=="image/jpeg"){this.params.FORMAT=OpenLayers.Util.alphaHack()?"image/gif":"image/png"
-}}},destroy:function(){OpenLayers.Layer.Grid.prototype.destroy.apply(this,arguments)
-},clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.WMS(this.name,this.url,this.params,this.getOptions())
+}}},clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.WMS(this.name,this.url,this.params,this.getOptions())
 }obj=OpenLayers.Layer.Grid.prototype.clone.apply(this,[obj]);
 return obj
-},reverseAxisOrder:function(){return(parseFloat(this.params.VERSION)>=1.3&&!!this.yx[this.map.getProjectionObject().getCode()])
+},reverseAxisOrder:function(){var projCode=this.projection.getCode();
+return parseFloat(this.params.VERSION)>=1.3&&!!(this.yx[projCode]||OpenLayers.Projection.defaults[projCode].yx)
 },getURL:function(bounds){bounds=this.adjustBounds(bounds);
 var imageSize=this.getImageSize();
 var newParams={};
@@ -10307,64 +11028,55 @@ newParams.WIDTH=imageSize.w;
 newParams.HEIGHT=imageSize.h;
 var requestString=this.getFullRequestString(newParams);
 return requestString
-},addTile:function(bounds,position){return new OpenLayers.Tile.Image(this,position,bounds,null,this.tileSize)
 },mergeNewParams:function(newParams){var upperParams=OpenLayers.Util.upperCaseObject(newParams);
 var newArguments=[upperParams];
 return OpenLayers.Layer.Grid.prototype.mergeNewParams.apply(this,newArguments)
-},getFullRequestString:function(newParams,altUrl){var projectionCode=this.map.getProjection();
+},getFullRequestString:function(newParams,altUrl){var mapProjection=this.map.getProjectionObject();
+var projectionCode=this.projection&&this.projection.equals(mapProjection)?this.projection.getCode():mapProjection.getCode();
 var value=(projectionCode=="none")?null:projectionCode;
 if(parseFloat(this.params.VERSION)>=1.3){this.params.CRS=value
 }else{this.params.SRS=value
+}if(typeof this.params.TRANSPARENT=="boolean"){newParams.TRANSPARENT=this.params.TRANSPARENT?"TRUE":"FALSE"
 }return OpenLayers.Layer.Grid.prototype.getFullRequestString.apply(this,arguments)
-},CLASS_NAME:"OpenLayers.Layer.WMS"});OpenLayers.Layer.XYZ=OpenLayers.Class(OpenLayers.Layer.Grid,{isBaseLayer:true,sphericalMercator:false,zoomOffset:0,initialize:function(name,url,options){if(options&&options.sphericalMercator||this.sphericalMercator){options=OpenLayers.Util.extend({maxExtent:new OpenLayers.Bounds(-128*156543.0339,-128*156543.0339,128*156543.0339,128*156543.0339),maxResolution:156543.0339,numZoomLevels:19,units:"m",projection:"EPSG:900913"},options)
-}url=url||this.url;
-name=name||this.name;
-var newArguments=[name,url,{},options];
-OpenLayers.Layer.Grid.prototype.initialize.apply(this,newArguments)
+},CLASS_NAME:"OpenLayers.Layer.WMS"});OpenLayers.Layer.XYZ=OpenLayers.Class(OpenLayers.Layer.Grid,{isBaseLayer:true,sphericalMercator:false,zoomOffset:0,serverResolutions:null,initialize:function(name,url,options){if(options&&options.sphericalMercator||this.sphericalMercator){options=OpenLayers.Util.extend({projection:"EPSG:900913",numZoomLevels:19},options)
+}OpenLayers.Layer.Grid.prototype.initialize.apply(this,[name||this.name,url||this.url,{},options])
 },clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.XYZ(this.name,this.url,this.getOptions())
 }obj=OpenLayers.Layer.Grid.prototype.clone.apply(this,[obj]);
 return obj
-},getURL:function(bounds){var res=this.map.getResolution();
+},getURL:function(bounds){var xyz=this.getXYZ(bounds);
+var url=this.url;
+if(OpenLayers.Util.isArray(url)){var s=""+xyz.x+xyz.y+xyz.z;
+url=this.selectUrl(s,url)
+}return OpenLayers.String.format(url,xyz)
+},getXYZ:function(bounds){var res=this.getServerResolution();
 var x=Math.round((bounds.left-this.maxExtent.left)/(res*this.tileSize.w));
 var y=Math.round((this.maxExtent.top-bounds.top)/(res*this.tileSize.h));
-var z=this.map.getZoom()+this.zoomOffset;
-var url=this.url;
-var s=""+x+y+z;
-if(url instanceof Array){url=this.selectUrl(s,url)
-}var path=OpenLayers.String.format(url,{x:x,y:y,z:z});
-return path
-},addTile:function(bounds,position){return new OpenLayers.Tile.Image(this,position,bounds,null,this.tileSize)
+var z=this.getServerZoom();
+if(this.wrapDateLine){var limit=Math.pow(2,z);
+x=((x%limit)+limit)%limit
+}return{x:x,y:y,z:z}
 },setMap:function(map){OpenLayers.Layer.Grid.prototype.setMap.apply(this,arguments);
 if(!this.tileOrigin){this.tileOrigin=new OpenLayers.LonLat(this.maxExtent.left,this.maxExtent.bottom)
-}},CLASS_NAME:"OpenLayers.Layer.XYZ"});
-OpenLayers.Layer.OSM=OpenLayers.Class(OpenLayers.Layer.XYZ,{name:"OpenStreetMap",attribution:"Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",sphericalMercator:true,url:"http://tile.openstreetmap.org/${z}/${x}/${y}.png",clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.OSM(this.name,this.url,this.getOptions())
-}obj=OpenLayers.Layer.XYZ.prototype.clone.apply(this,[obj]);
-return obj
-},CLASS_NAME:"OpenLayers.Layer.OSM"});OpenLayers.Renderer.SVG=OpenLayers.Class(OpenLayers.Renderer.Elements,{xmlns:"http://www.w3.org/2000/svg",xlinkns:"http://www.w3.org/1999/xlink",MAX_PIXEL:15000,translationParameters:null,symbolMetrics:null,isGecko:null,supportUse:null,initialize:function(containerID){if(!this.supported()){return
+}},CLASS_NAME:"OpenLayers.Layer.XYZ"});OpenLayers.Renderer.SVG=OpenLayers.Class(OpenLayers.Renderer.Elements,{xmlns:"http://www.w3.org/2000/svg",xlinkns:"http://www.w3.org/1999/xlink",MAX_PIXEL:15000,translationParameters:null,symbolMetrics:null,initialize:function(containerID){if(!this.supported()){return
 }OpenLayers.Renderer.Elements.prototype.initialize.apply(this,arguments);
 this.translationParameters={x:0,y:0};
-this.supportUse=(navigator.userAgent.toLowerCase().indexOf("applewebkit/5")==-1);
-this.isGecko=(navigator.userAgent.toLowerCase().indexOf("gecko/")!=-1);
 this.symbolMetrics={}
-},destroy:function(){OpenLayers.Renderer.Elements.prototype.destroy.apply(this,arguments)
 },supported:function(){var svgFeature="http://www.w3.org/TR/SVG11/feature#";
 return(document.implementation&&(document.implementation.hasFeature("org.w3c.svg","1.0")||document.implementation.hasFeature(svgFeature+"SVG","1.1")||document.implementation.hasFeature(svgFeature+"BasicStructure","1.1")))
 },inValidRange:function(x,y,xyOnly){var left=x+(xyOnly?0:this.translationParameters.x);
 var top=y+(xyOnly?0:this.translationParameters.y);
 return(left>=-this.MAX_PIXEL&&left<=this.MAX_PIXEL&&top>=-this.MAX_PIXEL&&top<=this.MAX_PIXEL)
-},setExtent:function(extent,resolutionChanged){OpenLayers.Renderer.Elements.prototype.setExtent.apply(this,arguments);
-var resolution=this.getResolution();
-var left=-extent.left/resolution;
-var top=extent.top/resolution;
+},setExtent:function(extent,resolutionChanged){var coordSysUnchanged=OpenLayers.Renderer.Elements.prototype.setExtent.apply(this,arguments);
+var resolution=this.getResolution(),left=-extent.left/resolution,top=extent.top/resolution;
 if(resolutionChanged){this.left=left;
 this.top=top;
 var extentString="0 0 "+this.size.w+" "+this.size.h;
 this.rendererRoot.setAttributeNS(null,"viewBox",extentString);
-this.translate(0,0);
+this.translate(this.xOffset,0);
 return true
-}else{var inRange=this.translate(left-this.left,top-this.top);
+}else{var inRange=this.translate(left-this.left+this.xOffset,top-this.top);
 if(!inRange){this.setExtent(extent,true)
-}return inRange
+}return coordSysUnchanged&&inRange
 }},translate:function(x,y){if(!this.inValidRange(x,y,true)){return false
 }else{var transformString="";
 if(x||y){transformString="translate("+x+","+y+")"
@@ -10376,7 +11088,7 @@ this.rendererRoot.setAttributeNS(null,"width",this.size.w);
 this.rendererRoot.setAttributeNS(null,"height",this.size.h)
 },getNodeType:function(geometry,style){var nodeType=null;
 switch(geometry.CLASS_NAME){case"OpenLayers.Geometry.Point":if(style.externalGraphic){nodeType="image"
-}else{if(this.isComplexSymbol(style.graphicName)){nodeType=this.supportUse===false?"svg":"use"
+}else{if(this.isComplexSymbol(style.graphicName)){nodeType="svg"
 }else{nodeType="circle"
 }}break;
 case"OpenLayers.Geometry.Rectangle":nodeType="rect";
@@ -10385,7 +11097,7 @@ case"OpenLayers.Geometry.LineString":nodeType="polyline";
 break;
 case"OpenLayers.Geometry.LinearRing":nodeType="polygon";
 break;
-case"OpenLayers.Geometry.Polygon":case"OpenLayers.Geometry.Curve":case"OpenLayers.Geometry.Surface":nodeType="path";
+case"OpenLayers.Geometry.Polygon":case"OpenLayers.Geometry.Curve":nodeType="path";
 break;
 default:break
 }return nodeType
@@ -10397,8 +11109,13 @@ var pos;
 if(node._geometryClass=="OpenLayers.Geometry.Point"&&r){node.style.visibility="";
 if(style.graphic===false){node.style.visibility="hidden"
 }else{if(style.externalGraphic){pos=this.getPosition(node);
-if(style.graphicTitle){node.setAttributeNS(null,"title",style.graphicTitle)
-}if(style.graphicWidth&&style.graphicHeight){node.setAttributeNS(null,"preserveAspectRatio","none")
+if(style.graphicTitle){node.setAttributeNS(null,"title",style.graphicTitle);
+var titleNode=node.getElementsByTagName("title");
+if(titleNode.length>0){titleNode[0].firstChild.textContent=style.graphicTitle
+}else{var label=this.nodeFactory(null,"title");
+label.textContent=style.graphicTitle;
+node.appendChild(label)
+}}if(style.graphicWidth&&style.graphicHeight){node.setAttributeNS(null,"preserveAspectRatio","none")
 }var width=style.graphicWidth||style.graphicHeight;
 var height=style.graphicHeight||style.graphicWidth;
 width=width?width:style.pointRadius*2;
@@ -10411,21 +11128,20 @@ node.setAttributeNS(null,"y",(pos.y+yOffset).toFixed());
 node.setAttributeNS(null,"width",width);
 node.setAttributeNS(null,"height",height);
 node.setAttributeNS(this.xlinkns,"href",style.externalGraphic);
-node.setAttributeNS(null,"style","opacity: "+opacity)
+node.setAttributeNS(null,"style","opacity: "+opacity);
+node.onclick=OpenLayers.Renderer.SVG.preventDefault
 }else{if(this.isComplexSymbol(style.graphicName)){var offset=style.pointRadius*3;
 var size=offset*2;
-var id=this.importSymbol(style.graphicName);
+var src=this.importSymbol(style.graphicName);
 pos=this.getPosition(node);
-widthFactor=this.symbolMetrics[id][0]*3/size;
+widthFactor=this.symbolMetrics[src.id][0]*3/size;
 var parent=node.parentNode;
 var nextSibling=node.nextSibling;
 if(parent){parent.removeChild(node)
-}if(this.supportUse===false){var src=document.getElementById(id);
-node.firstChild&&node.removeChild(node.firstChild);
+}node.firstChild&&node.removeChild(node.firstChild);
 node.appendChild(src.firstChild.cloneNode(true));
-node.setAttributeNS(null,"viewBox",src.getAttributeNS(null,"viewBox"))
-}else{node.setAttributeNS(this.xlinkns,"href","#"+id)
-}node.setAttributeNS(null,"width",size);
+node.setAttributeNS(null,"viewBox",src.getAttributeNS(null,"viewBox"));
+node.setAttributeNS(null,"width",size);
 node.setAttributeNS(null,"height",size);
 node.setAttributeNS(null,"x",pos.x-offset);
 node.setAttributeNS(null,"y",pos.y-offset);
@@ -10436,8 +11152,8 @@ if(nextSibling){parent.insertBefore(node,nextSibling)
 if((rotation!==undefined||node._rotation!==undefined)&&pos){node._rotation=rotation;
 rotation|=0;
 if(node.nodeName!=="svg"){node.setAttributeNS(null,"transform","rotate("+rotation+" "+pos.x+" "+pos.y+")")
-}else{var metrics=this.symbolMetrics[id];
-node.firstChild.setAttributeNS(null,"transform","rotate("+style.rotation+" "+metrics[1]+" "+metrics[2]+")")
+}else{var metrics=this.symbolMetrics[src.id];
+node.firstChild.setAttributeNS(null,"transform","rotate("+rotation+" "+metrics[1]+" "+metrics[2]+")")
 }}}if(options.isFilled){node.setAttributeNS(null,"fill",style.fillColor);
 node.setAttributeNS(null,"fill-opacity",style.fillOpacity)
 }else{node.setAttributeNS(null,"fill","none")
@@ -10464,14 +11180,16 @@ default:return OpenLayers.String.trim(str).replace(/\s+/g,",")
 if(id){node.setAttributeNS(null,"id",id)
 }return node
 },nodeTypeCompare:function(node,type){return(type==node.nodeName)
-},createRenderRoot:function(){return this.nodeFactory(this.container.id+"_svgRoot","svg")
+},createRenderRoot:function(){var svg=this.nodeFactory(this.container.id+"_svgRoot","svg");
+svg.style.display="block";
+return svg
 },createRoot:function(suffix){return this.nodeFactory(this.container.id+suffix,"g")
 },createDefs:function(){var defs=this.nodeFactory(this.container.id+"_defs","defs");
 this.rendererRoot.appendChild(defs);
 return defs
 },drawPoint:function(node,geometry){return this.drawCircle(node,geometry,1)
 },drawCircle:function(node,geometry,radius){var resolution=this.getResolution();
-var x=(geometry.x/resolution+this.left);
+var x=((geometry.x-this.featureDx)/resolution+this.left);
 var y=(this.top-geometry.y/resolution);
 if(this.inValidRange(x,y)){node.setAttributeNS(null,"cx",x);
 node.setAttributeNS(null,"cy",y);
@@ -10504,7 +11222,7 @@ node.setAttributeNS(null,"fill-rule","evenodd");
 return complete?node:null
 }else{return false
 }},drawRectangle:function(node,geometry){var resolution=this.getResolution();
-var x=(geometry.x/resolution+this.left);
+var x=((geometry.x-this.featureDx)/resolution+this.left);
 var y=(this.top-geometry.y/resolution);
 if(this.inValidRange(x,y)){node.setAttributeNS(null,"x",x);
 node.setAttributeNS(null,"y",y);
@@ -10512,48 +11230,52 @@ node.setAttributeNS(null,"width",geometry.width/resolution);
 node.setAttributeNS(null,"height",geometry.height/resolution);
 return node
 }else{return false
-}},drawSurface:function(node,geometry){var d=null;
-var draw=true;
-for(var i=0,len=geometry.components.length;
-i<len;
-i++){if((i%3)==0&&(i/3)==0){var component=this.getShortString(geometry.components[i]);
-if(!component){draw=false
-}d="M "+component
-}else{if((i%3)==1){var component=this.getShortString(geometry.components[i]);
-if(!component){draw=false
-}d+=" C "+component
-}else{var component=this.getShortString(geometry.components[i]);
-if(!component){draw=false
-}d+=" "+component
-}}}d+=" Z";
-if(draw){node.setAttributeNS(null,"d",d);
-return node
-}else{return false
-}},drawText:function(featureId,style,location){var resolution=this.getResolution();
-var x=(location.x/resolution+this.left);
+}},drawText:function(featureId,style,location){var drawOutline=(!!style.labelOutlineWidth);
+if(drawOutline){var outlineStyle=OpenLayers.Util.extend({},style);
+outlineStyle.fontColor=outlineStyle.labelOutlineColor;
+outlineStyle.fontStrokeColor=outlineStyle.labelOutlineColor;
+outlineStyle.fontStrokeWidth=style.labelOutlineWidth;
+delete outlineStyle.labelOutlineWidth;
+this.drawText(featureId,outlineStyle,location)
+}var resolution=this.getResolution();
+var x=((location.x-this.featureDx)/resolution+this.left);
 var y=(location.y/resolution-this.top);
-var label=this.nodeFactory(featureId+this.LABEL_ID_SUFFIX,"text");
-var tspan=this.nodeFactory(featureId+this.LABEL_ID_SUFFIX+"_tspan","tspan");
+var suffix=(drawOutline)?this.LABEL_OUTLINE_SUFFIX:this.LABEL_ID_SUFFIX;
+var label=this.nodeFactory(featureId+suffix,"text");
 label.setAttributeNS(null,"x",x);
 label.setAttributeNS(null,"y",-y);
 if(style.fontColor){label.setAttributeNS(null,"fill",style.fontColor)
+}if(style.fontStrokeColor){label.setAttributeNS(null,"stroke",style.fontStrokeColor)
+}if(style.fontStrokeWidth){label.setAttributeNS(null,"stroke-width",style.fontStrokeWidth)
 }if(style.fontOpacity){label.setAttributeNS(null,"opacity",style.fontOpacity)
 }if(style.fontFamily){label.setAttributeNS(null,"font-family",style.fontFamily)
 }if(style.fontSize){label.setAttributeNS(null,"font-size",style.fontSize)
 }if(style.fontWeight){label.setAttributeNS(null,"font-weight",style.fontWeight)
+}if(style.fontStyle){label.setAttributeNS(null,"font-style",style.fontStyle)
 }if(style.labelSelect===true){label.setAttributeNS(null,"pointer-events","visible");
-label._featureId=featureId;
-tspan._featureId=featureId;
+label._featureId=featureId
+}else{label.setAttributeNS(null,"pointer-events","none")
+}var align=style.labelAlign||OpenLayers.Renderer.defaultSymbolizer.labelAlign;
+label.setAttributeNS(null,"text-anchor",OpenLayers.Renderer.SVG.LABEL_ALIGN[align[0]]||"middle");
+if(OpenLayers.IS_GECKO===true){label.setAttributeNS(null,"dominant-baseline",OpenLayers.Renderer.SVG.LABEL_ALIGN[align[1]]||"central")
+}var labelRows=style.label.split("\n");
+var numRows=labelRows.length;
+while(label.childNodes.length>numRows){label.removeChild(label.lastChild)
+}for(var i=0;
+i<numRows;
+i++){var tspan=this.nodeFactory(featureId+suffix+"_tspan_"+i,"tspan");
+if(style.labelSelect===true){tspan._featureId=featureId;
 tspan._geometry=location;
 tspan._geometryClass=location.CLASS_NAME
-}else{label.setAttributeNS(null,"pointer-events","none")
-}var align=style.labelAlign||"cm";
-label.setAttributeNS(null,"text-anchor",OpenLayers.Renderer.SVG.LABEL_ALIGN[align[0]]||"middle");
-if(this.isGecko){label.setAttributeNS(null,"dominant-baseline",OpenLayers.Renderer.SVG.LABEL_ALIGN[align[1]]||"central")
-}else{tspan.setAttributeNS(null,"baseline-shift",OpenLayers.Renderer.SVG.LABEL_VSHIFT[align[1]]||"-35%")
-}tspan.textContent=style.label;
-if(!label.parentNode){label.appendChild(tspan);
-this.textRoot.appendChild(label)
+}if(OpenLayers.IS_GECKO===false){tspan.setAttributeNS(null,"baseline-shift",OpenLayers.Renderer.SVG.LABEL_VSHIFT[align[1]]||"-35%")
+}tspan.setAttribute("x",x);
+if(i==0){var vfactor=OpenLayers.Renderer.SVG.LABEL_VFACTOR[align[1]];
+if(vfactor==null){vfactor=-0.5
+}tspan.setAttribute("dy",(vfactor*(numRows-1))+"em")
+}else{tspan.setAttribute("dy","1em")
+}tspan.textContent=(labelRows[i]==="")?" ":labelRows[i];
+if(!tspan.parentNode){label.appendChild(tspan)
+}}if(!label.parentNode){this.textRoot.appendChild(label)
 }},getComponentsString:function(components,separator){var renderCmp=[];
 var complete=true;
 var len=components.length;
@@ -10573,9 +11295,9 @@ if(str){strings.push(str)
 }var resolution=this.getResolution();
 var maxX=this.MAX_PIXEL-this.translationParameters.x;
 var maxY=this.MAX_PIXEL-this.translationParameters.y;
-var x1=goodComponent.x/resolution+this.left;
+var x1=(goodComponent.x-this.featureDx)/resolution+this.left;
 var y1=this.top-goodComponent.y/resolution;
-var x2=badComponent.x/resolution+this.left;
+var x2=(badComponent.x-this.featureDx)/resolution+this.left;
 var y2=this.top-badComponent.y/resolution;
 var k;
 if(x2<-maxX||x2>maxX){k=(y2-y1)/(x2-x1);
@@ -10586,14 +11308,15 @@ y2=y2<0?-maxY:maxY;
 x2=x1+(y2-y1)*k
 }return x2+","+y2
 },getShortString:function(point){var resolution=this.getResolution();
-var x=(point.x/resolution+this.left);
+var x=((point.x-this.featureDx)/resolution+this.left);
 var y=(this.top-point.y/resolution);
 if(this.inValidRange(x,y)){return x+","+y
 }else{return false
 }},getPosition:function(node){return({x:parseFloat(node.getAttributeNS(null,"cx")),y:parseFloat(node.getAttributeNS(null,"cy"))})
 },importSymbol:function(graphicName){if(!this.defs){this.defs=this.createDefs()
 }var id=this.container.id+"-"+graphicName;
-if(document.getElementById(id)!=null){return id
+var existing=document.getElementById(id);
+if(existing!=null){return existing
 }var symbol=OpenLayers.Renderer.symbol[graphicName];
 if(!symbol){throw new Error(graphicName+" is not a valid symbol name")
 }var symbolNode=this.nodeFactory(id,"symbol");
@@ -10618,21 +11341,24 @@ var viewBox=[symbolExtent.left-width,symbolExtent.bottom-height,width*3,height*3
 symbolNode.setAttributeNS(null,"viewBox",viewBox.join(" "));
 this.symbolMetrics[id]=[Math.max(width,height),symbolExtent.getCenterLonLat().lon,symbolExtent.getCenterLonLat().lat];
 this.defs.appendChild(symbolNode);
-return symbolNode.id
+return symbolNode
 },getFeatureIdFromEvent:function(evt){var featureId=OpenLayers.Renderer.Elements.prototype.getFeatureIdFromEvent.apply(this,arguments);
-if(this.supportUse===false&&!featureId){var target=evt.target;
-featureId=target.parentNode&&target!=this.rendererRoot&&target.parentNode._featureId
+if(!featureId){var target=evt.target;
+featureId=target.parentNode&&target!=this.rendererRoot?target.parentNode._featureId:undefined
 }return featureId
 },CLASS_NAME:"OpenLayers.Renderer.SVG"});
 OpenLayers.Renderer.SVG.LABEL_ALIGN={l:"start",r:"end",b:"bottom",t:"hanging"};
-OpenLayers.Renderer.SVG.LABEL_VSHIFT={t:"-70%",b:"0"};OpenLayers.Layer.TileCache=OpenLayers.Class(OpenLayers.Layer.Grid,{isBaseLayer:true,format:"image/png",serverResolutions:null,initialize:function(name,url,layername,options){this.layername=layername;
+OpenLayers.Renderer.SVG.LABEL_VSHIFT={t:"-70%",b:"0"};
+OpenLayers.Renderer.SVG.LABEL_VFACTOR={t:0,b:-1};
+OpenLayers.Renderer.SVG.preventDefault=function(e){e.preventDefault&&e.preventDefault()
+};OpenLayers.Layer.TileCache=OpenLayers.Class(OpenLayers.Layer.Grid,{isBaseLayer:true,format:"image/png",serverResolutions:null,initialize:function(name,url,layername,options){this.layername=layername;
 OpenLayers.Layer.Grid.prototype.initialize.apply(this,[name,url,{},options]);
 this.extension=this.format.split("/")[1].toLowerCase();
 this.extension=(this.extension=="jpg")?"jpeg":this.extension
 },clone:function(obj){if(obj==null){obj=new OpenLayers.Layer.TileCache(this.name,this.url,this.layername,this.getOptions())
 }obj=OpenLayers.Layer.Grid.prototype.clone.apply(this,[obj]);
 return obj
-},getURL:function(bounds){var res=this.map.getResolution();
+},getURL:function(bounds){var res=this.getServerResolution();
 var bbox=this.maxExtent;
 var size=this.tileSize;
 var tileX=Math.round((bounds.left-bbox.left)/(res*size.w));
@@ -10647,13 +11373,10 @@ i<length;
 }var components=[this.layername,zeroPad(tileZ,2),zeroPad(parseInt(tileX/1000000),3),zeroPad((parseInt(tileX/1000)%1000),3),zeroPad((parseInt(tileX)%1000),3),zeroPad(parseInt(tileY/1000000),3),zeroPad((parseInt(tileY/1000)%1000),3),zeroPad((parseInt(tileY)%1000),3)+"."+this.extension];
 var path=components.join("/");
 var url=this.url;
-if(url instanceof Array){url=this.selectUrl(path,url)
+if(OpenLayers.Util.isArray(url)){url=this.selectUrl(path,url)
 }url=(url.charAt(url.length-1)=="/")?url:url+"/";
 return url+path
-},addTile:function(bounds,position){var url=this.getURL(bounds);
-return new OpenLayers.Tile.Image(this,position,bounds,url,this.tileSize)
-},CLASS_NAME:"OpenLayers.Layer.TileCache"});OpenLayers.Control.Button=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_BUTTON,trigger:function(){},CLASS_NAME:"OpenLayers.Control.Button"});OpenLayers.Control.ScaleLine=OpenLayers.Class(OpenLayers.Control,{maxWidth:100,topOutUnits:"km",topInUnits:"m",bottomOutUnits:"mi",bottomInUnits:"ft",eTop:null,eBottom:null,geodesic:false,initialize:function(options){OpenLayers.Control.prototype.initialize.apply(this,[options])
-},draw:function(){OpenLayers.Control.prototype.draw.apply(this,arguments);
+},CLASS_NAME:"OpenLayers.Layer.TileCache"});OpenLayers.Control.Button=OpenLayers.Class(OpenLayers.Control,{type:OpenLayers.Control.TYPE_BUTTON,trigger:function(){},CLASS_NAME:"OpenLayers.Control.Button"});OpenLayers.Control.ScaleLine=OpenLayers.Class(OpenLayers.Control,{maxWidth:100,topOutUnits:"km",topInUnits:"m",bottomOutUnits:"mi",bottomInUnits:"ft",eTop:null,eBottom:null,geodesic:false,draw:function(){OpenLayers.Control.prototype.draw.apply(this,arguments);
 if(!this.eTop){this.eTop=document.createElement("div");
 this.eTop.className=this.displayClass+"Top";
 var theLen=this.topInUnits.length;
@@ -10718,7 +11441,7 @@ if(!container.components){container.components=[]
 var max=obj.points[1];
 container.components.push(new OpenLayers.Bounds(min.x,min.y,max.x,max.y))
 }},OpenLayers.Format.GML.Base.prototype.readers.gml),feature:OpenLayers.Format.GML.Base.prototype.readers.feature,wfs:OpenLayers.Format.GML.Base.prototype.readers.wfs},write:function(features){var name;
-if(features instanceof Array){name="wfs:FeatureCollection"
+if(OpenLayers.Util.isArray(features)){name="wfs:FeatureCollection"
 }else{name="gml:featureMember"
 }var root=this.writeNode(name,features);
 this.setAttributeNS(root,this.namespaces.xsi,"xsi:schemaLocation",this.schemaLocation);
@@ -10758,69 +11481,20 @@ return node
 this.writeNode("coordinates",[{x:bounds.left,y:bounds.bottom},{x:bounds.right,y:bounds.top}],node);
 if(this.srsName){node.setAttribute("srsName",this.srsName)
 }return node
-}},OpenLayers.Format.GML.Base.prototype.writers.gml),feature:OpenLayers.Format.GML.Base.prototype.writers.feature,wfs:OpenLayers.Format.GML.Base.prototype.writers.wfs},CLASS_NAME:"OpenLayers.Format.GML.v2"});OpenLayers.Format.JSON=OpenLayers.Class(OpenLayers.Format,{indent:"    ",space:" ",newline:"\n",level:0,pretty:false,initialize:function(options){OpenLayers.Format.prototype.initialize.apply(this,[options])
-},read:function(json,filter){try{if(/^[\],:{}\s]*$/.test(json.replace(/\\["\\\/bfnrtu]/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){var object=eval("("+json+")");
-if(typeof filter==="function"){function walk(k,v){if(v&&typeof v==="object"){for(var i in v){if(v.hasOwnProperty(i)){v[i]=walk(i,v[i])
-}}}return filter(k,v)
-}object=walk("",object)
-}if(this.keepData){this.data=object
-}return object
-}}catch(e){}return null
-},write:function(value,pretty){this.pretty=!!pretty;
-var json=null;
-var type=typeof value;
-if(this.serialize[type]){try{json=this.serialize[type].apply(this,[value])
-}catch(err){OpenLayers.Console.error("Trouble serializing: "+err)
-}}return json
-},writeIndent:function(){var pieces=[];
-if(this.pretty){for(var i=0;
-i<this.level;
-++i){pieces.push(this.indent)
-}}return pieces.join("")
-},writeNewline:function(){return(this.pretty)?this.newline:""
-},writeSpace:function(){return(this.pretty)?this.space:""
-},serialize:{object:function(object){if(object==null){return"null"
-}if(object.constructor==Date){return this.serialize.date.apply(this,[object])
-}if(object.constructor==Array){return this.serialize.array.apply(this,[object])
-}var pieces=["{"];
-this.level+=1;
-var key,keyJSON,valueJSON;
-var addComma=false;
-for(key in object){if(object.hasOwnProperty(key)){keyJSON=OpenLayers.Format.JSON.prototype.write.apply(this,[key,this.pretty]);
-valueJSON=OpenLayers.Format.JSON.prototype.write.apply(this,[object[key],this.pretty]);
-if(keyJSON!=null&&valueJSON!=null){if(addComma){pieces.push(",")
-}pieces.push(this.writeNewline(),this.writeIndent(),keyJSON,":",this.writeSpace(),valueJSON);
-addComma=true
-}}}this.level-=1;
-pieces.push(this.writeNewline(),this.writeIndent(),"}");
-return pieces.join("")
-},array:function(array){var json;
-var pieces=["["];
-this.level+=1;
-for(var i=0,len=array.length;
-i<len;
-++i){json=OpenLayers.Format.JSON.prototype.write.apply(this,[array[i],this.pretty]);
-if(json!=null){if(i>0){pieces.push(",")
-}pieces.push(this.writeNewline(),this.writeIndent(),json)
-}}this.level-=1;
-pieces.push(this.writeNewline(),this.writeIndent(),"]");
-return pieces.join("")
-},string:function(string){var m={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"};
-if(/["\\\x00-\x1f]/.test(string)){return'"'+string.replace(/([\x00-\x1f\\"])/g,function(a,b){var c=m[b];
-if(c){return c
-}c=b.charCodeAt();
-return"\\u00"+Math.floor(c/16).toString(16)+(c%16).toString(16)
-})+'"'
-}return'"'+string+'"'
-},number:function(number){return isFinite(number)?String(number):"null"
-},"boolean":function(bool){return String(bool)
-},date:function(date){function format(number){return(number<10)?"0"+number:number
-}return'"'+date.getFullYear()+"-"+format(date.getMonth()+1)+"-"+format(date.getDate())+"T"+format(date.getHours())+":"+format(date.getMinutes())+":"+format(date.getSeconds())+'"'
-}},CLASS_NAME:"OpenLayers.Format.JSON"});OpenLayers.Format.Filter.v1=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{ogc:"http://www.opengis.net/ogc",gml:"http://www.opengis.net/gml",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance"},defaultPrefix:"ogc",schemaLocation:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
+}},OpenLayers.Format.GML.Base.prototype.writers.gml),feature:OpenLayers.Format.GML.Base.prototype.writers.feature,wfs:OpenLayers.Format.GML.Base.prototype.writers.wfs},CLASS_NAME:"OpenLayers.Format.GML.v2"});OpenLayers.Format.Filter.v1=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{ogc:"http://www.opengis.net/ogc",gml:"http://www.opengis.net/gml",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance"},defaultPrefix:"ogc",schemaLocation:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
 },read:function(data){var obj={};
 this.readers.ogc.Filter.apply(this,[data,obj]);
 return obj.filter
-},readers:{ogc:{Filter:function(node,parent){var obj={fids:[],filters:[]};
+},readers:{ogc:{_expression:function(node){var obj,value="";
+for(var child=node.firstChild;
+child;
+child=child.nextSibling){switch(child.nodeType){case 1:obj=this.readNode(child);
+if(obj.property){value+="${"+obj.property+"}"
+}else{if(obj.value!==undefined){value+=obj.value
+}}break;
+case 3:case 4:value+=child.nodeValue
+}}return value
+},Filter:function(node,parent){var obj={fids:[],filters:[]};
 this.readChildNodes(node,obj);
 if(obj.fids.length>0){parent.filter=new OpenLayers.Filter.FeatureId({fids:obj.fids})
 }else{if(obj.filters.length>0){parent.filter=obj.filters[0]
@@ -10852,66 +11526,69 @@ this.readChildNodes(node,filter);
 obj.filters.push(filter)
 },Literal:function(node,obj){obj.value=OpenLayers.String.numericIf(this.getChildValue(node))
 },PropertyName:function(node,filter){filter.property=this.getChildValue(node)
-},LowerBoundary:function(node,filter){filter.lowerBoundary=OpenLayers.String.numericIf(this.readOgcExpression(node))
-},UpperBoundary:function(node,filter){filter.upperBoundary=OpenLayers.String.numericIf(this.readOgcExpression(node))
+},LowerBoundary:function(node,filter){filter.lowerBoundary=OpenLayers.String.numericIf(this.readers.ogc._expression.call(this,node))
+},UpperBoundary:function(node,filter){filter.upperBoundary=OpenLayers.String.numericIf(this.readers.ogc._expression.call(this,node))
 },Intersects:function(node,obj){this.readSpatial(node,obj,OpenLayers.Filter.Spatial.INTERSECTS)
 },Within:function(node,obj){this.readSpatial(node,obj,OpenLayers.Filter.Spatial.WITHIN)
 },Contains:function(node,obj){this.readSpatial(node,obj,OpenLayers.Filter.Spatial.CONTAINS)
 },DWithin:function(node,obj){this.readSpatial(node,obj,OpenLayers.Filter.Spatial.DWITHIN)
 },Distance:function(node,obj){obj.distance=parseInt(this.getChildValue(node));
 obj.distanceUnits=node.getAttribute("units")
+},Function:function(node,obj){return
 }}},readSpatial:function(node,obj,type){var filter=new OpenLayers.Filter.Spatial({type:type});
 this.readChildNodes(node,filter);
 filter.value=filter.components[0];
 delete filter.components;
 obj.filters.push(filter)
-},readOgcExpression:function(node){var obj={};
-this.readChildNodes(node,obj);
-var value=obj.value;
-if(value===undefined){value=this.getChildValue(node)
-}return value
+},writeOgcExpression:function(value,node){if(value instanceof OpenLayers.Filter.Function){var child=this.writeNode("Function",value,node);
+node.appendChild(child)
+}else{this.writeNode("Literal",value,node)
+}return node
 },write:function(filter){return this.writers.ogc.Filter.apply(this,[filter])
-},writers:{ogc:{Filter:function(filter){var node=this.createElementNSPlus("ogc:Filter");
-var sub=filter.CLASS_NAME.split(".").pop();
-if(sub=="FeatureId"){for(var i=0;
-i<filter.fids.length;
+},writeFeatureIdNodes:function(filter,node){for(var i=0,ii=filter.fids.length;
+i<ii;
 ++i){this.writeNode("FeatureId",filter.fids[i],node)
-}}else{this.writeNode(this.getFilterType(filter),filter,node)
+}},writers:{ogc:{Filter:function(filter){var node=this.createElementNSPlus("ogc:Filter");
+if(filter.type==="FID"){OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this,filter,node)
+}else{this.writeNode(this.getFilterType(filter),filter,node)
 }return node
 },FeatureId:function(fid){return this.createElementNSPlus("ogc:FeatureId",{attributes:{fid:fid}})
 },And:function(filter){var node=this.createElementNSPlus("ogc:And");
 var childFilter;
-for(var i=0;
-i<filter.filters.length;
+for(var i=0,ii=filter.filters.length;
+i<ii;
 ++i){childFilter=filter.filters[i];
-this.writeNode(this.getFilterType(childFilter),childFilter,node)
-}return node
+if(childFilter.type==="FID"){OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this,childFilter,node)
+}else{this.writeNode(this.getFilterType(childFilter),childFilter,node)
+}}return node
 },Or:function(filter){var node=this.createElementNSPlus("ogc:Or");
 var childFilter;
-for(var i=0;
-i<filter.filters.length;
+for(var i=0,ii=filter.filters.length;
+i<ii;
 ++i){childFilter=filter.filters[i];
-this.writeNode(this.getFilterType(childFilter),childFilter,node)
-}return node
+if(childFilter.type==="FID"){OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this,childFilter,node)
+}else{this.writeNode(this.getFilterType(childFilter),childFilter,node)
+}}return node
 },Not:function(filter){var node=this.createElementNSPlus("ogc:Not");
 var childFilter=filter.filters[0];
-this.writeNode(this.getFilterType(childFilter),childFilter,node);
-return node
+if(childFilter.type==="FID"){OpenLayers.Format.Filter.v1.prototype.writeFeatureIdNodes.call(this,childFilter,node)
+}else{this.writeNode(this.getFilterType(childFilter),childFilter,node)
+}return node
 },PropertyIsLessThan:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLessThan");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsGreaterThan:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsGreaterThan");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsLessThanOrEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLessThanOrEqualTo");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsGreaterThanOrEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsGreaterThanOrEqualTo");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsBetween:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsBetween");
 this.writeNode("PropertyName",filter,node);
@@ -10921,7 +11598,7 @@ return node
 },PropertyName:function(filter){return this.createElementNSPlus("ogc:PropertyName",{value:filter.property})
 },Literal:function(value){return this.createElementNSPlus("ogc:Literal",{value:value})
 },LowerBoundary:function(filter){var node=this.createElementNSPlus("ogc:LowerBoundary");
-this.writeNode("Literal",filter.lowerBoundary,node);
+this.writeOgcExpression(filter.lowerBoundary,node);
 return node
 },UpperBoundary:function(filter){var node=this.createElementNSPlus("ogc:UpperBoundary");
 this.writeNode("Literal",filter.upperBoundary,node);
@@ -10933,10 +11610,16 @@ return node
 this.writeNode("Distance",filter,node);
 return node
 },Distance:function(filter){return this.createElementNSPlus("ogc:Distance",{attributes:{units:filter.distanceUnits},value:filter.distance})
+},Function:function(filter){var node=this.createElementNSPlus("ogc:Function",{attributes:{name:filter.name}});
+var params=filter.params;
+for(var i=0,len=params.length;
+i<len;
+i++){this.writeOgcExpression(params[i],node)
+}return node
 }}},getFilterType:function(filter){var filterType=this.filterMap[filter.type];
 if(!filterType){throw"Filter writing not supported for rule type: "+filter.type
 }return filterType
-},filterMap:{"&&":"And","||":"Or","!":"Not","==":"PropertyIsEqualTo","!=":"PropertyIsNotEqualTo","<":"PropertyIsLessThan",">":"PropertyIsGreaterThan","<=":"PropertyIsLessThanOrEqualTo",">=":"PropertyIsGreaterThanOrEqualTo","..":"PropertyIsBetween","~":"PropertyIsLike",BBOX:"BBOX",DWITHIN:"DWITHIN",WITHIN:"WITHIN",CONTAINS:"CONTAINS",INTERSECTS:"INTERSECTS"},CLASS_NAME:"OpenLayers.Format.Filter.v1"});OpenLayers.Format.Filter.v1_0_0=OpenLayers.Class(OpenLayers.Format.GML.v2,OpenLayers.Format.Filter.v1,{VERSION:"1.0.0",schemaLocation:"http://www.opengis.net/ogc/filter/1.0.0/filter.xsd",initialize:function(options){OpenLayers.Format.GML.v2.prototype.initialize.apply(this,[options])
+},filterMap:{"&&":"And","||":"Or","!":"Not","==":"PropertyIsEqualTo","!=":"PropertyIsNotEqualTo","<":"PropertyIsLessThan",">":"PropertyIsGreaterThan","<=":"PropertyIsLessThanOrEqualTo",">=":"PropertyIsGreaterThanOrEqualTo","..":"PropertyIsBetween","~":"PropertyIsLike",BBOX:"BBOX",DWITHIN:"DWITHIN",WITHIN:"WITHIN",CONTAINS:"CONTAINS",INTERSECTS:"INTERSECTS",FID:"FeatureId"},CLASS_NAME:"OpenLayers.Format.Filter.v1"});OpenLayers.Format.Filter.v1_0_0=OpenLayers.Class(OpenLayers.Format.GML.v2,OpenLayers.Format.Filter.v1,{VERSION:"1.0.0",schemaLocation:"http://www.opengis.net/ogc/filter/1.0.0/filter.xsd",initialize:function(options){OpenLayers.Format.GML.v2.prototype.initialize.apply(this,[options])
 },readers:{ogc:OpenLayers.Util.applyDefaults({PropertyIsEqualTo:function(node,obj){var filter=new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.EQUAL_TO});
 this.readChildNodes(node,filter);
 obj.filters.push(filter)
@@ -10952,29 +11635,30 @@ filter.value2regex(wildCard,singleChar,esc);
 obj.filters.push(filter)
 }},OpenLayers.Format.Filter.v1.prototype.readers.ogc),gml:OpenLayers.Format.GML.v2.prototype.readers.gml,feature:OpenLayers.Format.GML.v2.prototype.readers.feature},writers:{ogc:OpenLayers.Util.applyDefaults({PropertyIsEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsEqualTo");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsNotEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsNotEqualTo");
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsLike:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLike",{attributes:{wildCard:"*",singleChar:".",escape:"!"}});
 this.writeNode("PropertyName",filter,node);
 this.writeNode("Literal",filter.regex2value(),node);
 return node
 },BBOX:function(filter){var node=this.createElementNSPlus("ogc:BBOX");
-this.writeNode("PropertyName",filter,node);
+filter.property&&this.writeNode("PropertyName",filter,node);
 var box=this.writeNode("gml:Box",filter.value,node);
 if(filter.projection){box.setAttribute("srsName",filter.projection)
 }return node
 }},OpenLayers.Format.Filter.v1.prototype.writers.ogc),gml:OpenLayers.Format.GML.v2.prototype.writers.gml,feature:OpenLayers.Format.GML.v2.prototype.writers.feature},writeSpatial:function(filter,name){var node=this.createElementNSPlus("ogc:"+name);
 this.writeNode("PropertyName",filter,node);
-var child;
+if(filter.value instanceof OpenLayers.Filter.Function){this.writeNode("Function",filter.value,node)
+}else{var child;
 if(filter.value instanceof OpenLayers.Geometry){child=this.writeNode("feature:_geometry",filter.value).firstChild
 }else{child=this.writeNode("gml:Box",filter.value)
 }if(filter.projection){child.setAttribute("srsName",filter.projection)
-}node.appendChild(child);
-return node
+}node.appendChild(child)
+}return node
 },CLASS_NAME:"OpenLayers.Format.Filter.v1_0_0"});OpenLayers.Format.Filter.v1_1_0=OpenLayers.Class(OpenLayers.Format.GML.v3,OpenLayers.Format.Filter.v1,{VERSION:"1.1.0",schemaLocation:"http://www.opengis.net/ogc/filter/1.1.0/filter.xsd",initialize:function(options){OpenLayers.Format.GML.v3.prototype.initialize.apply(this,[options])
 },readers:{ogc:OpenLayers.Util.applyDefaults({PropertyIsEqualTo:function(node,obj){var matchCase=node.getAttribute("matchCase");
 var filter=new OpenLayers.Filter.Comparison({type:OpenLayers.Filter.Comparison.EQUAL_TO,matchCase:!(matchCase==="false"||matchCase==="0")});
@@ -10993,31 +11677,43 @@ filter.value2regex(wildCard,singleChar,esc);
 obj.filters.push(filter)
 }},OpenLayers.Format.Filter.v1.prototype.readers.ogc),gml:OpenLayers.Format.GML.v3.prototype.readers.gml,feature:OpenLayers.Format.GML.v3.prototype.readers.feature},writers:{ogc:OpenLayers.Util.applyDefaults({PropertyIsEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsEqualTo",{attributes:{matchCase:filter.matchCase}});
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
 },PropertyIsNotEqualTo:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsNotEqualTo",{attributes:{matchCase:filter.matchCase}});
 this.writeNode("PropertyName",filter,node);
-this.writeNode("Literal",filter.value,node);
+this.writeOgcExpression(filter.value,node);
 return node
-},PropertyIsLike:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLike",{attributes:{wildCard:"*",singleChar:".",escapeChar:"!"}});
+},PropertyIsLike:function(filter){var node=this.createElementNSPlus("ogc:PropertyIsLike",{attributes:{matchCase:filter.matchCase,wildCard:"*",singleChar:".",escapeChar:"!"}});
 this.writeNode("PropertyName",filter,node);
 this.writeNode("Literal",filter.regex2value(),node);
 return node
 },BBOX:function(filter){var node=this.createElementNSPlus("ogc:BBOX");
-this.writeNode("PropertyName",filter,node);
+filter.property&&this.writeNode("PropertyName",filter,node);
 var box=this.writeNode("gml:Envelope",filter.value);
 if(filter.projection){box.setAttribute("srsName",filter.projection)
 }node.appendChild(box);
 return node
+},SortBy:function(sortProperties){var node=this.createElementNSPlus("ogc:SortBy");
+for(var i=0,l=sortProperties.length;
+i<l;
+i++){this.writeNode("ogc:SortProperty",sortProperties[i],node)
+}return node
+},SortProperty:function(sortProperty){var node=this.createElementNSPlus("ogc:SortProperty");
+this.writeNode("ogc:PropertyName",sortProperty,node);
+this.writeNode("ogc:SortOrder",(sortProperty.order=="DESC")?"DESC":"ASC",node);
+return node
+},SortOrder:function(value){var node=this.createElementNSPlus("ogc:SortOrder",{value:value});
+return node
 }},OpenLayers.Format.Filter.v1.prototype.writers.ogc),gml:OpenLayers.Format.GML.v3.prototype.writers.gml,feature:OpenLayers.Format.GML.v3.prototype.writers.feature},writeSpatial:function(filter,name){var node=this.createElementNSPlus("ogc:"+name);
 this.writeNode("PropertyName",filter,node);
-var child;
+if(filter.value instanceof OpenLayers.Filter.Function){this.writeNode("Function",filter.value,node)
+}else{var child;
 if(filter.value instanceof OpenLayers.Geometry){child=this.writeNode("feature:_geometry",filter.value).firstChild
 }else{child=this.writeNode("gml:Envelope",filter.value)
 }if(filter.projection){child.setAttribute("srsName",filter.projection)
-}node.appendChild(child);
-return node
-},CLASS_NAME:"OpenLayers.Format.Filter.v1_1_0"});OpenLayers.Format.CSWGetRecords.v2_0_2=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance",csw:"http://www.opengis.net/cat/csw/2.0.2",dc:"http://purl.org/dc/elements/1.1/",dct:"http://purl.org/dc/terms/",ows:"http://www.opengis.net/ows"},defaultPrefix:"csw",version:"2.0.2",schemaLocation:"http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",requestId:null,resultType:null,outputFormat:null,outputSchema:null,startPosition:null,maxRecords:null,DistributedSearch:null,ResponseHandler:null,Query:null,regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
+}node.appendChild(child)
+}return node
+},CLASS_NAME:"OpenLayers.Format.Filter.v1_1_0"});OpenLayers.Format.CSWGetRecords.v2_0_2=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{csw:"http://www.opengis.net/cat/csw/2.0.2",dc:"http://purl.org/dc/elements/1.1/",dct:"http://purl.org/dc/terms/",gmd:"http://www.isotc211.org/2005/gmd",geonet:"http://www.fao.org/geonetwork",ogc:"http://www.opengis.net/ogc",ows:"http://www.opengis.net/ows",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance"},defaultPrefix:"csw",version:"2.0.2",schemaLocation:"http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",requestId:null,resultType:null,outputFormat:null,outputSchema:null,startPosition:null,maxRecords:null,DistributedSearch:null,ResponseHandler:null,Query:null,regExes:{trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)},initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
 },read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
 }if(data&&data.nodeType==9){data=data.documentElement
 }var obj={};
@@ -11051,29 +11747,35 @@ obj.records.push(record)
 },Record:function(node,obj){var record={type:"Record"};
 this.readChildNodes(node,record);
 obj.records.push(record)
+},"*":function(node,obj){var name=node.localName||node.nodeName.split(":").pop();
+obj[name]=this.getChildValue(node)
+}},geonet:{info:function(node,obj){var gninfo={};
+this.readChildNodes(node,gninfo);
+obj.gninfo=gninfo
 }},dc:{"*":function(node,obj){var name=node.localName||node.nodeName.split(":").pop();
-if(!(obj[name] instanceof Array)){obj[name]=new Array()
+if(!(OpenLayers.Util.isArray(obj[name]))){obj[name]=[]
 }var dc_element={};
 var attrs=node.attributes;
 for(var i=0,len=attrs.length;
 i<len;
 ++i){dc_element[attrs[i].name]=attrs[i].nodeValue
 }dc_element.value=this.getChildValue(node);
-obj[name].push(dc_element)
-}},dct:{"*":function(node,obj){var name=node.localName||node.nodeName.split(":").pop();
-if(!(obj[name] instanceof Array)){obj[name]=new Array()
+if(dc_element.value!=""){obj[name].push(dc_element)
+}}},dct:{"*":function(node,obj){var name=node.localName||node.nodeName.split(":").pop();
+if(!(OpenLayers.Util.isArray(obj[name]))){obj[name]=[]
 }obj[name].push(this.getChildValue(node))
 }},ows:OpenLayers.Util.applyDefaults({BoundingBox:function(node,obj){if(obj.bounds){obj.BoundingBox=[{crs:obj.projection,value:[obj.bounds.left,obj.bounds.bottom,obj.bounds.right,obj.bounds.top]}];
 delete obj.projection;
 delete obj.bounds
 }OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers.ows["BoundingBox"].apply(this,arguments)
 }},OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers.ows)},write:function(options){var node=this.writeNode("csw:GetRecords",options);
+node.setAttribute("xmlns:gmd",this.namespaces.gmd);
 return OpenLayers.Format.XML.prototype.write.apply(this,[node])
 },writers:{csw:{GetRecords:function(options){if(!options){options={}
 }var node=this.createElementNSPlus("csw:GetRecords",{attributes:{service:"CSW",version:this.version,requestId:options.requestId||this.requestId,resultType:options.resultType||this.resultType,outputFormat:options.outputFormat||this.outputFormat,outputSchema:options.outputSchema||this.outputSchema,startPosition:options.startPosition||this.startPosition,maxRecords:options.maxRecords||this.maxRecords}});
 if(options.DistributedSearch||this.DistributedSearch){this.writeNode("csw:DistributedSearch",options.DistributedSearch||this.DistributedSearch,node)
 }var ResponseHandler=options.ResponseHandler||this.ResponseHandler;
-if(ResponseHandler instanceof Array&&ResponseHandler.length>0){for(var i=0,len=ResponseHandler.length;
+if(OpenLayers.Util.isArray(ResponseHandler)&&ResponseHandler.length>0){for(var i=0,len=ResponseHandler.length;
 i<len;
 i++){this.writeNode("csw:ResponseHandler",ResponseHandler[i],node)
 }}this.writeNode("Query",options.Query||this.Query,node);
@@ -11085,11 +11787,12 @@ return node
 },Query:function(options){if(!options){options={}
 }var node=this.createElementNSPlus("csw:Query",{attributes:{typeNames:options.typeNames||"csw:Record"}});
 var ElementName=options.ElementName;
-if(ElementName instanceof Array&&ElementName.length>0){for(var i=0,len=ElementName.length;
+if(OpenLayers.Util.isArray(ElementName)&&ElementName.length>0){for(var i=0,len=ElementName.length;
 i<len;
 i++){this.writeNode("csw:ElementName",ElementName[i],node)
 }}else{this.writeNode("csw:ElementSetName",options.ElementSetName||{value:"summary"},node)
 }if(options.Constraint){this.writeNode("csw:Constraint",options.Constraint,node)
+}if(options.SortBy){this.writeNode("ogc:SortBy",options.SortBy,node)
 }return node
 },ElementName:function(options){var node=this.createElementNSPlus("csw:ElementName",{value:options.value});
 return node
@@ -11101,53 +11804,15 @@ node.appendChild(format.write(options.Filter))
 }else{if(options.CqlText){var child=this.createElementNSPlus("CqlText",{value:options.CqlText.value});
 node.appendChild(child)
 }}return node
-}}},CLASS_NAME:"OpenLayers.Format.CSWGetRecords.v2_0_2"});OpenLayers.Format.WMSCapabilities=OpenLayers.Class(OpenLayers.Format.XML,{defaultVersion:"1.1.1",version:null,parser:null,initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);
-this.options=options
-},read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
-}var root=data.documentElement;
-var version=this.version||root.getAttribute("version")||this.defaultVersion;
-if(!this.parser||this.parser.version!==version){var constr=OpenLayers.Format.WMSCapabilities["v"+version.replace(/\./g,"_")];
-if(!constr){throw"Can't find a WMS capabilities parser for version "+version
-}this.parser=new constr(this.options)
-}var capabilities=this.parser.read(data);
-capabilities.version=version;
-return capabilities
-},CLASS_NAME:"OpenLayers.Format.WMSCapabilities"});OpenLayers.Format.WMSCapabilities.v1=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{wms:"http://www.opengis.net/wms",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance"},defaultPrefix:"wms",initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
-},read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
-}if(data&&data.nodeType==9){data=data.documentElement
+}},ogc:OpenLayers.Format.Filter.v1_1_0.prototype.writers.ogc},CLASS_NAME:"OpenLayers.Format.CSWGetRecords.v2_0_2"});OpenLayers.Format.WMSCapabilities=OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC,{defaultVersion:"1.1.1",profile:null,CLASS_NAME:"OpenLayers.Format.WMSCapabilities"});OpenLayers.Format.WMSCapabilities.v1=OpenLayers.Class(OpenLayers.Format.XML,{namespaces:{wms:"http://www.opengis.net/wms",xlink:"http://www.w3.org/1999/xlink",xsi:"http://www.w3.org/2001/XMLSchema-instance"},defaultPrefix:"wms",read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
+}var raw=data;
+if(data&&data.nodeType==9){data=data.documentElement
 }var capabilities={};
 this.readNode(data,capabilities);
-this.postProcessLayers(capabilities);
-return capabilities
-},postProcessLayers:function(capabilities){if(capabilities.capability){capabilities.capability.layers=[];
-var layers=capabilities.capability.nestedLayers;
-for(var i=0,len=layers.length;
-i<len;
-++i){var layer=layers[i];
-this.processLayer(capabilities.capability,layer)
-}}},processLayer:function(capability,layer,parentLayer){if(layer.formats===undefined){layer.formats=capability.request.getmap.formats
-}if(parentLayer){layer.styles=layer.styles.concat(parentLayer.styles);
-var attributes=["queryable","cascaded","fixedWidth","fixedHeight","opaque","noSubsets","llbbox","minScale","maxScale","attribution"];
-var complexAttr=["srs","bbox","dimensions","authorityURLs"];
-var key;
-for(var j=0;
-j<attributes.length;
-j++){key=attributes[j];
-if(key in parentLayer){if(layer[key]==null){layer[key]=parentLayer[key]
-}if(layer[key]==null){var intAttr=["cascaded","fixedWidth","fixedHeight"];
-var boolAttr=["queryable","opaque","noSubsets"];
-if(OpenLayers.Util.indexOf(intAttr,key)!=-1){layer[key]=0
-}if(OpenLayers.Util.indexOf(boolAttr,key)!=-1){layer[key]=false
-}}}}for(var j=0;
-j<complexAttr.length;
-j++){key=complexAttr[j];
-layer[key]=OpenLayers.Util.extend(layer[key],parentLayer[key])
-}}for(var i=0,len=layer.nestedLayers.length;
-i<len;
-i++){var childLayer=layer.nestedLayers[i];
-this.processLayer(capability,childLayer,layer)
-}if(layer.name){capability.layers.push(layer)
-}},readers:{wms:{Service:function(node,obj){obj.service={};
+if(capabilities.service===undefined){var parser=new OpenLayers.Format.OGCExceptionReport();
+capabilities.error=parser.read(raw)
+}return capabilities
+},readers:{wms:{Service:function(node,obj){obj.service={};
 this.readChildNodes(node,obj.service)
 },Name:function(node,obj){obj.name=this.getChildValue(node)
 },Title:function(node,obj){obj.title=this.getChildValue(node)
@@ -11180,25 +11845,33 @@ this.readChildNodes(node,obj.contactAddress)
 if(fees&&fees.toLowerCase()!="none"){obj.fees=fees
 }},AccessConstraints:function(node,obj){var constraints=this.getChildValue(node);
 if(constraints&&constraints.toLowerCase()!="none"){obj.accessConstraints=constraints
-}},Capability:function(node,obj){obj.capability={nestedLayers:[]};
+}},Capability:function(node,obj){obj.capability={nestedLayers:[],layers:[]};
 this.readChildNodes(node,obj.capability)
 },Request:function(node,obj){obj.request={};
 this.readChildNodes(node,obj.request)
 },GetCapabilities:function(node,obj){obj.getcapabilities={formats:[]};
 this.readChildNodes(node,obj.getcapabilities)
-},Format:function(node,obj){if(obj.formats instanceof Array){obj.formats.push(this.getChildValue(node))
+},Format:function(node,obj){if(OpenLayers.Util.isArray(obj.formats)){obj.formats.push(this.getChildValue(node))
 }else{obj.format=this.getChildValue(node)
 }},DCPType:function(node,obj){this.readChildNodes(node,obj)
 },HTTP:function(node,obj){this.readChildNodes(node,obj)
-},Get:function(node,obj){this.readChildNodes(node,obj)
-},Post:function(node,obj){this.readChildNodes(node,obj)
-},GetMap:function(node,obj){obj.getmap={formats:[]};
+},Get:function(node,obj){obj.get={};
+this.readChildNodes(node,obj.get);
+if(!obj.href){obj.href=obj.get.href
+}},Post:function(node,obj){obj.post={};
+this.readChildNodes(node,obj.post);
+if(!obj.href){obj.href=obj.get.href
+}},GetMap:function(node,obj){obj.getmap={formats:[]};
 this.readChildNodes(node,obj.getmap)
 },GetFeatureInfo:function(node,obj){obj.getfeatureinfo={formats:[]};
 this.readChildNodes(node,obj.getfeatureinfo)
 },Exception:function(node,obj){obj.exception={formats:[]};
 this.readChildNodes(node,obj.exception)
-},Layer:function(node,obj){var attrNode=node.getAttributeNode("queryable");
+},Layer:function(node,obj){var parentLayer,capability;
+if(obj.capability){capability=obj.capability;
+parentLayer=obj
+}else{capability=obj
+}var attrNode=node.getAttributeNode("queryable");
 var queryable=(attrNode&&attrNode.specified)?node.getAttribute("queryable"):null;
 attrNode=node.getAttributeNode("cascaded");
 var cascaded=(attrNode&&attrNode.specified)?node.getAttribute("cascaded"):null;
@@ -11207,11 +11880,17 @@ var opaque=(attrNode&&attrNode.specified)?node.getAttribute("opaque"):null;
 var noSubsets=node.getAttribute("noSubsets");
 var fixedWidth=node.getAttribute("fixedWidth");
 var fixedHeight=node.getAttribute("fixedHeight");
-var layer={nestedLayers:[],styles:[],srs:{},metadataURLs:[],bbox:{},dimensions:{},authorityURLs:{},identifiers:{},keywords:[],queryable:(queryable&&queryable!=="")?(queryable==="1"||queryable==="true"):null,cascaded:(cascaded!==null)?parseInt(cascaded):null,opaque:opaque?(opaque==="1"||opaque==="true"):null,noSubsets:(noSubsets!==null)?(noSubsets==="1"||noSubsets==="true"):null,fixedWidth:(fixedWidth!=null)?parseInt(fixedWidth):null,fixedHeight:(fixedHeight!=null)?parseInt(fixedHeight):null};
+var parent=parentLayer||{},extend=OpenLayers.Util.extend;
+var layer={nestedLayers:[],styles:parentLayer?[].concat(parentLayer.styles):[],srs:parentLayer?extend({},parent.srs):{},metadataURLs:[],bbox:parentLayer?extend({},parent.bbox):{},llbbox:parent.llbbox,dimensions:parentLayer?extend({},parent.dimensions):{},authorityURLs:parentLayer?extend({},parent.authorityURLs):{},identifiers:{},keywords:[],queryable:(queryable&&queryable!=="")?(queryable==="1"||queryable==="true"):(parent.queryable||false),cascaded:(cascaded!==null)?parseInt(cascaded):(parent.cascaded||0),opaque:opaque?(opaque==="1"||opaque==="true"):(parent.opaque||false),noSubsets:(noSubsets!==null)?(noSubsets==="1"||noSubsets==="true"):(parent.noSubsets||false),fixedWidth:(fixedWidth!=null)?parseInt(fixedWidth):(parent.fixedWidth||0),fixedHeight:(fixedHeight!=null)?parseInt(fixedHeight):(parent.fixedHeight||0),minScale:parent.minScale,maxScale:parent.maxScale,attribution:parent.attribution};
 obj.nestedLayers.push(layer);
+layer.capability=capability;
 this.readChildNodes(node,layer);
-if(layer.name){var parts=layer.name.split(":");
+delete layer.capability;
+if(layer.name){var parts=layer.name.split(":"),request=capability.request,gfi=request.getfeatureinfo;
 if(parts.length>0){layer.prefix=parts[0]
+}capability.layers.push(layer);
+if(layer.formats===undefined){layer.formats=request.getmap.formats
+}if(layer.infoFormats===undefined&&gfi){layer.infoFormats=gfi.formats
 }}},Attribution:function(node,obj){obj.attribution={};
 this.readChildNodes(node,obj.attribution)
 },LogoURL:function(node,obj){obj.logo={width:node.getAttribute("width"),height:node.getAttribute("height")};
@@ -11270,14 +11949,12 @@ extent.current=node.getAttribute("current")==="1";
 extent["default"]=node.getAttribute("default")||"";
 var values=this.getChildValue(node);
 extent.values=values.split(",")
-}}},OpenLayers.Format.WMSCapabilities.v1.prototype.readers.wms)},CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1"});OpenLayers.Format.WMSCapabilities.v1_1_0=OpenLayers.Class(OpenLayers.Format.WMSCapabilities.v1_1,{version:"1.1.0",initialize:function(options){OpenLayers.Format.WMSCapabilities.v1_1.prototype.initialize.apply(this,[options])
-},readers:{wms:OpenLayers.Util.applyDefaults({SRS:function(node,obj){var srs=this.getChildValue(node);
+}}},OpenLayers.Format.WMSCapabilities.v1.prototype.readers.wms)},CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1"});OpenLayers.Format.WMSCapabilities.v1_1_0=OpenLayers.Class(OpenLayers.Format.WMSCapabilities.v1_1,{version:"1.1.0",readers:{wms:OpenLayers.Util.applyDefaults({SRS:function(node,obj){var srs=this.getChildValue(node);
 var values=srs.split(/ +/);
 for(var i=0,len=values.length;
 i<len;
 i++){obj.srs[values[i]]=true
-}}},OpenLayers.Format.WMSCapabilities.v1_1.prototype.readers.wms)},CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1_0"});OpenLayers.Format.WMSCapabilities.v1_1_1=OpenLayers.Class(OpenLayers.Format.WMSCapabilities.v1_1,{version:"1.1.1",initialize:function(options){OpenLayers.Format.WMSCapabilities.v1_1.prototype.initialize.apply(this,[options])
-},readers:{wms:OpenLayers.Util.applyDefaults({SRS:function(node,obj){obj.srs[this.getChildValue(node)]=true
+}}},OpenLayers.Format.WMSCapabilities.v1_1.prototype.readers.wms)},CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1_0"});OpenLayers.Format.WMSCapabilities.v1_1_1=OpenLayers.Class(OpenLayers.Format.WMSCapabilities.v1_1,{version:"1.1.1",readers:{wms:OpenLayers.Util.applyDefaults({SRS:function(node,obj){obj.srs[this.getChildValue(node)]=true
 }},OpenLayers.Format.WMSCapabilities.v1_1.prototype.readers.wms)},CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1_1"});OpenLayers.Format.WMSCapabilities.v1_3=OpenLayers.Class(OpenLayers.Format.WMSCapabilities.v1,{readers:{wms:OpenLayers.Util.applyDefaults({WMS_Capabilities:function(node,obj){this.readChildNodes(node,obj)
 },LayerLimit:function(node,obj){obj.layerLimit=parseInt(this.getChildValue(node))
 },MaxWidth:function(node,obj){obj.maxWidth=parseInt(this.getChildValue(node))
@@ -11322,14 +11999,14 @@ scale=(this.map.getGeodesicPixelSize().w||0.000001)*inches.km*OpenLayers.DOTS_PE
 }if(scale>=9500&&scale<=950000){scale=Math.round(scale/1000)+"K"
 }else{if(scale>=950000){scale=Math.round(scale/1000000)+"M"
 }else{scale=Math.round(scale)
-}}this.element.innerHTML=OpenLayers.i18n("scale",{scaleDenom:scale})
-},CLASS_NAME:"OpenLayers.Control.Scale"});OpenLayers.Control.DrawFeature=OpenLayers.Class(OpenLayers.Control,{layer:null,callbacks:null,EVENT_TYPES:["featureadded"],multi:false,featureAdded:function(){},handlerOptions:null,initialize:function(layer,handler,options){this.EVENT_TYPES=OpenLayers.Control.DrawFeature.prototype.EVENT_TYPES.concat(OpenLayers.Control.prototype.EVENT_TYPES);
-OpenLayers.Control.prototype.initialize.apply(this,[options]);
+}}this.element.innerHTML=OpenLayers.i18n("Scale = 1 : ${scaleDenom}",{scaleDenom:scale})
+},CLASS_NAME:"OpenLayers.Control.Scale"});OpenLayers.Control.DrawFeature=OpenLayers.Class(OpenLayers.Control,{layer:null,callbacks:null,multi:false,featureAdded:function(){},handlerOptions:null,initialize:function(layer,handler,options){OpenLayers.Control.prototype.initialize.apply(this,[options]);
 this.callbacks=OpenLayers.Util.extend({done:this.drawFeature,modify:function(vertex,feature){this.layer.events.triggerEvent("sketchmodified",{vertex:vertex,feature:feature})
 },create:function(vertex,feature){this.layer.events.triggerEvent("sketchstarted",{vertex:vertex,feature:feature})
 }},this.callbacks);
 this.layer=layer;
 this.handlerOptions=this.handlerOptions||{};
+this.handlerOptions.layerOptions=OpenLayers.Util.applyDefaults(this.handlerOptions.layerOptions,{renderers:layer.renderers,rendererOptions:layer.rendererOptions});
 if(!("multi" in this.handlerOptions)){this.handlerOptions.multi=this.multi
 }var sketchStyle=this.layer.styleMap&&this.layer.styleMap.styles.temporary;
 if(sketchStyle){this.handlerOptions.layerOptions=OpenLayers.Util.applyDefaults(this.handlerOptions.layerOptions,{styleMap:new OpenLayers.StyleMap({"default":sketchStyle})})
@@ -11340,7 +12017,15 @@ if(proceed!==false){feature.state=OpenLayers.State.INSERT;
 this.layer.addFeatures([feature]);
 this.featureAdded(feature);
 this.events.triggerEvent("featureadded",{feature:feature})
-}},CLASS_NAME:"OpenLayers.Control.DrawFeature"});OpenLayers.Rule=OpenLayers.Class({id:null,name:null,title:null,description:null,context:null,filter:null,elseFilter:false,symbolizer:null,symbolizers:null,minScaleDenominator:null,maxScaleDenominator:null,initialize:function(options){this.symbolizer={};
+}},insertXY:function(x,y){if(this.handler&&this.handler.line){this.handler.insertXY(x,y)
+}},insertDeltaXY:function(dx,dy){if(this.handler&&this.handler.line){this.handler.insertDeltaXY(dx,dy)
+}},insertDirectionLength:function(direction,length){if(this.handler&&this.handler.line){this.handler.insertDirectionLength(direction,length)
+}},insertDeflectionLength:function(deflection,length){if(this.handler&&this.handler.line){this.handler.insertDeflectionLength(deflection,length)
+}},undo:function(){return this.handler.undo&&this.handler.undo()
+},redo:function(){return this.handler.redo&&this.handler.redo()
+},finishSketch:function(){this.handler.finishGeometry()
+},cancel:function(){this.handler.cancel()
+},CLASS_NAME:"OpenLayers.Control.DrawFeature"});OpenLayers.Rule=OpenLayers.Class({id:null,name:null,title:null,description:null,context:null,filter:null,elseFilter:false,symbolizer:null,symbolizers:null,minScaleDenominator:null,maxScaleDenominator:null,initialize:function(options){this.symbolizer={};
 OpenLayers.Util.extend(this,options);
 if(this.symbolizers){delete this.symbolizer
 }this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_")
@@ -11374,14 +12059,13 @@ if(type==="object"){options.symbolizer[key]=OpenLayers.Util.extend({},value)
 }}}}options.filter=this.filter&&this.filter.clone();
 options.context=this.context&&OpenLayers.Util.extend({},this.context);
 return new OpenLayers.Rule(options)
-},CLASS_NAME:"OpenLayers.Rule"});OpenLayers.Handler.Hover=OpenLayers.Class(OpenLayers.Handler,{delay:500,pixelTolerance:null,stopMove:false,px:null,timerId:null,initialize:function(control,callbacks,options){OpenLayers.Handler.prototype.initialize.apply(this,arguments)
-},mousemove:function(evt){if(this.passesTolerance(evt.xy)){this.clearTimer();
+},CLASS_NAME:"OpenLayers.Rule"});OpenLayers.Handler.Hover=OpenLayers.Class(OpenLayers.Handler,{delay:500,pixelTolerance:null,stopMove:false,px:null,timerId:null,mousemove:function(evt){if(this.passesTolerance(evt.xy)){this.clearTimer();
 this.callback("move",[evt]);
 this.px=evt.xy;
 evt=OpenLayers.Util.extend({},evt);
 this.timerId=window.setTimeout(OpenLayers.Function.bind(this.delayedCall,this,evt),this.delay)
 }return !this.stopMove
-},mouseout:function(evt){if(OpenLayers.Util.mouseLeft(evt,this.map.div)){this.clearTimer();
+},mouseout:function(evt){if(OpenLayers.Util.mouseLeft(evt,this.map.viewPortDiv)){this.clearTimer();
 this.callback("move",[evt])
 }return true
 },passesTolerance:function(px){var passes=true;
@@ -11395,97 +12079,7 @@ this.timerId=null
 if(OpenLayers.Handler.prototype.deactivate.apply(this,arguments)){this.clearTimer();
 deactivated=true
 }return deactivated
-},CLASS_NAME:"OpenLayers.Handler.Hover"});OpenLayers.Control.MouseDefaults=OpenLayers.Class(OpenLayers.Control,{performedDrag:false,wheelObserver:null,initialize:function(){OpenLayers.Control.prototype.initialize.apply(this,arguments)
-},destroy:function(){if(this.handler){this.handler.destroy()
-}this.handler=null;
-this.map.events.un({click:this.defaultClick,dblclick:this.defaultDblClick,mousedown:this.defaultMouseDown,mouseup:this.defaultMouseUp,mousemove:this.defaultMouseMove,mouseout:this.defaultMouseOut,scope:this});
-OpenLayers.Event.stopObserving(window,"DOMMouseScroll",this.wheelObserver);
-OpenLayers.Event.stopObserving(window,"mousewheel",this.wheelObserver);
-OpenLayers.Event.stopObserving(document,"mousewheel",this.wheelObserver);
-this.wheelObserver=null;
-OpenLayers.Control.prototype.destroy.apply(this,arguments)
-},draw:function(){this.map.events.on({click:this.defaultClick,dblclick:this.defaultDblClick,mousedown:this.defaultMouseDown,mouseup:this.defaultMouseUp,mousemove:this.defaultMouseMove,mouseout:this.defaultMouseOut,scope:this});
-this.registerWheelEvents()
-},registerWheelEvents:function(){this.wheelObserver=OpenLayers.Function.bindAsEventListener(this.onWheelEvent,this);
-OpenLayers.Event.observe(window,"DOMMouseScroll",this.wheelObserver);
-OpenLayers.Event.observe(window,"mousewheel",this.wheelObserver);
-OpenLayers.Event.observe(document,"mousewheel",this.wheelObserver)
-},defaultClick:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}var notAfterDrag=!this.performedDrag;
-this.performedDrag=false;
-return notAfterDrag
-},defaultDblClick:function(evt){var newCenter=this.map.getLonLatFromViewPortPx(evt.xy);
-this.map.setCenter(newCenter,this.map.zoom+1);
-OpenLayers.Event.stop(evt);
-return false
-},defaultMouseDown:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}this.mouseDragStart=evt.xy.clone();
-this.performedDrag=false;
-if(evt.shiftKey){this.map.div.style.cursor="crosshair";
-this.zoomBox=OpenLayers.Util.createDiv("zoomBox",this.mouseDragStart,null,null,"absolute","2px solid red");
-this.zoomBox.style.backgroundColor="white";
-this.zoomBox.style.filter="alpha(opacity=50)";
-this.zoomBox.style.opacity="0.50";
-this.zoomBox.style.fontSize="1px";
-this.zoomBox.style.zIndex=this.map.Z_INDEX_BASE.Popup-1;
-this.map.viewPortDiv.appendChild(this.zoomBox)
-}document.onselectstart=OpenLayers.Function.False;
-OpenLayers.Event.stop(evt)
-},defaultMouseMove:function(evt){this.mousePosition=evt.xy.clone();
-if(this.mouseDragStart!=null){if(this.zoomBox){var deltaX=Math.abs(this.mouseDragStart.x-evt.xy.x);
-var deltaY=Math.abs(this.mouseDragStart.y-evt.xy.y);
-this.zoomBox.style.width=Math.max(1,deltaX)+"px";
-this.zoomBox.style.height=Math.max(1,deltaY)+"px";
-if(evt.xy.x<this.mouseDragStart.x){this.zoomBox.style.left=evt.xy.x+"px"
-}if(evt.xy.y<this.mouseDragStart.y){this.zoomBox.style.top=evt.xy.y+"px"
-}}else{var deltaX=this.mouseDragStart.x-evt.xy.x;
-var deltaY=this.mouseDragStart.y-evt.xy.y;
-var size=this.map.getSize();
-var newXY=new OpenLayers.Pixel(size.w/2+deltaX,size.h/2+deltaY);
-var newCenter=this.map.getLonLatFromViewPortPx(newXY);
-this.map.setCenter(newCenter,null,true);
-this.mouseDragStart=evt.xy.clone();
-this.map.div.style.cursor="move"
-}this.performedDrag=true
-}},defaultMouseUp:function(evt){if(!OpenLayers.Event.isLeftClick(evt)){return
-}if(this.zoomBox){this.zoomBoxEnd(evt)
-}else{if(this.performedDrag){this.map.setCenter(this.map.center)
-}}document.onselectstart=null;
-this.mouseDragStart=null;
-this.map.div.style.cursor=""
-},defaultMouseOut:function(evt){if(this.mouseDragStart!=null&&OpenLayers.Util.mouseLeft(evt,this.map.div)){if(this.zoomBox){this.removeZoomBox()
-}this.mouseDragStart=null
-}},defaultWheelUp:function(evt){if(this.map.getZoom()<=this.map.getNumZoomLevels()){this.map.setCenter(this.map.getLonLatFromPixel(evt.xy),this.map.getZoom()+1)
-}},defaultWheelDown:function(evt){if(this.map.getZoom()>0){this.map.setCenter(this.map.getLonLatFromPixel(evt.xy),this.map.getZoom()-1)
-}},zoomBoxEnd:function(evt){if(this.mouseDragStart!=null){if(Math.abs(this.mouseDragStart.x-evt.xy.x)>5||Math.abs(this.mouseDragStart.y-evt.xy.y)>5){var start=this.map.getLonLatFromViewPortPx(this.mouseDragStart);
-var end=this.map.getLonLatFromViewPortPx(evt.xy);
-var top=Math.max(start.lat,end.lat);
-var bottom=Math.min(start.lat,end.lat);
-var left=Math.min(start.lon,end.lon);
-var right=Math.max(start.lon,end.lon);
-var bounds=new OpenLayers.Bounds(left,bottom,right,top);
-this.map.zoomToExtent(bounds)
-}else{var end=this.map.getLonLatFromViewPortPx(evt.xy);
-this.map.setCenter(new OpenLayers.LonLat((end.lon),(end.lat)),this.map.getZoom()+1)
-}this.removeZoomBox()
-}},removeZoomBox:function(){this.map.viewPortDiv.removeChild(this.zoomBox);
-this.zoomBox=null
-},onWheelEvent:function(e){var inMap=false;
-var elem=OpenLayers.Event.element(e);
-while(elem!=null){if(this.map&&elem==this.map.div){inMap=true;
-break
-}elem=elem.parentNode
-}if(inMap){var delta=0;
-if(!e){e=window.event
-}if(e.wheelDelta){delta=e.wheelDelta/120;
-if(window.opera&&window.opera.version()<9.2){delta=-delta
-}}else{if(e.detail){delta=-e.detail/3
-}}if(delta){e.xy=this.mousePosition;
-if(delta<0){this.defaultWheelDown(e)
-}else{this.defaultWheelUp(e)
-}}OpenLayers.Event.stop(e)
-}},CLASS_NAME:"OpenLayers.Control.MouseDefaults"});OpenLayers.Control.MousePosition=OpenLayers.Class(OpenLayers.Control,{autoActivate:true,element:null,prefix:"",separator:", ",suffix:"",numDigits:5,granularity:10,emptyString:null,lastXy:null,displayProjection:null,initialize:function(options){OpenLayers.Control.prototype.initialize.apply(this,arguments)
-},destroy:function(){this.deactivate();
+},CLASS_NAME:"OpenLayers.Handler.Hover"});OpenLayers.Control.MousePosition=OpenLayers.Class(OpenLayers.Control,{autoActivate:true,element:null,prefix:"",separator:", ",suffix:"",numDigits:5,granularity:10,emptyString:null,lastXy:null,displayProjection:null,destroy:function(){this.deactivate();
 OpenLayers.Control.prototype.destroy.apply(this,arguments)
 },activate:function(){if(OpenLayers.Control.prototype.activate.apply(this,arguments)){this.map.events.register("mousemove",this,this.redraw);
 this.map.events.register("mouseout",this,this.reset);
@@ -11517,13 +12111,13 @@ if(newHtml!=this.element.innerHTML){this.element.innerHTML=newHtml
 }},formatOutput:function(lonLat){var digits=parseInt(this.numDigits);
 var newHtml=this.prefix+lonLat.lon.toFixed(digits)+this.separator+lonLat.lat.toFixed(digits)+this.suffix;
 return newHtml
-},CLASS_NAME:"OpenLayers.Control.MousePosition"});OpenLayers.Handler.RegularPolygon=OpenLayers.Class(OpenLayers.Handler.Drag,{sides:4,radius:null,snapAngle:null,snapToggle:"shiftKey",layerOptions:null,persist:false,irregular:false,angle:null,fixedRadius:false,feature:null,layer:null,origin:null,initialize:function(control,callbacks,options){if(!(options&&options.layerOptions&&options.layerOptions.styleMap)){this.style=OpenLayers.Util.extend(OpenLayers.Feature.Vector.style["default"],{})
-}OpenLayers.Handler.prototype.initialize.apply(this,[control,callbacks,options]);
+},CLASS_NAME:"OpenLayers.Control.MousePosition"});OpenLayers.Handler.RegularPolygon=OpenLayers.Class(OpenLayers.Handler.Drag,{sides:4,radius:null,snapAngle:null,snapToggle:"shiftKey",layerOptions:null,persist:false,irregular:false,citeCompliant:false,angle:null,fixedRadius:false,feature:null,layer:null,origin:null,initialize:function(control,callbacks,options){if(!(options&&options.layerOptions&&options.layerOptions.styleMap)){this.style=OpenLayers.Util.extend(OpenLayers.Feature.Vector.style["default"],{})
+}OpenLayers.Handler.Drag.prototype.initialize.apply(this,[control,callbacks,options]);
 this.options=(options)?options:{}
 },setOptions:function(newOptions){OpenLayers.Util.extend(this.options,newOptions);
 OpenLayers.Util.extend(this,newOptions)
 },activate:function(){var activated=false;
-if(OpenLayers.Handler.prototype.activate.apply(this,arguments)){var options=OpenLayers.Util.extend({displayInLayerSwitcher:false,calculateInRange:OpenLayers.Function.True},this.layerOptions);
+if(OpenLayers.Handler.Drag.prototype.activate.apply(this,arguments)){var options=OpenLayers.Util.extend({displayInLayerSwitcher:false,calculateInRange:OpenLayers.Function.True,wrapDateLine:this.citeCompliant},this.layerOptions);
 this.layer=new OpenLayers.Layer.Vector(this.CLASS_NAME,options);
 this.map.addLayer(this.layer);
 activated=true
@@ -11537,7 +12131,7 @@ this.feature=null;
 deactivated=true
 }return deactivated
 },down:function(evt){this.fixedRadius=!!(this.radius);
-var maploc=this.map.getLonLatFromPixel(evt.xy);
+var maploc=this.layer.getLonLatFromViewPortPx(evt.xy);
 this.origin=new OpenLayers.Geometry.Point(maploc.lon,maploc.lat);
 if(!this.fixedRadius||this.irregular){this.radius=this.map.getResolution()
 }if(this.persist){this.clear()
@@ -11546,7 +12140,7 @@ this.createGeometry();
 this.callback("create",[this.origin,this.feature]);
 this.layer.addFeatures([this.feature],{silent:true});
 this.layer.drawFeature(this.feature,this.style)
-},move:function(evt){var maploc=this.map.getLonLatFromPixel(evt.xy);
+},move:function(evt){var maploc=this.layer.getLonLatFromViewPortPx(evt.xy);
 var point=new OpenLayers.Geometry.Point(maploc.lon,maploc.lat);
 if(this.irregular){var ry=Math.sqrt(2)*Math.abs(point.y-this.origin.y)/2;
 this.radius=Math.max(this.map.getResolution()/2,ry)
@@ -11599,9 +12193,8 @@ for(var i=0,len=shapes.length;
 i<len;
 i++){style.addRule("olv\\:"+shapes[i],"behavior: url(#default#VML); position: absolute; display: inline-block;")
 }}OpenLayers.Renderer.Elements.prototype.initialize.apply(this,arguments)
-},destroy:function(){OpenLayers.Renderer.Elements.prototype.destroy.apply(this,arguments)
 },supported:function(){return !!(document.namespaces)
-},setExtent:function(extent,resolutionChanged){OpenLayers.Renderer.Elements.prototype.setExtent.apply(this,arguments);
+},setExtent:function(extent,resolutionChanged){var coordSysUnchanged=OpenLayers.Renderer.Elements.prototype.setExtent.apply(this,arguments);
 var resolution=this.getResolution();
 var left=(extent.left/resolution)|0;
 var top=(extent.top/resolution-this.size.h)|0;
@@ -11610,7 +12203,7 @@ left=0;
 top=0
 }else{left=left-this.offset.x;
 top=top-this.offset.y
-}var org=left+" "+top;
+}var org=(left-this.xOffset)+" "+top;
 this.root.coordorigin=org;
 var roots=[this.root,this.vectorRoot,this.textRoot];
 var root;
@@ -11620,7 +12213,7 @@ i<len;
 var size=this.size.w+" "+this.size.h;
 root.coordsize=size
 }this.root.style.flip="y";
-return true
+return coordSysUnchanged
 },setSize:function(size){OpenLayers.Renderer.prototype.setSize.apply(this,arguments);
 var roots=[this.rendererRoot,this.root,this.vectorRoot,this.textRoot];
 var w=this.size.w+"px";
@@ -11638,14 +12231,15 @@ switch(geometry.CLASS_NAME){case"OpenLayers.Geometry.Point":if(style.externalGra
 }}break;
 case"OpenLayers.Geometry.Rectangle":nodeType="olv:rect";
 break;
-case"OpenLayers.Geometry.LineString":case"OpenLayers.Geometry.LinearRing":case"OpenLayers.Geometry.Polygon":case"OpenLayers.Geometry.Curve":case"OpenLayers.Geometry.Surface":nodeType="olv:shape";
+case"OpenLayers.Geometry.LineString":case"OpenLayers.Geometry.LinearRing":case"OpenLayers.Geometry.Polygon":case"OpenLayers.Geometry.Curve":nodeType="olv:shape";
 break;
 default:break
 }return nodeType
 },setStyle:function(node,style,options,geometry){style=style||node._style;
 options=options||node._options;
 var fillColor=style.fillColor;
-if(node._geometryClass==="OpenLayers.Geometry.Point"){if(style.externalGraphic){if(style.graphicTitle){node.title=style.graphicTitle
+if(node._geometryClass==="OpenLayers.Geometry.Point"){if(style.externalGraphic){options.isFilled=true;
+if(style.graphicTitle){node.title=style.graphicTitle
 }var width=style.graphicWidth||style.graphicHeight;
 var height=style.graphicHeight||style.graphicWidth;
 width=width?width:style.pointRadius*2;
@@ -11653,7 +12247,7 @@ height=height?height:style.pointRadius*2;
 var resolution=this.getResolution();
 var xOffset=(style.graphicXOffset!=undefined)?style.graphicXOffset:-(0.5*width);
 var yOffset=(style.graphicYOffset!=undefined)?style.graphicYOffset:-(0.5*height);
-node.style.left=(((geometry.x/resolution-this.offset.x)+xOffset)|0)+"px";
+node.style.left=((((geometry.x-this.featureDx)/resolution-this.offset.x)+xOffset)|0)+"px";
 node.style.top=(((geometry.y/resolution-this.offset.y)-(yOffset+height))|0)+"px";
 node.style.width=width+"px";
 node.style.height=height+"px";
@@ -11745,7 +12339,7 @@ if(fillColor=="none"&&node.fillcolor!=fillColor){node.fillcolor=fillColor
 }if(strokeColor=="none"&&node.strokecolor!=strokeColor){node.strokecolor=strokeColor
 }},setNodeDimension:function(node,geometry){var bbox=geometry.getBounds();
 if(bbox){var resolution=this.getResolution();
-var scaledBox=new OpenLayers.Bounds((bbox.left/resolution-this.offset.x)|0,(bbox.bottom/resolution-this.offset.y)|0,(bbox.right/resolution-this.offset.x)|0,(bbox.top/resolution-this.offset.y)|0);
+var scaledBox=new OpenLayers.Bounds(((bbox.left-this.featureDx)/resolution-this.offset.x)|0,(bbox.bottom/resolution-this.offset.y)|0,((bbox.right-this.featureDx)/resolution-this.offset.x)|0,(bbox.top/resolution-this.offset.y)|0);
 node.style.left=scaledBox.left+"px";
 node.style.top=scaledBox.top+"px";
 node.style.width=scaledBox.getWidth()+"px";
@@ -11775,7 +12369,7 @@ if(splitIndex!=-1){nodeName=nodeName.substr(splitIndex+1)
 },createRoot:function(suffix){return this.nodeFactory(this.container.id+suffix,"olv:group")
 },drawPoint:function(node,geometry){return this.drawCircle(node,geometry,1)
 },drawCircle:function(node,geometry,radius){if(!isNaN(geometry.x)&&!isNaN(geometry.y)){var resolution=this.getResolution();
-node.style.left=(((geometry.x/resolution-this.offset.x)|0)-radius)+"px";
+node.style.left=((((geometry.x-this.featureDx)/resolution-this.offset.x)|0)-radius)+"px";
 node.style.top=(((geometry.y/resolution-this.offset.y)|0)-radius)+"px";
 var diameter=radius*2;
 node.style.width=diameter+"px";
@@ -11792,7 +12386,7 @@ var comp,x,y;
 for(var i=0;
 i<numComponents;
 i++){comp=geometry.components[i];
-x=(comp.x/resolution-this.offset.x)|0;
+x=((comp.x-this.featureDx)/resolution-this.offset.x)|0;
 y=(comp.y/resolution-this.offset.y)|0;
 parts[i]=" "+x+","+y+" l "
 }var end=(closeLine)?" x e":" e";
@@ -11801,24 +12395,31 @@ return node
 },drawPolygon:function(node,geometry){this.setNodeDimension(node,geometry);
 var resolution=this.getResolution();
 var path=[];
-var linearRing,i,j,len,ilen,comp,x,y;
-for(j=0,len=geometry.components.length;
-j<len;
-j++){linearRing=geometry.components[j];
-path.push("m");
-for(i=0,ilen=linearRing.components.length;
-i<ilen;
-i++){comp=linearRing.components[i];
-x=(comp.x/resolution-this.offset.x)|0;
+var j,jj,points,area,first,second,i,ii,comp,pathComp,x,y;
+for(j=0,jj=geometry.components.length;
+j<jj;
+j++){path.push("m");
+points=geometry.components[j].components;
+area=(j===0);
+first=null;
+second=null;
+for(i=0,ii=points.length;
+i<ii;
+i++){comp=points[i];
+x=((comp.x-this.featureDx)/resolution-this.offset.x)|0;
 y=(comp.y/resolution-this.offset.y)|0;
-path.push(" "+x+","+y);
+pathComp=" "+x+","+y;
+path.push(pathComp);
 if(i==0){path.push(" l")
-}}path.push(" x ")
+}if(!area){if(!first){first=pathComp
+}else{if(first!=pathComp){if(!second){second=pathComp
+}else{if(second!=pathComp){area=true
+}}}}}}path.push(area?" x ":" ")
 }path.push("e");
 node.path=path.join("");
 return node
 },drawRectangle:function(node,geometry){var resolution=this.getResolution();
-node.style.left=((geometry.x/resolution-this.offset.x)|0)+"px";
+node.style.left=(((geometry.x-this.featureDx)/resolution-this.offset.x)|0)+"px";
 node.style.top=((geometry.y/resolution-this.offset.y)|0)+"px";
 node.style.width=((geometry.width/resolution)|0)+"px";
 node.style.height=((geometry.height/resolution)|0)+"px";
@@ -11826,15 +12427,17 @@ return node
 },drawText:function(featureId,style,location){var label=this.nodeFactory(featureId+this.LABEL_ID_SUFFIX,"olv:rect");
 var textbox=this.nodeFactory(featureId+this.LABEL_ID_SUFFIX+"_textbox","olv:textbox");
 var resolution=this.getResolution();
-label.style.left=((location.x/resolution-this.offset.x)|0)+"px";
+label.style.left=(((location.x-this.featureDx)/resolution-this.offset.x)|0)+"px";
 label.style.top=((location.y/resolution-this.offset.y)|0)+"px";
 label.style.flip="y";
 textbox.innerText=style.label;
-if(style.fontColor){textbox.style.color=style.fontColor
+if(style.cursor!="inherit"&&style.cursor!=null){textbox.style.cursor=style.cursor
+}if(style.fontColor){textbox.style.color=style.fontColor
 }if(style.fontOpacity){textbox.style.filter="alpha(opacity="+(style.fontOpacity*100)+")"
 }if(style.fontFamily){textbox.style.fontFamily=style.fontFamily
 }if(style.fontSize){textbox.style.fontSize=style.fontSize
 }if(style.fontWeight){textbox.style.fontWeight=style.fontWeight
+}if(style.fontStyle){textbox.style.fontStyle=style.fontStyle
 }if(style.labelSelect===true){label._featureId=featureId;
 textbox._featureId=featureId;
 textbox._geometry=location;
@@ -11849,21 +12452,6 @@ if(align.length==1){align+="m"
 var yshift=textbox.clientHeight*(OpenLayers.Renderer.VML.LABEL_SHIFT[align.substr(1,1)]);
 label.style.left=parseInt(label.style.left)-xshift-1+"px";
 label.style.top=parseInt(label.style.top)+yshift+"px"
-},drawSurface:function(node,geometry){this.setNodeDimension(node,geometry);
-var resolution=this.getResolution();
-var path=[];
-var comp,x,y;
-for(var i=0,len=geometry.components.length;
-i<len;
-i++){comp=geometry.components[i];
-x=(comp.x/resolution-this.offset.x)|0;
-y=(comp.y/resolution-this.offset.y)|0;
-if((i%3)==0&&(i/3)==0){path.push("m")
-}else{if((i%3)==1){path.push(" c")
-}}path.push(" "+x+","+y)
-}path.push(" x e");
-node.path=path.join("");
-return node
 },moveRoot:function(renderer){var layer=this.map.getLayer(renderer.container.id);
 if(layer instanceof OpenLayers.Layer.Vector.RootContainer){layer=this.map.getLayer(this.container.id)
 }layer&&layer.renderer.clear();
@@ -11898,19 +12486,24 @@ symbolExtent.right=symbolExtent.right-diff
 this.symbolCache[id]=cache;
 return cache
 },CLASS_NAME:"OpenLayers.Renderer.VML"});
-OpenLayers.Renderer.VML.LABEL_SHIFT={l:0,c:0.5,r:1,t:0,m:0.5,b:1};OpenLayers.Control.ArgParser=OpenLayers.Class(OpenLayers.Control,{center:null,zoom:null,layers:null,displayProjection:null,initialize:function(options){OpenLayers.Control.prototype.initialize.apply(this,arguments)
+OpenLayers.Renderer.VML.LABEL_SHIFT={l:0,c:0.5,r:1,t:0,m:0.5,b:1};OpenLayers.Control.ArgParser=OpenLayers.Class(OpenLayers.Control,{center:null,zoom:null,layers:null,displayProjection:null,getParameters:function(url){url=url||window.location.href;
+var parameters=OpenLayers.Util.getParameters(url);
+var index=url.indexOf("#");
+if(index>0){url="?"+url.substring(index+1,url.length);
+OpenLayers.Util.extend(parameters,OpenLayers.Util.getParameters(url))
+}return parameters
 },setMap:function(map){OpenLayers.Control.prototype.setMap.apply(this,arguments);
 for(var i=0,len=this.map.controls.length;
 i<len;
 i++){var control=this.map.controls[i];
 if((control!=this)&&(control.CLASS_NAME=="OpenLayers.Control.ArgParser")){if(control.displayProjection!=this.displayProjection){this.displayProjection=control.displayProjection
 }break
-}}if(i==this.map.controls.length){var args=OpenLayers.Util.getParameters();
+}}if(i==this.map.controls.length){var args=this.getParameters();
 if(args.layers){this.layers=args.layers;
 this.map.events.register("addlayer",this,this.configureLayers);
 this.configureLayers()
 }if(args.lat&&args.lon){this.center=new OpenLayers.LonLat(parseFloat(args.lon),parseFloat(args.lat));
-if(args.zoom){this.zoom=parseInt(args.zoom)
+if(args.zoom){this.zoom=parseFloat(args.zoom)
 }this.map.events.register("changebaselayer",this,this.setCenter);
 this.setCenter()
 }}},setCenter:function(){if(this.map.baseLayer){this.map.events.unregister("changebaselayer",this,this.setCenter);
@@ -13625,7 +14218,7 @@ OpenLayers.Util.extend(OpenLayers.Lang.fr,GeoNetwork.Lang.fr);Ext.namespace("Geo
 GeoNetwork.Lang.nl={previousPage:"Ga naar vorige pagina",nextPage:"Ga naar volgende pagina",upInPage:"Scroll naar boven in de resultaten",downInPage:"Scroll naar beneden in de resultaten",example:"Voorbeeld:",helper:"Suggestie:",toggleLayerManager:"Toon lagenbeheer",tagName:"Element naam:",enableTooltip:"Activeer tooltips om informatie te krijgen over elke parameter.",connectIssue:"Catalogus connectie probleem",connectIssueMsg:"Fout 404. Kan geen connectie maken met de catalogus via de url",featureInfoTooltipTitle:"Attribuut-informatie",featureInfoTooltipText:"Klik in de kaart om attribuut-informatie op te vragen van alle zichtbare lagen.",zoomToMaxExtentTooltipTitle:"Volledig kaartbeeld",zoomToMaxExtentTooltipText:"Klik op deze knop om naar het volledig kaartbeeld te zoomen.",zoominTooltipTitle:"Zoom in",zoominTooltipText:"Trek een kader in kaart om in te zoomen. Ook kan er geklikt worden in de kaart waarna er met een factor 2 ingezoomd wordt.",zoomoutTooltipTitle:"Zoom uit",zoomoutTooltipText:"Klik in de kaart om gecentreerd op dit punt met een factor 2 uit te zoomen. Ook kan er een kader in de kaart getrokken worden, hoe kleiner dit kader hoe verder er uitgezoomd zal worden.",dragTooltipTitle:"Verschuif kaart",dragTooltipText:"Houd de linker muisknop ingedrukt en versleep de kaart.",previousTooltipTitle:"Vorige kaartbegrenzing",previosTooltipText:"Klik op deze knop om terug te gaan naar de vorige kaartbegrenzing",nextTooltipTitle:"Volgende kaartbegrenzing",nextTooltipText:"Klik op deze knop om verder te gaan naar de volgende kaartbegrenzing",featureInfoTitle:"Attribuut-informatie",layerManagerTabTitle:"Kaartlagenbeheer",legendTabTitle:"Legende",scaleTitle:"Schaal",xTitle:"X",yTitle:"Y",projectionTitle:"Projectie",FeatureInfoNotQueryable:"Er is geen bevraagbare kaartlaag",WMSBrowserTab1:"Selecteren",WMSBrowserTab3:"Extern",WMSBrowserPreviewTitle:"Voorbeeld kaartlaag",WMSBrowserAddButton:"Voeg toe",WMSBrowserDuplicateMsg:"Kaartlaag is reeds aanwezig.",WMSBrowserPreviewWaitMsg:"Voorbeeld afbeelding ophalen",WMSBrowserConnectButton:"Maak verbinding",WMSBrowserConnectError:"Er is een fout opgetreden bij het maken van de verbinding, controleer de URL.",infoTitle:"Informatie","mf.print.mapTitle":"Titel","mf.print.comment":"Opmerkingen","mf.print.dpi":"Resolutie","mf.print.scale":"Schaal","mf.print.rotation":"Rotatie","mf.print.resetPos":"Terug naar begininstellingen","mf.print.print":"Print","mf.print.generatingPDF":"Aanmaken PDF","mf.print.unableToPrint":"Het printen is niet gelukt, probeer het later nogmaals.","mf.error":"Fout",selectExtentTooltipTitle:"Begrens zoekgebied",selectExtentTooltipText:"Begrens het zoekgebied door in de kaart een kader te trekken.",clearExtentTooltipTitle:"Verwijder begrenzing",clearExtentTooltipText:"Verwijder begrenzing (ie. geen ruimtelijke criteria).",printTooltipTitle:"Print",printTooltipText:"Print de huidige kaart",savewmcTooltipTitle:"Opslaan Web Map Context",savewmcTooltipText:"Sla een Web Map Context document op","saveWMCFile.windowTitle":"Opslaan Web Map Context","saveWMCFile.errorSaveWMC":"Kon het Web Map Context bestand niet opslaan",loadwmcTooltipTitle:"Open Web Map Context",loadwmcTooltipText:"Opent een bestaand Web Map Context document in de kaart viewer","selectWMCFile.windowTitle":"Openen Web Map Context",selectWMCFile:"Selecteer Web Map Context bestand","selectWMCFile.waitLoadingWMC":"Laden Web Map Context","selectWMCFile.loadButtonText":"Openen","selectWMCFile.mergeButtonText":"Samenvoegen","selectWMCFile.errorLoadingWMC":"Kon het Web Map Context bestand niet openen",opacityButtonText:"Transparantie",opacityWindowTitle:"Transparantie",metadataButtonText:"Metadata",removeButtonText:"Verwijderen",addWMSButtonText:"Voeg WMS toe",addWMSWindowTitle:"Voeg WMS toe","layerInfoPanel.windowTitle":"Metadata van de kaartlaag","layerInfoPanel.titleField":"Titel","layerInfoPanel.descriptionField":"Samenvatting","layerInfoPanel.queryableField":"Bevraagbaar",layerList:"Kaartlagen",baseLayerList:"Ondergrond","metadataResults.buttonText":"Metadata resultaten","metadataResults.tooltipTitle":"Metadata resultaten","metadataResults.tooltipText":"Ga naar de metadata resultaatpagina","metadataResults.alertTitle":"Metadata resultaten","metadataResults.alertText":"Geen metadata resultaten om te tonen","featureInfoWindow.windowTitle":"Attribuut-informatie","mf.information":"Print","mf.print.pdfReady":"PDF klaar","loadLayer.loadingMessage":"Ophalen kaartlaag","loadLayer.error.title":"Ophalen kaartlaag","loadLayer.error.message":"De kaartlaag kon niet worden geladen","disclaimer.windowTitle":"Disclaimer","disclaimer.loading":"Laden...","disclaimer.buttonClose":"Sluiten",gazetteerAddressField1Label:"Postcode",gazetteerAddressField2Label:"Straat",gazetteerAddressField3Label:"Plaats",gazetteerAddressField4Label:"Gemeente",gazetteerAddressField5Label:"Huisnummer",searchOptionButton:"Zoek",GazetteerWindowTitle:"Zoek adres",searchResults:"Zoekresultaten",errorTitle:"Fout",SearchOptionLoadFailureMsg:"Het is niet gelukt resultaten op te halen.\nMogelijk is de service tijdelijk niet beschikbaar.\n",gazetteerTooltipTitle:"Zoek op basis van een adres",gazetteerTooltipText:"Zoek een locatie op basis van een postcode, straatnaam, gemeente en/of plaats.",SearchOptionNoResults:"Geen resultaten gevonden",zoomlayerTooltipTitle:"Zoom naar laag",zoomlayerTooltipText:"Gebruik deze knop om naar de volledige begrenzing van de geselecteerde laag te zoomen.","zoomlayer.selectLayerTitle":"Zoom naar laag","zoomlayer.selectLayerText":"Geen laag geselecteerd",layerStylesWindowTitle:"Kaartlaag stijlen",layerStylesPreviewTitle:"Maak een voorbeeld van de legenda",selectStyleButton:"Selecteer kaartstijl",WMSTimeWindowTitle:"WMS Tijd",WMSTimePositionTitle:"Kies een tijdstip",WMSTimeMovieTitle:"Speel een animatie af",wmsTimeUpdateButtonText:"Doorvoeren",WMSTimeAnimationCheckbox:"Speel laatste ${steps} tijdstippen af",fullTextSearch:"Volledige tekst zoeken",keyword:"Trefwoord",org:"Organisatie",mapTypes:"Kaarttypes",rsIdentifier:"Bronidentificator",inspireSearchOptions:"INSPIRE criteria",inspireannex:"INSPIRE annex",inspirerelated:"Gerelateerd aan INSPIRE",inspirerelatedtt:"INSPIRE dataset met rapport over de conformiteit volgens de data specificaties",inspiretheme:"INSPIRE thema",inspireClassificationDataServices:"INSPIRE classificatie data services",serviceType:"Service type",serviceType_discovery:"Discovery Service (ontdekken)",serviceType_view:"View Service (bekijken)",serviceType_transformation:"Transformation Service (transformatie)",serviceType_invoke:"Invoke Spatial Data Service (aanroepen)",serviceType_other:"Andere Services (ander)",similarity:"Zoek nauwkeurigheid",wkt:"WKT geometrie",simpleViewMode:"Eenvoudige voorstelling",spatialSearch:"Ruimtelijke criteria",mdChangeDate:"Metadata wijzigingsdatum",tempExtent:"Temporele begrenzing",hitsPerPage:"Aantal per pagina",sortBy:"Sorteer volgens",relevance:"Relevantie",title:"Titel",options:"Opties",changeDate:"Wijzigingsdatum",rating:"Score",popularity:"Populariteit",scaleDesc:"Schaal (aflopend)",scaleAsc:"Schaal (oplopend)","abstract":"Samenvatting",catalogue:"Catalogus",group:"Groep",chooseGroup:"Selecteer een groep",md:"Metadata",tpl:"Sjabloon",category:"Categorie",advTextSearch:"Geavanceerde tekst zoekmogelijkheden",eitherWords:"Elk van de woorden",exactPhrase:"Exacte zin",allWords:"Alle woorden",withoutWords:"Zonder de woorden",precise:"Exact",imprecise:"Niet exact",relationType:"Relatie type",within:"binnen in",touches:"raakt aan",crosses:"kruist",fullyOutsideOf:"volledig buiten",encloses:"omvat",overlaps:"overlapt",intersection:"doorsnijdt",nearYou:"nabij",from:"Van",to:"Tot",scaleNominator:"1:",scale:"Schaal",digital:"Digitaal",hardCopy:"Papieren kopie",download:"Download",downloadable:"Download",interactive:"Interactief",resourceType:"Type",dataset:"Dataset",series:"Datasetserie",service:"Service",spatialRepType:"Ruimtelijke voorstelling",video:"Video",vector:"Vector",textTable:"Tekst, tabel",tin:"Tin",stereoModel:"Stereo model",grid:"Grid",kind:"Soort",enterGetCapURL:"Geef een GetCapabilities URL voor het registreren van een nieuwe service.",edit:"Editeer",duplicate:"Dupliceer","delete":"Verwijder",createChild:"Creëer kind",privileges:"Rechten",categories:"Categorieën",otherActions:"Andere acties",view:"Bekijk",zoomTo:"Zoom naar",saveXml:"Bewaar als XML",exportCsv:"Exporteer (CSV)",exportZip:"Exporteer (ZIP)",printSel:"Exporteer (PDF)",printSelWorkspaceCopy:"Exporteer werkblad versie (PDF)",printTT:"Print. Open een nieuwe pagina voor het printen.",newOwner:"Nieuwe eigenaar",updateCategories:"Wijzig categorieën",updatePrivileges:"Wijzig rechten",noneSelected:"Niets geselecteerd",none:"geen enkele",all:"allemaal",allInPage:"alles in de pagina",select:"Selecteer",username:"Gebruikersnaam",password:"Paswoord",login:"Inloggen",logout:"Uitloggen",administration:"Beheer",validationReport:"Validatierapport",status:"Status",setStatus:"Wijzig status",updateStatus:"Update status",status_label:"Status:",status_0:"Niet gekend",status_1:"Ontwerp",status_2:"Goedgekeurd",status_3:"Gearchiveerd",status_4:"Voor controle ingediend",status_5:"Afgekeurd",status_6:"Pas gecreëerd",updateVersion:"Start versionering (via SVN)",statusTT:"Verander de status van een metadatarecord overeenkomstig zijn levenscyclus fase",setVersioning:"Metadata versionering",versioning:"Start versionering",versioningTT:"Eenmaal geactiveerd, zullen alle wijzigingen in het metadatarecord worden gelogd in de SVN repository",setUnlock:"Metadata editeer sessie annuleren",cancelEditSession:"Annuleer editeer sessie",cancelEditSessionTT:"Annuleert de editeer sessie",changeEditSessionOwner:"Verander eigenaar editeer sessie",changeEditSessionOwnerTT:"Verandert eigenaar van de editeer sessie zodat een andere gebruiker verder kan editeren",viewWorkspaceCopy:"Bekijk werkblad kopie",viewWorkspaceCopyTT:"Bekijk de werkblad kopie van het metadatarecord",viewOriginalCopy:"Bekijk origineel",viewOriginalCopyTT:"Bekijk de originele kopie van het metadatarecord",items:"onderdelen",item:"onderdeel",thumbnails:"Voorbeeldweergaves",noimages:"Geen afbeeldingen om te tonen",add:"Voeg toe",small:"Klein",large:"Groot",selectImage:"Selecteer een afbeelding",selectFile:"Selecteer een bestand",image:"Beeld",uploading:"Opladen...",upload:"Opladen",success:"Succesvol",failure:"Gefaald",error:"Fout",save:"Bewaar",reset:"Herstel",fileProcessedMsg:"Behandelde bestanden ${res} op de server",suggestion:"Suggestie",logoSelect:"Selecteer een logo",relatedResources:"Gerelateerde metadatarecords",createLink:"Creëren links ...",featureCat:"Objectencatalogus",serviceMd:"Service metadata",datasetMd:"Dataset metadata",parentMd:"Ouder metadata",updateChildren:"Wijzigen kinderen",records:"metadatarecords",record:"metadatarecord",help:"Help",publishError:"Publicatie gefaald.",outOfMemoryError:"Out of memory fout.",publishErrorCode:"foutcode:",saveAndCheck:"Bewaar en valideer",saveAndClose:"Bewaar en sluit",cancel:"Annuleer",layout:"Layout",collapseAll:"Klap alle secties in",editAttributes:"Beheer attributen",chooseAType:"Kies een type",chooseAView:"Kies een voorstellingswijze",viewMode:"Voorstellingswijze",errorAndStatusMsg:"Fout. Status: ${status}, tekst: ${text}. Probeer opnieuw.",mdEditor:"Metadata editor",minorEditTT:"Wijzig de timestamp niet bij bewaren",editing:"Bewerken ${title} (${uuid})",GetCapabilitiesDocumentError:"Fout laden service GetCapabilities document van URL: ",maxResults:"Aantal resultaten",mdTitle:"Metadata titel",keywords:"Trefwoorden",createRelation:"Creëer relatie",createIfNotExistButton:"Maak een nieuw metadata record",getCapabilitiesLayer:"GetCapabilities laag",layerName:"Laagnaam",searching:"Zoeken...",perThesaurus:" per thesaurus",anyThesaurus:"Elke thesaurus",selectedKeywords:"Geselecteerde trefwoorden",foundKeywords:"Gevonden trefwoorden",clear:"Wis",publish:"Publiceer",publishTooltip:"Publiceer de huidige dataset naar een externe node. Indien de dataset reeds bestaat in de node, wordt deze bijgewerkt.",publishSuccess:"Publicatie geslaagd.",publishLayerAdded:" Laag toegevoegd aan het kaartvoorbeeld.",unpublish:"Maak publicatie ongedaan",unpublishTooltip:"Verwijder huidige dataset van de externe node.",unpublishSuccess:"Publicatie ongedaan maken geslaagd.",unpublishError:"Publicatie ongedaan maken is mislukt. ",check:"Valideer",errorDatasetNotFound:"Dataset niet gevonden.",datasetFound:"Dataset gevonden en toegevoegd aan het kaartvoorbeeld.",checkFailure:"Check dataset in externe node is mislukt.",addOnlineSourceTitle:"Link service aan metadata",addOnlineSource:"Toevoegen links",addOnlineSourceTT:"Voeg een online bronsectie toe aan het huidige metadata record verwijzend naar de WMS/WFS/WCS services. Indien de service een WMS is, kan de laag getoond worden in de kaartviewer.",statusInformation:"Status informatie.",publishing:"Publiceren ...",mapPreview:"Kaartvoorbeeld",selectANode:"Selecteer een node ...",geoPublisherWindowTitle:"Geo-publicatie: ",keywordSelectionWindowTitle:"Trefwoord selectie",crsSelectionWindowTitle:"Coördinaten referentie systeem selectie",linkedMetadataSelectionWindowTitle:"Gerelateerde metadata selectie",NotOwnerError:"U heeft geen rechten om dit gerelateerde record te wijzigen.",ServiceUpdateError:"Fout tijdens wijziging service metadata",associateService:"Link service metadata",associateDataset:"Link dataset metadata",logoSelectionWindow:"Kies een logo",fileUploadWindow:"Opladen data of document",selectedCRS:"Geselecteerde coördinaatsystemen",foundCRS:"Beschikbare coördinaatsystemen",search:"Zoeken",restrictSearchToMap:"Beperk zoekactie tot kaartbegrenzing",selected:"geselecteerd",selectRegion:"Selecteer in een gebied...",drawRectangle:"Teken rechthoek",drawPolygon:"Teken polygoon",drawPolygonTT:"Klik op de knop en teken een polygoon door het aanklikken van punten op de kaart. Dubbelklik voor het laatste punt om de polygoon af te sluiten.",drawCircle:"Teken cirkel",discovery:"Ontdekken",visualization:"Visualisatie",when:"Wanneer?",anyTime:"Tijdsonafhankelijk zoeken",onSelection:"Op selectie",adminAction:"Ander",newMetadata:"Nieuw metadatarecord",chooseTemplate:"Selecteer een sjabloon",process:"Behandeling",suggestions:"Suggesties",applySelected:"Pas geselecteerde taak toe",processParametersWindow:"Taak parameters",noSuggestion:"Geen suggestie.",thumbnailUploadWindow:"Opladen voorbeeldweergave",addThumbnail:"Voeg toe",createSmall:"Maak kleine voorbeeldweergave",scalingFactor:"Schaalfactor",smallScalingFactor:"Kleine schaalfactor",type:"Recordtype",clickToClose:"Klik om te sluiten",removeSelected:"Verwijder selectie",ownerName:"Metadata record eigenaar",setPrivileges:"Stel rechten in",setCategories:"Stel categorieën in",massiveOp:"Bulk operatie",prepareDownload:"Download bestanden",mdMenu:"Acties",deleteRecord:"Verwijder metadatarecord?",deleteConfirm:"Bent u zeker dat u dit metadatarecord wil verwijderen?",deleteRecordSuccess:"Metadataracord verwijderd.",deleteRecordFailure:"Fout bij het verwijderen van het metadatarecord.",unlockRecordSuccess:"Metadatarecord unlocked",unlockRecordFailure:"Er is een fout opgetreden bij het unlocken van het metadatarecord.",advancedSearchOptions:"Geavanceerd zoeken",relatedservices:"Gerelateerde service",relatedchildren:"Kinderen",relatedfcats:"Gerelateerde objectencatalogus",relatedhasfeaturecat:"Datasets",relatedsources:"Bron datasets",getMEF:"Exporteer (ZIP)",metadataCategories:"Metadata categorieën",validityInfo:"Validatiestatus: ",lastUpdate:"Laatste wijziging: ",importMetadata:"Importeer metadata",validationStatus:"Validatiestatus",valid:"Geldig",notValid:"Niet geldig",notDetermined:"Onbepaald",addToMap:"Voeg toe aan kaart: ",downloadLink:"Download: ",webLink:"Web link: ",viewKml:"Open in GoogleEarth: ",layerTree:"Lagenbeheer",mdResultsLayer:"Zoekresultaten",printLayer:"Print pagina",relatedservices:"Gerelateerde services",relatedparent:"Ouder",relateddatasets:"Gerelateerde datasets",relatedchildren:"Kinderen",relatedrelated:"objectencatalogus/dataset link",delete19110Relation:"Verwijder relatie met objectencatalogus",newWindow:"Nieuw venster",addAsXLink:"Voeg toe als gelinkt element",contactSelectionWindowTitle:"Contact selectie",selectedContacts:"Geselecteerde contacten",foundContacts:"Beschikbare",contactRole:"Contact rol",mapNearYou:"Centreer de kaart op uw locatie",errorChangeProtocol:"Verwijder geüploade bestand voor het wijzigen van het protocol van de online bron.",resultBy:" resultaat(en) / ",subTemplateImport:"Folder entry import",xmlData:"XML",minorEdit:"Kleine wijziging",minorEditTT:"",create:"Aanmaken",runASearch:"Voer zoekopdracht uit",focusOnAny:"Verplaats focus naar het volledige tekst zoekveld",hideSearchForm:"Verberg of toon zoekformulier",switchMode:"Verander voorstellingswijze",resetSearchForm:"Herstel zoekformulier",focusOnLogin:"Focus op het aanmeldformulier voor toegang tot het catalogusbeheer of meld af indien reeds aangemeld",openAdmin:"Ga naar de beheeromgeving",displayInfoPanel:"Toon het informatiepaneel",displayHelpPanel:"Toon de help",SelectionWindowTitle:"Selecteer uit folder",found:"Gevonden metadatarecords",selected:"Geselecteerd","add-extent-from-geokeywordsreplace":"Vervang bestaande begrenzing","add-info-from-wmssetExtent":"Stel begrenzing in","add-info-from-wmssetAndReplaceExtent":"Vervang bestaande begrenzing","add-info-from-wmssetCRS":"Stel het coördinaatreferentie systeem in","add-info-from-wmssetDynamicGraphicOverview":"Stel het grafisch overzicht in (gebruik makend van de GetMap request URL)","add-info-from-wmswmsServiceUrl":"Service URL","linked-data-checkerlinkUrl":"URL om te verwijderen","related-metadata-checkeruuidToRemove":"Identificator om te verwijderen","add-service-info-from-wxssetAndReplaceOperations":"Vervang bestaande bewerkingen","add-service-info-from-wxswxsServiceUrl":"Service URL",manageDirectories:"Beheer folders",directory:"Folder",thesaurusManager:"Beheer Thesaurus",Theme:"Thema",thesaurusFilePath:"Thesaurus bestand (.rdf)",ThesaurusName:"Thesaurus naam",createThesaurusFromURL:"van URL",createThesaurusFromRepository:"van thesaurus repository",creationMode:"Maak",thesaurusFromRepository:"Thesaurus",externalThesaurusURL:"URL",thesaurusCreation:"Voeg een thesaurus toe",Type:"Type",Activated:"Geactiveerd",emptyThesaurus:"Nieuwe lege thesaurus",thesaurusFromFile:"Van lokaal bestand",thesaurusFromURL:"Van extern bestand (URL)",id:"Identificator",label:"Label",definition:"-",xmin:"X min",ymin:"Y min",xmax:"X max",ymax:"Y max",newLabel:"Label",newDefinition:"Definitie",selDirectoryTT:"Selecteer een foldertype. Een folder groepeert alle elementen met dezelfde naam voor het root element (eg. gmd:CI_ResponsibleParty is een contact folder)",privTplElTT:"Beheer rechten voor de huidige selectie.",addTplElTT:"Voeg een element toe van een XML fragment aan een folder. De doelfolder is gebaseerd op de naam van het root element (eg. gmd:CI_ResponsibleParty).",copyTplElTT:"Maak een nieuw element in de folder voor de huidige selectie.",delTplElTT:"Verwijder geselecteerd element uit de folder.",metadataLocked:"Metadatarecord in editeer sessie",diffWorkspaceCopy:"Vergelijk met werkblad kopie",diffWorkspaceCopyEditMode:"Vergelijk met werkblad kopie in editeer modus",diffOriginalCopy:"Vergelijk met origineel",diffOriginalCopyEditMode:"Vergelijk met origineel in editeer modus",allowedToUnlockMetadata:"U kan de editeer sessie overnemen",allowedToEditMetadata:"U kan dit metadatarecord wijzigen",workspaceCopy:"Werkblad kopie",diffMetadata:"Metadata vergelijken",switchViewTT:"Verwissel links en rechts",backgroundLayer:"Achtergrond laag",Home:"Home",Map:"Kaart",Poweredby:"Door",About:"Over",org:"Organisatie",When:"Wanneer",Where:"Waar",What:"Wat",Searchforspatialdataon:"Zoek ruimtelijke data over",Advanced:"Geavanceerd",List:"Lijst"};
 OpenLayers.Util.extend(OpenLayers.Lang.nl,GeoNetwork.Lang.nl);Ext.namespace("GeoNetwork");
 GeoNetwork.Lang={};
-GeoNetwork.Util={defaultLocale:"eng",locales:[["ar","عربي","ara"],["ca","Català","cat"],["cn","�文","chi"],["de","Deutsch","ger"],["en","English","eng"],["es","Español","spa"],["fr","Français","fre"],["it","Italiano","ita"],["nl","Nederlands","dut"],["no","Norsk","nor"],["pt","Рortuguês","por"],["ru","Ру�?�?кий","rus"]],setLang:function(lang,baseUrl){lang=lang||GeoNetwork.Util.defaultLocale;
+GeoNetwork.Util={defaultLocale:"eng",locales:[["ar","عربي","ara"],["ca","Català","cat"],["cn","中文","chi"],["de","Deutsch","ger"],["en","English","eng"],["es","Español","spa"],["fr","Français","fre"],["it","Italiano","ita"],["nl","Nederlands","dut"],["no","Norsk","nor"],["pt","Рortuguês","por"],["ru","Русский","rus"]],setLang:function(lang,baseUrl){lang=lang||GeoNetwork.Util.defaultLocale;
 var openlayerLang=this.getISO2LangCode(lang);
 OpenLayers.Lang.setCode(openlayerLang);
 new GeoNetwork.Templates().refreshTemplates();
@@ -13698,7 +14291,7 @@ if(this.hostUrl){if(this.hostUrl.indexOf("http")===-1){this.hostUrl=window.locat
 }else{this.URL=this.SERVERURL+"geonetwork"
 }}this.LANG=(this.lang?this.lang:this.DEFAULT_LANG);
 var serviceUrl=this.URL+"/srv/"+this.LANG+"/";
-this.services={rootUrl:serviceUrl,csw:serviceUrl+"csw",xmlSearch:serviceUrl+"xml.search",mdSelect:serviceUrl+"metadata.select",mdView:serviceUrl+"view",mdXMLInsert:serviceUrl+"xml.metadata.insert",mdShow:serviceUrl+"metadata.show.embedded",mdMEF:serviceUrl+"mef.export",mdXMLGet:serviceUrl+"xml.metadata.get",mdXMLGet19139:serviceUrl+"xml_iso19139",mdXMLGetDC:serviceUrl+"xml_dublin-core",mdXMLGetFGDC:serviceUrl+"xml_fgdc-std",mdXMLGet19115:serviceUrl+"xml_iso19115to19139",mdDuplicate:serviceUrl+"metadata.duplicate.form",mdDelete:serviceUrl+"metadata.delete",mdPrint:serviceUrl+"pdf",mdEdit:serviceUrl+"edit",mdCreate:serviceUrl+"metadata.create.new",mdDiff:serviceUrl+"diff",mdUpdate:serviceUrl+"metadata.update.new",mdProcessingXml:serviceUrl+"xml.metadata.processing",mdProcessing:serviceUrl+"metadata.processing.new",mdMassiveChildrenForm:serviceUrl+"metadata.batch.children.form",mdAdmin:serviceUrl+"metadata.admin.form",mdValidate:serviceUrl+"xml.metadata.validate",mdSuggestion:serviceUrl+"metadata.suggestion",mdCategory:serviceUrl+"metadata.category.form",mdRelationInsert:serviceUrl+"xml.relation.insert",mdRelationDelete:serviceUrl+"xml.relation.delete",mdRelation:serviceUrl+"xml.relation",mdGetThumbnail:serviceUrl+"metadata.thumbnail",mdSetThumbnail:serviceUrl+"metadata.thumbnail.set.new",mdUnsetThumbnail:serviceUrl+"metadata.thumbnail.unset.new",mdImport:serviceUrl+"metadata.xmlinsert.form",mdStatus:serviceUrl+"metadata.status.form",mdCancelEditSession:serviceUrl+"metadata.unlock",mdChangeEditSessionOwner:serviceUrl+"metadata.grab.lock.form",mdVersioning:serviceUrl+"metadata.version",subTemplateType:serviceUrl+"subtemplate.types",subTemplate:serviceUrl+"subtemplate",upload:serviceUrl+"resources.upload.new",prepareDownload:serviceUrl+"prepare.file.download",fileDisclaimer:serviceUrl+"file.disclaimer",fileDownload:serviceUrl+"file.download",geopublisher:serviceUrl+"geoserver.publisher",login:serviceUrl+"xml.user.login",logout:serviceUrl+"xml.user.logout",mef:serviceUrl+"mef.export?format=full&version=2",csv:serviceUrl+"csv.search",pdf:serviceUrl+"pdf.selection.search",harvestingStart:serviceUrl+"xml.harvesting.start",harvestingStop:serviceUrl+"xml.harvesting.stop",harvestingRun:serviceUrl+"xml.harvesting.run",harvestingAdd:serviceUrl+"xml.harvesting.add",harvestingUpdate:serviceUrl+"xml.harvesting.update",harvestingRemove:serviceUrl+"xml.harvesting.remove",thesaurusAdd:serviceUrl+"thesaurus.add",thesaurusActivate:serviceUrl+"thesaurus.activate",thesaurusDelete:serviceUrl+"thesaurus.delete",thesaurusUpload:serviceUrl+"xml.thesaurus.upload",thesaurusDownload:serviceUrl+"thesaurus.download",thesaurusConceptAdd:serviceUrl+"thesaurus.addelement",thesaurusConceptUpdate:serviceUrl+"thesaurus.updateelement",thesaurusConceptDelete:serviceUrl+"thesaurus.deleteelement",getIcons:serviceUrl+"xml.harvesting.info?type=icons",opensearchSuggest:serviceUrl+"main.search.suggest",massiveOp:{NewOwner:serviceUrl+"metadata.batch.newowner.form",Categories:serviceUrl+"metadata.batch.category.form",Delete:serviceUrl+"metadata.batch.delete",Privileges:serviceUrl+"metadata.batch.admin.form",Versioning:serviceUrl+"metadata.batch.version",Status:serviceUrl+"metadata.batch.status.form"},metadataMassiveUpdatePrivilege:serviceUrl+"metadata.batch.update.privileges",metadataMassiveUpdateCategories:serviceUrl+"metadata.batch.update.categories",metadataMassiveNewOwner:serviceUrl+"metadata.batch.newowner",getGroups:serviceUrl+"xml.info?type=groups",getRegions:serviceUrl+"xml.info?type=regions",getSources:serviceUrl+"xml.info?type=sources",getUsers:serviceUrl+"xml.info?type=users",getSiteInfo:serviceUrl+"xml.info?type=site",getInspireInfo:serviceUrl+"xml.info?type=inspire",getIsoLanguages:serviceUrl+"isolanguages",schemaInfo:serviceUrl+"xml.schema.info",getZ3950repositories:serviceUrl+"xml.info?type=z3950repositories",getCategories:serviceUrl+"xml.info?type=categories",getHarvesters:serviceUrl+"xml.harvesting.get",rate:serviceUrl+"xml.metadata.rate",xmlConfig:serviceUrl+"xml.config.get",admin:serviceUrl+"admin",xmlError:serviceUrl+"xml.main.error",searchKeyword:serviceUrl+"xml.search.keywords",getThesaurus:serviceUrl+"xml.thesaurus.getList",getStatus:serviceUrl+"xml.metadata.status.values.list",getKeyword:serviceUrl+"xml.keyword.get",searchCRS:serviceUrl+"crs.search",getCRSTypes:serviceUrl+"crs.types",logoAdd:serviceUrl+"logo.add",logoUrl:this.URL+"/images/logos/",imgUrl:this.URL+"/images/",harvesterLogoUrl:this.URL+"/images/harvesting/"};
+this.services={rootUrl:serviceUrl,csw:serviceUrl+"csw",xmlSearch:serviceUrl+"xml.search",mdSelect:serviceUrl+"metadata.select",mdView:serviceUrl+"view",mdXMLInsert:serviceUrl+"xml.metadata.insert",mdShow:serviceUrl+"metadata.show.embedded",mdMEF:serviceUrl+"mef.export",mdXMLGet:serviceUrl+"xml.metadata.get",mdRDFGet:serviceUrl+"rdf.metadata.get",mdXMLGet19139:serviceUrl+"xml_iso19139",mdXMLGetDC:serviceUrl+"xml_dublin-core",mdXMLGetFGDC:serviceUrl+"xml_fgdc-std",mdXMLGet19115:serviceUrl+"xml_iso19115to19139",mdDuplicate:serviceUrl+"metadata.duplicate.form",mdDelete:serviceUrl+"metadata.delete",mdPrint:serviceUrl+"pdf",mdEdit:serviceUrl+"edit",mdCreate:serviceUrl+"metadata.create.new",mdDiff:serviceUrl+"diff",mdUpdate:serviceUrl+"metadata.update.new",mdProcessingXml:serviceUrl+"xml.metadata.processing",mdProcessing:serviceUrl+"metadata.processing.new",mdMassiveChildrenForm:serviceUrl+"metadata.batch.children.form",mdAdmin:serviceUrl+"metadata.admin.form",mdValidate:serviceUrl+"xml.metadata.validate",mdSuggestion:serviceUrl+"metadata.suggestion",mdCategory:serviceUrl+"metadata.category.form",mdRelationInsert:serviceUrl+"xml.relation.insert",mdRelationDelete:serviceUrl+"xml.relation.delete",mdRelation:serviceUrl+"xml.relation",mdGetThumbnail:serviceUrl+"metadata.thumbnail",mdSetThumbnail:serviceUrl+"metadata.thumbnail.set.new",mdUnsetThumbnail:serviceUrl+"metadata.thumbnail.unset.new",mdImport:serviceUrl+"metadata.xmlinsert.form",mdStatus:serviceUrl+"metadata.status.form",mdCancelEditSession:serviceUrl+"metadata.unlock",mdChangeEditSessionOwner:serviceUrl+"metadata.grab.lock.form",mdVersioning:serviceUrl+"metadata.version",subTemplateType:serviceUrl+"subtemplate.types",subTemplate:serviceUrl+"subtemplate",upload:serviceUrl+"resources.upload.new",prepareDownload:serviceUrl+"prepare.file.download",fileDisclaimer:serviceUrl+"file.disclaimer",fileDownload:serviceUrl+"file.download",geopublisher:serviceUrl+"geoserver.publisher",login:serviceUrl+"xml.user.login",logout:serviceUrl+"xml.user.logout",mef:serviceUrl+"mef.export?format=full&version=2",csv:serviceUrl+"csv.search",pdf:serviceUrl+"pdf.selection.search",harvestingStart:serviceUrl+"xml.harvesting.start",harvestingStop:serviceUrl+"xml.harvesting.stop",harvestingRun:serviceUrl+"xml.harvesting.run",harvestingAdd:serviceUrl+"xml.harvesting.add",harvestingUpdate:serviceUrl+"xml.harvesting.update",harvestingRemove:serviceUrl+"xml.harvesting.remove",thesaurusAdd:serviceUrl+"thesaurus.add",thesaurusActivate:serviceUrl+"thesaurus.activate",thesaurusDelete:serviceUrl+"thesaurus.delete",thesaurusUpload:serviceUrl+"xml.thesaurus.upload",thesaurusDownload:serviceUrl+"thesaurus.download",thesaurusConceptAdd:serviceUrl+"thesaurus.addelement",thesaurusConceptUpdate:serviceUrl+"thesaurus.updateelement",thesaurusConceptDelete:serviceUrl+"thesaurus.deleteelement",getIcons:serviceUrl+"xml.harvesting.info?type=icons",opensearchSuggest:serviceUrl+"main.search.suggest",massiveOp:{NewOwner:serviceUrl+"metadata.batch.newowner.form",Categories:serviceUrl+"metadata.batch.category.form",Delete:serviceUrl+"metadata.batch.delete",Privileges:serviceUrl+"metadata.batch.admin.form",Versioning:serviceUrl+"metadata.batch.version",Status:serviceUrl+"metadata.batch.status.form"},metadataMassiveUpdatePrivilege:serviceUrl+"metadata.batch.update.privileges",metadataMassiveUpdateCategories:serviceUrl+"metadata.batch.update.categories",metadataMassiveNewOwner:serviceUrl+"metadata.batch.newowner",getGroups:serviceUrl+"xml.info?type=groups",getRegions:serviceUrl+"xml.info?type=regions",getSources:serviceUrl+"xml.info?type=sources",getUsers:serviceUrl+"xml.info?type=users",getSiteInfo:serviceUrl+"xml.info?type=site",getInspireInfo:serviceUrl+"xml.info?type=inspire",getIsoLanguages:serviceUrl+"isolanguages",schemaInfo:serviceUrl+"xml.schema.info",getZ3950repositories:serviceUrl+"xml.info?type=z3950repositories",getCategories:serviceUrl+"xml.info?type=categories",getHarvesters:serviceUrl+"xml.harvesting.get",rate:serviceUrl+"xml.metadata.rate",xmlConfig:serviceUrl+"xml.config.get",admin:serviceUrl+"admin",xmlError:serviceUrl+"xml.main.error",searchKeyword:serviceUrl+"xml.search.keywords",getThesaurus:serviceUrl+"xml.thesaurus.getList",getStatus:serviceUrl+"xml.metadata.status.values.list",getKeyword:serviceUrl+"xml.keyword.get",searchCRS:serviceUrl+"crs.search",getCRSTypes:serviceUrl+"crs.types",logoAdd:serviceUrl+"logo.add",logoUrl:this.URL+"/images/logos/",imgUrl:this.URL+"/images/",harvesterLogoUrl:this.URL+"/images/harvesting/"};
 this.extentMap=new GeoNetwork.map.ExtentMap();
 this.addEvents("selectionchange","afterLogin","afterLogout","afterBadLogin","afterBadLogout","afterDelete","afterUnlock","afterStatusChange","afterGrabEditSession");
 GeoNetwork.Catalogue.superclass.constructor.call(this,config)
@@ -13871,7 +14464,8 @@ return true
 }else{if(response.status===404){this.showError(OpenLayers.i18n("connectIssue"),OpenLayers.i18n("connectIssueMsg")+this.services.rootUrl+".")
 }else{if(exception){this.checkError();
 return false
-}else{if(cookie){cookie.set("user",undefined)
+}else{var cookie=Ext.state.Manager.getProvider();
+if(cookie){cookie.set("user",undefined)
 }return false
 }}}},login:function(username,password){var app=this,user;
 OpenLayers.Request.GET({url:this.services.login,params:{username:username,password:password,info:"true"},success:function(response){user=response.responseXML.getElementsByTagName("record")[0];
@@ -14019,19 +14613,14 @@ i<list.length;
 if(filter){query+=filter.join("&")
 }return query
 },getFormValues:function(form){var result={};
-form.cascade(function(cur){if(cur.disabled!==true&&!(cur.getName&&cur.getName().startsWith("ext-comp"))){if(cur.isXType("boxselect")||cur.isXType("combo")){if(cur.getValue&&cur.getValue()&&cur.getValue()!==""){result[cur.getName()]=cur.getValue()
-}}else{if(cur.isXType("combo")){if(cur.getValue&&cur.getValue()){if(cur.id==="E_any"){result[cur.getName()]=cur.getValue()
-}else{var value=cur.getValue();
-if(value.split){if(value.split(" ").length>1){result[cur.getName()]='"'+value+'"'
-}else{result[cur.getName()]=value
-}}else{result[cur.getName()]=value
-}}}}else{if(cur.isXType("fieldset")){if(cur.checkbox){result[cur.checkboxName]=!cur.collapsed
+form.cascade(function(cur){if(cur.disabled!==true&&!(cur.getName&&OpenLayers.String.startsWith(cur.getName(),"ext-comp"))){if(cur.isXType("boxselect")||cur.isXType("combo")){if(cur.getValue&&cur.getValue()&&cur.getValue()!==""){result[cur.getName()]=cur.getValue()
+}}else{if(cur.isXType("fieldset")){if(cur.checkbox){result[cur.checkboxName]=!cur.collapsed
 }}else{if(cur.isXType("radiogroup")){var first=cur.items.get(0);
 result[first.getName()]=first.getGroupValue()
 }else{if(cur.isXType("checkbox")){result[cur.getName()]=cur.getValue()
 }else{if(cur.isXType("datefield")){if(cur.getValue()!==""){result[cur.getName()]=cur.getValue().format("Y-m-d")+(cur.postfix?cur.postfix:"")
 }}else{if(cur.isXType("multislider")){}else{if(cur.getValue&&cur.getValue()&&cur.getValue()!==""){result[cur.getName()]=cur.getValue()
-}else{}}}}}}}}}return true
+}else{}}}}}}}}return true
 });
 return result
 }};var translations={};
@@ -14642,14 +15231,20 @@ links.push({name:tokens[0],title:tokens[1],href:tokens[2],protocol:tokens[3],typ
 }}return links
 }function getSource(v,record){if(record.geonet_info&&record.geonet_info.source){return record.geonet_info.source[0].value
 }else{return""
+}}function getCredit(v,record){if(record.credit){return record.credit
+}else{return""
 }}function getPopularity(v,record){if(record.popularity){return record.popularity[0].value
 }else{return""
 }}function getRating(v,record){if(record.rating){return record.rating[0].value
 }else{return""
-}}function getDownload(v,record){if(record.download){return record.download[0].value
-}else{return""
-}}function getOwnerName(v,record){if(record.geonet_info&&record.geonet_info.ownername){return record.geonet_info.ownername[0].value
-}else{return""
+}}function getDownload(v,record){if(record.geonet_info&&record.geonet_info.download){return record.geonet_info.download[0].value
+}else{return"false"
+}}function getDynamic(v,record){if(record.geonet_info&&record.geonet_info.dynamic){return record.geonet_info.dynamic[0].value
+}else{return"false"
+}}function getOwnerName(v,record){if(record.userinfo&&record.userinfo[0].value){var userinfo=record.userinfo[0].value.split(separator);
+try{return userinfo[2]+" "+userinfo[1]
+}catch(e){return""
+}}else{return""
 }}function getIsHarvested(v,record){if(record.isHarvested){return record.isHarvested[0].value
 }else{return""
 }}function getHarvesterType(v,record){if(record.geonet_info&&record.geonet_info.harvestInfo&&record.geonet_info.harvestInfo.type){return record.geonet_info.harvestInfo.type[0].value
@@ -14662,9 +15257,11 @@ links.push({name:tokens[0],title:tokens[1],href:tokens[2],protocol:tokens[3],typ
 }else{return""
 }}function getSelected(v,record){if(record.geonet_info&&record.geonet_info.selected){return record.geonet_info.selected[0].value
 }else{return""
-}}function getAbstract(v,record){if(record["abstract"]){return record["abstract"][0].value
+}}function getAbstract(v,record){if(record["abstract"]&&record["abstract"][0]){return record["abstract"][0].value
 }else{return""
-}}function getType(v,record){if(record.type){return record.type[0].value
+}}function getType(v,record){if(record.type&&record.type[0]){return record.type[0].value
+}else{return""
+}}function getSpatialRepresentationType(v,record){if(record.spatialRepresentationType&&record.spatialRepresentationType[0]){return record.spatialRepresentationType[0].value
 }else{return""
 }}function getEdit(v,record){if(record.geonet_info&&record.geonet_info.edit){return record.geonet_info.edit[0].value
 }else{return"false"
@@ -14683,7 +15280,7 @@ links.push({name:tokens[0],title:tokens[1],href:tokens[2],protocol:tokens[3],typ
 }else{return""
 }}function getOwner(v,record){if(record.geonet_info&&record.geonet_info.owner){return record.geonet_info.owner[0].value
 }else{return"false"
-}}return new Ext.data.JsonStore({totalProperty:"summary.count",root:"records",fast:"index",service:"q",fields:[{name:"title",convert:getTitle},{name:"abstract",convert:getAbstract},{name:"type",convert:getType},{name:"subject",mapping:"keyword",defaultValue:""},{name:"uuid",mapping:"geonet_info.uuid[0].value",defaultValue:""},{name:"id",mapping:"geonet_info.id[0].value",defaultValue:""},{name:"locked",convert:getLocked},{name:"workspace",convert:getWorkspace},{name:"status",convert:getStatusCode},{name:"schema",mapping:"geonet_info.schema[0].value",defaultValue:""},{name:"contact",convert:getContact},{name:"thumbnail",convert:getThumbnails},{name:"links",convert:getLinks},{name:"uri",mapping:"uri",defaultValue:""},{name:"isharvested",convert:getIsHarvested},{name:"harvestertype",convert:getHarvesterType},{name:"createdate",convert:getCreateDate},{name:"changedate",convert:getChangeDate},{name:"selected",convert:getSelected},{name:"source",convert:getSource},{name:"category",convert:getCategory},{name:"rating",convert:getRating},{name:"popularity",convert:getPopularity},{name:"download",convert:getDownload},{name:"ownername",convert:getOwnerName},{name:"edit",convert:getEdit},{name:"bbox",mapping:"BoundingBox",defaultValue:""},{name:"displayOrder",convert:getDisplayOrder,sortType:"asInt"},{name:"valid",convert:getValidationInfo},{name:"valid_details",convert:getValidationDetails},{name:"symbolicLocking",convert:getSymbolicLocking},{name:"lockedBy",convert:getLockedBy},{name:"owner",convert:getOwner}]})
+}}return new Ext.data.JsonStore({totalProperty:"summary.count",root:"records",fast:"index",service:"q",fields:[{name:"title",convert:getTitle},{name:"abstract",convert:getAbstract},{name:"type",convert:getType},{name:"subject",mapping:"keyword",defaultValue:""},{name:"spatialRepresentationType",convert:getSpatialRepresentationType},{name:"uuid",mapping:"geonet_info.uuid[0].value",defaultValue:""},{name:"id",mapping:"geonet_info.id[0].value",defaultValue:""},{name:"locked",convert:getLocked},{name:"workspace",convert:getWorkspace},{name:"status",convert:getStatusCode},{name:"schema",mapping:"geonet_info.schema[0].value",defaultValue:""},{name:"contact",convert:getContact},{name:"credit",convert:getCredit},{name:"thumbnail",convert:getThumbnails},{name:"links",convert:getLinks},{name:"uri",mapping:"uri",defaultValue:""},{name:"isharvested",convert:getIsHarvested},{name:"harvestertype",convert:getHarvesterType},{name:"createdate",convert:getCreateDate},{name:"changedate",convert:getChangeDate},{name:"selected",convert:getSelected},{name:"source",convert:getSource},{name:"category",convert:getCategory},{name:"rating",convert:getRating},{name:"popularity",convert:getPopularity},{name:"download",convert:getDownload},{name:"dynamic",convert:getDynamic},{name:"ownername",convert:getOwnerName},{name:"edit",convert:getEdit},{name:"bbox",mapping:"BoundingBox",defaultValue:""},{name:"displayOrder",convert:getDisplayOrder,sortType:"asInt"},{name:"valid",convert:getValidationInfo},{name:"valid_details",convert:getValidationDetails},{name:"symbolicLocking",convert:getSymbolicLocking},{name:"lockedBy",convert:getLockedBy},{name:"owner",convert:getOwner}]})
 };Ext.namespace("GeoNetwork.data");
 GeoNetwork.data.MetadataSummaryStore=function(){return new Ext.data.JsonStore({totalProperty:"count",root:"keywords.keyword",listeners:{load:function(store,records,opt){var valueField="count";
 var normalizedField="class";
@@ -14792,7 +15389,7 @@ return store
 GeoNetwork.data.UserStore=function(url){return new Ext.data.XmlStore({autoDestroy:true,proxy:new Ext.data.HttpProxy({method:"GET",url:url,disableCaching:false}),record:"user",idPath:"id",fields:[{name:"id"},{name:"username"},{name:"surname"},{name:"name"},{name:"profile"},{name:"address"},{name:"email"},{name:"city"},{name:"state"},{name:"zip"},{name:"country"},{name:"organisation"},{name:"kind"}]})
 };Ext.namespace("GeoNetwork.data");
 GeoNetwork.data.ValidationRuleStore=function(url,params,grouping){function getStatusIcon(v,record){var status=record.getAttribute("type");
-return'<span class="'+status+'">&#160;</span>'
+return'<span class="badge badge-'+status+'">&#160;</span>'
 }var fields=[{name:"id",mapping:"@id"},{name:"group",mapping:"@group"},{name:"status",mapping:"@type"},{name:"statusIcon",convert:getStatusIcon},{name:"title"},{name:"details"},{name:"msg"}];
 if(grouping){var reader=new Ext.data.XmlReader({record:"rule",idProperty:"id"},fields);
 return new Ext.data.GroupingStore({autoDestroy:true,proxy:new Ext.data.HttpProxy({method:"POST",url:url,params:params,disableCaching:false}),reader:reader,groupField:"group",sortInfo:{field:"status",direction:"ASC"}})
@@ -14894,10 +15491,10 @@ GeoNetwork.LoginForm=Ext.extend(Ext.FormPanel,{url:"",catalogue:undefined,defaul
 }}],initComponent:function(){Ext.applyIf(this,this.defaultConfig);
 var form=this;
 var loginBt=new Ext.Button({width:50,text:OpenLayers.i18n("login"),iconCls:"md-mn mn-login",id:"btnLoginForm",listeners:{click:function(){this.catalogue.login(this.username.getValue(),this.password.getValue())
-},scope:form}}),adminBt=new Ext.Button({width:80,text:OpenLayers.i18n("administration"),listeners:{click:function(){catalogue.admin()
-},scope:this}}),logoutBt=new Ext.Button({width:80,text:OpenLayers.i18n("logout"),iconCls:"md-mn mn-logout",listeners:{click:function(){catalogue.logout()
+},scope:form}}),adminBt=new Ext.Button({width:80,text:OpenLayers.i18n("administration"),listeners:{click:function(){this.catalogue.admin()
+},scope:this}}),logoutBt=new Ext.Button({width:80,text:OpenLayers.i18n("logout"),iconCls:"md-mn mn-logout",listeners:{click:function(){this.catalogue.logout()
 },scope:this}});
-this.username=new Ext.form.TextField({id:"username",name:"username",width:70,hideLabel:false,allowBlank:false,fieldLabel:OpenLayers.i18n("username"),emptyText:OpenLayers.i18n("username")});
+this.username=new Ext.form.TextField({id:"username",name:"username",width:70,autoCreate:{tag:"input"},hideLabel:false,allowBlank:false,fieldLabel:OpenLayers.i18n("username"),emptyText:OpenLayers.i18n("username")});
 this.password=new Ext.form.TextField({name:"password",width:70,hideLabel:false,allowBlank:false,fieldLabel:OpenLayers.i18n("password"),emptyText:OpenLayers.i18n("password"),inputType:"password"});
 this.userInfo=new Ext.form.Label({width:170,text:"",cls:"loginInfo"});
 if(this.hideLoginLabels){this.toggledFields.push(this.username,this.password,loginBt)
@@ -14993,6 +15590,11 @@ var schema=this.record.get("schema");
 this.catalogue.metadataXMLShow(id,schema)
 },scope:this});
 this.add(this.viewXMLAction);
+this.viewRDFAction=new Ext.Action({text:OpenLayers.i18n("saveRdf"),iconCls:"rdfIcon",handler:function(){var id=this.record.get("uuid");
+var schema=this.record.get("schema");
+window.open(this.catalogue.services.mdRDFGet+"?uuid="+id)
+},scope:this});
+this.add(this.viewRDFAction);
 this.printAction=new Ext.Action({text:OpenLayers.i18n("printSel"),iconCls:"md-mn-pdf",handler:function(){this.catalogue.metadataPrint(this.record.get("uuid"),false)
 },scope:this});
 this.add(this.printAction);
@@ -15153,7 +15755,7 @@ this.maps.push(m);
 this.initMap(m)
 }},initMap:function(map){if(!this.styleInitialized){this.initStyle();
 this.styleInitialized=true
-}var l=new OpenLayers.Layer.Vector(OpenLayers.i18n("mdResultsLayer"),{styleMap:new OpenLayers.StyleMap({"default":this.layer_style,hover:this.layer_style_hover}),});
+}var l=new OpenLayers.Layer.Vector(OpenLayers.i18n("mdResultsLayer"),{styleMap:new OpenLayers.StyleMap({"default":this.layer_style,hover:this.layer_style_hover})});
 this.addCurrentFeatures(l);
 map.layer=l;
 map.map.addLayer(l)
@@ -15431,7 +16033,8 @@ if(this.searchTriggered){state.search=""
 }var parameters=GeoNetwork.util.SearchTools.getFormValues(this);
 Ext.apply(state,parameters);
 return state
-},search:function(){this.searchTriggered=true,this.searchCb();
+},search:function(){this.searchTriggered=true;
+this.searchCb();
 this.fireEvent("onsearch")
 },reset:function(){this.searchTriggered=false;
 this.resetCb();
@@ -15600,7 +16203,7 @@ this.add(new Ext.Panel({autoLoad:{url:this.serviceUrl,scripts:true,callback:this
 }});
 Ext.reg("gn_view_viewpanel",GeoNetwork.view.ViewPanel);Ext.namespace("GeoNetwork.editor");
 GeoNetwork.editor.SubTemplateSelectionPanel=Ext.extend(Ext.FormPanel,{border:false,catalogue:undefined,namespaces:{xlink:"http://www.w3.org/1999/xlink",gmd:"http://www.isotc211.org/2005/gmd",gmx:"http://www.isotc211.org/2005/gmx",gco:"http://www.isotc211.org/2005/gco",gts:"http://www.isotc211.org/2005/gts",gml:"http://www.opengis.net/gml"},id:"subTemplateSearchForm",contact:Ext.data.Record.create([{name:"xlink"},{name:"name"}]),subTemplateStore:undefined,codeListStore:undefined,subTplTypeField:undefined,addAsXLink:false,itemSelector:null,loadingMask:null,subTemplateCount:null,ref:null,name:null,elementName:null,codeListConfig:{"gmd:CI_ResponsibleParty":{xpath:"gmd:role/gmd:CI_RoleCode/@codeListValue",url:"",label:OpenLayers.i18n("contactRole"),code:"gmd:CI_RoleCode"}},codeListCombo:null,role:"",defaultRole:"pointOfContact",SubTemplateSelected:[],initComponent:function(){this.subTemplateStore=GeoNetwork.data.MetadataResultsStore();
-this.items=[{xtype:"panel",layout:"fit",bodyStyle:"padding: 5px;",border:false,tbar:[this.getSearchField()],items:[this.getSubTemplateItemSelector()]}];
+this.items=[{xtype:"panel",layout:"fit",bodyStyle:"padding: 5px;",border:false,items:[this.getSearchField(),this.getSubTemplateItemSelector()]}];
 this.subTemplateStore.on({loadexception:function(){},beforeload:function(store,options){if(!this.loadingMask){this.loadingMask=new Ext.LoadMask(this.itemSelector.fromMultiselect.getEl(),{msg:OpenLayers.i18n("searching")})
 }this.loadingMask.show()
 },load:function(){this.loadingMask.hide()
@@ -15630,7 +16233,7 @@ return this.codeListCombo
 if(Ext.isIE||Ext.isIE7){tpl+='" unselectable=on'
 }else{tpl+=' x-unselectable"'
 }tpl+=">{title}</div></tpl>";
-this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["uuid","title"],toData:[],msWidth:320,msHeight:230,valueField:"uuid",fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selected"),fromLegend:OpenLayers.i18n("found"),fromStore:this.subTemplateStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/MultiselectItemSelector-3.0/icons",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
+this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["uuid","title"],toData:[],msWidth:320,msHeight:230,valueField:"uuid",fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selected"),fromLegend:OpenLayers.i18n("found"),fromStore:this.subTemplateStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/images",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
 i.reset.call(i)
 },scope:this}]});
 this.itemSelector.on({change:function(component){Ext.getCmp("SubTemplateSearchValidateButton").setDisabled(component.toStore.getCount()<1)
@@ -15707,7 +16310,7 @@ if(value.length<1){this.crsStore.baseParams.name=""
 if(Ext.isIE||Ext.isIE7){tpl+='" unselectable=on'
 }else{tpl+=' x-unselectable"'
 }tpl+=">{description}</div></tpl>";
-this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["code","codeSpace","authority","description","version"],toData:[],msWidth:320,msHeight:230,valueField:"code",fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selectedCRS"),fromLegend:OpenLayers.i18n("foundCRS"),fromStore:this.crsStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/MultiselectItemSelector-3.0/icons",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
+this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["code","codeSpace","authority","description","version"],toData:[],msWidth:320,msHeight:230,valueField:"code",fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selectedCRS"),fromLegend:OpenLayers.i18n("foundCRS"),fromStore:this.crsStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/images",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
 i.reset.call(i)
 },scope:this}]});
 this.itemSelector.on({change:function(component){Ext.getCmp("crsSearchValidateButton").setDisabled(component.toStore.getCount()<1)
@@ -16180,9 +16783,9 @@ Ext.getCmp("editorPanel").callAction(action)
 }function checkForFileUpload(fref,pref,protocolBeforeEdit){var fileName=Ext.getDom("_"+fref);
 var protoSelect=Ext.getDom("s_"+pref);
 var protoIn=Ext.getDom("_"+pref);
-var fileUploaded=protocolBeforeEdit.startsWith("WWW:DOWNLOAD");
+var fileUploaded=OpenLayers.String.startsWith(protocolBeforeEdit,"WWW:DOWNLOAD");
 var protocol=protoSelect.value;
-var protocolDownload=(protocol.startsWith("WWW:DOWNLOAD")&&protocol.indexOf("http")>0);
+var protocolDownload=(OpenLayers.String.startsWith(protocol,"WWW:DOWNLOAD")&&protocol.indexOf("http")>0);
 if(fileUploaded){if(!protocolDownload){alert(OpenLayers.i18n("errorChangeProtocol"));
 protoSelect.value=protoIn.value
 }else{protoIn.value=protoSelect.value
@@ -16393,7 +16996,7 @@ if(value.length<1){this.keywordStore.baseParams.pKeyword="*"
 if(Ext.isIE||Ext.isIE7){tpl+='" unselectable=on'
 }else{tpl+=' x-unselectable"'
 }tpl+='>{id} {value} <span class="ux-mselect-item-thesaurus">({thesaurus})</span></div></tpl>';
-this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["value","thesaurus"],toData:[],msWidth:320,msHeight:230,valueField:"value",toSortField:undefined,fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selectedKeywords"),fromLegend:OpenLayers.i18n("foundKeywords"),fromStore:this.keywordStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/MultiselectItemSelector-3.0/icons",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
+this.itemSelector=new Ext.ux.ItemSelector({name:"itemselector",fieldLabel:"ItemSelector",dataFields:["value","thesaurus"],toData:[],msWidth:320,msHeight:230,valueField:"value",toSortField:undefined,fromTpl:tpl,toTpl:tpl,toLegend:OpenLayers.i18n("selectedKeywords"),fromLegend:OpenLayers.i18n("foundKeywords"),fromStore:this.keywordStore,fromAllowTrash:false,fromAllowDup:true,toAllowDup:false,drawUpIcon:false,drawDownIcon:false,drawTopIcon:false,drawBotIcon:false,imagePath:"../js/ext-ux/images",toTBar:[{text:OpenLayers.i18n("clear"),handler:function(){var i=this.getForm().findField("itemselector");
 i.reset.call(i)
 },scope:this}]});
 this.itemSelector.on({change:function(component){Ext.getCmp("keywordSearchValidateButton").setDisabled(component.toStore.getCount()<1)
@@ -16576,7 +17179,7 @@ GeoNetwork.editor.NewMetadataPanel=Ext.extend(Ext.Panel,{defaultConfig:{border:f
 }else{this.createBt.setDisabled(true)
 }},initComponent:function(){Ext.applyIf(this,this.defaultConfig);
 var checkboxSM,colModel;
-this.createBt=new Ext.Button({text:OpenLayers.i18n("create"),iconCls:"addIcon",disabled:true,handler:function(){this.catalogue.metadataEdit(this.selectedTpl,true,this.selectedGroup,this.isChild,this.isTemplate);
+this.createBt=new Ext.Button({text:OpenLayers.i18n("create"),iconCls:"addIcon",ctCls:"gn-bt-main",disabled:true,handler:function(){this.catalogue.metadataEdit(this.selectedTpl,true,this.selectedGroup,this.isChild,this.isTemplate);
 this.ownerCt.hide()
 },scope:this});
 this.buttons=[this.createBt,{text:OpenLayers.i18n("cancel"),iconCls:"cancel",handler:function(){this.ownerCt.hide()
@@ -16584,22 +17187,34 @@ this.buttons=[this.createBt,{text:OpenLayers.i18n("cancel"),iconCls:"cancel",han
 GeoNetwork.editor.NewMetadataPanel.superclass.initComponent.call(this);
 this.groupStore=GeoNetwork.data.GroupStore(this.getGroupUrl);
 this.groupStore.load();
-if(!this.selectedTpl){this.tplStore=GeoNetwork.Settings.mdStore?GeoNetwork.Settings.mdStore():GeoNetwork.data.MetadataResultsStore();
+var cmp=[];
+if(!this.selectedTpl){this.tplStore=GeoNetwork.Settings.mdStore?GeoNetwork.Settings.mdStore():GeoNetwork.data.MetadataResultsFastStore();
 this.tplStore.setDefaultSort("displayOrder");
 checkboxSM=new Ext.grid.CheckboxSelectionModel({singleSelect:this.singleSelect,header:""});
-colModel=new Ext.grid.ColumnModel({defaults:{sortable:true},columns:[checkboxSM,{header:"Schema",dataIndex:"schema"},{id:"title",header:"Title",dataIndex:"title"},{header:"Order",hidden:true,dataIndex:"displayOrder"}]});
-this.add(new Ext.grid.GridPanel({layout:"fit",title:OpenLayers.i18n("chooseTemplate"),border:false,autoScroll:true,height:330,store:this.tplStore,colModel:colModel,sm:checkboxSM,autoExpandColumn:"title",listeners:{rowclick:function(grid,rowIndex,e){var data=grid.getStore().getAt(rowIndex).data;
-if(grid.getSelectionModel().getCount()!==0){this.selectedTpl=data.id
+var tplDescription=function(value,p,record){return String.format('<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div>',record.data.title,record.data["abstract"])
+};
+var tplType=function(value,p,record){var label=OpenLayers.i18n(record.data.type)||"";
+if(record.data.spatialRepresentationType){label+=" / "+OpenLayers.i18n(record.data.spatialRepresentationType)
+}return String.format("{0}",label)
+};
+colModel=new Ext.grid.ColumnModel({defaults:{sortable:true},columns:[checkboxSM,{header:OpenLayers.i18n("metadatatype"),renderer:tplType,dataIndex:"type"},{id:"title",header:OpenLayers.i18n("tplTitle"),renderer:tplDescription,dataIndex:"title"},{header:"Schema",dataIndex:"schema"},{header:"Order",hidden:true,dataIndex:"displayOrder"}]});
+var grid=new Ext.grid.GridPanel({border:false,anchor:"100% -30",store:this.tplStore,colModel:colModel,sm:checkboxSM,autoExpandColumn:"title"});
+grid.getSelectionModel().on("rowselect",function(sm,rowIndex,r){if(sm.getCount()!==0){this.selectedTpl=r.data.id
 }else{this.selectedTpl=undefined
 }this.validate()
-},scope:this}}));
+},this);
+grid.getStore().on("load",function(store){grid.getSelectionModel().selectFirstRow();
+grid.getView().focusEl.focus()
+},grid);
+cmp.push(grid);
 this.catalogue.search({E_template:"y"},null,null,1,true,this.tplStore,null)
-}this.combo=new Ext.form.ComboBox({name:"E_group",mode:"local",emptyText:OpenLayers.i18n("chooseGroup"),editable:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("group"),store:this.groupStore,allowBlank:false,valueField:"id",displayField:"name",tpl:'<tpl for="."><div class="x-combo-list-item">{[values.label.'+GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())+"]}</div></tpl>",listeners:{select:function(field,record,idx){this.selectedGroup=record.get("id");
+}this.combo=new Ext.form.ComboBox({name:"E_group",mode:"local",anchor:"100%",emptyText:OpenLayers.i18n("chooseGroup"),editable:false,triggerAction:"all",fieldLabel:OpenLayers.i18n("group"),store:this.groupStore,allowBlank:false,valueField:"id",displayField:"name",tpl:'<tpl for="."><div class="x-combo-list-item">{[values.label.'+GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())+"]}</div></tpl>",listeners:{select:function(field,record,idx){this.selectedGroup=record.get("id");
 this.combo.setValue(record.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
 this.validate()
 },scope:this}});
-this.add(this.combo);
-this.add({xtype:"textfield",name:"isTemplate",hidden:true,value:this.isTemplate});
+cmp.push(this.combo);
+cmp.push({xtype:"textfield",name:"isTemplate",hidden:true,value:this.isTemplate});
+this.add(cmp);
 this.groupStore.load({callback:function(){this.groupStore.each(function(record){if((record.get("id")=="-1")||(record.get("id")=="0")||(record.get("id")=="1")){this.remove(record)
 }},this.groupStore);
 if(this.groupStore.getCount()>0){var recordSelected=this.groupStore.getAt(0);
@@ -16840,7 +17455,7 @@ GeoNetwork.editor.ValidationPanel.superclass.initComponent.call(this);
 this.store=new GeoNetwork.data.ValidationRuleStore(this.serviceUrl,{id:this.metadataId},true);
 var xg=Ext.grid;
 var expander=new xg.RowExpander({tpl:new Ext.XTemplate('<div title="{details}"><b>{title}</b></div>{msg}')});
-var colModel=new Ext.grid.ColumnModel({defaults:{width:120,sortable:true},columns:[expander,{id:"group",header:OpenLayers.i18n("group"),width:60,sortable:true,hidden:true,dataIndex:"group"},{header:OpenLayers.i18n("status"),width:10,resizable:false,sortable:true,dataIndex:"statusIcon"},{header:OpenLayers.i18n("title"),hidden:false,dataIndex:"title"}]});
+var colModel=new Ext.grid.ColumnModel({defaults:{width:120,sortable:true},columns:[expander,{id:"group",header:OpenLayers.i18n("group"),width:60,sortable:true,hidden:true,dataIndex:"group"},{header:OpenLayers.i18n("status"),width:18,resizable:false,sortable:true,dataIndex:"statusIcon"},{header:OpenLayers.i18n("title"),hidden:false,dataIndex:"title"}]});
 var grid=new xg.GridPanel({store:this.store,colModel:colModel,loadMask:true,plugins:expander,view:new Ext.grid.GroupingView({forceFit:true,groupTextTpl:'{text} ({[values.rs.length]} {[values.rs.length > 1 ? "'+OpenLayers.i18n("items")+'" : "'+OpenLayers.i18n("item")+'"]})'}),frame:false,height:300,autoWidth:true});
 this.add(grid);
 this.editor.on("editorClosed",this.clear,this);
@@ -17413,8 +18028,8 @@ if(children.length>1){continue
 }var id;
 id=Ext.id(viewer);
 var map=createMap();
-if(edit){var control,tbarItems=[];
-if(mode==="bbox"){control=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.RegularPolygon,{handlerOptions:{irregular:true,sides:4},featureAdded:function(feature){var bounds=feature.geometry.getBounds(),boundsReproj;
+if(edit){var tbarItems=[];
+if(mode==="bbox"){var control=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.RegularPolygon,{handlerOptions:{irregular:true,sides:4},featureAdded:function(feature){var bounds=feature.geometry.getBounds(),boundsReproj;
 if(mainProj!==wgsProj){boundsReproj=bounds.clone().transform(mainProj,wgsProj)
 }else{boundsReproj=bounds
 }var wsen=this.watchedBbox.split(",");
@@ -17433,10 +18048,12 @@ Ext.get("_"+wsen[3]).dom.value=r.data.north;
 updateBboxForRegion(maps[eltRef],watchedBbox,eltRef,true);
 if(Ext.get("_"+this.descRef)!==null){Ext.get("_"+this.descRef).dom.value=r.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]
 }}.bind({extentMap:this,map:maps[eltRef],watchedBbox:watchedBbox,eltRef:eltRef,descRef:descRef})))
-}else{if(mode==="polygon"){control=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.Polygon,{featureAdded:function(feature){document.getElementById("_X"+this).value=convertToGml(feature,mainProjCode)
+}else{if(mode==="polygon"){var polyControl=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.Polygon,{featureAdded:function(feature){document.getElementById("_X"+this).value=convertToGml(feature,mainProjCode);
+polyControl.deactivate()
 }.bind(targetPolygon)});
-tbarItems.push(new GeoExt.Action({map:maps[eltRef],control:control,text:OpenLayers.i18n("drawPolygon"),tooltip:OpenLayers.i18n("drawPolygonTT"),pressed:false,allowDepress:true,toggleGroup:"tool",iconCls:"drawPolygon"}));
-control=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.RegularPolygon,{handlerOptions:{irregular:true,sides:60},featureAdded:function(feature){document.getElementById("_X"+this).value=convertToGml(feature,mainProjCode)
+tbarItems.push(new GeoExt.Action({map:maps[eltRef],control:polyControl,text:OpenLayers.i18n("drawPolygon"),tooltip:OpenLayers.i18n("drawPolygonTT"),pressed:false,allowDepress:true,toggleGroup:"tool",iconCls:"drawPolygon"}));
+control=new OpenLayers.Control.DrawFeature(vectorLayers[eltRef],OpenLayers.Handler.RegularPolygon,{handlerOptions:{irregular:true,sides:60},featureAdded:function(feature){document.getElementById("_X"+this).value=convertToGml(feature,mainProjCode);
+control.deactivate()
 }.bind(targetPolygon)});
 tbarItems.push(new GeoExt.Action({map:maps[eltRef],control:control,text:OpenLayers.i18n("drawCircle"),pressed:false,allowDepress:true,toggleGroup:"tool",iconCls:"drawCircle"}))
 }}tbarItems.push({text:OpenLayers.i18n("clear"),iconCls:"clearPolygon",handler:function(){this.vectorLayer.destroyFeatures();

@@ -107,7 +107,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
         return state;
     },
     search: function() {
-        this.searchTriggered = true,
+        this.searchTriggered = true;
         this.searchCb();
         this.fireEvent('onsearch');
     },

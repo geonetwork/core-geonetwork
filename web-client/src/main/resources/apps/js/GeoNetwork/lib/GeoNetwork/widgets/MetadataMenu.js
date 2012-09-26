@@ -300,6 +300,19 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.add(this.viewXMLAction);
         
+        this.viewRDFAction = new Ext.Action({
+            text: OpenLayers.i18n('saveRdf'),
+            //W3C Semantic Web Logo
+            iconCls: 'rdfIcon',
+            handler: function(){
+                var id = this.record.get('uuid');
+                var schema = this.record.get('schema');
+                window.open(this.catalogue.services.mdRDFGet + "?uuid=" + id);
+            },
+            scope: this
+        });
+        this.add(this.viewRDFAction);
+        
         this.printAction = new Ext.Action({
                 text: OpenLayers.i18n('printSel'),
                 iconCls: 'md-mn-pdf',

@@ -346,10 +346,23 @@ GeoNetwork.app = function(){
 
         var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
-        return new Ext.FormPanel({
+        return new GeoNetwork.SearchFormPanel({
             id: 'searchForm',
+            stateId: 's',
             bodyStyle: 'text-align: center;',
             border: false,
+            // Use dummy hidden buttons in form. Search buttons are managed outside of search form
+			searchBt: new Ext.Button({
+				text: OpenLayers.i18n('search'),
+				iconCls : 'md-mn-find',
+				iconAlign: 'right',
+				hidden: true
+			}),
+			resetBt: new Ext.Button({
+				tooltip: OpenLayers.i18n('resetSearchForm'),
+				iconCls: 'md-mn-reset',
+				hidden: true
+			}),
             //autoShow : true,
                 listeners: {
                 afterrender: function(){
@@ -557,7 +570,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createResultsPanel(){
+    function createResultsPanel(permalinkProvider){
         metadataResultsView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
             displaySerieMembers: true,
@@ -571,7 +584,8 @@ GeoNetwork.app = function(){
             catalogue: catalogue,
             searchBtCmp: Ext.getCmp('searchBt'),
             sortByCmp: Ext.getCmp('E_sortBy'),
-            metadataResultsView: metadataResultsView
+            metadataResultsView: metadataResultsView,
+            permalinkProvider: permalinkProvider
         });
 
         bBar = createBBar();
@@ -757,10 +771,12 @@ GeoNetwork.app = function(){
     // public space:
     return {
         init: function(){
-            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
+            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/tabsearch.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            var lang = urlParameters.hl || GeoNetwork.defaultLocale;
+            var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
+
+
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }
@@ -770,7 +786,11 @@ GeoNetwork.app = function(){
             cookie = new Ext.state.CookieProvider({
                 expires: new Date(new Date().getTime()+(1000*60*60*24*365))
             });
-            Ext.state.Manager.setProvider(cookie);
+            
+            // set a permalink provider which will be the main state provider.
+            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+            
+            Ext.state.Manager.setProvider(permalinkProvider);
 
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
@@ -793,7 +813,6 @@ GeoNetwork.app = function(){
             searchForm = createSearchForm();
 
 
-
             // Top navigation widgets
             //createModeSwitcher();
             createLanguageSwitcher(lang);
@@ -804,7 +823,7 @@ GeoNetwork.app = function(){
             resultsMap = getResultsMap();
 
             // Search result
-            resultsPanel = createResultsPanel();
+            resultsPanel = createResultsPanel(permalinkProvider);
 
             // Extra stuffs
             //infoPanel = {};//createInfoPanel();
@@ -1004,6 +1023,13 @@ GeoNetwork.app = function(){
                     }
                 });
             });
+            
+            // Hack to run search after all app is rendered within a sec ...
+            // It could have been better to trigger event in SearchFormPanel#applyState
+            // FIXME
+            if (urlParameters.s_search !== undefined) {
+                setTimeout(function(){Ext.getCmp('searchBt').fireEvent('click');}, 500);
+            }
         },
         getIMap: function(){
             // init map if not yet initialized

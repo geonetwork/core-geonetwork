@@ -39,7 +39,7 @@
   width : 100%;
   text-align : center;
   line-height : 0;
-  background : url(images/lb-load.gif) no-repeat center 15%;
+  background : url(../images/lb-load.gif) no-repeat center 15%;
 }
 
 #ux-lightbox-hoverNav {
@@ -63,7 +63,7 @@
 #ux-lightbox-navNext {
   width : 49%;
   height : 100%;
-  background-image : url(data:image/gif;base64,AAAA); /* Trick IE into showing hover */
+  background-image : url(data:../image/gif;base64,AAAA); /* Trick IE into showing hover */
   display : block;
 }
 
@@ -77,11 +77,11 @@
 }
 #ux-lightbox-navPrev:hover,
 #ux-lightbox-navPrev:visited:hover {
-  background : url(images/lb-prev.png) left 33% no-repeat;
+  background : url(../images/lb-prev.png) left 33% no-repeat;
 }
 #ux-lightbox-navNext:hover,
 #ux-lightbox-navNext:visited:hover {
-  background : url(images/lb-next.png) right 33% no-repeat;
+  background : url(../images/lb-next.png) right 33% no-repeat;
 }
 
 #ux-lightbox-outerDataContainer {
@@ -114,7 +114,7 @@
   padding-bottom : 1.0em;
 }
 #ux-lightbox-data #ux-lightbox-navClose {
-  background : url(images/lb-close.gif) no-repeat;
+  background : url(../images/lb-close.gif) no-repeat;
   width : 22px;
   height : 22px;
   float : right;
@@ -122,7 +122,7 @@
   outline : none;
 }
 #ux-lightbox-data #ux-lightbox-navClose:hover {
-  background-image : url(images/lb-close.gif);
+  background-image : url(../images/lb-close.gif);
 }
 
 #ux-lightbox-overlay,

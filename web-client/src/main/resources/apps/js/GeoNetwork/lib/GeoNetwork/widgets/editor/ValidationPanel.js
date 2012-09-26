@@ -120,7 +120,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
                 dataIndex: 'group'
             }, {
                 header: OpenLayers.i18n('status'),
-                width: 10,
+                width: 18,
                 resizable: false,
                 sortable: true,
                 dataIndex: 'statusIcon'

@@ -133,8 +133,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             layout: 'fit',
             bodyStyle: 'padding: 5px;',
             border: false,
-            tbar: [this.getSearchField()],
-            items: [this.getSubTemplateItemSelector()]
+            items: [this.getSearchField(), this.getSubTemplateItemSelector()]
         }];
         
         this.subTemplateStore.on({
@@ -305,7 +304,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/MultiselectItemSelector-3.0/icons', // FIXME
+            imagePath: '../js/ext-ux/images', // FIXME
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){

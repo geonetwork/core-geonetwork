@@ -459,9 +459,9 @@ function checkForFileUpload(fref, pref, protocolBeforeEdit){
     var fileName = Ext.getDom('_' + fref); // the file name input field
     var protoSelect = Ext.getDom('s_' + pref); // the protocol <select>
     var protoIn = Ext.getDom('_' + pref); // the protocol input field to be submitted
-    var fileUploaded = protocolBeforeEdit.startsWith('WWW:DOWNLOAD'); // File name not displayed in editor if downloaded
+    var fileUploaded = OpenLayers.String.startsWith(protocolBeforeEdit, 'WWW:DOWNLOAD'); // File name not displayed in editor if downloaded
     var protocol = protoSelect.value;
-    var protocolDownload = (protocol.startsWith('WWW:DOWNLOAD') && protocol.indexOf('http') > 0);
+    var protocolDownload = (OpenLayers.String.startsWith(protocol, 'WWW:DOWNLOAD') && protocol.indexOf('http') > 0);
     
     // don't let anyone change the protocol if a file has already been uploaded 
     // unless its between downloaddata and downloadother

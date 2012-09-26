@@ -199,7 +199,8 @@ GeoNetwork.app = function(){
                 field: 'orgName'
             }
         });
-        var orgNameField = new Ext.ux.form.SuperBoxSelect({
+        
+        orgNameField = new Ext.ux.form.SuperBoxSelect({
             hideLabel: false,
             minChars: 0,
             queryParam: 'q',
@@ -367,6 +368,12 @@ GeoNetwork.app = function(){
             padding: 5,
             defaults: {
                 width : 180
+            },
+            listeners: {
+                onreset: function () {
+                    resultsPanel.hide();
+                    infoPanel.show();
+                }
             },
             items: formItems
         });
@@ -680,7 +687,7 @@ GeoNetwork.app = function(){
             
             // Extra stuffs
             infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
+            createHelpPanel();
             tagCloudViewPanel = createTagCloud();
             
             createHeader();
@@ -790,9 +797,9 @@ GeoNetwork.app = function(){
             // Hack to run search after all app is rendered within a sec ...
             // It could have been better to trigger event in SearchFormPanel#applyState
             // FIXME
-            //if (urlParameters.s_search !== undefined) {
-            //    setTimeout(function(){searchForm.fireEvent('search');}, 500);
-            //}
+            if (urlParameters.s_search !== undefined) {
+                setTimeout(function(){searchForm.fireEvent('search');}, 500);
+            }
         },
         getIMap: function(){
             // init map if not yet initialized

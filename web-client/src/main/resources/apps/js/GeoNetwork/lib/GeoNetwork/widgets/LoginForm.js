@@ -85,7 +85,8 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
      */
 
     keys: [{
-        key: [Ext.EventObject.ENTER], handler: function() {
+        key: [Ext.EventObject.ENTER], 
+        handler: function () {
             Ext.getCmp('btnLoginForm').fireEvent('click');
         }
     }],
@@ -112,7 +113,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	            //iconCls : 'md-mn md-mn-advanced',
 	            listeners: {
 	                click: function(){
-	                    catalogue.admin();
+                        this.catalogue.admin();
 	                },
 	                scope: this
 	            }
@@ -123,7 +124,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 	            iconCls: 'md-mn mn-logout',
 	            listeners: {
 	                click: function(){
-	                    catalogue.logout();
+                        this.catalogue.logout();
 	                },
 	                scope: this
 	            }
@@ -132,6 +133,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     		id: 'username',
     		name: 'username',
             width: 70,
+            autoCreate: {tag: 'input'},
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('username'),

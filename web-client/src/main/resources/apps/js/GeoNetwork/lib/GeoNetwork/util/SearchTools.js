@@ -384,33 +384,12 @@ GeoNetwork.util.SearchTools = {
     getFormValues: function(form){
         var result = {};
         form.cascade(function(cur){
-            if (cur.disabled !== true && !(cur.getName && cur.getName().startsWith('ext-comp'))) { // Check element is
+            if (cur.disabled !== true && !(cur.getName && OpenLayers.String.startsWith(cur.getName(),'ext-comp'))) { // Check element is
                 // enabled
                 // and rendered (ie. visible, eg. field in a collapsed fieldset)
                 if (cur.isXType('boxselect') || cur.isXType('combo')) {
                     if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
-                    }
-                } else if (cur.isXType('combo')) {
-                    if (cur.getValue && cur.getValue()) {
-                        if (cur.id === "E_any") {
-                            result[cur.getName()] = cur.getValue();
-
-                        } else {
-                            var value = cur.getValue();
-                            // Check if value is a string or an array
-                            if (value.split) {
-                                // Use phase query
-                                if (value.split(" ").length > 1) {
-                                    result[cur.getName()] = '"' + value + '"';
-                                } else {
-                                    result[cur.getName()] = value;
-                                }
-                            } else {
-                                result[cur.getName()] = value;
-                            }
-                        }
-
                     }
                 } else if (cur.isXType('fieldset')) {
                     if (cur.checkbox) {

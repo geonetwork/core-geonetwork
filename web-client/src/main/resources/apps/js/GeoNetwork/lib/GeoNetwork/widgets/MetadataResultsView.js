@@ -437,7 +437,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         
         // TODO : Translate layer name based on a search name ?
         var l = new OpenLayers.Layer.Vector(OpenLayers.i18n("mdResultsLayer"), {
-            styleMap: new OpenLayers.StyleMap({'default': this.layer_style, 'hover': this.layer_style_hover}),
+            styleMap: new OpenLayers.StyleMap({'default': this.layer_style, 'hover': this.layer_style_hover})
         });
         this.addCurrentFeatures(l);
         map.layer = l;

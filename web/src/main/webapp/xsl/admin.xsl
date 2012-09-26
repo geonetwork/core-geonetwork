@@ -154,6 +154,22 @@
 													<xsl:value-of select="/root/gui/strings/catalogueTemplates"/>
 												</a>
 											</li>
+											
+											<li>
+												<xsl:choose>
+													<xsl:when test="/root/gui/session/profile = 'Editor' and /root/gui/env/symbolicLocking/enable = 'false'">	
+														<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__isLocked=', 'y&amp;','_owner=', /root/gui/session/userId)}">
+															<xsl:value-of select="/root/gui/strings/lockedmetadata"/>
+														</a>
+													</xsl:when>
+													
+													<xsl:otherwise>
+														<a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__isLocked=', 'y')}">
+															<xsl:value-of select="/root/gui/strings/lockedmetadata"/>
+														</a>
+													</xsl:otherwise>	
+												</xsl:choose>	
+                                            </li>
 										</ul>
 										
 										
@@ -162,6 +178,7 @@
 								
 							</xsl:when>
 							<xsl:otherwise>
+								<!-- my metadata -->
 								<xsl:call-template name="addrow">
 									<xsl:with-param name="service" select="'main.search'"/>
 									<xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true'"/>
@@ -170,6 +187,19 @@
 										select="/root/gui/strings/mymetadata"/>
 									<xsl:with-param name="desc" select="/root/gui/strings/mymetadata"/>
 								</xsl:call-template>
+								
+								<!-- locked metadata -->
+                                <xsl:call-template name="addrow">
+                                    <!--
+                                    <xsl:with-param name="service" select="'main.search'"/>
+                                    <xsl:with-param name="args" select="'hitsPerPage=10&amp;_isLocked=y&amp;sortBy=date'"/>
+                                    -->
+                                    <xsl:with-param name="service" select="'metadata.list.locked'"/>
+
+                                    <xsl:with-param name="title"
+                                                    select="/root/gui/strings/lockedmetadata"/>
+                                    <xsl:with-param name="desc" select="/root/gui/strings/lockedmetadatadesc"/>
+                                </xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
 						
