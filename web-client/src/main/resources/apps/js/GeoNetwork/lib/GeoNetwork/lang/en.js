@@ -290,6 +290,7 @@ GeoNetwork.lang.en = {
     'updateChildren': 'Update children',
     'records': 'records',
     'record': 'record',
+    'recordsFound': ' record(s) found',
     'help': 'Help',
     'publishError': 'Publication failed.',
     'outOfMemoryError': 'Out of memory error.',

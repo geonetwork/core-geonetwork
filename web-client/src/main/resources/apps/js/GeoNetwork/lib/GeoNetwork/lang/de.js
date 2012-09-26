@@ -275,6 +275,7 @@ GeoNetwork.Lang.de = {
 'updateChildren':'Kinder Aktualisieren',
 'records':'Aufzeichnungen',
 'record':'Aufzeichnung',
+'recordsFound': ' record(s) found',
 'help':'Hilfe',
 'publishError':'Veröffentlichung fehlgeschlagen.',
 'outOfMemoryError':'Nicht genügend Speicher verfügbar.',

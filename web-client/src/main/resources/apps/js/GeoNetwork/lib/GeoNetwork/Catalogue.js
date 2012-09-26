@@ -223,7 +223,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  ``Number``	Number of selected records
      */
     selectedRecords: 0,
-    
+    /** private: property[info]
+     *  ``Object``  Information about the catalog retrieved from xml.info service
+     */
+    info: null,
     /** private: method[constructor]
      *  Initializes the catalogue connection configuration
      *  and service URL.
@@ -481,27 +484,30 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.fireEvent('selectionchange', this, this.getSelectedRecords());
     },
     /** api: method[getInfo]
+     *  :param refresh: ``boolean`` force refreshing the catalog info if not available.
      *  
      *  Return catalogue information (site name, organization, id).
      */
-    getInfo: function(){
-        var info = {};
-        var properties = ['name', 'organization', 'siteId'];
-        var request = OpenLayers.Request.GET({
-            url: this.services.getSiteInfo,
-            async: false
-        });
-
-        if (request.responseXML) {
-            var xml = request.responseXML.documentElement;
-            Ext.each(properties, function(item, idx){
-                var children = xml.getElementsByTagName(item)[0];
-                if (children) {
-                    info[item] = children.childNodes[0].nodeValue;
-                }
+    getInfo: function (refresh) {
+        if (refresh || this.info === null) {
+            this.info = {};
+            var properties = ['name', 'organization', 'siteId'];
+            var request = OpenLayers.Request.GET({
+                url: this.services.getSiteInfo,
+                async: false
             });
+            
+            if (request.responseXML) {
+                var xml = request.responseXML.documentElement;
+                Ext.each(properties, function(item, idx){
+                    var children = xml.getElementsByTagName(item)[0];
+                    if (children) {
+                        this.info[item] = children.childNodes[0].nodeValue;
+                    }
+                }, this);
+            }
         }
-        return info;
+        return this.info;
     },
     /** api: method[getInspireInfo]
      *
