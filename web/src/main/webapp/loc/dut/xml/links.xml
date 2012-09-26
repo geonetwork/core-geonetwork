@@ -11,17 +11,8 @@
 		<a target="_blank" href="http://www.gsdi.org/">Global Spatial Data Infrastructure (GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">Open Geospatial Consortium (OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Geographic information/Geomatics<br/>
-		<h3>Geographic Metadata Standaard ISO-19115</h3>
-		<p>
-			UNGIWG ISO 19115 metadata template concept versie 1.0 <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML template met voorbeeld data)</a>
-			&#160;&#160;
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.doc">(Word document)</a>
-		</p>
-		<p>
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/ReferenceServices.htm','Online Resource References">Voorstel referentie voor ISO19115 online materiaal</a>
-		</p>
 		<h3>Online kaart initiatieven</h3>
-		<a target="_blank" href="http://www.digitalearth.gov/">Digital Earth</a><br/>
+		<a target="_blank" href="http://www.digitalearth-isde.org/">Digital Earth</a><br/>
 		<a target="_blank" href="http://www.iscgm.org/">Global Mapping</a><br/>
 		<p/>
 		<h3>Andere gerelateerde sites</h3>
@@ -31,7 +22,7 @@
 		<h3>Externe ruimtelijke informatie bronnen</h3>
 		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">African Data Dissemination Service</a><br/>
 		<a target="_blank" href="http://www.ngdc.noaa.gov/">NOAA National Data Centers, NGDC</a><br/>
-		<a target="_blank" href="http://www.nima.mil/">US National Imagery and Mapping Agency (NIMA)</a><br/>
-		<a target="_blank" href="http://www.esri.com/data/">ESRI ArcData Online</a>
+		<a target="_blank" href="http://www.nga.mil/">National Geospatial-Intelligence Agency (NGA)</a><br/>	
+		<a target="_blank" href="http://www.esri.com/data/find-data/">ESRI ArcData Online</a>
 	</content>
 </links>

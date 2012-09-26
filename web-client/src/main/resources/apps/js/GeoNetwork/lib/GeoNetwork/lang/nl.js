@@ -229,6 +229,7 @@ GeoNetwork.Lang.nl = {
     'view': "Bekijk",
     'zoomTo': "Zoom naar",
     'saveXml': "Bewaar als XML",
+    'saveRdf': 'Save as RDF',
     'exportCsv': "Exporteer (CSV)",
     'exportZip': "Exporteer (ZIP)",
     'printSel': "Exporteer (PDF)",

@@ -266,11 +266,21 @@ GeoNetwork.app = function(){
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
         var spatialTypes = GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null, true);
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
-
+        
+        // Add hidden fields to be use by quick metadata links from the admin panel (eg. my metadata).
+        var ownerField = new Ext.form.TextField({
+            name: 'E__owner',
+            hidden: true
+        });
+        var isHarvestedField = new Ext.form.TextField({
+            name: 'E__isHarvested',
+            hidden: true
+        });
+        
         advancedCriteria.push(themekeyField, orgNameField, categoryField,
             spatialTypes, denominatorField,
             catalogueField, groupField,
-            metadataTypeField, validField);
+            metadataTypeField, validField, ownerField, isHarvestedField);
         var adv = {
             xtype: 'fieldset',
             title: OpenLayers.i18n('advancedSearchOptions'),
@@ -331,7 +341,9 @@ GeoNetwork.app = function(){
 
         var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
-        return new Ext.FormPanel({
+        return new GeoNetwork.SearchFormPanel({
+            id: 'searchForm',
+            stateId: 's',
             id: 'searchForm',
             bodyStyle: 'text-align: center;',
             border: false,
@@ -542,7 +554,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createResultsPanel(){
+    function createResultsPanel(permalinkProvider){
         metadataResultsView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
             displaySerieMembers: true,
@@ -556,7 +568,8 @@ GeoNetwork.app = function(){
             catalogue: catalogue,
             searchBtCmp: Ext.getCmp('searchBt'),
             sortByCmp: Ext.getCmp('E_sortBy'),
-            metadataResultsView: metadataResultsView
+            metadataResultsView: metadataResultsView,
+            permalinkProvider: permalinkProvider
         });
 
         bBar = createBBar();
@@ -742,10 +755,10 @@ GeoNetwork.app = function(){
     // public space:
     return {
         init: function(){
-            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
+            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/tabsearch.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            var lang = urlParameters.hl || GeoNetwork.defaultLocale;
+            var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
 
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
@@ -756,8 +769,12 @@ GeoNetwork.app = function(){
             cookie = new Ext.state.CookieProvider({
                 expires: new Date(new Date().getTime()+(1000*60*60*24*365))
             });
-            Ext.state.Manager.setProvider(cookie);
-
+            
+            // set a permalink provider which will be the main state provider.
+            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+            
+            Ext.state.Manager.setProvider(permalinkProvider);
+            
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
                 statusBarId: 'info',
@@ -790,7 +807,7 @@ GeoNetwork.app = function(){
             resultsMap = getResultsMap();
 
             // Search result
-            resultsPanel = createResultsPanel();
+            resultsPanel = createResultsPanel(permalinkProvider);
 
             // Extra stuffs
             //infoPanel = {};//createInfoPanel();
@@ -980,6 +997,13 @@ GeoNetwork.app = function(){
         
                 });
             });
+            
+            // Hack to run search after all app is rendered within a sec ...
+            // It could have been better to trigger event in SearchFormPanel#applyState
+            // FIXME
+            if (urlParameters.s_search !== undefined) {
+                setTimeout(function(){Ext.getCmp('searchBt').fireEvent('click');}, 500);
+            }
         },
         getIMap: function(){
             // init map if not yet initialized

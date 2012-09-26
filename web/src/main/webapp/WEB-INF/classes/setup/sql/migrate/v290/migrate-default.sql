@@ -4,5 +4,8 @@ INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=o
 INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
 INSERT INTO Settings VALUES (150,80,'anonBind','true');
 
+ALTER TABLE HarvestHistory ADD elapsedTime int;
+
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <heading>Kayıt Başarılı</heading>
+    <message>Kaydınız başarı ile tamamlandı, lütfen eposta adresinizden kullanıcı adı ve şifrenizi kontrol ediniz.Teşekkürler</message>
+    <errorEmailAddressAlreadyRegistered>
+		<p>Üzgünüz, kayıt işlemi <font class="error">BAŞARISIZ OLDU</font> daha önceden kayıtlı bir kullanıcınızın olduu tespit edildi</p>
+    <p>Kullanıcı bilgilerinizi unuttuysanız yardım için şu eposta adresine <a href="mailto:yourname@yoursite.org?subject=Forgotten password">yourname@yoursite.org</a>mesaj  gönderin ya da  xxx-xxxxxxxx no'lu telefonu arayın</p>
+    <p>Şifre sıfırlama opsiyonu yakında aktif olacak.Bu süre içinde erişim problemleri için yardım masasını arayarak yeni bir kullanıcı tanımlatabilirsiniz..</p>
+    </errorEmailAddressAlreadyRegistered>
+    <errorEmailToAddressFailed>
+		<p>Üzgünüz, kayıt <font class="error">başarısız oldu</font> E posta adresiniz geçersiz</p>
+		<p>Bilgilerinizi kontrol edip tekrar deneyiniz.</p>
+    </errorEmailToAddressFailed>
+</strings>

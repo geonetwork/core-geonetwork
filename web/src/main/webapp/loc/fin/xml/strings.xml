@@ -13,7 +13,9 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    
+	<warning>Warning</warning>
     <anyLanguage>mikä tahansa kieli</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>

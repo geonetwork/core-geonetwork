@@ -197,6 +197,7 @@ CREATE TABLE HarvestHistory
   (
     id             int not null,
     harvestDate    varchar2(30),
+    elapsedTime    int,
     harvesterUuid  varchar2(250),
     harvesterName  varchar2(128),
     harvesterType  varchar2(128),

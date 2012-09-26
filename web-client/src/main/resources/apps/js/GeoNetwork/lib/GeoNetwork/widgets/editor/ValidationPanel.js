@@ -48,12 +48,12 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         collapsed: true,
         iconCls: 'validateMetadata'
     },
-    validate: function(){
-        this.editor.validate(function(){
+    validate: function () {
+        this.editor.validate(function () {
             this.updateValidationReport();
         }.bind(this));
     },
-    updateValidationReport: function(){
+    updateValidationReport: function () {
         if (this.collapsed) {
             this.toggleCollapse();
         }
@@ -62,10 +62,10 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
     /** private: method[clear] 
      *  Remove validation report from the store
      */
-    clear: function() {
+    clear: function () {
         this.store.removeAll();
     },
-    reload: function(e, id){
+    reload: function (e, id) {
         this.metadataId = id || this.metadataId;
         if (this.collapsed) {
             return;
@@ -79,7 +79,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the validation report panel.
      */
-    initComponent: function(){
+    initComponent: function() {
         Ext.applyIf(this, this.defaultConfig);
         
         this.title = OpenLayers.i18n('validationReport');
@@ -120,7 +120,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
                 dataIndex: 'group'
             }, {
                 header: OpenLayers.i18n('status'),
-                width: 10,
+                width: 18,
                 resizable: false,
                 sortable: true,
                 dataIndex: 'statusIcon'

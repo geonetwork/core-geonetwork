@@ -119,6 +119,7 @@ INSERT INTO Languages VALUES ('por','Português', 'por','y', 'n');
 INSERT INTO Languages VALUES ('rus','русский язык', 'rus','n', 'n');
 INSERT INTO Languages VALUES ('spa','Español', 'spa','y', 'n');
 INSERT INTO Languages VALUES ('vie','Tiếng Việt', 'vie','n', 'n');
+INSERT INTO Languages VALUES ('tur','Turkish', 'tur','n', 'n');
 
 UPDATE CategoriesDes SET langid='ara' WHERE langid='ar';
 UPDATE CategoriesDes SET langid='cat' WHERE langid='ca';
@@ -129,10 +130,11 @@ UPDATE CategoriesDes SET langid='fin' WHERE langid='fi';
 UPDATE CategoriesDes SET langid='fre' WHERE langid='fr';
 UPDATE CategoriesDes SET langid='ger' WHERE langid='de';
 UPDATE CategoriesDes SET langid='nor' WHERE langid='no';
-UPDATE CategoriesDes SET langid='por' WHERE langid='pt';
+UPDATE CategoriesDes SET langid='por' WHERE langid='po';
 UPDATE CategoriesDes SET langid='rus' WHERE langid='ru';
-UPDATE CategoriesDes SET langid='spa' WHERE langid='es';
+UPDATE CategoriesDes SET langid='spa' WHERE langid='sp';
 UPDATE CategoriesDes SET langid='vie' WHERE langid='vi';
+UPDATE CategoriesDes SET langid='tur' WHERE langid='tr';
 
 UPDATE IsoLanguagesDes SET langid='ara' WHERE langid='ar';
 UPDATE IsoLanguagesDes SET langid='cat' WHERE langid='ca';
@@ -147,6 +149,7 @@ UPDATE IsoLanguagesDes SET langid='por' WHERE langid='pt';
 UPDATE IsoLanguagesDes SET langid='rus' WHERE langid='ru';
 UPDATE IsoLanguagesDes SET langid='spa' WHERE langid='es';
 UPDATE IsoLanguagesDes SET langid='vie' WHERE langid='vi';
+UPDATE IsoLanguagesDes SET langid='tur' WHERE langid='tr';
 
 UPDATE RegionsDes SET langid='ara' WHERE langid='ar';
 UPDATE RegionsDes SET langid='cat' WHERE langid='ca';
@@ -161,6 +164,7 @@ UPDATE RegionsDes SET langid='por' WHERE langid='pt';
 UPDATE RegionsDes SET langid='rus' WHERE langid='ru';
 UPDATE RegionsDes SET langid='spa' WHERE langid='es';
 UPDATE RegionsDes SET langid='vie' WHERE langid='vi';
+UPDATE RegionsDes SET langid='tur' WHERE langid='tr';
 
 
 UPDATE GroupsDes SET langid='ara' WHERE langid='ar';
@@ -176,6 +180,7 @@ UPDATE GroupsDes SET langid='por' WHERE langid='pt';
 UPDATE GroupsDes SET langid='rus' WHERE langid='ru';
 UPDATE GroupsDes SET langid='spa' WHERE langid='es';
 UPDATE GroupsDes SET langid='vie' WHERE langid='vi';
+UPDATE GroupsDes SET langid='tur' WHERE langid='tr';
 
 
 UPDATE OperationsDes SET langid='ara' WHERE langid='ar';
@@ -191,6 +196,7 @@ UPDATE OperationsDes SET langid='por' WHERE langid='pt';
 UPDATE OperationsDes SET langid='rus' WHERE langid='ru';
 UPDATE OperationsDes SET langid='spa' WHERE langid='es';
 UPDATE OperationsDes SET langid='vie' WHERE langid='vi';
+UPDATE OperationsDes SET langid='tur' WHERE langid='tr';
 
 
 UPDATE StatusValuesDes SET langid='ara' WHERE langid='ar';
@@ -206,6 +212,7 @@ UPDATE StatusValuesDes SET langid='por' WHERE langid='pt';
 UPDATE StatusValuesDes SET langid='rus' WHERE langid='ru';
 UPDATE StatusValuesDes SET langid='spa' WHERE langid='es';
 UPDATE StatusValuesDes SET langid='vie' WHERE langid='vi';
+UPDATE StatusValuesDes SET langid='tur' WHERE langid='tr';
 
 
 UPDATE CswServerCapabilitiesInfo SET langid='ara' WHERE langid='ar';
@@ -221,6 +228,7 @@ UPDATE CswServerCapabilitiesInfo SET langid='por' WHERE langid='pt';
 UPDATE CswServerCapabilitiesInfo SET langid='rus' WHERE langid='ru';
 UPDATE CswServerCapabilitiesInfo SET langid='spa' WHERE langid='es';
 UPDATE CswServerCapabilitiesInfo SET langid='vie' WHERE langid='vi';
+UPDATE CswServerCapabilitiesInfo SET langid='tur' WHERE langid='tr';
 
 
 DELETE FROM Languages WHERE id='ar';
@@ -233,6 +241,7 @@ DELETE FROM Languages WHERE id='nl';
 DELETE FROM Languages WHERE id='no';
 DELETE FROM Languages WHERE id='pt';
 DELETE FROM Languages WHERE id='ru';
+DELETE FROM Languages WHERE id='tr';
 
 ALTER TABLE Languages DROP COLUMN isocode;
 
@@ -251,6 +260,7 @@ UPDATE IsoLanguages SET shortcode='pt' WHERE code='por';
 UPDATE IsoLanguages SET shortcode='ru' WHERE code='rus';
 UPDATE IsoLanguages SET shortcode='es' WHERE code='spa';
 UPDATE IsoLanguages SET shortcode='vi' WHERE code='vie';
+UPDATE IsoLanguages SET shortcode='tr' WHERE code='tur';
 
 
 UPDATE Settings SET value='2.7.0' WHERE name='version';

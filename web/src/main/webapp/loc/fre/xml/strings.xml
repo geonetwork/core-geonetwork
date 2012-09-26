@@ -309,7 +309,9 @@ Votre équipe geocat.ch</msg>
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    
+	<warning>Attention</warning>
     <anyLanguage>n'importe quelle langue</anyLanguage>
 	<nodata>Vide</nodata>
 	<!-- new strings - 2.7 -->

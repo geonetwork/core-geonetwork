@@ -296,6 +296,7 @@
   <noHistory>Kein Verlauf</noHistory>
   <dateDesc>Datum (neueste zuerst)</dateDesc>
   <date>Datum</date>
+ <elapsedTime>Zeit</elapsedTime>
   <detail>Detail</detail>
   <grandTotal>Total</grandTotal>
   <counter>von</counter>

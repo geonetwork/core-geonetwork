@@ -13,7 +13,8 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    
 	<!-- new strings - 2.7 -->
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -31,7 +32,8 @@
 		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
-    <anyLanguage>на любом языке</anyLanguage>
+	<warning>Warning</warning>
+	<anyLanguage>на любом языке</anyLanguage>
 	<status>Status</status>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<updateStatus>Update status</updateStatus>

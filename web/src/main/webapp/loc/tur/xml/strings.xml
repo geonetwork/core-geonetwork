@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <ara>عربي</ara> <!-- Do not translate! -->
+    <cat>Català</cat> <!-- Do not translate! -->
+    <chi>中文</chi> <!-- Do not translate! -->
+    <dut>Nederlands</dut> <!-- Do not translate -->
+    <eng>English</eng> <!-- Do not translate! -->
+    <fin>Suomeksi</fin>  <!-- Do not translate! -->
+    <fre>Français</fre> <!-- Do not translate! -->
+    <ger>Deutsch</ger> <!-- Do not translate! -->
+    <ita>Italiano</ita> <!-- Do not translate! -->
+    <nor>Norsk</nor>  <!-- Do not translate! -->
+    <por>Рortuguês</por> <!-- Do not translate! -->
+    <rus>Русский</rus> <!-- Do not translate! -->
+    <spa>Español</spa> <!-- Do not translate! -->
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    
+    <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
+    <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
+	<!-- new strings - SP 2.5 -->
+	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
+	<!-- end new strings -->
+
+	<createChild>Çocuk (child)oluştur</createChild>
+	<updateChildren>Çocuk (child) güncelle</updateChildren>
+	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>
+	<updateChildrenFailed>Çocuklar (children) güncellenmesinde hata oluştu</updateChildrenFailed>
+	<massiveUpdateChildrenTitle>Çocukları (children) güncelle</massiveUpdateChildrenTitle>
+	<updateMode>Ebevyenden çocuk güncellemesine uygulanacak stratejiyi seçiniz : </updateMode>
+	<addMode>Bölümler Ekle</addMode>
+	<replaceMode>Bölümleri Değiştir</replaceMode>
+	<updateChildrenHelp>
+		<div>
+			<h2>Daha fazla detay</h2>
+			Mevcut metaveri kaydı ile ilgili tüm çocukları güncelleyin. Her ana bölüme uygulanacak stratejiyi seçiniz
+			<br/>
+			<br/>
+			<b>Ekle</b> çocuk bölümünü koruyacak ve çocuklardan sonra ebevyen eşdeğer bölümünü çocuktan sonra ekleyecektir
+			<b>Yerine Koy </b> çocuk bölümünü kaldırırak yerine ebevyen bölümünü koyacaktır.
+			<br/>
+			<br/>
+			Çocuk belirteci (Children identifier), karakter seti, dil, ebevyen belirteci, hiyerarşi seviyesi, veriseti URI ve
+			belirteç bölümü (kapsam ve anahtar kelimeler hariç) her zaman korunur.
+			Ebevyen diller her zaman değiştirilir
+			<br/>
+			<b>Dağıtım ve bakım bölümü</b> her zaman değiştirili (ekleme modunde iken bile) çünkü
+			ISO19115 bir taneden daha fazla olmasına izin vermemektedir.
+		</div>
+	</updateChildrenHelp>
+	<otherActions>Diğer Eylemler</otherActions>
+	<computeExtentFromKeywords>Kapsamı Hesapla(ekle)</computeExtentFromKeywords>
+	<computeExtentFromKeywordsReplace>Kapsamı Hesapla(değiştir)</computeExtentFromKeywordsReplace>
+	<computeExtentFromKeywordsHelp>
+	Kapsamı hesapla eylemi metaveri anahtar kelime bölümünü analiz eder ve mevcut eşanlamlar içinde benzer konuda olanları arar.
+	Bir kapsam her eşleşen anahtar kelime için eklenir. "Ekleme" modunda iken, mevcut kapsam korunur. "Değiştirme" modunda iken, mevcut seçim alanı kaldırılır.
+	(geçici, dikey ve sınırlama poligonları korunuz). Bu eylemi başlatmadan önce meta verinizi kaydediniz.
+	</computeExtentFromKeywordsHelp>
+	<shortcutHelp js="true">Kısayollar hakkında yardım ?</shortcutHelp>
+	<helpShortcutsEditor>
+		<h2>Düzenleme modunda kısayollar </h2>
+		<hr/>
+		<ul>
+			<li>ctrl+shift+s: Düzenlemeyi kaydetme</li>
+			<li>ctrl+shift+v: Dokümanı doğrula</li>
+			<li>ctrl+shift+q: Düzenlemeyi kaydet ve kapat</li>
+			<li>ctrl+shift+t: Mevcut metaveri için pul resmi seç</li>
+			<li>ctrl+shift+r: Düzenlemeyi Sıfırla</li>
+			<li>ctrl+shift+c: Düzenlemeyi İptal Et</li>
+		</ul>
+	</helpShortcutsEditor>
+	<validationReport js="true">Doğrulama raporu</validationReport>
+	<errorsOnly>Sadece hataları görüntüle</errorsOnly>
+	<errorsOnly></errorsOnly>
+	<schematronReport>Metaveri tavsiyelerine uyumluluk (Schematron)</schematronReport>
+	<xsdReport>Metaveri standardına uyumluluk(XML Schema)</xsdReport>
+	<rules name="schematron-rules-inspire">INSPIRE uygulama kuralları</rules>
+	<rules name="schematron-rules-iso">ISO 19115/19119 kuralları</rules>
+	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules>	
+	<rules name="schematron-rules-geonetwork">GeoNetwork tavsiyeleri</rules>	
+	<getCapabilitiesLayer js="true">YetenekAl (GetCapabilities) katmanı</getCapabilitiesLayer>
+	<ServiceUpdateError js="true">Hizmet metaveri güncellemesi sırasında hata</ServiceUpdateError>
+	<NotOwnerError js="true">İlgili kaydı güncellemek için yetkiniz bulunmuyor</NotOwnerError>
+	<NoServiceURLError js="true">Seçilen servis için URL'in tanımlı olduğunu kontrol ediniz.</NoServiceURLError>
+	<GetCapabilitiesDocumentError js="true">GetCapabilities hizmetini şu URL'den yüklerken hata oluştu : </GetCapabilitiesDocumentError>
+	<noOperatesOn>İlgili kayıt kümesi bulunmuyor</noOperatesOn>
+    <linkedDataset>İlgili kayıt kümeleri:</linkedDataset>
+    <linkedFeatureCatalogue>İlgili obje katalogları:</linkedFeatureCatalogue>
+	<linkedFeatureCatalogueHelp>Mevcut metaveri kaydı ve özellik kataloğu arasında ISO 19110 standardında ilişki kur
+	</linkedFeatureCatalogueHelp>
+	<createLinkedFeatureCatalogue>Bağlantı özellik kataloğu</createLinkedFeatureCatalogue>
+	<layerNameHelp js="true">Veri kümesi üzerinde bir veya birden fazla meta veri olan hizmetlerin metaverisinin bağlantısında, eşleşen kaynak leman OGC servisinde tanımlanmış olan kaynağı içerebilir. Hizmet katmanlarının listesi metaveri editörünün yeni bir değer eklemesine yardımcı olabilir.
+	</layerNameHelp>
+	<layerName js="true">Katman İsmi</layerName>
+	<createIfNotExistButton js="true">Yeni bir metaveri kaydı oluştur</createIfNotExistButton>
+	<associateService js="true">Servis metaverisine ilişkilendir</associateService>
+	<associateDataset js="true">Metaveri veri kümesine ilişkilendir</associateDataset>
+	<associateServiceHelp>Metaveri servisine ilişki eklemek için, servisi arayın ve katman ismini tanımlayın.</associateServiceHelp>
+	<associateDatasetHelp>Bir veri kümesine ilişki ekleme için, ISO görüntüsü > Teşhis bölümüne gidin ve elemanlar üzerinde tanımlama işlemi yapın.</associateDatasetHelp>
+	<addParent>Ebevyen metaveri bölümünü güncelle veya ekle</addParent>
+	<createAssoService>İlişki oluştur</createAssoService>
+	<updateMdd>Veri kümesi metaverisini güncelle</updateMdd>
+	<datasetCreate>Veri kümesi metaverisini oluştur</datasetCreate>
+	<linkedServices> İlgili metaveri servisi:</linkedServices>
+	<linkedServiceMetadataHelp>Servise yeni ilişki eklemek için ISO görüntüsü &gt; Dağıtım sekmesine gidin.</linkedServiceMetadataHelp>
+	<linkedParentMetadata> Ebevyen/Çocuk Metaveri:</linkedParentMetadata>
+	<linkedParentMetadataHelp>Ebevyen ilişkisi eklemek için ISO görüntüsü&gt; Metaveri sekmesine gidin..</linkedParentMetadataHelp>
+	<linkedChildrenMetadata> Çocuk metavirisi:</linkedChildrenMetadata>
+	<linkedChildrenMetadataHelp>Mevcut metaveri kaydı ile ilişkili çocukların listesi.</linkedChildrenMetadataHelp>
+	<linkedDatasetMetadata> İlgili verisetleri:</linkedDatasetMetadata>
+	<serviceCreate>Yeni servis metaverisi oluştur</serviceCreate>
+	<parentSearch js="true">Mevcut kaydın ebevyeni olarak kurmak için metaveri kaydı aranması.</parentSearch>
+	<linkedMetadataSelectionWindowTitle js="true">İlgili metaveri seçimi</linkedMetadataSelectionWindowTitle>
+	<searchText js="true">Metin Arama</searchText>
+	<mdTitle js="true">Metaveri başlığı</mdTitle>
+	<createRelation js="true">İlişki oluştur</createRelation>
+	<export>Dışarı ver (Export ZIP)</export>
+	<exportText>Dışarı ver (Export TXT)</exportText>	
+	<addXMLFragment>Sözlükten ekle ...</addXMLFragment>
+	<translateWithGoogle>Seçilen dil için google tercüme hizmeti ile bir tercüme önerisi kullan.</translateWithGoogle>
+	<translateWithGoogle.maxSize js="true">Seçilen dilin tercümesi 5000 harfden fazladır (bknz http://code.google.com/apis/ajaxlanguage/terms.html)</translateWithGoogle.maxSize>
+	<translateWithGoogle.emptyInput js="true">Ana dil girdis boş. Tercüme servisini kullanmadan önce ana dilin değerini giriniz.</translateWithGoogle.emptyInput>
+	<layersAdded js="true">Seçilen katmanlar eklenmiştir</layersAdded>
+	<registrationFailed js="true">Hata, kayıt yapılamadı:</registrationFailed>	
+	<tryAgain js="true">Daha sonra tekrar deneyiniz</tryAgain>
+	<cannotRetrieveGroup js="true">Gruplar elde edilemiyor</cannotRetrieveGroup>
+	<selectNewOwner js="true">Yeni sahibi olacak kullanıcıyı seçiniz</selectNewOwner>
+	<selectOwnerGroup js="true">Seçilen kullanıcının ait olacağı grubu seçiniz</selectOwnerGroup>
+	<selectOneFile js="true">İndirmek için en az bir dosya seçmelisiniz!</selectOneFile>
+	<checkEmail js="true">Lütfen doğru bir eposta adresi giriniz</checkEmail>
+	<addName js="true">Lütfen bir isim ya da kurum ismi giriniz</addName>
+	<noComment js="true">Yorum yok</noComment>
+	<rateMetadataFailed js="true">Metaveri puanlanamaz.</rateMetadataFailed>
+	<error js="true">Hata</error>
+	<errors>hatalar</errors>
+	<northSouth js="true">Kuzey &lt; Güney</northSouth>
+	<north90 js="true">Kuzey  &gt; 90 derece</north90>
+	<south90 js="true">Güney &lt; -90 derece</south90>
+	<east180 js="true">East &gt; 180 derece</east180>
+	<west180 js="true">Batı &lt; -180 derece</west180>
+	<eastWest js="true">Doğu &lt; Batı</eastWest>
+	<metadataSelectionError js="true">Metaveri seçiminde hata.</metadataSelectionError>
+	<closeWindow js="true">Pencereyi Kapat</closeWindow>
+	<loseYourChange js="true">Eğer OK e basarsanız metaveriye yaptığınız değişiklikleri KAYBEDECEKSİNİZ!</loseYourChange>
+	<errorDeleteElement js="true">Hata: Eleman silinemedi</errorDeleteElement>
+	<errorFromDoc js="true">dokümandan:</errorFromDoc>
+	<errorMoveElement js="true">Hata: Eleman taşınamadı</errorMoveElement>
+	<errorAddElement js="true">Hata: Eleman eklenemedi</errorAddElement>
+	<errorSaveFailed js="true">Hata: Form kaydedilemedi</errorSaveFailed>
+	<errorOnAction js="true">Hata: Eylem gerçekleştirilemedi </errorOnAction>
+	<errorChangeProtocol js="true">Bir dosya yüklenmiş olabilir. Bu dosyayı kaldırana kadar protokolü değiştiremezsiniz</errorChangeProtocol>
+	<selectOneFile js="true">Yükle ye basmadan önce bir dosya ismi girin ya da da gözat a basın!</selectOneFile>
+	<uploadFailed js="true">Hata: Yükleme yapılamadı! - gelen hata kodu</uploadFailed>
+	<uploadSetFileNameFailed js="true">Hata: Yükleme başarılı fakat dosya adı oluşturulamadı!</uploadSetFileNameFailed>
+	<cannotGetTooltip js="true">Sunucudan araç ipucları (tooltip) yüklenemedi</cannotGetTooltip>
+	<maxResults js="true">Sonuç Sayısı</maxResults>
+	<perThesaurus js="true"> eşanlamlı başına</perThesaurus>
+	<anyThesaurus js="true">Herhangi bir eşanlam sözlüğü</anyThesaurus>
+	<selectedKeywords js="true">Seçilen anahtar kelimeler</selectedKeywords>
+	<foundKeywords js="true">Mevcut anahtar kelimeler</foundKeywords>
+	<keywordSelectionWindowTitle js="true">Anahtar kelime seçimi</keywordSelectionWindowTitle>
+	<crsSelectionWindowTitle js="true">Koordinat referans sistemi seçimi</crsSelectionWindowTitle>
+	<selectedCRS js="true">Seçilen Koordinat Sistemler</selectedCRS>
+	<foundCRS js="true">Mevcut Koordinat Sistemler</foundCRS>
+	
+	<about>Hakkında</about>
+	<abstract>Soyut</abstract>
+	<accept>Kabul</accept>
+	<actionOnSelect>seçim üzerine eylemler</actionOnSelect>
+	<add js="true">ekle</add>
+	<addNewMetadata>Yeni Metaveri ekle</addNewMetadata>
+	<address>Adres</address>
+	<admin>Yönetim</admin>
+	<Administrator>Yöneticisi</Administrator>
+	<agrovocKeyword>Agrovoc Anahtar Kelimeleri</agrovocKeyword>
+	<all>hepsi</all>
+	<any>- Herhangi -</any>
+	<anytime>Herhangi Zaman</anytime>
+	<appSchInfoTab>Uygulama şeması</appSchInfoTab>
+	<assigned>Atandı</assigned>
+	<attrlabl>Özellik etiketi</attrlabl>
+	<availability>Mümkünlük</availability>
+	<back>Geri</back>
+	<backToDescription>Veri tanımına geri dön</backToDescription>
+	<backToEditor>Metaveri düzenlemesine geri dön</backToEditor>
+	<backToPreviousPage>Önceki sayfaya geri dön</backToPreviousPage>
+	<batchImport>Bir yerel düzünden bütün XML biçimlendirilmiş metaveriyi içeri al</batchImport>
+	<batchImportTitle>Toplu İçeri Al</batchImportTitle>
+	<begdate>Başlangıç Tarihi</begdate>
+	<begtime>Başlangıç Zamanı</begtime>
+	<bgFileDescChoice value="large_thumbnail">Büyük pul resim</bgFileDescChoice>
+	<bgFileDescChoice value="thumbnail">Pul resim</bgFileDescChoice>
+	<bookmarkDelicious>Delicious Yer İmi</bookmarkDelicious>
+	<bookmarkDigg>Digg Yer İmi</bookmarkDigg>
+	<bookmarkEmail>Bu kayda bir referansı eposta gönder</bookmarkEmail>
+	<bookmarkFacebook>Facebook Yer İmi</bookmarkFacebook>
+	<bookmarkPermanent>Bu tanıma kalıcı bağlantı</bookmarkPermanent>
+	<bookmarkStumbleUpon>StumbleUpon Yer İmi</bookmarkStumbleUpon>
+	<bounding>Sınırlama Koordinatları</bounding>
+	<boundingRelation value="encloses">kapsar</boundingRelation>
+	<boundingRelation value="equal">dir</boundingRelation>
+	<boundingRelation value="fullyOutsideOf">tamamen dışındadır</boundingRelation>
+	<boundingRelation value="overlaps">üst üste biner</boundingRelation>
+	<browse>Grafiklere göz at</browse>
+	<browsed>Grafik Dosya Tanımına Gözat</browsed>
+	<browsen>Grafik Dosya Adına Gözat</browsen>
+	<browset>Grafik Dosya Türüne Gözat</browset>
+	<byGroup>Gruba göre</byGroup>
+	<byPackage>Pakete göre</byPackage>
+	<cancel>İptal</cancel>
+	<categories>Kategoriler</categories>
+	<category>Kategori</category>
+	<categoryManagement>Kategori Yönetimi</categoryManagement>
+	<categoryManDes>Kategori ekleme/düzenleme/silme ve gösterme</categoryManDes>
+	<categoryNameMandatory>Bir kategori adı girilmelidir.</categoryNameMandatory>
+	<changeDate>Metaveri değişme tarihi</changeDate>
+	<checkusername>Kontrol</checkusername>
+	<choose>-Seçiniz-</choose>
+	<chooseFile>Yükleme istediğiniz dosyanın yerini seçiniz</chooseFile>
+	<chooseLargeThumbnail>Büyük pul resmi dosyasının yerini seçiniz</chooseLargeThumbnail>
+	<chooseThumbnail>Küçük pul resmi dosyasının yerini seçiniz </chooseThumbnail>
+	<city>Şehir</city>
+	<clear js="true">Temizle</clear>
+	<clearAll>Hepsini Temizle</clearAll>
+	<close js="true">Kapat</close>
+	<completeTab>Gelişkin Görünüm</completeTab>
+	<completeTabEditor>Gelişkin Editör</completeTabEditor>
+    <confirmCancel>Editörden çıkmak istediğinize emin misiniz ? (Kaydetmediğiniz bütün değişiklikler kaybolacaktır)</confirmCancel>
+    <confirmCancelCreate>Bu metaveriyi oluşturmayı iptal etmek istediğinizden emin misiniz ?</confirmCancelCreate>
+	<confirmDelete>Bu metaveriyi veritabanından silmek istediğinize  emin misiniz ?</confirmDelete>
+	<confirmMassiveDelete>Seçilen bütün $1  metaverisini veritabanından silmek istediğinize emin misiniz ?</confirmMassiveDelete>
+	<confirmNewPassword>Yeni şifreyi doğrula</confirmNewPassword>
+	<confirmPassword>Şifreyi doğrula</confirmPassword>
+	<constraintsTab>Kısıtlar</constraintsTab>
+	<contactUs>İrtibat </contactUs>
+	<contains>İçerir</contains>
+	<contentInfoTab>İçerik Bilgisi</contentInfoTab>
+	<convert>Çevir</convert>
+	<copyright1>Telif Hakkı</copyright1>
+	<copyright2><p>Her hakkı saklıdır.<br/> </p></copyright2>
+	<country>Ülke</country>
+	<create>Oluştur</create>
+	<createTip>Bu şablondan yeni bir metaveri oluştur</createTip>
+	<crs code="EPSG:4326">WGS 84</crs>
+	<crs code="EPSG:3786">Mesafe Koruyan Silindirik Dünya projeksiyonu (Sifer)</crs>
+	<cswTest>CSW ISO Profil Testi</cswTest>
+	<cswTestDesc>CSW ISO Profil katalog arayüzü için test arayüzü</cswTestDesc>
+	<dataQualityTab>Veri kalitesi</dataQualityTab>
+	<datasetIssued>Geçici Kapsam</datasetIssued>
+	<datasetTab>Veri seti</datasetTab>
+	<dateModified>Değişme Tarihi</dateModified>
+	<dateRelChoice value="14">önce</dateRelChoice>
+	<dateRelChoice value="15">önce veya esnasında</dateRelChoice>
+	<dateRelChoice value="16">esnasında</dateRelChoice>
+	<dateRelChoice value="17">esnasında veya sonrasında</dateRelChoice>
+	<dateRelChoice value="18">sonrasında</dateRelChoice>
+	<dateRelChoice/>
+	<decline>Vazgeç</decline>
+	<definition>Tanım</definition>
+	<del>del</del>
+	<delete>Sil</delete>
+	<deleteCategory>Kategoriyi Sil?</deleteCategory>
+	<deleteConfirmationTitle>Metaveri konfirmasyonu sil</deleteConfirmationTitle>	
+	<deleteGroup>Grubu Sil?</deleteGroup>
+	<descriptionTab>Açıkama</descriptionTab>
+	<desSchema>Hedef Şema</desSchema>
+	<digital>Dijital</digital>
+	<directory>Dizin</directory>
+	<dirParameter>('dir' parametresine ihtiyaç var)</dirParameter>
+	<disclaimer1>Yasal uyarı başlığı</disclaimer1>
+	<disclaimer2>Yasal uyarı metini</disclaimer2>
+	<distributionTab>Dağıtım</distributionTab>
+	<down>aşağı</down>
+	<download>İndir</download>
+	<downloadable>İndirilebilir</downloadable>
+	<downloadData>İndirmek için veri</downloadData>
+	<downloadEmail>Eposta indir</downloadEmail>
+	<downloadSelect>İndir?</downloadSelect>
+	<downloadSelected>Seçilenleri İndir?</downloadSelected>
+	<downloadSummary>İndirme Özeti</downloadSummary>
+	<downloadThemAll>Bütün Dili İndir</downloadThemAll>
+	<dsgpoly>G-Poligon veri seti</dsgpoly>
+	<durationDays>gün(ler)</durationDays>
+	<durationHours>saat(lar)</durationHours>
+	<durationMinutes>dakika(lar)</durationMinutes>
+	<durationMonths>ay(lar)</durationMonths>
+	<durationNbDays>Gün sayısı:</durationNbDays>
+	<durationNbHours>Saat sayısı:</durationNbHours>
+	<durationNbMinutes>Dakika sayısı:</durationNbMinutes>
+	<durationNbMonths>Ay Sayısı:</durationNbMonths>
+	<durationNbSeconds>Saniye sayısı:</durationNbSeconds>
+	<durationNbYears>Yıl sayısı:</durationNbYears>
+	<durationSeconds>saniye(ler)</durationSeconds>
+	<durationSign>Eksi süre</durationSign>
+	<durationYears>yıl(lar)</durationYears>
+	<dynamic>Etkileşim</dynamic>
+	<eastbc>Doğu Sınırlamalı Koordinat</eastbc>
+	<edit>Düzenle</edit>
+	<Editor>Editör</Editor>
+	<email>Eposta</email>
+	<emailAddressInvalid js="true">Eposta adresi geçerli değil</emailAddressInvalid>
+	<enclosing>Kapsayan</enclosing>
+	<enclosingCoordinate>Kapsayan Koordinatlar</enclosingCoordinate>
+	<enddate>Bitiş Tarihi</enddate>
+	<enttypl>Varlık Tip Etiketi</enttypl>
+	<exactCoordinate>Kesin koordinatlar</exactCoordinate>
+	<exactTerm>Kesin terim</exactTerm>
+	<extended>Gelişkin</extended>
+	<extensionInfoTab>Dahili bilgi</extensionInfoTab>
+	<extent>Uzam</extent>
+	<featuredMap>Özel Harita</featuredMap>
+	<feedback>Geribesleme</feedback>
+	<feedbackCardTitle>Geribesleme ve Yorumlar</feedbackCardTitle>
+	<feedbackComments>Geribesleme / yorumlar</feedbackComments>
+	<feedbackRequest>İndirmeden önce detayları veriniz</feedbackRequest>
+	<file>Dosya</file>
+	<fileType>Dosya türü:</fileType>
+	<fileUploadSuccessful>Dosya yüklemesi başarılı</fileUploadSuccessful>
+	<firstName>İlk Ad</firstName>
+	<firstNameMandatory js="true">İlk Ad zorunludur</firstNameMandatory>
+	<foundWords>Bulunan terim sayısı:</foundWords>
+	<freeKeyword>Ücretsiz anahtar kelimeler</freeKeyword>
+	<from>Kimden</from>
+	<fromDateSelector>Kimden tarihini seçiniz</fromDateSelector>
+	<fuzzy>Doğruluk Ara</fuzzy>
+	<fuzzyImprecise>Muğlak</fuzzyImprecise>
+	<fuzzyPrecise>Hassas</fuzzyPrecise>
+	<fuzzySearch>Aramanın hassasiyetini ayarlayın (tam terim aramadan muğlak aramaya kadar).</fuzzySearch>
+	<general>Genel</general>
+	<generalInfo>Genel bilgi</generalInfo>
+	<generateUUID>Seçilen metaveri için UUID oluştur</generateUUID>
+	<georss>GeoRSS feed aç</georss>
+	<group>Grup</group>
+	<groupManagement>Grup yönetimi</groupManagement>
+	<groupManDes>Grupları ekle/düzenle/sil ve göster</groupManDes>
+	<groups>Gruplar</groups>
+	<harvestingManagement>Harmanlama yönetimi</harvestingManagement>
+	<harvestingManDes>Harmanlama görevlerini ekle/düzenle/sil/başlat/durdur</harvestingManDes>
+	<help>Yardım</help>
+    <helpLinkTooltip js="true">Yardım</helpLinkTooltip>
+	<helpComplete>Tam Yardım</helpComplete>
+	<helperList>Öneriler:</helperList>
+	<hideAdvancedOptions>Gelişkin seçenekleri sakla</hideAdvancedOptions>
+	<highlights>İlgimç noktalar</highlights>
+	<hitsPerPage>Sayfa başı gösterim</hitsPerPage>
+	<hitsPerPageChoice value="10">10</hitsPerPageChoice>
+	<hitsPerPageChoice value="100">100</hitsPerPageChoice>
+	<hitsPerPageChoice value="20">20</hitsPerPageChoice>
+	<hitsPerPageChoice value="50">50</hitsPerPageChoice>
+	<home>Ana sayfa</home>
+	<i18n>i18n Test</i18n>
+	<i18nDesc>Bu servis GeoNetwork açık kaynak geliştiricilerinin GUI için güncel yerelleştirilmiş dosyalara sahip olmasını sağlar</i18nDesc>
+	<identificationTab>Teşhis etme</identificationTab>
+	<identifier>Belirtici</identifier>
+	<imAreaInterest>İlgi alanını seçiniz</imAreaInterest>
+	<imPan>Kaydır</imPan>
+	<import>İçeri Al</import>
+	<imZoomFull>Bütün harita sınırına kadar büyült</imZoomFull>
+	<imZoomIn>Büyült</imZoomIn>
+	<imZoomOut>Küçült</imZoomOut>
+	<imZoomToLayer>Seçilen katman sınırına kadar büyült</imZoomToLayer>
+    <indexLanguages>Durdurma kelimeleri(Stopwords)</indexLanguages>
+    <indexLanguagesDes>Durdurma kelimeleri için kullanılan dilleri tanımlayabilirsiniz.</indexLanguagesDes>    
+	<infoTitle>Bilgi</infoTitle>
+	<insert>Ekle</insert>
+	<insertFileMode js="true">Dosya Yükleme</insertFileMode>
+	<insertMode>Ekleme modu:</insertMode>
+	<insertPasteMode>Kopyala/Yapıştır</insertPasteMode>
+	<interactiveMap>Etkileşimli harita</interactiveMap>
+	<interMapInfo><h1>Etkileşimli haritalar için bilgi</h1><p>
+	GeoNetwork içinde arama yaparak dijital verili etkileşimli bir harita bulabilirsiniz, ya da önceden tanımlı harita sunucusuna direkt bağlanabilirsiniz. </p><p> 
+	Desteklenen harita sunucuları <a href="http://www.opengeospatial.org" class="sm" target="_blank">Open GeoSpatial® Consortium</a>  uyumlu WMS Harita sunucuları ve
+	<a href="http://www.esri.com" class="sm" target="_blank">ESRI® ArcIMS</a> dir.</p></interMapInfo>
+	<intermapSearch>Coğrafik Arama</intermapSearch>
+	<isoAll>Hepsi ISO</isoAll>
+	<isoCore>ISO Çekirdek</isoCore>
+	<isoMinimum>ISO Minimum</isoMinimum>
+	<keyword>anahtar kelime</keyword>
+	<keywords js="true">Anahtar kelimeler</keywords>
+	<keywordshelp>Fare ile seçerken Ctrl-tuşunu basılı tutarak birden fazla anahtar kelime seçebilirsiniz</keywordshelp>
+	<kind>Tür</kind>
+	<kindChoice value="company">Özel Firma</kindChoice>
+	<kindChoice value="consultant">Bağımsız Danışman</kindChoice>
+	<kindChoice value="gov">Devlet</kindChoice>
+	<kindChoice value="int-org">Uluslararası Organizasyon</kindChoice>
+	<kindChoice value="ngo">Kar Amacı Gütmeyen Kurum (NPO)</kindChoice>
+	<kindChoice value="other">Diğer</kindChoice>
+	<kindChoice value="uni">Üniversite/Araştırma Merkezi</kindChoice>
+	<label>Etiketn</label>
+	<language>İngilizce</language>
+	<large_thumbnail>Daha büyük bir öngörünüm resmi için tıklayınız</large_thumbnail>
+	<lastNameMandatory js="true">Soyadı alanı mecburidir</lastNameMandatory>
+	<latitude>Derece cinsinden enlem (-90 ve 90 arası) </latitude>
+	<latMax>enlem (maks)</latMax>
+	<latMin>enlem (min)</latMin>
+	<legend>Gösterge</legend>
+	<link>Bağlantı</link>
+	<links>Bağlantılar</links>
+	<loading>Yükleniyor...</loading>
+	<local>Yerel Arama</local>
+	<localiz>Yerelleştirme</localiz>
+	<localizationHelp>
+	
+	Önemli ! Bu form veritabanına Anahtar değer eklemenize izin verir. Anahtar içinde boşluk karakteri bulunamaz.<br/> 
+	Anahtar değerleri ekledikten sonra, Yönetim panelindeki "Yerelleştirme" formunu kullanarak web sitesinde farklı dillerde göstermek istediğiniz esas ismi girebilrisiniz</localizationHelp>
+	<localizDes>Gruplar, kategoriler vb. gibi yerelleştirilmiş varlıkların değiştirilmesine izin veri</localizDes>
+	<localType>Yerel</localType>
+	<location>Neresi?</location>
+	<login>Giriş</login>
+	<loginCardTitle>Giriş/ Üyelik</loginCardTitle>
+	<loginwarning>Sadece site yönetimi için gereklidir</loginwarning>
+	<logout>Çıkış</logout>
+	<logoutDes>Çıkış eylemini gerçekleştirir</logoutDes>
+	<longitude>Boylam derecesi (-180 ve 180 arasında) </longitude>
+	<longMax>long (max)</longMax>
+	<longMin>long (min)</longMin>
+	<mainpageTitle>İnteraktif haritaları, CBS veri setlerini, Uydu Görüntülerini ve İlgili Uygulamaları bulur</mainpageTitle>
+	<maintenanceTab>Bakım</maintenanceTab>
+	<management>İşletim</management>
+	<mandatory>Mevcburi</mandatory>
+	<mandatoryIf>Eğer Mecburi</mandatoryIf>
+	<mapType>Harita Türü</mapType>
+	<mapViewerClose>Harita Görüntüleyicisini kapat</mapViewerClose>
+	<mapViewerLoading>Harita Görüntüleyicisini Yüklüyor...</mapViewerLoading>
+	<mapViewerOpen>Harita Görüntüleyicisini Aç</mapViewerOpen>
+	<massiveActions>Toplu İşlemler:</massiveActions>
+	<massiveDeleteTitle>Toplu Silme İşlemi</massiveDeleteTitle>
+	<massiveNewOwnerTitle>Toplu  Yeni Sahip İşlemi</massiveNewOwnerTitle>
+	<massiveUpdateCategoriesTitle>Toplu  Kategori Güncelleme İşlemi </massiveUpdateCategoriesTitle>
+	<massiveUpdatePrivilegesTitle>Toplu Yetki Güncelleme İşlemi</massiveUpdatePrivilegesTitle>
+	<max>Maksimum</max>
+	<mdRating>Veri Notu</mdRating>
+	<mdUpdateError>Güncelleme Hatası</mdUpdateError>
+	<mefFile>MEF dosyası</mefFile>
+	<message>Kullanıcı adı veya şifre yanlış.<br/>Geri düğmesine basarak tekrar deneyiniz.</message>
+	<messageChanged>Metaveri başka kullanıcı tarafından değiştirilmiştir. Lütfen tekrar deneyiniz.</messageChanged>
+	<messageDownload>İlginiz için teşekkür ederiz.Yükleme düğmesine basarak veriyi alabilirsiniz</messageDownload>
+	<messageLargeFile>Dosya çok büyük</messageLargeFile>
+	<messageMdUpdateError>Metaveriyi yüklerken bir hata oluştu.</messageMdUpdateError>
+	<messageNoPrivileges>Bu işlemi yapmak için yetkiniz bulunmuyor.</messageNoPrivileges>
+	<messageNotPerformed>Talep edilen işlem gerçekleştirilemedi.</messageNotPerformed>
+	<metadata.admin.index.desc>Lucene indeksini yeniden oluştur (Rebuild)</metadata.admin.index.desc>
+	<metadata.admin.index.failed>İndeksleme işlemi başarısız oldu.</metadata.admin.index.failed>
+	<metadata.admin.index.success>İndeksleme işlemi başarılı oldu.</metadata.admin.index.success>
+	<metadata.admin.index.optimize.desc>Lucene indeksini optimize et</metadata.admin.index.optimize.desc>
+	<metadata.admin.index.rebuildxlinks.desc>XLink Önbelleğini sil ve XLinks bağlantılı Kayıtların Indeksini yeniden oluştur</metadata.admin.index.rebuildxlinks.desc>
+	<rebuildxlinks>XLinks Yeniden Oluştur</rebuildxlinks>
+	<doYouReallyWantToDoThis js="true">
+	Bu işlem büyük kataloglarda çok sürebilir ve yoğun kullanım sırasında yapılmamalıdır. Devam edilsin mi ?</doYouReallyWantToDoThis>
+	<optimize>Optimize Et</optimize>
+	<metadata.admin.index>Indeks Yöneticisi</metadata.admin.index>
+    <metadata-samples>Örnek metaveri</metadata-samples>
+    <metadata-samples-add>Örnek metaveri ekle</metadata-samples-add>
+    <metadata-samples-add-failed>Örnek metaveri ekleme başarısız oldu</metadata-samples-add-failed>
+    <metadata-samples-add-success>Örnek metaveri ekleme başarılı oldu</metadata-samples-add-success>
+	<metadata-template-order>Şablonları sırala</metadata-template-order>	
+	<metadata-template-order-desc>Şablonlarınızı sırala</metadata-template-order-desc>	
+	<metadata-template-add-default>Şablonlar ekle</metadata-template-add-default>	
+	<metadata-template-add-default-desc>Varsayılan şablonu ekle</metadata-template-add-default-desc>	
+	<metadata-template-select>Eklemek istediğiniz şablonları seçiniz</metadata-template-select>	
+    <metadata>Metaveri</metadata>
+	<metadataAdded>Metaveri şu ID numarası ile eklendi:</metadataAdded>
+	<metadataDeleted>Metaveri şu ID numarası ile silindi:</metadataDeleted>
+	<metadataInsertResults>Metaveri içeri alma işleminin sonuçları</metadataInsertResults>
+	<metadataJSForm>JS Formundan Metaveri </metadataJSForm>
+	<metadataRecordsAdded>Eklenen toplam metavi kayıt sayısı:</metadataRecordsAdded>
+	<min>Minimum</min>
+	<missing>KAYIP veya BOŞ</missing>
+	<missingSeeTab>KAYIP - Yan çubuktaki aşağıdaki guruba bakınız: </missingSeeTab>
+	<more>daha fazla</more>
+	<moreinfo>Daha fazla bilgi için bizimle şu eposta adresinden irtibat kurabilirsiniz </moreinfo>
+	<name>İsim</name>
+	<newCategory>Yeni bir katagori ekle</newCategory>
+	<newGroup>Yeni bir grup ekle</newGroup>
+	<newMdDes>Biş şablondan kopyalayarak geonetwork'e yeni bir metaveri ekler</newMdDes>
+	<newMdInsert>Yeni metaveri eklendi:</newMdInsert>
+	<newMetadata>Yeni metaveri </newMetadata>
+	<newOwner>Yeni Sahibi</newOwner>
+	<newPassword>Yeni Şifre</newPassword>
+	<newUser>Yeni kullanıcı ekle</newUser>
+	<next>Sonraki</next>
+	<noCategory>Yeni kategori bulunmuyor.</noCategory>
+	<noHelp>Bu konuda yardım bulunmuyor</noHelp>
+	<noInfo>Bu konuda bilgi bulunmuyor</noInfo>
+	<noLogin>Giriş yapmadınız</noLogin>
+	<none>hiçbiri</none>
+	<noOwnerRights>Yetkiler/Kategoriler kitli : Mülkiyet hakkına sahip değilsiniz</noOwnerRights>
+	<northbc>Kuzey Sınırlama Koordinatı</northbc>
+	<noSelectedMd>Seçim yok, öncelikle bir metaveri seçmelisiniz.</noSelectedMd>
+	<noTemplatesAvailable>Şablon yok, öncelikle metaveri içeri almalısınız.</noTemplatesAvailable>
+	<notfound>Bulunamadı</notfound>
+	<nothing>İçeri alma sonucu eylem olmadı</nothing>
+	<notifications>Uyarılar</notifications>
+	<online>İnteraktif Harita</online>
+	<onlink>Çevrimiçi bağlantı</onlink>
+	<opensearch>GeoNetwork opensearch servisi metaveri kataloğunda arama yapmaya izin verir.</opensearch>
+	<operation>İşlem</operation>
+	<options>Seçenekler</options>
+	<organisation>Organizasyon/ departman</organisation>
+	<output>Çıktı</output>
+	<outputType id="full">Tam</outputType>
+	<outputType id="text">Sadece metin</outputType>
+	<overwrite>Metaveri aynı UUID ile üzerine yazılsın  mı</overwrite>
+	<overwriteFile>Üstüne yazılsın mı?</overwriteFile>
+	<owner>Sahibi</owner>
+	<ownerRights>Silme/Haklar/Kategoriler Açıldı: Mülkiyet hakkına sahipsiniz</ownerRights>
+	<page>Sayfa</page>
+	<paper>Kağıt kopya</paper>
+	<partial>Kısmi olarak üst üste biniyor</partial>
+	<partialCooordinate>Kısmi Koordinatlar</partialCooordinate>
+	<password>Şifre</password>
+	<passwordDoNotMatch>Aynı şifreyi iki defa girmediniz. Şifrenizi yeniden giriniz.</passwordDoNotMatch>
+	<passwordEntry>Şifrenizi iki kez giriniz.</passwordEntry>
+	<passwordLength>Şifreniz en az " + minLength + " karakter uzunluğunda olmalıdır tekrar deneyiniz.</passwordLength>
+	<passwordOldRequired>Eski şifre alanı mecburidir</passwordOldRequired>
+	<passwordSpace>Şifrede boşluk harfine izin verilmez.</passwordSpace>
+	<persInfo>Kişisel bilgi</persInfo>
+	<placeKeyword>Anahtar kelimeleri girin</placeKeyword>
+	<porCatInfoTab>Katalog</porCatInfoTab>
+	<poweredBy>Desteklenmektedir </poweredBy>
+	<previous>Önceki</previous>
+	<privileges>Yetkiler</privileges>
+	<profile>Profil</profile>
+	<profileChoice value="Administrator">Yönetici</profileChoice>
+	<profileChoice value="Editor">Editör</profileChoice>
+	<profileChoice value="RegisteredUse">Kayıtlı Kullanıcı</profileChoice>
+	<profileChoice value="Reviewer">İçerik Değerlendirici</profileChoice>
+	<profileChoice value="UserAdmin">Kullanıcı Yöneticisi</profileChoice>
+	<progress>Progress</progress>
+	<progressChoice value="complete">tamamlandı</progressChoice>
+	<progressChoice value="in-work">çalışma aşamasında</progressChoice>
+	<progressChoice value="planned">planlandı</progressChoice>
+	<progressChoice/>
+	<protocol>Protokol</protocol>
+	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Servis Konfigurasyon Dosyası (*.AXL)</protocolChoice>
+	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Servisi</protocolChoice>
+	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Servisi</protocolChoice>
+	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML servisi (ver 2.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
+    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole İşaretleme Dili</protocolChoice>
+    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography İşaretleme Dili</protocolChoice>
+    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Dizin Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Sunum Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Yönlendirme Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Gözlem Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planlama Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Uyarı Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Servisi</protocolChoice>
+    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Servisi (ver 1.1.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Servisi</protocolChoice>
+    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Servisi (ver 1.0.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Servisi (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Servisi (ver 1.1.1)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Servisi (ver 1.3.0)</protocolChoice>
+    <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Servisi</protocolChoice>
+    <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Servisi</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</protocolChoice>
+	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web addresi (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
+	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
+    <protocolChoice show="-" value="UKST">Bilinmeyen Servis Türü</protocolChoice>
+	<pubdate>Yayınlanma Tarihi</pubdate>
+	<publicationDate>Yayınlanma Tarihi</publicationDate>
+	<publisher>Yayıncı</publisher>
+	<purpose>Amaç</purpose>
+	<rateIt>Puanla</rateIt>
+	<ratingMsg>Puanlamak için bir butona basınız. Yeni puanların gözükmesi için biraz zaman gerekebilir.</ratingMsg>
+	<rawMetadata>Yeni Hamdata Eklennmesi</rawMetadata>
+	<rebuild>Yeniden Oluştur(Rebuild)</rebuild>
+	<recentAdditions>Son Değişiklikler</recentAdditions>
+	<refSysTab>Ref. sistem</refSysTab>
+	<region>Bölge</region>
+	<register>Kayıt Ol</register>
+	<registerChoose>Yapmak İstiyorum </registerChoose>
+	<RegisteredUser>Kayıtlı Kullanıcı</RegisteredUser>
+	<registerTitle>Kendi Kendine Kayıt Formu</registerTitle>
+	<registrationDetails>Girilen anahtar kayıt detayları </registrationDetails>
+	<remote>Uzakten Arama</remote>
+	<remoteType>Uzaktan</remoteType>
+	<remoteUpdates>Uzaktan Güncellemeler</remoteUpdates>
+	<remove>kaldır</remove>
+	<res>sonuçlar</res>
+	<reset>Sıfırla</reset>
+	<resetFeedbackForm>Geribildirim formunu sıfırla</resetFeedbackForm>
+	<resetPassword>Şifreyi Sıfırla</resetPassword>
+	<resetSearch>Arama formunu sıfırla</resetSearch>
+	<ress>sonuç</ress>
+	<restrictTo>e kısıtla</restrictTo>
+	<result>Son Sonuçlar</result>
+	<resultsCoordinate>Koordinat arama ile eşleşen sonuçlar</resultsCoordinate>
+	<resultsFreeText>Serbest aranan kelime ile eşleşen sonuçlar</resultsFreeText>
+	<resultsMatching>Arama kriteri ile eşleşen küme(aggregate)sonuçlar :</resultsMatching>
+	<Reviewer>İçerik Görüntüleyici</Reviewer>
+	<rss>RSS beslemeyi Aç</rss>
+	<rtitle>Başlık</rtitle>
+	<save>Kaydet</save>
+	<saveAndClose>Kaydet ve kapat</saveAndClose>
+	<saveAndValidate>Kontrol Et</saveAndValidate>
+	<savepdf>Arama sonuçlarını PDF olarak kaydet</savepdf>
+	<printSelection>PDF e bas</printSelection>
+	<schema>Şema</schema>
+	<schematronError>Schematron Hatası</schematronError>
+	<search>Arama</search>
+	<searchAllText>Ne?</searchAllText>
+	<searchBox>Veri ve Bilgi için Ara</searchBox>
+	<searchIndex>Arama İndeksi</searchIndex>
+	<searching js="true">...Metaveri için aranıyor...</searching>
+	<searchPage>Sayfa ara</searchPage>
+	<searchPageDes>Metaveri arama sayfasına gider</searchPageDes>
+	<searchTemplates>Şablon Ara</searchTemplates>
+	<searchText>Ne?</searchText>
+	<searchUnused>Kullanılamayan veya boş metaveri ara</searchUnused>
+	<searchUnusedTitle>Kullanılmayanları ara</searchUnusedTitle>
+	<select>Seçiniz: </select>
+	<selectAll>Bütün metaveriyi seç</selectAll>
+	<selectAllNotPossible>Çok fazla sonuç (hit), şundan daha az olmalıdır</selectAllNotPossible>
+	<selected> seçili</selected>
+	<selectedOnly>Sadece seçili olanı göster</selectedOnly>
+	<selection>Seçim</selection>
+	<selectNone>Seçilen metaveriden seçimi kaldır</selectNone>
+	<server>Sunucu</server>
+	<setAll>Hepsini Kur</setAll>
+	<setOnSave>Kaydedildiği zaman değer kurulacaktır</setOnSave>
+	<shibLogin>Shib Girişi</shibLogin>
+	<show>Metaveri</show>
+	<showFileDownloadSummary>Dosya İndirme Seçicisini Gönder</showFileDownloadSummary>
+	<simple>Basit Arama</simple>
+	<simpleTab>Varsayılan görüntü</simpleTab>
+	<simpleTabEditor>Varsayılan editör</simpleTabEditor>
+	<singleFile>Tek Dosya(XML, SLD, WMC...)</singleFile>
+	<site>Site</site>
+	<siteId>Site ID</siteId>
+	<sizeBytes>Boyut (bytes)</sizeBytes>
+	<sortBy>Sıralama sırası</sortBy>
+	<sortByType id="changeDate">Değişiklik Tarihi</sortByType>
+	<sortByType id="popularity">Popularite</sortByType>
+	<sortByType id="rating">Puanlama</sortByType>
+	<sortByType id="relevance">İlinti</sortByType>
+	<sortByType id="title">Başlık</sortByType>
+	<southbc>Güney Sınırlama Koordinatı</southbc>
+	<spacesNot js="true">Bu alanda boşluk karakterine izin verilmez</spacesNot>
+	<spatial2Tab>Mekansal Repr.</spatial2Tab>
+	<spatialTab>Mekansal Bilgi</spatialTab>
+	<startsWith>İle Başla</startsWith>
+	<state>Durum</state>
+	<styleSheet>Stil verisi</styleSheet>
+	<submit>Gönder</submit>
+	<subtemplate>Alt şablon</subtemplate>
+	<subtemplateTitle>Alt şablon başlığı</subtemplateTitle>
+	<summaryTab>Özet</summaryTab>
+	<surName>Soyadı</surName>
+	<systemConfig>Sistem konfigurasyonu</systemConfig>
+	<systemConfigDes>Bazı sistem parametrelerini değiştirmeye izin verir</systemConfigDes>
+	<template>Şablon</template>
+	<Term>Terim</Term>
+	<thanks>Çabanız için teşekkür ederiz. The GeoNetwork</thanks>
+	<theme>ISO başlık kategorisi</theme>
+	<thumbnails>Pul Resimler</thumbnails>
+	<timeout>Zaman Aşımı</timeout>
+	<timeoutChoice value="10">10 saniye sonra</timeoutChoice>
+	<timeoutChoice value="20">20 saniye sonra</timeoutChoice>
+	<timeoutChoice value="30">30 saniye sonra</timeoutChoice>
+	<title>GeoNetwork - Mekansal veri be bilgiye erişim portali</title>
+	<to>E (to)</to>
+	<toDateSelector>Tarih seçiniz (to date)</toDateSelector>
+	<tools>Araçlar</tools>
+	<topic>Konu</topic>
+	<transferOwnership>Aktarım mülkiyeti</transferOwnership>
+	<transferOwnershipDes>Metaveri mülkiyetini başka kullanıcıua aktar</transferOwnershipDes>
+	<type>Tür</type>
+	<up>yukarı</up>
+	<update>Güncelle</update>
+	<updateCategories>Kategorileri Güncelle</updateCategories>
+	<updateCategory>Kategori Güncelle </updateCategory>
+	<updateGroup>Grup Güncelle</updateGroup>
+	<updatePrivileges>Yetkileri Güncelle</updatePrivileges>
+	<updateUserAccount>Kullanıcı Hesabını Güncelle</updateUserAccount>
+	<upload>Yükle</upload>
+	<user>Kullanıcı</user>
+	<UserAdmin>Kullanıcı Yöneticisi</UserAdmin>
+	<userAtLeastOneGroup js="true">En az bir grup seçilmelidir.</userAtLeastOneGroup>
+	<userDefined>- Kullanıcı tanımlı -</userDefined>
+	<userInfo>Kullanıcı bilgisini değiştir</userInfo>
+	<userInfoDes>Mevcut kullanıcının kullanıcı bilgisini değiştirmesine izin ver</userInfoDes>
+	<userManagement>Kullanıcı Yönetimi</userManagement>
+	<userManDes>Kullanıcıları ekle/değiştir/sil ve göster</userManDes>
+	<username>Kullanıcı Adı</username>
+	<usernameMandatory>Kullanıcı Adı mecburidir.</usernameMandatory>
+	<userPw>Şifre değiştir</userPw>
+	<userPwDes>Mevcut kullanıcının şifre değiştirmesine izin ver</userPwDes>
+	<uuidAction>İçeri alma işlemleri:</uuidAction>
+	<validate>Doğrulama</validate>
+	<validityBegins>Doğrulama başlar</validityBegins>
+	<validityEnds>ve sona erer</validityEnds>
+	<view>Görüntüle</view>
+	<viewInGE>Google Earth üzerinde görüntüle</viewInGE>
+	<waitGetCap js="true">Sunucu katmanlarını yüklüyor, lütfen bekleyiniz ...</waitGetCap>
+	<westbc>Batı Sınırlama Koordinatı</westbc>
+	<what>Ne?</what>
+	<when>Ne Zaman</when>
+	<where>Neresi?</where>
+	<winInfo1>
+	Bu pencere GeoNetwork kaynaklarını gösterir. Bu pencere internet tarayıcısının pencere idare yönetimine bağlı olarak zaman zaman gizlenebilir. Bu durumda gerekli olduğunda pencereyi kendiniz ön plana getirmelisiniz.</winInfo1>
+	<winInfo2>Yardım (?) simgesi size açıklamalara erişim sağlayacaktır. Bu simgeyi aktive ettiğinizde çıktısı bu pencerede gösterilecektir</winInfo2>
+	<wwwlink>Web bağlantısı</wwwlink>
+	<xmlInsert>Metaveri kaydını XML veya MEF formatında içeri al</xmlInsert>
+	<xmlInsertTitle>Metaveri ekleme</xmlInsertTitle>
+	<xmlTab>XML görüntüsü</xmlTab>
+	<inspireTab>INSPIRE görüntüsü</inspireTab>
+	<inspireSection>
+		<identification>
+			<title>Teşhis etme</title>
+			<help>
+				<div>
+				Aşağıdaki metaveri elemanları sağlanacaktır:
+				<ul>
+					<li>Kaynak Başlığı:
+				Bu karakteristik ve sıklıkla özgün olan kaynağın bilindiği isimdir. Bu metaveri alanının değeri serbest metindir.</li>
+					<li>Kaynak Özeti:
+						Bu kaynağın içeriğine ait kısa bir özet kısmıdır. Bu metaveri alanının değeri serbest metindir.</li>
+					<li>Kaynak Türü:
+						Bu kaynak metaveri tarafından tariflenir. Bu metaveri alanının değeri Bölüm D.1.'de tanımlanmıştır</li>
+					<li>Kaynak Yeri (locator):
+						Kaynak yeri kaynak ve/veya bağlantı hakkındaki bağlantıları tanımlar. Bu metaveri alanının değei bir karakter dizisidir, genellikle URL formatında ifade edilir.</li>
+					<li>Özgün Kaynak Belirteci (URI):
+						Bir kaynağı özgün olarak belirtir. Bu metaveri alanının değeri zorunluı bir karakter serisidir, genellikle kaynak sahini tarafından atanır ve 
+						bir karakter serisi alanismi özgün olarak teşhis edici kodu tanımlar (örneğin veri sahibini).</li>
+					<li>Bağlı Kaynak :
+						Eğer kaynak bir mekansal veri servisi ise, bu metaveri elamanı - alakalı olduğu sürece - URI vasıtası ile hedef mekansal veri set(ler)i servisini düzenler ve teşhis eder. Bu metaveri alanının değeri zorunlu alandır, ve karakter kodudur, genellikle veri sahibi tatafından atanır ve bir karakter dizisi özgün olarak bu kodun bağşlamındaki isim alanını özgün olarak teşhis eder (örneğin veri sahibi)</li>
+					<li>Kaynak dili:
+						Bu kaynak ile kullanılan dil(ler). Bu metaveri alanının değeri ISO 639-2 ile tanımlanan diller ile sınırlıdır.</li>
+				</ul>
+				</div>
+			</help>
+		</identification>
+		<classification>
+			<title>Mekansal veri ve servislerin sınıflanması</title>
+			<help>
+				<div>
+					<ul>
+						<li>Konu kategorisi:
+						Konu kategorisi bir üst seviye sınıflama şeması olup, mümkün mekansal veri kaynaklarının gruplanması ve konu bazlı aranmasına yardımcı olur
+						Bu metaveri alanının değeri Bölüm D.2 de tanımlanmıştır.</li>
+						<li>
+							Mekansal veri servisi türü: 
+							Bu sınıflandırma mümkün mekansal veri servislerinin aranmasına yardımcı olur. Özel bir servis sadece bir kategoride kategorize edilebilir. Bu metaveri elemanının değeri Bölüm D.3 de tanımlanmıştır.</li>
+					</ul>
+				</div>
+			</help>
+		</classification>
+		<keywords>
+			<title>Anahtar kelimeler&amp; INSPIRE temaları</title>
+			<help>
+				<div>
+					Metaveri için INSPIRE Uyarlama Kuralına göre, eğer bir kaynajk mekansal veri seti veya mekansal veri seti serileri ise, 
+					Genel Çevresel Çoklu-Dilli Eşanlam Sözlüğünden (GEMET) ilgili mekansal veri tamasını 2007/2/EC Yönergesine göre Ek I, II veya III de tanımlanmış olacak şekilde en az bir anahtar kelime sağlanmalıdır.
+					<br/>					
+					23 resmi topluluk dilinde olacak şekilde 34 INSPIRE Mekansal Veri Temaları Genel Çevresel Çoklu-Dilli Eşanlam Sözlüğünden (GEMET) içine başlık ve tanımları entegre edilmiştir: http://www.eionet.europa.eu/gemet/inspire_themes.
+					<br/>
+					INSPIRE Mekansl Veri Temasına ek olarak, aynı zamanda diğer anahtar kelimeler de eklenebilir. Bunlar serbest metin alanından veya herhangi bir Kontrol edilen sözlükten tanımlanabilir. Eğer kontrol edilen bir sözlükten kaynaklanıyor ise (Eşanlamlılar, Ontoloji sözlüğü) Sözlükten alıntılar 
+					sözlükten alıntılar aşağıda tariflendiği gibi sağlanacaktır.
+				</div>
+			</help>
+		</keywords>
+		<geoloc>
+			<title>Coğrafik Lokasyon</title>
+			<help>
+				<div>
+					2007/2/EC Direktifinin 11(2)(e) maddesinde atıfta bulunulan bu coğrafik lokasyon için gereksinim coğrafik sınırlama kutusunun metaverisi ile ifade edilecektir.
+					Bu coğrafik alanda kaynağın uzamasıdır ve sınırlama kutusu ile verilir. Sınırlama kutusu batı ve doğuya doğru boylamlar ve güney ve kuzeye doğru enlemlerle ondalık dereceklerle noktadan sonra en az 2 basamak olacak şekilde ifade edilir.
+				</div>
+			</help>
+		</geoloc>
+		<temporal>
+			<title>Mekansal Referans</title>
+			<help>
+				<div>
+					Bu metaveri elemanı 2007/2/EC Direktifinin 8(2)(d) maddesinde atıfta bulunulan mekansam boyut hakkında bilgi sahibi olmsa gereksimine hitap eder.
+					5.1 den 5.4e kadar referans verilen noktalardan en az bir tanesi sağlanmalıdır. Bu metaveri alanının değeri 5.1 den 5.4 e kadar bir tarihler serisidir. Her tarih bir mekansal referans sistemine atıfta bulunmalı ve bu sistemle uyumlu olacak şekilde ifade edilmelidir. Varsayılan referans sistemi Gregoryan takibi olarak ve tarihler IS0 8601 e uyumlu olarak ifade edilmelidir.
+					<br/>
+					Mekansal alan kaynak içeriği tarafından kapsanan zaman aralığını tanımlar. 
+					Zaman aralığı aşağıdakilerden herhangi biri olarak ifade edilebilir:
+					<ul>					
+						<li>tek bir tarih</li>
+						<li>aralığın başlangıç ve bitiş tarihlerini içeren bir tarih aralığı</li>
+						<li>bireysel tarihler ve tarih aralıklarının karışımı</li>
+					</ul>
+				</div>
+			</help>
+		</temporal>
+		<quality>
+			<title>Kalite ve geçerlilik</title>
+			<help>
+				<div>
+				
+				 2007/2/EC Direktifinin 5(2) ve 11(2)  maddesinde atıfta bulunulan ve mekansal verinin kalitesi ve geçerliliği ile ilgili olan bu gereksinim aşağıdaki metaveri elemanları ile hitap edilecektir:
+					<ul>
+						<li>Sıralama:
+						Bu ifade işlemin tarihçesi ve/veta mekansal veri setinin toplam kalitesidir. Uygun olduğundan verinin doğrulandığı veya kalitesinin teminatının verildiği , resmi bir sürüm olup olmadığı (eğer birden fazla sürüm var ise) ve eğer varsa yasal bir geçerliliği olup olmadığını gösteren bir cümle içerebilir. Bu metaveri alanının değeri serbest metindir.</li>
+						<li>
+							Mekansal Çözünürlük :
+
+							Mekansal çözünürlük veri setinin detay seviyesine atıfta bulunur. Sıfırdan çoklu çözünürlük uzaklıklarına olarak(tipik olarak gridlenmiş veri ve resim türüveli ürünlerde) veya denk ölçeklerde (tipik olarak harita veya harita tabanlı ürünnlerde) ifade edilir. Denk ölçek genelde ölçek paydasını gösteren bir tamsayı olarak ifade edilir. Çözünürlük mesafesi birim uzunlukla ilişkilendirilmiş bir rakamsal değer olarak ifade edilir.
+						</li>
+					</ul>				
+				</div>
+			</help>
+		</quality>
+		<conformity>
+			<title>Uygunluk</title>
+			<help>
+				<div>
+					 2007/2/EC Direktifinin 5(2)(a) ve 11(2)(d)  maddesinde atıfta bulunulan uyumluluk ve uyumluluk derecesi gereksinimi, ve 2007/2/EC Direktifinin 7(1)maddesinde belirtilen uyarlama kuralları gereksinimi aşağıda belirtilen metraveri elemanları ile hitap edilecektir:
+					 <ul>
+						<li>
+						Şartname:					
+							2007/2/EC Direktifinin 7(1) maddesine bağlı olarak veya belirli bir kaynağa uyumlu olan diğer spesifikasyonlara bağlı olan altıntıları tarifler. Bir kaynak 2007/2/EC Direktifinin 7(1) maddesine veya başka spesifikasyona bağlı olarak birden fazla uyarlama kuralına uyumlu olabilir.
+							Bu alıntı 2007/2/EC Direktifinin 7(1) maddesine veya başka bir spesifikasyona bağlı olarak en az bir başlık ve bir referans tarih (yayın tarihi, son sürüm veya oluşturma tarihi) içerecektir.
+						</li>
+						<li>
+							Derece:					
+							Kaynağın 2007/2/EC Direktifinin 7(1) maddesine veya başka spesifikasyona bağlı olarak uygulamada uyumluluk derecesidir. Bu metaveri elemanı alan değeri D Bölümünde tanımlanmıştır.
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</conformity>
+		<constraint>
+			<title>Erişim ve kullanım ile bağlantılı Kısıt</title>
+			<help>
+				<div>
+					Erişim ve kullanım ile bağlantılı bir kısıt aşağıdakilerden biri veya ikisi olacaktır:
+					<ul>
+						<li>
+							Erişim ve kullanım ile ilgili koşullar:
+							Bu metaveri elemanı 2007/2/EC Direktifinin 5(2)(b) ve (11)(2)(f) maddesince şart koşulan erişim ve mekansal veri setlerinin kullanımı ve uygulanabilir ise ilgili ücretlerini tanımlar. Bu metaverinin alan değeri serbest metindir. Bu elemana mutlaka bir değer verilmelidir.
+							
+							Eğer kaynağın erişimine ve kullanımına ait olarak bir şart uygulanmmıyor ise "şart uygulanmıyor" kullanılmalıdır. Eğer koşullar bilinmiyor ise "şartlar bilinmiyor" kulanılacaktır. Bu eleman eğer bilgi hakkında erişim ve kaynak kullanımı hakkındaki ücretlendirme var ise hakkında bilgi ve eğer var ise bir URL adresine ait bilgi verecektir.
+						</li>
+						<li>
+							Genel erişim hakkında kısıtlamalar :
+							Üye devletler mekansal veri setleri ve mekansal veri servislerine genel erişimini 2007/2/EC Direktifinin 13. maddesine  göre kısıtladıkları zaman, bu metaveri elemanı kısıtlamalar ve nedenleri hakkında bilgi sağlayacaktır. Eğer genel erişime kısıtlama bulunmuyor ise, bu metaveri elemanı durumu açıklayacatır. Bu metaveri elemanının alan değeri serbest metindir.
+						</li>
+					</ul>					
+				</div>
+			</help>
+		</constraint>
+		<org>
+			<title>Kurulum, idare ve dağıtımdan sorunlu olan organizasyonlar</title>
+			<help>
+				<div>
+					2007/2/EC Direktifinin 5(2)(d) ve 11(2)(g) maddelerinin amaçlarına göre, aşağıdaki iki metaveri elemanı sağlanacaktır :
+					<ul>
+						<li>
+							Sorumlu taraf:
+							Burası kaynağın kurulum, idaresi, bakımı ve dağıtımından sorumlu organizasyonun açıklama alanıdır. Bu açıklama şunları içerecektir:
+							(serbest metin olarak organizasyonun adı, bir karakteri dizisi olarak iletişim eposta adresi)
+						</li>
+						<li>
+							Sorumlu taraf rolü :
+							Burası sorumlu organizasyonunun rolünü tarifler. Bu metaveri elemanının alan değeri D.6. bölümünde tanımlanmıştır.
+						</li>
+					</ul>
+				</div>
+			</help>
+		</org>
+		<metadata>
+			<title>Metaveri</title>
+			<help>For the purposes of Article 5(1) of Directive 2007/2/EC.</help>
+			<help>2007/2/EC Direktifinin 5(1) maddesinin amaçları için</help>
+		</metadata>
+	</inspireSection>
+	<inspireAddConformity>INSPIRE uyumluluk bölümünü ekle</inspireAddConformity>
+	<xsdError>XSD Doğrulama Hatası</xsdError>
+	<yourRegistration js="true">Sizin Kaydınız...</yourRegistration>
+	<zip>Zip</zip>
+    	<header_meta>
+		<meta name="keywords" content="GeoNetwork açık kaynak kodu metaveri ISO19115 ISO19139 ISO GIS uzaktan anlama veri shape dosyaları mekansal veri uydu görüntüler harita haritaları etkileşimli opengis makansal CSW referansı uygulama eşleştirme 19115 19139 coğrafi z39.50 katalog veri temizleme kapsamlar grid görüntü veri açık kaynak ağ"/>
+		<meta name="description" content="GeoNetwork açık kaynağı etkileşimli haritalara, uydu resimlerine ve ilgiki mekansal veritabanlarına İnternet erişimi sağlar. Amacı mekansal veri ve bilgiye olan erişim ve entegre kullanımı geliştirmektir. GeoNetwork açık kaynağı mekansal verileri farklı kullanıcılar arasında kolaylıkla paylaşmayı sağlar."/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="Turkish" content="Mekansal veri ve bilgiye GeoNetwork açık kaynak portali "/>
+		<meta name="DC.creator" content="GeoNetwork Ekibi"/>
+		<meta name="DC.subject" lang="Turkish" content="GeoNetwork açık kaynak kodu metaveri ISO19115 ISO19139 ISO GIS uzaktan anlama veri shape dosyaları mekansal veri uydu görüntüler harita haritaları etkileşimli opengis makansal CSW referansı uygulama eşleştirme 19115 19139 coğrafi z39.50 katalog veri temizleme kapsamlar grid görüntü veri açık kaynak ağ"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork açık kaynağı etkileşimli haritalara, uydu resimlerine ve ilgiki mekansal veritabanlarına İnternet erişimi sağlar. Amacı mekansal veri ve bilgiye olan erişim ve entegre kullanımı geliştirmektir. GeoNetwork açık kaynağı mekansal verileri farklı kullanıcılar arasında kolaylıkla paylaşmayı sağlar"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="Turkish,English French Spanish German Russian Chinese Dutch Portuguese"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<mainpage1>
+		<h1>GeoNetwork'ün amacı :</h1>
+		<ul>
+			<li>Mekansal veri ve bilgiye entegre kullanım ve erişimi geliştirmek</li>
+			<li>Karar verme aşamasını desteklemek</li>
+			<li>Sürdürülebilir kalkınma için çoklu disiplinli yaklaşımları desteklemek</li>
+			<li>Coğrafik bilginin faydalarının anlaşılmasını geliştirmek </li>
+		</ul>
+	</mainpage1>
+	<mainpage2>
+		<p>
+		GeoNetwork açık kaynak olarak değişik organizasyonlar arasında coğrafik referanslı tematik bilginin kolaylıkla paylaşılmasını sağlar
+		</p>
+	</mainpage2>
+	<mainhelp1> Arama Nasıl Yapılır... </mainhelp1>
+	<mainhelp2> Yardımı Gizle... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> Sağlanan seçeneklerin biri veya birkaçının kombinasyonu ile arama yapabilirsiniz.<br/> 
+			Sadece bütün kriterlerle eşleşen sonuçlar gösterilecektir.</font>
+		</p>
+		<p>
+			<font size="-2"> <b>Ne?</b> araması GeoNetwork içeriğinde eşleşen metin arar. <br/>
+				<i> <b>Serbest Metin</b>  alanına birden fazla kelime girilir ise, bunlar sistem tarafından VE olarak ayrılmış şekilde yorumlanır. </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> <b>Konu</b> belirlenen konu ile eşleşen haritaları arayacaktır. </font>
+		</p>
+		<p>
+			<font size="-2"> <b>Nere?</b> araması seçilen alanın seçim alan ile eşleşen haritaları bulacaktır. </font>
+		</p>
+		<p>
+			<font size="-2"> Selecting the option "<input name="demo" type="checkbox" checked="checked"/> <b>Seçili Alanın dahil edilmesi</b>" seçilen alandan daha fazla olacak şekilde kapsayan haritaları da bulacaktır.<br/>
+				<i>Örneğin: Sadece seçilen ülte değil diğer ülkeler de olan bölgesel veya global haritalar </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2">  "
+					<input name="demo" type="checkbox" checked="checked"/> <b> Kısmı üst üste binen Alan</b> seçeneği " aynı zamanda kısmi olarak seçilen alanı kapsayan haritaları da bulacaktır. </font>
+		</p>
+	</mainhelp3>
+	<savexml>
+		<dc>Dublin Core Metaverisini XML olarak kaydet</dc>
+		<fgdc>FGDC Metaverisini XML olarak kaydet</fgdc>
+		<iso19115Esri>ISO19115 Metaverisini ESRI ArcCatalog için XML olarak kaydet </iso19115Esri>
+		<iso19139>ISO19115/19139 Metaverisini XML olarak kaydet</iso19139>
+		<iso19139fra>Save ISO19115/19139 Fra Metaverisini XML olarak kaydet</iso19139fra>
+	</savexml>
+	<thesaurus>
+		<addelement>Eleman Ekle</addelement>
+		<admin>Eşanlamlılar Sözlük İdaresi</admin>
+		<broader>Daha Geniş Terim</broader>
+		<category>Eşanlamlılar Sözlük Kategorisi</category>
+		<consultation>Eşanlamlılar Sözlük Görüntüle</consultation>
+		<delete>Eşanlamlılar Sözlük Sil</delete>
+		<deleteelement>Elemanı Sil</deleteelement>
+		<download>Eşanlamlılar Sözlük İndir</download>
+		<edit>Eşanlamlılar Sözlük Düzenle</edit>
+		<editelement>Eleman Düzenle</editelement>
+		<edition>Eşanlamlılar Sözlük Düzenle</edition>
+		<en>içinde</en>
+		<foundKeyWords>Bulunan terimler</foundKeyWords>
+		<foundKeyWordsLimit>Bulunan maksimum terim sayısı </foundKeyWordsLimit>
+		<keywordConfirm>Anahtar kelime gizleme onayı</keywordConfirm>
+		<keywordDescription>Anahtar Kelime tanımı:</keywordDescription>
+		<management>Eşanlamlılar Sözlüğü İdare</management>
+		<manDes>Eşanlamlılar sözlüğü ekle/düzenle/sil ve göster</manDes>
+		<narrower>Daha Dar Kelime</narrower>
+		<related>İlgili Kelime</related>
+		<thesaurus>Eşanlamlılar Sözlüğü</thesaurus>
+		<unknown>Bilinmeyen Eşanlamlılar Sözlüğü</unknown>
+		<update>Eşanlamlılar Sözlüğü Güncelle</update>
+		<updateelement>Eleman Güncelle</updateelement>
+		<upload>Eşanlamlılar Sözlüğü Yükle</upload>
+	</thesaurus>
+	<searchhelp>
+		<searchAllText>Serbest Metni buraya giriniz</searchAllText>
+		<rtitle>Başlığı buraya giriniz</rtitle>
+		<abstract>Özeti buraya giriniz</abstract>
+		<keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
+		<thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
+	</searchhelp>
+
+    <inspire>
+        <what>
+            <l1>INSPIRE arama seçenekleri</l1>
+            <l2>INSPIRE metaveri</l2>
+            <l3>Sadece INSPIRE metaveri</l3>
+            <l4>INSPIRE seçeneklerini Gizle</l4>
+            <l5>INSPIRE seçeneklerini Göster</l5>
+            <l6>Ek</l6>
+            <l7>Kaynak Türü</l7>
+            <l8>Hepsi</l8>
+            <l9>Verisetleri ve veriset serileri</l9>
+            <l10>Servisler</l10>
+            <l11>Organizasyon</l11>
+            <l12>INSPIRE Temalarını Göster</l12>
+            <l13>INSPIRE Temalarını Gizle</l13>
+            <l14>INSPIRE Temalası</l14>
+            <l15>Servis Türü</l15>
+        </what>
+        <annex1>
+            <l1>Koordinat Referans Sistemler</l1>
+            <l2>Coğrafik grid sistemleri</l2>
+            <l3>Coğrafik isimler</l3>
+            <l4>İdari Birimler</l4>
+            <l5>Addresler</l5>
+            <l6>Kadastral parseller</l6>
+            <l7>Ulaşım ağları</l7>
+            <l8>Hidrografi</l8>
+            <l9>Korumalı Araziler</l9>
+        </annex1>
+        <annex2>
+            <l1>Yükselti</l1>
+            <l2>Arazi örtüsü</l2>
+            <l3>Orto Resim</l3>
+            <l4>Jeoloji</l4>
+        </annex2>
+        <annex3>
+            <l1>İstatiksel Birimler</l1>
+            <l2>Binalar</l2>
+            <l3>Toprak</l3>
+            <l4>Arazi Kullanımı</l4>
+            <l5>İnsan sağlığı ve güvenliği</l5>
+            <l6>Kamu ve Devlet Servisleri</l6>
+            <l7>Çevresel Monitörleme Tesisleri</l7>
+            <l8>Üretim ve Endüstriyel Tesisleri</l8>
+            <l9>Tarımsal ve Sulu Tarım Tesisleri</l9>
+            <l10>Nüfus Dağılımı — demografi</l10>
+            <l11>Alan idaresi/kısıtlama/düzenleme alanları ve raporlama birimleri</l11>
+            <l12>Doğal Risk Bölgeleri</l12>
+            <l13>Atmosferik Durumlar</l13>
+            <l14>Meteorolojik Coğrafi Özellikler</l14>
+            <l15>Oşinografik  Coğrafi Özellikler</l15>
+            <l16>Deniz Bölgeleri</l16>
+            <l17>Biyo-Coğrafik Bölgeler</l17>
+            <l18>Habitat  ve biyotoplar</l18>
+            <l19>Türlerin Dağılımları</l19>
+            <l20>Enerji kaynakları</l20>
+            <l21>Mineral kaynakları</l21>
+        </annex3>
+    </inspire>
+    
+    <selectMetadataFileAlert>Eklemek için bir metaveri seçmelisiniz</selectMetadataFileAlert>        
+    <showMoreSearchFields>Daha fazla arama alanı Göster/Gizle</showMoreSearchFields>
+    <searchEitherOfTheWords>Kelimelerden herhangi birisi</searchEitherOfTheWords>
+    <searchExactPhrase>Kesin İfade</searchExactPhrase>
+    <searchAllWords>Kelimelerin hepsi</searchAllWords>
+    <searchWithoutWords>Kelimeler olmadan</searchWithoutWords>
+    
+    <showMap>Haritayı Göster</showMap>
+    <mapViewer>Harita Göstergeci</mapViewer>
+
+    <uuid>Özgün Tanımlayıcı</uuid>
+    <mymetadata>Benim Metaverim</mymetadata>
+    <addremove>Ekle/Çıkart</addremove>
+    <enabled>Etkin yapılmış</enabled>
+    <notifications>Uzak hedeflere bildirim</notifications>
+    <url>URL</url>
+    
+    <cswServer>CSW sunucusu</cswServer>
+    <cswServerDes>CSW sunucusu konfigürasyonu</cswServerDes>
+    <cswServerConfig>CSW sunucusu konfigürasyonu</cswServerConfig>
+    <cswServerEnable>Etkinleştir</cswServerEnable>
+    <cswServerMetadataPublic>Eklenen metaveri geneldri (İşlem)</cswServerMetadataPublic>
+    <cswServerTitle>Başlık</cswServerTitle>
+    <cswServerAbstract>Özet</cswServerAbstract>
+    <cswServerFees>Ücretler</cswServerFees>
+    <cswServerAccessConstraints>Kısıtlar Erişimi</cswServerAccessConstraints>
+    <cswServerContact>İletişim</cswServerContact>
+
+    <customize-elementset>Eleman Setini özelleştir</customize-elementset>
+    <csw-server-disabled>CSW sunucusu hizmet dışı.</csw-server-disabled>
+    <custom-elementset-intro>Kendi özelleştirilmiş eleman verisinde bulunacak elemanları burada tanımlayın. Her eleman tam doküman kökünden tam XPATH ile teşhis edilebilmelidir.
+	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
+    <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
+    <custom-elementset-add>Eleman Ekle</custom-elementset-add>
+
+
+</strings>

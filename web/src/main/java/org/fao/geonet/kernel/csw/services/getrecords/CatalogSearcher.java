@@ -157,7 +157,7 @@ public class CatalogSearcher {
 
 	/**
 	 * Convert a filter to a lucene search and run the search.
-	 *
+	 * 
 	 * @return a list of id that match the given filter, ordered by sortFields
 	 */
 	public Pair<Element, List<ResultItem>> search(ServiceContext context,
@@ -434,7 +434,7 @@ public class CatalogSearcher {
         // TODO do not just use context getlanguage ?
 
 		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeLocalisedQuery(luceneExpr,
-                SearchManager.getAnalyzer(context.getLanguage()), _tokenizedFieldSet, _numericFieldSet,
+                SearchManager.getAnalyzer(context.getLanguage(), false), _tokenizedFieldSet, _numericFieldSet,
                 context.getLanguage(), false);
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
