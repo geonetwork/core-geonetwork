@@ -49,6 +49,8 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -160,21 +162,20 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     private KeywordsSearcher search(String keyword) throws Exception
     {
-        Element searchParams = new Element("params");
-        Element pKeyword = new Element("pKeyword");
-        Element pTypeSearch = new Element("pTypeSearch");
-        Element pLanguage = new Element("pLanguage");
-        searchParams.addContent(pKeyword);
-        searchParams.addContent(pTypeSearch);
-        searchParams.addContent(pLanguage);
-
-        pKeyword.setText(keyword);
-        pTypeSearch.setText("2");
-        pLanguage.setText("*");
+    	KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
+    	builder.addThesaurus(GEOCAT_THESAURUS_NAME)
+    		.addThesaurus(NON_VALID_THESAURUS_NAME)
+    		.addLang("eng")
+    		.addLang("ger")
+    		.addLang("fre")
+    		.addLang("ita")
+    		.maxResults(1)
+    		.keyword(keyword, KeywordSearchType.MATCH, true);
+    		
 
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
-        searcher.search(null, searchParams);
+        searcher.search(builder.build());
         searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         return searcher;
     }

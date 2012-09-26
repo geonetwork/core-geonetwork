@@ -42,8 +42,8 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    private final static Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
-    private final static Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
+    private final Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
+    private final Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
 
 
     protected IsoLanguagesMapper() {}
@@ -102,7 +102,7 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
-        if(iso639_1_to_iso639_2IsoLanguagesMap.containsKey(iso639_1.toLowerCase())) {
+        if(iso639_2_to_iso639_1IsoLanguagesMap.containsKey(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
             return iso639_1_to_iso639_2IsoLanguagesMap.get(iso639_1.toLowerCase());
@@ -116,7 +116,7 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_2_to_iso639_1(String iso639_2) {
-        if(iso639_2_to_iso639_1IsoLanguagesMap.containsKey(iso639_2.toLowerCase())) {
+        if(iso639_1_to_iso639_2IsoLanguagesMap.containsKey(iso639_2.toLowerCase())) {
             return iso639_2.toLowerCase();
         } else {
             return iso639_2_to_iso639_1IsoLanguagesMap.get(iso639_2.toLowerCase());

@@ -201,7 +201,7 @@ public final class TransformationTestSupport {
         MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
         mds.setName(name);
         mds.setSchemaDir(path);
-        mds.loadSchematronRules();
+        mds.loadSchematronRules(geonetworkWebapp.getAbsolutePath());
 
         Element schemaTronXml = VALIDATOR.getSchemaTronXmlReport(mds, root, Geonet.DEFAULT_LANGUAGE);
 

@@ -45,7 +45,8 @@ public class KeywordSearchParamsBuilder {
      * @param params the root element containing children with each param.
      * @return A params object ready for searching with
      */
-    public static KeywordSearchParamsBuilder createFromElement(IsoLanguagesMapper mapper, Element params) throws BadInputEx {
+    @SuppressWarnings("unchecked")
+	public static KeywordSearchParamsBuilder createFromElement(IsoLanguagesMapper mapper, Element params) throws BadInputEx {
         KeywordSearchParamsBuilder parsedParams = new KeywordSearchParamsBuilder(mapper).lenient(true);
         
         String keyword = Util.getParam(params, XmlParams.pKeyword, null);
@@ -74,16 +75,19 @@ public class KeywordSearchParamsBuilder {
             parsedParams.thesauriDomainName(thesauriDomainName);
         }
 
-        @SuppressWarnings("unchecked")
         List<Element> thesauri = params.getChildren(XmlParams.pThesauri);
         for (Element thesaurusName : thesauri) {
             parsedParams.addThesaurus(thesaurusName.getTextTrim());
         }
         
-        @SuppressWarnings("unchecked")
         List<Element> langs = params.getChildren(XmlParams.pLang);
         for (Element lang : langs) {
             parsedParams.addLang(lang.getTextTrim());
+        }
+        
+        langs = params.getChildren(XmlParams.pLanguages);
+        for (Element lang : langs) {
+        	parsedParams.addLang(lang.getTextTrim());
         }
         
         return parsedParams;

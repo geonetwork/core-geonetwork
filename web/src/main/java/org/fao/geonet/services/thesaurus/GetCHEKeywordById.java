@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
 /**
@@ -75,11 +76,17 @@ public class GetCHEKeywordById implements Service {
 		
 		searcher = new KeywordsSearcher(thesaurusMan);
 
-		KeywordBean kb = searcher.searchById(uri, sThesaurusName, "*");
+		String[] langs = locales.split(",");
+		for (int i = 0; i < langs.length; i++) {
+			langs[i] = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langs[i], langs[i]);
+		}
+		KeywordBean kb = searcher.searchById(uri, sThesaurusName, langs);
 		if (kb == null)
 			return response;
-		else
-			return response.addContent(kb.toElement(lang, locales.split(",")));
+		else {
+			Element element = kb.toElement(lang, langs);
+			return response.addContent(element);
+		}
 	}
 }
 

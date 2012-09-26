@@ -45,6 +45,12 @@ public final class XmlParams {
      */
     public static final String pLang = "pLang";
     /**
+     * A language to load when a keyword is found.  Several pLang Elements can be defined in request
+     * 
+     * Optional default is to only load the language of the current gui language
+     */
+    public static String pLanguages = "pLanguage";
+    /**
      * If present then a search clause for the uri is included
      */
     public static final String pUri = "pUri";
