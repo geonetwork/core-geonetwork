@@ -454,5 +454,22 @@ DELETE FROM Settings WHERE id=80;
 
 ALTER TABLE Settings ALTER COLUMN name TYPE varchar(64);
 
+
+-- Fix Sextant missing translation for groups and categories
+INSERT INTO categoriesdes ( 
+  SELECT iddes, 'eng', label FROM categoriesdes WHERE iddes IN (
+    SELECT id FROM categories WHERE id NOT IN 
+      (SELECT iddes FROM categoriesdes WHERE langid LIKE 'en%')
+  ) 
+);
+
+INSERT INTO groupsdes ( 
+  SELECT iddes, 'eng', label FROM groupsdes WHERE iddes IN (
+    SELECT id FROM groups WHERE id NOT IN 
+      (SELECT iddes FROM groupsdes WHERE langid LIKE 'en%')
+  ) 
+);
+
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
