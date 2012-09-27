@@ -79,7 +79,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent] 
      *  Initializes the validation report panel.
      */
-    initComponent: function() {
+    initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
         
         this.title = OpenLayers.i18n('validationReport');
@@ -100,33 +100,44 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         
         var xg = Ext.grid;
         
-        // TODO : check exist 
-        var expander = new xg.RowExpander({
-            tpl: new Ext.XTemplate('<div title="{details}"><b>{title}</b></div>' +
-            '{msg}')
-        });
+        var groupTpl = function (value, p, record){
+            var rules = record.store.query('group', record.data.group);
+            return String.format(
+                    '{0} ({1} {2})',
+                    OpenLayers.i18n(record.data.group), rules.getCount(), 
+                    (rules.getCount() > 1 ? OpenLayers.i18n('rules') : OpenLayers.i18n('rule'))
+                    );
+        };
+        var tpl = function(value, p, record){
+            return String.format(
+                    '<h3>{0} {1}</h3><div title="{2}">{3}</div>',
+                    record.data.statusIcon, record.data.title, record.data.details, record.data.msg);
+        };
         
         var colModel = new Ext.grid.ColumnModel({
             defaults: {
                 width: 120,
                 sortable: true
             },
-            columns: [expander, {
+            columns: [{
                 id: 'group',
                 header: OpenLayers.i18n('group'),
                 width: 60,
                 sortable: true,
                 hidden: true,
+                renderer: groupTpl,
                 dataIndex: 'group'
             }, {
                 header: OpenLayers.i18n('status'),
                 width: 18,
                 resizable: false,
                 sortable: true,
+                hidden: true,
                 dataIndex: 'statusIcon'
             }, {
                 header: OpenLayers.i18n('title'),
                 hidden: false,
+                renderer: tpl,
                 dataIndex: 'title'
             }]
         });
@@ -135,12 +146,9 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
             store: this.store,
             colModel: colModel,
             loadMask: true,
-            plugins: expander,
             view: new Ext.grid.GroupingView({
                 forceFit: true,
-                groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "' + 
-                                    OpenLayers.i18n('items') + '" : "' + 
-                                    OpenLayers.i18n('item') + '"]})'
+                groupRenderer: groupTpl
             }),
             
             frame: false,
