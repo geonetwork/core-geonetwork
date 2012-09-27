@@ -25,6 +25,6 @@
     <constraints_access>Contraintes d\'accès</constraints_access>
     <constraints_other>Autres contraintes</constraints_other>
     <constraints_information>Informations sur les contraintes</constraints_information>
-    <abstract>Résumé</<abstract>
+    <abstract>Résumé</abstract>
     <contact>Contact</contact>
 </strings>
