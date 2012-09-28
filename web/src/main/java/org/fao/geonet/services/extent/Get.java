@@ -500,7 +500,6 @@ public class Get implements Service
         return boundingPoly;
     }
 
-    @SuppressWarnings("unchecked")
     private Element encodeAsGML(SimpleFeature feature, CoordinateReferenceSystem crs) throws Exception
     {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -515,7 +514,8 @@ public class Get implements Service
         encoder.encode(transformed, org.geotools.gml3.GML.geometryMember, outputStream);
         String gmlString = outputStream.toString();
 		Element geometryMembers = Xml.loadString(gmlString, false);
-        Iterator iter = geometryMembers.getChildren().iterator();
+        @SuppressWarnings("rawtypes")
+		Iterator iter = geometryMembers.getChildren().iterator();
         do {
             Object next = iter.next();
             if (next instanceof Element) {
