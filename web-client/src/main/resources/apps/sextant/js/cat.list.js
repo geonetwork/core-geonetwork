@@ -61,7 +61,7 @@ cat.list = function() {
 			'</div>',
 			'<hr/>',
 			'<div class="md-links">',
-			'<div class="md-action-menu">&nbsp;<span class="icon"></span>'+ OpenLayers.i18n('administrer') + '</div>',
+			'<div class="md-action-menu">&nbsp;<span class="icon"></span>'+ OpenLayers.i18n('administrer') + '<span class="list-icon"></span></div>',
 			'<div class="btn-separator">&nbsp;</div>',
 			'<div class="downloadMenu"><span class="icon"></span>'+ OpenLayers.i18n('result-list-download')+ '<span class="list-icon"></span></div>',
 			'<div class="btn-separator">&nbsp;</div>',

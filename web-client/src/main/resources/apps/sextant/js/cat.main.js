@@ -116,8 +116,8 @@ cat.app = function() {
             draggable: false,
             movable: false,
             resizable: false,
-            width: Ext.getBody().getViewSize().width-250,
-            height: Ext.getBody().getViewSize().height-150,
+            width: Ext.getBody().getViewSize().width-400,
+            height: Ext.getBody().getViewSize().height-250,
             cls: 'view-win',
             bodyStyle:'padding:10px'
             });
@@ -187,6 +187,18 @@ cat.app = function() {
 		}
 		if (!resultsPanel.isVisible()) {
 			resultsPanel.show();
+		}
+	}
+	
+	function resetResultPanels() {
+		var infoPanel = Ext.getCmp('infoPanel'), resultsPanel = Ext
+		.getCmp('resultsPanel');
+
+		if (resultsPanel.isVisible()) {
+			resultsPanel.hide();
+		}
+		if (!infoPanel.isVisible()) {
+			infoPanel.show();
 		}
 	}
 
@@ -403,7 +415,7 @@ cat.app = function() {
 			cls : 'search-panel',
 			buttonAlign : 'left',
 			title : '<span id="searchFormHeaderTitle" class="mainheader">'
-					+ '&nbsp;' //OpenLayers.i18n('search-header-criteria-simple')
+					+ '&nbsp;'
 					+ '</span>' + '<a id="searchFormHeaderLink" href="#">'
 					+ OpenLayers.i18n('search-header-advanced') + '</a>',
 			searchBt : new Ext.Button({
@@ -421,7 +433,7 @@ cat.app = function() {
 				var elt = this.findByType('gn_categorytree', true);
 				elt[0].reset();
 				catalogue.metadataStore.removeAll();
-				tBar.setVisible(false);
+				resetResultPanels();
 			},
 			resetBt : new Ext.Button({
 				text : OpenLayers.i18n('reset'),
@@ -447,10 +459,8 @@ cat.app = function() {
 				}
 				catalogue.startRecord = 1; // Reset start record
 				search();
-				tBar.setVisible(true);
 			},
 			padding : 5,
-			//height: Ext.getBody().getViewSize().height-120,
 			autoScroll: true,
 			defaults : {
 				padding : 15,
@@ -543,18 +553,6 @@ cat.app = function() {
 			
 			// Extra stuffs
 			infoPanel = createInfoPanel();
-			// helpPanel = createHelpPanel();
-			// tagCloudViewPanel = createTagCloud();
-
-			// set a permalink provider
-//			permalinkProvider = new GeoExt.state.PermalinkProvider({
-//				encodeType : false
-//			});
-//			Ext.state.Manager.setProvider(permalinkProvider);
-			//            
-			// createHeader();
-
-			// Search form
 			searchForm = createSearchForm();
 			createLoginForm();
 			createLanguageSwitcher(lang);

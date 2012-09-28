@@ -146,9 +146,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         if(this.config.selectAction){
         	cmp.push(this.createTemplateMenu());
         }
-
-        cmp.push(this.createOtherActionMenu());
-        
+        if(this.config.otherActions) {
+        	cmp.push(this.createOtherActionMenu());
+        }
         
         // Permalink
         if(this.permalinkProvider) {
@@ -157,6 +157,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         }
         
         GeoNetwork.MetadataResultsToolbar.superclass.initComponent.call(this);
+        
+        if(cmp[cmp.length-1] == '|') {
+        	cmp.pop();
+        }
         
         this.add(cmp);
         this.catalogue.on('afterLogin', this.updatePrivileges, this);
