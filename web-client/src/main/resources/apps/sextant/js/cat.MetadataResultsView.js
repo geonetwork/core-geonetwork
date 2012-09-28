@@ -5,6 +5,9 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
 	curMenu: undefined,
 	
+	/** current index in the dataview list of the selected MD **/
+	curId: -1,
+	
 	layer_style_hover: new OpenLayers.Style({
         fillColor: "#000000",
         fillOpacity: 0,
@@ -41,16 +44,30 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         }
     },
     
-    menuAction: function(action) {
-    	var txt='';
-    	if(typeof(action) == 'object'){
-    		txt=action.text;
+    menuAction: function(link, type) {
+    	if(type == 'wms') {
+	    	var c = link.split('|');
+	    	
+	    	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;;
+	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
+	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
+	        
+	    	var p='';
+	    	switch (c[3]) {
+	        case "OGC:WMS-1.0.0-http-get-map":
+	            p = "WMS_1.0.0";
+	            break;
+	        case "OGC:WMS-1.1.1-http-get-map":
+	            p = "WMS_1.1.1";
+	            break;
+	        case "OGC:WMS-1.3.0-http-get-map":
+	            p = "WMS_1.3.0";
+	            break;
+	        }
+	    	
+	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
+	    	Ext.query('a[id*=viewerButton]')[0].onclick();
     	}
-    	else {
-    		txt= action
-    	}
-    	
-    	return alert(txt);
     },
     
     /**
@@ -61,12 +78,18 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	
     	var a = Ext.DomQuery.jsSelect('div.'+type+'Link', node);
     	var its = new Array();
+    	this.curId= id;
     	
     	for (var i=0;i<a.length;i++) {
     		if(a[i].firstChild) {
     			its.push(new Ext.Action({
     				text: a[i].firstChild.wholeText,
-    				handler: this.menuAction
+    				type: type,
+    				cfg: a[i].children ? a[i].lastChild.innerHTML:'',
+    				handler: function(action) {
+    					this.menuAction(action.cfg, action.type)
+    				},
+    				scope:this
     			}));
     		}
     	}

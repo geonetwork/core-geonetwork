@@ -722,7 +722,8 @@ Ext.onReady(function() {
 			});
 		}, 250);
 	}
-
+	cat.imgPath=cat.imgPath?cat.imgPath:'';
+	
 	app = new cat.app();
 	app.init();
 	catalogue = app.getCatalogue();
