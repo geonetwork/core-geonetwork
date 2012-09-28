@@ -61,12 +61,12 @@ public class CatalogueController implements Serializable {
             what = sextantConfig.getCatalogueWhat();
             who = sextantConfig.getCatalogueWho();
             System.out.println("------ TODO : Change portlet url");
-            mdviewerurl = "mdviewerurl";
-            geoviewerurl = "geoviewerurl";
-            panierurl = "panierurl";
-//            mdviewerurl = sextantConfig.getMdViewerUrl();
-//            geoviewerurl = sextantConfig.getGeoviewerUrl();
-//            panierurl = sextantConfig.getPanierUrl();
+//            mdviewerurl = "mdviewerurl";
+//            geoviewerurl = "geoviewerurl";
+//            panierurl = "panierurl";
+            mdviewerurl = sextantConfig.getMdViewerUrl();
+            geoviewerurl = sextantConfig.getGeoviewerUrl();
+            panierurl = sextantConfig.getPanierUrl();
             
         } else {
             maxextent = null;
