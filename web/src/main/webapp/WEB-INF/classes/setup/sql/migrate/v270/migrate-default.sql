@@ -1,28 +1,3 @@
-CREATE TABLE Validation
-  (
-    metadataId   int,
-    valType      varchar(40),
-    status       int,
-    tested       int,
-    failed       int,
-    valDate      varchar(30),
-    
-    primary key(metadataId, valType),
-    foreign key(metadataId) references Metadata(id)
-);
-
-CREATE TABLE Thesaurus (
-    id   varchar(250) not null,
-    activated    varchar(1),
-    primary key(id)
-  );
-
-ALTER TABLE Users ALTER COLUMN username TYPE varchar(256);
-
-ALTER TABLE Metadata ALTER COLUMN createDate TYPE varchar(30);
-ALTER TABLE Metadata ALTER COLUMN changeDate TYPE varchar(30);
-ALTER TABLE Metadata ADD doctype varchar(255);
-
 INSERT INTO Settings VALUES (910,1,'metadata',NULL);
 INSERT INTO Settings VALUES (911,910,'enableSimpleView','true');
 INSERT INTO Settings VALUES (912,910,'enableIsoView','true');
@@ -53,9 +28,6 @@ INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
 INSERT INTO Settings VALUES (953,952,'only','false');
 INSERT INTO Settings VALUES (954,952,'sorted','true');
 INSERT INTO Settings VALUES (955,952,'ignored','false');
-
-
-DROP TABLE IndexLanguages;
 
 -- delete indexlanguages settings
 -- Remove third level settings
@@ -243,9 +215,6 @@ DELETE FROM Languages WHERE id='pt';
 DELETE FROM Languages WHERE id='ru';
 DELETE FROM Languages WHERE id='tr';
 
-ALTER TABLE Languages DROP COLUMN isocode;
-
-ALTER TABLE IsoLanguages ADD shortcode varchar(2);
 
 UPDATE IsoLanguages SET shortcode='ar' WHERE code='ara';
 UPDATE IsoLanguages SET shortcode='ca' WHERE code='cat';

@@ -51,3 +51,34 @@ ALTER TABLE MetadataStatus ADD FOREIGN KEY (statusId) REFERENCES StatusValues (i
 ALTER TABLE MetadataStatus ADD FOREIGN KEY (userId) REFERENCES Users (id);
 ALTER TABLE StatusValuesDes ADD FOREIGN KEY (idDes) REFERENCES StatusValues (id);
 ALTER TABLE StatusValuesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
+
+CREATE TABLE Validation
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType),
+    foreign key(metadataId) references Metadata(id)
+);
+
+CREATE TABLE Thesaurus (
+    id   varchar(250) not null,
+    activated    varchar(1),
+    primary key(id)
+  );
+
+ALTER TABLE Users ALTER COLUMN username SET DATA TYPE varchar(256);
+
+ALTER TABLE Metadata ALTER COLUMN createDate SET DATA TYPE varchar(30);
+ALTER TABLE Metadata ALTER COLUMN changeDate SET DATA TYPE varchar(30);
+ALTER TABLE Metadata ADD doctype varchar(255);
+
+DROP TABLE IndexLanguages;
+
+ALTER TABLE Languages DROP COLUMN isocode;
+
+ALTER TABLE IsoLanguages ADD shortcode varchar(2);

@@ -34,6 +34,31 @@ CREATE TABLE StatusValuesDes
     label   varchar(96)   not null,
     primary key(idDes,langId)
   );
+  
+CREATE TABLE Validation
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType),
+    foreign key(metadataId) references Metadata(id)
+);
+
+CREATE TABLE Thesaurus (
+    id   varchar(250) not null,
+    activated    varchar(1),
+    primary key(id)
+  );
+
+ALTER TABLE Users ALTER COLUMN username TYPE varchar(256);
+
+ALTER TABLE Metadata ALTER COLUMN createDate TYPE varchar(30);
+ALTER TABLE Metadata ALTER COLUMN changeDate TYPE varchar(30);
+ALTER TABLE Metadata ADD doctype varchar(255);
 
 
 CREATE TABLE MetadataStatus
@@ -49,3 +74,10 @@ CREATE TABLE MetadataStatus
     foreign key(userId)     references Users(id)
 
   );
+
+
+DROP TABLE IndexLanguages;
+
+ALTER TABLE Languages DROP COLUMN isocode;
+
+ALTER TABLE IsoLanguages ADD shortcode varchar(2);
