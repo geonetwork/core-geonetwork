@@ -48,3 +48,34 @@ CREATE TABLE MetadataStatus
 
 
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
+
+CREATE TABLE Validation
+  (
+    metadataId   int,
+    valType      varchar(40),
+    status       int,
+    tested       int,
+    failed       int,
+    valDate      varchar(30),
+    
+    primary key(metadataId, valType),
+    foreign key(metadataId) references Metadata(id)
+);
+
+CREATE TABLE Thesaurus (
+    id   varchar(250) not null,
+    activated    varchar(1),
+    primary key(id)
+  );
+
+ALTER TABLE Users ALTER COLUMN username varchar(256);
+
+ALTER TABLE Metadata ALTER COLUMN createDate varchar(30);
+ALTER TABLE Metadata ALTER COLUMN changeDate varchar(30);
+ALTER TABLE Metadata ADD doctype varchar(255);
+
+DROP TABLE IndexLanguages;
+
+ALTER TABLE Languages DROP COLUMN isocode;
+
+ALTER TABLE IsoLanguages ADD shortcode varchar(2);
