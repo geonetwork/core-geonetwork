@@ -32,7 +32,7 @@
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ara-"/><!-- Draft to be improved-->
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ita-"/><!-- Draft to be improved-->
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-tur-"/><!-- Draft to be improved-->
-    <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/> Draft to be improved-->
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/><!-- Draft to be improved-->
   </data>
   <migrate>
     <version id="243">
@@ -61,6 +61,22 @@
     <version id="270">
       <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-db-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-ara-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-eng-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-fre-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-ger-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-spa-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-cat-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-rus-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-por-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-chi-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-dut-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-nor-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-fin-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-ara-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-ita-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-tur-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="loc-vie-"/><!-- Draft to be improved-->
     </version>
     <version id="280">
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
