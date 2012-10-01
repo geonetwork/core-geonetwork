@@ -79,7 +79,7 @@ public class AddElement implements Service {
 				String south = Util.getParam(params, "south");
 				String north = Util.getParam(params, "north");
 				keyword = new KeywordBean()
-				    .setCode(newid)
+				    .setRelativeCode(newid)
 				    .setValue(prefLab, lang)
                     .setDefinition(definition, lang)
                     .setCoordEast(east)
@@ -89,7 +89,7 @@ public class AddElement implements Service {
 			} else {
                 keyword = new KeywordBean()
                     .setNamespaceCode(namespace)
-                    .setCode(newid)
+                    .setRelativeCode(newid)
                     .setValue(prefLab, lang)
                     .setDefinition(definition, lang);
                 
