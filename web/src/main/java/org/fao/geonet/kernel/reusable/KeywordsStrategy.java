@@ -364,7 +364,10 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(nonValidThesaurusName);
 
-        List<Pair<String/* code */, String/* locale */>> words = new ArrayList<Pair<String, String>>();
+        KeywordBean bean = new KeywordBean().
+        		setNamespaceCode(NAMESPACE).
+        		setRelativeCode(code);
+        		
         for (Element keywordElement : xml) {
             String keyword = keywordElement.getTextTrim();
             String locale = keywordElement.getAttributeValue("locale");
@@ -375,25 +378,14 @@ public final class KeywordsStrategy extends ReplacementStrategy
             }
 
             locale = locale.toLowerCase().substring(0, 2);
-
-            words.add(Pair.read(keyword, locale));
+            bean.setValue(keyword, locale);
+            bean.setDefinition(keyword, locale);
         }
-        URI uri = null;
-        final String namespace = NAMESPACE;
-        for (Pair<String, String> pair : words) {
-            String lang = pair.two();
-            String value = pair.one();
-            String definition = pair.one();
-            KeywordBean keyword = new KeywordBean()
-                .setNamespaceCode(namespace)
-                .setCode(code)
-                .setValue(value, lang)
-                .setDefinition(definition, lang);
-            if (update) {
-                thesaurus.updateElement(keyword, true);
-            } else {
-                uri = thesaurus.addElement(keyword);
-            }
+        URI uri;
+		if (update) {
+        	uri = thesaurus.updateElement(bean, true);
+        } else {
+        	uri = thesaurus.addElement(bean);
         }
         return uri;
     }
@@ -443,14 +435,14 @@ public final class KeywordsStrategy extends ReplacementStrategy
     public String createAsNeeded(String href, UserSession session) throws Exception {
 
         String startId = Utils.id(href);
-        if(startId!=null) return href;
+        if(startId!=null && startId.startsWith(NAMESPACE)) return href;
          
         String code = UUID.randomUUID().toString();
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(NON_VALID_THESAURUS_NAME);
 
         KeywordBean keywordBean = new KeywordBean()
             .setNamespaceCode(NAMESPACE)
-            .setCode(code)
+            .setRelativeCode(code)
             .setValue("", Geocat.DEFAULT_LANG)
             .setDefinition("", Geocat.DEFAULT_LANG);
 

@@ -5,8 +5,8 @@
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:gts="http://www.isotc211.org/2005/gts"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
-	xmlns:gml="http://www.opengis.net/gml"
     xmlns:che="http://www.geocat.ch/2008/che"
+	xmlns:gml="http://www.opengis.net/gml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
     xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
@@ -14,7 +14,7 @@
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
     <xsl:include href="metadata-che-layouts.xsl"/>
-	<xsl:include href="metadata-iso19139.che-fop.xsl"/>
+	<xsl:include href="metadata-che-fop.xsl"/>
   
 	<xsl:template name="iso19139.che-javascript"/>
     <xsl:template name="iso19139.cheCompleteTab">
@@ -1772,42 +1772,6 @@
 			</geonet:info>
 	</xsl:template>
 	
-
-<!--  Just stuck in here so xsl compile pre-edit stage of project, really needs to be other place -->
-  <xsl:template name="validatedXlink">
-	<xsl:param name="root" select="."/>
-     <xsl:variable name="xlinkedAncestor" select="$root/ancestor::node()[@xlink:href]" />
-     <xsl:choose>
-     <xsl:when test="count($xlinkedAncestor) > 0 and count($root/ancestor::node()[@xlink:role = 'http://www.geonetwork.org/non_valid_obj']) = 0">
-         <xsl:value-of select="true()" />
-     </xsl:when>
-     <xsl:otherwise>
-         <xsl:value-of select="false()" />
-     </xsl:otherwise>
-     </xsl:choose>
-   </xsl:template>
- 	
-    <xsl:template mode="addXMLFragment"  priority="100"
-    match="
-           gmd:descriptiveKeywords|geonet:child[@name='descriptiveKeywords' and @prefix='gmd'] |
-           srv:keywords|geonet:child[@name='keywords' and @prefix='srv'] |
-           gmd:extent[not(ancestor::gmd:temporalElement)]|geonet:child[@name='extent' and not(ancestor::gmd:temporalElement)] | srv:extent |
-           gmd:spatialExtent|geonet:child[@name='spatialExtent' and @prefix='gmd'] |
-           che:revisionExtent|geonet:child[@name='revisionExtent' and @prefix='che'] |
-           gmd:sourceExtent|geonet:child[@name='sourceExtent' and @prefix='gmd'] |
-           gmd:contact|geonet:child[@name='contact' and @prefix='gmd'] |
-           gmd:processor|geonet:child[@name='processor' and @prefix='gmd'] |
-           gmd:citedResponsibleParty|geonet:child[@name='citedResponsibleParty' and @prefix='gmd'] |
-           gmd:pointOfContact|geonet:child[@name='pointOfContact' and @prefix='gmd'] |
-           gmd:distributorContact|geonet:child[@name='distributorContact' and @prefix='gmd'] |
-           gmd:source|geonet:child[@name='source' and @prefix='gmd'] |
-           gmd:userContactInfo|geonet:child[@name='userContactInfo' and @prefix='gmd'] |
-           gmd:distributionFormat|geonet:child[@name='distributionFormat' and @prefix='gmd'] |
-           gmd:distributorFormat|geonet:child[@name='distributorFormat' and @prefix='gmd'] |
-           gmd:resourceFormat|geonet:child[@name='resourceFormat' and @prefix='gmd']
-           ">
-        <xsl:text>displayXLinkSearchBox</xsl:text>
-    </xsl:template>
     <xsl:template mode="addXMLFragment" match="gmd:referenceSystemInfo|geonet:child[@name='referenceSystemInfo' and @prefix='gmd']" priority="100"/>
 
 

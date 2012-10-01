@@ -493,18 +493,6 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema"   select="$schema"/>
-					<xsl:with-param name="edit"     select="$edit"/>
-					<xsl:with-param name="title"    select="$title"/>
-					<xsl:with-param name="helpLink" select="$helpLink"/>
-					<xsl:with-param name="text"     select="$text"/>
-					<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
-				</xsl:apply-templates>
-				</xsl:with-param>
-			</xsl:apply-templates>
-		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates mode="simpleElement" select=".">
 				<xsl:with-param name="schema"   select="$schema"/>

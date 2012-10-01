@@ -5,7 +5,7 @@ OpenLayers.ImgPath = Env.url + '/scripts/openlayers/img/'
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 
 // Define a constant with the base url to the MapFish web service.
-mapfish.SERVER_BASE_URL = Env.url + '/'; //'../../';
+//mapfish.SERVER_BASE_URL = Env.url + '/'; //'../../';
 
 // Remove pink background when a tile fails to load
 OpenLayers.Util.onImageLoadErrorColor = "transparent";

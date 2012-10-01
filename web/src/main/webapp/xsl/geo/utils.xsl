@@ -94,13 +94,14 @@
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/no.js"/><xsl:text>&#10;</xsl:text-->
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/><xsl:text>&#10;</xsl:text-->
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"/><xsl:text>&#10;</xsl:text>
+				<!-- <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"/><xsl:text>&#10;</xsl:text> -->
 
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text-->
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text-->
 
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/geoext/GeoExt.js"/><xsl:text>&#10;</xsl:text-->
 				<!--script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text-->
+                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/geocat.js"/> <!-- to avoid using gn map component but use geocat one -->
 			</xsl:otherwise>
 		</xsl:choose>
 
