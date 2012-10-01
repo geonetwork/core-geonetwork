@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <M6>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason</M6>
+    <M7>Contraintes sur les attributs CRS</M7>
+    <M8>[ISOFTDS19139:2005-TableA1-Row24] - Au moins le nom du contact, le nom de l'organisation ou la fonction du contact doivent être renseignés</M8>
+    <M9>[ISOFTDS19139:2005-TableA1-Row07] - Les autres contraintes doivent être renseignées si les contraintes d'accès ou d'utilisation ont la valeur 'autres restrictions'</M9>
+    <M10>[ISOFTDS19139:2005-TableA1-Row16] - L'unité est obligatoire si la valeur min ou la valeur max d'une longueur d'onde est renseignée</M10>
+    <M11>[ISOFTDS19139:2005-TableA1-Row13] - La description du référentiel est obligatoire si l'étendue des données sources n'est pas renseignée</M11>
+    <M12>[ISOFTDS19139:2005-TableA1-Row14] - Une étendue des données sources est obligatoire si la description du référentiel n'est pas renseignée</M12>
+    <M13>[ISOFTDS19139:2005-TableA1-Row10] - La généalogie de la donnée est obligatoire pour un jeu de données si le référentiel ou l'évènement dans le processus ne sont pas renseignés</M13>
+    <M14>[ISOFTDS19139:2005-TableA1-Row11] - La description du référentiel est obligatoire si la généalogie de la donnée ou la description de l'évènement dans le processus ne sont pas renseignés</M14>
+    <M15>[ISOFTDS19139:2005-TableA1-Row12] - La description de l'evenement dans le processus est obligatoire si la généalogie de la donnée ou la description du référentiel</M15>
+    <M16>[ISOFTDS19139:2005-TableA1-Row08] - Au moins le rapport sur la qualité ou la généalogie de la donnée doit être renseigné</M16>
+    <M17>[ISOFTDS19139:2005-TableA1-Row09] - La description du niveau de hiérarchie est obligatoire s'il ne s'agit pas d'un jeu ou d'une collection de données</M17>
+    <M18>[ISOFTDS19139:2005-TableA1-Row17] - L'unité de densité d'enregistrement est obligatoire si la densité est renseignée</M18>
+    <M19>[ISOFTDS19139:2005-TableA1-Row18] - Au moins le format de distribution ou de diffusion doit être renseignés</M19>
+    <M20>[ISOFTDS19139:2005-TableA1-Row23] - Au moins la description de l'étendue, l'élément géographique, temporel ou vertical doit être renseignés</M20>
+    <M21>[ISOFTDS19139:2005-TableA1-Row04] - Au moins la description ou l'étendue spatiale doit être renseignées pour un jeu de données</M21>
+    <M22>[ISOFTDS19139:2005-TableA1-Row05] - Le thème doit être renseigné pour un jeu ou une collection de données</M22>
+    <M23>[ISOFTDS19139:2005-TableA1-Row06] - Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</M23>
+    <M24>[ISOFTDS19139:2005-TableA1-Row01] - La langue est obligatoire</M24>
+    <M25>[ISOFTDS19139:2005-TableA1-Row02] - Le jeu de caractère est obligatoire</M25>
+    <M26>[ISOFTDS19139:2005-TableA1-Row19] - L'obligation, le maximum d'occurence et les valeurs valides sont obligatoires si le type valeur n'est pas 'liste de code', 'énumeration', 'élément de liste de code'</M26>
+    <M27>[ISOFTDS19139:2005-TableA1-Row20] - La condition est obligatoire si l'obligation a la valeur 'conditionnelle'</M27>
+    <M28>[ISOFTDS19139:2005-TableA1-Row21] - Le code est obligatoire si le type de valeur a la valeur 'liste de code'</M28>
+    <M29>[ISOFTDS19139:2005-TableA1-Row22] - Si le type de valeur n'est pas 'liste de code', alors le nom court est obligatoire</M29>
+    <M30>[ISOFTDS19139:2005-TableA1-Row15] - La description des points de calage est obligatoire si elle est disponible</M30>
+    <M61>[ISOFTDS19139:2005-TableA1] - Le nom du niveau de hiérarchie doit être renseigné si le niveau hierarchique ne content pas 'jeu de données'</M61>
+    <alert.M6><div>Le thème doit être renseigné pour un jeu ou une collection de données.</div></alert.M6>
+    <report.M6>La thématique est :</report.M6>
+    <alert.M6.characterString><div>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason</div></alert.M6.characterString>
+    <alert.M6.directPosition><div>La présence d'un attribut de dimension implique la présence de l'attribut srsName</div></alert.M6.directPosition>
+    <alert.M7.axisAndSrs><div>La présence d'un attribut axisLabels implique la présence de l'attribut srsName</div></alert.M7.axisAndSrs>
+    <alert.M7.uomAndSrs><div>La présence d'un attribut uomLabels implique la présence de l'attribut srsName</div></alert.M7.uomAndSrs>
+    <alert.M7.uomAndAxis><div>La présence d'un attribut uomLabels implique la présence de l'attribut axisLabels et inversement</div></alert.M7.uomAndAxis>
+    <alert.M8><div>Au moins le nom du contact, le nom de l'organisation ou la fonction du contact doivent être renseignés
+        <span class="validationReportSuggestion">Suggestions : Vérifier les informations relatives aux contacts dans la section métadonnées ou identificaton par exemple.</span>
+    </div></alert.M8>
+    <report.M8>Un ou plusieurs noms, organisations ou positions trouvés pour le contact :</report.M8>
+    <alert.M9.access><div>Les autres contraintes sont obligatoires si les contraintes d'accès ont la valeur 'Autres restrictions'.<br/>
+        <span class="validationReportSuggestion">Suggestion : Ajouter un élément autres contraintes.</span>
+    </div></alert.M9.access>
+    <report.M9>Autres restrictions :</report.M9>
+    <alert.M9.use><div>Les autres contraintes sont obligatoires si les contraintes d'utilisation ont la valeur 'Autres restrictions'.<br/>
+        <span class="validationReportSuggestion">Suggestion : Ajouter un élément autres contraintes.</span>        
+    </div></alert.M9.use>
+    <alert.M9><div>L'unité de la longueur d'onde est obligatoire si la valeur min ou la valeur max est renseignée.
+        <span class="validationReportSuggestion">Suggestion : Ajouter une unité.</span>
+    </div></alert.M9>
+    <report.M9.units>Unités :</report.M9.units>
+    <report.M9.max>Valeur max :</report.M9.max>
+    <report.M9.min>Valeur min :</report.M9.min>
+    <alert.M11><div>La description du référentiel est obligatoire si une étendue des données sources n'est pas renseignée.<br/>
+        <span class="validationReportSuggestion">Suggestion: Ajouter une description ou une étendue.</span>
+    </div></alert.M11>
+    <report.M11><div>Description et source de l'étendue sont documentées pour la généalogie.</div></report.M11>
+    <alert.M12><div>Une étendue des données sources est obligatoire si la description du référentiel n'est pas renseignée</div></alert.M12>
+    <alert.M13><div>La généalogie de la donnée est obligatoire pour un jeu ou une collection de données si le référentiel ou l'évènement dans le processus ne sont pas renseignés.<br/>
+        <span class="validationReportSuggestion">Suggestion: Ajouter les informations sur la généalogie.</span>
+    </div></alert.M13>
+    <report.M13><div>L'évènement est documenté.</div></report.M13>
+    <alert.M14><div>La description du référentiel est obligatoire si la généalogie de la donnée ou la description de l'évènement dans le processus ne sont pas renseignés.<br/>
+        <span class="validationReportSuggestion">Suggestions: Décrire l'évènement ou ajouter des informations sur la généalogie.</span>
+    </div></alert.M14>
+    <report.M14>Source requis si aucun évènement ou processus.</report.M14>
+    <alert.M15><div>La description de l'évènement dans le processus est obligatoire si la généalogie de la donnée ou la description du référentiel.<br/>
+        <span class="validationReportSuggestion">Suggestions: Décrire le référentiel ou ajouter des informations sur la généalogie.</span>
+    </div></alert.M15>
+    <report.M15>Processus requis si aucun évènement ou source.</report.M15>
+    <alert.M16><div>Au moins le rapport sur la qualité ou la généalogie de la ressource doit être renseigné.</div></alert.M16>
+    <report.M16><div>Rapport ou généalogie sont définis.</div></report.M16>
+    <alert.M17><div>La description du niveau de hiérarchie est obligatoire s'il ne s'agit pas d'un jeu ou d'une collection de données</div></alert.M17>
+    <report.M17>La description du niveau de hiérarchie est :</report.M17>
+    <alert.M18><div>L'unité de densité d'enregistrement est obligatoire si la densité est renseignée</div></alert.M18>
+    <report.M18>La densité est :</report.M18>
+    <alert.M19><div>Au moins le format de distribution ou de diffusion doit être renseignés</div></alert.M19>
+    <report.M19> format(s) de distribution trouvés.</report.M19>
+    <alert.M20><div>Au moins la description de l'étendue, l'élément géographique, temporel ou vertical doit être renseignés</div></alert.M20>
+    <report.M20>Une description, un élément géographique, temporel ou vertical est renseigné.</report.M20>
+    <alert.M21><div>Au moins la description ou l'étendue spatiale doit être renseignées s'il s'agit d'un jeu de données</div></alert.M21>
+    <report.M21>L'étendue est définie.</report.M21>
+    <alert.M23><div>Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</div></alert.M23>
+    <report.M23>aggregateDataSetName ou aggregateDataSetIdentifier renseigné.</report.M23>
+    <alert.M26.obligation><div>L'obligation est obligatoire si le type de valeur n'est pas 'liste de code', 'énumeration', 'élément d'une liste de code'</div></alert.M26.obligation>
+    <alert.M26.maximumOccurence><div>Le maximum d'occurence est obligatoire si le type de valeur n'est pas 'liste de code', 'énumeration', 'élément d'une liste de code'</div></alert.M26.maximumOccurence>
+    <alert.M26.domainValue><div>Les valeurs valides sont obligatoires si le type de valeur n'est pas 'liste de code', 'énumeration', 'élément d'une liste de code'</div></alert.M26.domainValue>
+    <alert.M27><div>La condition est obligatoire si l'obligation a la valeur 'conditionnelle'</div></alert.M27>
+    <report.M27>La condition est documentée.</report.M27>
+    <alert.M28><div>Le code est obligatoire si le type de valeur est 'Elément d'une liste de code'</div></alert.M28>
+    <report.M28>Le code est documenté.</report.M28>
+    <alert.M29><div>Le nom court est obligatoire si le type de valeur n'est pas 'Elément d'une liste de code'</div></alert.M29>
+    <report.M29>Le nom court est obligatoire.</report.M29>
+    <alert.M30><div>La description des points de calage est obligatoire si elle est disponible</div></alert.M30> 
+    <report.M30>La description des points de calage est documentée.</report.M30>
+    <alert.M61><div><h2>Le nom du niveau de hiérarchie doit être renseigné si le niveau hierarchique ne content pas 'jeu de données'</h2></div></alert.M61>
+    <report.M61>Le niveau de hiérarchie est :</report.M61>
+</strings>
