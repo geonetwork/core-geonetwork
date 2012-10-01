@@ -364,7 +364,7 @@ public class KeywordBean {
 			return "#";
 	}
 
-	public KeywordBean setCode(String code) {
+	public KeywordBean setURICode(String code) {
 		this.code = code;
 		return this;
 	}
