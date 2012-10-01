@@ -15,4 +15,41 @@
             <option value="WCS">Web Coverage Service (OGC)</option>
         </helper>
     </element>
+    <element name="gmd:abstract" id="25.0">
+		<label>Summary</label>
+		<description>Brief narrative summary of the content of the resource(s)</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:statement" id="83.0">
+		<label>Origin</label>
+		<description>General explanation of the data producer_s knowledge about the lineage of a
+            dataset</description>
+		<condition>conditional</condition>
+	</element>
+	<element name="gmd:organisationName" id="376.0">
+		<label>Organism</label>
+		<description>Name of the responsible organization</description>
+		<condition>conditional</condition>
+	</element>
+	<element name="gmd:electronicMailAddress" id="386.0">
+		<label>Email</label>
+		<description>Address of the electronic mailbox of the responsible organization or
+            individual</description>
+	</element>
+	<element name="gmd:MD_LegalConstraints" id="69.0">
+		<label>Constraints information</label>
+		<description>Restrictions and legal prerequisites for accessing and using the resource or
+            metadata</description>
+	</element>
+	<element name="gmd:useLimitation" id="68.0">
+		<label>Use restriction</label>
+		<description>Limitation affecting the fitness for use of the resource. Example, _not to be
+            used for navigation_</description>
+	</element>
+	<element name="gmd:individualName" id="375.0">
+		<label>Responsible party</label>
+		<description>Name of the responsible person- surname, given name, title separated by a
+            delimiter</description>
+		<_condition>Conditional / organisationName and positionName not documented?</_condition>
+	</element>
 </labels>
