@@ -63,11 +63,11 @@
                                                   
               <h:panelGroup id="nbLayersBox" style="display:none;">
                 <h:outputText value="#{catalogue.nbPanierLayers}" id="nbPanierLayers" style="display:none;" />
-                <h:outputText value="#{catalogue.nbViewerLayers}" id="nbViewerLayers" style="display:none;" />                
+                <h:outputText value="#{catalogue.nbViewerLayers}" id="nbViewerLayers" style="display:none;" />
               </h:panelGroup>
 
               <a4j:commandLink style="display:none;" id="viewerButton" action="#{catalogue.sendLayerToGeoviewer}" reRender="nbLayersBox" oncomplete="cat.ipc.displayLayersNumber();" />
-              <a4j:commandLink style="display:none;" id="panierButton" action="#{catalogue.sendLayerToPanier}" reRender="nbLayersBox" oncomplete="javascript:cat.modal.openModal('CART');cat.ipc.displayLayersNumber();" />
+              <a4j:commandLink style="display:none;" id="panierButton" action="#{catalogue.sendLayerToPanier}" reRender="nbLayersBox" oncomplete="cat.ipc.displayLayersNumber();" />
                 
               <input type="hidden" name="data" id="catalogForm-hidden" value=""/>
 

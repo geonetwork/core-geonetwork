@@ -28,11 +28,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	menuElt.on('click', function(){
 
         		if(this.curMenu) this.curMenu.destroy();
+        		this.curId= idx;
         		
         		//don't create a menu if only 1 element
         		var a = Ext.DomQuery.jsSelect('div.'+type+'Link', node);
         		if(a && a.length==1 && a[0].firstChild){
-        			this.menuAction(a[0].firstChild.wholeText);
+        			this.menuAction(a[0].lastChild.innerHTML, type);
         		}
         		else {
 		            this.curMenu = this.createLinksMenu(idx, this, node, type);
@@ -48,7 +49,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	if(type == 'wms') {
 	    	var c = link.split('|');
 	    	
-	    	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;;
+	    	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;
 	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
 	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
 	        
@@ -68,6 +69,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
 	    	Ext.query('a[id*=viewerButton]')[0].onclick();
     	}
+    	else if(type=='download') {
+    		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
+    		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
+    			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
+    		Ext.query('a[id*=panierButton]')[0].onclick();
+    	}
     },
     
     /**
@@ -78,7 +85,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	
     	var a = Ext.DomQuery.jsSelect('div.'+type+'Link', node);
     	var its = new Array();
-    	this.curId= id;
     	
     	for (var i=0;i<a.length;i++) {
     		if(a[i].firstChild) {
