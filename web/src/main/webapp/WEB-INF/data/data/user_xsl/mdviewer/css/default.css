@@ -1,52 +1,8 @@
-/* .tpl-sextant .ui-layout-content { 	
-	height: 100% !important;
-} */
+
 div.ui-dialog-titlebar .ui-state-hover, div.ui-dialog-titlebar .ui-state-active, div.ui-dialog-titlebar .ui-state-focus {
   border: none;
   background: none;
   background-image: none;
-}
-
-.mdshow-tabpanel {
-	padding: 6px 12px;
-}
-.mdshow-tabpanel .x-tab-panel-header{
-	background-color: white !important;
-	border-bottom: medium none;
-}
-.mdshow-tabpanel span.x-tab-strip-text {
-	font-family: Arial,​Helvetica,​sans-serif !important;
-	font-size: 12px !important;
-	font-weight: bold !important;
-	color: #616161 !important;
-	line-height: 15.6px !important;
-	padding: 7px 11px 4px 8px !important;
-}
-.mdshow-tabpanel .x-tab-strip-active span.x-tab-strip-text {
-	color: #FFFFFF !important;
-}
-.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right,
-.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left,
-.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-strip-inner {
-	background: url("../../images/ui-bg_inset-hard_75_999999_1x100.png") repeat-x scroll 50% 50% #999999 !important;
-}
-.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-right {
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-.mdshow-tabpanel .x-tab-strip-top .x-tab-strip-active .x-tab-left {
-	border-top-right-radius: 4px;
-}
-.mdshow-tabpanel ul.x-tab-strip-top {
-	background-color: white !important;
-	border-top-left-radius: 4px !important;
-}
-.mdshow-tabpanel ul.x-tab-strip-top {
-	border-bottom: none;
-}
-.mdshow-tabpanel ul.x-tab-strip li{
-	margin-right:2px;
-	margin-left:0;
 }
 
 div.ui-dialog-content {
@@ -74,7 +30,7 @@ div.ui-tabs-panel {
   background-color: #EFEFEF;
 }
 
-.tpl-sextant h3 {
+h3 {
   font-size : 1.4em;
   font-weight : bold;
   background-color : grey;
@@ -82,11 +38,11 @@ div.ui-tabs-panel {
   padding: 1em;
 }
 
-.tpl-sextant h4 {
+h4 {
   float : left;
 }
 
-.tpl-sextant h5 {
+h5 {
   background-color: #aaa !important;
   border:1px solid #999999 !important;
   color:#FFFFFF;
@@ -96,12 +52,12 @@ div.ui-tabs-panel {
   padding-top: 5px !important;
 }
 
-.tpl-sextant p {
+p {
   margin : 1em !important;
   margin-left : 0px !important;
 }
 
-.tpl-sextant hr {
+hr {
   margin: 1em 0 1.5em 0;
   clear : both;
 }
@@ -157,7 +113,7 @@ div.result-metadata-modal-content table td {
   float: left;
 }
 
-.tpl-sextant .button {
+.button {
   cursor : pointer;
   position: relative;
   float : left;
@@ -171,7 +127,7 @@ div.result-metadata-modal-content table td {
 }
 
 /* solo icon buttons must have block properties for the text-indent to work */
-.tpl-sextant .button-icon-solo {
+.button-icon-solo {
   display:block;
   width:24px;
   height : 24px;
@@ -181,7 +137,7 @@ div.result-metadata-modal-content table td {
 
 
 /* icones */
-.tpl-sextant .icon {
+.icon {
   background-repeat:no-repeat;
   height:24px;
   width:24px;
@@ -190,8 +146,8 @@ div.result-metadata-modal-content table td {
   text-indent:-99999px;
 }
 
-.tpl-sextant .button .ui-icon, /* jQuery CSS Framework */
-.tpl-sextant .button .icon {   /* MP CSS Framework */
+.button .ui-icon, /* jQuery CSS Framework */
+.button .icon {   /* MP CSS Framework */
   position: absolute;
   margin-left : -12px;
   margin-top : -12px;
@@ -200,35 +156,20 @@ div.result-metadata-modal-content table td {
 }
 
 
-.mdshow-tabpanel .file-pdf {
-  background-image:url("../../images/icons/file-pdf.png");
-  border: medium none;
-    height: 16px;
-    position: absolute;
-    right: 30px;
-    top: 14px;
-    width: 16px;
-    z-index: 5000;
-    cursor:pointer;
+.file-pdf {
+  background-image:url("../metadata.formatter.resource?id=sextant&fname=/img/default/icons/file-pdf.png");
+  height:18px;
+  width:18px;
+  border: none;
 }
 
-.mdshow-tabpanel .file-xml {
-  background-image:url("../../images/icons/file-xml.png");
-  border: medium none;
-    height: 16px;
-    position: absolute;
-    right: 60px;
-    top: 14px;
-    width: 16px;
-    z-index: 5000;
-    cursor:pointer;
+.file-xml {
+  background-image:url("../metadata.formatter.resource?id=sextant&fname=/img/default/icons/file-xml.png");
+  height:18px;
+  width:18px;
+  border: none;
 }
-.mdshow-tabpanel .file-xml:hover {
-  background-position:-19px 0;
-}
-.mdshow-tabpanel .file-pdf:hover {
-  background-position:-19px 0;
-}
+
 .ui-widget-content .button {
   background-image: none !important;
   border: none !important;

@@ -39,6 +39,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 					scripts : true,
 					scope : this
 				},
+				id : 'result-metadata-modal-tab-1-content',
 				cls : 'viewmd-panel',
 				border : false,
 				frame : false,
@@ -61,8 +62,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				border : false,
 				frame : false,
 				cls : 'viewmd-panel',
-				autoHeight : true,
-				autoScroll : true
+				autoScroll : false
 			});
 			if (this.formatterServiceUrl) {
 				formatterViewPanel.setTitle(OpenLayers.i18n('essentielle'));
@@ -76,6 +76,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				border : false,
 				frame : false,
 				autoScroll : true,
+				autoHeight : true,
 				title: 'titre',
 				cls : 'mdshow-tabpanel',
 				headerCfg: {

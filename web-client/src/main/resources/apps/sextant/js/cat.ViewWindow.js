@@ -22,7 +22,7 @@ cat.view.ViewWindow = Ext.extend(GeoNetwork.view.ViewWindow, {
         }];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
-        this.setTitle(this.record ? Ext.util.Format.ellipsis(this.record.get('title'), 150) : '');
+        if(!this.title) this.setTitle(this.record ? Ext.util.Format.ellipsis(this.record.get('title'), 150) : '');
         
         this.panel = new cat.view.ViewPanel({
             serviceUrl: this.serviceUrl,
