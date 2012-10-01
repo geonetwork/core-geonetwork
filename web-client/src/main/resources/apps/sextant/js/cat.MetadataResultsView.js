@@ -72,7 +72,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	else if(type=='download') {
     		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
     		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
-    			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
+    			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&outputSchema=csw:IsoRecord&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
     		Ext.query('a[id*=panierButton]')[0].onclick();
     	}
     },
