@@ -34,10 +34,6 @@
               <input type="hidden" name="data" id="catalogPDF-hidden" value="" />
             </form>
             
-            <!-- <div id="loading-mask"></div>
-		    <div id="loading">
-		      <div class="loading-indicator">Loading ...</div>
-		    </div> -->
 		    <div id="login-form"></div>
             <div id="lang-form"></div>
             
@@ -66,11 +62,11 @@
                                                   
               <h:panelGroup id="nbLayersBox" style="display:none;">
                 <h:outputText value="#{catalogue.nbPanierLayers}" id="nbPanierLayers" style="display:none;" />
-                <h:outputText value="#{catalogue.nbViewerLayers}" id="nbViewerLayers" style="display:none;" />                
+                <h:outputText value="#{catalogue.nbViewerLayers}" id="nbViewerLayers" style="display:none;" />
               </h:panelGroup>
 
-              <a4j:commandLink style="display:none;" id="viewerButton" action="#{catalogue.sendLayerToGeoviewer}" reRender="nbLayersBox" oncomplete="javascript:cat.modal.openModal('GEOVIEWER');cat.ipc.displayLayersNumber();" />
-              <a4j:commandLink style="display:none;" id="panierButton" action="#{catalogue.sendLayerToPanier}" reRender="nbLayersBox" oncomplete="javascript:cat.modal.openModal('CART');cat.ipc.displayLayersNumber();" />
+              <a4j:commandLink style="display:none;" id="viewerButton" action="#{catalogue.sendLayerToGeoviewer}" reRender="nbLayersBox" oncomplete="cat.ipc.displayLayersNumber();" />
+              <a4j:commandLink style="display:none;" id="panierButton" action="#{catalogue.sendLayerToPanier}" reRender="nbLayersBox" oncomplete="cat.ipc.displayLayersNumber();" />
                 
               <input type="hidden" name="data" id="catalogForm-hidden" value=""/>
 
@@ -80,8 +76,8 @@
           </div>
           <!-- FIN catalog -->
 
-      
-      <script type="text/javascript" src="#{contextPath}/js/lib/ext/adapter/ext/ext-base.js"></script>
+    <a4j:loadScript src="resource:///org/ajax4jsf/framework.pack.js"/>
+    <script type="text/javascript" src="#{contextPath}/js/lib/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext/ext-all-debug.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/Rating/RatingItem.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/FileUploadField/FileUploadField.js"></script>
@@ -117,6 +113,7 @@
 	<script type="text/javascript" src="#{contextPath}/js/cat.ViewPanel.js"></script>
 	<script type="text/javascript" src="#{contextPath}/js/cat.MetadataResultsView.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.list.js"></script>
+    <script type="text/javascript" src="#{contextPath}/js/cat.ipc.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/cat.main.js"></script>
 
     <script type="text/javascript">

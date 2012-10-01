@@ -5,6 +5,9 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
 	curMenu: undefined,
 	
+	/** current index in the dataview list of the selected MD **/
+	curId: -1,
+	
 	layer_style_hover: new OpenLayers.Style({
         fillColor: "#000000",
         fillOpacity: 0,
@@ -25,11 +28,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	menuElt.on('click', function(){
 
         		if(this.curMenu) this.curMenu.destroy();
+        		this.curId= idx;
         		
         		//don't create a menu if only 1 element
         		var a = Ext.DomQuery.jsSelect('div.'+type+'Link', node);
         		if(a && a.length==1 && a[0].firstChild){
-        			this.menuAction(a[0].firstChild.wholeText);
+        			this.menuAction(a[0].lastChild.innerHTML, type);
         		}
         		else {
 		            this.curMenu = this.createLinksMenu(idx, this, node, type);
@@ -41,16 +45,36 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         }
     },
     
-    menuAction: function(action) {
-    	var txt='';
-    	if(typeof(action) == 'object'){
-    		txt=action.text;
+    menuAction: function(link, type) {
+    	if(type == 'wms') {
+	    	var c = link.split('|');
+	    	
+	    	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;
+	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
+	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
+	        
+	    	var p='';
+	    	switch (c[3]) {
+	        case "OGC:WMS-1.0.0-http-get-map":
+	            p = "WMS_1.0.0";
+	            break;
+	        case "OGC:WMS-1.1.1-http-get-map":
+	            p = "WMS_1.1.1";
+	            break;
+	        case "OGC:WMS-1.3.0-http-get-map":
+	            p = "WMS_1.3.0";
+	            break;
+	        }
+	    	
+	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
+	    	Ext.query('a[id*=viewerButton]')[0].onclick();
     	}
-    	else {
-    		txt= action
+    	else if(type=='download') {
+    		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
+    		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
+    			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
+    		Ext.query('a[id*=panierButton]')[0].onclick();
     	}
-    	
-    	return alert(txt);
     },
     
     /**
@@ -66,7 +90,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     		if(a[i].firstChild) {
     			its.push(new Ext.Action({
     				text: a[i].firstChild.wholeText,
-    				handler: this.menuAction
+    				type: type,
+    				cfg: a[i].children ? a[i].lastChild.innerHTML:'',
+    				handler: function(action) {
+    					this.menuAction(action.cfg, action.type)
+    				},
+    				scope:this
     			}));
     		}
     	}
