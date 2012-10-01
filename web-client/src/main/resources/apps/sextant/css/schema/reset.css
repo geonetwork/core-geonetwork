@@ -9,13 +9,7 @@
 .viewmd-panel dl, .viewmd-panel dt, .viewmd-panel dd, .viewmd-panel ol,.viewmd-panel ul, .viewmd-panel li,
 .viewmd-panel fieldset, .viewmd-panel form, .viewmd-panel label, .viewmd-panel legend,
 .viewmd-panel table, .viewmd-panel caption, .viewmd-panel tbody, .viewmd-panel tfoot, .viewmd-panel thead, .viewmd-panel tr, .viewmd-panel th, .viewmd-panel td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
 	font-size: 100%;
-	background: transparent;
-	text-decoration: none;
 }
 
 .viewmd-panel * div#tabs {

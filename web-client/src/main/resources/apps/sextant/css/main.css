@@ -523,3 +523,7 @@ hr {
     background: url("../images/ui-bg_flat_0_aaaaaa_40x100.png") repeat-x scroll 50% 50% #000000;
     opacity: 0.5;
 }
+
+p.abstract {
+	font-size:12px;
+}

@@ -38,7 +38,7 @@
 								<div class="result-metadata-modal-resume">
 									<h6>
 									<xsl:call-template name="getTitle">
-										<xsl:with-param name="name" select="'gmd:descriptiveKeywords'" />
+										<xsl:with-param name="name" select="'gmd:MD_Keywords'" />
 									</xsl:call-template>
 									</h6>
 									<p><div class="result-metadata-modal-content">

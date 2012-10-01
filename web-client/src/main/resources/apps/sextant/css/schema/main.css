@@ -25,12 +25,12 @@ body {
 	padding: 1em 1.4em;
 }
 
-#result-metadata-modal-tab-2-content table, 
+/* #result-metadata-modal-tab-2-content table, 
 #result-metadata-modal-tab-2-content * table, 
 #result-metadata-modal-tab-2-content * td, 
 #result-metadata-modal-tab-2-content * th {
     border: none !important;
-}
+} */
 
 #result-metadata-modal-tab-2-content * th {
     text-align: left !important;
@@ -81,4 +81,7 @@ body {
 
 #result-metadata-modal-tab-2-content * table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td * td {
     padding: 4px 0 0 12px !important;
+}
+#result-metadata-modal-tab-2-content * .md-view div.relation ul li, table.related * li {
+    width: auto;
 }
