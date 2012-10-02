@@ -434,7 +434,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {
 
-        String startId = Utils.id(href);
+        String startId = URLDecoder.decode(Utils.id(href), "UTF-8");
         if(startId!=null && startId.startsWith(NAMESPACE)) return href;
          
         String code = UUID.randomUUID().toString();
