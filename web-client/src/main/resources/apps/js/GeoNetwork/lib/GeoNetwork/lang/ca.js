@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.namespace('GeoNetwork",
-    ' 'GeoNetwork.lang');
+Ext.namespace('GeoNetwork1', 'GeoNetwork.lang');
 
 GeoNetwork.lang.ca={
     'previousPage': 'Tornar a la pàgina anterior',
@@ -202,7 +201,7 @@ GeoNetwork.lang.ca={
     'nearYou': 'A prop',
     'from': 'Des de',
     'to': 'a',
-    'scaleNominator': '1': ',
+    'scaleNominator': '1: ',
     'scale': 'Escala',
     'digital': 'Digital',
     'hardCopy': 'Còpia en paper',
@@ -293,7 +292,7 @@ GeoNetwork.lang.ca={
     'help': 'Ajuda',
     'publishError': 'La publicació ha fallat.',
     'outOfMemoryError': 'Error de falta de memoria.',
-    'publishErrorCode': 'Codi d\'error': ',
+    'publishErrorCode': 'Codi d\'error: ',
     'saveAndCheck': 'Salvar i comprovar',
     'saveAndClose': 'Salvar i tancar',
     'cancel': 'Cancel·lar',
@@ -428,7 +427,7 @@ GeoNetwork.lang.ca={
     'foundContacts': 'Disponible',
     'contactRole': 'Rol del contacte',
     'mapNearYou': 'Centrar el mapa a la seva localització',
-    'errorChangeProtocol': 'Esborrar el fitxer carregat abans de canviar el protocol d'un recurs online.',
+    'errorChangeProtocol': 'Esborrar el fitxer carregat abans de canviar el protocol d\'un recurs online.',
     'resultBy': ' resultat(s) / ',
     'subTemplateImport': 'Importar un element al directori',
     'xmlData': 'XML',
@@ -442,7 +441,7 @@ GeoNetwork.lang.ca={
     'resetSearchForm': 'Reinicialitzar el formulari de cerca.',
     'focusOnLogin': 'Col·locar el cursor sobre el formulari de connexió o desconnexió si esteu connectats.',
     'openAdmin': 'Administrar el catàleg',
-    'displayInfoPanel': 'Mostrar el panell d'informació.',
+    'displayInfoPanel': 'Mostrar el panell d\'informació.',
     'displayHelpPanel': 'Mostrar aquesta ajuda.',
     
     'SelectionWindowTitle': "Seleccionar del directori",
