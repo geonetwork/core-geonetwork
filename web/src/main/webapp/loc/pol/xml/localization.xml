@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<entity>Jednostka</entity>
+	
+	<entityType>
+		<type id="groups">Grupy</type>
+		<type id="categories">Kategorie</type>
+		<type id="operations">Operacje</type>
+		<type id="regions">Regiony</type>
+	</entityType>
+	
+	<srcLang>Język źródłowy</srcLang>
+	<desLang>Język docelowy</desLang>
+	
+			<!-- Buttons -->
+	
+	<save>Zapisz</save>
+	<refresh>Odśwież</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Tekst lokalizowany nie może być pusty</cannotBeEmpty>
+			<invalidMaxSize>Tekst lokalizowany nie może mieć max.{VALUE} znaków</invalidMaxSize>
+		</length>		
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGetList>Nie można odczytać listy jednostek</cannotGetList>
+	<cannotSave>Wystąpił błąd podczas zapisywania</cannotSave>
+	
+	<!-- tooltips -->
+	
+	<tips>
+	</tips>
+	
+</strings>
+

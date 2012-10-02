@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Informacje na temat zbioru</understandResource>
+  <relatedResources>Powiązane usługi i dane</relatedResources>
+  <techInfo>Informacje techniczne</techInfo>
+  <contactInfo>Informacje kontaktowe</contactInfo>
+  <mdContactInfo>Kontakt w sprawie metadanych</mdContactInfo>
+  <refDate>Data referencyjna</refDate>
+  <temporalRef>Informacje o odniesieniu czasowym</temporalRef>
+  <constraintInfo>Ograniczenia dostępu</constraintInfo>
+  <xml_iso19139>Zapisz plik metadanych jako XML zgodny z ISO19139</xml_iso19139>
+</strings>
