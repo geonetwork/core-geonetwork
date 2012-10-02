@@ -35,6 +35,8 @@ GeoNetwork.app = function(){
 
     var searchForm;
 
+		var optionsForm;
+
     var resultsPanel;
 
     var metadataResultsView;
@@ -159,7 +161,7 @@ GeoNetwork.app = function(){
             id: "resultsMap",
             height: 125,
             width: 250,
-            map: map,
+            map: map
         });
   
         return mapPanel;
@@ -341,10 +343,9 @@ GeoNetwork.app = function(){
 
         var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
-        return new GeoNetwork.SearchFormPanel({
+        return new Ext.FormPanel({
             id: 'searchForm',
             stateId: 's',
-            id: 'searchForm',
             bodyStyle: 'text-align: center;',
             border: false,
             //autoShow : true,
@@ -477,6 +478,13 @@ GeoNetwork.app = function(){
                             defaultType: 'datefield',
                             layout:'form',
                             items:GeoNetwork.util.SearchFormTools.getWhen()
+                        },
+												// Options panel
+                        {
+                            title:OpenLayers.i18n('Options'),
+                            margins:'0 5 0 5',
+                            layout: 'form',
+                            items: optionsForm
                         },
                         // INSPIRE panel
                         {
@@ -746,6 +754,32 @@ GeoNetwork.app = function(){
         }
     }
 
+		
+		function createOptionsForm() {
+			var hitsPerPage = [['10'], ['20'], ['50'], ['100']], items = [];
+
+			items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+
+			items.push(new Ext.form.ComboBox({
+            id: 'E_hitsperpage',
+            name: 'E_hitsperpage',
+            mode: 'local',
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('hitsPerPage'),
+            value: hitsPerPage[1], // Set arbitrarily the second value of the
+            // array as the default one.
+            store: new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id'],
+                data: hitsPerPage
+            }),
+            valueField: 'id',
+            displayField: 'id'
+        }));
+
+			return items;
+		}
+
     function createHeader(){
         var info = catalogue.getInfo();
         Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/banner_logo.png" title="'  + info.name + '"/>';
@@ -755,7 +789,7 @@ GeoNetwork.app = function(){
     // public space:
     return {
         init: function(){
-            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/tabsearch.*/, '')[1];
+            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
             var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
@@ -791,6 +825,9 @@ GeoNetwork.app = function(){
             });
 
             createHeader();
+
+						// Options Panel
+						optionsForm = createOptionsForm();
 
             // Search form
             searchForm = createSearchForm();
@@ -863,9 +900,7 @@ GeoNetwork.app = function(){
                                 },{
                                         columnWidth: .90,
                                         border: false,
-                                        items: [
-                                                    searchForm,
-                                ]
+                                        items: [ searchForm ]
                                     },{
                                         border: false,
                                         columnWidth: .05, 
@@ -1130,7 +1165,7 @@ Ext.onReady(function () {
 
     //overwrite default detail-click action
     catalogue.metadataShow = function (uuid) {
-        console.log(uuid);
+        //console.log(uuid);
         tabPanel = Ext.getCmp("GNtabs");
         var tabs = tabPanel.find( 'id', uuid );
         if (tabs[0])
@@ -1138,7 +1173,7 @@ Ext.onReady(function () {
         else {
             // Retrieve information in synchrone mode    todo: this doesn't work here
             var store = GeoNetwork.data.MetadataResultsFastStore();
-            catalogue.kvpSearch("fast=index", null, null, null, true, store, null, false);
+            catalogue.kvpSearch("fast=index&uuid="+uuid, null, null, null, true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
 
             var RowTitle = uuid;
@@ -1196,7 +1231,7 @@ function setTab(id){
     tabPanel = Ext.getCmp("GNtabs");
     var tabs = tabPanel.find( 'id', id );
     if (tabs[0]) tabPanel.setActiveTab( tabs[ 0 ] );
-    else console.log(id);
+    //else console.log(id);
 }
 
     
