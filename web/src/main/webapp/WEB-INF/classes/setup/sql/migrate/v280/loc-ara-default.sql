@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('ara','العربية', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='ara' WHERE langid='ar';
+UPDATE IsoLanguagesDes           SET langid='ara' WHERE langid='ar';
+UPDATE RegionsDes                SET langid='ara' WHERE langid='ar';
+UPDATE GroupsDes                 SET langid='ara' WHERE langid='ar';
+UPDATE OperationsDes             SET langid='ara' WHERE langid='ar';
+UPDATE StatusValuesDes           SET langid='ara' WHERE langid='ar';
+UPDATE CswServerCapabilitiesInfo SET langid='ara' WHERE langid='ar';
+DELETE FROM Languages WHERE id='ar';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (41, 'ara', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (42, 'ara', 'abstract', '');

@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('tur','Turkish', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='tur' WHERE langid='tr';
+UPDATE IsoLanguagesDes           SET langid='tur' WHERE langid='tr';
+UPDATE RegionsDes                SET langid='tur' WHERE langid='tr';
+UPDATE GroupsDes                 SET langid='tur' WHERE langid='tr';
+UPDATE OperationsDes             SET langid='tur' WHERE langid='tr';
+UPDATE StatusValuesDes           SET langid='tur' WHERE langid='tr';
+UPDATE CswServerCapabilitiesInfo SET langid='tur' WHERE langid='tr';
+DELETE FROM Languages WHERE id='tr';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (57, 'tur', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (58, 'tur', 'abstract', '');

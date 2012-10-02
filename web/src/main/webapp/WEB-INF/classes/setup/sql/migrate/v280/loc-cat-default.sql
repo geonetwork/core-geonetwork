@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('cat','Català', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='cat' WHERE langid='ca';
+UPDATE IsoLanguagesDes           SET langid='cat' WHERE langid='ca';
+UPDATE RegionsDes                SET langid='cat' WHERE langid='ca';
+UPDATE GroupsDes                 SET langid='cat' WHERE langid='ca';
+UPDATE OperationsDes             SET langid='cat' WHERE langid='ca';
+UPDATE StatusValuesDes           SET langid='cat' WHERE langid='ca';
+UPDATE CswServerCapabilitiesInfo SET langid='cat' WHERE langid='ca';
+DELETE FROM Languages WHERE id='ca';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (53, 'cat', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (54, 'cat', 'abstract', '');

@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('ita','Italiano', 'y', 'n');
+
+UPDATE CategoriesDes             SET langid='ita' WHERE langid='it';
+UPDATE IsoLanguagesDes           SET langid='ita' WHERE langid='it';
+UPDATE RegionsDes                SET langid='ita' WHERE langid='it';
+UPDATE GroupsDes                 SET langid='ita' WHERE langid='it';
+UPDATE OperationsDes             SET langid='ita' WHERE langid='it';
+UPDATE StatusValuesDes           SET langid='ita' WHERE langid='it';
+UPDATE CswServerCapabilitiesInfo SET langid='ita' WHERE langid='it';
+DELETE FROM Languages WHERE id='it';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (49, 'ita', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (50, 'ita', 'abstract', '');
