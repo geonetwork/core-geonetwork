@@ -251,16 +251,6 @@ GeoNetwork.app = function(){
         });
 
 
-        var when = new Ext.form.FieldSet({
-            title: OpenLayers.i18n('when'),
-            autoWidth: true,
-            //layout: 'row',
-            defaultType: 'datefield',
-            collapsible: true,
-            collapsed: true,
-            items: GeoNetwork.util.SearchFormTools.getWhen()
-        });
-
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -283,25 +273,6 @@ GeoNetwork.app = function(){
             spatialTypes, denominatorField,
             catalogueField, groupField,
             metadataTypeField, validField, ownerField, isHarvestedField);
-        var adv = {
-            xtype: 'fieldset',
-            title: OpenLayers.i18n('advancedSearchOptions'),
-            autoHeight: true,
-            autoWidth: true,
-            collapsible: true,
-            collapsed: (urlParameters.advanced?false:true),
-            defaultType: 'checkbox',
-            defaults: {
-                width: 160
-            },
-            items: advancedCriteria
-        };
-        var formItems = [];
-        formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services,
-            GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true,
-            GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-            adv);
-        // Add advanced mode criteria to simple form - end
 
 
         // Hide or show extra fields after login event
@@ -322,30 +293,13 @@ GeoNetwork.app = function(){
             });
             GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
-        var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
-        var hitsPerPageField = new Ext.form.ComboBox({
-            id: 'E_hitsperpage',
-            name: 'E_hitsperpage',
-            mode: 'local',
-            triggerAction: 'all',
-            fieldLabel: OpenLayers.i18n('hitsPerPage'),
-            value: hitsPerPage[1], // Set arbitrarily the second value of the
-            // array as the default one.
-            store: new Ext.data.ArrayStore({
-                id: 0,
-                fields: ['id'],
-                data: hitsPerPage
-            }),
-            valueField: 'id',
-            displayField: 'id'
-        });
 
 
         var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
         return new Ext.FormPanel({
             id: 'searchForm',
-            stateId: 's',
+            //stateId: 's',
             bodyStyle: 'text-align: center;',
             border: false,
             //autoShow : true,
@@ -416,7 +370,6 @@ GeoNetwork.app = function(){
                        })
                     ]
                 },
-
                 // Panel with Advanced search, Help and About Links
                 {
                     layout: {
@@ -448,6 +401,7 @@ GeoNetwork.app = function(){
                     plain:true,
                     autoHeight:true,
                     border:false,
+										autoScroll:true,
                     deferredRender: false,
                     defaults:{bodyStyle:'padding:10px'},
                     items:[
@@ -471,26 +425,20 @@ GeoNetwork.app = function(){
                                 //,new GeoExt.ux.GeoNamesSearchCombo({ map: Ext.getCmp('geometryMap').map, zoom: 12})
                             ]
                         },
-                        // When panel
+                        // When & Options panel
                         {
-                            title:OpenLayers.i18n('When'),
+                            title:OpenLayers.i18n('When')+' & '+OpenLayers.i18n('Options'),
                             margins:'0 5 0 5',
                             defaultType: 'datefield',
                             layout:'form',
-                            items:GeoNetwork.util.SearchFormTools.getWhen()
-                        },
-												// Options panel
-                        {
-                            title:OpenLayers.i18n('Options'),
-                            margins:'0 5 0 5',
-                            layout: 'form',
-                            items: optionsForm
+                            items: [ GeoNetwork.util.SearchFormTools.getWhen(), {xtype: 'box', autoEl: 'div', height:20}, optionsForm 
+														]
                         },
                         // INSPIRE panel
                         {
                             title:'INSPIRE',
                             margins:'0 5 0 5',
-                            hidden: hideInspirePanel,
+                            //hidden: hideInspirePanel,
                             defaultType: 'datefield',
                             layout:'form',
                             items: GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
