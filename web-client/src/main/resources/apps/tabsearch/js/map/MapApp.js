@@ -1074,7 +1074,7 @@ GeoNetwork.mapApp = function() {
         createToolbars();         
         createTree();
         createLegendPanel();
-        //createPrintPanel();
+        createPrintPanel();
         
         var mapOverlay = createMapOverlay();
        
@@ -1085,7 +1085,7 @@ GeoNetwork.mapApp = function() {
             layout: 'accordion',
             deferredRender:false, 
             items: [
-                tree //, printPanel
+                tree , printPanel
             ]
         });
        
