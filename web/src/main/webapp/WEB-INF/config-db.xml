@@ -61,7 +61,6 @@
     <version id="280">
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-db-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
-      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-ara-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-eng-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-fre-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-ger-"/>
