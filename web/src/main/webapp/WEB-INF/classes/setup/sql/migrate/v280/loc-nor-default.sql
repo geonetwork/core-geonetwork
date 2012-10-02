@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('nor','Norsk', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='nor' WHERE langid='no';
+UPDATE IsoLanguagesDes           SET langid='nor' WHERE langid='no';
+UPDATE RegionsDes                SET langid='nor' WHERE langid='no';
+UPDATE GroupsDes                 SET langid='nor' WHERE langid='no';
+UPDATE OperationsDes             SET langid='nor' WHERE langid='no';
+UPDATE StatusValuesDes           SET langid='nor' WHERE langid='no';
+UPDATE CswServerCapabilitiesInfo SET langid='nor' WHERE langid='no';
+DELETE FROM Languages WHERE id='no';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes VALUES (1,'nor','Kart og grafikk');
 INSERT INTO CategoriesDes VALUES (2,'nor','Datasett');

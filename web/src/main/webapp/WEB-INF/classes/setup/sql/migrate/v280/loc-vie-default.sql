@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('vie','Tiếng Việt', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='vie' WHERE langid='vi';
+UPDATE IsoLanguagesDes           SET langid='vie' WHERE langid='vi';
+UPDATE RegionsDes                SET langid='vie' WHERE langid='vi';
+UPDATE GroupsDes                 SET langid='vie' WHERE langid='vi';
+UPDATE OperationsDes             SET langid='vie' WHERE langid='vi';
+UPDATE StatusValuesDes           SET langid='vie' WHERE langid='vi';
+UPDATE CswServerCapabilitiesInfo SET langid='vie' WHERE langid='vi';
+DELETE FROM Languages WHERE id='vi';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CswServerCapabilitiesInfo VALUES (45, 'vie', 'title', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (46, 'vie', 'abstract', '');
