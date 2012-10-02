@@ -105,7 +105,7 @@ public class UpdateElement implements Service {
 			    .setCoordWest(west);
 		}
 
-		thesaurus.updateElement(bean, true);
+		thesaurus.updateElement(bean, false);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));
