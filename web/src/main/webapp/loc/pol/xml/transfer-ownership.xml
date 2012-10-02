@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<sourceUser>Edytor źródłowy</sourceUser>
+	<targetUser>Edytor docelowy</targetUser>
+	<sourceGroup>Grupa źródłowa</sourceGroup>
+	<targetGroup>Grupa docelowa</targetGroup>
+	<operation>OLperacja</operation>
+	
+	<cannotRetrieve>Nie można pozyskać informacji z serwera</cannotRetrieve>
+	<cannotTransfer>Nie można przetransferować własności</cannotTransfer>
+	<noUser>Nie określono docelowego edytora</noUser>
+	<transfer>Transfer</transfer>
+	<result>Przetransferowane {PRIV} uprawnienia {MD} metadanych</result>
+	<noEditors>Nie określono edytora dla metadanych</noEditors>
+</strings>
+

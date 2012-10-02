@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Nieodnalezione rekordy metadanych</notfound>
+	<notowner>Rekordy metadanych, dla których nie zaktualizowano stasu, ponieważ nie jesteś ich właścicielem</notowner>
+	<updated>Rekordy metadanych, dla których zaktualizowano status</updated>
+	<resultstitle>Wynik aktualizacji statusu metadanych</resultstitle>
+</strings>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <M500>[Język] - Język metadanych jest nie zdefiniowany i inny język jest zadeklarowany - nie wolno zdefiniować języka głównego metadanych w sekcji innego języka.</M500>
+    <alert.M500>
+        <div>Sprawdź czy język główny metadanych nie jest zdefiniowany w innych językach(w gmd:locale). <br/>
+            <span class="validationReportSuggestion">Sugestie: Zdefiniuj język główny metadanych lub usuń definicje innych języków.</span></div>
+    </alert.M500>
+    <report.M500>Język główny metadanych:</report.M500>
+    <alert.M501>
+        <div>Zadeklaruj język główny metadanych tylko raz (zobacz Widok zaawansowany / Sekcja metadanych). <br/>
+            <span class="validationReportSuggestion">Sugestie: usuń go z sekcji innych języków.</span></div>
+    </alert.M501>
+    <report.M501>Nie znaleziono zduplikowanych języków.</report.M501>
+</strings>

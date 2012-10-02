@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Nie znaleziono rekordu metadanych</notfound>
+	<notowner>Rekord metadanych, które nie zostały przetworzone, ponieważ nie jesteś właścicielem</notowner>
+	<updated>Przetworzone rekordy metadanych</updated>
+    <notProcessFound>Nie znaleziono procesu metadanych dla tego schematu</notProcessFound>
+</strings>
