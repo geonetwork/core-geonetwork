@@ -504,7 +504,13 @@ GeoNetwork.lang.en = {
     'when': "when",
     'Searchforspatialdataon': "Search for spatial data on",
     'Advanced': "Advanced",
-    'List': "List"
+    'List': "List",
+    'xsd': 'ISO schema',
+    'rules': 'rules',
+    'rule': 'rule',
+    'schematron-rules-geonetwork': 'GeoNetwork validation',
+    'schematron-rules-iso': 'ISO validation',
+    'schematron-rules-inspire': 'INSPIRE validation'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);

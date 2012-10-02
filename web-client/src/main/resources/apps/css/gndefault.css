@@ -480,3 +480,6 @@ dl.xml * dd {
 .label-success, .badge-success {
     background-color: #468847;
 }
+.validation * h2, .validation * div {
+    white-space: normal !important;
+}
