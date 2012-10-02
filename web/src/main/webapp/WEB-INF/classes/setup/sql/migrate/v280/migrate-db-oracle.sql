@@ -90,10 +90,10 @@ CREATE TABLE Thesaurus (
     primary key(id)
   );
 
-ALTER TABLE Users modify username varchar2(256);
+ALTER TABLE Users MODIFY username varchar2(256);
 
-ALTER TABLE Metadata modify createDate varchar2(30);
-ALTER TABLE Metadata modify changeDate varchar2(30);
+ALTER TABLE Metadata MODIFY createDate varchar2(30);
+ALTER TABLE Metadata MODIFY changeDate varchar2(30);
 ALTER TABLE Metadata ADD doctype varchar2(255);
 
 DROP TABLE IndexLanguages;
@@ -101,3 +101,8 @@ DROP TABLE IndexLanguages;
 ALTER TABLE Languages DROP COLUMN isocode;
 
 ALTER TABLE IsoLanguages ADD shortcode varchar2(2);
+
+ALTER TABLE Categories MODIFY (name varchar2(255));
+ALTER TABLE CategoriesDes MODIFY (label varchar2(255));
+ALTER TABLE Settings MODIFY (name varchar2(64));
+
