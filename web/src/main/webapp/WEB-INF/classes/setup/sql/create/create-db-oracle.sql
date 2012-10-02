@@ -398,7 +398,7 @@ REM ======================================================================
 
 CREATE TABLE Thesaurus
   (
-    id   varchar2(250),
+    id   varchar2(250) not null,
     activated    varchar2(1),
     primary key(id)
   );
