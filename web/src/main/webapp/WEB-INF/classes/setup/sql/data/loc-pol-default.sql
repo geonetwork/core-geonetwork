@@ -1,10 +1,10 @@
 INSERT INTO Languages VALUES ('pol','Polski', 'n', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CswServerCapabilitiesInfo VALUES (1, 'pol', 'tytuł', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (2, 'pol', 'streszczenie', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (3, 'pol', 'opłaty', '');
-INSERT INTO CswServerCapabilitiesInfo VALUES (4, 'pol', 'ograniczenia dostępu', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (61, 'pol', 'tytuł', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (62, 'pol', 'streszczenie', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (63, 'pol', 'opłaty', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES (64, 'pol', 'ograniczenia dostępu', '');
 
 INSERT INTO CategoriesDes VALUES (1,'pol','Mapy i grafika');
 INSERT INTO CategoriesDes VALUES (2,'pol','Zbiory danych');
