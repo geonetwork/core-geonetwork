@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('chi','??', 'n', 'n');
+
+UPDATE CategoriesDes             SET langid='chi' WHERE langid='cn';
+UPDATE IsoLanguagesDes           SET langid='chi' WHERE langid='cn';
+UPDATE RegionsDes                SET langid='chi' WHERE langid='cn';
+UPDATE GroupsDes                 SET langid='chi' WHERE langid='cn';
+UPDATE OperationsDes             SET langid='chi' WHERE langid='cn';
+UPDATE StatusValuesDes           SET langid='chi' WHERE langid='cn';
+UPDATE CswServerCapabilitiesInfo SET langid='chi' WHERE langid='cn';
+DELETE FROM Languages WHERE id='cn';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes VALUES (11,'chi','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'chi','Registers');

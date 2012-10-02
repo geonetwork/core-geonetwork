@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.namespace('GeoNetwork1', 'GeoNetwork.lang');
+Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
 
 GeoNetwork.lang.ca={
     'previousPage': 'Tornar a la pàgina anterior',

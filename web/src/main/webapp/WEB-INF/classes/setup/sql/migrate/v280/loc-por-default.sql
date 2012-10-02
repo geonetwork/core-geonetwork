@@ -1,3 +1,15 @@
+-- ISO 3 letter code migration
+INSERT INTO Languages VALUES ('por','Português', 'y', 'n');
+
+UPDATE CategoriesDes             SET langid='por' WHERE langid='pt';
+UPDATE IsoLanguagesDes           SET langid='por' WHERE langid='pt';
+UPDATE RegionsDes                SET langid='por' WHERE langid='pt';
+UPDATE GroupsDes                 SET langid='por' WHERE langid='pt';
+UPDATE OperationsDes             SET langid='por' WHERE langid='pt';
+UPDATE StatusValuesDes           SET langid='por' WHERE langid='pt';
+UPDATE CswServerCapabilitiesInfo SET langid='por' WHERE langid='pt';
+DELETE FROM Languages WHERE id='pt';
+
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes VALUES (11,'por','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'por','Registers');

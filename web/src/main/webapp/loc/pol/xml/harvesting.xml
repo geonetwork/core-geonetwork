@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<select>Wybierz</select>
+	<name>Nazwa</name>
+	<directoryname>Katalog</directoryname>
+	<type>Typ</type>
+	<status>Status</status>
+	<errors>Błędy</errors>
+	<every>Cyklicznie</every>
+	<lastRun>Ostatnie uruchomienie</lastRun>
+	<operation>Operacja</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>Gałąź  GeoNetwork v2.1</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>Gałąź GeoNetwork v2.0</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV server</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/ISO 2.0</short>
+		<long>Catalogue Services for the Web ISO Profile 2.0</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Z3950 Zdalne wyszukiwanie</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>Metadane dla OAI Protocol Harvesting 2.0</long>
+	</info>
+	
+	<info type="ogcwxs">
+		<short>OGC WxS</short>
+		<long>OGC Web services (ie. WMS, WFS, WCS, WPS, CSW)</long>
+	</info>
+
+	<info type="arcsde">
+		<short>ArcSDE</short>
+		<long>Serwer ArcSDE</long>
+	</info>
+
+	<info type="thredds">
+		<short>Thredds</short>
+		<long>Katalog Thredds</long>
+	</info>
+	
+	<info type="wfsfeatures">
+		<short>WFS Features</short>
+		<long>Odpowiedź na OGC WFS GetFeature</long>
+	</info>
+	
+	<info type="metadatafragments">
+		<short>WFS Fragments</short>
+		<long>Fragmenty metadanych OGC WFS</long>
+	</info>
+
+	<info type="filesystem">
+		<short>Katalog lokalny</short>
+		<long>Harvesting z lokalnego katalogu</long>
+	</info>	
+
+	<info type="z3950Config">
+		<short>Konfiguracja harvestingu dla serwera Z3950</short>
+		<long>Konfiguracja harvestingu dla serwera Z3950</long>
+	</info>
+
+    <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+
+<category>Kategoria</category>
+	<clearConfig>Wyczyść konfiguracje serwera Z3950</clearConfig>
+
+	<wxstype>Type of OGC webservice</wxstype>
+	<wxstypes>
+		<type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
+		<type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
+		<type value="WMS1.3.0">OGC Web Map Service (WMS) Version 1.3.0</type>
+		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
+		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
+		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
+        <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
+        <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
+		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
+	</wxstypes>
+	
+	<wxslang>metadane - język</wxslang>
+	<wxsImp>Typ importu</wxsImp>
+	<wxsOutputSchema>Schemat docelowy</wxsOutputSchema>
+	<wxs119Only>Domyślnie GetCapabilities harvester utworzy<br/> tylko metadane dla serwisów ISO19119.</wxs119Only>
+	<wxs139>Utwórz metadane dla elementów warstw przy użyciu GetCapabilities.</wxs139>
+	<wxs139Layer>Utwórz metadane dla elementów warstw przy użyciu MetadataURL (jeśli istnieje, jeśli nie - użyj GetCapabilities).</wxs139Layer>
+	<createThumbnails>Utwórz miniaturki (thumbnails) dla warstw WMS.</createThumbnails>
+	
+	<serviceCategory>Kategorie dla serwisów</serviceCategory>
+	<datasetCategory>Kategorie dla zbiorów danych</datasetCategory>
+	
+    <returnedSets>OAI provider sets</returnedSets>
+	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
+	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
+    
+	<host>Host</host>
+	<port>Port</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Użyj konta</useAccount>
+	<username>Nazwa</username>
+	<password>Hasło</password>
+	
+<createRemoteCategory>Ustaw kategorie, jeśli istnieje lokalnie</createRemoteCategory>
+  <mefFormatFull>Użyj pełnego formatu MEF</mefFormatFull>
+  <xslfilter>Nazwa filtru XSL</xslfilter>
+	<search>Kryteria wyszukiwania</search>
+	<siteName>Nazwa strony</siteName>
+	
+	<freeText>Dowolny tekst</freeText>
+	<title>Tytuł</title>
+	<abstract>Streszczenie</abstract>
+	<keywords>Słowa kluczowe</keywords>
+	<minscale>Min scale denominator</minscale>
+	<maxscale>Max scale denominator</maxscale>
+	<subject>Temat</subject>
+	<digital>Cyfrowy</digital>
+	<hardcopy>Kopia tradycyjna</hardcopy>
+	<siteId>ID strony</siteId>
+
+	<retrieve>Pobierz</retrieve>
+	<warn>Pobierać można dopiero po wypełnieniu sekcji "strony"</warn>
+	
+	<content>Zawartość pobrana</content>
+	<importxslt>Zastosuj ten XSLT do pobranych rekordów</importxslt>
+
+	<at>Run at</at>
+    <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
+    <interval>Will run again every</interval>
+    <hourintervals>
+        <hour label="Each hour">1</hour>
+        <hour label="3 hours">3</hour>
+        <hour label="6 hours">6</hour>
+        <hour label="12 hours">12</hour>
+        <hour label="N/A">undefined</hour>
+    </hourintervals>
+    
+    <dayofweek>
+        <day label="Monday">MON</day>
+        <day label="Tuesday">TUE</day>
+        <day label="Wednesday">WED</day>
+        <day label="Thursday">THU</day>
+        <day label="Friday">FRI</day>
+        <day label="Saturday">SAT</day>
+        <day label="Sunday">SUN</day>
+    </dayofweek>
+    <hours>
+        <hour label="0">0</hour>
+        <hour label="1">1</hour>
+        <hour label="2">2</hour>
+        <hour label="3">3</hour>
+        <hour label="4">4</hour>
+        <hour label="5">5</hour>
+        <hour label="6">6</hour>
+        <hour label="7">7</hour>
+        <hour label="8">8</hour>
+        <hour label="9">9</hour>
+        <hour label="10">10</hour>
+        <hour label="11">11</hour>
+        <hour label="12">12</hour>
+        <hour label="13">13</hour>
+        <hour label="14">14</hour>
+        <hour label="15">15</hour>
+        <hour label="16">16</hour>
+        <hour label="17">17</hour>
+        <hour label="18">18</hour>
+        <hour label="19">19</hour>
+        <hour label="20">20</hour>
+        <hour label="21">21</hour>
+        <hour label="22">22</hour>
+        <hour label="23">23</hour>
+    </hours>
+    <minutes>
+        <minute label="00">0</minute>
+        <minute label="15">15</minute>
+        <minute label="30">30</minute>
+        <minute label="45">45</minute>
+    </minutes>
+
+
+	<options>Opcje</options>
+	<everySpec>(dni : godziny : minuty)</everySpec>
+	<oneRun>Tylko jeden przebieg</oneRun>
+	<createGroups>Twórz grupy</createGroups>
+	<createCateg>Twórz kategorie</createCateg>
+	<active>Aktywne</active>
+	<inactive>Nieaktywne</inactive>
+	<retrieveSources>Pobierz źródła</retrieveSources>
+	<retrieveGroups>Pobierz grupy</retrieveGroups>
+	<retrieveInfo>Pobierz info</retrieveInfo>
+	<source>Źródło</source>
+	<criteria>Kryteria</criteria>
+	<validate>Waliduj</validate>
+	<recurse>Rekursywnie</recurse>
+	<nodelete>Zachowaj lokalnie jeśli usunięto źródło</nodelete>
+	<server>Serwer</server>	
+	<database>Baza danych</database>	
+	<privileges>Uprawnienia</privileges>
+	<categories>Kategorie</categories>
+	<url>URL</url>
+	<capabUrl>Service URL</capabUrl>
+	<icon>Ikona</icon>
+	<group>Grupa</group>
+	<groups>Grupy</groups>
+	<remoteGroup>Zdalne group</remoteGroup>
+	<copyPolicy>Kopiuj politykę</copyPolicy>
+	<allGroup>Grupuj 'Wszystko'</allGroup>
+	
+	<policy>
+		<copy>Kopiuj</copy>
+		<createAndCopy>Utwórz i Kopiuj</createAndCopy>
+		<copyToIntranet>Kopiuj do grupy Intranet</copyToIntranet>
+		<dontCopy>Nie kopiuj</dontCopy>
+	</policy>
+	
+	<from>Z</from>
+	<until>Dopóki</until>
+	<set>Ustaw</set>
+	<prefix>Prefix</prefix>
+	<stylesheet>Stylesheet</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Dodaj</add>
+	<edit>Edytuj</edit>
+	<save>Zapisz</save>
+	<activate>Aktywuj</activate>
+	<deactivate>Deaktywuj</deactivate>
+	<run>Uruchom</run>
+	<remove>Usuń</remove>
+	<refresh>Odśwież</refresh>
+	<history>Historia</history>
+	<clone>Klonuj</clone>
+	
+	<days>dni</days>
+	<hours>godziny</hours>
+	<mins>minuty</mins>
+	
+	<threddslang>Metadane - język</threddslang>
+	<threddsCreateDIFMd>Pobierz metadane DIF i utwórz metadane ISO</threddsCreateDIFMd>
+	<threddsCreateFragments>Dostosuj generowanie metadanych wg "fragmentów"</threddsCreateFragments>
+	<threddsFragmentStylesheet>Stylesheet do stworzenia "fragmentów" metadanych</threddsFragmentStylesheet>
+    <threddsCreateSubtemplates>Twórz podszablony dla fragmentów i połącz z schematem przez XLink</threddsCreateSubtemplates>
+	<threddsIgnoreHarvest>Ignoruj atrybut harvestingu</threddsIgnoreHarvest>
+	<threddsOutputSchema>Wskaż schemata dla wynikowych metadanych</threddsOutputSchema>
+	<threddsCreateThumbnails>Twórz miniaturki (thumbnails) dla dowolnych zbiorów dostarczonych przez WMS</threddsCreateThumbnails>
+	<threddsModifiedOnly>Harvestuj tylko nowe lub zmodyfikowane dane</threddsModifiedOnly>
+	<threddsServiceMd>Twórz metadane dla wszystkich serwisów w katalogu wg ISO19119.</threddsServiceMd>
+	<threddsCollectionDataset>Twórz metadane dla kolekcji zbiorów danych.</threddsCollectionDataset>
+	<threddsAtomicDataset>Twórz metadane dla atomowych rekordów</threddsAtomicDataset>
+	<threddsTemplate>Wybierz schemata do połączenia z fragmentami</threddsTemplate>
+	
+    <wfsFeaturesLang>Język metadanych</wfsFeaturesLang>
+	<wfsFeaturesQuery>OGC WFS GetFeature Query</wfsFeaturesQuery>
+	<wfsFeaturesStylesheet>Stylesheet do stworzenia "fragmentów" metadanych</wfsFeaturesStylesheet>
+	<wfsFeaturesLargeResponse>Zapisz długie odpowiedzi na dysku</wfsFeaturesLargeResponse>
+	<wfsFeaturesCreateSubtemplates>Twórz podszablony</wfsFeaturesCreateSubtemplates>
+	<wfsFeaturesTemplate>Wybierz schemata do połączenia z fragmentami</wfsFeaturesTemplate>
+	<wfsFeaturesSubtemplateCategory>Kategoria dla podszablonów</wfsFeaturesSubtemplateCategory>
+	<wfsFeaturesRecordCategory>Kategoria wynikowych metadanych</wfsFeaturesRecordCategory>
+	<wfsFeaturesOutputSchema>Schemat wynikowych metadanych</wfsFeaturesOutputSchema>
+
+	<z3950repositories>Serwer(y) Z3950</z3950repositories>
+	<z3950query>Zapytanie Z3950</z3950query>
+	
+	<cataUrl>URL Katalogu</cataUrl>
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Pole '{NAME}' nie może być puste</cannotBeEmpty>
+			<invalidMinSize>Pole '{NAME}' musi mieć min. {VALUE} znaków</invalidMinSize>
+			<invalidMaxSize>Pole '{NAME}' może mieć max. {VALUE} znaków</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Pole '{NAME}' must be an integer</notInt>
+			<invalidMinValue>Pole '{NAME}' musi być &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Pole '{NAME}' musi być  &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Pole '{NAME}' musi być alphanumeryczne (zaczynające się od litery)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Pole '{NAME}' nie jest poprawną nazwą host-a</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Pole '{NAME}' nie jest poprawną wartością URL</notURL>
+		</url>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<pleaseSelect>Proszę wybrać min. jedną wartość</pleaseSelect>
+	<pleaseSelectGroup>Proszę select min. jedną grupę</pleaseSelectGroup>
+	<cannotAdd>Nie powiodło się wprowadzenie nowej wartości</cannotAdd>
+	<cannotGet>Nie powiodło się pobranie nowych wartości</cannotGet>
+	<cannotRemove>Nie powiodło się usunięcie wybranych wartości</cannotRemove>
+	<cannotStart>Nie powiodło się aktywowanie  wybranych wartości</cannotStart>
+	<cannotStop>Nie powiodło się deaktywowanie  wybranych wartości</cannotStop>
+	<cannotRun>Nie powiodło się uruchomienie wybranych wartości</cannotRun>
+	<confirmRemove>Usunąć wybrane wartości ? Węzły i pobrane metadane zostaną usunięte!</confirmRemove>
+	<everyZero>Okres harvesting-u nie może być 0:0:0</everyZero>
+	<pleaseRetrieve>Proszę pobrać najpierw jakieś strony</pleaseRetrieve>
+	<cannotRetrieve>Nie powiodło się pobranie informacji</cannotRetrieve>
+	<cannotUpdate>Nie powiodło się odświeżenie informacji na serwerze</cannotUpdate>
+	<supplyHost>Proszę podać parametr 'host'</supplyHost>
+	<supplyServlet>Proszę podać parametr 'servlet'</supplyServlet>
+	<pleaseSpecifySiteId>Proszę podać ID strony</pleaseSpecifySiteId>
+	<cannotQueryOai>Nie powiodło się odpytanie OAI-PMH server-a</cannotQueryOai>
+	<gn20Unsafe>Proszę zwrócić uwagę, że harvesting "starych" węzłów GeoNetwork nie jest bezpieczne. 
+ 					Stare węzły nie mają unikalnych id strony, co może powodować nieprzewidywalne rezultaty (np. usunięcie węzłów z innych harvestingów).</gn20Unsafe>
+	<supplyUrl>Proszę podać parametr 'url'</supplyUrl>
+	<oper>
+		<op id="0">Pokaż</op>
+		<op id="1">Download</op>
+		<op id="2">Edytuj</op>
+		<op id="3">Powiadom</op>
+		<op id="4">Admin</op>
+		<op id="5">Interaktywna mapa</op>
+		<op id="6">Featured</op>
+	</oper>
+	
+	<!-- history messages -->
+  <harvesterHistory>Historia harvestowania</harvesterHistory>
+  <noHistory>Brak historii</noHistory>
+  <dateDesc>Data (najpierw najnowsze)</dateDesc>
+  <date>Data</date>
+  <detail>Szczegóły</detail>
+  <grandTotal>Suma całkowita</grandTotal>
+  <counter>z</counter>
+  <totalHistory>Wszystkiee rekordy historii:</totalHistory>
+  <viewAll>Pokaż wszystkie</viewAll>
+  <deleteHistory>Usuń historie</deleteHistory>
+  <harvestedNothing>Nic nie pobrano</harvestedNothing>
+  <sortBy>Sortuj wg:</sortBy>
+  <ok>Sukces</ok>
+  <deleted>Usunięte</deleted>
+  <historyDeleted>Usunięte rekordy harvestingu:</historyDeleted>
+  <historyDeletedTitle>Wynik usunięcia rekordu harvestingu</historyDeletedTitle>
+	<historyDeleteConfirm>Usunąć wskazane rekordy z historii?</historyDeleteConfirm>
+  <backToHarvestManager>Powrót do managera harvestingu</backToHarvestManager>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Nieaktywny</inactive>
+		<active>Aktywny</active>
+		<running>Uruchomiony</running>
+	</statusTip>
+	
+	<tipHeader>
+		<total>Total</total>
+		<added>Added</added>
+		<removed>Removed</removed>
+		<updated>Updated</updated>
+		<unchanged>Unchanged</unchanged>
+		<unknownSchema>Unknown schema</unknownSchema>
+		<unretrievable>Unretrievable</unretrievable>
+		<badFormat>Bad XML format</badFormat>
+		<doesNotValidate>Does not validate</doesNotValidate>
+		<datasetAdded>Datasets</datasetAdded>
+		<datasetExist>Existing datasets</datasetExist>
+		<datasetMdUrl>Metadata Url used</datasetMdUrl>
+		<thumbnails>Thumbnails</thumbnails>
+		<thumbnailsFailed>Thumbnails failed</thumbnailsFailed>
+		<serviceRecords>Services Added</serviceRecords>
+		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
+		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>
+        <fragmentsAdded>Fragments Added</fragmentsAdded>
+        <subtemplatesAdded>Subtemplates Added</subtemplatesAdded>
+        <fragmentsRemoved>Fragments Removed</fragmentsRemoved>
+        <subtemplatesRemoved>Subtemplates Removed</subtemplatesRemoved>
+		<fragmentsUnknownSchema>Fragments w/Unknown Schema</fragmentsUnknownSchema>
+		<fragmentsReturned>Fragments Returned</fragmentsReturned>
+		<fragmentsMatched>Fragments Matched</fragmentsMatched>
+		<recordsBuilt>Records Built</recordsBuilt>
+		<incompatible>Niekompatybilne</incompatible>
+		<couldNotInsert>Nie udało się wstawić</couldNotInsert>
+    <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
+		<recordsUpdated>Records Updated</recordsUpdated>
+	</tipHeader>
+	
+	<notRun>Czekaj nie pierwszy przebieg</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Naza identyfikująca węzeł harvesting-u
+		</tip>
+		
+		<tip id="gn.host">
+			Host
+		</tip>
+		
+		<tip id="gn.xslfilter">
+		Nazwa filtra XSL, który ma zostać zastosowany do harvestowanych metadanych. Filtr musi być
+		zarejestrowany w katalogu procesów przez administratora. Jeśli nie zostanie odnaleziony, 
+		żaden filtr nie zostanie zastosowany.
+		</tip>
+		<tip id="gn.retrieveSources">
+			Określ <i>host</i>, <i>port</i> , <i>servlet</i> i wciśnij ten przycisk aby pobrać źródła "znane" zdalnemu węzłowi.
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			Określ <i>host</i>, <i>port</i> , <i>servlet</i> i wciśnij ten przycisk aby pobrać grupy dostępne zdalnemu węzłowi.
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Dodaj wyszukiwanie na zdlanym węźle. Musisz określić przynajmniej jedno wyszukiwanie, aby pobrać metadane z węzła.
+		</tip>
+		
+		<tip id="gn.categories">
+			Możesz przypisać jedną lub więcej kategorii do pobranych metadanych. Użyj klawisza <b>&lt;CTRL&gt;</b> 
+			aby wybrać więcej kategorii.
+		</tip>
+		
+		<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+	
+		<tip id="z3950.repositories">
+			Wybierz jeden lub więcej z pokazancyh  serverów Z3950
+		</tip>
+		
+		<tip id="z3950.query">
+			Zapytanie musi mieć poprawną postać dla Z3950 np. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "woda"
+		</tip>
+	
+		<tip id="z3950.profile">
+			Wybierz profil (grupa) serverów Z3950
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			Podany adres URL musi wskazywać na dokument "capabilities" - format:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Dodaj jedno wyszukiwanie na serwerze. Musisz określić przynajmniej jedno wyszukiwanie, aby pobrać metadane z serwera.
+		</tip>
+		
+		<tip id="csw.groups">
+			Możesz wybrać uprawnienia przypisywane do pobranych metadanych.
+		</tip>
+		
+		<tip id="csw.addGroups">
+			Wybierz jedną lub więcej grup (użyj klawisza <b>&lt;CTRL&gt;</b>) w lewym panelu i wciśnij przycisk.
+		</tip>
+		
+		<tip id="csw.categories">
+			Możesz wybrać kategorie przypisywane do pobranych metadanych. Użyj klawisza <b>&lt;CTRL&gt;</b> 
+			aby wybrać więcej kategorii.
+		</tip>
+	
+		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="ogcwxs.wxstype">
+			Typ OGC web services.	
+		</tip>
+		
+		<tip id="ogcwxs.version">
+			Wersja OGC web services.	
+		</tip>
+		
+		<tip id="ogcwxs.lang">
+			Język wytworzonych metadanych.	
+		</tip>
+		
+		<tip id="ogcwxs.capabUrl">
+			Podany URL musi wskazywać wejście web serwisu (entry point) - format:<br/>
+			http://HOST/PATH			
+		</tip>
+		
+		
+		<tip id="ogcwxs.outputSchema">
+			Schemat do wykorzystania dla pobranych zbiorów metadanych
+		</tip>
+		
+		<tip id="ogcwxs.addSearch">
+			Dodaj jedno wyszukiwanie na serwerze. Musisz określić przynajmniej jedno wyszukiwanie, aby pobrać metadane z serwera..
+		</tip>
+		
+		<tip id="ogcwxs.groups">
+			Możesz wybrać uprawnienia przypisywane do pobranych metadanych.
+		</tip>
+		
+		<tip id="ogcwxs.addGroups">
+			Wybierz jedną lub więcej grup (użyj klawisza <b>&lt;CTRL&gt;</b>) w lewym panelu i wciśnij przycisk.
+		</tip>
+		
+		<tip id="ogcwxs.categories">
+			Możesz wybrać kategorie przypisywane do pobranych metadanych. Użyj klawisza <b>&lt;CTRL&gt;</b> 
+			aby wybrać więcej kategorii.
+		</tip>
+	
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			URL musi wskazywać OAI-PMH server
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Dodaj wyszukiwanie na serwerze. W innym wypadku wyszukiwanie nastąpi w oparciu o format 'oai_dc'
+		</tip>
+		
+		<tip id="oai.groups">
+			Możesz wybrać uprawnienia przypisywane do pobranych metadanych.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Wybierz jedną lub więcej grup (użyj klawisza <b>&lt;CTRL&gt;</b>) w lewym panelu i wciśnij przycisk.
+		</tip>
+		
+		<tip id="oai.categories">
+			Możesz wybrać kategorie przypisywane do pobranych metadanych. Użyj klawisza <b>&lt;CTRL&gt;</b> 
+			aby wybrać więcej kategorii.
+		</tip>
+	
+		<tip id="oai.validate">
+			Pobierz tylko metadane walidujące się ze swoim schematem.
+		</tip>
+		
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Usuń warunek wyszukiwania
+		</tip>
+		
+		<tip id="oai.from">
+			Opcjonalnie data "od".
+		</tip>
+		
+		<tip id="oai.from.set">
+			Otwórz okno ustawienia daty "od"
+		</tip>
+		
+		<tip id="oai.from.clear">
+			Wyczyść parametr "od"
+		</tip>
+		
+		<tip id="oai.until">
+			Opcjonalnie data "do".
+		</tip>
+		
+		<tip id="oai.until.set">
+			Otwórz okno ustawienia daty "do"
+		</tip>
+		
+		<tip id="oai.until.clear">
+			Wyczyść parametr "do"
+		</tip>
+	
+		<tip id="oai.set">
+			Możesz ograniczyć harvesting do specyficznych metadanych.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Wybierz format metadanych do harvesting-u.
+		</tip>
+	</tips>
+</strings>
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<help>
+	<title>O GeoNetwork opensource</title>
+	<content>
+		<p>Ten serwis WWW jest obsługiwany przez <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork opensource</a>.
+		</p>
+		<p>
+			<strong>GeoNetwork opensource</strong> jest zaestandaryzowanym i zdecentralizowanym środowiskiem zarządzania informacją przestrzenną, zaprojektowanym tak, aby zapewnić dostęp do metadanych dla geo-referowanych baz danych, materiałów kartograficznych.
+		</p>
+		<p>
+			<b><span lang="PL-PL">GeoNetwork opensource </span></b><span lang="EN-US"> powstał, aby powiązać dane przestrzenne i informacje je opisujące  </span>przy wykorzystaniu <span lang="EN-US">nowoczesnej, zarazem wydajnej i taniej w utrzymaniu architektury, opartej </span> na zasadach oprogramowania Free and Open Source Software (FOSS) oraz międzynarodowych, otwartych standardów <span lang="EN-US"> ( <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> oraz <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
+		</p>
+		<p><a href="http://geonetwork-opensource.org" target="_blank">Więcej ...</a></p>
+	</content>
+</help>
