@@ -18,6 +18,8 @@ public class ConfigFile {
     private static final String LOAD_STRINGS_PROP = "loadGeonetworkStrings";
     private static final String SCHEMAS_TO_LOAD_PROP = "schemasToLoad";
     private static final String APPLICABLE_SCHEMAS = "applicableSchemas";
+    private static final String LOADER = "loader";
+    private static final String LOADER_REDIRECT = "loader.redirect";
 
 	private Properties config;
 
@@ -110,6 +112,13 @@ public class ConfigFile {
 
 	public boolean loadStrings() {
 		return contains(ConfigFile.LOAD_STRINGS_PROP);
+	}
+	
+	public String loadLoaderRootPath(final String loader) {
+		return config.getProperty(LOADER+'.'+loader.toLowerCase(), "*");
+	}
+	public boolean isHttpRedirect() {
+		return Boolean.valueOf(config.getProperty(LOADER_REDIRECT, "false")).booleanValue();
 	}
 
 }
