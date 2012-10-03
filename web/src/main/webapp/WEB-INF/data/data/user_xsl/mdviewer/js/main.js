@@ -8,9 +8,17 @@ Ext.onReady(function() {
 	var style = urlParameters.style || 'sextant';
 	var uuid = urlParameters.uuid;
 	
+	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/metadata.formatter.*/, '')[1];
+	var lang = window.location.href.substring(
+			window.location.href.indexOf('/srv')+5, 
+			window.location.href.indexOf('/metadata.formatter')) 
+		|| GeoNetwork.Util.defaultLocale;
+	
+	GeoNetwork.Util.setLang(lang, '../../apps');
+	
 	catalogue = new GeoNetwork.Catalogue({
-		lang : 'fre',
-		hostUrl : 'http://localhost:8080/geonetwork'
+		lang : lang,
+		hostUrl : geonetworkUrl
 	});
 	
 	var win = new cat.view.ViewWindow({
