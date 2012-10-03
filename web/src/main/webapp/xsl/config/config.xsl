@@ -52,6 +52,7 @@
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="oai"/>
 		<xsl:call-template name="xlinkResolver"/>
+		<xsl:call-template name="hideWithheld"/>
 		<xsl:call-template name="searchStats"/>
         <xsl:call-template name="multilingual"/>
 		<xsl:call-template name="downloadservice"/>
@@ -144,6 +145,24 @@
 				<tr>
 					<td class="padded" width="{$width}"><label for="xlinkResolver.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="xlinkResolver.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+	<xsl:template name="hideWithheld">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/hidewithheldelements"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="hidewithheldelements.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
+					<td class="padded"><input id="hidewithheldelements.enable" class="content" type="checkbox"/></td>
+				</tr>
+				<tr>
+					<td class="padded" width="{$width}"><label for="hidewithheldelements.keepMarkedElement"><xsl:value-of select="/root/gui/config/keepMarkedElement"/></label></td>
+					<td class="padded"><input id="hidewithheldelements.keepMarkedElement" class="content" type="checkbox"/></td>
 				</tr>
 			</table>
 		</div>

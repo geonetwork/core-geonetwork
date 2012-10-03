@@ -132,13 +132,13 @@ public class SchemaLoader
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 
 
-				List<Element> annotation = elFirst.getChildren("annotation", Geonet.XSD_NAMESPACE);
+				List<Element> annotation = elFirst.getChildren("annotation", Geonet.Namespaces.XSD);
 
 				if (annotation!=null) {
 					List<Element> allAppInfo = new ArrayList<Element>();
 
 					for (Element currAnnotation: annotation) {
-						List<Element> currAppInfo = currAnnotation.getChildren("appinfo",Geonet.XSD_NAMESPACE);
+						List<Element> currAppInfo = currAnnotation.getChildren("appinfo",Geonet.Namespaces.XSD);
 
 						if (currAppInfo != null) {
 							allAppInfo.addAll(currAppInfo);

@@ -2702,4 +2702,9 @@ e di trasformazione.</label>
 		<label>Link href</label>
 		<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
 	</element>
+  	<!-- ==================================================== -->
+    <element name="hidden-elements">
+        <label>Hidden Elements</label>
+        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+    </element>
 </labels>

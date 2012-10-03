@@ -206,6 +206,8 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "userSelfRegistration/enable",  "system/userSelfRegistration/enable"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "xlinkResolver/enable",         "system/xlinkResolver/enable"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable",         "system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement",         "system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "searchStats/enable",         "system/searchStats/enable"),
 

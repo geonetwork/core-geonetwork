@@ -1325,4 +1325,5 @@
     <formatter.admin>Benutzerdefinierte Stylsheets verwalten</formatter.admin>
     <formatter.admin.des>Verwaltung für benutzerdefinierte Darstellung von Metadaten</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
 </strings>

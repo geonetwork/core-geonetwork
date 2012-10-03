@@ -260,7 +260,12 @@
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
     </dependency>
-
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-all</artifactId>
+		<scope>test</scope>
+	</dependency>
+	            
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>

@@ -407,5 +407,7 @@
   <db.maxactive>Nombre maximum de connexions :</db.maxactive>	
   <db.statserror>Statistique :</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

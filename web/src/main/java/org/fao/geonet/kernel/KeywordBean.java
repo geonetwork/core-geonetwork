@@ -23,10 +23,10 @@
 package org.fao.geonet.kernel;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -64,11 +64,6 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
-	private static final Namespace NS_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-	private static final Namespace NS_GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
-	private static final Namespace NS_GMX = Namespace.getNamespace("gmx", "http://www.isotc211.org/2005/gmx");
-	private static final Namespace NS_XLINK = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
-	
 	/**
 	 * TODO javadoc.
 	 *
@@ -454,14 +449,14 @@ public class KeywordBean {
 	 * @return an iso19139 representation of the keyword
 	 */
 	public Element getIso19139 () {
-		Element ele = new Element("MD_Keywords", NS_GMD);
-		Element el = new Element("keyword", NS_GMD);
-		Element an = new Element("Anchor", NS_GMX);
-		Element cs = new Element("CharacterString", NS_GCO);
+		Element ele = new Element("MD_Keywords", Namespaces.GMD);
+		Element el = new Element("keyword", Namespaces.GMD);
+		Element an = new Element("Anchor", Namespaces.GMX);
+		Element cs = new Element("CharacterString", Namespaces.GCO);
 		if (getCode() != null && getCode().length() != 0) {
 			try {
 				an.setText(getDefaultValue());
-				an.setAttribute("href", URIUtil.encodeQuery(keywordUrl+getCode()), NS_XLINK);
+				an.setAttribute("href", URIUtil.encodeQuery(keywordUrl+getCode()), Namespaces.XLINK);
 				el.addContent(an);
 			} catch (URIException e) { // what to do here? Just add the value
 				cs.setText(getDefaultValue());
@@ -520,10 +515,10 @@ public class KeywordBean {
 	 * @return a complex iso19139 representation of the keyword
 	 */
 	public static Element getComplexIso19139Elt(List<KeywordBean> kbList) {
-		Element root = new Element("MD_Keywords", NS_GMD);
+		Element root = new Element("MD_Keywords", Namespaces.GMD);
 		
-		Element cs = new Element("CharacterString", NS_GCO);
-		Element an = new Element("Anchor", NS_GMX);
+		Element cs = new Element("CharacterString", Namespaces.GCO);
+		Element an = new Element("Anchor", Namespaces.GMX);
 		
 		List<Element> keywords = new ArrayList<Element>();
 		
@@ -531,11 +526,11 @@ public class KeywordBean {
 		Element thesaurusName = null;
 		
 		for (KeywordBean kb : kbList) {
-			Element keyword = new Element("keyword", NS_GMD);
+			Element keyword = new Element("keyword", Namespaces.GMD);
 			if (kb.getCode() != null && kb.getCode().length() != 0) {
 				try {
 					an.setText(kb.getDefaultValue());
-					an.setAttribute("href", URIUtil.encodeQuery(kb.keywordUrl+kb.getCode()), NS_XLINK);
+					an.setAttribute("href", URIUtil.encodeQuery(kb.keywordUrl+kb.getCode()), Namespaces.XLINK);
 					keyword.addContent((Content) an.clone());
 				} catch (URIException e) {
 					cs.setText(kb.getDefaultValue());
@@ -567,8 +562,8 @@ public class KeywordBean {
 	 * @return
 	 */
 	private static Element createKeywordTypeElt(KeywordBean kb) {
-		Element type = new Element("type", NS_GMD);
-		Element keywordTypeCode = new Element("MD_KeywordTypeCode", NS_GMD);
+		Element type = new Element("type", Namespaces.GMD);
+		Element keywordTypeCode = new Element("MD_KeywordTypeCode", Namespaces.GMD);
 		keywordTypeCode.setAttribute("codeList", "http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode");
 		keywordTypeCode.setAttribute("codeListValue", kb.getType());
 		type.addContent(keywordTypeCode);
@@ -582,11 +577,11 @@ public class KeywordBean {
 	 * @return
 	 */
 	private static Element createIdentifier(String authority, String downloadUrl) {
-		Element result = new Element("identifier", NS_GMD);
-		Element ident  = new Element("MD_Identifier", NS_GMD);
-		Element code = new Element("code", NS_GMD);
-		Element gmxAnchor = new Element("Anchor", NS_GMX).setText(authority);
-		gmxAnchor.setAttribute("href", downloadUrl, NS_XLINK);
+		Element result = new Element("identifier", Namespaces.GMD);
+		Element ident  = new Element("MD_Identifier", Namespaces.GMD);
+		Element code = new Element("code", Namespaces.GMD);
+		Element gmxAnchor = new Element("Anchor", Namespaces.GMX).setText(authority);
+		gmxAnchor.setAttribute("href", downloadUrl, Namespaces.XLINK);
 
 		code.addContent(gmxAnchor);
 		ident.addContent(code);
@@ -601,23 +596,23 @@ public class KeywordBean {
 	 * @return
 	 */
 	private static Element createThesaurusNameElt (KeywordBean kb) {
-		Element thesaurusName = new Element("thesaurusName", NS_GMD);
-		Element citation = new Element("CI_Citation", NS_GMD);
-		Element title = new Element("title", NS_GMD);
-		Element cs = new Element("CharacterString", NS_GCO);
-		Element date = new Element("date", NS_GMD);
+		Element thesaurusName = new Element("thesaurusName", Namespaces.GMD);
+		Element citation = new Element("CI_Citation", Namespaces.GMD);
+		Element title = new Element("title", Namespaces.GMD);
+		Element cs = new Element("CharacterString", Namespaces.GCO);
+		Element date = new Element("date", Namespaces.GMD);
 
         cs.setText(kb.thesaurusTitle);
 
         if (StringUtils.hasLength(kb.thesaurusDate)) {
-            Element ciDateEl = new Element("CI_Date", NS_GMD);
-            Element ciDateDateEl = new Element("date", NS_GMD);
-            Element ciDateDateGcoDateEl = new Element("Date", NS_GCO);
+            Element ciDateEl = new Element("CI_Date", Namespaces.GMD);
+            Element ciDateDateEl = new Element("date", Namespaces.GMD);
+            Element ciDateDateGcoDateEl = new Element("Date", Namespaces.GCO);
 
             ciDateDateGcoDateEl.setText(kb.thesaurusDate);
 
-            Element ciDateDatetypeEl = new Element("dateType", NS_GMD);
-            Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", NS_GMD);
+            Element ciDateDatetypeEl = new Element("dateType", Namespaces.GMD);
+            Element ciDateDatetypeCodeEl = new Element("CI_DateTypeCode", Namespaces.GMD);
             ciDateDatetypeCodeEl.setAttribute("codeList","http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode");
             ciDateDatetypeCodeEl.setAttribute("codeListValue", "publication");
 
@@ -628,7 +623,7 @@ public class KeywordBean {
             date.addContent(ciDateEl);
 
         } else {
-            date.setAttribute("nilReason", "unknown",NS_GCO);
+            date.setAttribute("nilReason", "unknown",Namespaces.GCO);
         }
 
 
