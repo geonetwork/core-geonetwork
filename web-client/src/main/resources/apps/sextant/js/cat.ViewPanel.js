@@ -7,12 +7,38 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 
 	/** template use for custom formatter * */
 	viewMode : undefined,
-
+	
 	afterMetadataLoad : function() {
 		this.cache = {};
 		this.tooltips = [];
 		this.catalogue.extentMap.initMapDiv();
 		this.registerTooltip();
+	},
+	
+	getPermaLink : function() {
+		return formatterUrl = this.catalogue.services.mdFormatter + '?uuid=' + escape(this.metadataUuid) + '&xsl=mdviewer';
+	},
+	
+	/**
+	 * Show a textfield with the external link of the MD
+	 */
+	showPermaLinkField: function(value) {
+		
+		if(this.permalinkMenu) this.permalinkMenu.destroy();
+		
+		var menuElt = Ext.get('md-link-btn');
+		this.permalinkMenu = new Ext.menu.Menu({
+			cls: 'no-icon-menu permalink-menu',
+			floating: true,
+			showSeparator: false
+		});
+		
+		var permalinkText = new Ext.menu.TextItem({
+			text : '<input value="'+value+'"/><br/><a href="'+value+'" target="#">'+OpenLayers.i18n('link')+'</a>'
+		});
+		
+		this.permalinkMenu.add(OpenLayers.i18n('permalinkInfo'), permalinkText);
+		this.permalinkMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
 	},
 
 	/**
@@ -25,9 +51,6 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				GeoNetwork.util.HelpTools.Templates.SIMPLE);
 		this.relatedTpl = new Ext.XTemplate(this.relatedTpl
 				|| GeoNetwork.Templates.Relation.SHORT);
-
-		// this.tbar = [this.createViewMenu(), this.createActionMenu(), '->',
-		// this.createPrintMenu(), this.createTooltipMenu()];
 
 		GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
 		this.metadataSchema = this.record ? this.record.get('schema') : '';
@@ -81,6 +104,12 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				cls : 'mdshow-tabpanel',
 				headerCfg: {
 					children: [{
+						id: 'md-link-btn',
+						tag: 'div',
+						html: '&nbsp;',
+						cls: 'file-link',
+						tip: 'PermaLink'
+					},{
 						id: 'md-print-btn',
 						tag: 'div',
 						html: '&nbsp;',
@@ -102,7 +131,10 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 							}, this);
 							Ext.get('md-xml-btn').on('click', function(btn) {
 								this.catalogue.metadataXMLShow(this.metadataUuid, this.metadataSchema);
-							}, this)
+							}, this);
+							Ext.get('md-link-btn').on('click', function(btn) {
+								this.showPermaLinkField(this.getPermaLink());
+							}, this);
 						},
 						scope: this
 					}
@@ -115,13 +147,6 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				this.add(formatterViewPanel);
 			}
 		}
-
-		// if (this.permalink) {
-		// // TODO : Add viewpanel state (ie. size for window, tab)
-		// var l = GeoNetwork.Util.getBaseUrl(location.href) + "?uuid=" +
-		// this.metadataUuid;
-		// this.getTopToolbar().add(GeoNetwork.Util.buildPermalinkMenu(l));
-		// }
 
 		this.addEvents(
 		/**

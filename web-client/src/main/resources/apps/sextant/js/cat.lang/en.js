@@ -15,7 +15,8 @@ cat.lang.en = {
     "group": "Companies",
     "administrer": "Manage",
     "Themes": "Themes",
-    "orgs": "Companies"
+    "orgs": "Companies",
+    "link": "Link"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

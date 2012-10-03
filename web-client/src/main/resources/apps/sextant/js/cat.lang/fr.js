@@ -18,6 +18,7 @@ cat.lang.fr = {
     "beginDate": "Date de début",
     "endDate": "Date de fin",
     "orgs": "Organismes",
-    "administrer": "Administrer"
+    "administrer": "Administrer",
+    "link": "Lien"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

@@ -11,15 +11,6 @@ cat.view.ViewWindow = Ext.extend(GeoNetwork.view.ViewWindow, {
     initComponent: function(){
         Ext.applyIf(this, this.defaultConfig);
         
-        this.tools = [{
-            id: 'newwindow',
-            qtip: OpenLayers.i18n('newWindow'),
-            handler: function(e, toolEl, panel, tc){
-                window.open(GeoNetwork.Util.getBaseUrl(location.href) + "?uuid=" + this.metadataUuid);
-                this.hide();
-            },
-            scope: this
-        }];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
         if(!this.title) this.setTitle(this.record ? Ext.util.Format.ellipsis(this.record.get('title'), 150) : '');

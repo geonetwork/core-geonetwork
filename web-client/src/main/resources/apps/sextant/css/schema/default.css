@@ -207,7 +207,7 @@ div.result-metadata-modal-content table td {
     position: absolute;
     right: 30px;
     top: 14px;
-    width: 16px;
+    width: 18px;
     z-index: 5000;
     cursor:pointer;
 }
@@ -219,16 +219,32 @@ div.result-metadata-modal-content table td {
     position: absolute;
     right: 60px;
     top: 14px;
+    width: 19px;
+    z-index: 5000;
+    cursor:pointer;
+}
+.mdshow-tabpanel .file-link {
+  background-image:url("../../images/icons/metadata.png");
+  border: medium none;
+    height: 16px;
+    position: absolute;
+    right: 90px;
+    top: 14px;
     width: 16px;
     z-index: 5000;
     cursor:pointer;
 }
+
 .mdshow-tabpanel .file-xml:hover {
   background-position:-19px 0;
 }
 .mdshow-tabpanel .file-pdf:hover {
-  background-position:-19px 0;
+  background-position:-18px 0;
 }
+.mdshow-tabpanel .file-link:hover {
+  background-position:-16px 0;
+}
+
 .ui-widget-content .button {
   background-image: none !important;
   border: none !important;
@@ -295,5 +311,16 @@ div.result-metadata-modal-content div.result-metadata-modal-content table th,
 div.result-metadata-modal-content div.result-metadata-modal-content table td {
 	border: 1px solid #A0A0A0 !important;
 	padding: 5px 10px !important;
+}
+
+.permalink-menu {
+	font-family: Arial,​​Helvetica,​​sans-serif;
+	font-size:11px;
+	color: #333333;
+}
+.permalink-menu input{
+	padding:3px;
+	font-family: Arial,​​Helvetica,​​sans-serif;
+	font-size:11px;
 }
 
