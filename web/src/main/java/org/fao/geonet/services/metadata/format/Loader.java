@@ -1,4 +1,6 @@
 package org.fao.geonet.services.metadata.format;
+import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public enum Loader {
 			public void validateParams(Element params) {
 				urlParam = Util.getParam(params, Params.URL, null);
 				if (urlParam == null) {
-					throw new IllegalArgumentException(Params.URL + " is a required parameter if you use GetRecordById mode");
+					throw new IllegalArgumentException(Params.URL + " is a required parameter if you use "+this.name()+" loader");
 				}
 			}
 			
@@ -87,7 +89,14 @@ public enum Loader {
 				validateParams(params);
 				String xmlUrl = URLDecoder.decode(urlParam, "UTF-8").toLowerCase();
 				
-				if(xmlUrl.startsWith(url.toLowerCase())) {
+				URI baseUrl = new URI(url);
+				URI paramUrl = new URI(xmlUrl);
+				
+				boolean sameserver = InetAddress.getByName(baseUrl.getHost()).equals(InetAddress.getByName(paramUrl.getHost()));
+				boolean sameport = baseUrl.getPort() == paramUrl.getPort();
+				boolean sameapp = paramUrl.getPath().startsWith(baseUrl.getPath());
+				
+				if(sameserver && sameport && sameapp) {
 					String uuid = getParamsFromUrl(xmlUrl, Params.UUID);
 					if (uuid == null) {
 						uuid = getParamsFromUrl(xmlUrl, Params.ID);
@@ -199,7 +208,7 @@ public enum Loader {
 			}
 			// if loader parameter is null or doesn't match with any enumeration
 			catch(Exception e) {
-				l = Loader.SHOW;
+				throw new IllegalArgumentException(Params.LOADER+" "+name+" is not a valid loader for the formatter");
 			}
 			return l;
 		}

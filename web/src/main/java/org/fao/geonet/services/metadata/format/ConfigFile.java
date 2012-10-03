@@ -20,6 +20,7 @@ public class ConfigFile {
     private static final String APPLICABLE_SCHEMAS = "applicableSchemas";
     private static final String LOADER = "loader";
     private static final String LOADER_REDIRECT = "loader.redirect";
+    private static final String LOADER_REMOTE_REQUEST = "loader.http.permitRemoteRequests";
 
 	private Properties config;
 
@@ -119,6 +120,9 @@ public class ConfigFile {
 	}
 	public boolean isHttpRedirect() {
 		return Boolean.valueOf(config.getProperty(LOADER_REDIRECT, "false")).booleanValue();
+	}
+	public boolean isRemoteAllowed() {
+		return Boolean.valueOf(config.getProperty(LOADER_REMOTE_REQUEST, "false")).booleanValue();
 	}
 
 }
