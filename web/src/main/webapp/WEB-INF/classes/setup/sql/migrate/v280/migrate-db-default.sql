@@ -81,3 +81,7 @@ DROP TABLE IndexLanguages;
 ALTER TABLE Languages DROP COLUMN isocode;
 
 ALTER TABLE IsoLanguages ADD shortcode varchar(2);
+
+ALTER TABLE Categories ALTER COLUMN  name TYPE varchar(255);
+ALTER TABLE CategoriesDes ALTER COLUMN label TYPE varchar(255);
+ALTER TABLE Settings ALTER COLUMN name TYPE varchar(64);

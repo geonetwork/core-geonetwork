@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Błąd uprawnień</heading>
+	<message>Nie masz uprawnień do wykonania tej operacji.</message>
+	<button>Powrót</button>
+</strings>
