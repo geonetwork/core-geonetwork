@@ -289,16 +289,20 @@ public class KeywordsSearcher {
 
                 // lowcorner
                 if (lowCorner != null) {
-                    sLowCorner = lowCorner.toString();
-                    sWest = sLowCorner.substring(0, sLowCorner.indexOf(' ')).trim();
-                    sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
+                	sLowCorner = lowCorner.toString();
+                    if (!sLowCorner.trim().isEmpty()) {
+                    	sWest = sLowCorner.substring(0, sLowCorner.indexOf(' ')).trim();
+                    	sSouth = sLowCorner.substring(sLowCorner.indexOf(' ')).trim();
+                    }
                 }
 
                 // uppercorner
                 if (upperCorner != null) {
                     sUpperCorner = upperCorner.toString();
-                    sEast = sUpperCorner.substring(0, sUpperCorner.indexOf(' ')).trim();
-                    sNorth = sUpperCorner.substring(sUpperCorner.indexOf(' ')).trim();
+                    if (!sUpperCorner.trim().isEmpty()) {
+                    	sEast = sUpperCorner.substring(0, sUpperCorner.indexOf(' ')).trim();
+                    	sNorth = sUpperCorner.substring(sUpperCorner.indexOf(' ')).trim();
+                    }
                 }
 
                 KeywordBean kb = new KeywordBean(idKeyword, sValue, sDefinition, sUri, sEast, sWest, sSouth, sNorth, thesaurusName.getTextTrim(),
