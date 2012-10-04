@@ -3,11 +3,15 @@ var catalogue;
 
 Ext.onReady(function() {
 	
-	urlParameters = GeoNetwork.Util.getParameters(location.href);
+	var urlParameters = GeoNetwork.Util.getParameters(location.href);
 	
 	var style = urlParameters.style || 'sextant';
 	var uuid = urlParameters.uuid;
 	
+	if(!uuid && urlParameters.url) {
+		var paramsCsw = GeoNetwork.Util.getParameters(urlParameters.url);
+		uuid = paramsCsw.uuid || paramsCsw.id;
+	}
 	var geonetworkUrl = window.location.href.match(/((http).*\/.*)\/srv.*\/metadata.formatter.*/, '')[1];
 	var lang = window.location.href.substring(
 			window.location.href.indexOf('/srv')+5, 
