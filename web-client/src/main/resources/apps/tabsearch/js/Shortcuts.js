@@ -24,9 +24,9 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('runSearch'),
         fn: function(){
-            var e = Ext.getCmp('searchBt');
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('search');
         }
     }, {
         key: Ext.EventObject.LEFT,
@@ -84,9 +84,9 @@ function initShortcut(){
         shift: true,
         label: OpenLayers.i18n('resetSearchForm'),
         fn: function(){
-            var e = Ext.getCmp('resetBt');
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('reset');
         }
     }, {
         key: "v",
@@ -133,13 +133,30 @@ function initShortcut(){
             catalogue.admin();
         }
     }, {
+        key: "c",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('newMetadata'),
+        fn: function(){
+            var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+            actionCtn.createMetadataAction.handler.apply(actionCtn);
+        }
+    }, {
         key: "i",
         ctrl: true,
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('displayInfoPanel'),
         fn: function(){
-            app.getInfoWindow()
+            var infoPanel = Ext.getCmp('infoPanel');
+            var resultsPanel = Ext.getCmp('resultsPanel');
+            if (resultsPanel.isVisible()) {
+                resultsPanel.hide();
+            }
+            if (!infoPanel.isVisible()) {
+                infoPanel.show();
+            }
         }
     }, {
         key: 'h', // FIXME
@@ -148,7 +165,12 @@ function initShortcut(){
         stopEvent: true,
         label: OpenLayers.i18n('displayHelpPanel'),
         fn: function(){
-            if (app.getHelpWindow()) app.getHelpWindow().show();
+            var ss = Ext.getDom('shortcut').style;
+            if (ss.display == 'block') {
+                Ext.getDom('shortcut').style.display = 'none';
+            } else {
+                Ext.getDom('shortcut').style.display = 'block';
+            }
         }
     }];
     var map = new Ext.KeyMap(document, searchConfig);
@@ -177,7 +199,7 @@ function initShortcut(){
     var formMap = new Ext.KeyMap("searchForm", [{
         key: [10, 13],
         fn: function(){
-            Ext.getCmp('searchBt').fireEvent('click');
+            Ext.getCmp('searchForm').fireEvent('search');
         }
     }]);
     
