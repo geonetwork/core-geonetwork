@@ -109,14 +109,14 @@ public class GetKeywordById implements Service {
 			case raw:
 			    Element root = new Element("descKeys");
 			    for (KeywordBean keywordBean : kbList) {
-                    root.addContent(KeywordsSearcher.toRawElement(root, keywordBean));
+                    KeywordsSearcher.toRawElement(root, keywordBean);
                 }
 			    return root;
 			}
 
 		}
 
-        return new Element ("<null/>");
+        return new Element ("null");
 	}
 }
 
