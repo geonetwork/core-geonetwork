@@ -510,6 +510,71 @@ cat.app = function() {
 		});
 		return searchForm;
 	}
+	
+	function modalActionFn(title, url, cb){
+        if (url) {
+            var app = this, win, defaultCb = function(el, success, response, options) {
+                if (!success){
+                    app.showError('Catalogue error', title);
+                    win.close();
+                }
+            };
+            win = new Ext.Window({
+                id: 'modalWindow',
+                layout: 'fit',
+                width: 900,
+                height: 400,
+                closeAction: 'destroy',
+                maximized: false,
+                modal: true,
+                draggable: false,
+                movable: false,
+                resizable: false,
+                width: Ext.getBody().getViewSize().width-400,
+                height: Ext.getBody().getViewSize().height-250,
+                cls: 'view-win',
+                bodyStyle:'padding:10px',
+                title: title,
+                items: new Ext.Panel({
+                	border:false,
+                    autoLoad: {
+                        url: url,
+                        callback: cb || defaultCb,
+                        scope: win
+                    },
+                    border: false,
+                    frame: false,
+                    autoScroll: true
+                })
+            });
+            win.show(this);
+            //win.alignTo(Ext.getBody(), 't-t');
+            
+        }
+    }
+	
+	/**
+	 * Fix the main panel height to the browser size (or portlet-content if embeded in liferay)
+	 * Called on startup and window.resize
+	 * 
+	 **/
+	function fitHeightToBody(o) {
+		var portletContainer = Ext.Element.select('.portlet-content');
+		var height=0
+		if(portletContainer.getCount()==2) {
+			var d = Ext.get('main-viewport');
+			height=Ext.getBody().getViewSize().height -d.getY();
+		}
+		else if (portletContainer.getCount()>1) {
+			height=400;
+			o.setHeight(400);
+		}
+		else if (portletContainer.getCount()==0) {
+			height=Ext.getBody().getViewSize().height-50;
+		}
+		o.setHeight(height);
+		searchForm.setHeight(height);
+	}
 
 	return {
 		init : function() {
@@ -546,7 +611,8 @@ cat.app = function() {
 				summaryStore : GeoNetwork.data.MetadataSummaryStore(),
 				editMode : 2,
 				metadataEditFn: edit,
-				metadataShowFn: showMD
+				metadataShowFn: showMD,
+				modalAction:modalActionFn
 			});
 			
 			catalogue.getInfo();
@@ -576,11 +642,9 @@ cat.app = function() {
 					minWidth : 300,
 					width : 400,
 					maxWidth : 500,
-					//autoScroll : true,
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
-					//margins : '0 0 20 30',
 					layoutConfig : {
 						animate : true
 					},
@@ -589,7 +653,6 @@ cat.app = function() {
 					region : 'center',
 					id : 'center',
 					split : true,
-					//margins : '40 30 20 0',
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
 							tag : 'img',
@@ -601,27 +664,14 @@ cat.app = function() {
 				} ],
 				listeners: {
 					afterrender: {
-						fn: function(o) {
-							var portletContainer = Ext.Element.select('.portlet-content');
-							var height=0
-							if(portletContainer.getCount()==2) {
-								var d = Ext.get('main-viewport');
-								height=Ext.getBody().getViewSize().height -d.getY();
-							}
-							else if (portletContainer.getCount()>1) {
-								height=400;
-								o.setHeight(400);
-							}
-							else if (portletContainer.getCount()==0) {
-								height=Ext.getBody().getViewSize().height-100;
-							}
-							o.setHeight(height);
-							searchForm.setHeight(height);
-							
-						}
+						fn: fitHeightToBody
 					}
 				}
 			});
+			
+			window.onresize = function() {
+				fitHeightToBody(viewport);
+			}
 			
 			if (urlParameters.mode) {
                 app.switchMode(urlParameters.mode, false);

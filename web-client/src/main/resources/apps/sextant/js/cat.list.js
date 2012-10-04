@@ -70,6 +70,9 @@ cat.list = function() {
 			'<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
 			'<div class="mdHiddenMenu wmsLink dynamic-{parent.dynamic}" title="'
 					+ OpenLayers.i18n('addToMap') + ' {title}">',
+			'<tpl if="values.title">',
+				'{title}',
+			'</tpl>',
 			'<tpl if="values.title==\'\'">',
 			OpenLayers.i18n('result-list-view'),
 			'</tpl>',
@@ -79,7 +82,7 @@ cat.list = function() {
 			'<tpl if="values.type == \'DB\'">',
 			'<div class="mdHiddenMenu downloadLink download-{parent.download}" title="'
 					+ OpenLayers.i18n('viewKml')
-					+ ' {title}"><div style="display:none">{values.name}</div></div>',
+					+ ' {title}">{title}<div style="display:none">{values.name}</div></div>',
 			'</tpl>',
 			'</tpl>',
 			'<tpl if="this.hasDownloadLinks(values.links)">',

@@ -520,6 +520,10 @@ hr {
   background-position:-18px 0 !important;
 }
 .ext-el-mask {
-    background: url("../images/ui-bg_flat_0_aaaaaa_40x100.png") repeat-x scroll 50% 50% #000000;
+    background: none repeat-x scroll 50% 50% #000000;
     opacity: 0.5;
+}
+
+p.abstract {
+	font-size:12px;
 }

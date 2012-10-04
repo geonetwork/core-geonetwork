@@ -174,6 +174,32 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         }
     },
     
+    createMenu: function(id, dv){
+        var record = this.getStore().getAt(id);
+        
+        if (!this.contextMenu) {
+            this.contextMenu = new GeoNetwork.MetadataMenu({
+                floating: true,
+                catalogue: catalogue,
+                record: record,
+                resultsView: dv,
+                composeMenu: function(){
+                    this.add(this.editAction);
+                    this.add(this.deleteAction);
+                    this.add(this.duplicateAction);
+                    this.add(this.createChildAction);
+                    this.add(this.adminAction);
+                    this.add(this.statusAction);
+                    this.add(this.versioningAction);
+                    this.add(this.categoryAction);
+                },
+            });
+        } else {
+            this.contextMenu.setRecord(record);
+        }
+        
+    },
+    
 	initComponent: function(){
 		this.addListener('mouseenter', function(dv, idx, node, e){
             this.linkMenuInit(idx, node, 'wms');

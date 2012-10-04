@@ -76,7 +76,13 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      *  Create the menu.
      *  
      */
-    create: function(){
+    create: function() {
+    	this.initAction();
+    	this.composeMenu();
+    	this.updateMenu();
+    },
+    
+    initAction: function(){
         /* Edit menu */
         /* TODO : only displayer for logged in users */
         this.editAction = new Ext.Action({
@@ -88,7 +94,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.add(this.editAction);
         this.deleteAction = new Ext.Action({
             text: OpenLayers.i18n('delete'),
             iconCls: 'md-mn-del',
@@ -98,7 +103,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.add(this.deleteAction);
         
         /* Other actions */
         this.duplicateAction = new Ext.Action({
@@ -160,17 +164,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        
-        this.otherActions = new Ext.menu.Item({
-            text: OpenLayers.i18n('otherActions'),
-            menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
-            }
-        });
-        this.add(this.otherActions);
-        
         this.adminMenuSeparator = new Ext.menu.Separator();
-        this.add(this.adminMenuSeparator);
         
         /* Public menu */
         this.viewAction = new Ext.Action({
@@ -181,9 +175,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.catalogue.metadataShow(id);
             },
             scope: this
-        });
-        this.add(this.viewAction);
-        
+        });        
         this.zoomToAction = new Ext.Action({
             text: OpenLayers.i18n('zoomTo'),
             iconCls: 'zoomlayer',
@@ -192,9 +184,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.resultsView.zoomTo(uuid);
             },
             scope: this
-        });
-        this.add(this.zoomToAction);
-        
+        });        
         this.viewXMLAction = new Ext.Action({
             text: OpenLayers.i18n('saveXml'),
             iconCls: 'xmlIcon',
@@ -205,7 +195,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.add(this.viewXMLAction);
         
         this.printAction = new Ext.Action({
                 text: OpenLayers.i18n('printSel'),
@@ -215,8 +204,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 },
                 scope: this
             });
-        this.add(this.printAction);
-        
         this.getMEFAction = new Ext.Action({
             text: OpenLayers.i18n('getMEF'),
             iconCls: 'md-mn-zip',
@@ -225,9 +212,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.add(this.getMEFAction);
-        
-        
         
         /* Rating menu */
         if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
@@ -250,12 +234,34 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                     scope: this
                 }
             });
+        }
+    },
+    
+    composeMenu: function(){
+        this.add(this.editAction);
+        this.add(this.deleteAction);
+        
+        this.otherActions = new Ext.menu.Item({
+            text: OpenLayers.i18n('otherActions'),
+            menu: {
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
+            }
+        });
+        this.add(this.otherActions);
+        this.add(this.adminMenuSeparator);
+        
+        this.add(this.viewAction);
+        this.add(this.zoomToAction);
+        this.add(this.viewXMLAction);
+        this.add(this.printAction);
+        this.add(this.getMEFAction);
+        
+        /* Rating menu */
+        if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
             this.add(this.ratingWidget);
         }
-        
-        /* TODO : add categories / privileges / create child */
-        this.updateMenu();
     },
+    
     /** private: method[updateMenu] 
      *  Update menu privileges according to information defined in current record.
      *  
@@ -283,7 +289,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             this.editAction.show();
             this.deleteAction.show();
         }
-        this.otherActions.setVisible(identified);
+        
+        if(this.otherActions) this.otherActions.setVisible(identified);
         this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */

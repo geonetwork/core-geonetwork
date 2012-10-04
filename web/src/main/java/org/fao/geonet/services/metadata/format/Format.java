@@ -43,7 +43,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.services.metadata.Show;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -53,34 +52,39 @@ import org.jdom.JDOMException;
  * @author jeichar
  */
 public class Format extends AbstractFormatService {
-
-	private Show showService;
-    private WeakHashMap<String, List<SchemaLocalization>> labels = new WeakHashMap<String, List<SchemaLocalization>>();
+	
+	private WeakHashMap<String, List<SchemaLocalization>> labels = new WeakHashMap<String, List<SchemaLocalization>>();
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, "xsl", null);
-        String uuid = Util.getParam(params, Params.UUID, null);
-        String id = Util.getParam(params, Params.ID, null);
-
-        if (uuid == null && id == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
-        }
+        String loaderParam = Util.getParam(params, Params.LOADER, Loader.SHOW.name());
 
         File formatDir = getAndVerifyFormatDir("xsl", xslid);
-
         File viewXslFile = new File(formatDir, VIEW_XSL_FILENAME);
 
         if (!viewXslFile.exists())
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid URL");
 
-        Element metadata = showService.exec(params, context);
-
         ConfigFile config = new ConfigFile(formatDir);
         String lang = config.getLang(context.getLanguage());
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        String url = new SettingInfo(gc.getSettingManager()).getSiteUrl() + context.getBaseUrl();
+        
+        Loader loader = Loader.fromString(loaderParam);
+        
+        if(loader.equals(Loader.HTTP) && !config.isRemoteAllowed()) {
+        	throw new IllegalArgumentException("The bundle is not allowed to use remote http request. Set the property loader.http.permitRemoteRequests to true if you want to allow it.");
+        }
+        if(config.isHttpRedirect()) {
+        	loader = loader.getValidLoader(url, params);
+        }
+        loader.validateParams(params);
+        Element metadata = loader.load(params, config, context);
 
-        if(!isCompatibleMetadata(params, config, context)) {
+        if(!loader.isCompatibleXml(params, config, context)) {
         	throw new IllegalArgumentException("The bundle cannot format metadata with the "+getMetadataSchema(params, context)+" schema");
         }
         
@@ -88,9 +92,6 @@ public class Format extends AbstractFormatService {
         
         Element root = new Element("root");
         
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String url = new SettingInfo(gc.getSettingManager()).getSiteUrl() + context.getBaseUrl();
-
         root.addContent (new Element("url").setText(url));
         String locUrl = url+"/srv/"+context.getLanguage()+"/";
         root.addContent (new Element("locUrl").setText(locUrl));
@@ -133,14 +134,6 @@ public class Format extends AbstractFormatService {
         response.addContent(transformed);
         return response;
     }
-
-    private boolean isCompatibleMetadata(Element params, ConfigFile config,
-			ServiceContext context) throws Exception {
-    	String schema = getMetadataSchema(params, context);
-    	List<String> applicable = config.listOfApplicableSchemas();
-		return applicable.contains(schema) || applicable.contains("all");
-		
-	}
 
 	private Element getStrings(String appPath, String lang) throws IOException, JDOMException {
         File baseLoc = new File(appPath, "loc");
@@ -203,9 +196,10 @@ public class Format extends AbstractFormatService {
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
-
-        showService = new Show();
-        showService.init(appPath, params);
+        
+        for(Loader loader: Loader.values()) { 
+        	loader.init(appPath, params); 
+        }
     }
     
     private static class SchemaLocalization {

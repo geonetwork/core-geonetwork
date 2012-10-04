@@ -1,7 +1,6 @@
 /* inspired from http://www.emodnet-hydrography.eu/cdi_v2/style.css */
 
 .tpl-emodnet .ui-layout-content { 	
-	height: 100% !important;
     background-color: #e4eef7 !important;
     background-image: url("../../images/schema/emodnet/background.gif") !important;
     background-repeat: repeat-x !important;

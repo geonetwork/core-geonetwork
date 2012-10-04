@@ -3,11 +3,12 @@
 	version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
-	xmlns:che="http://www.geocat.ch/2008/che" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
 	<!-- Load labels. -->
-	<xsl:variable name="label" select="/root/schemas/iso19139" />
+	<xsl:variable name="label" select="/root/schemas/iso19139.sextant" />
+	<xsl:variable name="labelIso" select="/root/schemas/iso19139" />
 	<xsl:template xmlns:geonet="http://www.fao.org/geonetwork"
 		mode="iso19139" match="geonet:info" />
 	<!-- Root element matching. -->
@@ -18,7 +19,6 @@
 				select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString" />
 
 			<head>
-			
 				<title>
 					Metadata:
 					<xsl:value-of select="$title" />
@@ -35,12 +35,25 @@
 					<div>
 						<div class="result-metadata-modal-tabs">
 							<div id="result-metadata-modal-tab-1">
+								<div class="result-metadata-modal-resume">
+									<h6>
+									<xsl:call-template name="getTitle">
+										<xsl:with-param name="name" select="'gmd:MD_Keywords'" />
+									</xsl:call-template>
+									</h6>
+									<p><div class="result-metadata-modal-content">
+									<xsl:apply-templates mode="iso19139" 
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword" />
+									</div></p>
+								</div>		
 								<h5>Description</h5>
 								<div class="result-metadata-modal-content">
 									<xsl:apply-templates mode="iso19139" 
 										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox" />
 									<xsl:apply-templates mode="iso19139"
-										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
+										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract|
+										/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation|
+										/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement" />
 								</div>
 								
 								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
@@ -104,6 +117,19 @@
 		</div>
 	</xsl:template>
 	
+	<!-- Key words -->
+	<xsl:template mode="iso19139" match="gmd:keyword"
+		priority="3">
+		<xsl:choose>
+			<xsl:when test="position()!=last()">
+				<xsl:value-of select="concat(gco:CharacterString, ', ')" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="gco:CharacterString" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
 	<!--  Abstract & Statement : Display Title and <p> with text -->
 	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement|gmd:supplementalInformation"
 		priority="3">
@@ -134,8 +160,8 @@
     
     <!-- Display in bold the title of a section -->
 	<xsl:template mode="iso19139"
-		match="gmd:locale|gmd:contact|gmd:identificationInfo|gmd:descriptiveKeywords|
-        gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints|gmd:MD_Constraints|
+		match="gmd:locale|gmd:contact|gmd:identificationInfo|
+		gmd:MD_LegalConstraints|gmd:MD_SecurityConstraints|gmd:MD_Constraints|
         gmd:resourceConstraints|
         gmd:distributionInfo">
 
@@ -166,7 +192,7 @@
 				<b><xsl:value-of select="/root/schemas/iso19139.sextant/strings/role" /> : </b>
 				<xsl:variable name="choiceValue" select="gmd:role/gmd:CI_RoleCode/@codeListValue" />
 				<xsl:variable name="name" select="'gmd:CI_RoleCode'" />
-				<xsl:value-of select="string($label/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label)" />
+				<xsl:value-of select="string($labelIso/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label)" />
 			</li>
 			<br/>
 		</xsl:for-each>
@@ -206,7 +232,7 @@
 				<xsl:value-of select="$title" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="string($label/labels/element[@name=$name]/label)" />
+				<xsl:value-of select="string($labelIso/labels/element[@name=$name]/label)" />
 			</xsl:otherwise>
 		</xsl:choose>
 
