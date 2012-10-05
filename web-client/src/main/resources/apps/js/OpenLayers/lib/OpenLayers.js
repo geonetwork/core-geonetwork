@@ -393,6 +393,10 @@
                 "OpenLayers/Symbolizer/Raster.js",
                 "OpenLayers/Lang.js",
                 "OpenLayers/Lang/en.js",
+                "OpenLayers/Lang/de.js",
+                "OpenLayers/Lang/fr.js",
+                "OpenLayers/Lang/es.js",
+                "OpenLayers/Lang/nl.js",
                 "OpenLayers/Spherical.js"
             ]; // etc.
         }

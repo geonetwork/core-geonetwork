@@ -534,3 +534,8 @@ div.facets h2 {
 .validation * h2, .validation * div {
     white-space: normal !important;
 }
+
+.x-superboxselect-item img {
+    max-height: 16px;
+    vertical-align: middle;
+}
