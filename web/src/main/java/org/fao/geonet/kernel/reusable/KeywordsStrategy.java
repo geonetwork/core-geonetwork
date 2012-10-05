@@ -434,6 +434,11 @@ public final class KeywordsStrategy extends ReplacementStrategy
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {
 
+    	String decodedHref = URLDecoder.decode(href, "UTF-8");
+    	if (!decodedHref.toLowerCase().contains("thesaurus="+NON_VALID_THESAURUS_NAME.toLowerCase())) {
+    		return href;
+    	}
+    	
         String startId = URLDecoder.decode(Utils.id(href), "UTF-8");
         if(startId!=null && startId.startsWith(NAMESPACE)) return href;
          
