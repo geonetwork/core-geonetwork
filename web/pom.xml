@@ -1029,6 +1029,20 @@
       </properties>
     </profile>
     <profile>
+      <id>jeichar</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>jeichar</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
       <id>local</id>
       <activation>
         <property>
