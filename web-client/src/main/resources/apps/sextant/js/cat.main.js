@@ -69,6 +69,7 @@ cat.app = function() {
 			renderTo : 'login-form',
 			catalogue : catalogue,
 			layout : 'hbox',
+			hidden:catalogue.casEnabled,
 			hideLoginLabels : GeoNetwork.hideLoginLabels
 		});
 		
@@ -93,6 +94,9 @@ cat.app = function() {
 			catalogue.identifiedUser = user;
 			loginForm.login(catalogue, true);
 		}
+		if(catalogue.casEnabled) {
+			loginForm.triggerClick();
+		}
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
@@ -101,6 +105,7 @@ cat.app = function() {
 		var style = urlParameters.style || 'sextant';
 		
 		var win = new cat.view.ViewWindow({
+			layout:'fit',
             serviceUrl: style == 'sextant' ? this.services.mdView + '?uuid=' + escape(uuid) : null,
             formatterServiceUrl: this.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
             lang: this.lang,
@@ -321,7 +326,7 @@ cat.app = function() {
 				selectAction : false,
 				sortByAction : true,
 				templateView : true,
-				otherActions : false
+				otherActions : true
 			},
 			sortByStore : new Ext.data.ArrayStore({
 	            id: 0,
@@ -522,8 +527,6 @@ cat.app = function() {
             win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',
-                width: 900,
-                height: 400,
                 closeAction: 'destroy',
                 maximized: false,
                 modal: true,
@@ -574,6 +577,8 @@ cat.app = function() {
 		}
 		o.setHeight(height);
 		searchForm.setHeight(height);
+		
+		Ext.getBody().setHeight(Ext.getBody().getViewSize().height);
 	}
 
 	return {

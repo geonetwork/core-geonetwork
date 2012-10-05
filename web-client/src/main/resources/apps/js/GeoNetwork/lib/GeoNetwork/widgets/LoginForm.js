@@ -90,6 +90,10 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             Ext.getCmp('btnLoginForm').fireEvent('click');
         }
     }],
+    
+    triggerClick: function() {
+    	this.catalogue.login(this.username.getValue(), this.password.getValue());
+    },
 
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
@@ -101,9 +105,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 iconCls: 'md-mn mn-login',
                 id: 'btnLoginForm',
                 listeners: {
-                    click: function () {
-                        this.catalogue.login(this.username.getValue(), this.password.getValue());
-                    },
+                    click: this.triggerClick,
                     scope: form
                 }
             }),

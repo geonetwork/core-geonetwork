@@ -1114,14 +1114,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     	var loginAttempts = 0;
     	var loginWindow;
         if (this.casEnabled) {
-        	loginWindow = window.open(this.URL+'/srv/'+this.LANG+'/login.form?casLogin', '_casLogin', 'menubar=no,location=no,toolbar=no', true);
+        	var framePanel = new Ext.Panel({
+        		hidden: true,
+        		renderTo: 'casLogin-frame-win',
+        		html:'<iframe frameborder="0" width="20" id="casLoginFrame" height="20" src="'+
+        				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>',
+        		
+        	});
+        	
         	intervalID = setInterval(function (){
         		loginAttempts += 1;
         		if(loginAttempts > (5*60*2)) {
         			clearInterval (intervalID);
         			app.identifiedUser = undefined;
 	                app.onAfterBadLogin();
-        		} else if(loginWindow.closed) {
+        		} 
+        		else if (framePanel.rendered) {
         			clearInterval (intervalID);
         			app.isLoggedIn();
         		}
