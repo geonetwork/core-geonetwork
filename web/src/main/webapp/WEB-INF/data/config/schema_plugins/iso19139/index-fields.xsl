@@ -74,7 +74,7 @@
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">
 				<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
-					<Field name="identifier" string="{string(.)}" store="false" index="true"/>
+					<Field name="identifier" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
                 <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString">
@@ -89,27 +89,27 @@
 				</xsl:for-each>
 	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
-					<Field name="altTitle" string="{string(.)}" store="false" index="true"/>
+					<Field name="altTitle" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date">
-					<Field name="revisionDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+					<Field name="revisionDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date">
 					<Field name="createDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date">
-					<Field name="publicationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+					<Field name="publicationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
-						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					</xsl:if>
 				</xsl:for-each>
 
@@ -131,7 +131,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
-            	<Field name="responsiblePartyRole" string="{string(.)}" store="false" index="true"/>
+            	<Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -150,7 +150,7 @@
 				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
-					<Field name="geoDescCode" string="{string(.)}" store="false" index="true"/>
+					<Field name="geoDescCode" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
@@ -162,8 +162,8 @@
 							</xsl:call-template>
 						</xsl:variable>
 
-						<Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}" store="false" index="true"/>
-						<Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}" store="false" index="true"/>
+						<Field name="tempExtentBegin" string="{lower-case(substring-before($times,'|'))}" store="true" index="true"/>
+					    <Field name="tempExtentEnd" string="{lower-case(substring-after($times,'|'))}" store="true" index="true"/>
 					</xsl:for-each>
 
 				</xsl:for-each>
@@ -201,14 +201,14 @@
                 </xsl:for-each>
 
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
-					<Field name="keywordType" string="{string(.)}" store="false" index="true"/>
+					<Field name="keywordType" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
 			<xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
-				<Field name="orgName" string="{string(.)}" store="false" index="true"/>
+				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
 				
 				<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
 				<xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
@@ -221,10 +221,10 @@
 	
 			<xsl:choose>
 				<xsl:when test="gmd:resourceConstraints/gmd:MD_SecurityConstraints">
-					<Field name="secConstr" string="true" store="false" index="true"/>
+					<Field name="secConstr" string="true" store="true" index="true"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<Field name="secConstr" string="false" store="false" index="true"/>
+					<Field name="secConstr" string="false" store="true" index="true"/>
 				</xsl:otherwise>
 			</xsl:choose>
 
@@ -249,11 +249,11 @@
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:distance/gco:Distance">
-					<Field name="distanceVal" string="{string(.)}" store="false" index="true"/>
+					<Field name="distanceVal" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:distance/gco:Distance/@uom">
-					<Field name="distanceUom" string="{string(.)}" store="false" index="true"/>
+					<Field name="distanceUom" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
 			
@@ -290,25 +290,25 @@
 			</xsl:for-each>
 			
 			<xsl:for-each select="//srv:SV_OperationMetadata/srv:operationName/gco:CharacterString">
-				<Field  name="operation" string="{string(.)}" store="false" index="true"/>
+				<Field  name="operation" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="srv:operatesOn/@uuidref">
-                <Field  name="operatesOn" string="{string(.)}" store="false" index="true"/>
+                <Field  name="operatesOn" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
 			
 			<xsl:for-each select="srv:coupledResource">
 				<xsl:for-each select="srv:SV_CoupledResource/srv:identifier/gco:CharacterString">
-					<Field  name="operatesOnIdentifier" string="{string(.)}" store="false" index="true"/>
+					<Field  name="operatesOnIdentifier" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 				
 				<xsl:for-each select="srv:SV_CoupledResource/srv:operationName/gco:CharacterString">
-					<Field  name="operatesOnName" string="{string(.)}" store="false" index="true"/>
+					<Field  name="operatesOnName" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//srv:SV_CouplingType/@codeListValue">
-				<Field  name="couplingType" string="{string(.)}" store="false" index="true"/>
+				<Field  name="couplingType" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
 			
@@ -336,7 +336,7 @@
 
 		<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
 			<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-				<Field name="format" string="{string(.)}" store="false" index="true"/>
+				<Field name="format" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- index online protocol -->
@@ -351,11 +351,11 @@
 				
 				<!-- ignore empty downloads -->
 				<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
-					<Field name="protocol" string="{string($protocol)}" store="false" index="true"/>
+					<Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
 				</xsl:if>  
 
 				<xsl:if test="normalize-space($mimetype)!=''">
-					<Field name="mimetype" string="{$mimetype}" store="false" index="true"/>
+					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>
 			  
 				<xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
@@ -411,23 +411,23 @@
 			</xsl:if>
 			
 			<xsl:for-each select="//gmd:pass/gco:Boolean">
-				<Field name="degree" string="{string(.)}" store="false" index="true"/>
+				<Field name="degree" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:title/gco:CharacterString">
-				<Field name="specificationTitle" string="{string(.)}" store="false" index="true"/>
+				<Field name="specificationTitle" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date">
-				<Field name="specificationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="false" index="true"/>
+				<Field name="specificationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 			</xsl:for-each>
 			
 			<xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
-				<Field name="specificationDateType" string="{string(.)}" store="false" index="true"/>
+				<Field name="specificationDateType" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 		</xsl:for-each>
 		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString">
-			<Field name="lineage" string="{string(.)}" store="false" index="true"/>
+			<Field name="lineage" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -488,7 +488,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<xsl:for-each select="gmd:contact/*/gmd:organisationName/gco:CharacterString">
-			<Field name="metadataPOC" string="{string(.)}" store="false" index="true"/>
+			<Field name="metadataPOC" string="{string(.)}" store="true" index="true"/>
 			
 			<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
 			<xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
