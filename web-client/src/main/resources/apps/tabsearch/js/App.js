@@ -35,6 +35,8 @@ GeoNetwork.app = function(){
 
     var searchForm;
 
+		var optionsForm;
+
     var resultsPanel;
 
     var metadataResultsView;
@@ -159,7 +161,7 @@ GeoNetwork.app = function(){
             id: "resultsMap",
             height: 125,
             width: 250,
-            map: map,
+            map: map
         });
   
         return mapPanel;
@@ -249,16 +251,6 @@ GeoNetwork.app = function(){
         });
 
 
-        var when = new Ext.form.FieldSet({
-            title: OpenLayers.i18n('when'),
-            autoWidth: true,
-            //layout: 'row',
-            defaultType: 'datefield',
-            collapsible: true,
-            collapsed: true,
-            items: GeoNetwork.util.SearchFormTools.getWhen()
-        });
-
         var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
         var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
@@ -266,30 +258,21 @@ GeoNetwork.app = function(){
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
         var spatialTypes = GeoNetwork.util.SearchFormTools.getSpatialRepresentationTypeField(null, true);
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
-
+        
+        // Add hidden fields to be use by quick metadata links from the admin panel (eg. my metadata).
+        var ownerField = new Ext.form.TextField({
+            name: 'E__owner',
+            hidden: true
+        });
+        var isHarvestedField = new Ext.form.TextField({
+            name: 'E__isHarvested',
+            hidden: true
+        });
+        
         advancedCriteria.push(themekeyField, orgNameField, categoryField,
             spatialTypes, denominatorField,
             catalogueField, groupField,
-            metadataTypeField, validField);
-        var adv = {
-            xtype: 'fieldset',
-            title: OpenLayers.i18n('advancedSearchOptions'),
-            autoHeight: true,
-            autoWidth: true,
-            collapsible: true,
-            collapsed: (urlParameters.advanced?false:true),
-            defaultType: 'checkbox',
-            defaults: {
-                width: 160
-            },
-            items: advancedCriteria
-        };
-        var formItems = [];
-        formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services,
-            GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true,
-            GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-            adv);
-        // Add advanced mode criteria to simple form - end
+            metadataTypeField, validField, ownerField, isHarvestedField);
 
 
         // Hide or show extra fields after login event
@@ -310,29 +293,13 @@ GeoNetwork.app = function(){
             });
             GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
-        var hitsPerPage =  [['10'], ['20'], ['50'], ['100']];
-        var hitsPerPageField = new Ext.form.ComboBox({
-            id: 'E_hitsperpage',
-            name: 'E_hitsperpage',
-            mode: 'local',
-            triggerAction: 'all',
-            fieldLabel: OpenLayers.i18n('hitsPerPage'),
-            value: hitsPerPage[1], // Set arbitrarily the second value of the
-            // array as the default one.
-            store: new Ext.data.ArrayStore({
-                id: 0,
-                fields: ['id'],
-                data: hitsPerPage
-            }),
-            valueField: 'id',
-            displayField: 'id'
-        });
 
 
         var hideInspirePanel = catalogue.getInspireInfo().enable == "false";
 
         return new Ext.FormPanel({
             id: 'searchForm',
+            //stateId: 's',
             bodyStyle: 'text-align: center;',
             border: false,
             //autoShow : true,
@@ -403,7 +370,6 @@ GeoNetwork.app = function(){
                        })
                     ]
                 },
-
                 // Panel with Advanced search, Help and About Links
                 {
                     layout: {
@@ -435,6 +401,7 @@ GeoNetwork.app = function(){
                     plain:true,
                     autoHeight:true,
                     border:false,
+										autoScroll:true,
                     deferredRender: false,
                     defaults:{bodyStyle:'padding:10px'},
                     items:[
@@ -458,19 +425,20 @@ GeoNetwork.app = function(){
                                 //,new GeoExt.ux.GeoNamesSearchCombo({ map: Ext.getCmp('geometryMap').map, zoom: 12})
                             ]
                         },
-                        // When panel
+                        // When & Options panel
                         {
-                            title:OpenLayers.i18n('When'),
+                            title:OpenLayers.i18n('When')+' & '+OpenLayers.i18n('Options'),
                             margins:'0 5 0 5',
                             defaultType: 'datefield',
                             layout:'form',
-                            items:GeoNetwork.util.SearchFormTools.getWhen()
+                            items: [ GeoNetwork.util.SearchFormTools.getWhen(), {xtype: 'box', autoEl: 'div', height:20}, optionsForm 
+														]
                         },
                         // INSPIRE panel
                         {
                             title:'INSPIRE',
                             margins:'0 5 0 5',
-                            hidden: hideInspirePanel,
+                            //hidden: hideInspirePanel,
                             defaultType: 'datefield',
                             layout:'form',
                             items: GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
@@ -542,7 +510,7 @@ GeoNetwork.app = function(){
      *
      * @return
      */
-    function createResultsPanel(){
+    function createResultsPanel(permalinkProvider){
         metadataResultsView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
             displaySerieMembers: true,
@@ -556,7 +524,8 @@ GeoNetwork.app = function(){
             catalogue: catalogue,
             searchBtCmp: Ext.getCmp('searchBt'),
             sortByCmp: Ext.getCmp('E_sortBy'),
-            metadataResultsView: metadataResultsView
+            metadataResultsView: metadataResultsView,
+            permalinkProvider: permalinkProvider
         });
 
         bBar = createBBar();
@@ -733,6 +702,32 @@ GeoNetwork.app = function(){
         }
     }
 
+		
+		function createOptionsForm() {
+			var hitsPerPage = [['10'], ['20'], ['50'], ['100']], items = [];
+
+			items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+
+			items.push(new Ext.form.ComboBox({
+            id: 'E_hitsperpage',
+            name: 'E_hitsperpage',
+            mode: 'local',
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('hitsPerPage'),
+            value: hitsPerPage[1], // Set arbitrarily the second value of the
+            // array as the default one.
+            store: new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id'],
+                data: hitsPerPage
+            }),
+            valueField: 'id',
+            displayField: 'id'
+        }));
+
+			return items;
+		}
+
     function createHeader(){
         var info = catalogue.getInfo();
         Ext.getDom('title').innerHTML = '<img class="catLogo" src="images/banner_logo.png" title="'  + info.name + '"/>';
@@ -745,7 +740,7 @@ GeoNetwork.app = function(){
             geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            var lang = urlParameters.hl || GeoNetwork.defaultLocale;
+            var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
 
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
@@ -756,8 +751,12 @@ GeoNetwork.app = function(){
             cookie = new Ext.state.CookieProvider({
                 expires: new Date(new Date().getTime()+(1000*60*60*24*365))
             });
-            Ext.state.Manager.setProvider(cookie);
-
+            
+            // set a permalink provider which will be the main state provider.
+            permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+            
+            Ext.state.Manager.setProvider(permalinkProvider);
+            
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
                 statusBarId: 'info',
@@ -775,6 +774,9 @@ GeoNetwork.app = function(){
 
             createHeader();
 
+						// Options Panel
+						optionsForm = createOptionsForm();
+
             // Search form
             searchForm = createSearchForm();
 
@@ -790,7 +792,7 @@ GeoNetwork.app = function(){
             resultsMap = getResultsMap();
 
             // Search result
-            resultsPanel = createResultsPanel();
+            resultsPanel = createResultsPanel(permalinkProvider);
 
             // Extra stuffs
             //infoPanel = {};//createInfoPanel();
@@ -846,9 +848,7 @@ GeoNetwork.app = function(){
                                 },{
                                         columnWidth: .90,
                                         border: false,
-                                        items: [
-                                                    searchForm,
-                                ]
+                                        items: [ searchForm ]
                                     },{
                                         border: false,
                                         columnWidth: .05, 
@@ -980,6 +980,13 @@ GeoNetwork.app = function(){
         
                 });
             });
+            
+            // Hack to run search after all app is rendered within a sec ...
+            // It could have been better to trigger event in SearchFormPanel#applyState
+            // FIXME
+            if (urlParameters.s_search !== undefined) {
+                setTimeout(function(){Ext.getCmp('searchBt').fireEvent('click');}, 500);
+            }
         },
         getIMap: function(){
             // init map if not yet initialized
@@ -1106,7 +1113,7 @@ Ext.onReady(function () {
 
     //overwrite default detail-click action
     catalogue.metadataShow = function (uuid) {
-        console.log(uuid);
+        //console.log(uuid);
         tabPanel = Ext.getCmp("GNtabs");
         var tabs = tabPanel.find( 'id', uuid );
         if (tabs[0])
@@ -1114,7 +1121,7 @@ Ext.onReady(function () {
         else {
             // Retrieve information in synchrone mode    todo: this doesn't work here
             var store = GeoNetwork.data.MetadataResultsFastStore();
-            catalogue.kvpSearch("fast=index", null, null, null, true, store, null, false);
+            catalogue.kvpSearch("fast=index&uuid="+uuid, null, null, null, true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
 
             var RowTitle = uuid;
@@ -1172,7 +1179,7 @@ function setTab(id){
     tabPanel = Ext.getCmp("GNtabs");
     var tabs = tabPanel.find( 'id', id );
     if (tabs[0]) tabPanel.setActiveTab( tabs[ 0 ] );
-    else console.log(id);
+    //else console.log(id);
 }
 
     

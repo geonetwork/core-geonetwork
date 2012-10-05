@@ -11,17 +11,8 @@
 		<a target="_blank" href="http://www.gsdi.org/">Infra-estrutura Global de Dados Espaciais (GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">Open Geospatial Consortium (OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Informação Geográfica/Geomática<br/>
-		<h3>Padrão de metadados geográficos ISO 19115</h3>
-		<p>
-			Concepção (versão 1.0) de modelo de metadados ISO 19115 de UNGIWG <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML template with sample data)</a>
-			&#160;&#160;
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.doc">(Documento descritivo de Word)</a>
-		</p>
-		<p>
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/ReferenceServices.htm','Online Resource References">Referências propostas de serviço para recursos online de ISO 19115</a>
-		</p>
 		<h3>Iniciativas de cartografia</h3>
-		<a target="_blank" href="http://www.digitalearth.gov/">Digital Earth (Terra Digital)</a><br/>
+		<a target="_blank" href="http://www.digitalearth-isde.org/">Digital Earth (Terra Digital)</a><br/>
 		<a target="_blank" href="http://www.iscgm.org/">Global Mapping (Cartografia Global)</a><br/>
 		<p/>
 		<h3>Outras páginas relacionadas</h3>
@@ -31,7 +22,7 @@
 		<h3>Fontes eternas para dados espaciais</h3>
 		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">African Data Dissemination Service</a><br/>
 		<a target="_blank" href="http://www.ngdc.noaa.gov/">NOAA National Data Centers, NGDC</a><br/>
-		<a target="_blank" href="http://www.nima.mil/">US National Imagery and Mapping Agency (NIMA)</a><br/>
-		<a target="_blank" href="http://www.esri.com/data/">ESRI ArcData Online</a>
+		<a target="_blank" href="http://www.nga.mil/">National Geospatial-Intelligence Agency (NGA)</a><br/>
+		<a target="_blank" href="http://www.esri.com/data/find-data/">ESRI ArcData Online</a>
 	</content>
 </links>

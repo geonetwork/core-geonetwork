@@ -360,7 +360,6 @@
       <dependency>
           <groupId>com.cybozu.labs</groupId>
           <artifactId>langdetect</artifactId>
-          <version>1.0.0.0</version>
       </dependency>
       <dependency>
           <groupId>net.arnx.jsonic</groupId>
@@ -526,6 +525,7 @@
 				<include>${geonetwork.build.dir}/scripts/map/lang/no.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/fi.js</include>
 				<include>${geonetwork.build.dir}/scripts/map/lang/it.js</include>
+				<include>${geonetwork.build.dir}/scripts/map/lang/tr.js</include>
 
                 <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
                 
@@ -725,42 +725,6 @@
             </aggregation>
           </aggregations>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <id>ant-schematrons-clean</id>
-            <phase>clean</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <commandlineArgs>clean</commandlineArgs> 
-              <environmentVariables>
-                <ANT_OPTS>-client</ANT_OPTS>
-              </environmentVariables>
-              <workingDirectory>${basedir}/../schematrons</workingDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>ant-schematrons</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ant</executable>
-              <environmentVariables>
-                <ANT_OPTS>-client</ANT_OPTS>
-              </environmentVariables>
-              <workingDirectory>${basedir}/../schematrons</workingDirectory>
-            </configuration>
-          </execution>
-        </executions>      
       </plugin>
 
       <plugin>

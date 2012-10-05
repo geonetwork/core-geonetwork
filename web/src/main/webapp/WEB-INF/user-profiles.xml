@@ -129,9 +129,6 @@
         <allow service="csw.config.get"/>
         <allow service="csw.config.set"/>
 
-        <!-- csw publication -->
-        <allow service="csw-publication"/>
-
         <allow service="csw.customelementset.get"/>
         <allow service="csw.customelementset.set"/>
 
@@ -306,6 +303,10 @@
 		<!-- Subtemplate -->
 	  <allow service="subtemplate.types"/>
 	  <allow service="subtemplate.admin"/>
+	    
+	    
+	    <!-- csw publication -->
+	    <allow service="csw-publication"/>
 	</profile>
 
 	<!-- ====================================================================== -->
@@ -425,6 +426,7 @@
 		<allow service="portal.categories"/>
 		<allow service="portal.sources"/>
         <allow service="portal.sitemap"/>
+        <allow service="robots.txt"/>
 
 		<!-- Metadata export services -->
 		<allow service="pdf.search"/>
@@ -441,13 +443,17 @@
 	  <allow service="xml_iso19110Tooai_dc"/>
 	  <allow service="xml_csw-record"/>
 	  <allow service="xml_csw-recordTooai_dc"/>
-
+	    
 	  <!-- RSS services -->
 		<allow service="rss.latest"/>
 		<allow service="rss.search"/>
 		<allow service="rss.present"/>
 		<allow service="metadata.latest.updated"/>
-
+	    
+	    <!-- RDF services -->
+	    <allow service="rdf.search"/>
+	    <allow service="rdf.metadata.get"/>
+	
 		<!-- CSV Service -->
 		<allow service="csv.search"/>
 		<allow service="csv.present"/>		

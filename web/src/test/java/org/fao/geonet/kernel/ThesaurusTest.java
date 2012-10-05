@@ -108,7 +108,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String coordSouth = "20";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
@@ -124,7 +124,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         note = "note2";
         code = "http://thesaurus.test#1";
         keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setDefinition(note, lang)
             .setValue(label, lang);
         writableThesaurus.addElement(keyword);
@@ -136,7 +136,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
         code = "http://thesaurus.test#2";
         keyword = new KeywordBean(isoLangMapper)
-        .setCode(code)
+        .setURICode(code)
         .setCoordEast(null)
         .setCoordNorth(null)
         .setCoordSouth(null)
@@ -181,7 +181,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String coordSouth = "20";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
@@ -209,7 +209,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String coordSouth = "20";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
@@ -240,7 +240,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String coordSouth = "20";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
@@ -259,7 +259,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         label = "Hello2";
         note = "note2";
         keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
@@ -275,7 +275,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         label = "Hello3";
         note = "note3";
         keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast("")
             .setCoordNorth("")
             .setCoordSouth("")
@@ -291,7 +291,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         label = "Hello4";
         note = "note4";
         keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast("")
             .setCoordNorth("")
             .setCoordSouth("")
@@ -307,7 +307,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         label = "Hello5";
         note = "note5";
         keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setCoordEast(null)
             .setCoordNorth(null)
             .setCoordSouth(null)
@@ -335,7 +335,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String code = "http://thesaurus.test#0";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setCode(code)
+            .setURICode(code)
             .setDefinition(note, lang)
             .setValue(label, lang);
         
@@ -366,12 +366,12 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String code2 = "http://thesaurus.test#1";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-        .setCode(code1)
+        .setURICode(code1)
         .setDefinition(note, lang)
         .setValue(label, lang);
         writableThesaurus.addElement(keyword);
 
-        keyword.setCode(code2);
+        keyword.setURICode(code2);
         writableThesaurus.addElement(keyword);
         
         writableThesaurus.addRelation(code1, KeywordRelation.BROADER, code2);

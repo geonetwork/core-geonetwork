@@ -6,26 +6,26 @@
 	xmlns:exslt="http://exslt.org/common" 
 	exclude-result-prefixes="exslt saxon geonet">
 
-	<xsl:include href="blanks/metadata-schema01.xsl"/>
-	<xsl:include href="blanks/metadata-schema02.xsl"/>
-	<xsl:include href="blanks/metadata-schema03.xsl"/>
-	<xsl:include href="blanks/metadata-schema04.xsl"/>
-	<xsl:include href="blanks/metadata-schema05.xsl"/>
-	<xsl:include href="blanks/metadata-schema06.xsl"/>
-	<xsl:include href="blanks/metadata-schema07.xsl"/>
-	<xsl:include href="blanks/metadata-schema08.xsl"/>
-	<xsl:include href="blanks/metadata-schema09.xsl"/>
-	<xsl:include href="blanks/metadata-schema10.xsl"/>
-	<xsl:include href="blanks/metadata-schema11.xsl"/>
-	<xsl:include href="blanks/metadata-schema12.xsl"/>
-	<xsl:include href="blanks/metadata-schema13.xsl"/>
-	<xsl:include href="blanks/metadata-schema14.xsl"/>
-	<xsl:include href="blanks/metadata-schema15.xsl"/>
-	<xsl:include href="blanks/metadata-schema16.xsl"/>
-	<xsl:include href="blanks/metadata-schema17.xsl"/>
-	<xsl:include href="blanks/metadata-schema18.xsl"/>
-	<xsl:include href="blanks/metadata-schema19.xsl"/>
-	<xsl:include href="blanks/metadata-schema20.xsl"/>
+	<xsl:include href="blanks/metadata-schema01/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema02/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema03/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema04/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema05/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema06/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema07/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema08/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema09/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema10/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema11/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema12/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema13/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema14/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema15/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema16/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema17/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema18/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema19/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema20/present/metadata.xsl"/>
 
 	<xsl:template mode="schema" match="*">
 		<xsl:choose>

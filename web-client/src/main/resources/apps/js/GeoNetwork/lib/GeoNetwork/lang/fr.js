@@ -233,6 +233,7 @@ GeoNetwork.Lang.fr = {
     'view': 'Consulter',
     'zoomTo': 'Zoomer vers',
     'saveXml': 'Export (XML)',
+    'saveRdf': 'Export (RDF)',
     'exportCsv': 'Export (CSV)',
     'exportZip': 'Export (ZIP)',
     'printSel': 'Export (PDF)',
@@ -505,6 +506,12 @@ GeoNetwork.Lang.fr = {
 	'Searchforspatialdataon': "Rechercher des données spatiales sur les",
 	'fullTextSearch': "Recherche texte intégral",
 	'Advanced': "Avancées",
-	'List': "Liste"
+	'List': "Liste",
+    'xsd': 'Modèle ISO',
+    'rules': 'règles',
+    'rule': 'règle',
+    'schematron-rules-geonetwork': 'Validation GeoNetwork',
+    'schematron-rules-iso': 'Validation ISO',
+    'schematron-rules-inspire': 'Validation INSPIRE'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

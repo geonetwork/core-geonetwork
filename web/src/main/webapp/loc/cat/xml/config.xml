@@ -14,6 +14,8 @@
 	<network>Xarxa</network>
 	<netmask>Màscara de xarxa</netmask>
 
+	<searchStats>Search Statistics</searchStats>
+	
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activa</enable>
 
@@ -110,7 +112,9 @@
     <autofixing>Correccions automàtiques</autofixing>
 
     <inspire>INSPIRE</inspire>
-    
+    <harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+	
 	<proxy>Proxy</proxy>
 	<use>Ús</use>
 	<username>Nom d'usuari</username>
@@ -237,6 +241,11 @@
 	<!-- tooltips -->
 
 	<tips>
+		<tip id="site.siteId">
+			Unique catalogue identifier.
+			After changing the site identifier, user should update the index and the logo
+			from the administration panel.
+		</tip>
 		<tip id="site.name">Usat per identificar la instal·lació.</tip>
 
 		<!-- server -->
@@ -390,6 +399,12 @@
 			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
 
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			If set, Statistics on searches will be collected and stored in the database.
+		</tip>
+		
         <!-- multilingual settings -->
         <tip id="autodetect.enable">
             Si s'estableix, el llenguatge de cerca es detecta automàticament. Fixeu-vos que això no funciona molt bé per als termes de cerca curts.

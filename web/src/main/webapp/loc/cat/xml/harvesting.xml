@@ -89,7 +89,8 @@
         <type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
         <type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
         <type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
-	<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>        
+		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
+		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>        
     </wxstypes>
     
     <wxslang>Idioma de metadades</wxslang>
@@ -249,6 +250,7 @@
 	<threddslang>Idioma de les metadades</threddslang>
 	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
 	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
+	<threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>
 	<threddsCreateSubtemplates>Create subtemplates for fragments and XLink them into template</threddsCreateSubtemplates>
 	<threddsIgnoreHarvest>Ignore harvesting attribute</threddsIgnoreHarvest>
 	<threddsOutputSchema>Select schema for output metadata records</threddsOutputSchema>
@@ -339,6 +341,7 @@
   <noHistory>No History</noHistory>
   <dateDesc>Date (most recent first)</dateDesc>
   <date>Date</date>
+  <elapsedTime>Time</elapsedTime>
   <detail>Detail</detail>
   <grandTotal>Grand Total</grandTotal>
   <counter>of</counter>

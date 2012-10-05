@@ -197,6 +197,7 @@ CREATE TABLE HarvestHistory
   (
     id             int not null,
     harvestDate    varchar2(30),
+    elapsedTime    int,
     harvesterUuid  varchar2(250),
     harvesterName  varchar2(128),
     harvesterType  varchar2(128),
@@ -397,7 +398,7 @@ REM ======================================================================
 
 CREATE TABLE Thesaurus
   (
-    id   varchar2(250),
+    id   varchar2(250) not null,
     activated    varchar2(1),
     primary key(id)
   );

@@ -67,7 +67,7 @@ public class UpdateElement implements Service {
 		String thesaType = Util.getParam(params, "refType");
 		String prefLab = Util.getParam(params, "prefLab");
 		String lang = Util.getParam(params, "lang");
-		String definition = Util.getParam(params, "definition");
+		String definition = Util.getParam(params, "definition","");
 
 		ThesaurusManager manager = gc.getThesaurusManager();
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
@@ -82,7 +82,8 @@ public class UpdateElement implements Service {
 			}
 		}
 		KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
-            .setCode(newid)
+			.setNamespaceCode(namespace)
+            .setRelativeCode(newid)
             .setValue(prefLab, lang)
             .setDefinition(definition, lang);
     

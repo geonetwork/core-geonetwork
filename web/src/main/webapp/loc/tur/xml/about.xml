@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<help>
+	<title>GeoNetwork açık kaynak sayfası hakkında</title>
+	<content>
+		<p>Bu site <a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork açık kaynak ile çalıştırılmıştır</a>.
+		</p>
+		<p>
+			<strong>GeoNetwork açık kaynak</strong> standart ve merkezi olmayan bir mekansal bilgi yönetim ortamıdır. GeoNetwork internetin olanaklarını kullanarak jeo-referanslı veritabanlarına, kartografik ürünlere ve çeşitli kaynaklardan elde edilen üstverilere erişim sağlamak ile organizasyonlar arasındaki mekansal bilgi değişimini ve paylaşımını arttırmak için tasarlanmıştır. Coğrafi bilgi yönetiminin bu yaklaşımı, mekansal bilgi kullanıcılarının büyük bir kısmının ulaşılabilir durumdaki mekansal verilere ve tematik haritalara zamanında ve kolayca erişmelerini sağlamayı amaçlamaktadır.
+		</p>
+		<p>
+			<span lang="EN-US"> 
+
+
+			Uydu görüntülerinden elde edilen haritalar,</span> etkili birer iletişim aracıdır ve çeşitli <span lang="EN-US"> kullanıcıların çalışmalarında önemli bir rol oynamaktadır:</span>
+		</p>
+		<ul type="disc" style="margin-top: 0cm;">
+			<li>
+				Karar Vericiler: <span lang="EN-US">Eylemin,</span><span lang="EN-US"> </span><span lang="EN-US"> daha iyi bir planlamanın ve eylemlerini izleyebilmenin </span> temeli olarak hızlı, güvenilir, güncel ve kullanıcı dostu <span lang="EN-US">kartografik </span> ürünler ihticında olan sürdürülebilir gelişim planlayıcıları ve insani acil yardım yöneticileri.
+				
+			</li>
+			<li>
+				Güncel ve tutarlı coğrafi veri değişimine ihtiyaç duyan GIS uzmanları. 
+			</li>
+			<li>
+			    Coğrafi analizlerin ön hazırlık aşamasında ve değerli bölgeler için yapılan müdehalelerin daha doğru organize edilebilmesi amacıyla  güvenilir tahminler yapabilmek için gereken çok disiplinli verilere ihtiyaç duyan mekansal analistler. 
+			</li>
+		</ul>
+		<p>
+			<span lang="EN-US"><b>GeoNetwork açık kaynak </b> yazılımının temel amacı, farklı ölçekte olan ve çok disiplinli kaynaklardan elde edilen verilerin ve bunlarla ilişkili bilgilerin erişilebilirliğini arttırmaktır. Ayrıca GeoNetwork bu verilerin standart ve tutarlı bir biçimde organize ve dökümante edebilmesini sağlamayı da amaçlamaktadır.
+			 </span>
+		</p>
+		<p>
+			<span lang="EN-US">
+            Organizasyonlar arası veri değişimi ve paylaşımını arttırırken yaşanan en büyük zorluk mükerrer kayıt oluşmasını engellemek, verileri toplayarak ve herkesin yararı için bunları ulaşılabilir yaparak, kaynakları saklayarak ve veri-bilgi mülkiyetini koruyarak koordinasyon ve işbirliğini arttırmaktır.</span>
+		</p>
+		<p>
+			<span lang="EN-US"><a target="_blank" href="http://www.fao.org">FAO</a> ve <a href="http://www.wfp.org" target="_blank">WFP</a>, ve son günlerde <a href="http://www.unep.org" target="_blank">UNEP</a>, dijital haritalar, uydu görüntüleri ve ilgili istatistikleri içeren mekansal veritabanlarını etkili bir biçimde paylaşma ortak stratejisi ile <b>GeoNetwork açık kaynağı </b> geliştirmek için araştırmalarını ve haritacılık uzmanlıklarını birleştirdi.  Coğrafi Bilgi Sistemi (Geographic Information System - GIS) ve Uzaktan Algılama (Remote Sensing - RS) olarak bilinen bilgisayar tabanlı veri görselleştirme araçlarının yoğun kullanımını sağlayan birimler genellikle çeşitli bilgi katmanlarını biraraya getirerek haritalar yaratırlar. <b>GeoNetwork açık kaynak</b> onlara büyük çeşitliliktedi harita lara ve dünya çapında farklı veritabanlarında saklanan diğer mekansal bilgilere tek bir noktadan ulaşma imkanı sağlamaktadır.</span>
+		</p>
+		<p>
+			<b><span lang="EN-US">GeoNetwork açık kaynak </span></b><span lang="EN-US"> mekansal bilgi topluluklarını ve onların verilerini bağlantıda tutmak için, modern, güçlü, düşük maaliyetli ve </span>Özgür ve Açık Kaynak Yazılım (FOSS) ile Servis ve Protokoller için Uluslararası ve Açık Standartlar prensiplerini<span lang="EN-US"> temel alan bir mimari </span>kullanarak <span lang="EN-US"> geliştirilmiştir.(a.o.*** from <a href="http://www.isotc211.org" target="_blank">ISO/TC211</a> ve <a href="http://www.opengeospatial.org" target="_blank">OGC</a>).</span>
+		</p>
+		<p><a href="http://geonetwork-opensource.org" target="_blank">Daha fazlasını okumak için ...</a></p>
+	</content>
+</help>

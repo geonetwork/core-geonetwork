@@ -118,6 +118,7 @@ GeoNetwork.map.ExtentMap = function(){
             options = {
                 units: units,
                 projection: mainProjCode,
+                resolutions: GeoNetwork.map.RESOLUTIONS,
                 theme: null
             },
             map = new OpenLayers.Map(options);

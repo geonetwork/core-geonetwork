@@ -103,6 +103,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
@@ -1599,7 +1600,7 @@ public class SearchManager {
         private final Parser                          _gmlParser;
         private final Lock                            _lock;
         private SpatialIndexWriter                    _writer;
-        private Committer                             _committerTask;
+        private volatile Committer                             _committerTask;
 
         /**
          * TODO javadoc.
@@ -1649,9 +1650,13 @@ public class SearchManager {
             boolean rebuildIndex;
             try {
                 _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
-                rebuildIndex = _writer.getFeatureSource().getSchema() == null;
+				rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             }
-            catch (Exception e) {
+            catch (Throwable e) {
+
+				if (_writer == null) {
+					throw new RuntimeException(e);
+				}
                 String exceptionString = Xml.getString(JeevesException.toElement(e));
                 Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:" +
                         exceptionString);

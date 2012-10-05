@@ -1,0 +1,2346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../labels.xsd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gmx="http://www.isotc211.org/2005/gmx">
+	<element name="gmd:MD_ScopeCode">
+		<label>Kod zakresu</label>
+		<description>Class of information to which the referencing entity applies</description>
+	</element>
+	<element name="code" id="207.0" context="gmd:MD_Identifier">
+		<label>Kod</label>
+		<description>Wartość alfanumeryczna identyfikująca egzemplarz w danej przestrzeni nazw</description>
+	</element>
+	<element name="code">
+		<label>Kod systemu</label>
+		<description>Kod np. kod EPSG</description>
+	</element>
+	<element name="code" id="547.0" context="gmd:MD_CodeValue">
+		<label>Kod</label>
+		<description>Kod wartości</description>
+	</element>
+	<element name="codeSpace" id="208.1">
+		<label>Autorytet odpowiedzialny</label>
+		<description/>
+	</element>
+	<element name="gco:Date" id="364.0" context="gmd:CI_Citation">
+		<label>Data edycji</label>
+		<description/>
+	</element>
+	<element name="gco:Date" id="393.0">
+		<label>Data</label>
+		<description>Sformatowana jako YYYY-MM-DD</description>
+	</element>
+	<element name="gco:DateTime" id="64.0" context="gmd:MD_Usage">
+		<label>Data i czas użycia</label>
+		<description>Sformatowana jako YYYY-MM-DDTHH:mm:ss</description>
+	</element>
+	<element name="gco:DateTime" id="300.0" context="gmd:MD_StandardOrderProcess">
+		<label>Data i czas planowanego dostępu</label>
+		<description>Sformatowana jako YYYY-MM-DDTHH:mm:ss</description>
+	</element>
+	<!--<element name="gmd:dateTime">
+        <label>DateTime</label>
+        <description>Date and time or range of date and time on or over which the process step
+            occurred (YYYY-MM-DDThh:mm:ss)</description>
+    </element>-->
+	<element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
+		<label>Nazwa miary</label>
+		<description>Nazwa testu zastosowanego wobec danych</description>
+	</element>
+	<element name="gco:Measure" id="357.0" context="gmd:EX_VerticalExtent">
+		<label>Jednostka miary</label>
+		<description>Jednostki zastosowane w zasięgu pionowym</description>
+	</element>
+	<element name="gmd:CI_Address" id="380.0">
+		<label>Adres</label>
+		<description>lokalizacja osoby lub organizacji odpowiedzialnej</description>
+	</element>
+	<element name="gmd:CI_Citation" id="359.0">
+		<label>Przytoczenie</label>
+		<description>zestandaryzowane odniesienie do zasobu</description>
+	</element>
+	<element name="gmd:CI_Contact" id="387.0">
+		<label>Kontakt</label>
+		<description>informacja wymagana w celu umożliwienia kontaktu z osobą i/lub 
+		organizacją odpowiedzialną </description>
+	</element>
+	<element name="gmd:CI_Date" id="393.0">
+		<label>Data</label>
+		<description>data odniesienia oraz zdarzenie użyte do jej opisania </description>
+	</element>
+	<element name="gmd:CI_OnlineResource" id="396.0">
+		<label>Zasób sieciowy</label>
+		<description>informacja o źródłach sieciowych, z których może być pobrany zbiór danych, 
+		specyfikacja lub nazwa profilu społeczności i elementy rozszerzonych metadanych </description>
+	</element>
+	<element name="gmd:CI_ResponsibleParty" id="374.0">
+		<label>Strona odpowiedzialna</label>
+		<description>identyfikacja i sposoby kontaktowania się z osobą(ami) i organizacjami 
+		powiązanymi ze zbiorem danych </description>
+	</element>
+	<element name="gmd:CI_Series" id="403.0">
+		<label>Seria</label>
+		<description>informacja o serii lub zagregowanym zbiorze danych , którego 
+		częścią jest zbiór danych </description>
+	</element>
+	<element name="gmd:CI_Telephone" id="407.0">
+		<label>Telefon</label>
+		<description>numery telefonu, pod którymi można kontaktować się z osobą lub organizacją</description>
+	</element>
+	<element name="gmd:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+		<label>Pełna zewnętrzna dokładność położenia</label>
+		<description>przybliżenie zapisanych wartości współrzędnych do wartości przyjętych za prawdziwe </description>
+	</element>
+	<element name="gmd:DQ_AccuracyOfATimeMeasurement" id="121.0">
+		<label>Dokładność pomiaru czasu</label>
+		<description>poprawność pozycji odniesień czasowych (odnotowywanie błędów w pomiarze czasu) </description>
+	</element>
+	<element name="gmd:DQ_CompletenessCommission" id="109.0">
+		<label>Nadwyżka</label>
+		<description>nadmiar danych w zbiorze danych w stosunku do opisanego zakresu </description>
+	</element>
+	<element name="gmd:DQ_CompletenessOmission" id="110.0">
+		<label>Niedobór</label>
+		<description>brak danych w zbiorze danych w stosunku do opisanego zakresu </description>
+	</element>
+	<element name="gmd:DQ_ConceptualConsistency" id="112.0">
+		<label>Spójność pojęciowa</label>
+		<description>stosowanie się do reguł schematu pojęciowego </description>
+	</element>
+	<element name="gmd:DQ_ConformanceResult" id="129.0">
+		<label>Wynik zgodności</label>
+		<description>informacja o rezultacie oceniania uzyskanej wartości (lub zbioru wartości) 
+		względem określonego przyjętego poziomu jakości </description>
+	</element>
+	<element name="gmd:DQ_DataQuality" id="78.0">
+		<label>Jakość danych</label>
+		<description>informacja o jakości dla danych określonych przez zakres jakości danych </description>
+	</element>
+	<element name="gmd:DQ_DomainConsistency" id="113.0">
+		<label>Spójność dziedziny</label>
+		<description>stosowanie wartości z dziedzin wartości </description>
+	</element>
+	<element name="gmd:DQ_FormatConsistency" id="114.0">
+		<label>Spójność formatu</label>
+		<description>stopień, z jakim dane są składowane zgodnie z fizyczną strukturą 
+		zbioru danych opisanego zakresem </description>
+	</element>
+	<element name="gmd:DQ_GriddedDataPositionalAccuracy" id="118.0">
+		<label>Dokładność położenia danych w siatce</label>
+		<description>przybliżenie wartości położenia danych w siatce do  wartości 
+		przyjętych za prawdziwe </description>
+	</element>
+	<element name="gmd:DQ_NonQuantitativeAttributeAccuracy" id="126.0">
+		<label>Dokładność atrybutu nieilościowego</label>
+		<description>poprawność atrybutów nieilościowych </description>
+	</element>
+	<element name="gmd:DQ_QuantitativeAttributeAccuracy" id="127.0">
+		<label>Dokładność atrybutu ilościowego</label>
+		<description>poprawność atrybutów ilościowych </description>
+	</element>
+	<element name="gmd:DQ_QuantitativeResult" id="133.0">
+		<label>Wynik ilościowy</label>
+		<description>informacja o wartości (lub zbiorze wartości) uzyskanych w wyniku 
+		zastosowania miar jakości danych </description>
+	</element>
+	<element name="gmd:DQ_RelativeInternalPositionalAccuracy" id="119.0">
+		<label>Pośrednia wewnętrzna dokładność położenia</label>
+		<description>przybliżenie położeń pośrednich obiektów w zakresie ich odpowiednich 
+		położeń pośrednich przyjętych za prawdziwe </description>
+	</element>
+	<element name="gmd:DQ_Scope" id="138.0">
+		<label>Zakres</label>
+		<description>opis danych dla których jest określona informacja o jakości </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:DQ_TemporalConsistency" id="122.0">
+		<label>Spójność czasowa</label>
+		<description>poprawność kolejności zdarzeń lub sekwencji zdarzeń, jeśli takie 
+		zostały odnotowane </description>
+	</element>
+	<element name="gmd:DQ_TemporalValidity" id="123.0">
+		<label>Wiarygodność czasowa</label>
+		<description>wiarygodność danych określonych przez zakres z uwzględnieniem czasu </description>
+	</element>
+	<element name="gmd:DQ_ThematicClassificationCorrectness" id="125.0">
+		<label>Poprawność klasyfikacji ematycznej</label>
+		<description>porównanie klas przypisanych do obiektów lub ich atrybutów z 
+		tematami występującymi w klasyfikacji </description>
+	</element>
+	<element name="gmd:DQ_TopologicalConsistency" id="115.0">
+		<label>Spójność topologiczna</label>
+		<description>poprawność bezpośrednio zapisanych cech topologicznych zbioru 
+		danych opisanego zakresem </description>
+	</element>
+	<element name="gmd:EX_BoundingPolygon" id="341.0">
+		<label>Wielobok ograniczający</label>
+		<description>granica obejmująca zbiór danych, wyrażona jako zamknięty zbiór współrzędnych (x, y) 
+		wieloboku (ostatni punkt jest powtórzeniem pierwszego punktu) </description>
+	</element>
+	<element name="gmd:EX_Extent" id="334.0">
+		<label>Zasięg</label>
+		<description>informacja o przestrzennym, pionowym i czasowym zasięgu </description>
+	</element>
+	<element name="gmd:EX_GeographicBoundingBox" id="343.0">
+		<label>Geograficzny prostokąt ograniczający</label>
+		<description>położenie geograficzne zbioru danych  UWAGA: jest to jedynie odniesienie 
+		przybliżone więc określanie układu współrzędnych nie jest konieczne </description>
+	</element>
+	<element name="gmd:EX_GeographicDescription" id="348.0">
+		<label>Opis geograficzny</label>
+		<description>opis obszaru geograficznego z użyciem identyfikatorów </description>
+	</element>
+	<element name="gmd:EX_SpatialTemporalExtent" id="352.0">
+		<label>Zasięg przestrzenno czasowy</label>
+		<description>zasięg z uwzględnieniem daty/czasu i granic przestrzennych</description>
+	</element>
+	<element name="gmd:EX_TemporalExtent" id="350.0">
+		<label>Zasięg czasowy</label>
+		<description>przedział czasowy objęty zawartością zbioru danych </description>
+	</element>
+	<element name="gmd:EX_VerticalExtent" id="354.0">
+		<label>Zasięg pionowy</label>
+		<description>dziedzina pionowa zbioru danych</description>
+	</element>
+	<element name="gmd:ISBN" id="372.0">
+		<label>ISBN</label>
+		<description>międzynarodowy standardowy numer książki </description>
+	</element>
+	<element name="gmd:ISSN" id="373.0">
+		<label>ISSN</label>
+		<description>międzynarodowy standardowy numer serii</description>
+	</element>
+	<element name="gmd:LI_Lineage" id="82.0">
+		<label>Historia</label>
+		<description>informacja o zdarzeniach lub danych źródłowych wykorzystanych 
+		w budowie danych określonych zakresem lub też brak wiedzy o historii </description>
+	</element>
+	<element name="gmd:LI_ProcessStep" id="86.0">
+		<label>Etap procesu</label>
+		<description>Informacja o zdarzeniu lub transformacji związanej z danymi wraz 
+		z procedurami utrzymywania zasobu </description>
+	</element>
+	<element name="gmd:LI_Source" id="92.0">
+		<label>Źródło</label>
+		<description>informacja o danych źródłowych wykorzystanych przy tworzeniu danych 
+		określonych zakresem</description>
+	</element>
+	<element name="gmd:MD_AggregateInformation" id="66.1">
+		<label>Informacja o agregacji</label>
+		<description>Informacja o zagregowanym zbiorze danych</description>
+	</element>
+	<element name="gmd:MD_ApplicationSchemaInformation" id="320.0">
+		<label>Informacja o Sshemacie aplikacji</label>
+		<description>informacja o schemacie aplikacji użytym do budowy zbioru danych </description>
+	</element>
+	<element name="gmd:MD_Band" id="259.0">
+		<label>Zakres</label>
+		<description>zakres długości fal w widmie elektromagnetycznym </description>
+	</element>
+	<element name="gmd:MD_BrowseGraphic" id="48.0">
+		<label>Grafika poglądowa</label>
+		<description>grafika, która ilustruje zbiór danych (powinna zawierać legendę dla grafiki) </description>
+	</element>
+	<element name="gmd:MD_Constraints" id="67.0">
+		<label>Ograniczenia</label>
+		<description>ograniczenia dotyczące dostępu i korzystania z zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:MD_CoverageDescription" id="239.0">
+		<label>Opis pokrycia</label>
+		<description>informacja o zawartości komórki danych siatkowych </description>
+	</element>
+	<element name="gmd:MD_DataIdentification" id="36.0">
+		<label>Identyfikacja danych</label>
+		<description>informacja wymagana do identyfikacji zbioru danych </description>
+	</element>
+	<element name="gmd:MD_DigitalTransferOptions" id="274.0">
+		<label>Opcje transferu cyfrowego</label>
+		<description>środki techniczne i nośniki, na których zasób może być nabyty od dystrybutora </description>
+	</element>
+	<element name="gmd:MD_Dimension" id="179.0">
+		<label>Wymiar</label>
+		<description>właściwości osi </description>
+	</element>
+	<element name="gmd:MD_Distribution" id="270.0">
+		<label>Dystrybucja</label>
+		<description>informacja o dystrybutorze oraz opcjach nabycia zasobu </description>
+	</element>
+	<element name="gmd:MD_Distributor" id="279.0">
+		<label>Dystrybutor</label>
+		<description>Informacja o dystrybutorze </description>
+	</element>
+	<element name="gmd:MD_ExtendedElementInformation" id="306.0">
+		<label>Informacja o rozszerzonym elemencie</label>
+		<description>Nowy element metadanych, nie zdefiniowany w ISO 19115, 
+		który jest potrzebny do opisu danych geograficznych </description>
+	</element>
+	<element name="gmd:MD_FeatureCatalogueDescription" id="233.0">
+		<label>Opis katalogu obiektów</label>
+		<description>informacja identyfikująca katalog obiektów schematu pojęciowego</description>
+	</element>
+	<element name="gmd:MD_Format" id="284.0">
+		<label>Format</label>
+		<description>opis struktury języka komputerowego, który określa reprezentację 
+		obiektów danych w rekordzie, pliku, komunikacie, pamięci lub kanale transmisyjnym </description>
+	</element>
+	<element name="gmd:MD_GeometricObjects" id="183.0">
+		<label>Obiekty geometryczne</label>
+		<description>liczba obiektów  w zbiorze danych, wymieniona dla typu obiektu geometrycznego </description>
+	</element>
+	<element name="gmd:MD_Georectified" id="162.0">
+		<label>Geoprostokątny</label>
+		<description>siatka, której komórki są rozmieszczone regularnie w geograficznym 
+		układzie współrzędnych  lub układzie współrzędnych mapy zdefiniowanym w Układzie 
+		Odniesień Przestrzennych (SRS) w ten sposób, że każda komórka  siatki może być 
+		zlokalizowana  mając daną jej współrzędną siatki, początek układu siatki, 
+		rozmieszczenie komórek oraz orientację</description>
+	</element>
+	<element name="gmd:MD_Georeferenceable" id="170.0">
+		<label>Georeferencyjny</label>
+		<description>siatka z komórkami rozmieszczonych nieregularnie w dowolnym geograficznym 
+		układzie współrzędnych l, której poszczególne komórki mogą być zlokalizowane geograficznie 
+		za pomocą informacji o lokalizacji dostarczonym z danymi, ale nie mogą być zlokalizowane 
+		na podstawie samych właściwości siatki </description>
+	</element>
+	<element name="gmd:MD_GridSpatialRepresentation" id="157.0">
+		<label>Siatkowa reprezentacja przestrzenna</label>
+		<description>informacja o siatkowych obiektach przestrzennych w zbiorze danych </description>
+	</element>
+	<element name="gmd:MD_Identifier" id="205.0">
+		<label>Identyfikator</label>
+		<description>wartość jednoznacznie identyfikującą obiekt w  przestrzeni nazw </description>
+	</element>
+	<element name="gmd:MD_ImageDescription" id="243.0">
+		<label>Opis obrazu</label>
+		<description>informacja o użyteczności obrazu </description>
+	</element>
+	<element name="gmd:MD_Keywords" id="52.0">
+		<label>Słowa kluczowe</label>
+		<description>słowa kluczowe, ich typ i odniesienie do źródła </description>
+	</element>
+	<element name="gmd:MD_LegalConstraints" id="69.0">
+		<label>Ograniczenia prawne</label>
+		<description>ograniczenia i prawne wymagania wstępne dotyczące dostępu i korzystania 
+		z zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:MD_MaintenanceInformation" id="142.0">
+		<label>Informacja o utrzymaniu</label>
+		<description>Informacja o zakresie i częstotliwości aktualizacji </description>
+	</element>
+	<element name="gmd:MD_Medium" id="291.0">
+		<label>Nośnik</label>
+		<description>informacja o nośnikach, na których zasób może być dystrybuowany </description>
+	</element>
+	<element name="gmd:MD_Metadata" id="1.0">
+		<label>Metadane</label>
+		<description>bazowa encja, która definiuje metadane o zasobie lub zasobach </description>
+	</element>
+	<element name="gmd:MD_MetadataExtensionInformation" id="303.0">
+		<label>Informacja o rozszerzeniu metadanych</label>
+		<description>informacja opisująca rozszerzenia metadanych </description>
+	</element>
+	<element name="gmd:MD_PortrayalCatalogueReference" id="268.0">
+		<label>Odniesienie do katalogu opisów</label>
+		<description>informacja określająca użyty katalog opisów </description>
+	</element>
+	<element name="gmd:MD_RangeDimension" id="256.0">
+		<label>Zakres wymiaru</label>
+		<description>informacja o zakresie każdego wymiaru wartości pomiarowej komórki </description>
+	</element>
+	<element name="gmd:MD_ReferenceSystem" id="186.0">
+		<label>Układ odniesienia</label>
+		<description>informacja o układzie odniesienia </description>
+	</element>
+	<element name="gmd:MD_RepresentativeFraction" id="56.0">
+		<label>Ułamek reprezentatywny</label>
+		<description>pochodzący ze standardu ISO19103 – Skala, 
+		gdzie MD_UłamekReprezentatywny. mianownik = 1/ Skala.miara 
+		i Skala.jednostkiCelu =Skala.jednostkiŹródła </description>
+	</element>
+	<element name="gmd:MD_Resolution" id="59.0">
+		<label>Rozdzielczość</label>
+		<description>poziom szczegółowości wyrażony jako współczynnik skali lub odległość w terenie </description>
+	</element>
+	<element name="gmd:MD_ScopeDescription" id="149.0">
+		<label>Opis zakresu</label>
+		<description>opis klasy informacji objętej przez informację </description>
+	</element>
+	<element name="gmd:MD_SecurityConstraints" id="73.0">
+		<label>Ograniczenia bezpieczeństwa</label>
+		<description>ograniczenia nałożone na zasób lub metadane  w celu zapewnienia 
+		bezpieczeństwa krajowego lub bezpieczeństwa o podobnym znaczeniu </description>
+	</element>
+	<element name="gmd:MD_ServiceIdentification" id="47.0">
+		<label>Identyfikacja usług</label>
+		<description>identyfikacja możliwości , jakie udostępnia dostawca usług użytkownikowi 
+		poprzez zbiór interfejsów, które definiują zachowanie zapoznaj się ze standardem 
+		ISO 19119  w celu pozyskania dalszych informacji </description>
+	</element>
+	<element name="gmd:MD_StandardOrderProcess" id="298.0">
+		<label>Standardowy proces zamawiania</label>
+		<description>powszechne metody nabycia lub otrzymania zasobu i powiązane 
+		instrukcje i informacje o opłatach </description>
+	</element>
+	<element name="gmd:MD_Usage" id="62.0">
+		<label>Użycie</label>
+		<description>krótki opis sposobów, w jaki zasób(y) jest/są obecnie wykorzystywane </description>
+	</element>
+	<element name="gmd:MD_VectorSpatialRepresentation" id="176.0">
+		<label>Wektorowa reprezentacja przestrzenna</label>
+		<description>informacja o wektorowych obiektach przestrzennych w zbiorze danych </description>
+	</element>
+	<element name="gmd:FreeText" id="601.0">
+		<label>Wolny tekst</label>
+		<description>opis elementu metadanych w wielojęzycznym wolnym tekście</description>
+	</element>
+	<element name="gmd:RS_Identifier" id="208.0">
+		<label>Identyfikator</label>
+		<description>identyfikator użyty dla układów odniesienia </description>
+	</element>
+	<element name="gmd:URL" id="608.0">
+		<label>URL</label>
+		<description>lokalizacja (adres) dostępu sieciowego wykorzystający  adres 
+		Uniform Resource Locator (URL) lub podobny schemat adresowania np. 
+		http://www.statkart.no </description>
+	</element>
+	<element name="gmd:abstract" id="25.0">
+		<label>Streszczenie</label>
+		<description>krótki opis określający zawartość zasobu(ów)</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:accessConstraints" id="70.0">
+		<label>Ograniczenia dostępu</label>
+		<description>ograniczenia dostępu w celu zapewnienia ochrony prywatności lub 
+		dóbr intelektualnych oraz wszystkie dodatkowe ograniczenia lub ostrzeżenia 
+		dotyczące nabycia zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:address" id="525.0" context="gmd:CI_ResponsibleParty">
+		<label>Adres</label>
+		<description>Adres strony odpowiedzialnej</description>
+	</element>
+	<element name="gmd:address" id="389.0">
+		<label>Adres</label>
+		<description>adres fizyczny i elektroniczny, pod którymi można kontaktować się 
+		z osobą lub organizacją </description>
+	</element>
+	<element name="gmd:administrativeArea" id="383.0">
+		<label>Obszar administracyjny</label>
+		<description>stan, prowincja lokalizacji</description>
+	</element>
+	<element name="gmd:aggregateDataSetIdentifier" id="66.3">
+		<label>Identyfikator zagregowanego zbioru danych</label>
+		<description>Informacja o identyfikatorze zagregowanego zbioru danych</description>
+	</element>
+	<element name="gmd:aggregateDataSetName" id="66.2">
+		<label>Nazwa zagregowanego zbioru danych</label>
+		<description>Informacja o nazwie zagregowanego zbioru danych</description>
+	</element>
+	<element name="gmd:aggregationInfo" id="35.1">
+		<label>Informacja o agregacji</label>
+		<description>dostarcza informacje o zagregowanym zbiorze danych</description>
+	</element>
+	<element name="gmd:alternateTitle" id="361.0">
+		<label>Tytuł zastępczy</label>
+		<description>nazwa skrócona lub nazwa w innym języku, pod jaką znany jest przytaczany zasób.
+		Przykład: DCW’ jako nazwa zastępcza dla cyfrowej mapy świata (Digital Chart of the World) </description>
+	</element>
+	<element name="gmd:amendmentNumber" id="287.0">
+		<label>Numer poprawki</label>
+		<description>numer poprawki danej wersji formatu</description>
+	</element>
+	<element name="gmd:applicationProfile" id="399.0">
+		<label>Profil aplikacji</label>
+		<description>nazwa profilu aplikacji, która może być użyta  z zasobem sieciowym </description>
+	</element>
+	<element name="gmd:applicationSchemaInfo" id="21.0">
+		<label>Informacja o schemacie aplikacji</label>
+		<description>dostarcza informacje o schemacie pojęciowym zbioru danych</description>
+	</element>
+	<element name="gmd:associationType" id="66.4">
+		<label>Typ powiązania</label>
+		<description>Typ powiązania zagregowanego zbioru danych</description>
+	</element>
+	<element name="gmd:attributeDescription" id="240.0">
+		<label>Opis atrybutu</label>
+		<description>opis atrybutów poprzez pomierzone wartości</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:attributeInstances" id="153.0">
+		<label>Atrybuty</label>
+		<description>egzemplarze atrybutów, dla których ma zastosowanie informacja</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:attributes" id="150.0">
+		<label>Typy atrybutów</label>
+		<description>egzemplarze typów atrybutów, dla których ma zastosowanie informacja</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:authority" id="206.0">
+		<label>Autorytet</label>
+		<description>osoba lub strona odpowiedzialna za utrzymanie przestrzeni nazw</description>
+	</element>
+	<element name="gmd:axisDimensionProperties" id="159.0">
+		<label>Właściwości wymiarów osi</label>
+		<description>informacja o właściwościach  przestrzenno-czasowych osi</description>
+	</element>
+	<element name="gmd:bitsPerValue" id="264.0">
+		<label>Ilość bitów na wartość</label>
+		<description>maksymalna liczba bitów znaczących w niespakowanej reprezentacji 
+		dla wartości w każdym zakresie każdego piksela</description>
+	</element>
+	<element name="gmd:cameraCalibrationInformationAvailability" id="253.0">
+		<label>Dostępność informacji o kalibracji kamery</label>
+		<description>wskazanie, czy są lub nie są dostępne są stałe, które pozwalają 
+		na korekcję kalibracji kamery</description>
+	</element>
+	<element name="gmd:cellGeometry" id="160.0">
+		<label>Geometria komórki</label>
+		<description>identyfikacja rastrowych danych jako punktu lub komórki</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:centerPoint" id="166.0">
+		<label>Punkt środkowy</label>
+		<description>terenowe położenie w układzie współrzędnych zdefiniowanym przez 
+		System Odniesień Przestrzennych i przez współrzędną siatki komórki leżącej 
+		w połowie drogi między przeciwległymi końcami siatki w wymiarach przestrzennych</description>
+	</element>
+	<element name="gmd:characterSet" id="40.0" context="gmd:MD_DataIdentification">
+		<label>Zbiór znaków</label>
+		<description>pełna nazwa standardu zapisu znaków użytego w zbiorze danych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:characterSet" id="4.0" context="gmd:MD_Metadata">
+		<label>Zbiór znaków</label>
+		<description>pełna nazwa standardu zapisu znaków użytego dla zbioru metadanych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:checkPointAvailability" id="163.0">
+		<label>Dostępność punktu kontrolnego</label>
+		<description>wskazanie, czy są lub nie są dostępne punkty pozycji geograficznej 
+		w celu testowania dokładności georeferencyjnych danych siatki</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:checkPointDescription" id="164.0">
+		<label>Opis punktu kontrolnego</label>
+		<description>opis punktów o określonym położeniu geograficznym, użytych do 
+		testowania dokładności georeferencyjnych danych siatki</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:citation" id="24.0" context="gmd:MD_Identification">
+		<label>Przytoczenie</label>
+		<description>dane przytoczone dla zasobu(ów) </description>
+	</element>
+	<element name="gmd:citation" id="576.0" context="gmd:MD_Authority">
+		<label>Przytoczenie</label>
+		<description>Przytoczenie należące do strony odpowiedzialnej</description>
+	</element>
+	<element name="gmd:citation" id="581.0" context="gmd:MD_Thesaurus">
+		<label>Przytoczenie</label>
+		<description>Przytoczenie słownika</description>
+	</element>
+	<element name="gmd:citation" id="581.0">
+		<label>Przytoczenie</label>
+		<description>dane przytoczone dla zasobu(ów)</description>
+	</element>
+	<element name="gmd:citedResponsibleParty" id="367.0">
+		<label>Przytaczana strona odpowiedzialna</label>
+		<description>informacja o nazwie i pozycji osoby lub organizacji odpowiedzialnej za zasób </description>
+	</element>
+	<element name="gmd:city" id="382.0">
+		<label>Miasto</label>
+		<description>miasto lokalizacji</description>
+	</element>
+	<element name="gmd:classification" id="74.0">
+		<label>Klasyfikacja</label>
+		<description>nazwa ograniczeń nałożonych na zasób lub metadane</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:classificationSystem" id="76.0">
+		<label>System klasyfikacji</label>
+		<description>nazwa systemu klasyfikacji</description>
+	</element>
+	<element name="gmd:cloudCoverPercentage" id="248.0">
+		<label>Procent pokrycia chmurami</label>
+		<description>obszar zbioru danych przysłonięty chmurami, wyrażony jako procent 
+		zakresu przestrzennego </description>
+	</element>
+		<element name="gmd:code" id="207.0" context="gmd:RS_Identifier">
+		<label>Unikalny identyfikator zasobu</label>
+		<description>Alphanumeric value identifying an instance in the namespace</description>
+		<condition>mandatory</condition>
+	</element>
+	<element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
+		<label>Kod</label>
+		<description>wartość alfanumeryczna identyfikująca egzemplarz w  przestrzeni nazw</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:code" id="547.0" context="gmd:MD_CodeValue">
+		<label>Kod</label>
+		<description>Wartość kodowa</description>
+	</element>
+	<element name="gmd:codeSpace" id="208.1">
+		<label>Kod przestrzeni</label>
+		<description>nazwa lub identyfikator osoby lub organizacji odpowiedzialnej 
+		za przestrzeń nazw</description>
+	</element>
+	<element name="gmd:collectiveTitle" id="371.0">
+		<label>Tytuł zbiorowy</label>
+		<description>wspólny tytuł wraz z notatką o miejscu jego przechowywania
+		UWAGA: tytuł identyfikuje zbiorowo elementy serii dołączając informację 
+		o tym, które wolumeny są dostępne w przytaczanym zasobie</description>
+	</element>
+	<element name="gmd:complianceCode" id="234.0">
+		<label>Kod zgodności</label>
+		<description>Wskazanie, czy przytaczany katalog obiektów jest zgodny z normą ISO 19110</description>
+	</element>
+	<element name="gmd:compressionGenerationQuantity" id="250.0">
+		<label>Współczynnik kompresji</label>
+		<description>określa liczbę cykli stratnych  kompresji wykonanych na obrazie</description>
+	</element>
+	<element name="gmd:condition" id="312.0">
+		<label>Warunek</label>
+		<description>warunek, dla którego rozszerzony element jest obligatoryjny</description>
+	</element>
+	<element name="gmd:constraintLanguage" id="323.0">
+		<label>Język ograniczeń</label>
+		<description>język formalny użyty w Schemacie Aplikacji </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
+		<label>Kontakt</label>
+		<description>strona odpowiedzialna za informacje o metadanych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
+		<label>Kontakt</label>
+		<description>identyfikacja i środki komunikacji do osób, organizacji odpowiedzialnych za konserwcję danych</description>
+	</element>
+	<element name="gmd:contact" id="8.0">
+		<label>Autor metadanych</label>
+		<description>strona odpowiedzialna za informacje o metadanych</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:contactInfo" id="378.0">
+		<label>Informacja o kontakcie</label>
+		<description>adres strony odpowiedzialnej </description>
+	</element>
+	<element name="gmd:contactInstructions" id="392.0">
+		<label>Instrukcje kontaktowania </label>
+		<description>dodatkowe instrukcje informujące o tym jak i kiedy  kontaktować 
+		się z osobą lub organizacją </description>
+	</element>
+	<element name="gmd:contentInfo" id="16.0">
+		<label>Informacja o zawartości </label>
+		<description>dostarcza informacje o katalogu obiektów i opisuje charakterystykę 
+		pokrycia i danych obrazowych </description>
+	</element>
+	<element name="gmd:contentType" id="241.0">
+		<label>Typ zawartości</label>
+		<description>typ informacji reprezentowanej przez wartość komórki </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:controlPointAvailability" id="171.0">
+		<label>Dostępność punktu kontrolnego </label>
+		<description>wskazanie, czy istnieje lub nie istnieje punkt(y) kontrolny</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:cornerPoints" id="165.0">
+		<label>Punkty narożne</label>
+		<description>terenowe położenie  w układzie współrzędnych zdefiniowane przez 
+		System Odniesień Przestrzennych i współrzędną siatki komórek na przeciwległych 
+		końcach dwóch przekątnych pokrycia siatki w wymiarach przestrzennych siatki. 
+		Są cztery punkty narożne w prostokątnej siatce: wymagane są co najmniej dwa 
+		punkty narożne na jednej przekątnej. Pierwszy punkt narożny odpowiada 
+		początkowi układu siatki </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:country" id="612.0">
+		<label>Państwo</label>
+		<description>państwo adresu fizycznego</description>
+	</element>
+	<element name="gmd:country" id="508.0" context="gmd:MD_Legislation">
+		<label>Państwo</label>
+		<description>państwo, w którym został wydany akt prawny</description>
+	</element>
+	<element name="gmd:country" id="605.0" context="Group">
+		<label>Państwo</label>
+		<description>państwo, którego język został użyty do dokumentacji tekstowej</description>
+	</element>
+	<element name="gmd:credit" id="27.0">
+		<label>Uczestnictwo </label>
+		<description>identyfikacja osób, które wniosły swój wkład do zasobu </description>
+	</element>
+	<element name="gmd:dataQualityInfo" id="18.0">
+		<label>Informacja o jakości danych </label>
+		<description>dostarcza ogólną ocenę jakości zasobu(ów) </description>
+	</element>
+	<element name="gmd:dataSetURI" id="11.1">
+		<label>URI zbioru danych</label>
+		<description>Identyfikator URI zbioru danych, do których metadane się odnoszą</description>
+	</element>
+	<element name="gmd:dataType" id="313.0">
+		<label>Typ danych</label>
+		<description>kod, który identyfikuje rodzaj wartości podawany w rozszerzonym elemencie </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:dataset" id="154.0">
+		<label>Zbiór danych</label>
+		<description>zbiór danych, dla którego ma zastosowanie informacja </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:date" id="570.0">
+		<label>Data</label>
+		<description>data odniesienia dla przytaczanego zasobu</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:date" id="570.0" context="gmd:MD_Revision">
+		<label>Data ostatniej aktualizacji</label>
+		<description>data ostatniej aktualizacji</description>
+	</element>
+	<element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
+		<label>Data następnej aktualizacji</label>
+		<description>ustalona data przeglądu zasobu</description>
+	</element>
+	<element name="gmd:date" id="362.0" context="gmd:CI_Citation">
+		<label>Data</label>
+		<description>data odniesienia dla przytaczanego zasobu</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:date" id="394.0" context="gmd:CI_Date">
+		<label>Data</label>
+		<description>data odniesienia dla przytaczanego zasobu</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:dateOfNextUpdate" id="144.0">
+		<label>Data następnej aktualizacji </label>
+		<description>ustalona data przeglądu zasobu </description>
+	</element>
+	<element name="gmd:dateStamp" id="9.0">
+		<label>Oznaczenie daty metadanych</label>
+		<description>data utworzenia metadanych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+		<element name="gmd:dateTime" id="89.0">
+		<label>Data / Czas</label>
+		<description>Date and time or range of date and time on or over which the process step
+            occurred (YYYY-MM-DDThh:mm:ss)</description>
+	</element>
+	<element name="gmd:dateTime" id="89.0" context="LI_ProcessStep">
+		<label>Data czas</label>
+		<description>data i czas lub przedział czasowy, w którym lub po którym 
+		nastąpił etap procesu </description>
+	</element>
+	<element name="gmd:dateTime" id="106.0" context="gmd:DQ_Element">
+		<label>Data czas</label>
+		<description>data i czas lub przedział czasowy, w którym lub po którym 
+		nastąpił etap procesu </description>
+	</element>
+	<element name="gmd:dateType" id="395.0">
+		<label>Typ daty</label>
+		<description>zdarzenie wykorzystane dla daty odniesienia </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:definition" id="310.0">
+		<label>Definicja</label>
+		<description>definicja rozszerzonego elementu </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:deliveryPoint" id="381.0">
+		<label>Punkt dostawczy </label>
+		<description>linia adresu lokalizacji (opisana w ISO 11180, załącznik A) </description>
+	</element>
+	<element name="gmd:denominator" id="57.0">
+		<label>Mianownik</label>
+		<description>liczba pod kreską ułamka zwykłego </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:density" id="293.0">
+		<label>Gęstość </label>
+		<description>gęstość zapisu danych </description>
+	</element>
+	<element name="gmd:densityUnits" id="294.0">
+		<label>Jednostki gęstości </label>
+		<description>jednostki miary gęstości zapisu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:description" id="561.0">
+		<label>Opis</label>
+		<description>opis zdarzenia, wraz z powiązanymi parametrami lub tolerancją </description>
+	</element>
+	<element name="gmd:description" id="561.0" context="gmd:MD_AbstractClass">
+		<label>Opis</label>
+		<description>opis zdarzenia, wraz z powiązanymi parametrami lub tolerancją </description>
+	</element>
+	<element name="gmd:description" id="87.0" context="LI_ProcessStep">
+		<label>Opis</label>
+		<description>opis zdarzenia, wraz z powiązanymi parametrami lub tolerancją </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:description" id="93.0" context="LI_Source">
+		<label>Opis</label>
+		<description>szczegółowy opis poziomu danych źródłowych</description>
+	</element>
+	<element name="gmd:description" id="335.0" context="gmd:EX_Extent">
+		<label>Opis</label>
+		<description>zasięg przestrzenny i czasowy dla odwołującego się obiektu</description>
+	</element>
+	<element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
+		<label>Opis</label>
+		<description>szczegółowy opis tekstowy tego czym jest lub co robi zasób sieciowy</description>
+	</element>
+	<element name="gmd:description" id="541.0" context="gmd:MD_CodeDomain">
+		<label>Opis</label>
+		<description>Description of the code domain</description>
+	</element>
+	<element name="gmd:description" id="549.0" context="gmd:MD_CodeValue">
+		<label>Opis wartości</label>
+		<description>Opis wartości</description>
+	</element>
+	<element name="gmd:description" id="552.0" context="gmd:MD_Attribute">
+		<label>Opis</label>
+		<description>Opis atrybutu</description>
+	</element>
+	<element name="gmd:description" id="557.0" context="gmd:MD_Role">
+		<label>Opis</label>
+		<description>Opis roli</description>
+	</element>
+	<element name="gmd:descriptiveKeywords" id="33.0">
+		<label>Opisowe słowa kluczowe</label>
+		<description>dostarcza sklasyfikowane słowa kluczowe, ich typ i źródło odniesienia </description>
+	</element>
+	<element name="gmd:descriptor" id="258.0">
+		<label>Deskryptor</label>
+		<description>opis zakresu  wartości pomiarowej komórki </description>
+	</element>
+	<element name="gmd:dimension" id="242.0">
+		<label>Wymiar</label>
+		<description>informacja o wymiarach wartości pomiarowej komórki </description>
+	</element>
+	<element name="gmd:dimensionName" id="180.0">
+		<label>Nazwa wymiaru </label>
+		<description>nazwa osi </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:dimensionSize" id="181.0">
+		<label>Liczba wymiarów</label>
+		<description>liczba elementów na osi </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:distance" id="61.0">
+		<label>Odległość</label>
+		<description>terenowa próbka odległości </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:distributionFormat" id="271.0">
+		<label>Format dystrybucji</label>
+		<description>dostarcza opis formatu dystrybuowanych danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:distributionInfo" id="17.0">
+		<label>Informacja o dystrybucji</label>
+		<description>dostarcza informacje o dystrybutorze i opcjach pozyskania zasobu(ów) </description>
+	</element>
+	<element name="gmd:distributionOrderProcess" id="281.0">
+		<label>Proces zamawiania</label>
+		<description>dostarcza informacje o sposobach nabycia zasobu, związanych instrukcjach i opłatach</description>
+	</element>
+	<element name="gmd:distributor" id="272.0">
+		<label>Dystrybutor</label>
+		<description>dostarcza informacje o dystrybutorze </description>
+	</element>
+	<element name="gmd:distributorContact" id="280.0">
+		<label>Kontakt dystrybutora</label>
+		<description>strona, od której można nabyć zasób. Lista ta nie musi być kompletna </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:distributorFormat" id="282.0">
+		<label>Format dystrybutora </label>
+		<description>dostarcza informacje o formacie użytym przez dystrybutora </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:distributorTransferOptions" id="283.0">
+		<label>Opcje transferu dystrybutora</label>
+		<description>dostarcza informacje o środkach technicznych oraz nośnikach 
+		stosowanych przez dystrybutora </description>
+	</element>
+	<element name="gmd:domainCode" id="309.0">
+		<label>Kod dziedziny</label>
+		<description>trzycyfrowy kod przypisany do rozszerzonego elementu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:domainOfValidity" id="197.0">
+		<label>Dziedzina poprawności</label>
+		<description>zakres, który jest poprawny dla układu odniesienia </description>
+	</element>
+	<element name="gmd:domainValue" id="315.0">
+		<label>Wartość dziedziny</label>
+		<description>poprawne wartości, które mogą być przypisane do rozszerzonego elementu </description>
+	</element>
+	<element name="gmd:eastBoundLongitude" id="345.0">
+		<label>Wschodnia graniczna długość geograficzna</label>
+		<description>najbardziej wysunięta na wschód współrzędna granicy zasięgu zbioru danych, 
+		wyrażona w długości geograficznej  w stopniach dziesiętnych (wschód dodatnia) </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:edition" id="363.0">
+		<label>Wydanie</label>
+		<description>wersja przytaczanego zasobu </description>
+	</element>
+	<element name="gmd:editionDate" id="364.0">
+		<label>Data wydania</label>
+		<description>data wydania </description>
+	</element>
+	<element name="gmd:electronicMailAddress" id="386.0">
+		<label>Adres elektroniczny</label>
+		<description>adres skrzynki elektronicznej organizacji lub osoby odpowiedzialnej </description>
+	</element>
+	<element name="gmd:environmentDescription" id="44.0">
+		<label>Opis środowiska</label>
+		<description>opis zbioru danych w środowisku przetwarzania producenta, 
+		uwzględniający kwestie takie jak oprogramowanie, system operacyjny komputera, 
+		nazwa pliku, rozmiar zbioru danych </description>
+	</element>
+	<element name="gmd:equivalentScale" id="60.0">
+		<label>Odpowiadająca skala</label>
+		<description>poziom szczegółowości wyrażony jako skala porównywalnej wydrukowanej mapy lub wykresu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:errorStatistic" id="136.0">
+		<label>Statystyka błędu</label>
+		<description>metoda statystyczna użyta do określenia wartości </description>
+	</element>
+	<element name="gmd:evaluationMethodDescription" id="104.0">
+		<label>Opis metody oceniania</label>
+		<description>opis metody oceniania </description>
+	</element>
+	<element name="gmd:evaluationMethodType" id="103.0">
+		<label>Typ metody oceniania</label>
+		<description>typ metody użytej do oceny jakości zbioru danych </description>
+	</element>
+	<element name="gmd:evaluationProcedure" id="105.0">
+		<label>Procedura oceniania</label>
+		<description>odniesienie do informacji o procedurze</description>
+	</element>
+	<element name="gmd:explanation" id="131.0">
+		<label>Wyjaśnienie</label>
+		<description>wyjaśnienie znaczenia zgodności dla tego wyniku </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:extendedElementInformation" id="305.0">
+		<label>Informacja o rozszerzonym elemencie</label>
+		<description>dostarcza informację o nowym elemencie metadanych, nie znajdującym 
+		się w ISO 19115, który jest potrzebny do opisu danych geograficznych </description>
+	</element>
+	<element name="gmd:extensionOnLineResource" id="304.0">
+		<label>Zasób sieciowy rozszerzenie</label>
+		<description>informacja o źródłach sieciowych zawierających nazwę profilu społeczności 
+		i elementy rozszerzonych metadanych. Informacja dla wszystkich nowych elementów metadanych </description>
+	</element>
+	<element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
+		<label>Zasięg</label>
+		<description>dadatkowa informacja o zasięgu zawierająca prostokąt ograniczający, pionowy i czasowy zasięg zbioru danych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:extent" id="140.0" context="gmd:DQ_Scope">
+		<label>Zasięg</label>
+		<description>informacja o  poziomym, pionowym i czasowym zasięgu danych określonych przez zakres</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:extent" id="351.0" context="gmd:EX_TemporalExtent">
+		<label>Zasięg</label>
+		<description>data i czas dla zawartości zbioru danych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:extentTypeCode" id="340.0">
+		<label>Kod typu zasięgu</label>
+		<description>wskazanie, czy wielobok ograniczający obejmuje obszar pokryty 
+		danymi czy też obszar, dla którego brak danych </description>
+	</element>
+	<element name="gmd:facsimile" id="409.0">
+		<label>Faks</label>
+		<description>telefoniczny numer faksu organizacji lub osoby odpowiedzialnej </description>
+	</element>
+	<element name="gmd:featureCatalogueCitation" id="238.0">
+		<label>Przytoczenie katalogu obiektów</label>
+		<description>pełne odniesienie bibliograficzne do jednego lub więcej zewnętrznych katalogów obiektów </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:featureInstances" id="152.0">
+		<label>Obiekty</label>
+		<description>feature instances to which the information applies</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:featureTypes" id="237.0">
+		<label>Typy obiektów</label>
+		<description>podzbiór typów obiektów z przytaczanego katalogu obiektów 
+		występującego w zbiorze </description>
+	</element>
+	<element name="gmd:features" id="151.0">
+		<label>Funkcje</label>
+		<description>egzemplarze obiektów, dla których ma zastosowanie informacja </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:fees" id="299.0">
+		<label>Opłaty</label>
+		<description>opłaty i warunki pozyskania zasobu. Obejmuje jednostki monetarne 
+		(określone w ISO 4217) </description>
+	</element>
+	<element name="gmd:fileDecompressionTechnique" id="289.0">
+		<label>Technika rozpakowania pliku</label>
+		<description>rekomendowane algorytmy lub procesy, które mogą być użyte do odczytania 
+		lub rozpakowania zasobów, dla których zastosowane zostały techniki kompresji</description>
+	</element>
+	<element name="gmd:fileDescription" id="50.0">
+		<label>Opis pliku</label>
+		<description>opis tekstowy ilustracji </description>
+	</element>
+	<element name="gmd:fileIdentifier" id="2.0">
+		<label>Identyfikator pliku</label>
+		<description>unikalny identyfikator tego pliku metadanych </description>
+	</element>
+	<element name="gmd:fileName" id="49.0">
+		<label>Nazwa pliku</label>
+		<description>nazwa pliku, który zawiera grafikę ilustrującą zbiór danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:fileType" id="51.0">
+		<label>Typ pliku</label>
+		<description>format w jakim zapisana jest ilustracja. 
+		Przykłady: CGM, EPS, GIF, JPEG, PBM, PS, TIFF, XWD </description>
+	</element>
+	<element name="gmd:filmDistortionInformationAvailability" id="254.0">
+		<label>Dostępność informacji o zniekształceniu filmu</label>
+		<description>wskazanie, czy jest lub nie jest dostępna  informacja o siatce 
+		Calibration Reseau </description>
+	</element>
+	<element name="gmd:formatDistributor" id="290.0">
+		<label>Format dystrybutora</label>
+		<description>dostarcza informacje o formacie dystrybutora </description>
+	</element>
+	<element name="gmd:function" id="402.0">
+		<label>Funkcja</label>
+		<description>kod funkcji wykonywanej przez zasób sieciowy</description>
+	</element>
+	<element name="gmd:geographicElement" id="336.0">
+		<label>Element geograficzny</label>
+		<description>dostarcza komponent geograficzny zasięgu odnoszącego się obiektu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:geographicIdentifier" id="349.0">
+		<label>Identyfikator geograficzny</label>
+		<description>identyfikator użyty do reprezentowania obszaru geograficznego </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:geometricObjectCount" id="185.0">
+		<label>Liczba obiektów geometrycznych</label>
+		<description>liczba wszystkich obiektów  punktowych lub wektorowych występujących w zbiorze </description>
+	</element>
+	<element name="gmd:geometricObjectType" id="184.0">
+		<label>Typ obiektu geometrycznego</label>
+		<description>nazwa obiektów punktowych lub wektorowych użytych do zlokalizowania 
+		zero-, jedno-  dwu-trzy- wymiarowych położeń przestrzennych w zbiorze danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:geometricObjects" id="178.0">
+		<label>Obiekty geometryczne</label>
+		<description>informacja o obiektach geometrycznych użytych w zbiorze </description>
+	</element>
+	<element name="gmd:georeferencedParameters" id="174.0">
+		<label>Parametry georeferencyjne</label>
+		<description>parametry georeferencyjne danych siatki</description>
+	</element>
+	<element name="gmd:graphicOverview" id="31.0">
+		<label>Przegląd graficzny</label>
+		<description>dostarcza grafikę, która ilustruje zasób(oby) (powinna zawierać 
+		legendę dla grafiki) </description>
+	</element>
+	<element name="gmd:graphicsFile" id="325.0">
+		<label>Plik graficzny</label>
+		<description>pełny schemat aplikacji podany w pliku graficznym </description>
+	</element>
+	<element name="gmd:handlingDescription" id="77.0">
+		<label>Opis przechowywania</label>
+		<description>dodatkowe informacje o ograniczeniach dotyczących przechowywania zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:hierarchyLevel" id="6.0">
+		<label>Poziom hierarchii</label>
+		<description>zakres, do którego odnoszą się metadane (zobacz załącznik H aby 
+		uzyskać więcej informacji o poziomach hierarchii metadanych) </description>
+	</element>
+	<element name="gmd:hierarchyLevelName" id="7.0">
+		<label>Nazwa poziomu hierarchii</label>
+		<description>nazwa poziomów hierarchii, dla których dostarczane są metadane </description>
+	</element>
+	<element name="gmd:hoursOfService" id="391.0">
+		<label>Godziny serwisu</label>
+		<description>przedział czasowy (włączając strefę czasową), kiedy można 
+		skontaktować się z organizacją lub osobą</description>
+	</element>
+	<element name="gmd:identificationInfo" id="15.0">
+		<label>Informacje o identyfikacji</label>
+		<description>podstawowa informacja o zasobie(ach), do których mają zastosowanie metadane </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:identifier" id="573.0">
+		<label>Identyfikator</label>
+		<description>jednoznaczny identyfikator obiektu w  przestrzeni nazw </description>
+	</element>
+	<element name="gmd:identifier" id="573.0" context="gmd:CI_Citation">
+		<label>Identyfikator</label>
+		<description>Identyfikator przytoczenia</description>
+	</element>
+	<element name="gmd:identifier" id="575.0" context="gmd:MD_Authority">
+		<label>Identyfikator</label>
+		<description>Identyfikator należący do organizacji</description>
+	</element>
+	<element name="gmd:illuminationAzimuthAngle" id="245.0">
+		<label>Kąt azymutu oświetlenia</label>
+		<description>azymut oświetlenia mierzony w stopniach zgodnie z kierunkiem wskazówek
+		zegara od rzeczywistego kierunku północnego w momencie wykonywania obrazu. 
+		Dla skanowanych obrazów odnosi się do środkowego piksela obrazu</description>
+	</element>
+	<element name="gmd:illuminationElevationAngle" id="244.0">
+		<label>Kąt nachylenia oświetlenia</label>
+		<description>nachylenie oświetlenia mierzone w stopniach zgodnie z kierunkiem wskazówek
+		zegara od planu docelowego w miejscu przecięcia optycznej linii widzenia z powierzchnią Ziemi.
+		Dla obrazów skanowanych odnosi się do środkowego piksela obrazu</description>
+	</element>
+	<element name="gmd:imageQualityCode" id="247.0">
+		<label>Kod jakości obrazu</label>
+		<description>określa jakość obrazu </description>
+	</element>
+	<element name="gmd:imagingCondition" id="246.0">
+		<label>Warunki zobrazowania</label>
+		<description>warunki wpływające na obraz </description>
+	</element>
+	<element name="gmd:includedWithDataset" id="236.0">
+		<label>Zawarty w zbiorze danych</label>
+		<description>wskazanie, czy katalog obiektów jest lub nie jest zawarty 
+		w zbiorze danych</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:individualName" id="375.0">
+		<label>Nazwa osoby</label>
+		<description>nazwa osoby odpowiedzialnej: - nazwisko, imię, tytuł oddzielone separatorem </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:initiativeType" id="66.5">
+		<label>Typ inicjatywy</label>
+		<description>Typ inicjatywy, w czasie której zagregowany zbiór danych 
+		został utworzony</description>
+	</element>
+	<element name="gmd:issueIdentification" id="405.0">
+		<label>Identyfikacja numeru</label>
+		<description>informacja identyfikująca numer serii </description>
+	</element>
+	<element name="gmd:keyword" id="53.0">
+		<label>Słowo kluczowe</label>
+		<description>wyraz(y) powszechnie wykorzystywane lub sformalizowane wyraz(y) lub fraza(y) użyte do opisu tematu </description>
+	</element>
+	<element name="gmd:language" context="gmd:MD_Metadata" id="3.0">
+		<label>Język</label>
+		<description>język użyty do udokumentowania metadanych </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:language" context="gmd:MD_DataIdentification" id="39.0">
+		<label>Język</label>
+		<description>język użyty w zbiorze danych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:language" context="gmd:MD_FeatureCatalogueDescription" id="235.0">
+		<label>Język</label>
+		<description>język użyty w katalogu</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:lensDistortionInformationAvailability" id="255.0">
+		<label>Dostępność informacji o zniekształceniu soczewki </label>
+		<description>wskazanie, czy jest lub nie jest dostępna informacja o korekcji odchylenia soczewki</description>
+	</element>
+	<element name="gmd:level" id="139.0">
+		<label>Poziom</label>
+		<description>poziom hierarchiczny danych określonych przez zakres </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:levelDescription" id="141.0">
+		<label>Opis poziomu</label>
+		<description>szczegółowy opis poziomu danych określonych przez zakres </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:lineage" id="81.0">
+		<label>Historia</label>
+		<description>nieilościowa informacja jakościowa o historii danych określonych zakresem </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:linkage" id="397.0">
+		<label>Odnośnik</label>
+		<description>lokalizacja (adres) dostępu sieciowego wykorzystający adres 
+		Uniform Resource Locator (URL) lub podobny schemat adresowania 
+		np. http://www.starkart.no/isotc211 </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
+		<label>Częstotliwość utrzymania i aktualizacji</label>
+		<description>częstotliwość z jaką wykonywane są zmiany w zasobie po tym jak 
+		zasób został skompletowany </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:maintenanceNote" id="148.0">
+		<label>Wyjaśnienie o utrzymaniu</label>
+		<description>informacja dotycząca określonych wymagań związanych z utrzymaniem zasobu </description>
+	</element>
+	<element name="gmd:maxValue" id="260.0">
+		<label>Wartość największa</label>
+		<description>najdłuższa długość fali, na której czujnik jest w stanie 
+		rejestrować w  wyznaczonym zakresie </description>
+	</element>
+	<element name="gmd:maximumValue" id="356.0">
+		<label>Wartość największa</label>
+		<description>największa wartość pionowa zawarta w zbiorze danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:measureDescription" id="102.0">
+		<label>Opis miary</label>
+		<description>opis  miary </description>
+	</element>
+	<element name="gmd:measureIdentification" id="101.0">
+		<label>Identyfikacja miary</label>
+		<description>kod identyfikujący zarejestrowaną standardową procedurę </description>
+	</element>
+	<element name="gmd:mediumFormat" id="296.0">
+		<label>Format nośnika</label>
+		<description>metoda zastosowana do zapisania nośnika </description>
+	</element>
+	<element name="gmd:mediumNote" id="297.0">
+		<label>Uwaga o nośniku</label>
+		<description>opis innych ograniczeń lub wymagań dla używania nośnika </description>
+	</element>
+	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
+		<label>Ograniczenia metadanych</label>
+		<description>dostarcza ograniczenia związane z dostępem i korzystaniem z metadanych </description>
+	</element>
+	<element name="gmd:metadataConstraints">
+		<label>Ograniczenia metadanych</label>
+		<description>dostarcza ograniczenia związane z dostępem i korzystaniem z danych</description>
+	</element>
+	<element name="gmd:metadataExtensionInfo" id="14.0">
+		<label>Informacja o rozszerzeniu metadanych</label>
+		<description>informacja opisująca rozszerzenia metadanych </description>
+	</element>
+	<element name="gmd:metadataMaintenance" id="22.0">
+		<label>Utrzymanie metadanych</label>
+		<description>dostarcza informacje o częstotliwości aktualizacji metadanych 
+		i zakresie tych aktualizacji </description>
+	</element>
+	<element name="gmd:metadataStandardName" id="10.0">
+		<label>Nazwa standardu metadanych</label>
+		<description>nazwa użytego standardu metadanych (włącznie z nazwą profilu) </description>
+	</element>
+	<element name="gmd:metadataStandardVersion" >
+		<label>Wersja standardu metadanych</label>
+		<description>zastosowana wersja standardu metadanych (wersja profilu) </description>
+	</element>
+	<element name="gmd:minValue" id="261.0">
+		<label>Najmniejsza wartość</label>
+		<description>najkrótsza długość fali, na której czujnik jest w stanie rejestrować 
+		w wyznaczonym zakresie </description>
+	</element>
+	<element name="gmd:minimumValue" id="355.0">
+		<label>Najmniejsza wartość</label>
+		<description>najmniejsza wartość pionowa zawarta w zbiorze danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:name" context="gmd:MD_AbstractClass" id="560.0">
+		<label>Nazwa</label>
+		<description>Nazwa</description>
+	</element>
+	<element name="gmd:name" context="gmd:MD_Medium" id="292.0">
+		<label>Nazwa</label>
+		<description>Nazwa nośnika, na którym zasób może być otrzymany</description>
+	</element>
+	<element name="gmd:name" context="gmd:RS_ReferenceSystem" id="196.0">
+		<label>Nazwa</label>
+		<description>Nazwa zastosowanego systemu odniesienia</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:name" context="gmd:MD_Format" id="285.0">
+		<label>Nazwa</label>
+		<description>Nazwa formatu transferu danych</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:name" context="gmd:MD_ExtendedElementInformation" id="307.0">
+		<label>Nazwa</label>
+		<description>Nazwa rozszerzonego elementu metadanych</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:name" context="gmd:MD_ApplicationSchemaInformation" id="321.0">
+		<label>Nazwa</label>
+		<description>Nazwa użytego schematu aplikacji</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:name" context="gmd:CI_OnlineResource" id="400.0">
+		<label>Nazwa</label>
+		<description>Nazwa zasobu sieciowego</description>
+	</element>
+	<element name="gmd:name" context="gmd:CI_Series" id="404.0">
+		<label>Nazwa</label>
+		<description>Nazwa serii lub zbioru danych stanowiącego kontener, którego częścią jest zbiór danych</description>
+	</element>
+	<element name="gmd:name" context="gmd:MD_CodeDomain" id="537.0">
+		<label>Nazwa</label>
+		<description>Nazwa kodu dziedziny</description>
+	</element>
+	<element name="gmd:name" context="gmd:MD_CodeValue" id="546.0">
+		<label>Nazwa</label>
+		<description>Nazwa wartości</description>
+	</element>
+	<element name="gmd:name" context="gmd:MD_Attribute" id="551.0">
+		<label>Nazwa</label>
+		<description>Nazwa atrybutu</description>
+	</element>
+	<element name="gmd:name" context="gmd:MD_Role" id="556.0">
+		<label>Nazwa</label>
+		<description>Nazwa funkcji</description>
+	</element>
+	<element name="gmd:name">
+		<label>Nazwa</label>
+		<description/>
+	</element>
+	<element name="gmd:nameOfMeasure" id="100.0">
+		<label>Nazwa miary</label>
+		<description>nazwa testu zastosowanego dla danych </description>
+	</element>
+	<element name="gmd:northBoundLatitude" id="347.0">
+		<label>Północna graniczna szerokość geograficzna</label>
+		<description>najbardziej wysunięta na północ współrzędna granicy zasięgu zbioru danych, 
+		wyrażona w szerokości geograficznej w stopniach dziesiętnych (północ dodatnia) </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:numberOfDimensions" id="158.0">
+		<label>Ilość wymiarów</label>
+		<description>liczba niezależnych osi przestrzenno-czasowych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:obligation" id="311.0">
+		<label>Wymagalność</label>
+		<description>obligatoryjność rozszerzonego elementu </description>
+	</element>
+	<element name="gmd:offLine" id="278.0">
+		<label>Zasób niesieciowy</label>
+		<description>informacja o nośnikach niesieciowych, na których może zostać nabyty zasób </description>
+	</element>
+	<element name="gmd:offset" id="267.0">
+		<label>Przesunięcie</label>
+		<description>wartość fizyczna odpowiadająca zerowej wartości komórki </description>
+	</element>
+	<element name="gmd:onLine" id="277.0">
+		<label>Zasób sieciowy</label>
+		<description>informacja o źródłach sieciowych, z których może być uzyskany zasób </description>
+	</element>
+	<element name="gmd:onlineResource" id="390.0">
+		<label>Zasób sieciowy</label>
+		<description>informacja sieciowa,  której można użyć do skontaktowania się z osobą lub organizacją</description>
+	</element>
+	<element name="gmd:orderingInstructions" id="301.0">
+		<label>Instrukcje zamawiania</label>
+		<description>podstawowe instrukcje, warunki i usługi dostarczane przez dystrybutora </description>
+	</element>
+	<element name="gmd:organisationName" id="376.0">
+		<label>Nazwa organizacji</label>
+		<description>nazwa organizacji odpowiedzialnej</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:orientationParameterAvailability" id="172.0">
+		<label>Dostępność parametru orientacji</label>
+		<description>wskazanie, czy są lub nie są dostępne parametry orientacji </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:orientationParameterDescription" id="173.0">
+		<label>Opis parametru orientacji</label>
+		<description>opis parametrów użytych do opisu orientacji czujnika </description>
+	</element>
+	<element name="gmd:other" id="155.0">
+		<label>Inne</label>
+		<description>klasa informacji, która nie pasuje do żadnej kategorii, 
+		dla której ma zastosowanie informacja </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:otherCitationDetails" id="370.0">
+		<label>Inne szczegóły przytoczenia</label>
+		<description>inne informacje wymagane w celu pełnego przytoczenia, 
+		które nie są odnotowane w innym miejscu </description>
+	</element>
+	<element name="gmd:otherConstraints" id="72.0">
+		<label>Inne ograniczenia</label>
+		<description>inne ograniczenia i prawne wymagania wstępne do dostępu i korzystania z zasobu lub metadanych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:page" id="406.0">
+		<label>Strona</label>
+		<description>określa, na których stronach publikacji został opublikowany artykuł</description>
+	</element>
+	<element name="gmd:parameterCitation" id="175.0">
+		<label>Przytoczenie parametrów</label>
+		<description>referencje, które dostarczają opisu parametrów </description>
+	</element>
+	<element name="gmd:parentEntity" id="316.0">
+		<label>Encja rodzica</label>
+		<description>nazwa encji metadanych, dla których rozszerzony element metadanych 
+		może występować. Nazwa(y) może być standardowym elementem(ami) metadanych 
+		lub innym rozszerzonym elementem(ami) metadanych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:parentIdentifier" id="5.0">
+		<label>Identyfikator rodzica</label>
+		<description>identyfikator pliku metadanych, dla których ten zbiór metadanych 
+    jest podzbiorem (dzieckiem) </description>
+	</element>
+	<element name="gmd:pass" id="132.0">
+		<label>Aprobata</label>
+		<description>wskazanie wyniku badania zgodności gdzie 0 = nie zdany a 1 = zdany </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:peakResponse" id="263.0">
+		<label>Wysokość odpowiedzi</label>
+		<description>długość fali, dla której odpowiedź jest najmocniejsza
+</description>
+	</element>
+	<element name="gmd:phone" id="526.0">
+		<label>Telefon</label>
+		<description>numery telefonu, pod którymi można kontaktować się z osobą lub organizacją</description>
+	</element>
+	<element name="gmd:plannedAvailableDateTime" id="300.0">
+		<label>Planowany czas dostępności</label>
+		<description>data i czas, kiedy zbiór danych jest dostępny </description>
+	</element>
+	<element name="gmd:pointInPixel" id="167.0">
+		<label>Punkt w pikselu</label>
+		<description>punkt w pikselu odpowiadający terenowemu położeniu piksela </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:pointOfContact" id="29.0">
+		<label>Punkt kontaktowy</label>
+		<description>identyfikacja i sposoby komunikowania się z osobą(ami) 
+		i organizacją(ami) związanymi z zasobem(ami)</description>
+	</element>
+	<element name="gmd:polygon" id="342.0">
+		<label>Wielobok</label>
+		<description>zbiór punktów definiujących wielobok ograniczający </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:portrayalCatalogueCitation" id="269.0">
+		<label>Przytoczenie katalogu opisów</label>
+		<description>bibliograficzne odniesienie do przytoczonego katalogu opisów </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:portrayalCatalogueInfo" id="19.0">
+		<label>Informacja o katalogu opisów</label>
+		<description>dostarcza informacje o katalogu reguł zdefiniowanych do opisu zasobu(ów) </description>
+	</element>
+	<element name="gmd:positionName" id="377.0">
+		<label>Nazwa pozycji</label>
+		<description>rola lub stanowisko osoby odpowiedzialnej</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:postalCode" id="384.0">
+		<label>Kod pocztowy</label>
+		<description>ZIP lub inny kod pocztowy </description>
+	</element>
+	<element name="gmd:presentationForm" id="368.0">
+		<label>Forma prezentacji</label>
+		<description>sposób, w jaki zasób jest reprezentowany </description>
+	</element>
+	<element name="gmd:processStep" id="84.0">
+		<label>Etap procesu</label>
+		<description>informacja o zdarzeniu w trakcie procesu tworzenia dla danych 
+		określonych zakresem</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:processingLevelCode" id="249.0">
+		<label>Kod poziomu przetworzenia</label>
+		<description>kod dystrybutora obrazu, który określa poziom zastosowanego 
+		radiometrycznego i geometrycznego przetworzenia </description>
+	</element>
+	<element name="gmd:processor" id="90.0">
+		<label>Wykonawca</label>
+		<description>identyfikacja i sposób komunikowania się z osobą(ami) 
+		i organizacją(ami) związaną z etapem procesu </description>
+	</element>
+	<element name="gmd:protocol" id="398.0">
+		<label>Protokół</label>
+		<description>użyty protokół połączenia</description>
+	</element>
+	<element name="gmd:purpose" id="26.0">
+		<label>Cel</label>
+		<description>streszczenie założeń, na podstawie których został zbudowany zasób </description>
+	</element>
+	<element name="gmd:radiometricCalibrationDataAvailability" id="252.0">
+		<label>Dostępność danych o kalibracji radiometrycznej</label>
+		<description>wskazanie, czy jest lub nie jest dostępna informacja o kalibracji 
+		radiometrycznej dla generowania standardowych danych kalibrowanych radiometrycznie </description>
+	</element>
+	<element name="gmd:rationale" id="88.0">
+		<label>Przyczyna</label>
+		<description>wymaganie lub cel etapu procesu </description>
+	</element>
+	<element name="gmd:rationale" id="318.0" context="gmd:MD_ExtendedElementInformation">
+		<label>Przyczyna</label>
+		<description>powód utworzenia rozszerzonego elementu</description>
+	</element>
+	<element name="gmd:referenceSystemIdentifier" id="187.0">
+		<label>Identyfikator układu odniesienia</label>
+		<description>nazwa układu odniesienia </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:referenceSystemInfo" id="13.0">
+		<label>Informacja o układzie odniesienia</label>
+		<description>opis przestrzennych i czasowych układów odniesień użytych 
+		w zbiorze danych</description>
+	</element>
+	<element name="gmd:report" id="80.0">
+		<label>Raport</label>
+		<description>ilościowa informacja o jakości dla danych określonych zakresem </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:resolution" id="182.0">
+		<label>Rozdzielczość</label>
+		<description>stopień szczegółowości w siatkowym zbiorze danych </description>
+	</element>
+	<element name="gmd:resourceConstraints" id="35.0">
+		<label>Ograniczenia zasobu</label>
+		<description>dostarcza informacje o ograniczeniach, które dotyczą zasobu(ów) </description>
+	</element>
+	<element name="gmd:resourceFormat" id="32.0">
+		<label>Format zasobu</label>
+		<description>dostarcza opis formatu zasobu(ów) </description>
+	</element>
+	<element name="gmd:resourceMaintenance" id="30.0">
+		<label>Utrzymanie zasobu</label>
+		<description>dostarcza informację o częstotliwości aktualizacji zasobu 
+		i zakresie tych aktualizacji</description>
+	</element>
+	<element name="gmd:resourceSpecificUsage" id="34.0">
+		<label>Określone użycie zasobu</label>
+		<description>dostarcza podstawowe informacje o określonym zastosowaniu(ach), 
+		dla którego zasób(oby) został lub jest używany przez różnych użytkowników </description>
+	</element>
+	<element name="gmd:result" id="107.0">
+		<label>Wynik</label>
+		<description>wartość (lub zbiór wartości) uzyskanych po zastosowaniu miary 
+		jakości danych lub rezultat oceny uzyskanej wartości (lub zbioru wartości) 
+		zgodnie z określonym przyjętym poziomem jakości </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:role" id="566.0" context="gmd:MD_Association">
+		<label>Rola</label>
+		<description/>
+	</element>
+	<element name="gmd:role" id="379.0">
+		<label>Rola</label>
+		<description>funkcja pełniona przez stronę odpowiedzialną </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:rule" id="317.0">
+		<label>Reguła</label>
+		<description>określa, w jaki sposób rozszerzony element wiąże się z innymi 
+		istniejącymi elementami i encjami </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:scaleDenominator" id="94.0">
+		<label>Mianownik skali</label>
+		<description>mianownik ułamka reprezentatywnego na mapie źródłowej </description>
+	</element>
+	<element name="gmd:scaleFactor" id="266.0">
+		<label>Współczynnik skalowania</label>
+		<description>współczynnik skalowania, który został zastosowany dla wartości komórki </description>
+	</element>
+	<element name="gmd:schemaAscii" id="324.0">
+		<label>Schemat ASCII</label>
+		<description>pełny schemat aplikacji podany w pliku ASCII </description>
+	</element>
+	<element name="gmd:schemaLanguage" id="322.0">
+		<label>Język schematu</label>
+		<description>identyfikacja użytego języka schematu </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:scope" id="79.0">
+		<label>Zakres</label>
+		<description>określone dane, dla których ma zastosowanie informacja o jakości danych </description>
+	</element>
+	<element name="gmd:sequenceIdentifier" id="257.0">
+		<label>Identyfikator sekwencji</label>
+		<description>numer, który jednoznacznie identyfikuje egzemplarze zakresów 
+		długości fal, na których działa czujnik </description>
+	</element>
+	<element name="gmd:series" id="369.0">
+		<label>Seria</label>
+		<description>informacja o serii lub zagregowanym zbiorze danych , 
+		którego częścią jest zbiór danych </description>
+	</element>
+	<element name="gmd:shortName" id="308.0">
+		<label>Nazwa skrócona</label>
+		<description>krótka forma wygodna do zastosowania w metodach implementacyjnych 
+		takich jak XML lub SGML. UWAGA: inne metody także mogą być użyte </description>
+	</element>
+	<element name="gmd:softwareDevelopmentFile" id="326.0">
+		<label>Plik rozwoju oprogramowania</label>
+		<description>pełny schemat aplikacji podany w pliku rozwoju oprogramowania
+</description>
+	</element>
+	<element name="gmd:softwareDevelopmentFileFormat" id="327.0">
+		<label>Format pliku rozwoju oprogramowania</label>
+		<description>zależny od oprogramowania format użyty dla pliku  rozwoju 
+		oprogramowania(schematu aplikacji) </description>
+	</element>
+	<element name="gmd:source" id="85.0">
+		<label>Źródło</label>
+		<description>informacja o danych źródłowych wykorzystanych przy tworzeniu 
+		danych określonych zakresem </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:source" id="319.0" context="gmd:MD_ExtendedElementInformation">
+		<label>Źródło</label>
+		<description>nazwa osoby lub organizacji tworzącej rozszerzony element</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:sourceCitation" id="96.0">
+		<label>Przytoczenie źródła</label>
+		<description>rekomendowane odniesienia użyte dla danych źródłowych </description>
+	</element>
+	<element name="gmd:sourceExtent" id="97.0">
+		<label>Zasięg źródła</label>
+		<description>informacja o przestrzennym, pionowym i czasowym zakresie danych źródłowych</description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:sourceReferenceSystem" id="95.0">
+		<label>Układ odniesienia źródła</label>
+		<description>układ odniesień przestrzennych stosowany przez dane źródłowe </description>
+	</element>
+	<element name="gmd:sourceStep" id="98.0">
+		<label>Etap źródła</label>
+		<description>informacja o zdarzeniu w trakcie procesu tworzenia danych źródłowych </description>
+	</element>
+	<element name="gmd:southBoundLatitude" id="346.0">
+		<label>Południowa graniczna szerokość geograficzna</label>
+		<description>najbardziej wysunięta na południe współrzędna granicy zasięgu 
+		zbioru danych, wyrażona w szerokości geograficznej w stopniach dziesiętnych 
+		(północ dodatnia) </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:spatialExtent" id="353.0">
+		<label>Zasięg przestrzenny</label>
+		<description>komponent zasięgu przestrzennego  łączonego zasięgu przestrzennego i czasowego </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:spatialRepresentationInfo" id="12.0">
+		<label>Informacja o reprezentacji przestrzennej</label>
+		<description>cyfrowa reprezentacja informacji przestrzennej w zbiorze danych </description>
+	</element>
+	<element name="gmd:spatialRepresentationType" id="37.0">
+		<label>Typ reprezentacji przestrzennej</label>
+		<description>metoda użyta do reprezentowania przestrzennego informacji geograficznej</description>
+	</element>
+	<element name="gmd:spatialResolution" id="38.0">
+		<label>Rozdzielczość przestrzenna</label>
+		<description>parametr, który dostarcza podstawowej informacji o gęstości danych 
+		przestrzennych w zbiorze danych </description>
+	</element>
+	<element name="gmd:specificUsage" id="63.0">
+		<label>Określone użycie</label>
+		<description>krótki opis wykorzystania zasobu i/lub serii zasobów</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:specification" id="130.0" context="gmd:DQ_ConformanceResult">
+		<label>Specyfikacja</label>
+		<description>przytoczenie specyfikacji produktu lub wymagań użytkownika, względem których oceniane są dane</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:specification" id="288.0" context="gmd:MD_Format">
+		<label>Specyfikacja</label>
+		<description>nazwa podzbioru, profilu lub specyfikacja produkcyjna formatu</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:specification">
+		<label>Specyfikacja</label>
+	</element>
+	<element name="gmd:statement" id="83.0">
+		<label>Oświadczenie</label>
+		<description>ogólne wyjaśnienie wiedzy producenta danych o historii zbioru </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:status" id="28.0">
+		<label>Status</label>
+		<description>status zasobu(ów)</description>
+	</element>
+	<element name="gmd:supplementalInformation" id="46.0">
+		<label>Dodatkowa informacja</label>
+		<description>każda inna informacja opisowa o zbiorze danych </description>
+	</element>
+	<element name="gmd:temporalElement" id="337.0">
+		<label>Element czasowy</label>
+		<description>dostarcza komponent czasowy zasięgu odnoszącego się obiektu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:textGroup" id="602.0">
+		<label>Grupa tekstowa</label>
+		<description/>
+	</element>
+	<element name="gmd:thesaurusName" id="55.0">
+		<label>Nazwa słownika</label>
+		<description>nazwa formalnie zarejestrowanego słownika lub podobnego wiarygodnego 
+		źródła słów kluczowych </description>
+	</element>
+	<element name="gmd:title" id="360.0">
+		<label>Tytuł</label>
+		<description>nazwa, pod jaką znany jest przytaczany zasób </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:title" id="507.0" context="gmd:MD_Legislation">
+		<label>Tytuł</label>
+		<description>Odniesienie do tytułu prawnego</description>
+	</element>
+	<element name="gmd:toneGradation" id="265.0">
+		<label>Stopniowanie tonów</label>
+		<description>liczba dyskretnych wartości numerycznych w danych siatkowych </description>
+	</element>
+	<element name="gmd:topicCategory" id="41.0">
+		<label>Kategoria tematyczna</label>
+		<description>główny temat zbioru danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:MD_TopicCategoryCode">
+		<label>KodKategoriiTematycznej</label>
+		<description>wysokopoziomowa klasyfikacja tematyczna danych geograficznych 
+		dla wsparcia grupowania i wyszukiwania dostępnych zbiorów danych geograficznych. 
+		Może być też użyta do grupowania słów kluczowych. Wymienione przykłady nie są wyczerpujące.
+		UWAGA: Zrozumiałym jest, że podstawowe kategorie mogą się pokrywać i zachęca 
+		się użytkownika do wyboru jednej najbardziej właściwej kategorii</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:topologyLevel" id="177.0">
+		<label>Poziom topologii</label>
+		<description>kod, który identyfikuje stopień złożoności związków przestrzennych </description>
+	</element>
+	<element name="gmd:transferOptions" id="273.0">
+		<label>Opcje transferu</label>
+		<description>dostarcza informacje o środkach technicznych i nośnikach, 
+		na których zasób jest nabywany od dystrybutora </description>
+	</element>
+	<element name="gmd:transferSize" id="276.0">
+		<label>Wielkość transferu</label>
+		<description>szacunkowy rozmiar jednostki w określonym formacie transferu, 
+		wyrażony w megabajtach. Rozmiar transferu jest > 0.0
+</description>
+	</element>
+	<element name="gmd:transformationDimensionDescription" id="168.0">
+		<label>Opis wymiaru transformacji</label>
+		<description>opis informacji o tym, które wymiary siatki są wymiarami przestrzennymi</description>
+	</element>
+	<element name="gmd:transformationDimensionMapping" id="169.0">
+		<label>Odwzorowanie wymiaru transformacji</label>
+		<description>informacje o tym, które osie siatki są osiami przestrzennymi (mapy) </description>
+	</element>
+	<element name="gmd:transformationParameterAvailability" id="161.0">
+		<label>Dostępność parametru transformacji</label>
+		<description>wskazanie, czy istnieją lub nie (czy są dostępne) parametry transformacji </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:triangulationIndicator" id="251.0">
+		<label>Wskaźnik triangulacji</label>
+		<description>wskazanie, czy na obrazie została lub nie została przeprowadzona triangulacja </description>
+	</element>
+	<element name="gmd:turnaround" id="302.0">
+		<label>Czas odpowiedzi</label>
+		<description>typowy czas odpowiedzi na wypełnienie formularza zamówienia </description>
+	</element>
+	<element name="gmd:type" id="54.0">
+		<label>Typ</label>
+		<description>znaczenie tematu użytego dla grupy podobnych słów kluczowych </description>
+	</element>
+	<element name="gmd:type" id="540.0" context="gmd:MD_CodeDomain">
+		<label>Typ</label>
+		<description>Typ danych dziedziny kodu</description>
+	</element>
+	<element name="gmd:type" id="543.0" context="gmd:MD_Type">
+		<label>Definicja typu</label>
+		<description>definicja typu danych</description>
+	</element>
+	<element name="gmd:units" id="262.0">
+		<label>Jednostki</label>
+		<description>jednostki, w jakich określona jest długość fali czujnika </description>
+	</element>
+	<element name="gmd:unitsOfDistribution" id="275.0">
+		<label>Jednostki dystrybucji</label>
+		<description>arkusze, warstwy, obszary geograficzne itp., w  których dostępne są dane </description>
+	</element>
+	<element name="gmd:updateScope" id="146.0">
+		<label>Zakres aktualizacji </label>
+		<description>zakres danych, dla których stosowane jest utrzymanie </description>
+	</element>
+	<element name="gmd:updateScopeDescription" id="147.0">
+		<label>Opis zakresu aktualizacji</label>
+		<description>dodatkowe informacje o skali lub zakresie zasobu </description>
+	</element>
+	<element name="gmd:usageDateTime" id="64.0">
+		<label>Czas użycia</label>
+		<description>data i czas pierwszego użycia lub zakresu zastosowań zasobu i/lub serii zasobów </description>
+	</element>
+	<element name="gmd:useConstraints" id="71.0">
+		<label>Ograniczenia korzystania</label>
+		<description>ograniczenia stosowane w celu zapewnienia ochrony prywatności 
+		lub własności intelektualnych oraz wszystkie dodatkowe ograniczenia 
+		lub ostrzeżenia dotyczące korzystania z zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:useLimitation" id="68.0">
+		<label>Ograniczenie korzystania</label>
+		<description>ograniczenie dotyczące stosowności użycia zasobu lub metadanych. 
+		Na przykład: „nie może być wykorzystywane do nawigacji” </description>
+	</element>
+	<element name="gmd:userContactInfo" id="66.0">
+		<label>Informacja o kontakcie użytkownika</label>
+		<description>identyfikacja i sposób komunikowania się  z osobą(ami) 
+		i organizacją(ami) korzystającymi z zasobów </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:userDefinedMaintenanceFrequency" id="145.0">
+		<label>Częstotliwość aktualizacji zdefiniowana przez użytkownika</label>
+		<description>okres utrzymania inny niż te zdefiniowane </description>
+	</element>
+	<element name="gmd:userDeterminedLimitations" id="65.0">
+		<label>Ograniczenia ustalone przez użytkownika</label>
+		<description>zastosowania określone przez użytkownika, dla których zasób 
+		lub seria zasobów nie jest właściwa </description>
+	</element>
+	<element name="gmd:userNote" id="75.0">
+		<label>Wyjaśnienie dla użytkownika</label>
+		<description>wyjaśnienie nałożenia ograniczeń prawnych lub innych ograniczeń 
+		i prawnych wymagań wstępnych na nabywanie i korzystanie z zasobu lub metadanych </description>
+	</element>
+	<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
+		<label>Wartość</label>
+		<description>ilościowa wartość lub wartości, określona przez zastosowaną procedurę oceny </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:value">
+		<label>Wartość</label>
+		<description/>
+	</element>
+	<element name="gmd:value" id="544.0" context="gmd:MD_Type">
+		<label>Wartość</label>
+		<description>Wartość typu danych</description>
+	</element>
+	<element name="gmd:valueType" id="134.0">
+		<label>Typ wartości</label>
+		<description>typ wartości użyty do określenia wyniku jakości danych </description>
+	</element>
+	<element name="gmd:valueUnit" id="135.0">
+		<label>Jednostka wartości</label>
+		<description>jednostka wartości do określenia wyniku jakości danych </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:version" id="208.2" context="gmd:RS_Identifier">
+		<label>Wersja</label>
+		<description>identyfikator wersji dla przestrzeni nazw</description>
+	</element>
+	<element name="gmd:version" id="286.0">
+		<label>Wersja</label>
+		<description>wersja formatu (data, numer itp.) </description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gmd:verticalElement" id="338.0">
+		<label>Element pionowy</label>
+		<description>dostarcza komponent pionowy zasięgu odnoszącego się obiektu </description>
+		<condition>warunkowy</condition>
+	</element>
+	<element name="gmd:voice" id="408.0">
+		<label>Telefon</label>
+		<description>numer telefonu, pod którym osoby mogą rozmawiać z organizacją 
+		lub osobą odpowiedzialną </description>
+	</element>
+	<element name="gmd:volumes" id="295.0">
+		<label>Wolumeny</label>
+		<description>liczba pozycji w nośniku </description>
+	</element>
+	<element name="gmd:westBoundLongitude" id="344.0">
+		<label>Zachodnia graniczna długość geograficzna</label>
+		<description>najbardziej wysunięta na zachód współrzędna granicy zasięgu zbioru danych, 
+		wyrażona w długości geograficznej w stopniach dziesiętnych (wschód dodatnia)</description>
+		<condition>obligatoryjny</condition>
+	</element>
+	<element name="gml:beginPosition">
+		<label>Data początkowa</label>
+		<description>Sformatowana jako YYYY-MM-DDTHH:mm:ss</description>
+	</element>
+	<element name="gml:endPosition">
+		<label>Data końcowa</label>
+		<description>Sformatowana jako YYYY-MM-DDTHH:mm:ss</description>
+	</element>
+	<element name="gml:relatedTime">
+		<label>Związany czas</label>
+		<description>Definiuje relację podanego czasu z obiektem.</description>
+	</element>
+	<element name="gml:coordinates">
+		<label>Współrzędne</label>
+		<description>Used to record an array of tuples or coordinates.</description>
+	</element>
+	<element name="gml:Polygon">
+		<label>Poligon</label>
+		<description/>
+	</element>
+	<element name="gml:Point">
+		<label>Punkt</label>
+		<description/>
+	</element>
+	<element name="gml:LineString">
+		<label>Linia</label>
+		<description/>
+	</element>
+	<element name="gml:LinearRing">
+		<label>Łamana zamknięta</label>
+		<description/>
+	</element>
+	<element name="gml:exterior">
+		<label>Granica zewnętrzna</label>
+		<description/>
+	</element>
+	<element name="gml:interior">
+		<label>Granica wewnętrzna</label>
+		<description/>
+	</element>
+	<element name="gml:begin">
+		<label>Początek</label>
+		<description/>
+	</element>
+	<element name="gml:end">
+		<label>Koniec</label>
+		<description/>
+	</element>
+	<element name="gml:duration">
+		<label>Czas trwania</label>
+		<description/>
+	</element>
+	<element name="gml:timeInterval">
+		<label>Odstęp czasu</label>
+		<description/>
+	</element>
+		<element name="gml:name">
+		<label>Name</label>
+		<description/>
+	</element>
+	<element name="gml:metaDataProperty">
+		<label>Metadata property</label>
+		<description/>
+	</element>
+	<element name="gml:identifier">
+		<label>Identifier</label>
+		<description/>
+	</element>
+	<element name="gml:description">
+		<label>Description</label>
+		<description>Text description of the element</description>
+	</element>
+	<element name="gml:descriptionReference">
+		<label>Description reference</label>
+		<description/>
+	</element>
+	<element name="gml:TimeInstant">
+		<label>Moment czasu</label>
+		<description/>
+	</element>
+	<element name="gml:TimePosition">
+		<label>Pozycja czasowa</label>
+		<description/>
+	</element>
+		<element name="gml:timePosition">
+		<label>Time position</label>
+		<description/>
+	</element>
+	<element name="gml:TimePeriod">
+		<label>Okres czasu</label>
+		<description/>
+	</element>
+	<element name="gml:TimeNode">
+		<label>Węzeł czasu</label>
+		<description/>
+	</element>
+	<element name="gml:TimeEdge">
+		<label>Zakres czasu</label>
+		<description/>
+	</element>
+	<element name="gml:ProjectedCRS">
+		<label>Układ odwzorowania</label>
+		<description/>
+	</element>
+	<element name="gml:id">
+		<label>Identyfikator</label>
+		<description/>
+	</element>
+	<element name="gml:id" id="191.0" context="gmd:MD_CRS">
+		<label>Ellipsoid</label>
+		<description>Identity of the ellipsoid used</description>
+		<help>identity of the ellipsoid used</help>
+	</element>
+		<element name="id" id="191.0">
+		<label>Identifier</label>
+		<description>Unique identifier</description>
+	</element>
+	<element name="indeterminatePosition">
+		<label>Indeterminate position</label>
+		<description/>
+	</element>
+	<element name="frame">
+		<label>Frame</label>
+		<description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
+	</element>
+	<element name="calendarEraName">
+		<label>Name of the calendar era</label>
+		<description/>
+	</element>
+	<element name="unit">
+		<label>Unit</label>
+		<description/>
+	</element>
+	<element name="radix">
+		<label>Radix</label>
+		<description/>
+	</element>
+	<element name="factor">
+		<label>Factor</label>
+		<description/>
+	</element>
+	<element name="srv:SV_ServiceIdentification">
+		<label>Identyfikacja usługi</label>
+		<description>identyfikacja usług zgodnie z ISO 19119</description>
+	</element>
+	<element name="srv:SV_ParameterDirection">
+		<label>Parametr kierunku</label>
+	</element>
+	<element name="srv:serviceType">
+		<label>Typ usługi</label>
+		<description>Nazwa typu usługi zdefiniowana w rejestrze usług</description>
+	</element>
+	<element name="srv:serviceTypeVersion">
+		<label>Wersja usługi</label>
+		<description>Informacja o wersji usługi</description>
+	</element>
+	<element name="srv:accessProperties">
+		<label>Własności dostępu</label>
+		<description>Informacje o dostępie usługi np. opłatach, dostępności, instrukcjach zamawiania</description>
+	</element>
+	<element name="srv:restrictions">
+		<label>Ograniczenia</label>
+		<description>Ograniczenia prawne i bezpieczeństwa w dostępie do usługi i dystrybucji danych generowanych przez usługę</description>
+	</element>
+	<element name="srv:containsOperations">
+		<label>Zawiera operacje</label>
+		<description>Informacja o metodach udostępnianych przez usługę</description>
+	</element>
+	<element name="srv:operatesOn">
+		<label>Operuje na</label>
+		<description>Informacja o zbiorach danych, na których operuje usługa</description>
+	</element>
+	<element name="srv:operationName">
+		<label>Nazwa metody</label>
+		<description>Nazwa metody usługi</description>
+	</element>
+	<element name="srv:SV_OperationMetadata">
+		<label>Metoda</label>
+		<description>Opis jednej metody udostępnianej przez usługę</description>
+	</element>
+	<element name="srv:DCP">
+		<label>Dystrybuowana platforma obliczeniowa</label>
+		<description>Dystrybuowana platforma obliczeniowa, na której metoda została zaimplementowana</description>
+	</element>
+	<element name="srv:operationDescription">
+		<label>Opis metody</label>
+		<description>Wolny tekst opisujący cel metody i wyniki metody</description>
+	</element>
+	<element name="srv:invocationName">
+		<label>Nazwa wezwania</label>
+		<description>Nazwa wezwania interfejsu w ramach dystrybuowanej platformy obliczeniowej</description>
+	</element>
+	<element name="srv:parameters">
+		<label>Parametry</label>
+		<description>Parametry wymagane przez interfejs</description>
+	</element>
+	<element name="srv:SV_Parameter">
+		<label>Parametr</label>
+		<description>Parametr, który jest wymagany przez intefejs</description>
+	</element>
+	<element name="srv:direction">
+		<label>Kierunek</label>
+	</element>
+	<element name="srv:valueType">
+		<label>Typ wartości</label>
+	</element>
+	<element name="srv:connectPoint">
+		<label>Punkt dostępu</label>
+		<description>Punkt dostępu do interfejsu usługi</description>
+	</element>
+	<element name="srv:dependsOn">
+		<label>Zależy od</label>
+		<description>Lista metod, które muszą być wykonane przed wywołaniem bieżącej metody</description>
+	</element>
+	<element name="srv:providerName">
+		<label>Nazwa dostawcy</label>
+		<description/>
+	</element>
+	<element name="srv:serviceContact">
+		<label>Kontakt do serwisu</label>
+		<description/>
+	</element>
+	<element name="srv:name">
+		<label>Nazwa</label>
+		<description/>
+	</element>
+	<element name="srv:description">
+		<label>Opis</label>
+		<description/>
+	</element>
+	<element name="srv:optionality">
+		<label>Wymagalność</label>
+		<description/>
+	</element>
+	<element name="srv:repeatability">
+		<label>Powtarzalność</label>
+		<description/>
+	</element>
+	<element name="srv:coupledResource">
+		<label>Zasób powiązany</label>
+		<description/>
+	</element>
+	<element name="srv:SV_CoupledResource">
+		<label>Zasób powiązany</label>
+		<description>Połączenie metody z zasobem danych za pomocą identyfikatora</description>
+	</element>
+	<element name="srv:identifier">
+		<label>Identyfikator</label>
+		<description/>
+	</element>
+	<element name="srv:couplingType">
+		<label>Typ powiązania</label>
+		<description/>
+	</element>
+	<element name="srv:extent">
+		<label>Zasięg</label>
+		<description>zasięg przestrzenny/czasowy usługi </description>
+	</element>
+	<element name="srv:keywords">
+		<label>Słowa kluczowe</label>
+		<description>słowa kluczowe opisujące usługę</description>
+	</element>
+	<element name="gmd:locale">
+		<label>Inne języki</label>
+		<description>Użyj tej sekcji aby zdefiniować inne języki metadanych</description>
+	</element>
+	<element name="gmd:describes">
+		<label>Opisuje</label>
+		<description>opisuje</description>
+	</element>
+	<element name="gmd:propertyType">
+		<label>Typ własności</label>
+		<description>Typ własności</description>
+	</element>
+	<element name="gmd:Locale">
+		<label>Lokalizacja</label>
+		<description>Opis lokalizacji językowej</description>
+	</element>
+	<element name="gmd:LocaleContainer">
+		<label>ZbiórLokalizacji</label>
+		<description>zbiór lokalizacji</description>
+	</element>
+	<element name="gmd:featureType">
+		<label>Typ obiektu</label>
+		<description>podzbiór typów obiektu z przytaczanego katalogu obiektów 
+		występującego w zbiorze</description>
+	</element>
+	<element name="gmd:featureTypes">
+		<label>Typy obiektu</label>
+		<description>podzbiór typów obiektu z przytaczanego katalogu obiektów 
+		występującego w zbiorze</description>
+	</element>
+	<element name="gmd:featureAttribute">
+		<label>Atrybut obiektu</label>
+		<description>Atrybut obiektu</description>
+	</element>
+	<element name="gmd:DS_Association">
+		<label>Powiązanie</label>
+		<description>Powiązanie</description>
+	</element>
+	<element name="gmd:DS_DataSet">
+		<label>Zbiór danych</label>
+		<description>Zbiór danych</description>
+	</element>
+	<element name="gmd:DS_Initiative">
+		<label>Inicjatywa</label>
+		<description>Inicjatywa</description>
+	</element>
+	<element name="gmd:DS_OtherAggregate">
+		<label>Inny agregat</label>
+		<description>Inny agregat</description>
+	</element>
+	<element name="gmd:DS_Platform">
+		<label>Platforma</label>
+		<description>Platforma</description>
+	</element>
+	<element name="gmd:DS_ProductionSeries">
+		<label>Seria produkcyjna</label>
+		<description>Seria produkcyjna</description>
+	</element>
+	<element name="gmd:DS_Sensor">
+		<label>Sensor</label>
+		<description>Sensor</description>
+	</element>
+	<element name="gmd:DS_Series">
+		<label>Seria</label>
+		<description>Seria</description>
+	</element>
+	<element name="gmd:DS_StereoMate">
+		<label>Stereopara</label>
+		<description>Stereopara</description>
+	</element>
+	<element name="gmd:languageCode">
+		<label>Kod języka</label>
+		<description>Kod języka wg ISO 639-2</description>
+	</element>
+	<element name="gmd:LanguageCode">
+		<label>ISO Language code</label>
+		<description>Language code</description>
+	</element>
+	<element name="gmd:characterEncoding">
+		<label>Kodowanie znaków</label>
+		<description>kodowanie znaków</description>
+	</element>
+	<element name="uuidref">
+		<label>UUID metadanych</label>
+		<description>Unikalny identyfikator metadanych</description>
+	</element>
+	<element name="uom">
+		<label>Jednostki miary</label>
+		<description/>
+		<helper>
+			<option value="m">metry</option>
+		</helper>
+	</element>
+	<element name="gco:Record">
+		<label>Rekord</label>
+		<description/>
+	</element>
+	<element name="gco:Binary">
+		<label>Binarny</label>
+		<description/>
+	</element>
+	<element name="gco:MemberName">
+		<label>Nazwa członka</label>
+		<description/>
+	</element>
+	<element name="gco:aName">
+		<label>Nazwa</label>
+		<description/>
+	</element>
+	<element name="gco:aName" context="gco:TypeName">
+		<label>Nazwa typu</label>
+		<description/>
+		<helper>
+			<option value="BOOLEAN">BOOLEAN</option>
+			<option vaue="BYTE">BYTE</option>
+			<option value="CHARACTER">CHARACTER</option>
+			<option value="DATE">DATE</option>
+			<option value="DATETIME">DATETIME</option>
+			<option value="DOUBLE">DOUBLE</option>
+			<option value="FLOAT">FLOAT</option>
+			<option value="INTEGER">INTEGER</option>
+			<option value="NUMERIC">NUMERIC</option>
+			<option value="REAL">REAL</option>
+			<option value="SERIAL">SERIAL</option>
+			<option value="VARCHAR">VARCHAR</option>
+			<option value="TEXT">TEXT</option>
+		</helper>
+	</element>
+	<element name="gco:attributeType">
+		<label>Typ atrybutu</label>
+		<description/>
+	</element>
+	<element name="gco:TypeName">
+		<label>Nazwa typu</label>
+		<description/>
+	</element>
+	<element name="gco:LocalName">
+		<label>Nazwa lokalna</label>
+		<description/>
+	</element>
+	<element name="gco:ScopedName">
+		<label>Nazwa zakresu</label>
+		<description/>
+	</element>
+	<element name="gmd:has">
+		<label>Posiada</label>
+		<description>Dostarcza listę zbiorów metadanych związanych ze zbiorem danych</description>
+	</element>
+	<element name="gmd:MD_PixelOrientationCode">
+		<label>KodOrientacjiPiksela</label>
+		<description>punkt w pikselu odpowiadający terenowemu położeniu piksela </description>
+	</element>
+	<element name="gmd:MD_ObligationCode">
+		<label>KodWymoguWystępowania</label>
+		<description>wymóg występowania danego elementu lub encji</description>
+	</element>
+	<element name="gmd:maximumOccurrence">
+		<label>Maksymalna liczba wystąpień</label>
+		<description>maksymalna liczba wystąpień rozszerzonego elementu </description>
+	</element>
+	<element name="gco:localName">
+		<label>Nazwa</label>
+		<description/>
+	</element>
+	<element name="gmd:composedOf">
+		<label>Złożony z</label>
+		<description>złożony z</description>
+	</element>
+	<element name="gmd:partOf">
+		<label>Część</label>
+		<description>Część</description>
+	</element>
+	<element name="gmd:seriesMetadata">
+		<label>Serie metadanych</label>
+		<description>dostarcza listę zbiorów metadanych związanych z agregatem </description>
+	</element>
+	<element name="gmd:subset">
+		<label>Podzbiór</label>
+		<description>Dostarcza listę podzbiorów tworzących agregat </description>
+	</element>
+	<element name="gmd:superset">
+		<label>Nadzbiór</label>
+		<description>Dostarcza listę nadzbiorów, do których należy agregat </description>
+	</element>
+	<element name="gmd:CI_RoleCode">
+		<label>KodRoli</label>
+		<description>funkcja pełniona przez stronę odpowiedzialną </description>
+	</element>
+	<element name="gts:TM_PeriodDuration">
+		<label>Okres trwania</label>
+		<description/>
+	</element>
+	<element name="gco:CharacterString">
+		<label>Tekst</label>
+		<description/>
+	</element>
+	<element name="gco:nilReason">
+		<label>Atrybut "Nil reason"</label>
+		<description>Wyjaśnienie pustych wartości artybutu</description>
+	</element>
+	<element name="srv:DCPList">
+		<label>Lista dystrybuowanych platform obliczeniowych</label>
+		<description/>
+	</element>
+	<element name="gmd:verticalCRS">
+		<label>Pionowy UW</label>
+		<description>dostarcza informacje o pionowym układ współrzędnych, w którym 
+		mierzone są wartości wysokości. UW zawiera informacje o jednostkach pomiarowych </description>
+	</element>
+	<element name="gmx:FileName">
+		<label>Nazwa pliku</label>
+		<description>Nazwa pliku i źródła URL.</description>
+	</element>
+	<element name="src">
+		<label>Źródłowy URL</label>
+		<description>URL dokumentu.</description>
+	</element>
+</labels>

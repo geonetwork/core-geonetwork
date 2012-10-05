@@ -229,6 +229,7 @@ GeoNetwork.Lang.nl = {
     'view': "Bekijk",
     'zoomTo': "Zoom naar",
     'saveXml': "Bewaar als XML",
+    'saveRdf': 'Save as RDF',
     'exportCsv': "Exporteer (CSV)",
     'exportZip': "Exporteer (ZIP)",
     'printSel': "Exporteer (PDF)",
@@ -496,7 +497,13 @@ GeoNetwork.Lang.nl = {
 	'What': "Wat",
 	'Searchforspatialdataon': "Zoek ruimtelijke data over",
 	'Advanced': "Geavanceerd",
-	'List': "Lijst"
+	'List': "Lijst",
+    'xsd': 'ISO schema',
+    'rules': 'rules',
+    'rule': 'rule',
+    'schematron-rules-geonetwork': 'GeoNetwork validation',
+    'schematron-rules-iso': 'ISO validation',
+    'schematron-rules-inspire': 'INSPIRE validation'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

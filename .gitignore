@@ -1,8 +1,9 @@
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/loc/*/schematron*
-web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron*
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
+web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
+web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
-web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
 web/logs/
 web/jcs_caching/
 geonetwork*.db
@@ -17,3 +18,9 @@ web/src/main/webapp/WEB-INF/metadata_subversion/
 schematrons/.build
 docs/*/users/build
 .props/
+web-client/src/main/resources/apps/css/geonetwork.css
+web-client/src/main/resources/apps/js/GeoNetwork-mini-nomap.js
+web-client/src/main/resources/apps/js/GeoNetwork-mini.js
+web-client/src/main/resources/apps/js/ext-ux/css/ext-ux.css
+web-client/src/main/resources/apps/search/js/App-mini.js
+web-client/src/main/resources/apps/tabsearch/js/App-mini.js

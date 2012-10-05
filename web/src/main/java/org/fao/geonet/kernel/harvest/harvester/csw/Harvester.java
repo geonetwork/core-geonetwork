@@ -276,6 +276,10 @@ class Harvester
      */
     private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
             throws Exception {
+        if (oper.getUrl == null && oper.postUrl == null) {
+            throw new OperationAbortedEx("No GET or POST DCP available in this service.");
+        }
+        
         // Use the preferred HTTP method and check one exist.
 		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
 			request.setUrl(oper.getUrl);
@@ -333,7 +337,20 @@ class Harvester
 
 			} else {
 			    // TODO : add GET+FE and POST+CQL support
-				throw new OperationAbortedEx("No GET (using CQL) or POST (using FE) DCP available in this service.");
+			    log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
+			    
+			    request.setUrl(oper.getUrl);
+                request.setServerVersion(server.getPreferredServerVersion());
+                request.setOutputSchema(oper.preferredOutputSchema);
+                request.setConstraintLanguage(ConstraintLanguage.CQL);
+                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+                request.setConstraint(getCqlConstraint(s));
+                request.setMethod(CatalogRequest.Method.GET);
+                for(String typeName: oper.typeNamesList) {
+                    request.addTypeName(TypeName.getTypeName(typeName));
+                }
+                request.setOutputFormat(oper.preferredOutputFormat) ;
+
 			}
 		}
     }

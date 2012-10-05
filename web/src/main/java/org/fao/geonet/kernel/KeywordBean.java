@@ -364,7 +364,7 @@ public class KeywordBean {
 			return "#";
 	}
 
-	public KeywordBean setCode(String code) {
+	public KeywordBean setURICode(String code) {
 		this.code = code;
 		return this;
 	}
@@ -688,7 +688,7 @@ public class KeywordBean {
 
             Element elValue = new Element("value");
             elValue.addContent(values.get(language));
-            elValue.setAttribute("lang", language.toUpperCase());
+            elValue.setAttribute("lang", getIsoLanguageMapper().iso639_2_to_iso639_1(language, language.substring(2)).toUpperCase());
             elKeyword.addContent(elValue);
         }
 
