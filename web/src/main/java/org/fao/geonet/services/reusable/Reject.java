@@ -111,7 +111,7 @@ public class Reject implements Service
 
         Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
         List<Element> result = new ArrayList<Element>();
-        ArrayList<Integer> allAffectedMdIds = new ArrayList<Integer>();
+        ArrayList<String> allAffectedMdIds = new ArrayList<String>();
         for (String id : ids) {
             Set<MetadataRecord> results = Utils.getReferencingMetadata(context, invalidXlinkLuceneField, id, true, idConverter);
 
@@ -121,11 +121,9 @@ public class Reject implements Service
             }
 
             Element newIds = updateHrefs(strategy, context, dbms, session, id, results, baseURL, strategySpecificData);
-            ArrayList<Integer> mdIds = new ArrayList<Integer>();
             for (MetadataRecord metadataRecord : results) {
                 int mdId = Integer.parseInt(metadataRecord.id);
-                mdIds.add(mdId);
-                allAffectedMdIds.add(mdId);
+                allAffectedMdIds.add(Integer.toString(mdId));
             }
 
             Element e = new Element("idMap").addContent(new Element("oldId").setText(id)).addContent(newIds);
@@ -137,7 +135,7 @@ public class Reject implements Service
         }
         strategy.performDelete(ids, dbms, session, strategySpecificData);
 
-        gc.getDataManager().indexInThreadPool(context, Arrays.asList(ids), dbms, false, true);
+        gc.getDataManager().indexInThreadPool(context, allAffectedMdIds, dbms, false, true);
 
         return result;
 

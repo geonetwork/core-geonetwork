@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
@@ -101,12 +102,12 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
             KeywordsSearcher searcher = search(elem.two());
 
-            List keywords = searcher.getXmlResults().getChildren();
+            List<KeywordBean> keywords = searcher.getResults();
             if (!keywords.isEmpty()) {
-                Element keyword = (Element) keywords.get(0);
+                KeywordBean keyword = keywords.get(0);
                 elem.one().detach();
-                String thesaurus = keyword.getChildTextTrim("thesaurus");
-                String id = keyword.getChildTextTrim("uri");
+                String thesaurus = keyword.getThesaurusKey();
+                String id = keyword.getUriCode();
 
                 // do not add if a keyword with the same ID and thesaurus has previously been added
                 if(addedIds.add(thesaurus+"@@"+id)) {
@@ -184,74 +185,41 @@ public final class KeywordsStrategy extends ReplacementStrategy
     {
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
-        Element params = new Element("params");
-        Element thesParam = new Element("pThesauri");
-        thesParam.setText(NON_VALID_THESAURUS_NAME);
-        params.addContent(thesParam);
-        params.addContent(new Element("pTypeSearch").setText("2"));
-        params.addContent(new Element("pKeyword").setText("*"));
-        
-        searcher.search(null, params);
+        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
+        builder.addLang(_currentLocale)
+        	.keyword("*", KeywordSearchType.MATCH, false)
+        	.addThesaurus(NON_VALID_THESAURUS_NAME);
+        KeywordSearchParams params = builder.build();
+		searcher.search(params);
         searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
-        List<Element> results = searcher.getXmlResults().getChildren();
-
-        Element keywords = new Element(REPORT_ROOT);
-        for (Element element : results) {
-            String id = element.getChildTextTrim("id");
-            Element e = new Element(REPORT_ELEMENT);
-            Pair<String/*lang*/,String/*name*/> desc = keyWordValueFromSearchResult(element);
-            StringBuilder uriBuilder = new StringBuilder();
-            uriBuilder.append(XLink.LOCAL_PROTOCOL);
-            uriBuilder.append("thesaurus.admin?thesaurus=");
-            uriBuilder.append(NON_VALID_THESAURUS_NAME);
-            uriBuilder.append("&id=");
-            uriBuilder.append(URLEncoder.encode(element.getChildText("uri"), "UTF-8"));
-            uriBuilder.append("&lang=");
-            String lang = desc.one();
-            if(lang != null) {
-                if(lang.equalsIgnoreCase("fra")) {
-                    lang = "fre";
-                } else if(lang.equalsIgnoreCase("deu")) {
-                    lang = "ger";
-                }
-                
-            }
-            uriBuilder.append(lang);
-            
-            addChild(e, REPORT_ID, id);
-            addChild(e, REPORT_URL, uriBuilder.toString());
-            addChild(e, REPORT_DESC, desc.two());
-            keywords.addContent(e);
+      Element keywords = new Element(REPORT_ROOT);
+        for (KeywordBean bean : searcher.getResults()) {
+          Element e = new Element(REPORT_ELEMENT);
+          StringBuilder uriBuilder = new StringBuilder();
+          uriBuilder.append(XLink.LOCAL_PROTOCOL);
+          uriBuilder.append("thesaurus.admin?thesaurus=");
+          uriBuilder.append(NON_VALID_THESAURUS_NAME);
+          uriBuilder.append("&id=");
+          uriBuilder.append(URLEncoder.encode(bean.getUriCode(), "UTF-8"));
+          uriBuilder.append("&lang=");
+          uriBuilder.append(bean.getDefaultLang());
+          
+          addChild(e, REPORT_ID, Integer.toString(bean.getId()));
+          addChild(e, REPORT_URL, uriBuilder.toString());
+          addChild(e, REPORT_DESC, bean.getDefaultValue());
+          keywords.addContent(e);
         }
 
         return keywords;
-    }
-
-    private Pair<String, String> keyWordValueFromSearchResult(Element element) throws Exception {
-        @SuppressWarnings("unchecked")
-        List<Element> values = element.getChildren("value");
-        String lang = _currentLocale;
-        String val = "...";
-        for (Element value : values) {
-            if(!value.getTextTrim().equals("")) {
-                val = value.getTextTrim();
-                String code = value.getAttributeValue("lang").toLowerCase();
-                lang = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(code);
-                if(lang.equalsIgnoreCase(_currentLocale)) {
-                    break;
-                }
-            }
-        }
-        return Pair.read(lang, val);
     }
 
     public String createXlinkHref(String id, UserSession session, String thesaurusName) throws Exception
     {
         String thesaurus = validateName(thesaurusName);
         KeywordBean concept = lookup(id, session);
-        String uri = concept.getCode();
+        String uri = concept.getUriCode();
         return XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + thesaurus + "&id=" + URLEncoder.encode(uri, "utf-8");
     }
 
@@ -262,7 +230,6 @@ public final class KeywordsStrategy extends ReplacementStrategy
         for (String id : ids) {
             try {
                 // A test to see if id is from a previous search or 
-                Integer.parseInt(id);
                 KeywordBean concept = lookup(id, session);
                 thesaurus.removeElement(concept);
             } catch (NumberFormatException e) {
@@ -284,7 +251,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private KeywordBean lookup(String id, UserSession session)
     {
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.getKeywordFromResults(id);
+        KeywordBean concept = searcher.getKeywordFromResultsById(Integer.parseInt(id));
         return concept;
     }
 
@@ -293,8 +260,8 @@ public final class KeywordsStrategy extends ReplacementStrategy
     {
         String base = oldHref.substring(0, oldHref.indexOf('?'));
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.getKeywordFromResults(id);
-        String encoded = URLEncoder.encode(concept.getCode(), "utf-8");
+        KeywordBean concept = searcher.getKeywordFromResultsById(id);
+        String encoded = URLEncoder.encode(concept.getUriCode(), "utf-8");
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
     }
 
@@ -309,8 +276,8 @@ public final class KeywordsStrategy extends ReplacementStrategy
         String[] langs = {"en", "fr","de", "it"};
         for (String id : ids) {
             idMap.put(id, id);
-            KeywordBean concept = searcher.getKeywordFromResults(id);
-            String code = concept.getCode();
+            KeywordBean concept = searcher.getKeywordFromResultsById(id);
+            String code = concept.getUriCode();
             for(String lang : langs){
                 KeywordBean translation = searcher.searchById(code, NON_VALID_THESAURUS_NAME, lang);
 
@@ -463,9 +430,8 @@ public final class KeywordsStrategy extends ReplacementStrategy
                 try {
                     KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
                     try {
-                        Integer.parseInt(id);
-                        KeywordBean concept = searcher.getKeywordFromResults(id);
-                        return URLEncoder.encode(concept.getCode(), "UTF-8");
+                        KeywordBean concept = searcher.getKeywordFromResultsById(Integer.parseInt(id));
+                        return URLEncoder.encode(concept.getUriCode(), "UTF-8");
                     } catch(NumberFormatException e) {
                         return  URLEncoder.encode(NAMESPACE+id, "utf-8");
                     }

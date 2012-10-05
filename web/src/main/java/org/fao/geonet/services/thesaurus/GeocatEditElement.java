@@ -81,9 +81,9 @@ public class GeocatEditElement implements Service {
 				UserSession session = context.getUserSession();
 				KeywordsSearcher searcher = (KeywordsSearcher) session
 					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-				kb = searcher.getKeywordFromResults(id);
+				kb = searcher.getKeywordFromResultsById(id);
                 // need to get other translations
-				kb = searcher.searchById(kb.getCode(), ref, "*");
+				kb = searcher.searchById(kb.getUriCode(), ref, "*");
 			}else{
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				ThesaurusManager thesaurusMan = gc.getThesaurusManager();
