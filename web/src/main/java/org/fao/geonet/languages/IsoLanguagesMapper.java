@@ -42,8 +42,8 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    private final Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
-    private final Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
+    protected final Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
+    protected final Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
 
 
     protected IsoLanguagesMapper() {}

@@ -23,10 +23,17 @@ public abstract class AbstractThesaurusBasedTest {
 	protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
     protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
 		{
-			isoLanguagesMap639.put("en", "eng");
-			isoLanguagesMap639.put("de", "ger");
-			isoLanguagesMap639.put("fr", "fre");
-			isoLanguagesMap639.put("it", "ita");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("fra", "fr");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
+			iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
+			
+			iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
+			iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
+			iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
+			iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
 		}
 	};
     protected File thesaurusFile;
