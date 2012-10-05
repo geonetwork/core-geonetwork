@@ -19,3 +19,4 @@ docs/*/users/build
 .props/
 web-client/src/main/resources/apps/js/GeoNetwork-mini*
 web-client/src/main/resources/apps/*/js/App-mini.js
+portlet/src/main/webapp/*
