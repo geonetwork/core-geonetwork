@@ -19,7 +19,7 @@
 
 Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
 
-GeoNetwork.lang.en = {
+GeoNetwork.lang.ca = {
     'featureInfoTooltipTitle': "Informació de l'entitat",
     'featureInfoTooltipText': "Feu clic sobre el mapa per obtenir informació de totes les entitats de les capes visibles.",
     'zoomToMaxExtentTooltipTitle': "Extensió completa",
@@ -130,4 +130,4 @@ GeoNetwork.lang.en = {
     'WMSTimeAnimationCheckbox': "Play a movie loop spanning the last ${steps} time positions"
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.ca, GeoNetwork.lang.ca);

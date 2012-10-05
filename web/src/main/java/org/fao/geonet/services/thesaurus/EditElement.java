@@ -59,37 +59,37 @@ public class EditElement implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context)
-            throws Exception {
-        String ref      = Util.getParam(params, Params.REF);
-        String id       = Util.getParam(params, Params.ID, "");
-        String uri      = Util.getParam(params, Params.URI, "");
-        String mode     = Util.getParam(params, Params.MODE, "");
-        String lang     = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(context.getLanguage());
-        
-        String modeType     = "add";
-        
-        Element elResp = new Element(Jeeves.Elem.RESPONSE);
-        
-        if (!id.equals("") || !uri.equals("")) {
-            KeywordBean kb = null;
-            
-            if (!id.equals("")){
-                UserSession session = context.getUserSession();
-                KeywordsSearcher searcher = (KeywordsSearcher) session
-                    .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-                kb = searcher.getKeywordFromResultsById(id);
-            }else{
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                ThesaurusManager thesaurusMan = gc.getThesaurusManager();
-                KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
-                
-                kb = searcher.searchById(uri, ref, lang);
-                
-            }
-            // Add info needed by thesaurus.edit
-            elResp.addContent(new Element("prefLab").setText(kb.getDefaultValue()));
-            elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		String ref 		= Util.getParam(params, Params.REF);
+		String id 		= Util.getParam(params, Params.ID, "");
+		String uri 		= Util.getParam(params, Params.URI, "");
+		String mode	 	= Util.getParam(params, Params.MODE, "");
+		String lang 	= IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(context.getLanguage());
+		
+		String modeType 	= "add";
+		
+		Element elResp = new Element(Jeeves.Elem.RESPONSE);
+		
+		if (!id.equals("") || !uri.equals("")) {
+			KeywordBean kb = null;
+			
+			if (!id.equals("")){
+				UserSession session = context.getUserSession();
+				KeywordsSearcher searcher = (KeywordsSearcher) session
+					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+				kb = searcher.getKeywordFromResultsById(id);
+			}else{
+				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+				ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+				KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
+				
+				kb = searcher.searchById(uri, ref, lang);
+				
+			}
+			// Add info needed by thesaurus.edit
+			elResp.addContent(new Element("prefLab").setText(kb.getDefaultValue()));
+			elResp.addContent(new Element("definition").setText(kb.getDefaultDefinition()));
 
             elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
             elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));

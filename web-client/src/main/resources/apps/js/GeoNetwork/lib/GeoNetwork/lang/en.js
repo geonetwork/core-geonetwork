@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
+Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
-GeoNetwork.lang.en = {
+GeoNetwork.Lang.en = {
     'previousPage': 'Move to previous page',
     'nextPage': 'Move to next page',
     'upInPage': 'Scroll up in the results',
@@ -513,4 +513,4 @@ GeoNetwork.lang.en = {
     'schematron-rules-inspire': 'INSPIRE validation'
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

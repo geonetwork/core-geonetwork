@@ -374,7 +374,6 @@
       <dependency>
           <groupId>com.cybozu.labs</groupId>
           <artifactId>langdetect</artifactId>
-          <version>1.0.0.0</version>
       </dependency>
       <dependency>
           <groupId>net.arnx.jsonic</groupId>

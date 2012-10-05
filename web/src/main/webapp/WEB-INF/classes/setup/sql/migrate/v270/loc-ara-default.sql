@@ -1,1 +1,0 @@
--- Take care to table ID (related to other loc files)

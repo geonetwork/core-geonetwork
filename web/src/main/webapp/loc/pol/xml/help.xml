@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<help>
+	<title>Pomoc</title>
+	<content>
+		<h3>Pomoc</h3>
+		<p>Często zadawane pytania (FAQ's), Tutoriale, Dokumentacje i inne informacje: <strong>Dokumentacja</strong> w języku angielskim na stronie <strong><a href="http://geonetwork-opensource.org" target="_blank">The GeoNetwork opensource Community</a></strong></p>
+		<h3>Zawartość strony</h3>
+		<p>
+			<a href="#1">Znajdowanie danych przestrzennych</a><br/>
+			<a href="#2">Dane przestrzenne i aplikacje</a><br/>
+			<a href="#3">Pobieranie danych przestrzennych</a>
+			<p/>
+			<a name="1"/><h3>Znajdowanie danych przestrzennych</h3>
+			Możliwość wyszukiwania wg
+			<ul>
+				<li>Tytułu</li>
+				<li>Streszczenia</li>
+				<li>Słów kluczowych</li>
+				<li>Położenia</li>
+				<li>Dowolnego tekstu (dowolne pole metadanych)</li>
+			</ul>
+			W każdym z pól wyszukiwnaia użytkownik może podac wyrażenie używając nastepujacej gramatyki:
+			<ul>
+				<li>tekst1: wyszukuje metadane posiadające wpis "tekst1" w przeszukiwanym polu</li>
+				<li>tekst1 tekst2: posiada tekst1 i tekst2</li>
+				<li>"tekst1 tekst2": posiada "tekst1 tekst2" w polu</li>
+				<li>tekst1 and tekst2: posiada zarówno "teskt1" jak i  "teskt2" w przeszukiwanym polu</li>
+				<li>tekst1 or tekst2: posiada 'tekst1' lub "tekst2"  w przeszukiwanym polu</li>
+				<li>tekst1 not tekst2: posiada "teskt1" ale nie "tekst2"  w przeszukiwanym polu</li>
+			</ul>
+			Słowa kluczowe i operatory (and, or not) nie są rozróżniane wg wielkości liter.
+			<p/>
+			Na przykład, w polu tytuł:
+			<p/>
+			Ewidencja gruntów: wyszukaj wszystkie pliki metadanych, zawierające w polu tytułu słowa "ewidencja" i "gruntów";<br/>
+			"Ewidencja gruntów": wyszukaj wszystkie pliki metadanych, zawierające w polu tytułu słowa "ewidencja gruntów";<br/>
+			"Ewidencja gruntów" not budynków: szystkie pliki metadanych, zawierające w polu tytułu słowa "ewidencja gruntów" ale niezawierające słowa "budynków".
+			<p/>
+
+			Ponieważ transakcje zdalne typu Z39.50 mogą być bardzo powolne, użytkownik może określić czas utrzymywania transkacji (timeout) na 10, 20 albo 30 sekund.
+			<p/>
+			<a name="2"/><h3>Dane przestrzenne i aplikacje</h3>
+
+			<p/>
+			Dane przestrzenne opisane w katalogu są często używane jako dane podstawowe w zaawansowanych aplikacjach sieciowych. Aplikacje te służą wspieraniu rozwiązywania problemów, dotyczących: rolnictwa, żywego inwentarza, lasów, rybołówstwa i bezpieczeństwa żywności.<br/>
+		    Ponieważ wspomniane aplikcje można opisać w katalogu metadanych, użytkownik może uzyskać szersze informacje oraz odnośniki (linki) do tych aplikcji.<br/>
+			Opis (metadane) aplikacji, zawarty w katalogu zawiera również informacje o danych przestrzennych, z jakich korzysta opisywana aplikacja.<br/>
+			W niektórych przypadkach istnieje możliwość wyświetlenia informacji, zawartych w opisywanej usłudze, z poziomu katalogu metadanych.
+			Funkcjonalność taka występuje w przypadku usług przeglądania danych z usług przeglądania OGC WMS.
+
+			<p/>
+			<a name="3"/><h3>Pobieranie danych przestrzennych</h3>
+			Dane przestrzenne są często dostępne do pobrania. Dane udostępniane są w popularnych formatach, kompatybilnych z większością profesjonalnych i darmowych aplikacji GIS.<br/>
+			Dane dostępne do pobrania posiadają odnośnik do pobrania danych. Przed pobraniem danych użytkownik musi zaakceptować warunki pobierania i korzystania z zanych.<br/>
+			
+			Część danych pozwala na pobranie tylko interesującego zakresu przestrzennego.
+		</p>
+	</content>
+</help>
