@@ -28,12 +28,12 @@
 							<!-- loop on all operations leaving editing and notify to last -->
 							<xsl:for-each select="/root/response/operations/record">
 								<xsl:if test="id!='2' and id!='3'">
-									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
+									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
 							<xsl:for-each select="/root/response/operations/record">
 								<xsl:if test="id='2' or id='3'">
-									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
+									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
 							</xsl:for-each>
 							<th width="70"/>
@@ -93,7 +93,7 @@
 								<!-- loop on all operations leaving editing and notify to last -->
 										<xsl:for-each select="oper">
 											<xsl:if test="id!='2' and id!='3'">
-												<td class="padded" align="center" width="80">
+												<td class="padded record-{id}" align="center" width="80">
 													<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
 														<xsl:if test="on">
 															<xsl:attribute name="checked"/>
@@ -107,7 +107,7 @@
 										</xsl:for-each>
 										<xsl:for-each select="oper">
 											<xsl:if test="id='2' or id='3'">
-												<td class="padded" align="center" width="80">
+												<td class="padded record-{id}" align="center" width="80">
 													<xsl:if test="$userGroup='true'">
 														<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
 															<xsl:if test="on">
@@ -193,7 +193,7 @@
 			<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
 			<xsl:for-each select="oper">
 				<xsl:if test="id!='2' and id!='3'">
-					<td class="padded" align="center" width="80">
+					<td class="padded record-{id}" align="center" width="80">
 						<input type="checkbox" name="_{$groupId}_{id}" id="_{$groupId}_{id}">
 							<xsl:if test="$disabled">
 								<xsl:attribute name="disabled"/>
@@ -209,7 +209,7 @@
 			<!-- fill empty slots -->
 			<xsl:for-each select="oper">
 				<xsl:if test="id='2' or id='3'">
-					<td/>
+					<td class="record-{id}"/>
 				</xsl:if>
 			</xsl:for-each>
 

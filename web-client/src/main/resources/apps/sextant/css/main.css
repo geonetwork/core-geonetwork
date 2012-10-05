@@ -527,3 +527,8 @@ hr {
 p.abstract {
 	font-size:12px;
 }
+
+div#privileges .record-6,
+div#privileges .record-3 {
+	display:none;
+} 
