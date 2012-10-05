@@ -33,6 +33,7 @@ import java.util.Set;
 
 import jeeves.utils.Util;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
@@ -109,6 +110,9 @@ public class KeywordsSearcher {
      * @throws Exception hmm
      */
 	public void search(String contextLanguage, Element params) throws Exception {
+		if(contextLanguage == null) {
+			contextLanguage = Geonet.DEFAULT_LANGUAGE;
+		}
 	    KeywordSearchParamsBuilder paramsBuilder = KeywordSearchParamsBuilder.createFromElement(_isoLanguageMapper, params);
         if(paramsBuilder.getLangs().isEmpty()) {
             paramsBuilder.addLang(contextLanguage);
@@ -242,7 +246,7 @@ public class KeywordsSearcher {
         elKeyword.addContent(new Element("definition").addContent(kb.getDefaultDefinition()).setAttribute("language", defaultLang));
         elKeyword.addContent(new Element("defaultLang").addContent(defaultLang));
         elKeyword.addContent(new Element("thesaurus").addContent(kb.getThesaurusKey()));
-        elKeyword.addContent(new Element("uri").addContent(kb.getCode()));
+        elKeyword.addContent(new Element("uri").addContent(kb.getUriCode()));
         addBbox(kb, elKeyword);
         rootEl.addContent(elKeyword);
         
@@ -285,7 +289,7 @@ public class KeywordsSearcher {
      */
     public void selectUnselectKeywords(Set<String> idSet) {
         for (KeywordBean keyword : _results) {
-            if(idSet.contains(""+keyword.getId()) || idSet.contains(keyword.getCode())) {
+            if(idSet.contains(""+keyword.getId()) || idSet.contains(keyword.getUriCode())) {
                 keyword.setSelected(!keyword.isSelected());
             }
         }
@@ -372,7 +376,7 @@ public class KeywordsSearcher {
      * 
      * @return keywordbean
      */
-	public KeywordBean getKeywordFromResults(int id) {
+	public KeywordBean getKeywordFromResultsById(int id) {
 		for (KeywordBean kb : _results) {
             if (kb.getId() == id) {
 					return kb;
@@ -380,7 +384,16 @@ public class KeywordsSearcher {
 			}
 		return null;
 	}
-	
+    /**
+     * find the keyword with provided ID
+     *
+     * @param id integer id (not URI) of keyword
+     * 
+     * @return keywordbean
+     */
+	public KeywordBean getKeywordFromResultsById(String id) {
+		return getKeywordFromResultsById(Integer.parseInt(id));
+	}
 	/**
 	 * find the keyword with provided code/uri
 	 *
@@ -388,13 +401,14 @@ public class KeywordsSearcher {
 	 * 
 	 * @return keywordbean
 	 */
-	public KeywordBean getKeywordFromResults(String code) {
+	public KeywordBean getKeywordFromResultsByUriCode(String code) {
 	    for (KeywordBean kb : _results) {
-	        if (kb.getCode().equals(code)) {
+	        if (kb.getUriCode().equals(code)) {
 	            return kb;
 	        }
 	    }
 	    return null;
 	}
+
 
 }
