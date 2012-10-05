@@ -25,9 +25,16 @@ Ext.onReady(function() {
 		hostUrl : geonetworkUrl
 	});
 	
+	var formatterServiceUrl;
+	if(urlParameters.loader && urlParameters.loader=='HTTP' && urlParameters.url) {
+		formatterServiceUrl = catalogue.services.mdFormatter + '?loader=HTTP&xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
+	} else {
+		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
+	}
+		
 	var win = new cat.view.ViewWindow({
         serviceUrl: style == 'sextant' ? catalogue.services.mdView + '?uuid=' + escape(uuid) : null,
-        formatterServiceUrl: catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style,
+        formatterServiceUrl: formatterServiceUrl,
         lang: catalogue.lang,
         currTab: GeoNetwork.defaultViewMode || 'simple',
         printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
