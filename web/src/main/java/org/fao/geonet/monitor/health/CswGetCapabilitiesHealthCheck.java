@@ -3,7 +3,11 @@ package org.fao.geonet.monitor.health;
 import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.local.LocalServiceRequest;
+import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -27,12 +31,18 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
                 String port = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
                 final String baseUrl = context.getBaseUrl();
                 try {
-                    GetCapabilitiesRequest getCapabilities = new GetCapabilitiesRequest();
+					LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetCapabilities&service=CSW");
+					request.setDebug(false);
+					request.setLanguage("eng");
+					request.setInputMethod(InputMethod.GET);
+					Element result = context.execute(request);
 
-                    getCapabilities.setHost(host);
-                    getCapabilities.setPort(port == null ? 80 : Integer.parseInt(port));
-                    getCapabilities.setAddress(baseUrl + "/srv/eng/csw");
-                    Element result = getCapabilities.execute();
+//                    GetCapabilitiesRequest getCapabilities = new GetCapabilitiesRequest();
+//
+//                    getCapabilities.setHost(host);
+//                    getCapabilities.setPort(port == null ? 80 : Integer.parseInt(port));
+//                    getCapabilities.setAddress(baseUrl + "/srv/eng/csw");
+//                    Element result = getCapabilities.execute();
                     if (result.getChild("ServiceIdentification", Csw.NAMESPACE_OWS) == null)
                         return Result.unhealthy("Capabilities did not have a 'ServiceIdentification' element as expected.  Xml: " + Xml.getString(result));
                     return Result.healthy();
