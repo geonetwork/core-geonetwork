@@ -97,15 +97,9 @@ public class Search implements Service
 				elData.addContent(new Element(Geonet.SearchResult.NORTH_BL).addContent(bounds[3]));
 			}
 		}
-		
-		// possibly close old searcher
+	
 		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
- 		if (oldSearcher != null)
- 			if (oldSearcher instanceof LuceneSearcher)
- 				((LuceneSearcher)oldSearcher).close();
-		
+
 		// possibly close old selection
 		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
 		

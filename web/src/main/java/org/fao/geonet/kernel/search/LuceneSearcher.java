@@ -33,10 +33,10 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.MapFieldSelector;
@@ -54,20 +54,22 @@ import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.NumericUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -85,6 +87,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -105,7 +108,7 @@ public class LuceneSearcher extends MetaSearcher
 	private Sort          _sort;
 	private Element       _elSummary;
 	private FieldSelector _selector;
-	private IndexReader		_reader;
+	private long					_searchToken;
 
 	private int           _maxSummaryKeys;
 	private int           _maxHitsInSummary;
@@ -179,13 +182,15 @@ public class LuceneSearcher extends MetaSearcher
 	//--------------------------------------------------------------------------------
 	// MetaSearcher API
 
-	public void search(ServiceContext srvContext, Element request, ServiceConfig config)
-		throws Exception
-	{
-		_reader = _sm.getIndexReader();
-		computeQuery(srvContext, request, config);
-		initSearchRange(srvContext);
-		performQuery(getFrom()-1, getTo());
+	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		IndexSearcher searcher = getNewSearcher();
+		try {
+			computeQuery(srvContext, request, config, searcher);
+			initSearchRange(srvContext);
+			performQuery(getFrom()-1, getTo(), searcher);
+		} finally {
+			releaseSearcher();
+		}
 	}
 
 	//--------------------------------------------------------------------------------
@@ -215,41 +220,46 @@ public class LuceneSearcher extends MetaSearcher
 		response.addContent((Element)_elSummary.clone());
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(getFrom()-1, getTo()); // get enough hits to show a page	
+			IndexSearcher searcher = getCurrentSearcher();
+			try {
+				TopDocs tdocs = performQuery(getFrom()-1, getTo(), searcher); // get enough hits to show a page	
 
-			int nrHits = getTo() - (getFrom()-1);
-			if (tdocs.scoreDocs.length >= nrHits) {
-				for (int i = 0; i < nrHits; i++) {
-					Document doc;
-					if (fast) {
-						doc = _reader.document(tdocs.scoreDocs[i].doc); // no selector
-					} else {
-						doc = _reader.document(tdocs.scoreDocs[i].doc, _selector);
-					}
-					String id = doc.get("_id");
-					Element md = null;
+				int nrHits = getTo() - (getFrom()-1);
+				if (tdocs.scoreDocs.length >= nrHits) {
+					for (int i = 0; i < nrHits; i++) {
+						Document doc;
+						if (fast) {
+							doc = searcher.getIndexReader().document(tdocs.scoreDocs[i].doc); // no selector
+						} else {
+							doc = searcher.getIndexReader().document(tdocs.scoreDocs[i].doc, _selector);
+						}
+						String id = doc.get("_id");
+						Element md = null;
 	
-					if (fast) {
-						md = getMetadataFromIndex(doc, id);
-					}
-                    else if (srvContext != null) {
-						md = gc.getDataManager().getMetadata(srvContext, id, false);
-					}
-
-					//--- a metadata could have been deleted just before showing 
-					//--- search results
+						if (fast) {
+							md = getMetadataFromIndex(doc, id);
+						}
+                    	else if (srvContext != null) {
+							md = gc.getDataManager().getMetadata(srvContext, id, false);
+						}
 	
-					if (md != null) {
-						// Calculate score and add it to info elem
-						Float score = tdocs.scoreDocs[i].score;
-						Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
-						addElement(info, Edit.Info.Elem.SCORE, score.toString());
-
-						response.addContent(md);
+						//--- a metadata could have been deleted just before showing 
+						//--- search results
+		
+						if (md != null) {
+							// Calculate score and add it to info elem
+							Float score = tdocs.scoreDocs[i].score;
+							Element info = md.getChild (Edit.RootChild.INFO, Edit.NAMESPACE);
+							addElement(info, Edit.Info.Elem.SCORE, score.toString());
+	
+							response.addContent(md);
+						}
 					}
+				} else {
+					throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
 				}
-			} else {
-				throw new Exception("Failed: Not enough search results ("+tdocs.scoreDocs.length+") available to meet request for "+nrHits+".");
+			} finally {
+				releaseSearcher();
 			}
 		}
 		
@@ -274,19 +284,45 @@ public class LuceneSearcher extends MetaSearcher
 
 	//--------------------------------------------------------------------------------
 
-	public void close() {
-		try {
-			_sm.releaseIndexReader(_reader);
-		} catch (IOException e) {
-			Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
-			e.printStackTrace();
-		}
-	}
+	public void close() {}
 
 	//--------------------------------------------------------------------------------
 	// private setup, index, delete and search functions
 
-	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception
+	private IndexSearcher getCurrentSearcher() throws Exception {
+		Log.debug(Geonet.SEARCH_ENGINE,"LuceneSearcher: Asking for searcher with "+_searchToken);
+		Pair<Long,IndexSearcher> searcherPair = _sm.getIndexSearcher(_searchToken);
+		Log.debug(Geonet.SEARCH_ENGINE,"LuceneSearcher: Found searcher with "+searcherPair.one()+" comparing with "+_searchToken);
+		if (searcherPair.one() != _searchToken) {
+			throw new SearchExpiredEx("Search has expired/timed out - start a new search");
+		}
+		return searcherPair.two();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private IndexSearcher getNewSearcher() throws Exception {
+		Pair<Long,IndexSearcher> searcherPair = _sm.getNewIndexSearcher();
+		_searchToken = searcherPair.one();
+		return searcherPair.two();
+	}
+
+	//---------------------------------------------------------------------------
+
+	private void releaseSearcher() {
+		try {
+			IndexSearcher searcher = getCurrentSearcher();
+			_sm.releaseIndexSearcher(searcher);
+		} catch (Exception e) {
+			Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Searcher: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+	//---------------------------------------------------------------------------
+
+	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config, IndexSearcher searcher) throws Exception
 	{
 
 		String sMaxRecordsInKeywordSummary = request.getChildText("maxHitsInSummary");
@@ -373,7 +409,7 @@ public class LuceneSearcher extends MetaSearcher
                 Log.debug(Geonet.SEARCH_ENGINE,"Lucene query: " + _query);
                  //System.out.println("** query:\n"+ _query);
                 try {
-                    Query rw = _query.rewrite(_reader);
+                    Query rw = _query.rewrite(searcher.getIndexReader());
                     Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
                     //System.out.println("** rewritten:\n"+ rw);
                 }
@@ -451,7 +487,7 @@ public class LuceneSearcher extends MetaSearcher
      * @return topdocs
      * @throws Exception hmm
      */
-	private TopDocs performQuery(int startHit, int endHit) throws Exception
+	private TopDocs performQuery(int startHit, int endHit, IndexSearcher searcher) throws Exception
 	{
 		CachingWrapperFilter cFilter = null;
 		if (_filter != null) cFilter = new CachingWrapperFilter(_filter);
@@ -465,14 +501,13 @@ public class LuceneSearcher extends MetaSearcher
 			numHits = endHit;
 		}
 
-		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, _maxSummaryKeys, _language, _resultType, _summaryConfig, _reader, _query, cFilter, _sort, buildSummary);
-		TopDocs hits = results.one();
+		Pair<TopDocs,Element> results = doSearchAndMakeSummary( numHits, startHit, endHit, _maxSummaryKeys, _language, _resultType, _summaryConfig, searcher, _query, cFilter, _sort, buildSummary);
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
 	
 		Log.debug(Geonet.SEARCH_ENGINE, "Hits found : "+_numHits+"");
 			
-		return hits;
+		return results.one();
 	}
 
 	//--------------------------------------------------------------------------------
@@ -667,9 +702,10 @@ public class LuceneSearcher extends MetaSearcher
                 returnValue = NumericRangeQuery.newDoubleRange(fld, min, max, inclusive, inclusive);
             }
             else {
-			Term lowerTerm = (lowerTxt == null ? null : new Term(fld, analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet)));
-			Term upperTerm = (upperTxt == null ? null : new Term(fld, analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet)));
-			returnValue = new RangeQuery(lowerTerm, upperTerm, inclusive);
+							String min = null, max = null;
+			if (lowerTxt != null) min = analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet);
+			if (upperTxt != null) max = analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet);
+			returnValue = new TermRangeQuery(fld, min, max, inclusive, inclusive);
 		}
 		}
 		else if (name.equals("DateRangeQuery"))
@@ -934,7 +970,7 @@ public class LuceneSearcher extends MetaSearcher
 
 	
 	/**
-	 * Do Lucene search and optionnaly build a summary for the search.
+	 * Do Lucene search and build a summary for the search if required.
 	 * 
 	 * @param numHits	the maximum number of hits to collect
 	 * @param startHit	the start hit to return in the TopDocs if not building summary
@@ -956,13 +992,14 @@ public class LuceneSearcher extends MetaSearcher
 	 */
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, int maxSummaryKeys, 
 			String langCode, String resultType, Element summaryConfig, 
-			IndexReader reader, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
+			IndexSearcher searcher, Query query, CachingWrapperFilter cFilter, Sort sort, boolean buildSummary) throws Exception
 	{
 
 		Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, false, false, false);
 
-		new IndexSearcher(reader).search(query, cFilter, tfc); 
+		searcher.search(query, cFilter, tfc); 
+		IndexReader reader = searcher.getIndexReader();
 
 		Element elSummary= new Element("summary");
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
@@ -1020,8 +1057,9 @@ public class LuceneSearcher extends MetaSearcher
 		addElement(info, Edit.Info.Elem.SOURCE,      source);
 
         @SuppressWarnings("unchecked")
-		List<Field> fields = doc.getFields();
-        for (Field field : fields) {
+		List<Fieldable> fields = doc.getFields();
+        for (Iterator<Fieldable> i = fields.iterator(); i.hasNext(); ) {
+						Fieldable field = i.next();
             String name = field.name();
             String value = field.stringValue();
             if (name.equals("_cat")) {
@@ -1052,11 +1090,12 @@ public class LuceneSearcher extends MetaSearcher
 					}
 				};
 
+				IndexSearcher searcher = getCurrentSearcher();
         List<String> response = new ArrayList<String>();
-				TopDocs tdocs = performQuery(0, maxHits);
+				TopDocs tdocs = performQuery(0, maxHits, searcher);
 
         for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-          Document doc = _reader.document(sdoc.doc, uuidselector);
+          Document doc = searcher.getIndexReader().document(sdoc.doc, uuidselector);
           String uuid = doc.get("_uuid");
 					if (uuid != null) response.add(uuid);
         }
@@ -1088,7 +1127,7 @@ public class LuceneSearcher extends MetaSearcher
 			MapFieldSelector selector = new MapFieldSelector(fieldnames); 
 
 			File luceneDir = new File(appPath + "WEB-INF/lucene/nonspatial");
-			IndexReader reader = IndexReader.open(luceneDir);
+			IndexReader reader = IndexReader.open(FSDirectory.open(luceneDir));
       Searcher searcher = new IndexSearcher(reader);
 
 			Map<String,String> values = new HashMap<String,String>();
@@ -1149,13 +1188,13 @@ public class LuceneSearcher extends MetaSearcher
 		if ((requestStr.startsWith("\"") && requestStr.endsWith("\""))) phrase = true;
 		
 		TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
+		CharTermAttribute charTermAttribute = ts.addAttribute(CharTermAttribute.class);
+
 
 		List<String> tokenList = new ArrayList<String>();
 		try {
-			while (true) {
-				Token token = ts.next();
-				if (token == null) break;
-				tokenList.add(token.termText());
+			while (ts.incrementToken()) {
+				tokenList.add(charTermAttribute.toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

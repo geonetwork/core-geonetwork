@@ -27,8 +27,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
@@ -178,13 +178,14 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager sm = gc.getSearchmanager();
 			
-			IndexReader reader = sm.getIndexReader();
+			IndexSearcher searcher = sm.getNewIndexSearcher().two();
+
 			try {
 				Query query = CatalogSearcher.getGroupsQuery(context);
 				Sort   sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true)));
 				CachingWrapperFilter filter = null;
 
-				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxRecords, 0, maxRecords, Integer.MAX_VALUE, context.getLanguage(), "results", new Element("summary"), reader, query, filter, sort, false);
+				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( maxRecords, 0, maxRecords, Integer.MAX_VALUE, context.getLanguage(), "results", new Element("summary"), searcher, query, filter, sort, false);
 				TopDocs hits = searchResults.one();
 			
 				try {
@@ -195,8 +196,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
-							.contains(property))
+					if (searcher.getIndexReader().getFieldInfos().fieldInfo(property) == null)
 						continue;
 					
 					boolean isRange = false;
@@ -220,7 +220,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					SortedSet<String> sortedValues = new TreeSet<String>();
 					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
-						Document doc = reader.document(hits.scoreDocs[j].doc, selector);
+						Document doc = searcher.getIndexReader().document(hits.scoreDocs[j].doc, selector);
 						
 						// Skip templates and subTemplates
 						String[] isTemplate = doc.getValues("_isTemplate");
@@ -254,7 +254,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					domainValuesList.add(domainValues);
 				}
 			} finally {
-				sm.releaseIndexReader(reader);
+				sm.releaseIndexSearcher(searcher);
 			}
 		}
 		return domainValuesList;

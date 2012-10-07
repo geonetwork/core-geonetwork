@@ -33,7 +33,6 @@ import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
@@ -622,35 +621,17 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalExtentOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
-			Term lowerTerm = null;
-			Term upperTerm = null;
-			RangeQuery temporalRangeQuery;
+			TermRangeQuery temporalRangeQuery;
 
 			// temporal extent start is within search extent
-            if(extFrom != null) {
-				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN , extFrom);
-			}
-			if(extTo != null) {
-				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extTo);
-			}
-			temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+			temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
 			BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 			
-            temporalExtentQuery.add(temporalRangeQueryClause);
+      temporalExtentQuery.add(temporalRangeQueryClause);
 
 
-            // or temporal extent end is within search extent
-            lowerTerm = null;
-			upperTerm = null;
-
-            if(extFrom != null) {
-				lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extFrom);
-			}
-
-			if(extTo != null) {
-				upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END, extTo);
-			}
-            temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+      // or temporal extent end is within search extent
+            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
             temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
@@ -659,16 +640,12 @@ public class LuceneQueryBuilder {
             if((extTo != null && extTo.length() > 0) && (extFrom != null && extFrom.length() > 0)) {
                 BooleanQuery bq = new BooleanQuery();
 
-                lowerTerm = new Term(LuceneIndexField.TEMPORALEXTENT_END , extTo);
-                temporalRangeQuery = new RangeQuery(lowerTerm, null, true);
+                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 bq.add(temporalRangeQueryClause);
 
-                lowerTerm = null;
-                upperTerm = new Term(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom);
-
-                temporalRangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 bq.add(temporalRangeQueryClause);
 
@@ -876,21 +853,15 @@ public class LuceneQueryBuilder {
 	private void addDateRangeQuery(BooleanQuery query, String dateTo,
 			String dateFrom, String luceneIndexField) {
 		if((dateTo != null && dateTo.length() > 0) || (dateFrom != null && dateFrom.length() > 0)) {
-			Term lowerTerm = null;
-			Term upperTerm = null;
-			RangeQuery rangeQuery;
-			if(dateFrom != null) {
-				lowerTerm = new Term(luceneIndexField, dateFrom);
-			}
+			TermRangeQuery rangeQuery;
 			if(dateTo != null) {
 				// while the 'from' parameter can be short (like yyyy-mm-dd)
 				// the 'until' parameter must be long to match
 				if(dateTo.length() == 10) {
 					dateTo = dateTo + "T23:59:59";
 				}
-				upperTerm = new Term(luceneIndexField, dateTo);
 			}
-			rangeQuery = new RangeQuery(lowerTerm, upperTerm, true);
+			rangeQuery = new TermRangeQuery(luceneIndexField, dateFrom, dateTo, true, true);
 			BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 			BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
 			query.add(dateRangeClause);

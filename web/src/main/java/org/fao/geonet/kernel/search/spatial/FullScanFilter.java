@@ -30,8 +30,9 @@ import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.HitCollector;
+import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
@@ -80,9 +81,19 @@ public class FullScanFilter extends SpatialFilter
 
         final Set<String> matches = loadMatches();
 
-        new IndexSearcher(reader).search(_query, new HitCollector()
+        new IndexSearcher(reader).search(_query, new Collector()
         {
-            public final void collect(int doc, float score)
+						private int docBase;
+
+						// ignore scorer
+						public void setScorer(Scorer scorer) {}
+						
+						// accept docs out of order (for a BitSet it doesn't matter)
+						public boolean acceptsDocsOutOfOrder() {
+							return true;
+						}
+
+            public final void collect(int doc)
             {
                 Document document;
                 try {
@@ -94,6 +105,10 @@ public class FullScanFilter extends SpatialFilter
                     throw new RuntimeException(e);
                 }
             }
+
+						public void setNextReader(IndexReader reader, int docBase) {
+							this.docBase = docBase;
+						}
         });
         return bits;
     }

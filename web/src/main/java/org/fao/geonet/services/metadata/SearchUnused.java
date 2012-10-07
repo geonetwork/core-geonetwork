@@ -63,13 +63,7 @@ public class SearchUnused implements Service
 
 		SearchManager searchMan = gc.getSearchmanager();
 
-		// possibly close old searcher
 		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-
-		if (oldSearcher != null)
-			if (oldSearcher instanceof LuceneSearcher)
-				((LuceneSearcher)oldSearcher).close();
 
 		// perform the search and save search result into session
 

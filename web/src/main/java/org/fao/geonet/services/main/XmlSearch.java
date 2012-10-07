@@ -69,14 +69,6 @@ public class XmlSearch implements Service
 		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
 		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
 
-		// possibly close old searcher
-		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
- 		if (oldSearcher != null)
- 			if (oldSearcher instanceof LuceneSearcher)
- 				((LuceneSearcher)oldSearcher).close();
-		
 		// perform the search and save search result into session
 		MetaSearcher searcher;
 
@@ -86,6 +78,7 @@ public class XmlSearch implements Service
 			else      searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
 		searcher.search(context, elData, _config);
+		UserSession  session     = context.getUserSession();
 		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
 		elData.addContent(new Element("fast").setText("true"));

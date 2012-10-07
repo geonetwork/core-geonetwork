@@ -90,7 +90,6 @@ public class Result implements Service
 			Object oldSearcher = session.getProperty(Geonet.Session.LAST_SEARCH_RESULT);
 			if (oldSearcher != null) {
 				context.info("Restoring last search");
-				if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher)searcher).close();
 				session.setProperty(Geonet.Session.SEARCH_RESULT, oldSearcher);
 			}
 		}

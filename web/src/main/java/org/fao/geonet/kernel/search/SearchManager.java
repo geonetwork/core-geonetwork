@@ -42,7 +42,9 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.store.FSDirectory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -665,7 +667,8 @@ public class SearchManager
      */
 	public ArrayList<Integer> getDocsWithXLinks() throws Exception
 	{
-		IndexReader reader = getIndexReader();
+		IndexSearcher searcher = getNewIndexSearcher().two();
+		IndexReader reader = searcher.getIndexReader();
 
 		try {
 			FieldSelector idXLinkSelector = new FieldSelector() {
@@ -692,7 +695,7 @@ public class SearchManager
 			}
 			return docs;
 		} finally {
-			releaseIndexReader(reader);
+			releaseIndexSearcher(searcher);
 		}
 	}
 
@@ -706,7 +709,8 @@ public class SearchManager
      */
 	public HashMap<String,String> getDocsChangeDate() throws Exception
 	{
-		IndexReader reader = getIndexReader();
+		IndexSearcher searcher = getNewIndexSearcher().two();
+		IndexReader reader = searcher.getIndexReader();
 
 		try {
 			FieldSelector idChangeDateSelector = new FieldSelector() {
@@ -730,7 +734,7 @@ public class SearchManager
 			}
 			return docs;
 		} finally {
-			releaseIndexReader(reader);
+			releaseIndexSearcher(searcher);
 		}
 	
 	}
@@ -746,19 +750,20 @@ public class SearchManager
 	{
 		Vector<String> terms = new Vector<String>();
 
-		IndexReader reader = getIndexReader();
+		IndexSearcher searcher = getNewIndexSearcher().two();
+		IndexReader reader = searcher.getIndexReader();
 
 		try {
 			TermEnum enu = reader.terms(new Term(fld, ""));
 			if (enu.term()==null) return terms;
 			do	{
 				Term term = enu.term();
-				if (!term.field().equals(fld)) break;
+				if (term == null || !term.field().equals(fld)) break;
 				terms.add(enu.term().text());
 			} while (enu.next());
 			return terms;
 		} finally {
-			releaseIndexReader(reader);
+			releaseIndexSearcher(searcher);
 		}
 	}
 
@@ -780,7 +785,9 @@ public class SearchManager
 	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms, int threshold) throws Exception
 	{
 		List<TermFrequency> termList = new ArrayList<TermFrequency>();
-		IndexReader reader = getIndexReader();
+
+		IndexSearcher searcher = getNewIndexSearcher().two();
+		IndexReader reader = searcher.getIndexReader();
 		TermEnum term = reader.terms();
 		int i = 0;
 		// TODO : we should apply the same Analyzer used for field indexing
@@ -801,7 +808,7 @@ public class SearchManager
 				}
 			}
 		} finally {
-			releaseIndexReader(reader);
+			releaseIndexSearcher(searcher);
 		}
 		return termList;
 	}
@@ -892,27 +899,34 @@ public class SearchManager
 		}
 	}
 
-    //-----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	/**
-	 * Returns a reopened index reader to do operations on
-	 * an up-to-date index.
+	 * Return a (refreshed) IndexSearcher to do search operations on.
 	 * 
 	 * @return
 	 */
-	public IndexReader getIndexReader() throws InterruptedException, IOException {
-		return _indexReader.getReader();
+	public Pair<Long,IndexSearcher> getIndexSearcher(long token) throws IOException, InterruptedException {
+		Pair<Long,IndexSearcher> result = _indexReader.getReader(token);
+		Log.debug(Geonet.INDEX_ENGINE,"Got index reader token "+result.one()+" index reader object: "+result.two());
+		return result;
 	}
 
-	//-----------------------------------------------------------------------------
-	
-    /**
-     * TODO javadoc.
-     *
-     * @param reader
-     * @throws IOException
-     */
-	public void releaseIndexReader(IndexReader reader) throws IOException {
-		_indexReader.releaseReader(reader);
+	//----------------------------------------------------------------------------
+	/**
+	 * Return a new IndexSearcher to do search operations on.
+	 * 
+	 * @return
+	 */
+	public Pair<Long,IndexSearcher> getNewIndexSearcher() throws IOException, InterruptedException {
+		Log.debug(Geonet.INDEX_ENGINE,"Ask for new searcher");
+		return getIndexSearcher(-1);
+	}
+
+	//----------------------------------------------------------------------------
+
+	public void releaseIndexSearcher(IndexSearcher searcher) throws IOException {
+		Log.debug(Geonet.INDEX_ENGINE,"Closing index reader object: "+searcher);
+	  _indexReader.releaseReader(searcher);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -926,7 +940,7 @@ public class SearchManager
 		boolean badIndex = true;
 		if (!rebuild) {
 			try {
-				IndexReader indexReader = IndexReader.open(_luceneDir);
+				IndexReader indexReader = IndexReader.open(FSDirectory.open(_luceneDir));
 				indexReader.close();
 				badIndex = false;
 			} catch (Exception e) {
@@ -939,7 +953,7 @@ public class SearchManager
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 			if (_spatial != null) _spatial.writer().reset();
-			IndexWriter writer = new IndexWriter(_luceneDir, _analyzer, true);
+			IndexWriter writer = new IndexWriter(FSDirectory.open(_luceneDir), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
 			writer.close();
 		}
 		
@@ -1032,10 +1046,10 @@ public class SearchManager
                 }
                 Field.Index index = null;
                 if (bIndex && token) {
-                    index = Field.Index.TOKENIZED;
+                    index = Field.Index.ANALYZED;
                 }
                 if (bIndex && !token) {
-                    index = Field.Index.UN_TOKENIZED;
+                    index = Field.Index.NOT_ANALYZED;
                 }
                 if (!bIndex) {
                     index = Field.Index.NO;

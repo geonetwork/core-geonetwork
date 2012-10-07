@@ -76,8 +76,6 @@ public class SelectionSearch implements Service
 		if (oldSearcher != null) {
 			if (restoreLastSearch.equals("yes")) {
 				session.setProperty(Geonet.Session.LAST_SEARCH_RESULT, oldSearcher);
-			} else {
-				if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher)oldSearcher).close();
 			}
 		}
 

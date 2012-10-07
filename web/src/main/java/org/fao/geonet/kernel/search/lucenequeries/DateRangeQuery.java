@@ -20,13 +20,12 @@
 
 package org.fao.geonet.kernel.search.lucenequeries;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.RangeQuery;
+import org.apache.lucene.search.TermRangeQuery;
 
-	public class DateRangeQuery extends RangeQuery {
+	public class DateRangeQuery extends TermRangeQuery {
 
       public DateRangeQuery(String fld, String lowerString, String upperString,String inclusive) {
-        super(new Term(fld, formatDate(lowerString)), new Term(fld, formatDate(upperString)), inclusive.equalsIgnoreCase("true") );
+        super(fld, formatDate(lowerString), formatDate(upperString), inclusive.equalsIgnoreCase("true"), inclusive.equalsIgnoreCase("true")  );
       }
 
       private static String formatDate(String s) {

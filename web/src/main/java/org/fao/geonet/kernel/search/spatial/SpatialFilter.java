@@ -34,10 +34,12 @@ import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Collector;
+import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.util.DocIdBitSet;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.DefaultQuery;
 import org.geotools.data.FeatureSource;
@@ -113,7 +115,7 @@ public abstract class SpatialFilter extends Filter
         this(query,JTS.toGeometry(bounds),sourceAccessor);
     }
 
-    public BitSet bits(final IndexReader reader) throws IOException
+    public DocIdSet getDocIdSet(final IndexReader reader) throws IOException
     {
         final BitSet bits = new BitSet(reader.maxDoc());
 
@@ -155,9 +157,9 @@ public abstract class SpatialFilter extends Filter
         });
         
         if( matches.isEmpty() ){
-            return bits;
+            return new DocIdBitSet(bits);
         }else{
-            return applySpatialFilter(matches,docIndexLookup,bits);
+            return new DocIdBitSet(applySpatialFilter(matches,docIndexLookup,bits));
         }
     }
 

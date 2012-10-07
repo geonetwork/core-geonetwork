@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
@@ -43,7 +44,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.util.spring.StringUtils;
+//import org.fao.geonet.util.spring.StringUtils;
 import org.jdom.Element;
 
 import javax.xml.transform.Source;
@@ -165,7 +166,26 @@ public class SearchController
     //---------------------------------------------------------------------------
 
     /**
-     * Performs the general search tasks.
+     * Performs the general search tasks. Brief explanation of what happens 
+		 * here: 
+		 *
+		 * This is a stateful search because when a search is
+		 * first initiated a snapshot of the Lucene index must be captured (via an 
+		 * IndexSearcher session id) and held in the user session
+		 * so that the user can page through/request pages of results from the
+		 * original search result without effects being introduced by changes to
+		 * the Lucene index after the original search (eg. user adds a new 
+		 * metadata record, makes changes, deletes one or more records -
+		 * these should not appear in the search results otherwise funny
+		 * things happen such as more or less records returned than the number 
+		 * originally found etc).
+		 *
+		 * If no previous search in this user session then create a new 
+		 * CatalogSearcher (which captures a view of the Index). If there is a
+		 * previous CatalogSearcher in the session then retrieve and use it.
+		 * If the query is different from the one we have in the user session
+		 * then we throw away the CatalogSearcher and get a new one with a new view
+		 * of the Lucene index.
      *
      * @param context
      * @param startPos
@@ -181,32 +201,44 @@ public class SearchController
      * @return
      * @throws CatalogException
      */
-    public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
-                                         ResultType resultType, OutputSchema outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, Sort sort,
-                                         Set<String> elemNames, int maxHitsFromSummary) throws CatalogException {
-	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
-	CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _selector, _uuidselector, _tokenizedFieldSet, _longFieldSet, _integerFieldSet, _floatFieldSet, _doubleFieldSet);
-        
-    UserSession session = context.getUserSession();
-	session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-        
-	// search for results, filtered and sorted
-    Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
+    public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords, ResultType resultType, OutputSchema outSchema, ElementSetName setName, Element filterExpr, String filterVersion, Sort sort, Set<String> elemNames, int maxHitsFromSummary) throws CatalogException {
 
-	// clear selection from session when query filter change
+
+	Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
+  UserSession session = context.getUserSession();
+        
+	// build an id from the query filter to see whether the filter has changed
+	// from the one we already had
 	String requestId = Util.scramble(Xml.getString(filterExpr));
 	String sessionRequestId = (String) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
+
+	// possibly close old selection if at least one previous search
 	if (sessionRequestId != null && !sessionRequestId.equals(requestId)) {
-		// possibly close old selection
-		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
+		if (sessionRequestId != null) {
+			SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
+			
+			if (oldSelection != null){
+				oldSelection.close();
+				oldSelection = null;
+			}	
+		}
+	}
+
+	// initialize catalog searcher and a new view of the index and set into
+	// user session if there is no session or this is a new query
+	CatalogSearcher searcher = (CatalogSearcher)session.getProperty(Geonet.Session.SEARCH_RESULT);
+	if (searcher == null || !sessionRequestId.equals(requestId)) {
+		Log.debug(Geonet.CSW_SEARCH,"Creating new catalog searcher");
 		
-		if (oldSelection != null){
-			oldSelection.close();
-			oldSelection = null;
-		}	
+		searcher = new CatalogSearcher(_summaryConfig, _selector, _uuidselector, _tokenizedFieldSet, _longFieldSet, _integerFieldSet, _floatFieldSet, _doubleFieldSet);
+		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+	}	else {
+		Log.debug(Geonet.CSW_SEARCH,"Using existing catalog searcher");
 	}
 	session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestId);
+
+	// search for results, filtered and sorted
+  Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion, sort, resultType, startPos, maxRecords, maxHitsFromSummary);
 	
 	List<ResultItem> resultsList = summaryAndSearchResults.two();
 	int counter = Math.min(maxRecords,resultsList.size());
@@ -376,7 +408,7 @@ public class SearchController
                 "<xsl:copy>\n";
 
         for (String xpath : elemNames) {
-            if(StringUtils.hasLength(xpath)) {
+            if(org.fao.geonet.util.spring.StringUtils.hasLength(xpath)) {
                 result += "<xsl:apply-templates select=\"" + xpath + "\"/>\n";
             }
         }
