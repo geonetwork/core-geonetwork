@@ -219,6 +219,9 @@ public class ServiceContext extends BasicContext
 		} catch (Exception e) {
 			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
 			throw new ServiceExecutionFailedException(request.getService(),e);
+		} finally {
+			// set old context back as thread local
+			setAsThreadLocal();
 		}
 		try {
 			return request.getResult();

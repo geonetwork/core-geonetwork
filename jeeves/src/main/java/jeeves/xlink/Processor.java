@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import jeeves.JeevesJCS;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
+import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -183,6 +184,7 @@ public final class Processor {
 					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
 					request.setDebug(false);
 					request.setLanguage("eng");
+					request.setInputMethod(InputMethod.GET);
 					remoteFragment = srvContext.execute(request);
 				} else {
 					URL url = new URL(uri.replaceAll("&amp;", "&"));
