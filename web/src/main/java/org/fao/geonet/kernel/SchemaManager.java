@@ -973,7 +973,7 @@ public class SchemaManager {
         			if (content instanceof Element) uri = (Element)content;
         			else continue; // skip this
         
-        		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
+        		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.Namespaces.OASIS_CATALOG)) {
                       if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                           Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
         				continue;
