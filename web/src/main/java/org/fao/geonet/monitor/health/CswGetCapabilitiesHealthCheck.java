@@ -26,10 +26,6 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
         return new HealthCheck("Csw GetCapabilities") {
             @Override
             protected Result check() throws Exception {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                String host = gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-                String port = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-                final String baseUrl = context.getBaseUrl();
                 try {
 					LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetCapabilities&service=CSW");
 					request.setDebug(false);
@@ -37,12 +33,6 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
 					request.setInputMethod(InputMethod.GET);
 					Element result = context.execute(request);
 
-//                    GetCapabilitiesRequest getCapabilities = new GetCapabilitiesRequest();
-//
-//                    getCapabilities.setHost(host);
-//                    getCapabilities.setPort(port == null ? 80 : Integer.parseInt(port));
-//                    getCapabilities.setAddress(baseUrl + "/srv/eng/csw");
-//                    Element result = getCapabilities.execute();
                     if (result.getChild("ServiceIdentification", Csw.NAMESPACE_OWS) == null)
                         return Result.unhealthy("Capabilities did not have a 'ServiceIdentification' element as expected.  Xml: " + Xml.getString(result));
                     return Result.healthy();
