@@ -85,36 +85,36 @@ div.attr {
 }
 
 /* Tab navigation - start */
-div#tabs-metadata ul li ul {
+div.tabs-metadata ul li ul {
   list-style-type : none;
   padding-bottom : 25px;
   border-bottom : 2px solid #7EADD9;
   margin : 0;
 }
-div#tabs-metadata ul li span.mode {
+div.tabs-metadata ul li span.mode {
   display : none;
 }
 
-div#tabs-metadata ul li ul li {
+div.tabs-metadata ul li ul li {
   float : left;
   height : 21px;
   background-color : #F7EEE1;
   margin : 2px 2px 0 2px;
   border : 2px solid #7EADD9;
 }
-div#tabs-metadata ul li ul li.active {
+div.tabs-metadata ul li ul li.active {
   padding-top : 2px;
   border-bottom : 2px solid #fff;
   background-color : #fff;
 }
-#tabs-metadata a {
+.tabs-metadata a {
   float : left;
   display : block;
   color : #666;
   text-decoration : none;
   padding : 4px;
 }
-#tabs-metadata a:hover {
+.tabs-metadata a:hover {
   background : #fff;
 }
 /* Tab navigation - end */
