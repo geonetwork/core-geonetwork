@@ -171,7 +171,7 @@ public class LocalServiceRequest extends ServiceRequest
 		String queryPart = urlParts[1];
 
 		String[] nvPairs = queryPart.split("\\&");
-		Element result = new Element("params");
+		Element result = new Element("request");
 		String[] nvPair;
 		Element param;
 		String name, value;
