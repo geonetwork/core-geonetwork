@@ -330,17 +330,17 @@ span.icon {
   background-repeat : no-repeat;
 }
 
-span.buttons {
+span.buttons, a.buttons {
   background-color : inherit;
   text-align : left;
   vertical-align : middle;
 }
-span.buttons a {
+span.buttons a, a.buttons {
   border-width : 0px !important;
   cursor : hand;
   cursor : pointer;
 }
-span.buttons a.small span {
+span.buttons a.small span, a.small.buttons span {
   margin : 1px;
   padding : 0px 4px;
   width : 6px !important;
@@ -351,7 +351,7 @@ span.buttons a.small span {
   padding-left : 15px !important;
   background-image : url(../images/default/find.png);
 }
-.buttons a.findsub span {
+.buttons a.findsub span, a.findsub.buttons span {
   padding-left : 15px !important;
   background-image : url(../images/default/find.png);
 }
@@ -531,4 +531,11 @@ be use for custom styling in view mode */
 .color {
     border-left-width: 5px;
     border-left-style: solid;
+}
+
+/* duration field: inline input elements 
+  class name is on the label, so select the next sibling which is the container.
+* */
+.gmlduration + * input {
+    float: none !important;
 }

@@ -510,7 +510,7 @@
                 </gmd:EX_Extent>
             </gmd:extent>
             <gmd:supplementalInformation>
-                <gco:CharacterString>Temporal coverage/temporal resolution (as ISO8601)</gco:CharacterString>
+                <gco:CharacterString>temporal resolution: daily mean</gco:CharacterString>
             </gmd:supplementalInformation>
         </gmd:MD_DataIdentification>
     </gmd:identificationInfo>
@@ -525,7 +525,7 @@
             <gmd:dimension>
                 <gmd:MD_RangeDimension>
                     <gmd:descriptor>
-                        <gco:CharacterString>temporal resolution: value</gco:CharacterString>
+                        <gco:CharacterString>temporal resolution: hourly mean</gco:CharacterString>
                     </gmd:descriptor>
                 </gmd:MD_RangeDimension>
             </gmd:dimension>

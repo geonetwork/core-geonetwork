@@ -821,9 +821,6 @@
 
   </xsl:template>
 
-
-
-
   <!--
 	shows editable fields for an attribute
 	-->
