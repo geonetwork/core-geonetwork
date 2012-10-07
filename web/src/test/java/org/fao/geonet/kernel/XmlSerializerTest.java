@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import jeeves.constants.Jeeves;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
@@ -26,6 +27,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
+import org.springframework.security.cas.authentication.CasAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.sun.tools.javac.util.Context;
 
@@ -169,7 +172,15 @@ public class XmlSerializerTest {
 			} else {
 				profile = editorProfile;
 			}
-			userSession.authenticate(userId, "username", "name", "surname", profile, "");
+			JeevesUser user = new JeevesUser(profileManager);
+			user.setProfile(profile);
+			user.setId(userId);
+			CasAuthenticationToken authentication = mock(CasAuthenticationToken.class);
+			when(authentication.getPrincipal()).thenReturn(user);
+			when(authentication.getUserDetails()).thenReturn(user);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		} else {
+			SecurityContextHolder.getContext().setAuthentication(null);
 		}
 		when(context.getUserSession()).thenReturn(userSession);
 
