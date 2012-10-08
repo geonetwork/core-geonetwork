@@ -23,7 +23,7 @@
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/gnmetadatadefault.css"/>
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/main.css"/>
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/main.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/>
+				<!-- <link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/> -->
 			</head>
 			<body>
 			

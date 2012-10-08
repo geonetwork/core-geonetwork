@@ -85,3 +85,6 @@ body {
 #result-metadata-modal-tab-2-content * .md-view div.relation ul li, table.related * li {
     width: auto;
 }
+#result-metadata-modal-tab-2-content * table.gn td.right img{
+	display:none;
+}

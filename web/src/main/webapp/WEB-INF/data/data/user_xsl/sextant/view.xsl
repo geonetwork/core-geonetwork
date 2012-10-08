@@ -133,20 +133,22 @@
 	<!--  Abstract & Statement : Display Title and <p> with text -->
 	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement|gmd:supplementalInformation"
 		priority="3">
-		<xsl:variable name="name" select="name(.)" />
-		<xsl:variable name="title">
-			<xsl:call-template name="getTitle">
-				<xsl:with-param name="name" select="$name" />
-			</xsl:call-template>
-		</xsl:variable>
-		
-		<hr/>
-		<div class="result-metadata-modal-resume">
-			<h6><xsl:value-of select="$title" /></h6>
-			<div class="result-metadata-modal-content">
-				<p><xsl:value-of select="gco:CharacterString" />
-				</p></div>
-		</div>
+		<xsl:if test="gco:CharacterString!=''">
+			<xsl:variable name="name" select="name(.)" />
+			<xsl:variable name="title">
+				<xsl:call-template name="getTitle">
+					<xsl:with-param name="name" select="$name" />
+				</xsl:call-template>
+			</xsl:variable>
+			
+			<hr/>
+			<div class="result-metadata-modal-resume">
+				<h6><xsl:value-of select="$title" /></h6>
+				<div class="result-metadata-modal-content">
+					<p><xsl:value-of select="gco:CharacterString" />
+					</p></div>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- ACCESS PART  -->

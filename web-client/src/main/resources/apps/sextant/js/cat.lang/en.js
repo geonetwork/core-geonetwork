@@ -16,7 +16,10 @@ cat.lang.en = {
     "administrer": "Manage",
     "Themes": "Themes",
     "orgs": "Companies",
-    "link": "Link"
+    "link": "Link",
+    "exportPDF": "PDF Export",
+    "exportXSML": "XML Export",
+    "exportLink": "Link to the Metadata"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

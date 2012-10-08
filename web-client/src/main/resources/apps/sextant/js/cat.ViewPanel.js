@@ -91,7 +91,8 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				formatterViewPanel.setTitle(OpenLayers.i18n('essentielle'));
 			}
 		}
-
+		
+		Ext.QuickTips.init();
 		if (showPanel && formatterViewPanel) {
 			this.add(new Ext.TabPanel({
 				items : [ formatterViewPanel, showPanel ],
@@ -108,19 +109,19 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 						tag: 'div',
 						html: '&nbsp;',
 						cls: 'file-link',
-						tip: 'PermaLink'
+						'ext:qtip': OpenLayers.i18n('exportLink')
 					},{
 						id: 'md-print-btn',
 						tag: 'div',
 						html: '&nbsp;',
 						cls: 'file-pdf',
-						tip: 'PDF'
+						'ext:qtip': OpenLayers.i18n('exportPDF')
 					},{
 						id: 'md-xml-btn',
 						tag: 'div',
 						html: '&nbsp;',
 						cls: 'file-xml',
-						tip: 'ISO19139'
+						'ext:qtip': OpenLayers.i18n('exportXSML')
 					}]
 				},
 				listeners: {

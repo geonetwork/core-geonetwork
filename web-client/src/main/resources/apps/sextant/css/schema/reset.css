@@ -1,4 +1,4 @@
-.viewmd-panel div, .viewmd-panel span, .viewmd-panel applet, .viewmd-panel object, .viewmd-panel iframe,
+#result-metadata-modal-tab-2-content.viewmd-panel div, .viewmd-panel span, .viewmd-panel applet, .viewmd-panel object, .viewmd-panel iframe,
 .viewmd-panel h1, .viewmd-panel h2, .viewmd-panel h3, .viewmd-panel h4, 
 .viewmd-panel h5, .viewmd-panel h6, .viewmd-panel p, .viewmd-panel blockquote, .viewmd-panel pre,
 .viewmd-panel a, .viewmd-panel abbr, .viewmd-panel acronym, .viewmd-panel address, 
@@ -10,6 +10,10 @@
 .viewmd-panel fieldset, .viewmd-panel form, .viewmd-panel label, .viewmd-panel legend,
 .viewmd-panel table, .viewmd-panel caption, .viewmd-panel tbody, .viewmd-panel tfoot, .viewmd-panel thead, .viewmd-panel tr, .viewmd-panel th, .viewmd-panel td {
 	font-size: 100%;
+}
+
+#result-metadata-modal-tab-2-content.viewmd-panel div {
+	font-size:102%;
 }
 
 .viewmd-panel * div#tabs {

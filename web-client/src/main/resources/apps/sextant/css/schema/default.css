@@ -224,8 +224,9 @@ div.result-metadata-modal-content table td {
     cursor:pointer;
 }
 .mdshow-tabpanel .file-link {
-  background-image:url("../../images/icons/metadata.png");
-  border: medium none;
+    background-image:url("../../images/default/link.png");
+    background-repeat: no-repeat;
+    border: medium none;
     height: 16px;
     position: absolute;
     right: 90px;
@@ -323,4 +324,8 @@ div.result-metadata-modal-content div.result-metadata-modal-content table td {
 	font-family: Arial,​​Helvetica,​​sans-serif;
 	font-size:11px;
 }
-
+/* 
+.mdshow-tabpanel div.loading-indicator {
+	 background-image: url("../../images/spinner-large.gif");
+}
+ */

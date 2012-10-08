@@ -19,6 +19,9 @@ cat.lang.fr = {
     "endDate": "Date de fin",
     "orgs": "Organismes",
     "administrer": "Administrer",
-    "link": "Lien"
+    "link": "Lien",
+    "exportPDF": "Export PDF",
+    "exportXSML": "Export XML",
+    "exportLink": "Lien vers la fiche"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);
