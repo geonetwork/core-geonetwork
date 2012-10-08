@@ -392,6 +392,7 @@
 	<db.maxactive>Massimo numero di connessioni al db:</db.maxactive>	
 	<db.statserror>Statistiche sul db:</db.statserror>
 	<sequentialExecution>Modalità di esecuzione sequenziale del pool di thread: </sequentialExecution>
-	
+  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

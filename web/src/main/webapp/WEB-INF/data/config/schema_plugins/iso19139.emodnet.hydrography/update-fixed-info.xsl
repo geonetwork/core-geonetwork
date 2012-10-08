@@ -63,6 +63,28 @@
 			<xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
 		</xsl:copy>
 	</xsl:template>
+  
+	<xsl:template match="gmd:linkage" priority="10">
+	  <xsl:choose>
+	    <xsl:when test="
+    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'postgis') or 
+    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'oracle') or 
+    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'wcs') or 
+    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'wfs') or 
+    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'file')">
+  			<gmd:linkage gco:nilReason="withheld">
+  			  <xsl:apply-templates select="@*"/>
+          <xsl:copy-of select="./*" />
+  		  </gmd:linkage>
+  	  </xsl:when>
+  	  <xsl:otherwise>
+  			<gmd:linkage >
+  			  <xsl:apply-templates select="@*"/>
+          <xsl:copy-of select="./*" />
+  		  </gmd:linkage>
+  	  </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:template>
 
 
 	<!-- ================================================================= -->

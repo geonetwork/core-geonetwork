@@ -501,16 +501,28 @@
     <xsl:param name="title"/>
     <xsl:param name="text"/>
     <xsl:param name="helpLink"/>
+    <xsl:variable name="hiddenChildren">
+    	<xsl:call-template name="hasHiddenChildren"/>
+    </xsl:variable>
 
     <!-- don't show it if there isn't anything in it! -->
-    <xsl:if test="normalize-space($text)!=''">
-      <xsl:call-template name="simpleElementGui">
-        <xsl:with-param name="title" select="$title"/>
-        <xsl:with-param name="schema" select="$schema"/>
-        <xsl:with-param name="text" select="$text"/>
-        <xsl:with-param name="helpLink" select="$helpLink"/>
-      </xsl:call-template>
-    </xsl:if>
+    <xsl:choose>
+	    <xsl:when test="$hiddenChildren = true() and normalize-space($text)=''">
+			<xsl:call-template name="hiddenElement">
+				<xsl:with-param name="title" select="$title" />
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="helpLink" select="$helpLink" />
+			</xsl:call-template>
+	    </xsl:when>
+	    <xsl:when test="normalize-space($text)!=''">
+	      <xsl:call-template name="simpleElementGui">
+	        <xsl:with-param name="title" select="$title"/>
+	        <xsl:with-param name="schema" select="$schema"/>
+	        <xsl:with-param name="text" select="$text"/>
+	        <xsl:with-param name="helpLink" select="$helpLink"/>
+	      </xsl:call-template>
+	    </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
   <!--
@@ -521,18 +533,29 @@
     <xsl:param name="title"/>
     <xsl:param name="content"/>
     <xsl:param name="helpLink"/>
+    <xsl:variable name="hiddenChildren">
+    	<xsl:call-template name="hasHiddenChildren"/>
+    </xsl:variable>
 
     <!-- don't show it if there isn't anything in it! -->
-    <xsl:if test="normalize-space($content)!=''">
-      <xsl:call-template name="complexElementGui">
-        <xsl:with-param name="title" select="$title"/>
-        <xsl:with-param name="text" select="text()"/>
-        <xsl:with-param name="content" select="$content"/>
-        <xsl:with-param name="helpLink" select="$helpLink"/>
-        <xsl:with-param name="schema" select="$schema"/>
-      </xsl:call-template>
-    </xsl:if>
-
+    <xsl:choose>
+	    <xsl:when test="$hiddenChildren = true() and normalize-space($content)=''">
+			<xsl:call-template name="hiddenElement">
+				<xsl:with-param name="title" select="$title" />
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="helpLink" select="$helpLink" />
+			</xsl:call-template>
+	    </xsl:when>
+	    <xsl:when test="normalize-space($content)!=''">
+	      <xsl:call-template name="complexElementGui">
+	        <xsl:with-param name="title" select="$title"/>
+	        <xsl:with-param name="text" select="text()"/>
+	        <xsl:with-param name="content" select="$content"/>
+	        <xsl:with-param name="helpLink" select="$helpLink"/>
+	        <xsl:with-param name="schema" select="$schema"/>
+	      </xsl:call-template>
+	    </xsl:when>
+	</xsl:choose>
   </xsl:template>
 
   <!--
@@ -594,22 +617,37 @@
         <xsl:with-param name="ref" select="$ref"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="hiddenChildren">
+    	<xsl:call-template name="hasHiddenChildren"/>
+    </xsl:variable>
 
-    <xsl:call-template name="simpleElementGui">
-      <xsl:with-param name="title" select="$title"/>
-      <xsl:with-param name="text" select="$text"/>
-      <xsl:with-param name="schema" select="$schema"/>
-      <xsl:with-param name="addLink" select="$addLink"/>
-      <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
-      <xsl:with-param name="removeLink" select="$removeLink"/>
-      <xsl:with-param name="upLink" select="$upLink"/>
-      <xsl:with-param name="downLink" select="$downLink"/>
-      <xsl:with-param name="helpLink" select="$helpLink"/>
-      <xsl:with-param name="validationLink" select="$validationLink"/>
-      <xsl:with-param name="edit" select="true()"/>
-      <xsl:with-param name="editAttributes" select="$editAttributes"/>
-      <xsl:with-param name="id" select="$id"/>
-    </xsl:call-template>
+    <!-- don't show it if there isn't anything in it! -->
+    <xsl:choose>
+	    <xsl:when test="$hiddenChildren = true()">
+			<xsl:call-template name="hiddenElement">
+				<xsl:with-param name="title" select="$title" />
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="helpLink" select="$helpLink" />
+			</xsl:call-template>
+	    </xsl:when>
+		<xsl:otherwise>
+		   <xsl:call-template name="simpleElementGui">
+		     <xsl:with-param name="title" select="$title"/>
+		     <xsl:with-param name="text" select="$text"/>
+		     <xsl:with-param name="schema" select="$schema"/>
+		     <xsl:with-param name="addLink" select="$addLink"/>
+		     <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
+		     <xsl:with-param name="removeLink" select="$removeLink"/>
+		     <xsl:with-param name="upLink" select="$upLink"/>
+		     <xsl:with-param name="downLink" select="$downLink"/>
+		     <xsl:with-param name="helpLink" select="$helpLink"/>
+		     <xsl:with-param name="validationLink" select="$validationLink"/>
+		     <xsl:with-param name="edit" select="true()"/>
+		     <xsl:with-param name="editAttributes" select="$editAttributes"/>
+		     <xsl:with-param name="id" select="$id"/>
+		   </xsl:call-template>
+	   </xsl:otherwise>
+   </xsl:choose>
   </xsl:template>
 
 
@@ -782,9 +820,6 @@
     </xsl:choose>
 
   </xsl:template>
-
-
-
 
   <!--
 	shows editable fields for an attribute
@@ -1225,6 +1260,7 @@
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="false()"/>
     <xsl:param name="editAttributes" select="true()"/>
+    <xsl:param name="showAttributes" select="true()"/>
     <xsl:param name="id" select="generate-id(.)"/>
     <xsl:param name="visible" select="true()"/>
 
@@ -1265,6 +1301,7 @@
           </xsl:choose>
         </label>
         <xsl:text>&#160;</xsl:text>
+        
         <!-- srv:operatesOn is an element which contains xlink:href attribute 
           (due to INSPIRE usage added in r7710) and must be editable in any cases (#705). 
           The xLink for this element is used for linking to a full
@@ -1336,7 +1373,7 @@
               </table>
             </div>
           </xsl:when>
-          <xsl:when test="not($edit) and @*">
+          <xsl:when test="not($edit) and @* and $showAttributes">
             <xsl:apply-templates mode="simpleAttribute" select="@*">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="edit" select="$edit"/>
@@ -1354,14 +1391,30 @@
     <xsl:param name="title"/>
     <xsl:param name="helpLink"/>
     <xsl:param name="content"/>
-    <tr>
-      <th class="main" id="stip.{$helpLink}|{generate-id()}">
-        <xsl:value-of select="$title"/>
-      </th>
-      <td>
-        <xsl:copy-of select="$content"/>
-      </td>
-    </tr>
+    
+    <xsl:variable name="hiddenChildren">
+    	<xsl:call-template name="hasHiddenChildren"/>
+    </xsl:variable>
+
+    <!-- don't show it if there isn't anything in it! -->
+    <xsl:choose>
+	    <xsl:when test="$hiddenChildren = true()">
+			<xsl:call-template name="hiddenElement">
+				<xsl:with-param name="title" select="$title" />
+				<xsl:with-param name="helpLink" select="$helpLink" />
+			</xsl:call-template>
+	    </xsl:when>
+	    <xsl:otherwise>
+		    <tr>
+		      <th class="main" id="stip.{$helpLink}|{generate-id()}">
+		        <xsl:value-of select="$title"/>
+		      </th>
+		      <td>
+		        <xsl:copy-of select="$content"/>
+		      </td>
+		    </tr>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -1739,15 +1792,28 @@
   <xsl:template name="complexElementSimpleGui">
     <xsl:param name="title"/>
     <xsl:param name="content"/>
-    <fieldset>
-      <legend>
-        <xsl:value-of select="$title"/>
-      </legend>
+    <xsl:variable name="hiddenChildren">
+    	<xsl:call-template name="hasHiddenChildren"/>
+    </xsl:variable>
 
-      <table class="gn">
-        <xsl:copy-of select="$content"/>
-      </table>
-    </fieldset>
+    <!-- don't show it if there isn't anything in it! -->
+    <xsl:choose>
+	    <xsl:when test="$hiddenChildren = true()">
+			<xsl:call-template name="hiddenElement">
+				<xsl:with-param name="title" select="$title" />
+			</xsl:call-template>
+	    </xsl:when>
+	    <xsl:otherwise>
+		    <fieldset>
+		      <legend>
+		        <xsl:value-of select="$title"/>
+		      </legend>
+		      <table class="gn">
+		        <xsl:copy-of select="$content"/>
+		      </table>
+		    </fieldset>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!--
@@ -2132,5 +2198,20 @@
       </div>
     </div>
   </xsl:template>
-
+  
+  <xsl:template name="hiddenElement">
+    <xsl:param name="schema"/>
+    <xsl:param name="title"/>
+    <xsl:param name="helpLink"/>
+	<xsl:call-template name="simpleElementGui">
+		<xsl:with-param name="title" select="$title" />
+		<xsl:with-param name="schema" select="$schema" />
+		<xsl:with-param name="removeLink" select="false()" />
+		<xsl:with-param name="upLink" select="false()" />
+		<xsl:with-param name="downLink" select="false()" />
+		<xsl:with-param name="showAttributes" select="false()" />
+		<xsl:with-param name="text">&#160;<img class="helplink" id="{generate-id()}{name(.)}|hidden-elements" src="{/root/gui/url}/images/important.png"/></xsl:with-param>
+		<xsl:with-param name="helpLink" select="$helpLink" />
+	</xsl:call-template>
+  </xsl:template>
 </xsl:stylesheet>

@@ -3285,4 +3285,9 @@
 			resource (or resource fragment)
 			[W3C XLINK]</description>
 	</element>
+	<!-- ==================================================== -->
+  <element name="hidden-elements">
+      <label>Hidden Elements</label>
+      <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+  </element>
 </labels>

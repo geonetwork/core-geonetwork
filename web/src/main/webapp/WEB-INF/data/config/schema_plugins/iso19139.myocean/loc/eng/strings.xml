@@ -5,18 +5,29 @@
     
     <creationDate>Creation date</creationDate>
     
+    <!-- Section title -->
     <identification>Identification</identification>
     <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
-    <spatioTemporalCoverage>Spatiotemporal coverages</spatioTemporalCoverage>
-    <processingOperation>Processing operation</processingOperation>
+    <spatioTemporalCoverage>Spatio-temporal extent</spatioTemporalCoverage>
+    <processingOperation>Processing information</processingOperation>
     <org>Organizations responsible for management and processing, point of contact</org>
     <metadataInfo>Metadata date stamps and versions</metadataInfo>
-    <metadataInfoTitle>Identification</metadataInfoTitle>
-    <ancillaryInfo>Ancillary information</ancillaryInfo>
+    <metadataInfoTitle>Product identification</metadataInfoTitle>
+    <ancillaryInfo>Complementary information</ancillaryInfo>
     <geoCoverage>Geographical coverage</geoCoverage>
-    <verticalCoverage>Vertical coverage</verticalCoverage>
-    <temporalCoverage>Temporal coverage</temporalCoverage>
+    <verticalCoverage>Vertical extent</verticalCoverage>
+    <temporalCoverage>Temporal extent</temporalCoverage>
     
-    <orgOriginator>Organization in charge, point of contact</orgOriginator>
-    <orgCustodian>Coordinator, point of contact</orgCustodian>
+    <orgOriginator>Production center</orgOriginator>
+    <orgCustodian>Production unit</orgCustodian>
+    <slidingWindow>Sliding window of updates</slidingWindow>
+    
+    
+    <!-- Some hardcoded element name -->
+    <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>
+    <startDate>Start date</startDate>
+    <endDate>End date</endDate>
+    <startPeriod>Start period</startPeriod>
+    <endPeriod>End period</endPeriod>
+    <temporalResolution>Temporal resolution</temporalResolution>
 </strings>

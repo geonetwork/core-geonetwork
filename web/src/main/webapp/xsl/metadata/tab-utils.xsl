@@ -22,7 +22,7 @@
   <xsl:template name="tab">
     <xsl:param name="schema"/>
     <xsl:param name="tabLink"/>
-    <div id="tabs">
+    <div id="tabs" class="tabs-metadata">
 
       <!-- Tab visibility is managed in config-gui.xml -->
       <!-- simple tab -->

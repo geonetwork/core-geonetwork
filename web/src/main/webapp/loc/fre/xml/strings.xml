@@ -1353,4 +1353,5 @@
     <formatter.admin>Formatage de métadonnées</formatter.admin>
     <formatter.admin.des>Interface d'administration pour les XSLT personnalisés</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
 </strings>

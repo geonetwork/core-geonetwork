@@ -959,17 +959,22 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         // Register event to form element to display help information 
         var formElements = Ext.query('th[id]', this.body.dom);
-        //formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
+        // select the title element of complex metadata elements
         formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
         Ext.each(formElements, function(item, index, allItems){
             var e = Ext.get(item);
             var id = e.getAttribute('id');
             if (e.is('TH')) {
                 var section = e.up('FIELDSET');
-                // TODO : register event on custom widgets like Bbox
-                e.parent().on('mouseover', function(){
-                    this.helpPanel.updateHelp(id, section);
-                }, this);
+                var helplinks = e.parent().select(".helplink");
+                if (helplinks && helplinks.elements.length > 0) {
+                    // skip  
+                  } else {
+	                // TODO : register event on custom widgets like Bbox
+	                e.parent().on('mouseover', function(){
+	                    this.helpPanel.updateHelp(id, section);
+	                }, this);
+            	}
             } else {
                 e.on('mouseover', function(){
                     this.helpPanel.updateHelp(id);
@@ -977,6 +982,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
         }, this);
         
+        // select additional elements requiring a help link  
+        formElements = Ext.query('.helplink', this.body.dom);
+        Ext.each(formElements, function(item, index, allItems){
+            var e = Ext.get(item);
+            var id = e.getAttribute('id');
+            var section = e.up('FIELDSET');
+
+            e.on('mouseover', function(){
+                this.helpPanel.updateHelp(id, section);
+            }, this);
+        }, this);
         
         this.updateViewMenu();
     },

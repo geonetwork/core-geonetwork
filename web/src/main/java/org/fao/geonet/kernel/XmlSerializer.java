@@ -25,6 +25,8 @@ package org.fao.geonet.kernel;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ProfileManager;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -33,10 +35,15 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -46,6 +53,7 @@ import java.util.Vector;
  */
 public abstract class XmlSerializer {
 
+	private static final List<Namespace> XML_SELECT_NAMESPACE = Arrays.asList(Geonet.Namespaces.GCO);
 	protected SettingManager sm;
 
     /**
@@ -89,14 +97,51 @@ public abstract class XmlSerializer {
      */
 	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element rec = dbms.select(query, new Integer(id)).getChild(Jeeves.Elem.RECORD);
+		Element select = dbms.select(query, new Integer(id));
+		Element record = select.getChild(Jeeves.Elem.RECORD);
 
-		if (rec == null)
+		if (record == null)
 			return null;
 
-		String xmlData = rec.getChildText("data");
-		rec = Xml.loadString(xmlData, false);
-		return (Element) rec.detach();
+		String xmlData = record.getChildText("data");
+		Element metadata = Xml.loadString(xmlData, false);
+
+		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+		if(ServiceContext.get() != null) {
+			ServiceContext context = ServiceContext.get();
+			String ownerId = record.getChildText("owner");
+			UserSession userSession = context.getUserSession();
+			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
+			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
+			if(isAdmin || isOwner) {
+				hideWithheldElements = false;
+			}
+		}
+		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
+		if (hideWithheldElements) {
+			List<?> nodes = Xml.selectNodes(metadata, "*//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+			for (Object object : nodes) {
+				if (object instanceof Element) {
+					Element element = (Element) object;
+					
+					if(keepMarkedElement) {
+						element.removeContent();
+						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
+						@SuppressWarnings("unchecked")
+						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+						for (Attribute attribute : atts) {
+							if(attribute != nilReason) {
+								attribute.detach();
+							}
+						}
+					} else {
+						element.detach();
+					}
+				}
+			}
+		}
+
+		return (Element) metadata.detach();
 	}
 
     /**
@@ -261,10 +306,9 @@ public abstract class XmlSerializer {
 			 int owner, String groupOwner, String docType, ServiceContext context) 
 			 throws Exception;
 
+	
 	public abstract Element select(Dbms dbms, String table, String id) 
 			 throws Exception;
-
-	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, 
-				String id) 
-				throws Exception;
+	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id) 
+			 throws Exception;
 } 

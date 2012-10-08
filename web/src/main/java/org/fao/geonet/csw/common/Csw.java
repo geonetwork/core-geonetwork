@@ -23,6 +23,7 @@
 
 package org.fao.geonet.csw.common;
 
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Namespace;
 
 /**
@@ -40,14 +41,14 @@ public class Csw {
 	public static final Namespace NAMESPACE_OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
 	public static final Namespace NAMESPACE_OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
-	public static final Namespace NAMESPACE_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+	public static final Namespace NAMESPACE_GMD = Geonet.Namespaces.GMD;
 	public static final Namespace NAMESPACE_GFC = Namespace.getNamespace("gfc", "http://www.isotc211.org/2005/gfc");
-	public static final Namespace NAMESPACE_GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
+	public static final Namespace NAMESPACE_GEONET = Geonet.Namespaces.GEONET;
 	public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc","http://purl.org/dc/elements/1.1/");
-	public static final Namespace NAMESPACE_XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+	public static final Namespace NAMESPACE_XSI = Geonet.Namespaces.XSI;
     public static final Namespace NAMESPACE_INSPIRE_DS = Namespace.getNamespace("inspire_ds", "http://inspire.ec.europa.eu/schemas/inspire_ds/1.0");
     public static final Namespace NAMESPACE_INSPIRE_COM = Namespace.getNamespace("inspire_common", "http://inspire.ec.europa.eu/schemas/common/1.0");
-	public static final Namespace NAMESPACE_SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+	public static final Namespace NAMESPACE_SRV = Geonet.Namespaces.SRV;
 	
 	//---------------------------------------------------------------------------
 	//---
