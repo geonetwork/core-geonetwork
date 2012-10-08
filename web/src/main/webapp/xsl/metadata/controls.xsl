@@ -4,8 +4,40 @@
   TODO : remove some JS dependencies eg. setBunload 
   -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common" xmlns:str="http://exslt.org/strings"
-  xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="exslt geonet str">
+    xmlns:exslt="http://exslt.org/common" xmlns:str="http://exslt.org/strings"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all">
+    
+
+    <!-- 
+        Create a button to add subtemplate 
+        
+        Example: Add a button to add point of contact in identification info
+            <xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 
+                                                                    'gmd:pointOfContact', 
+                                                                    'gmd:CI_ResponsibleParty', 
+                                                                    /root/gui/strings/addXMLFragment,
+                                                                    /root/gui/strings/addXMLFragment)"/>
+    -->
+    <xsl:function name="geonet:makeSubTemplateButton" as="node()">
+        <!-- The parent element of the subtemplate type (eg. gmd:MD_DataIdentification/geonet:element/@ref for a gmd:pointOfContact -->
+        <xsl:param name="elementRef" as="xs:string"/>
+        <!-- The tag name of the element (eg. gmd:pointOfContact).-->
+        <xsl:param name="elementName" as="xs:string"/>
+        <!-- The type of subtemplate which will be use to filter subtemplate by type (eg. gmd:CI_ResponsibleParty for a gmd:pointOfContact).-->
+        <xsl:param name="elementType" as="xs:string"/>
+        <!-- The button title and alt attribute. -->
+        <xsl:param name="title" as="xs:string"/>
+        <!-- The button label. -->
+        <xsl:param name="label" as="xs:string"/>
+        
+        <a class="buttons small findsub" 
+            onclick="javascript:Ext.getCmp('editorPanel').showSubTemplateSelectionPanel({$elementRef}, '{$elementName}', '{$elementType}');" 
+            style="cursor: pointer; " 
+            alt="{$title}" 
+            title="{$title}"><span><xsl:value-of select="$label"/></span>
+        </a>
+    </xsl:function>
 
   <xsl:template name="getButtons">
     <xsl:param name="addLink"/>
