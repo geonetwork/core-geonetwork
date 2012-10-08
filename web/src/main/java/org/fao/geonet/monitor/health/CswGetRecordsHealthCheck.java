@@ -32,11 +32,6 @@ public class CswGetRecordsHealthCheck implements HealthCheckFactory {
 					request.setInputMethod(InputMethod.GET);
 					Element result = context.execute(request);
 
-//                    GetRecordsRequest getRecords = new GetRecordsRequest();
-//
-//                    getRecords.setResultType(ResultType.HITS);
-//                    getRecords.setMaxRecords("1");
-//                    Element result = getRecords.execute();
                     if (result.getChild("SearchResults", Csw.NAMESPACE_CSW) == null)
                         return Result.unhealthy("GetRecords request did not contain a SearchResults Element as Expected.  Xml = " + Xml.getString(result));
                     return Result.healthy();
