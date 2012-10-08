@@ -162,16 +162,16 @@ ul.main {
   background-color : rgba(10, 10, 10, 0.15);
   border-top : 1px solid rgba(0, 0, 0, 0.15);
 }
-#header {
+#gn_header {
   /*background-image : url(../images/default/header-bg.png);*/
   border-bottom : 3px solid #0076A1;
   height : 33px;
 }
 
-#header .catLogo {
+#gn_header .catLogo {
   max-height : 31px;
 }
-#header div {
+#gn_header div {
   float : left;
   width : auto;
   display : inline;
