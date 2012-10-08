@@ -794,6 +794,7 @@
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
+              <headerBufferSize>20000</headerBufferSize>
             </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>
