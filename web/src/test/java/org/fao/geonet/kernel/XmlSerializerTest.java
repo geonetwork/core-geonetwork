@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.sun.tools.javac.util.Context;
-
 public class XmlSerializerTest {
 	
 	public class DummyXmlSerializer extends XmlSerializer {
