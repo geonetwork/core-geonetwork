@@ -339,7 +339,18 @@ cat.app = function() {
 				xtype : 'tbtext',
 				text : '',
 				id : 'info'
-			}, ' ',' ', ' ', ' ', ' ', pdfAction ]
+			}, ' ',' ', ' ', ' ', ' ', pdfAction ],
+			createOtherActionMenu : function() {
+				this.actionMenu = new Ext.menu.Menu();
+				this.createAdminMenu(!this.catalogue.isIdentified());
+
+				this.actionOnSelectionMenu = new Ext.Button({
+					text : OpenLayers.i18n('administrer'),
+					menu : this.actionMenu,
+					hidden : !this.config.otherActions || !this.catalogue.isIdentified()
+				});
+				return this.actionOnSelectionMenu;
+			}
 		});
 		
         tBar.add(new Ext.Action({

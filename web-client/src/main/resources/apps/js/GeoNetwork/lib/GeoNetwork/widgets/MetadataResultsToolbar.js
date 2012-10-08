@@ -163,8 +163,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         }
         
         this.add(cmp);
-        this.catalogue.on('afterLogin', this.updatePrivileges, this);
-        this.catalogue.on('afterLogout', this.updatePrivileges, this);
+        
+        if(this.config.otherActions) {
+	        this.catalogue.on('afterLogin', this.updatePrivileges, this);
+	        this.catalogue.on('afterLogout', this.updatePrivileges, this);
+        }
     },
     getSortByCombo: function(){
         var tb = this;
@@ -533,26 +536,36 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     updatePrivileges: function(catalogue, user){
     	
-    	// if the otherAction menu is not present, we quit
-    	if(!this.config.otherActions) return;
+    	var nbVisible=0;
+    	var editingActions = [], adminActions = [], actions =[];
+    	if(this.deleteAction) editingActions.push(this.deleteAction);
+    	if(this.updateCategoriesAction) editingActions.push(this.updateCategoriesAction);
+    	if(this.updatePrivilegesAction) editingActions.push(this.updatePrivilegesAction);
+    	if(this.createMetadataAction) editingActions.push(this.createMetadataAction);
+    	if(this.mdImportAction) editingActions.push(this.mdImportAction);
     	
-        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
-                        this.updatePrivilegesAction, this.createMetadataAction,
-                        this.mdImportAction],
-            adminActions = [this.ownerAction],
-            actions = [this.adminAction, this.otherItem];
+    	if(this.ownerAction) adminActions.push(this.ownerAction);
+    	if(this.adminAction) actions.push(this.adminAction);
+    	if(this.otherItem) actions.push(this.otherItem);
         
         Ext.each(actions, function(){
             this.setVisible(user);
+            if(user)nbVisible++;
         });
         // Do not display editing action for registered users
         Ext.each(editingActions, function(){
-            this.setVisible(user && user.role !== 'RegisteredUser');
+        	var vis = user && user.role !== 'RegisteredUser';
+            this.setVisible(vis);
+            if(vis)nbVisible++;
         });
         // Change owners are only available for admins (#781)
         Ext.each(adminActions, function(){
-            this.setVisible(user && (user.role === 'Administrator' || user.role === 'UserAdmin'));
+        	var vis = user && (user.role === 'Administrator' || user.role === 'UserAdmin');
+            this.setVisible(vis);
+            if(vis)nbVisible++;
         });
+        
+        this.actionOnSelectionMenu.setVisible(nbVisible > 0);
     },
     /** private: method[onDestroy] 
      *

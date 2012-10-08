@@ -321,8 +321,15 @@ div.result-metadata-modal-content div.result-metadata-modal-content table td {
 	font-family: Arial,​​Helvetica,​​sans-serif;
 	font-size:11px;
 }
-/* 
+
 .mdshow-tabpanel div.loading-indicator {
-	 background-image: url("../../images/spinner-large.gif");
+	 background-image: url("../images/spinner-large.gif");
+	 position:fixed;
+	 width:48px;
+	 height:48px;
+	 top:50%;
+	 left:50%;
+	 margin-left:-24px;
+	 margin-top:-24px;
 }
- */
+

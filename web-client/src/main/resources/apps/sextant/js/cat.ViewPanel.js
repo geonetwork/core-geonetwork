@@ -60,14 +60,14 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				autoLoad : {
 					url : this.formatterServiceUrl,
 					scripts : true,
-					scope : this
+					scope : this,
+					text:' '
 				},
 				id : 'result-metadata-modal-tab-1-content',
 				cls : 'viewmd-panel',
 				border : false,
 				frame : false,
-				autoScroll : true,
-				autoHeight : true
+				autoScroll : true
 			});
 		}
 
@@ -78,7 +78,8 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 					callback : function() {
 						this.fireEvent('aftermetadataload', this);
 					},
-					scope : this
+					scope : this,
+					text: ' '
 				},
 				id : 'result-metadata-modal-tab-2-content',
 				title : OpenLayers.i18n('complete'),
@@ -100,7 +101,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				border : false,
 				frame : false,
 				autoScroll : true,
-				autoHeight : true,
+				deferredRender: false,
 				title: 'titre',
 				cls : 'mdshow-tabpanel',
 				headerCfg: {

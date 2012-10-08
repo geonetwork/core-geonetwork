@@ -34,8 +34,10 @@ table, tbody, tr, td, th {
 	width:48px;
 	height:48px;
 	z-index: 100000;
-	left: 46%;
-	top:48%;
+	left: 50%;
+	top:50%;
+	margin-left:-24px;
+	margin-top:-24px;
 	position:absolute;
 	visibility:hidden;
 }
@@ -544,4 +546,15 @@ div#privileges .record-3 {
 .x-date-picker button, button:hover{
 	background-image:none;
 	text-shadow:inherit;
+}
+
+.mdshow-tabpanel div.loading-indicator {
+	 background-image: url("../images/spinner-large.gif");
+	 position:fixed;
+	 width:48px;
+	 height:48px;
+	 top:50%;
+	 left:50%;
+	 margin-left:-24px;
+	 margin-top:-24px;
 }
