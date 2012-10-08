@@ -40,7 +40,6 @@ cat.what = function() {
 	            valueField: 'value',
 	            displayField: 'value',
 	            valueDelimiter: ' or ',
-	//            tpl: tpl,
 	            fieldLabel: OpenLayers.i18n('Catalogue')
 	        });
 			
@@ -61,6 +60,7 @@ cat.what = function() {
 				fieldLabel: OpenLayers.i18n('fullTextSearch'),
 				hideLabel: false,
 				hideTrigger: true,
+				startwith:true,
 				url: services.opensearchSuggest
 			});
 			advancedFields.push(categoryTree, catalogueField);

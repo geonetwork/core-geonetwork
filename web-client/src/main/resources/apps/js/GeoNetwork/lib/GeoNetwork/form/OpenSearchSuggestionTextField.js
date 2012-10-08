@@ -73,6 +73,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
 
     defaultConfig: {
         hideLabel: true,
+        startwith: false,
         width: 400,
         minChars: 2,
         loadingText: '...',
@@ -102,6 +103,9 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
      *
      */
     fieldLabel: undefined,
+    
+    /** boolean tell if the suggestion have to startwith the requested word or can just contain the queryparam **/
+    startwith: undefined,
     
     displayField: 'value',
     
@@ -151,7 +155,8 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
             url: this.url,
             rootId: 1,
             baseParams: {
-                field: this.field
+                field: this.field,
+                startwith: this.startwith
             }
         });
     }
