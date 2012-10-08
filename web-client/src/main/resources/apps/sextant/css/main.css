@@ -9,6 +9,14 @@ body {
 	padding: 0;
 	background: none repeat scroll 0 0 #EEF0F2;
 }
+button {
+	padding:2px;
+	font-weight: normal;
+}
+table, tbody, tr, td, th {
+	vertical-align: top;
+}
+
 #main-viewport {
 	background-color: white;
 	height: 100%;
@@ -531,4 +539,9 @@ p.abstract {
 div#privileges .record-6,
 div#privileges .record-3 {
 	display:none;
-} 
+}
+
+.x-date-picker button, button:hover{
+	background-image:none;
+	text-shadow:inherit;
+}
