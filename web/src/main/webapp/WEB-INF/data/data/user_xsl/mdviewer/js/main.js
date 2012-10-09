@@ -6,6 +6,8 @@ Ext.onReady(function() {
 	var urlParameters = GeoNetwork.Util.getParameters(location.href);
 	
 	var style = urlParameters.style || 'sextant';
+	var screenMode = urlParameters.screen || 'full';
+
 	var uuid = urlParameters.uuid;
 	
 	if(!uuid && urlParameters.url) {
@@ -31,27 +33,41 @@ Ext.onReady(function() {
 	} else {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
 	}
-		
-	var win = new cat.view.ViewWindow({
-        serviceUrl: style == 'sextant' ? catalogue.services.mdView + '?uuid=' + escape(uuid) : null,
-        formatterServiceUrl: formatterServiceUrl,
-        lang: catalogue.lang,
-        currTab: GeoNetwork.defaultViewMode || 'simple',
-        printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-        catalogue: catalogue,
-        maximized: false,
-        metadataUuid: uuid,
-        viewMode: style, 
-        modal: true,
-        draggable: false,
-        movable: false,
-        resizable: false,
-        width: Ext.getBody().getViewSize().width-400,
-        height: Ext.getBody().getViewSize().height-250,
-        cls: 'view-win',
-        bodyStyle:'padding:10px',
-        title: title
-        });
 	
-    win.show();
+	if(screenMode == 'win') {
+		var win = new cat.view.ViewWindow({
+	        serviceUrl: style == 'sextant' ? catalogue.services.mdView + '?uuid=' + escape(uuid) : null,
+	        formatterServiceUrl: formatterServiceUrl,
+	        lang: catalogue.lang,
+	        currTab: GeoNetwork.defaultViewMode || 'simple',
+	        printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+	        catalogue: catalogue,
+	        maximized: false,
+	        metadataUuid: uuid,
+	        viewMode: style, 
+	        modal: true,
+	        draggable: false,
+	        movable: false,
+	        resizable: false,
+	        width: Ext.getBody().getViewSize().width-400,
+	        height: Ext.getBody().getViewSize().height-250,
+	        cls: 'view-win',
+	        bodyStyle:'padding:10px',
+	        title: title
+	    });
+		
+	    win.show();
+	}
+	else {
+		var panel = new cat.view.ViewPanel({
+            serviceUrl: style == 'sextant' ? catalogue.services.mdView + '?uuid=' + escape(uuid) : null,
+            formatterServiceUrl: formatterServiceUrl,
+            lang: catalogue.lang,
+            currTab: GeoNetwork.defaultViewMode || 'simple',
+            printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+            catalogue: catalogue,
+            metadataUuid: uuid,
+            renderTo: Ext.getBody()
+        });
+	}
 });

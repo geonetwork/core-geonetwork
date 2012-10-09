@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+        <mdinfo>Metadata information</mdinfo>
+        <identification>Identification</identification>
+        <what>What?</what>
+        <processedDSDescr>Description of processed data sources</processedDSDescr>
+        <dataProcDescr>Description of data processing</dataProcDescr>
+        <qualityAccur>Quality / Accuracy / Calibration</qualityAccur>
+        <accuracyH>Horizontal accuracy</accuracyH>
+        <accuracyV>Vertical accuracy</accuracyV>
+        <suitability>Suitability, Expected type of users / uses and limitations</suitability>
+        <intellProperty>Intellectual property</intellProperty>
+        <where>Where?</where>
+        <CRS>Coordinate Reference System</CRS>
+        <geoCRS>Geographic CRS</geoCRS>
+        <projCRS>Projected CRS</projCRS>
+        <when>When?</when>
+        <who>Who?</who>
+        <dataHoldingCenter>Data holding center</dataHoldingCenter>
+        <whereToFind>Where to find?</whereToFind>
+        <datadistribCenter>Data distributor center</datadistribCenter>
+        <collatingCenter>Collating center</collatingCenter>
+</strings>

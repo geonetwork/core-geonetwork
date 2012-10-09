@@ -132,9 +132,14 @@
 									</td>
 									<td class="print_data"></td>
 								</tr>
+								
+								<xsl:call-template name="writeAttribute">
+									<xsl:with-param name="element" select="/root//gmd:MD_ScopeDescription" />
+									<xsl:with-param name="attr" select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope[gmd:level/gmd:MD_ScopeCode/@codeListValue='propertyType']/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:attributes/@uuidref" />
+								</xsl:call-template>
+								
 								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope[gmd:level/gmd:MD_ScopeCode/@codeListValue='propertyType']/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:attributes/@uuidref|
-											/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement|
+									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement|
 											/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope[gmd:level/gmd:MD_ScopeCode/@codeListValue='software']/gmd:extent/gmd:EX_Extent/gmd:description" />
 
 								<tr valign="top">
@@ -387,7 +392,9 @@
 
 	<!-- Write text of the node under this element -->
 	<xsl:template mode="iso19139"
-		match="gmd:transferSize|gml:TimeInstant|gmd:maximumValue|gmd:minimumValue|gmd:MD_Identifier|gmd:pointInPixel|gmd:DQ_QuantitativeResult/gmd:value|gmd:CI_DateTypeCode/gmd:date">
+		match="gmd:transferSize|gml:TimeInstant|gmd:maximumValue|gmd:minimumValue|gmd:MD_Identifier|gmd:pointInPixel|
+		gmd:DQ_QuantitativeResult/gmd:value|gmd:CI_DateTypeCode/gmd:date|gmx:Anchor|gml:VerticalDatum/gml:identifier|
+		gmd:MD_Resolution/gmd:distance">
 		<xsl:variable name="name" select="name(.)" />
 		<xsl:variable name="title">
 			<xsl:call-template name="getTitle">
@@ -400,7 +407,7 @@
 				<xsl:value-of select="$title" />
 			</td>
 			<td class="print_data">
-				<xsl:value-of select="*" />
+				<xsl:value-of select="." />
 			</td>
 		</tr>
 	</xsl:template>
@@ -450,6 +457,28 @@
 		</tr>
 	</xsl:template>
 
+	<!-- Display Attribute -->
+	<xsl:template name="writeAttribute">
+		<xsl:param name="element" />
+		<xsl:param name="attr" />
+		
+		<xsl:variable name="name" select="name($element)" />
+		<xsl:variable name="title">
+			<xsl:call-template name="getTitle">
+				<xsl:with-param name="name" select="$name" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<tr valign="top">
+			<td class="print_desc">
+				<xsl:value-of select="$title" />
+			</td>
+			<td class="print_data">
+				<xsl:value-of select="$attr" />
+			</td>
+		</tr>
+	</xsl:template>
+	
 	<!-- Display characterString -->
 	<xsl:template mode="iso19139"
 		match="gmd:*[gco:CharacterString or gmd:PT_FreeText]|
