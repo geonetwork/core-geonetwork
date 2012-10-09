@@ -762,6 +762,7 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <archiveClasses>true</archiveClasses>
           <!-- Filter resources according to current profile properties
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
