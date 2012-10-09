@@ -614,6 +614,7 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <archiveClasses>true</archiveClasses>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
 
 <!-- Remove comment tag to include documentation in the build.
