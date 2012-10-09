@@ -245,7 +245,13 @@ public class KeywordsSearcher {
         elKeyword.addContent(new Element("value").addContent(kb.getDefaultValue()).setAttribute("language", defaultLang));
         elKeyword.addContent(new Element("definition").addContent(kb.getDefaultDefinition()).setAttribute("language", defaultLang));
         elKeyword.addContent(new Element("defaultLang").addContent(defaultLang));
-        elKeyword.addContent(new Element("thesaurus").addContent(kb.getThesaurusKey()));
+        Element thesaurusElement = new Element("thesaurus");
+        thesaurusElement.addContent(new Element("key").setText(kb.getThesaurusKey()));
+        thesaurusElement.addContent(new Element("title").setText(kb.getThesaurusTitle()));
+        thesaurusElement.addContent(new Element("date").setText(kb.getThesaurusDate()));
+        thesaurusElement.addContent(new Element("type").setText(kb.getType()));
+        thesaurusElement.addContent(new Element("url").setText(kb.getDownloadUrl()));
+        elKeyword.addContent(thesaurusElement);
         elKeyword.addContent(new Element("uri").addContent(kb.getUriCode()));
         addBbox(kb, elKeyword);
         rootEl.addContent(elKeyword);

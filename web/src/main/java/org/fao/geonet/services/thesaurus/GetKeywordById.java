@@ -23,20 +23,22 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Returns a list of keywords given a list of thesaurus
@@ -76,17 +78,19 @@ public class GetKeywordById implements Service {
 		
 		searcher = new KeywordsSearcher(thesaurusMan);
 		KeywordBean kb = null;
+		Element root = null;
+		
 		if (!multiple) {
 			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
 			if (kb == null) {
                 switch (format) {
-        		    case iso: new Element ("null");
-        		    case raw: new Element("descKeys");
+        		    case iso: root = new Element ("null");
+        		    case raw: root = new Element("descKeys");
     		    }
 			} else {
                 switch (format) {
-        		    case iso: return kb.getIso19139();
-        		    case raw: return KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
+        		    case iso: root = kb.getIso19139();
+        		    case raw: root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
     		    }
 	        }
 		} else {
@@ -96,7 +100,7 @@ public class GetKeywordById implements Service {
 				String currentUri = url[i];
 				kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
 				if (kb == null) {
-					return new Element ("null");
+					root = new Element ("null");
 				} else {
 					kbList.add(kb);
 					kb = null;
@@ -105,18 +109,15 @@ public class GetKeywordById implements Service {
 			switch (format) {
 			case iso:
 			    Element complexeKeywordElt = KeywordBean.getComplexIso19139Elt(kbList);
-			    return (Element) complexeKeywordElt.detach();
+			    root = (Element) complexeKeywordElt.detach();
 			case raw:
-			    Element root = new Element("descKeys");
+			    root = new Element("descKeys");
 			    for (KeywordBean keywordBean : kbList) {
                     KeywordsSearcher.toRawElement(root, keywordBean);
                 }
-			    return root;
 			}
-
 		}
-
-        return new Element ("null");
+		return root;
 	}
 }
 
