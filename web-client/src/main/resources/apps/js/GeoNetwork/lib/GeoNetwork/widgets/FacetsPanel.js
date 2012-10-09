@@ -45,8 +45,6 @@ Ext.namespace('GeoNetwork');
  *     To customize default facet configuration provided by the server, the facetListConfig
  *     properties could be use to overrides the server configuration.
  *     
- *     TODO : Add a maxDisplayedItem preperties to display by facet (with a more link to display all)
- *     TODO : Add support for permalink with facet
  *     
  *  .. code-block:: javascript
  *     
@@ -101,6 +99,11 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
          *  will display 15 keywords and all spatial representation types.
          */
         facetListConfig: [],
+        /** api: config[maxDisplayedItem] 
+         *  If the number of values for a facet is greater than that number, a more/less button is displayed
+         *  to display all values returned by the server for this facet.
+         */
+        maxDisplayedItem: undefined,
         autoScroll: true
     },
     /** private: property[facetsStore]
@@ -138,7 +141,11 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         var facets = response.responseXML.childNodes[0].childNodes[1],
             zappette = '', 
             panel = this, 
-            store = this.facetsStore;
+            store = this.facetsStore,
+            moreBt =  "<li class='facet-more-bt'><a href='javascript:void(0);'>" + 
+                OpenLayers.i18n('facetMore') + "</a></li>",
+            lessBt = "<li class='facet-less-bt' style='display:none;'><a href='javascript:void(0);'>" + 
+                OpenLayers.i18n('facetLess') + "</a></li>";
         
         // Clean previous facets
         store.removeAll();
@@ -149,17 +156,29 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 // Display only client requested facet
                 Ext.each(this.facetListConfig, function (facetToDisplay) {
                     Ext.each(facets.getElementsByTagName(facetToDisplay.name), function (facet) {
+                        // Property to see if more action link should be displayed
+                        facet.moreAction = false;
                         if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                             var nodeCount = 0;
                             var facetList = "";
                             Ext.each(facet.childNodes, function (node) {
-                                if (this.count === undefined || (this.count && nodeCount < this.count)) {
-                                    facetList += panel.displayFacetValue(node);
+                                if (node.nodeName !== '#text') {
+                                    var visible = (nodeCount < this.count) || (nodeCount < panel.maxDisplayedItems);
+                                    if (facet.moreAction === false && !visible) {
+                                        facet.moreAction = true;
+                                        facetList += moreBt;
+                                    }
+                                    facetList += panel.displayFacetValue(node, visible);
+                                    nodeCount ++;
                                 }
                             }, this);
                             if (facetList !== "") {
-                                zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
+                                zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
                                 zappette += facetList;
+                                if (facet.moreAction === true) {
+                                    zappette += lessBt;
+                                }
+                                zappette += "</ul>";
                             }
                         }
                     }, facetToDisplay);
@@ -167,20 +186,35 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             } else {
                 // Display all
                 Ext.each(facets.childNodes, function (facet) {
+                    // Property to see if more action link should be displayed
+                    facet.moreAction = false;
                     if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                         var facetList = "";
+                        var nodeCount = 0;
                         Ext.each(facet.childNodes, function (node) {
-                            facetList += panel.displayFacetValue(node, store);
+                            if (node.nodeName !== '#text') {
+                                var visible = (nodeCount < panel.maxDisplayedItems);
+                                if (facet.moreAction === false && !visible) {
+                                    facet.moreAction = true;
+                                    facetList += moreBt;
+                                }
+                                facetList += panel.displayFacetValue(node, visible);
+                                nodeCount ++;
+                            }
                         });
                         if (facetList !== "") {
-                            zappette += "<h1 class='facet'>" + OpenLayers.i18n(facet.nodeName) + "</h1>";
+                            zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
                             zappette += facetList;
+                            if (facet.moreAction === true) {
+                                zappette += lessBt;
+                            }
+                            zappette += "</ul>";
                         }
                     }
                 });
             }
         }
-        Ext.getDom('facets').innerHTML = zappette;
+        Ext.getDom('facets').innerHTML = "<ul>" + zappette + "</ul>";
         
         // Register click event
         var items = Ext.DomQuery.select('a.facet-link');
@@ -188,6 +222,22 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         Ext.each(items, function (input) {
             Ext.get(input).on('click', function () {
                 scope.addFacet(this.id);
+            });
+        });
+        
+        items = Ext.DomQuery.select('li.facet-more-bt');
+        scope = this;
+        Ext.each(items, function (input) {
+            Ext.get(input).on('click', function () {
+                scope.displayMoreFacet(this, true);
+            });
+        });
+        
+        items = Ext.DomQuery.select('li.facet-less-bt');
+        scope = this;
+        Ext.each(items, function (input) {
+            Ext.get(input).on('click', function () {
+                scope.displayMoreFacet(this, false);
             });
         });
         
@@ -210,7 +260,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *  
      *  Return a facet value as HTML.
      */
-    displayFacetValue: function (node) {
+    displayFacetValue: function (node, visible) {
         if (node.getAttribute) {
             var data = {
                 facet : node.nodeName,
@@ -224,11 +274,38 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 var recId = this.facetsStore.getCount() + 1,
                      r = new this.facetsStore.recordType(data, recId); 
                 this.facetsStore.add(r);
-                return "<h2><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
-                              data.node + "<span class='facet-count'>(" + data.count + ")</span></a></h2>";
+                return "<li class='" + (visible ? '' : 'facet-more') + "' style='" + (visible ? '' : 'display:none;') + "'><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
+                        data.node + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
             }
         }
         return "";
+    },
+    /** private: method[displayMoreFacet]
+     *  :param li: ``Object`` the li element corresponding to the more or less button
+     *  :param more: ``boolean`` true for displaying element with facet-more class, false otherwise.
+     *  
+     *  Display or hide facet extra values.
+     */
+    displayMoreFacet: function (li, more) {
+        var el = Ext.get(li);
+        
+        // Hide the clicked element
+        el.setVisibilityMode(Ext.Element.DISPLAY);
+        el.setVisible(false);
+        
+        // Search for all siblings with a facet-more class and switch the visibility
+        Ext.each(li.parent().query('[class=facet-more]'), function(item) {
+            var node = Ext.get(item);
+            node.setVisibilityMode(Ext.Element.DISPLAY);
+            node.setVisible(more, true);
+        });
+        
+        // Display less or more button accordingly
+        if (more) {
+            li.next('[class=facet-less-bt]').setVisible(true, true);
+        } else {
+            li.prev('[class=facet-more-bt]').setVisible(true, true);
+        }
     },
     /** private: method[addFacet]
      *  :param recordId: ``String`` the id of the facet to add in the facetsStore

@@ -424,22 +424,44 @@ dl.xml {
 dl.xml * dd {
   padding-left : 2px;
 }
-div.facets h1 {
+
+div.facets * ul,
+div.facets * li {
+    list-style: none;
+}
+/**
+ * Facet category label
+ */
+div.facets > ul > li {
     margin: 0px;
     padding: 0px;
-    border-top: 1px solid #555;
+    border-top: 1px solid #CCC;
+    font-weight: bold;
+}
+/**
+ * Facet sub elements
+ */
+div.facets ul ul {
+    margin-left: 5px;
+    margin-bottom: 5px;
     font-size: 85%;
 }
-div.facets h2 {
-    margin-left: 15px;
-    font-size: 70%;
-}
+/**
+ * Facet count between (number) displayed next to a facet value
+ */
 .facet-count {
     color: #71C0DD;
     padding-left: 3px;
 }
-.facet-link {
+/**
+ * Facet clickable link which trigger the filter action
+ */
+div.facets * a {
     text-decoration: none;
+}
+div.facets * .facet-more-bt, 
+div.facets * .facet-less-bt {
+    color: #71C0DD;
 }
 .breadcrumb * .x-btn-tl, 
 .breadcrumb * .x-btn-tr, 

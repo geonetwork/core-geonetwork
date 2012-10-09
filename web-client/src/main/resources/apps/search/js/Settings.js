@@ -50,7 +50,13 @@ GeoNetwork.hideLoginLabels = true;
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 
 // List of facet to display. If none, the server configuration is use.
-GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, {name: 'types'}, {name: 'denominators'}, {name: 'keywords'}, {name: 'createDateYears'}];
+GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
+                                       {name: 'types'},  
+                                       {name: 'serviceTypes'}, 
+                                       {name: 'denominators'}, 
+                                       {name: 'keywords'}, 
+                                       {name: 'createDateYears'}];
+GeoNetwork.Settings.facetMaxItems = 7;
 
 // Latest update info query
 GeoNetwork.Settings.latestQuery = "from=1&to=6&sortBy=changeDate&fast=index";

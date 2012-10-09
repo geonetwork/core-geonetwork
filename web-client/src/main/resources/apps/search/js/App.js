@@ -723,6 +723,7 @@ GeoNetwork.app = function () {
             facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,
+                maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
                 facetListConfig: GeoNetwork.Settings.facetListConfig || []
             });
             

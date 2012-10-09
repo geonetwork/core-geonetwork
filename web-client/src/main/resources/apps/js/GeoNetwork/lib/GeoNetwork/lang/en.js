@@ -515,6 +515,8 @@ GeoNetwork.Lang.en = {
     'About': "About",
     'Searchforspatialdataon': "Search for spatial data on",
     'Advanced': "Advanced",
+    'facetMore': '+ Show more',
+    'facetLess': '- Show less',
     'List': "List",
     'xsd': 'ISO schema',
     'rules': 'rules',
