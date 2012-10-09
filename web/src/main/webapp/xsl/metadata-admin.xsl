@@ -27,6 +27,7 @@
 							<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 							<!-- loop on all operations leaving editing and notify to last -->
 							<xsl:for-each select="/root/response/operations/record">
+							<xsl:sort select="id"/>
 								<xsl:if test="id!='2' and id!='3'">
 									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
@@ -39,7 +40,7 @@
 							<th width="70"/>
 							<th/>
 						</tr>
-			
+						
 						<!-- 'Internet', 'Intranet' and GUEST groups 
 							Disabled if user is not an administrator
 							or if user is not a reviewer of the metadata group.
@@ -58,6 +59,14 @@
 							<xsl:with-param name="lang" select="$lang"/>
 							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
+						
+						<!-- Specifique SextantV5 -->
+						<!-- if goup=GEOCATALOGUE, display in first -->
+						<xsl:apply-templates select="/root/response/groups/group[name='GEOCATALOGUE']" mode="group">
+							<xsl:with-param name="lang" select="$lang"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
+						</xsl:apply-templates>
+						<!-- end Specifique SextantV5 -->
 
 						<tr>
 							<td class="dots"/>
@@ -77,7 +86,7 @@
 							or not a user group but the usergrouponly catalog setting is false
 							-->
 							<xsl:if test="(/root/gui/env/metadataprivs/usergrouponly='false' and $userGroup!='true') or $userGroup='true'">
-								<xsl:if test="id!='0' and id!='1' and id!='-1'">
+								<xsl:if test="id!='0' and id!='1' and id!='-1' and name!='GEOCATALOGUE'">
 									<xsl:variable name="groupId" select="id"/>
 									<tr id="row.{id}">
 										<td class="padded">
@@ -92,6 +101,7 @@
 										
 								<!-- loop on all operations leaving editing and notify to last -->
 										<xsl:for-each select="oper">
+										<xsl:sort select="id"/>
 											<xsl:if test="id!='2' and id!='3'">
 												<td class="padded record-{id}" align="center" width="80">
 													<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
@@ -192,6 +202,7 @@
 			
 			<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
 			<xsl:for-each select="oper">
+				<xsl:sort select="id"/>
 				<xsl:if test="id!='2' and id!='3'">
 					<td class="padded record-{id}" align="center" width="80">
 						<input type="checkbox" name="_{$groupId}_{id}" id="_{$groupId}_{id}">
