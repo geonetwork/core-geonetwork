@@ -88,7 +88,7 @@ public class OgcGenericFilters
      * @throws Exception
      */
     @SuppressWarnings("serial")
-    public static SpatialFilter create(Query query,
+    public static SpatialFilter create(Query query, int numHits,
             Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
         Name geometryColumn = sourceAccessor.one().getSchema().getGeometryDescriptor().getName();
@@ -146,7 +146,7 @@ public class OgcGenericFilters
 
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
-            return new FullScanFilter(query, bounds, sourceAccessor){
+            return new FullScanFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
@@ -154,7 +154,7 @@ public class OgcGenericFilters
                 }
             };
         }else{
-            return new SpatialFilter(query, bounds, sourceAccessor){
+            return new SpatialFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
