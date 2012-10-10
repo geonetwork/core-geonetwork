@@ -240,6 +240,7 @@ public final class Utils {
             for( String field : luceneFields ) {
                 Set<String> requiredFields = new HashSet<String>();
                 requiredFields.add("_id");
+                requiredFields.add("_owner");
                 requiredFields.add(field);
                 FieldSelector selector = new SetBasedFieldSelector(requiredFields, Collections.<String>emptySet()); 
                 Term term = new Term(field, "*id=" + concreteId + "*");
