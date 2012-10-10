@@ -314,8 +314,13 @@
             "OpenLayers/Symbolizer/Text.js",
             "OpenLayers/Symbolizer/Raster.js",
             "OpenLayers/Lang.js",
+            "OpenLayers/Lang/ca.js",
             "OpenLayers/Lang/en.js",
-            "OpenLayers/Lang/fr.js"
+            "OpenLayers/Lang/de.js",
+            "OpenLayers/Lang/fr.js",
+            "OpenLayers/Lang/es.js",
+            "OpenLayers/Lang/nl.js",
+            "OpenLayers/Lang/pl.js"
         ); // etc.
 
         var allScriptTags = new Array(jsfiles.length);
