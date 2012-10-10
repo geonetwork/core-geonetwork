@@ -120,7 +120,20 @@ GeoNetwork.Util = {
     getBaseUrl: function(url){
         return url.substring(0, url.indexOf('?') || url.indexOf('#') || url.length);
     },
-
+    /** api: property[protocolToCSS] 
+     *  
+     *  Provide a mapping between various GeoNetwork protocol and the CSS icon class
+     */
+    protocolToCSS: {
+        'application/vnd.ogc.wms_xml': 'addLayerIcon',
+        'OGC:WMS': 'addLayer',
+        'application/vnd.google-earth.kml+xml': 'md-mn-kml',
+        'application/zip': 'md-mn-zip',
+        'WWW:DOWNLOAD-1.0-http--download': 'md-mn-zip',
+        'application/x-compressed': 'md-mn-zip',
+        'text/html': 'md-mn-www',
+        'text/plain': 'md-mn-www'
+    },
     // TODO : add function to compute color map
     defaultColorMap: [
                        "#2205fd", 

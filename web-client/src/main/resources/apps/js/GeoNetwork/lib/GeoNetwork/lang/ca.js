@@ -495,8 +495,8 @@ GeoNetwork.Lang.ca={
     'copyTplElTT': 'Crear un nou element en el directori a partir de l\'element seleccionat.',
     'delTplElTT': 'Esborrar la selecció del directori.',
     'language': 'Idioma',
-	
-	//tabbed search
+    
+    //tabbed search
     'Home': "Pàgina d'inici",
     'Map': "Mapa",
     'Poweredby': "Creat per",

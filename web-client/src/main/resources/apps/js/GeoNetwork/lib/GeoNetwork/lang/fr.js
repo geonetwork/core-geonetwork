@@ -512,6 +512,16 @@ GeoNetwork.Lang.fr = {
     'rule': 'règle',
     'schematron-rules-geonetwork': 'Validation GeoNetwork',
     'schematron-rules-iso': 'Validation ISO',
-    'schematron-rules-inspire': 'Validation INSPIRE'
+    'schematron-rules-inspire': 'Validation INSPIRE',
+    'linklabel-application/vnd.ogc.wms_xml': 'Visualiser',
+    'linklabel-OGC:WMS': 'Visualiser',
+    'linklabel-application/vnd.google-earth.kml+xml': 'KML',
+    'linklabel-application/zip': 'Télécharger',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Télécharger',
+    'linklabel-application/x-compressed': 'Télécharger',
+    'linklabel-text/html': 'Liens',
+    'linklabel-text/plain': 'Liens',
+    'linklabel-image/png': 'Images',
+    'linklabel-': 'Liens'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

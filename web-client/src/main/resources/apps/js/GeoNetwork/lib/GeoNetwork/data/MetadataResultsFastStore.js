@@ -163,17 +163,17 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     
     function getDownload(v, record){
         if (record.geonet_info && record.geonet_info.download) {
-            return record.geonet_info.download[0].value;
+            return (record.geonet_info.download[0].value === 'true');
         } else {
-            return 'false';
+            return false;
         }
     }
     
     function getDynamic(v, record){
         if (record.geonet_info && record.geonet_info.dynamic) {
-            return record.geonet_info.dynamic[0].value;
+            return (record.geonet_info.dynamic[0].value === 'true');
         } else {
-            return 'false';
+            return false;
         }
     }
     
