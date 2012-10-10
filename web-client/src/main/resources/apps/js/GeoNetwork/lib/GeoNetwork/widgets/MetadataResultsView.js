@@ -298,7 +298,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.acMenu.on('click', function(){
             this.createMenu(idx, this);
             this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
-        }.bind(this));
+        }, this);
         this.acMenu.show();
     },
     createMenu: function(id, dv){
