@@ -319,7 +319,8 @@
             "OpenLayers/Lang/de.js",
             "OpenLayers/Lang/fr.js",
             "OpenLayers/Lang/es.js",
-            "OpenLayers/Lang/nl.js"
+            "OpenLayers/Lang/nl.js",
+            "OpenLayers/Lang/pl.js"
         ); // etc.
 
         var allScriptTags = new Array(jsfiles.length);
