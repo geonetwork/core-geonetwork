@@ -40,8 +40,12 @@ GeoNetwork.Util = {
             ['it', 'Italiano', 'ita'], 
             ['nl', 'Nederlands', 'dut'], 
             ['no', 'Norsk', 'nor'],
+            ['pl', 'Polski', 'pol'], 
             ['pt', 'Рortuguês', 'por'], 
-            ['ru', 'Русский', 'rus']
+            ['ru', 'Русский', 'rus'],
+            ['fi', 'Suomeksi', 'fin'],
+            ['tr', 'Türkçe', 'tur']
+                       
     ],
     /** api: method[setLang] 
      *  :param lang: String ISO 3 letters code
