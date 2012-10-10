@@ -188,7 +188,7 @@ public class LuceneSearcher extends MetaSearcher {
 		initSearchRange(srvContext);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
-        computeQuery(srvContext, getFrom() - 1, request, config);
+        computeQuery(srvContext, getTo() - 1, request, config);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
 		performQuery(getFrom()-1, getTo(), buildSummary);
@@ -544,7 +544,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @param config
      * @throws Exception
      */
-	private void computeQuery(ServiceContext srvContext, int numHits, Element request, ServiceConfig config) throws Exception {
+	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
         determineLanguage(srvContext, request);
 
@@ -707,7 +707,7 @@ public class LuceneSearcher extends MetaSearcher {
             if (_sm.getLogSpatialObject()) {
                 _geomWKT = geometry.toText();
             }
-            spatialfilter = _sm.getSpatial().filter(_query, numHits, geometry, request);
+            spatialfilter = _sm.getSpatial().filter(_query, endHits, geometry, request);
         }
 
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
