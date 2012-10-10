@@ -79,6 +79,7 @@
     if(!singleFile) {
         var jsfiles = new Array(
             "GeoNetwork/Util.js",
+            "GeoNetwork/lang/ca.js",
             "GeoNetwork/lang/en.js",
             "GeoNetwork/lang/fr.js",
 			"GeoNetwork/lang/nl.js",
