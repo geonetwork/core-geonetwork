@@ -368,13 +368,14 @@ public class CatalogSearcher {
 		// --- proper search
 		Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
+        int numHits = startPosition + maxRecords;
+
 		// TODO Handle NPE creating spatial filter (due to constraint
 		// language version).
-		Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
+		Filter spatialfilter = sm.getSpatial().filter(query, numHits, filterExpr, filterVersion);
 		CachingWrapperFilter cFilter = null;
 		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
 		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
-		int numHits = startPosition + maxRecords;
 
 			// get as many results as instructed or enough for search summary
 		if (buildSummary) {

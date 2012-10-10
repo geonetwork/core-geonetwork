@@ -185,8 +185,8 @@ public class LuceneSearcher extends MetaSearcher
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
 		IndexSearcher searcher = getNewSearcher();
 		try {
-			computeQuery(srvContext, request, config, searcher);
 			initSearchRange(srvContext);
+			computeQuery(srvContext, request, config, searcher);
 			performQuery(getFrom()-1, getTo(), searcher);
 		} finally {
 			releaseSearcher();
@@ -435,7 +435,7 @@ public class LuceneSearcher extends MetaSearcher
 		
 		Geometry geometry = getGeometry(request);
         if (geometry != null) {
-            _filter = new CachingWrapperFilter(_sm.getSpatial().filter(_query, geometry, request));
+            _filter = new CachingWrapperFilter(_sm.getSpatial().filter(_query, getTo() - 1, geometry, request));
         }
         
         String sortBy = Util.getParam(request, Geonet.SearchResult.SORT_BY,
