@@ -289,6 +289,7 @@ GeoNetwork.Lang.fr = {
     'updateChildren': 'Mettre à jour les enfants',
     'records': 'enregistrements',
     'record': 'enregistrement',
+    'recordsFound': ' fiche(s)',
     'help': 'Aide',
     'publishError': 'Échec lors de la publication.',
     'outOfMemoryError': 'Érreur de dépassement de mémoire.',

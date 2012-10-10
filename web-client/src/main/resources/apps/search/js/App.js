@@ -364,6 +364,9 @@ GeoNetwork.app = function () {
                 onreset: function () {
                     resultsPanel.hide();
                     infoPanel.show();
+                    GeoNetwork.Util.updateHeadInfo({
+                        title: catalogue.getInfo().name
+                    });
                 }
             },
             items: formItems
@@ -584,8 +587,56 @@ GeoNetwork.app = function () {
             items: tagCloudView
         });
     }
-    
-    function edit(metadataId, create, group, child) {
+    function show(uuid, record, url, maximized, width, height) {
+        var win = new GeoNetwork.view.ViewWindow({
+            serviceUrl: url,
+            lang: this.lang,
+            currTab: GeoNetwork.defaultViewMode || 'simple',
+            printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+            printUrl: GeoNetwork.printUrl || 'print.html',
+            catalogue: this,
+            maximized: maximized || false,
+            metadataUuid: uuid,
+            record: record,
+            resultsView: this.resultsView
+            });
+        win.show(this.resultsView);
+        win.alignTo(Ext.getBody(), 'tr-tr');
+        
+        
+        
+        // Adapt page title and meta according to current record
+        
+        // If more than one metadata records opened, the last one opened set the title
+        // When metadata windows is closed, reset to default title
+        win.on('close', function () {
+            GeoNetwork.Util.updateHeadInfo({
+                title: catalogue.getInfo().name
+            });
+        });
+        
+        // Get title, keywords and author for current record
+        // in order to populate the META tag in the HEAD of the HTML page.
+        var contacts = [];
+        Ext.each(record.get('contact'), function (item) {
+             contacts.push(item.name);
+        });
+        var subjects = [];
+        Ext.each(record.get('subject'), function (item) {
+            subjects.push(item.value);
+        });
+        GeoNetwork.Util.updateHeadInfo({
+            title: catalogue.getInfo().name + ' | ' 
+                   + record.get('title') 
+                   + (record.get('type') ? ' (' + record.get('type') + ')' : ''),
+            meta: {
+                subject: record.get('abstract'),
+                keywords: subjects,
+                author: contacts
+            }
+        });
+    }
+    function edit(metadataId, create, group, child){
         
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
@@ -671,7 +722,8 @@ GeoNetwork.app = function () {
                 metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
                 summaryStore: GeoNetwork.data.MetadataSummaryStore(),
                 editMode: 2, // TODO : create constant
-                metadataEditFn: edit
+                metadataEditFn: edit,
+                metadataShowFn: show
             });
             
             // Extra stuffs
@@ -827,6 +879,26 @@ GeoNetwork.app = function () {
             Ext.getCmp('center').syncSize();
             Ext.ux.Lightbox.register('a[rel^=lightbox]');
             
+            // Update page title based on search results and params
+            var formParams = GeoNetwork.util.SearchTools.getFormValues(searchForm);
+            var criteria = '', 
+                excludedSearchParam = {E_hitsperpage: null, timeType: null,
+                sortOrder: null, sortBy: null};
+            for (var item in formParams) {
+                if (formParams.hasOwnProperty(item) && excludedSearchParam[item] === undefined) {
+                    var value = formParams[item];
+                    if (value != '') {
+                        fieldName = item.split('_');
+                        criteria += OpenLayers.i18n(fieldName[1] || item) + ': ' + value + ' - '
+                    }
+                }
+            }
+            var title = (catalogue.metadataStore.totalLength || 0) + OpenLayers.i18n('recordsFound')
+                           + (criteria !== '' ? ' | ' + criteria : '');
+            
+            GeoNetwork.Util.updateHeadInfo({
+                title: catalogue.getInfo().name + ' | ' + title
+            });
         },
         /**
          * Switch from one mode to another

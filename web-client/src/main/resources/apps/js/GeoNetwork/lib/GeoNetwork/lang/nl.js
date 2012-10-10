@@ -278,6 +278,7 @@ GeoNetwork.Lang.nl = {
     'updateChildren': "Wijzigen kinderen",
     'records': "records",
     'record': "record",
+    'recordsFound': ' record(s) found',
     'help': "Help",
     'publishError': "Publicatie gefaald.",
     'outOfMemoryError': "Out of memory fout.",
