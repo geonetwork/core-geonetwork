@@ -5,6 +5,9 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	
 	curMenu: undefined,
 	
+	/** true if you want to display a popup for 5 seconds telling u just add a layer to basket or geoviewer **/
+	popup: true,
+	
 	/** current index in the dataview list of the selected MD **/
 	curId: -1,
 	
@@ -45,7 +48,13 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         }
     },
     
+    /**
+     * Pass values to A4J hidden element and trigger the click to call java methods
+     */
     menuAction: function(link, type) {
+    	
+    	var url;
+
     	if(type == 'wms') {
 	    	var c = link.split('|');
 	    	
@@ -68,13 +77,52 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	
 	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
 	    	Ext.query('a[id*=viewerButton]')[0].onclick();
+	    	url=Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
     	}
     	else if(type=='download') {
     		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
     		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
     			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&outputSchema=csw:IsoRecord&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
     		Ext.query('a[id*=panierButton]')[0].onclick();
+    		url=Ext.get(Ext.query('input[id*=configpanierurl]')[0]).getValue();
     	}
+    	if(this.popup) {
+    		this.displayPopup(type,url);
+    	}
+    },
+    
+    /**
+     * Display a modal popup on list view button click.
+     * popup informs action is made and ask for redirection to basket or geoviewer. Stays 5 sec.
+     */
+    displayPopup: function(type, url) {
+    	
+    	win = new Ext.Window({
+            id: 'clickPopup-win',
+            layout: 'fit',
+            closeAction: 'destroy',
+            maximized: false,
+            border: false,
+            modal: true,
+            draggable: false,
+            movable: false,
+            resizable: false,
+            width: 350,
+            height: 120,
+            cls: 'view-win sxt-popup',
+            title: OpenLayers.i18n(type+'ModalMsg'),
+            html: OpenLayers.i18n('modalRedirect') + ' <a href="'+ url+'" >'
+            		+OpenLayers.i18n(type+'Portlet')+'</a>',
+            listeners: {
+            	afterrender: {
+            		fn: function(w) {
+            			w.destroy();
+            		},
+            		delay: 5000
+            	}
+            }
+        });
+    	win.show();
     },
     
     /**

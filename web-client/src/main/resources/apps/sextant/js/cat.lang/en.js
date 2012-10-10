@@ -10,7 +10,7 @@ cat.lang.en = {
     "result-list-download": "Download",
     "essentielle": "Essential metadata",
     "complete": "Full metadata",
-    "beginDate": "Begin date",
+    "beginDate": "Begin date",	
     "endDate": "End date",
     "group": "Companies",
     "administrer": "Manage",
@@ -20,6 +20,11 @@ cat.lang.en = {
     "exportPDF": "PDF Export",
     "exportXSML": "XML Export",
     "exportLink": "Link to the Metadata"
+    ,"wmsModalMsg": "You've just added a layer to the GeoViewer"
+    ,"downloadModalMsg": "You've just added a layer to your Basket"	
+    ,"modalRedirect": "Access directly to the "
+    ,"wmsPortlet": "Geoviewer"
+    ,"downloadPortlet": "Basket"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

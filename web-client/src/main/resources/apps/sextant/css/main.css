@@ -558,3 +558,14 @@ div#privileges .record-3 {
 	 margin-left:-24px;
 	 margin-top:-24px;
 }
+
+.sxt-popup .x-window-body {
+	padding-top:25px;
+	text-align:center;
+	font-family:Arial,Helvetica,sans-serif;;
+	font-size:12px;
+}
+.sxt-popup a {
+	color:#F28033;
+	text-decoration:underline;
+}

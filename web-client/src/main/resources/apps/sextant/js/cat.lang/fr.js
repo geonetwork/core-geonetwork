@@ -23,5 +23,10 @@ cat.lang.fr = {
     "exportPDF": "Export PDF",
     "exportXSML": "Export XML",
     "exportLink": "Lien vers la fiche"
+    ,"wmsModalMsg": "Vous venez d'ajouter une couche au GeoViewer"
+    ,"downloadModalMsg": "Vous venez d'ajouter une couche au Panier"	
+    ,"modalRedirect": "Accéder directement au "
+    ,"wmsPortlet": "Geoviewer"
+    ,"downloadPortlet":"Panier"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

@@ -79,10 +79,8 @@ cat.list = function() {
 			'<div style="display:none">{values.name}|{values.title}|{values.href}|{values.protocol}|{values.type}</div>',
 			'</div>',
 			'</tpl>',
-			'<tpl if="values.type == \'DB\'">',
-			'<div class="mdHiddenMenu downloadLink download-{parent.download}" title="'
-					+ OpenLayers.i18n('viewKml')
-					+ ' {title}">{title}<div style="display:none">{values.name}</div></div>',
+			'<tpl if="values.type == \'DB\' || values.type == \'File\' || values.type == \'WFS\' || values.type == \'WCS\' || values.type == \'Copy\'">',
+			'<div class="mdHiddenMenu downloadLink download-{parent.download}">{title}<div style="display:none">{values.name}</div></div>',
 			'</tpl>',
 			'</tpl>',
 			'<tpl if="this.hasDownloadLinks(values.links)">',

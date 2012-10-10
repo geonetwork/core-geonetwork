@@ -129,7 +129,8 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 					afterrender: {
 						fn: function(c) {
 							Ext.get('md-print-btn').on('click', function(btn) {
-								window.open('print.html?uuid=' + this.metadataUuid + '&currTab=' + 'simple' + "&hl=" + this.lang);
+								//window.open('print.html?uuid=' + this.metadataUuid + '&currTab=' + 'simple' + "&hl=" + this.lang);
+								this.catalogue.metadataPrint(this.metadataUuid);
 							}, this);
 							Ext.get('md-xml-btn').on('click', function(btn) {
 								this.catalogue.metadataXMLShow(this.metadataUuid, this.metadataSchema);
