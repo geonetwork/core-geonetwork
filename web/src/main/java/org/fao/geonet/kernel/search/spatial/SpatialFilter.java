@@ -65,6 +65,7 @@ import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.spatial.SpatialOperator;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -157,7 +158,7 @@ public abstract class SpatialFilter extends Filter
                  document = reader.document(doc, _selector);
                  String key = document.get("_id");
                  FeatureId featureId = unrefinedSpatialMatches.get(key); 
-                 if (featureId!=null) {
+                 if (featureId!=null && _hits < _numHits) {
                 	 _hits ++ ;
                    matches.add(featureId);
                    docIndexLookup.put(featureId, doc + docBase);
@@ -198,6 +199,7 @@ public abstract class SpatialFilter extends Filter
         		fidFilter = _filterFactory.id(subset);
 	        } else {
 	        	fidFilter = _filterFactory.id(matches);
+	        	matches = Collections.emptySet();
 	        }
         FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
         String ftn = _featureSource.getSchema().getName().getLocalPart();
