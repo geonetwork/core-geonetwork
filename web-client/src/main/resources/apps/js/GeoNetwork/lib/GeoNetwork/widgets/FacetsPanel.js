@@ -138,7 +138,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *   and populate the store. If no filter applied, copy the store to the startFacetStore.
      */
     refresh: function (response) {
-        var facets = response.responseXML.childNodes[0].childNodes[1],
+        var facets = response.responseXML.getElementsByTagName('summary')[0],
             zappette = '', 
             panel = this, 
             store = this.facetsStore,
@@ -157,15 +157,15 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 Ext.each(this.facetListConfig, function (facetToDisplay) {
                     Ext.each(facets.getElementsByTagName(facetToDisplay.name), function (facet) {
                         // Property to see if more action link should be displayed
-                        facet.moreAction = false;
+                        facet.setAttribute('moreAction', 'false');
                         if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                             var nodeCount = 0;
                             var facetList = "";
                             Ext.each(facet.childNodes, function (node) {
                                 if (node.nodeName !== '#text') {
                                     var visible = (nodeCount < this.count) || (nodeCount < panel.maxDisplayedItems);
-                                    if (facet.moreAction === false && !visible) {
-                                        facet.moreAction = true;
+                                    if (facet.getAttribute('moreAction') === 'false' && !visible) {
+                                        facet.setAttribute('moreAction', 'true');
                                         facetList += moreBt;
                                     }
                                     facetList += panel.displayFacetValue(node, visible);
@@ -175,7 +175,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                             if (facetList !== "") {
                                 zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
                                 zappette += facetList;
-                                if (facet.moreAction === true) {
+                                if (facet.getAttribute('moreAction') === 'true') {
                                     zappette += lessBt;
                                 }
                                 zappette += "</ul>";
@@ -187,15 +187,15 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 // Display all
                 Ext.each(facets.childNodes, function (facet) {
                     // Property to see if more action link should be displayed
-                    facet.moreAction = false;
+                    facet.setAttribute('moreAction', 'false');
                     if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
                         var facetList = "";
                         var nodeCount = 0;
                         Ext.each(facet.childNodes, function (node) {
                             if (node.nodeName !== '#text') {
                                 var visible = (nodeCount < panel.maxDisplayedItems);
-                                if (facet.moreAction === false && !visible) {
-                                    facet.moreAction = true;
+                                if (facet.getAttribute('moreAction') === 'false' && !visible) {
+                                    facet.setAttribute('moreAction', 'true');
                                     facetList += moreBt;
                                 }
                                 facetList += panel.displayFacetValue(node, visible);
@@ -205,7 +205,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                         if (facetList !== "") {
                             zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
                             zappette += facetList;
-                            if (facet.moreAction === true) {
+                            if (facet.getAttribute('moreAction') === 'true') {
                                 zappette += lessBt;
                             }
                             zappette += "</ul>";
@@ -261,24 +261,22 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *  Return a facet value as HTML.
      */
     displayFacetValue: function (node, visible) {
-        if (node.getAttribute) {
-            var data = {
-                facet : node.nodeName,
-                node : node.getAttribute('name'),
-                count : node.getAttribute('count')
-            };
-            // Only display a facet if it's not part of current filter
-            
-            if (this.currentFilterStore.getCount() === 0 ||
-                    this.currentFilterStore.query('value', data.node).length === 0) {
-                var recId = this.facetsStore.getCount() + 1,
-                     r = new this.facetsStore.recordType(data, recId); 
-                this.facetsStore.add(r);
-                return "<li class='" + (visible ? '' : 'facet-more') + "' style='" + (visible ? '' : 'display:none;') + "'><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
-                        data.node + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
-            }
+        var data = {
+            facet : node.nodeName,
+            node : node.getAttribute('name'),
+            count : node.getAttribute('count')
+        };
+        // Only display a facet if it's not part of current filter
+        
+        if (this.currentFilterStore.getCount() === 0 ||
+                this.currentFilterStore.query('value', data.node).length === 0) {
+            var recId = this.facetsStore.getCount() + 1,
+                 r = new this.facetsStore.recordType(data, recId); 
+            this.facetsStore.add(r);
+            return "<li class='" + (visible ? '' : 'facet-more') + "' style='" + (visible ? '' : 'display:none;') + "'><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
+                    data.node + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
         }
-        return "";
+        return '';
     },
     /** private: method[displayMoreFacet]
      *  :param li: ``Object`` the li element corresponding to the more or less button
