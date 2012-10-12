@@ -439,10 +439,6 @@ public class Get implements Service
 
     private Element bbox(SimpleFeature feature, CoordinateReferenceSystem crs) throws Exception
     {
-
-        final Object showNativeAtt = feature.getAttribute(FeatureType.SHOW_NATIVE);
-        boolean showNative = showNativeAtt != null && showNativeAtt.equals("y");
-
         Element bbox = new Element("EX_GeographicBoundingBox", GMD_NAMESPACE);
         Element west = new Element("westBoundLongitude", GMD_NAMESPACE);
         Element east = new Element("eastBoundLongitude", GMD_NAMESPACE);
@@ -455,9 +451,7 @@ public class Get implements Service
         double southDecimal = reducePrecision(bounds.getMinY(), 0);
         double northDecimal = reducePrecision(bounds.getMaxY(), 0);
 
-        if(showNative) {
-            bbox.addContent(new Comment(format("native coords: %s,%s,%s,%s", westDecimal, southDecimal, eastDecimal, northDecimal)));
-        }
+        bbox.addContent(new Comment(format("native coords: %s,%s,%s,%s", westDecimal, southDecimal, eastDecimal, northDecimal)));
 
         bbox.addContent(west);
         bbox.addContent(east);

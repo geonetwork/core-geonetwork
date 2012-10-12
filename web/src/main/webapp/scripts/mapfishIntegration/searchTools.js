@@ -606,12 +606,48 @@ var searchTools = {
             });
 
             if (children.length > 0) {
-                drawCmp.readFeature(children[0].innerHTML, {
-                    format: 'WKT',
-                    zoomToFeatures: true,
-                    from: searchTools.mainProj,
-                    to: searchTools.alternateProj
-                });
+
+                var nativeCoordsString;
+            	var nativeCoordsDiv;
+            	var cheBounds;
+
+            	var nativeEl = Ext.get("native_"+eltRef);
+            	if (nativeEl) {
+            	    nativeEl = nativeEl.dom;
+            	    if(nativeEl.innerText !== undefined) {
+            	        nativeCoordsDiv = nativeEl.innerText;
+            	    } else {
+            	        nativeCoordsDiv = nativeEl.textContent;
+            	    }
+            	}
+            	if(nativeCoordsDiv === undefined) {
+            	    nativeCoordsDiv = "";
+            	} else {
+            	    nativeCoordsDiv = nativeCoordsDiv.trim();
+            	}
+            	if(nativeCoordsDiv.length > 0) {
+            		nativeCoordsString = nativeCoordsDiv.split(":")[1].trim();
+            		cheBounds = OpenLayers.Bounds.fromString(nativeCoordsString);
+            		var nativeCHEPoly = "MULTIPOLYGON ((("+cheBounds.left.toFixed(0)+" "+cheBounds.top.toFixed(0)+","+
+	            	    cheBounds.right.toFixed(0)+" "+cheBounds.top.toFixed(0)+","+
+	            	    cheBounds.right.toFixed(0)+" "+cheBounds.bottom.toFixed(0)+","+
+	            	    cheBounds.left.toFixed(0)+" "+cheBounds.bottom.toFixed(0)+","+
+	            	    cheBounds.left.toFixed(0)+" "+cheBounds.top.toFixed(0)+")))";
+            		drawCmp.readFeature(nativeCHEPoly, {
+                        format: 'WKT',
+                        zoomToFeatures: true,
+                        from: searchTools.alternateProj,
+                        to: searchTools.alternateProj
+                    });
+            	} else {
+                    drawCmp.readFeature(children[0].innerHTML, {
+                        format: 'WKT',
+                        zoomToFeatures: true,
+                        from: searchTools.mainProj,
+                        to: searchTools.alternateProj
+                    });
+            	}
+
                 /* Sometimes the dom element used as container for the map has a height/width 
                 of 0 (zero). So the map has a wrong size because the js is executed before 
                 the page content has finished rendering DESPITE the onload/ready event which is 
@@ -671,28 +707,7 @@ var searchTools = {
                 wsenEl[2].wgs84 = bounds.right.toFixed(3);
                 wsenEl[3].wgs84 = bounds.top.toFixed(3);
 
-                var cheBounds;
-                var nativeCoordsDiv;
-                
-                
-                var nativeEl = Ext.get("native_"+eltRef);
-                if (nativeEl) {
-                    nativeEl = nativeEl.dom;
-                    if(nativeEl.innerText !== undefined) {
-                        nativeCoordsDiv = nativeEl.innerText;
-                    } else {
-                        nativeCoordsDiv = nativeEl.textContent;
-                    }
-                }
-                if(nativeCoordsDiv === undefined) {
-                    nativeCoordsDiv = "";
-                } else {
-                    nativeCoordsDiv = nativeCoordsDiv.trim();
-                }
-                if(nativeCoordsDiv.length > 0) {
-                    var nativeCoordsString = nativeCoordsDiv.split(":")[1].trim();
-                    cheBounds = OpenLayers.Bounds.fromString(nativeCoordsString);
-                } else {
+                if(nativeCoordsDiv.length <= 0) {
                     cheBounds = bounds.clone();
                     cheBounds.transform(searchTools.mainProj, searchTools.alternateProj);
                 }
