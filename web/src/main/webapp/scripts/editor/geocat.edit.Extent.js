@@ -60,6 +60,6 @@ geocat.edit.Extent = {
         return ucName == 'GMD:GEOGRAPHICELEMENT' || ucName == 'GMD:POLYGON' 
         	|| ucName == 'GMD:EXTENT' || ucName == 'GMD:SERVICEEXTENT'
     		|| ucName == 'GMD:SOURCEEXTENT' || ucName == 'GMD:SPATIALEXTENT'
-    		|| ucName == 'CHE:REVISIONEXTENT';
+    		|| ucName == 'SRV:EXTENT' || ucName == 'CHE:REVISIONEXTENT';
     }
 };
