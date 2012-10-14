@@ -505,11 +505,6 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.geotools</groupId>
-        <artifactId>gt-postgis</artifactId>
-        <version>${geotools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.geotools.jdbc</groupId>
         <artifactId>gt-jdbc-postgis</artifactId>
         <version>${geotools.version}</version>
@@ -864,7 +859,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>2.7.4</geotools.version>
+    <geotools.version>8.2</geotools.version>
     <lucene.version>3.0.2</lucene.version>
   </properties>
 </project>

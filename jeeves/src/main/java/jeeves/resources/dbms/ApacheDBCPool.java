@@ -38,7 +38,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 import org.geotools.data.DataStore;
 
-import org.geotools.data.postgis.PostgisDataStoreFactory;
+import org.geotools.data.postgis.PostgisNGDataStoreFactory;
 
 import org.jdom.Element;
 
@@ -298,13 +298,13 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		DataStore newDataStore = null;
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(PostgisDataStoreFactory.DBTYPE.key, PostgisDataStoreFactory.DBTYPE.sample);
-		params.put(PostgisDataStoreFactory.DATABASE.key, getDatabase(url, values));
-		params.put(PostgisDataStoreFactory.USER.key, user);
-		params.put(PostgisDataStoreFactory.PASSWD.key, passwd);
-		params.put(PostgisDataStoreFactory.HOST.key, getHost(url, values));
-		params.put(PostgisDataStoreFactory.PORT.key, getPort(url, values));
-		PostgisDataStoreFactory factory = new PostgisDataStoreFactory();
+		params.put(PostgisNGDataStoreFactory.DBTYPE.key, PostgisNGDataStoreFactory.DBTYPE.sample);
+		params.put(PostgisNGDataStoreFactory.DATABASE.key, getDatabase(url, values));
+		params.put(PostgisNGDataStoreFactory.USER.key, user);
+		params.put(PostgisNGDataStoreFactory.PASSWD.key, passwd);
+		params.put(PostgisNGDataStoreFactory.HOST.key, getHost(url, values));
+		params.put(PostgisNGDataStoreFactory.PORT.key, getPort(url, values));
+		PostgisNGDataStoreFactory factory = new PostgisNGDataStoreFactory();
 		newDataStore = factory.createDataStore(params);
 		if (newDataStore != null) info("NOTE: Using POSTGIS for spatial index");
 

@@ -15,6 +15,7 @@ import org.geotools.factory.GeoTools;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.filter.spatial.WithinImpl;
+import org.geotools.filter.spatial.ReprojectingFilterVisitor;
 import org.geotools.filter.visitor.DefaultFilterVisitor;
 import org.geotools.filter.visitor.DuplicatingFilterVisitor;
 import org.geotools.filter.visitor.ExtractBoundsFilterVisitor;
@@ -102,8 +103,8 @@ public class OgcGenericFilters
 
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter");
-        Filter fullFilter = (org.opengis.filter.Filter) parser
-                .parse(new StringReader(string));
+				Filter fullFilter = null;
+				Object o = parser.parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){
         	Log.error(Geonet.SEARCH_ENGINE,"Errors occurred when trying to parse a filter:");
         	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
@@ -112,6 +113,13 @@ public class OgcGenericFilters
 	        }
         	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
         }
+				if (o instanceof org.opengis.filter.Filter) {
+        	fullFilter = (org.opengis.filter.Filter)o;
+				} else {
+        	Log.error(Geonet.SEARCH_ENGINE,"Filter is not useable");
+					if (o != null) Log.error(Geonet.SEARCH_ENGINE,"Expecting org.opengis.filter.Filter but got "+o.getClass().getName());
+					return null;
+				}
         final FilterFactory2 filterFactory2 = CommonFactoryFinder
                 .getFilterFactory2(GeoTools.getDefaultHints());
 
@@ -175,12 +183,10 @@ public class OgcGenericFilters
             {
 
                 @Override
-                public boolean evaluate(Object feature)
+                public boolean evaluateInternal(Geometry leftGeom, Geometry rightGeom)
                 {
-                    Geometry leftGeom = getLeftGeometry(feature);
-                    Geometry rightGeom = getRightGeometry(feature);
                     boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
-                    return equals2 || super.evaluate(feature);
+                    return equals2 || super.evaluateInternal(leftGeom, rightGeom);
                 }
             };
         };

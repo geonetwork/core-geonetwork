@@ -95,10 +95,6 @@
      	<artifactId>xml-resolver</artifactId>
     </dependency>
     <dependency>
-     <groupId>org.geotools</groupId>
-     <artifactId>gt-postgis</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.geotools.jdbc</groupId>
       <artifactId>gt-jdbc-postgis</artifactId>
     </dependency>

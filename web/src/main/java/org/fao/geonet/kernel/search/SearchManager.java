@@ -1620,8 +1620,10 @@ public class SearchManager {
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
+							e.printStackTrace();
     			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + filterVersion + "):" +
                         Xml.getString(filterExpr) + ". Error is: " + e.toString());
+
             }
             finally {
                 _lock.unlock();
