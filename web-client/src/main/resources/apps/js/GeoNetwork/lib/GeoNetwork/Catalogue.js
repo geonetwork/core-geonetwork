@@ -153,7 +153,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: property[windowOption] 
      *  ``String`` Configuration of popup windows
      */
-    windowOption: "menubar=no,location=no,toolbar=no,directories=no",
+    windowOption: "menubar=no,location=no,toolbar=no,directories=no,scrollbars=yes",
     
     /** api: property[windowName] 
      *  ``String`` Name of popup windows
