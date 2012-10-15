@@ -8,6 +8,9 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 	/** template use for custom formatter * */
 	viewMode : undefined,
 	
+	/** mask the full panel before it shows **/
+	mask: undefined,
+	
 	afterMetadataLoad : function() {
 		this.cache = {};
 		this.tooltips = [];
@@ -51,15 +54,37 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				GeoNetwork.util.HelpTools.Templates.SIMPLE);
 		this.relatedTpl = new Ext.XTemplate(this.relatedTpl
 				|| GeoNetwork.Templates.Relation.SHORT);
-
+		
+		this.hidden=true;
 		GeoNetwork.view.ViewPanel.superclass.initComponent.call(this);
 		this.metadataSchema = this.record ? this.record.get('schema') : '';
+		
+		this.on('afterrender', function(p) {
+			var el = this.ownerCt ? this.ownerCt.body : Ext.getBody();
+			this.mask = new Ext.LoadMask(el , {
+				msg:' ',
+				removeMask: true,
+				msgCls: 'mdviewer-mask-msg'
+			});
+			this.mask.show();
+		}, this);
+		
 
 		if (this.formatterServiceUrl) {
 			var formatterViewPanel = new Ext.Panel({
 				autoLoad : {
 					url : this.formatterServiceUrl,
 					scripts : true,
+					callback : function() {
+						this.show();
+						this.doLayout();
+						
+						var task = new Ext.util.DelayedTask(function(){
+							this.mask.hide();
+						}, this);
+						
+						task.delay(500);
+					},
 					scope : this,
 					text:' '
 				},
@@ -67,7 +92,9 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				cls : 'viewmd-panel',
 				border : false,
 				frame : false,
-				autoScroll : true
+				autoScroll : false,
+				autoHeight:true,
+				autoWidth: true
 			});
 		}
 
@@ -102,6 +129,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				frame : false,
 				autoScroll : true,
 				deferredRender: false,
+				id: 'gn-sxt-viewertabpanel',
 				title: 'titre',
 				cls : 'mdshow-tabpanel',
 				headerCfg: {

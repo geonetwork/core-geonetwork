@@ -322,10 +322,12 @@ cat.app = function() {
 			sortByCmp : Ext.getCmp('E_sortBy'),
 			metadataResultsView : metadataResultsView,
 			permalinkProvider: permalinkProvider,
+			autoWidth: true,
 			config : {
 				selectAction : false,
 				sortByAction : true,
 				templateView : true,
+				autoWidth: true,
 				otherActions : true
 			},
 			sortByStore : new Ext.data.ArrayStore({
@@ -577,7 +579,7 @@ cat.app = function() {
 		var height=0
 		if(portletContainer.getCount()==2) {
 			var d = Ext.get('main-viewport');
-			height=Ext.getBody().getViewSize().height -d.getY();
+			height=Ext.getBody().getViewSize().height -d.getY() - 20;
 		}
 		else if (portletContainer.getCount()>1) {
 			height=400;
@@ -603,7 +605,6 @@ cat.app = function() {
 			
 			urlParameters = GeoNetwork.Util.getParameters(location.href);
 			
-			var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
 			if (urlParameters.extent) {
 				urlParameters.bounds = new OpenLayers.Bounds(
 						urlParameters.extent[0], urlParameters.extent[1],
@@ -619,10 +620,10 @@ cat.app = function() {
 			// Create connexion to the catalogue
 			catalogue = new GeoNetwork.Catalogue({
 				statusBarId : 'info',
-				lang : lang,
+				lang : cat.language,
 				hostUrl : geonetworkUrl,
 				mdOverlayedCmpId : 'resultsPanel',
-				adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin',
+				adminAppUrl : geonetworkUrl + '/srv/' + cat.language + '/admin',
 				metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore()	: GeoNetwork.data.MetadataResultsStore(), metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
 				summaryStore : GeoNetwork.data.MetadataSummaryStore(),
 				editMode : 2,
@@ -637,7 +638,7 @@ cat.app = function() {
 			infoPanel = createInfoPanel();
 			searchForm = createSearchForm();
 			createLoginForm();
-			createLanguageSwitcher(lang);
+			//createLanguageSwitcher(cat.language);
 
 			edit();
 			// Search result
@@ -773,8 +774,14 @@ cat.app = function() {
 }
 
 Ext.onReady(function() {
-	var lang = /hl=([a-z]{3})/.exec(location.href);
-	GeoNetwork.Util.setLang(lang && lang[1], '..');
+	
+	var urlParameters = GeoNetwork.Util.getParameters(location.href);
+	cat.language = cat.language || urlParameters.hl || GeoNetwork.Util.defaultLocale;
+	
+	if(cat.language == 'fr') cat.language = 'fre';
+	else if(cat.language == 'en') cat.language = 'eng';
+
+	GeoNetwork.Util.setLang(cat.language, '..');
 
 	Ext.QuickTips.init();
 	var loadDiv = Ext.get('loading');

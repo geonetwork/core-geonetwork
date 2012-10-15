@@ -25,7 +25,7 @@
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/main.css"/>
 				<!-- <link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/> -->
 			</head>
-			<body>
+			<body class="view-win">
 			
 			<script type="text/javascript">
 				<xsl:variable name="apos">'</xsl:variable>

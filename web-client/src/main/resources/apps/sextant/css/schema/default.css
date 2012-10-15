@@ -208,7 +208,7 @@ div.result-metadata-modal-content table td {
     right: 30px;
     top: 14px;
     width: 18px;
-    z-index: 5000;
+    z-index: 99;
     cursor:pointer;
 }
 
@@ -220,7 +220,7 @@ div.result-metadata-modal-content table td {
     right: 60px;
     top: 14px;
     width: 19px;
-    z-index: 5000;
+    z-index: 99;
     cursor:pointer;
 }
 .mdshow-tabpanel .file-link {
@@ -232,7 +232,7 @@ div.result-metadata-modal-content table td {
     right: 90px;
     top: 14px;
     width: 16px;
-    z-index: 5000;
+    z-index: 99;
     cursor:pointer;
 }
 
@@ -241,6 +241,9 @@ div.result-metadata-modal-content table td {
 }
 .mdshow-tabpanel .file-pdf:hover {
   background-position:-18px 0;
+}
+.mdshow-tabpanel .file-link:hover {
+  background-position:-16px 0;
 }
 
 .ui-widget-content .button {
@@ -332,4 +335,3 @@ div.result-metadata-modal-content div.result-metadata-modal-content table td {
 	 margin-left:-24px;
 	 margin-top:-24px;
 }
-

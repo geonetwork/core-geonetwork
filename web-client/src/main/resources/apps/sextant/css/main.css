@@ -569,3 +569,19 @@ div#privileges .record-3 {
 	color:#F28033;
 	text-decoration:underline;
 }
+
+.view-win .ext-el-mask {
+	background: white;
+	opacity: 1;
+}
+.mdviewer-mask-msg {
+	background-image: url("../images/spinner-large.gif");
+	background-color: white;
+	border: none;
+	width:48px;
+	height:48px;
+	padding: 0;
+}
+.mdviewer-mask-msg div {
+	display: none;
+}
