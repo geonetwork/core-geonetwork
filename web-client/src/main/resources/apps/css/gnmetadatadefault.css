@@ -429,7 +429,7 @@ div.button {
 }
 .valid--1 {
 }
-.cat-children, .cat-parent {
+.cat-children, .cat-parent, .cat-sibling {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
 .book {

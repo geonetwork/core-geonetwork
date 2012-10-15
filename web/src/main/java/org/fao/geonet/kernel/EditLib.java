@@ -524,7 +524,7 @@ public class EditLib {
 
 					if (
 							(schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) ||
-							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion)
+							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion && minCard == 0)
 						) {
 						String name   = getUnqualifiedName(childName);
 						String ns     = getNamespace(childName, md, schema);

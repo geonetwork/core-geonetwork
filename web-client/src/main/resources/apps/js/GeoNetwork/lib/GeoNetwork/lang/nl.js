@@ -405,6 +405,7 @@ GeoNetwork.Lang.nl = {
     'printLayer': "Print pagina",
     'relatedservices': "Gerelateerde services",
     'relatedparent': "Ouder",
+		'relatedsibling': 'Related records',
     'relateddatasets': "Gerelateerde datasets",
     'relatedchildren': "Kinderen",
     'relatedrelated': "objectencatalogus/dataset link",

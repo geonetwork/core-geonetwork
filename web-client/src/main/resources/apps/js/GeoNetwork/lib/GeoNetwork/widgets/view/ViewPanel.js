@@ -73,7 +73,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
          *  Set to '' to display all.
          */
-        relationTypes: 'service|children|related|parent|dataset'
+        relationTypes: 'service|children|related|parent|dataset|siblings'
     },
     serviceUrl: undefined,
     catalogue: undefined,
@@ -103,7 +103,9 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      */
     displayLinkedData: function(record){
         var table = Ext.query('table.related', this.body.dom),
-            type = record.get('type');
+            type = record.get('type'),
+						subType = record.get('subType');
+				if (subType.length>0) subType += ': ';
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
         var link = this.relatedTpl.apply(record.data)

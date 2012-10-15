@@ -414,6 +414,7 @@ GeoNetwork.Lang.fr = {
     'printLayer': 'Page de l\'impression',
     'relatedservices': 'Services associés',
     'relatedparent': 'Métadonnée parent',
+		'relatedsibling': 'Related records',
     'relateddatasets': 'Métadonnées associées',
     'relatedchildren': 'Enfants',
     'relatedrelated': 'Relation catalogue d\'attributs/données',

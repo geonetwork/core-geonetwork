@@ -285,6 +285,6 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
 
 GeoNetwork.Templates.Relation = {
         SHORT: ['<li class="{type}">',
-                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+									 '<table><tr><td style="text-transform:capitalize;vertical-align:top;color:red">{subType}</td><td><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a></td></tr></table>',
                  '</li>']
 };

@@ -403,6 +403,7 @@ GeoNetwork.Lang.de = {
 'printLayer':'Seite drucken',
 'relatedservices':'In Verbindung stehende Dienstleistungen',
 'relatedparent':'Elternteil',
+'relatedsibling': 'Related records',
 'relateddatasets':'Ähnliche Datensätze',
 'relatedchildren':'Kinder',
 'relatedrelated':'Feature-Katalog / Datensatz Link',

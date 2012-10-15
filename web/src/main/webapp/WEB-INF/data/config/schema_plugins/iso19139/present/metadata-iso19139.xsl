@@ -3736,53 +3736,68 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+ 	<!--
+        Open a popup to select a parent and set the parent identifier field or
+				select a related metadata record as a sibling.
+        In view mode display an hyperlink to the parent or sibling metadata record.
+    -->
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier|gmd:code[name(../..)='gmd:aggregateDataSetIdentifier']"
+        priority="2">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
 
-	<!--
-		Open a popup to select a parent and set the parent identifier field.
-		In view mode display an hyperlink to the parent metadata record.
-	-->
-	<xsl:template mode="iso19139" match="gmd:parentIdentifier" priority="2">
-		<xsl:param name="schema" />
-		<xsl:param name="edit" />
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                  <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref" />
+                  <input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
+	                    	class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
+	                <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');">
+										<xsl:choose>
+											<xsl:when test="name()='gmd:parentIdentifier'">
+												<xsl:attribute name="title">
+													<xsl:value-of select="/root/gui/strings/parentSearch"/>
+												</xsl:attribute>
+												<xsl:attribute name="alt">
+													<xsl:value-of select="/root/gui/strings/parentSearch"/>
+												</xsl:attribute>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="title">
+													<xsl:value-of select="/root/gui/strings/siblingSearch"/>
+												</xsl:attribute>
+												<xsl:attribute name="alt">
+													<xsl:value-of select="/root/gui/strings/siblingSearch"/>
+												</xsl:attribute>
+											</xsl:otherwise>
+										</xsl:choose>
+									</img>
+                </xsl:variable>
 
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:variable name="text">
-					<xsl:variable name="ref"
-						select="gco:CharacterString/geonet:element/@ref" />
-						<input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
-							class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
-						<img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
-							onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"/>
-				</xsl:variable>
-
-				<xsl:apply-templates mode="simpleElement"
-					select=".">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="edit" select="true()" />
-					<xsl:with-param name="text" select="$text" />
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="simpleElement"
-					select=".">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="text">
-
-						<xsl:variable name="metadataTitle">
-							<xsl:call-template name="getMetadataTitle">
-								<xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:variable>
-						<a href="metadata.show?uuid={gco:CharacterString}">
-							<xsl:value-of select="$metadataTitle"/>
-						</a>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="edit" select="true()" />
+                    <xsl:with-param name="text" select="$text" />
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="text">
+                    
+                        <xsl:variable name="metadataTitle">
+                            <xsl:call-template name="getMetadataTitle">
+                                <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <a href="metadata.show?uuid={gco:CharacterString}">
+                            <xsl:value-of select="$metadataTitle"/>
+                        </a>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
 	<!-- Display extra thumbnails (not managed by GeoNetwork).
 		 Thumbnails managed by GeoNetwork are displayed on header.

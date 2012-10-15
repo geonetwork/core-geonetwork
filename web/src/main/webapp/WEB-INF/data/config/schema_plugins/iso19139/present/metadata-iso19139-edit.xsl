@@ -3120,10 +3120,11 @@
 
 
    <!--
-        Open a popup to select a parent and set the parent identifier field.
-        In view mode display an hyperlink to the parent metadata record.
+        Open a popup to select a parent and set the parent identifier field or
+				select a related metadata record as a sibling.
+        In view mode display an hyperlink to the parent or sibling metadata record.
     -->
-    <xsl:template mode="iso19139" match="gmd:parentIdentifier"
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier|gmd:code[name(../..)='gmd:aggregateDataSetIdentifier']"
         priority="2">
         <xsl:param name="schema" />
         <xsl:param name="edit" />

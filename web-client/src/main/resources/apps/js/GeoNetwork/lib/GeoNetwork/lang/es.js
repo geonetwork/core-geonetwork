@@ -400,6 +400,7 @@ GeoNetwork.Lang.es = {
     'printLayer':'Imprimir esta página',
     'relatedservices':'Servicios relacionados con',
     'relatedparent':'Padre',
+		'relatedsibling': 'Related records',
     'relateddatasets':'Registros similares',
     'relatedchildren':'Hijos',
     'relatedrelated':'Característica catalog / enlace de datos',
