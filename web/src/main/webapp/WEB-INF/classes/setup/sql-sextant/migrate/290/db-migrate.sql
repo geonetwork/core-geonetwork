@@ -473,3 +473,24 @@ INSERT INTO groupsdes (
 
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
+
+-- Update operation labels to be sorted in privileges
+﻿INSERT INTO operations(
+            id, name, reserved)
+    VALUES (7, 'ToRemove', 'n');
+
+update operations set name='Interactive Map' where id='1';
+update operations set name='Download' where id='5';
+
+update operationsdes set iddes=7 where iddes=1;
+update operationsdes set iddes=1 where iddes=5;
+update operationsdes set iddes=5 where iddes=7;
+
+delete from operations where id=7;
+
+update operationsdes set label='Visualiser' where iddes=1 and langid='fre';
+update operationsdes set label='Métadonnée' where iddes=0 and langid='fre';
+
+update operationsdes set label='View' where iddes=1 and langid='eng';
+update operationsdes set label='Metadata' where iddes=0 and langid='eng';
+update operationsdes set label='Edit' where iddes=2 and langid='eng';
