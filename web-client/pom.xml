@@ -84,6 +84,7 @@
             <exclude>src/main/resources/apps/js/GeoNetwork-mini*.js</exclude>
             <exclude>src/main/resources/apps/search/js/App-mini.js</exclude>
             <exclude>src/main/resources/apps/tabsearch/js/App-mini.js</exclude>
+            <exclude>src/main/resources/apps/marlin/js/App-mini.js</exclude>
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
             <exclude>**/ext-4.0-pr1/**/*.js</exclude>
@@ -428,6 +429,17 @@
               </includes>
             </aggregation>
 
+            <aggregation>
+              <output>src/main/resources/apps/marlin/js/App-mini.js</output>
+              <includes>
+                <include>../../js/GeoNetwork-mini.js</include>
+                <include>${project.build.directory}/classes/apps/marlin/js/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/marlin/js/map/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/marlin/js/map/MapApp.js</include>
+                <include>${project.build.directory}/classes/apps/marlin/js/Shortcuts.js</include>
+                <include>${project.build.directory}/classes/apps/marlin/js/App.js</include>
+              </includes>
+            </aggregation>
            <!-- <aggregation>
               <output>${geonetwork.webapp.dir}/apps/search/css/style.css</output>
               <includes>
