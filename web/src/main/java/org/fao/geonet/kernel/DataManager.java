@@ -2331,33 +2331,48 @@ public class DataManager {
      * @throws Exception
      */
 	public void setOperation(ServiceContext context, Dbms dbms, int mdId, int grpId, int opId) throws Exception {
-		// Check user privileges
-		String userProfile = context.getUserSession().getProfile();
-		if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
-			int userId = Integer.parseInt(context.getUserSession().getUserId());
-			// Reserved groups
-			if (grpId <= 1) {
-				//  If user is reviewer, user can change operation for groups -1, 0, 1
-				String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
-				Element isReviewerRes = dbms.select(isReviewerQuery, userId, Geonet.Profile.REVIEWER);
-				if (isReviewerRes.getChildren().size() == 0) {
-					throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a Reviewer of any group.");
-				}
-			} else {
+        // Check user privileges
+        // Session may not be defined when a harvester is running
+        if (context.getUserSession() != null) {
+            String userProfile = context.getUserSession().getProfile();
+            if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+                int userId = Integer.parseInt(context.getUserSession()
+                        .getUserId());
+                // Reserved groups
+                if (grpId <= 1) {
+                    // If user is reviewer, user can change operation for groups
+                    // -1, 0, 1
+                    String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+                    Element isReviewerRes = dbms.select(isReviewerQuery,
+                            userId, Geonet.Profile.REVIEWER);
+                    if (isReviewerRes.getChildren().size() == 0) {
+                        throw new ServiceNotAllowedEx(
+                                "User can't set operation for group "
+                                        + grpId
+                                        + " because the user in not a Reviewer of any group.");
+                    }
+                } else {
 
-				GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				String userGroupsOnly  = settingMan.getValue("system/metadataprivs/usergrouponly");
-				if (userGroupsOnly.equals("true")) {
-					//  If user is member of the group, user can set operation
-					String isMemberQuery = "SELECT groupId FROM UserGroups WHERE groupId=? AND userId=?";
-					Element isMemberRes = dbms.select(isMemberQuery, grpId, userId);
-					if (isMemberRes.getChildren().size() == 0) {
-						throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not member of this group.");
-					}
-				}
-			}
-		}
-		
+                    GeonetContext gc = (GeonetContext) context
+                            .getHandlerContext(Geonet.CONTEXT_NAME);
+                    String userGroupsOnly = settingMan
+                            .getValue("system/metadataprivs/usergrouponly");
+                    if (userGroupsOnly.equals("true")) {
+                        // If user is member of the group, user can set
+                        // operation
+                        String isMemberQuery = "SELECT groupId FROM UserGroups WHERE groupId=? AND userId=?";
+                        Element isMemberRes = dbms.select(isMemberQuery, grpId,
+                                userId);
+                        if (isMemberRes.getChildren().size() == 0) {
+                            throw new ServiceNotAllowedEx(
+                                    "User can't set operation for group "
+                                            + grpId
+                                            + " because the user in not member of this group.");
+                        }
+                    }
+                }
+            }
+        }
 		// Set operation
 		String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
 		Element elRes = dbms.select(query, mdId, grpId, opId);
