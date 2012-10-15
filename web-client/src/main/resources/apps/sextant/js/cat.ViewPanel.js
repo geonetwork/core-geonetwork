@@ -83,7 +83,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 							this.mask.hide();
 						}, this);
 						
-						task.delay(500);
+						task.delay(100);
 					},
 					scope : this,
 					text:' '

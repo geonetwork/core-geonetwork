@@ -79,7 +79,7 @@ cat.list = function() {
 			'<div style="display:none">{values.name}|{values.title}|{values.href}|{values.protocol}|{values.type}</div>',
 			'</div>',
 			'</tpl>',
-			'<tpl if="values.type == \'DB\' || values.type == \'FILE\' || values.type == \'WFS\' || values.type == \'WCS\' || values.type == \'COPYFILE\'">',
+			'<tpl if="values.type == \'DB\' || values.type == \'WWW:LINK-1.0-http--link\' || values.type == \'FILE\' || values.type == \'WFS\' || values.type == \'WCS\' || values.type == \'COPYFILE\'">',
 			'<div class="mdHiddenMenu downloadLink download-{parent.download}">{title}<div style="display:none">{values.name}</div></div>',
 			'</tpl>',
 			'</tpl>',
