@@ -873,12 +873,21 @@ GeoNetwork.app = function(){
                                 title:OpenLayers.i18n('Map'),
                                 layout:'fit',                              
                                 margins:margins,
-                                items: [iMap.getViewport()]
-
+                               	listeners : {
+                                    // Only initialized the map
+                                    // application when the tab is
+                                    // activated
+                                    // then the layout is done and all
+                                    // sub widget like printPanel could
+                                    // access the map layout.
+                                    activate : function (p) {
+                                        p.add(iMap.getViewport());
+                                        p.doLayout();
+                                    }
+                                } 
                             }
                         ]
-                    }
-                    ),
+                    }),
                     {
                         id:'footer',
                         region:'south',
@@ -1063,7 +1072,7 @@ Ext.onReady(function () {
     setTimeout(function(){
         Ext.get('loading').remove();
         Ext.get('loading-mask').fadeOut({remove:true});
-    }, 12000);
+    }, 2000);
 
     app = new GeoNetwork.app();
     app.init();

@@ -429,14 +429,16 @@
               </includes>
             </aggregation>
 
+						<!-- MarLIN app uses tabsearch mostly but defines its own
+						     App.js and Settings.js (both app and map) -->
             <aggregation>
               <output>src/main/resources/apps/marlin/js/App-mini.js</output>
               <includes>
                 <include>../../js/GeoNetwork-mini.js</include>
                 <include>${project.build.directory}/classes/apps/marlin/js/Settings.js</include>
                 <include>${project.build.directory}/classes/apps/marlin/js/map/Settings.js</include>
-                <include>${project.build.directory}/classes/apps/marlin/js/map/MapApp.js</include>
-                <include>${project.build.directory}/classes/apps/marlin/js/Shortcuts.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/map/MapApp.js</include>
+                <include>${project.build.directory}/classes/apps/tabsearch/js/Shortcuts.js</include>
                 <include>${project.build.directory}/classes/apps/marlin/js/App.js</include>
               </includes>
             </aggregation>
