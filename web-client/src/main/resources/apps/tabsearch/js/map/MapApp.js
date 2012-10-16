@@ -192,9 +192,9 @@ GeoNetwork.mapApp = function() {
      *
      */
     var refreshTocToolbar = function(node) {
-    	
-    	activeNode = node;
-        
+       
+			 activeNode = node;
+
        if ((node) && (node.attributes.layer)) {
             if (node.parentNode.attributes.nodeType == "gx_baselayercontainer") {
                 Ext.getCmp("tbRemoveButton").disable();
@@ -232,11 +232,18 @@ GeoNetwork.mapApp = function() {
 	var createPrintPanel = function() {
         // The printProvider that connects us to the print service
         printProvider = new GeoExt.data.PrintProvider({
-            method: "POST",
+            method: "GET",
             url: GeoNetwork.map.printCapabilities,
-            autoLoad: true
+            autoLoad: true,
+						listeners: {
+							"loadcapabilities": setupPrintProvider
+						},
+            scope: this
         });
-        
+		};
+							
+	var setupPrintProvider = function() {
+
         printPage = new GeoExt.data.PrintPage({
             printProvider: printProvider
         });
@@ -328,7 +335,83 @@ GeoNetwork.mapApp = function() {
                 scope: pageLayer
             }
         });
+
+        var mapOverlay = createMapOverlay();
+       
+        // Accordion panel with layer tree and advanced print config
+        var accordion = new Ext.Panel({
+            region: 'center',
+            border: false,
+            layout: 'accordion',
+            deferredRender:false, 
+            items: [
+                tree, printPanel
+            ]
+        });
+      
+				viewport = new Ext.Panel({
+            	layout: 'border',
+            	border: false,
+							items: [
+            		{
+										id: 'layerManager',
+                    region: 'east',
+                    xtype: 'panel',			
+                    collapsible: true,
+                    collapseMode: "mini",
+                    split:true,
+                    border: false,
+                    width:170,
+                    minSize: 170,
+                    maxSize: 300,
+                    layout: 'border',
+										items: [accordion, legendPanel]
+                },{
+                    region: 'center',
+                    layout: 'fit',
+                    frame: false,
+                    border: false,
+                    margins: '0 0 0 0',
+                    items: [{
+                        id: 'mappanel',
+                        xtype: 'gx_mappanel',
+                        map: map,
+                        tbar: toolbar,
+                        border: false,
+                        extent: GeoNetwork.map.EXTENT,
+                        items: [mapOverlay]
+										}]
+                }
+							]
+				});
+
+        Ext.getCmp("toctree").on({
+            "click": function(node) {
+                if (node.ui.radio) {
+                    node.ui.radio.checked = true;
+                    node.ui.fireEvent("radiochange", node);
+
+                }
+
+                refreshTocToolbar(node);
+
+            },
+            scope: this
+        });
+        
+        Ext.getCmp("toctree").on("nodedragover", function(evt) {
+            // Only allow to move layers in the gx_overlaylayercontainer (user layers)
+            if ((evt.dropNode.parentNode.attributes.nodeType == "gx_baselayercontainer") ||  // restrict move baselayers
+                (evt.target.attributes.nodeType == "gx_baselayercontainer") ||               // restrict move layers to baselayer container
+                (evt.target.parentNode.attributes.nodeType == "gx_baselayercontainer") ||
+                (evt.target.parentNode == evt.tree.root))  {                                 // restrict move layers to outside of layercontainers
+                 evt.cancel=true;
+            }
+        });
+
+				refreshTocToolbar(activeNode);
     };
+
     /**
      * Creates the map viewer toolbars
      */
@@ -401,9 +484,8 @@ GeoNetwork.mapApp = function() {
         action = new GeoExt.Action({
             control: new OpenLayers.Control.ZoomToMaxExtent(),
             map: map,
-            iconCls: 'zoomfull'
-            	//,
-            //tooltip: {title: OpenLayers.i18n("zoomToMaxExtentTooltipTitle"), text: OpenLayers.i18n("zoomToMaxExtentTooltipText")}
+            iconCls: 'zoomfull',
+            tooltip: {title: OpenLayers.i18n("zoomToMaxExtentTooltipTitle"), text: OpenLayers.i18n("zoomToMaxExtentTooltipText")}
         });
 
         toolbar.push(action);
@@ -412,8 +494,8 @@ GeoNetwork.mapApp = function() {
 
         action = new GeoExt.Action({
             iconCls: 'zoomlayer',
-            id: 'btnZoomToExtent',
-            //tooltip: {title: OpenLayers.i18n("zoomlayerTooltipTitle"), text: OpenLayers.i18n("zoomlayerTooltipText")},
+            id: "btnZoomToExtent",
+            tooltip: {title: OpenLayers.i18n("zoomlayerTooltipTitle"), text: OpenLayers.i18n("zoomlayerTooltipText")},
             handler: function() {
                 var node = activeNode;
                 var layer;
@@ -462,8 +544,8 @@ GeoNetwork.mapApp = function() {
             map: map,
             toggleGroup: "move",
             allowDepress: false,
-            iconCls: 'zoomin'
-            //tooltip: {title: OpenLayers.i18n("zoominTooltipTitle"), text: OpenLayers.i18n("zoominTooltipText")}
+            iconCls: 'zoomin',
+            tooltip: {title: OpenLayers.i18n("zoominTooltipTitle"), text: OpenLayers.i18n("zoominTooltipText")}
         });
 
         toolbar.push(action);
@@ -476,8 +558,8 @@ GeoNetwork.mapApp = function() {
             toggleGroup: "move",
             allowDepress: false,
             map: map,
-            iconCls: 'zoomout'
-            //tooltip:  {title: OpenLayers.i18n("zoomoutTooltipTitle"), text: OpenLayers.i18n("zoomoutTooltipText")}
+            iconCls: 'zoomout',
+            tooltip:  {title: OpenLayers.i18n("zoomoutTooltipTitle"), text: OpenLayers.i18n("zoomoutTooltipText")}
         });
 
         toolbar.push(action);
@@ -490,8 +572,8 @@ GeoNetwork.mapApp = function() {
             allowDepress: false,
             pressed: true,
             map: map,
-            iconCls: 'pan'
-            //tooltip:  {title: OpenLayers.i18n("dragTooltipTitle"), text: OpenLayers.i18n("dragTooltipText")}
+            iconCls: 'pan',
+            tooltip:  {title: OpenLayers.i18n("dragTooltipTitle"), text: OpenLayers.i18n("dragTooltipText")}
         });
 
         toolbar.push(action);
@@ -545,8 +627,8 @@ GeoNetwork.mapApp = function() {
             allowDepress: false,
             pressed: false,
             map: map,
-            iconCls: 'query'
-            //tooltip: {title: OpenLayers.i18n('featureInfoTooltipTitle'), text: OpenLayers.i18n('featureInfoTooltipText') }
+            iconCls: 'query',
+            tooltip: {title: OpenLayers.i18n('featureInfoTooltipTitle'), text: OpenLayers.i18n('featureInfoTooltipText') }
         });
         
         toolbar.push(action);
@@ -561,8 +643,8 @@ GeoNetwork.mapApp = function() {
             control: ctrl.previous,
             disabled: true,
             map: map,
-            iconCls: 'back'
-            //tooltip: {title: OpenLayers.i18n("previousTooltipTitle"), text: OpenLayers.i18n("previosTooltipText")}
+            iconCls: 'back',
+            tooltip: {title: OpenLayers.i18n("previousTooltipTitle"), text: OpenLayers.i18n("previosTooltipText")}
         });
         toolbar.push(action);
 
@@ -570,8 +652,8 @@ GeoNetwork.mapApp = function() {
             control: ctrl.next,
             disabled: true,
             map: map,
-            iconCls: 'next'
-            //tooltip: {title: OpenLayers.i18n("nextTooltipTitle"), text: OpenLayers.i18n("nextTooltipText")}
+            iconCls: 'next',
+            tooltip: {title: OpenLayers.i18n("nextTooltipTitle"), text: OpenLayers.i18n("nextTooltipText")}
         });
         toolbar.push(action);
 
@@ -579,7 +661,7 @@ GeoNetwork.mapApp = function() {
         
         action = new GeoExt.Action({
             iconCls: 'savewmc',
-            //tooltip: {title: OpenLayers.i18n("savewmcTooltipTitle"), text: OpenLayers.i18n("savewmcTooltipText")},
+            tooltip: {title: OpenLayers.i18n("savewmcTooltipTitle"), text: OpenLayers.i18n("savewmcTooltipText")},
             handler: function() {
                 GeoNetwork.WMCManager.saveContext(map);
             }
@@ -589,7 +671,7 @@ GeoNetwork.mapApp = function() {
         
         action = new GeoExt.Action({
             iconCls: 'loadwmc',
-            //tooltip: {title: OpenLayers.i18n("loadwmcTooltipTitle"), text: OpenLayers.i18n("loadwmcTooltipText")},
+            tooltip: {title: OpenLayers.i18n("loadwmcTooltipTitle"), text: OpenLayers.i18n("loadwmcTooltipText")},
             handler: function() {
                 GeoNetwork.WindowManager.showWindow("loadwmc");
             }
@@ -905,10 +987,10 @@ GeoNetwork.mapApp = function() {
         // configuration for editing it in the UI
         var treeConfig = new OpenLayers.Format.JSON().write([{
             nodeType: "gx_baselayercontainer",
-            text: OpenLayers.i18n('baseLayerList')
+						text: OpenLayers.i18n('baseLayerList')
         }, {
             nodeType: "gx_overlaylayercontainer",
-            text: OpenLayers.i18n('overlaysList'),
+						text: OpenLayers.i18n('overlaysList'),
             expanded: true,
             // render the nodes inside this container with a radio button,
             // and assign them the group "foo".
@@ -945,7 +1027,7 @@ GeoNetwork.mapApp = function() {
 //	                	  activeNode = node;
 //	                  }
 //	              }
-//              }),
+//             }),
               new GeoExt.tree.LayerOpacitySliderPlugin({
                   listeners: { 
                       "opacityslide": function(node, value) {
@@ -1078,83 +1160,7 @@ GeoNetwork.mapApp = function() {
         createToolbars();         
         createTree();
         createLegendPanel();
-        createPrintPanel();
-        
-        var mapOverlay = createMapOverlay();
-       
-        // Accordion panel with layer tree and advanced print config
-        var accordion = new Ext.Panel({
-            region: 'center',
-            border: false,
-            layout: 'accordion',
-            deferredRender:false, 
-            items: [
-                tree, printPanel
-            ]
-        });
-       
-        viewport = new Ext.Panel({
-            layout: 'border',
-            border: false,
-            //renderTo:'map_container',
-            items: [{
-                    id: 'layerManager',
-                    region: 'east',
-                    xtype: 'panel',
-                    collapsible: true,
-                    collapseMode: "mini",
-                    split:true,
-                    border: false,
-                    width:170,
-                    minSize: 170,
-                    maxSize: 300,
-                    layout: 'border',
-                    items: [accordion, legendPanel]
-                },{
-                    region: 'center',
-                    layout: 'fit',
-                    frame: false,
-                    border: false,
-                    margins: '0 0 0 0',
-                    items: [{
-                        id: 'mappanel',
-                        xtype: 'gx_mappanel',
-                        map: map,
-                        tbar: toolbar,
-                        border: false,
-                        extent: GeoNetwork.map.EXTENT,
-                        items: [mapOverlay]
-                    }]
-                }
-            ]
-        });
-        
-        
-        Ext.getCmp("toctree").on({
-            "click": function(node) {
-                if (node.ui.radio) {
-                    node.ui.radio.checked = true;
-                    node.ui.fireEvent("radiochange", node);
-
-                }
-
-                refreshTocToolbar(node);
-
-            },
-            scope: this
-        });
-        
-        Ext.getCmp("toctree").on("nodedragover", function(evt) {
-            // Only allow to move layers in the gx_overlaylayercontainer (user layers)
-            if ((evt.dropNode.parentNode.attributes.nodeType == "gx_baselayercontainer") ||  // restrict move baselayers
-                (evt.target.attributes.nodeType == "gx_baselayercontainer") ||               // restrict move layers to baselayer container
-                (evt.target.parentNode.attributes.nodeType == "gx_baselayercontainer") ||
-                (evt.target.parentNode == evt.tree.root))  {                                 // restrict move layers to outside of layercontainers
-                 evt.cancel=true;
-            }
-        }); 
-        
-        refreshTocToolbar(activeNode);
+       	createPrintPanel();
     };
 
 
