@@ -4,6 +4,10 @@
 	<xsl:include href="modal.xsl"/>
 
 	<xsl:variable name="profile"  select="/root/gui/session/profile"/>
+	
+	<!-- Define a custom order for operation columns -->
+	<xsl:variable name="operationOrder"><id>0</id><id>5</id><id>1</id></xsl:variable>
+	
 
 	<!-- ================================================================================= -->
 	<!-- page content -->
@@ -26,12 +30,29 @@
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 							<!-- loop on all operations leaving editing and notify to last -->
-							<xsl:for-each select="/root/response/operations/record">
-							<xsl:sort select="id"/>
-								<xsl:if test="id!='2' and id!='3'">
-									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
-								</xsl:if>
-							</xsl:for-each>
+							
+							<xsl:choose>
+								<!-- If list of operation is overriden and must be displayed in a custom order -->
+								<xsl:when test="$operationOrder">
+									<xsl:variable name="oper" select="/root/response/operations/record"/>
+									
+									<xsl:for-each select="$operationOrder/id">
+										<xsl:variable name="currentOperation" select="."/>
+										<xsl:for-each select="$oper[id = $currentOperation]">
+											<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
+										</xsl:for-each>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:for-each select="/root/response/operations/record">
+										<xsl:sort select="id"/>
+										<xsl:if test="id!='2' and id!='3'">
+											<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:otherwise>
+							</xsl:choose>
+							
 							<xsl:for-each select="/root/response/operations/record">
 								<xsl:if test="id='2' or id='3'">
 									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
@@ -99,22 +120,47 @@
 											</span>
 										</td>
 										
-								<!-- loop on all operations leaving editing and notify to last -->
-										<xsl:for-each select="oper">
-										<xsl:sort select="id"/>
-											<xsl:if test="id!='2' and id!='3'">
-												<td class="padded record-{id}" align="center" width="80">
-													<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
-														<xsl:if test="on">
-															<xsl:attribute name="checked"/>
-														</xsl:if>
-														<xsl:if test="$disabled">
-															<xsl:attribute name="disabled"/>
-														</xsl:if>
-													</input>
-												</td>
-											</xsl:if>
-										</xsl:for-each>
+										<!-- loop on all operations leaving editing and notify to last -->
+										<xsl:choose>
+											<!-- If list of operation is overriden and must be displayed in a custom order -->
+											<xsl:when test="$operationOrder">
+												<xsl:variable name="oper" select="oper"/>
+												
+												<xsl:for-each select="$operationOrder/id">
+													<xsl:variable name="currentOperation" select="."/>
+													<xsl:for-each select="$oper[id = $currentOperation]">
+														<td class="padded record-{id}" align="center" width="80">
+															<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+																<xsl:if test="on">
+																	<xsl:attribute name="checked"/>
+																</xsl:if>
+																<xsl:if test="$disabled">
+																	<xsl:attribute name="disabled"/>
+																</xsl:if>
+															</input>
+														</td>
+													</xsl:for-each>
+												</xsl:for-each>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:for-each select="oper">
+													<xsl:sort select="id" order="descending"/>
+													<xsl:if test="id!='2' and id!='3'">
+														<td class="padded record-{id}" align="center" width="80">
+															<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+																<xsl:if test="on">
+																	<xsl:attribute name="checked"/>
+																</xsl:if>
+																<xsl:if test="$disabled">
+																	<xsl:attribute name="disabled"/>
+																</xsl:if>
+															</input>
+														</td>
+													</xsl:if>
+												</xsl:for-each>
+											</xsl:otherwise>
+										</xsl:choose>
+										
 										<xsl:for-each select="oper">
 											<xsl:if test="id='2' or id='3'">
 												<td class="padded record-{id}" align="center" width="80">

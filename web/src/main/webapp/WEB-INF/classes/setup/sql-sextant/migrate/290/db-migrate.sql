@@ -470,27 +470,22 @@ INSERT INTO groupsdes (
   ) 
 );
 
+UPDATE Operations SET name = 'view' WHERE id = 0;
+UPDATE Operations SET name = 'download' WHERE id = 1;
+UPDATE Operations SET name = 'editing' WHERE id = 2;
+UPDATE Operations SET name = 'notify' WHERE id = 3;
+UPDATE Operations SET name = 'dynamic' WHERE id = 5;
+UPDATE Operations SET name = 'featured' WHERE id = 6;
+
+
+UPDATE operationsdes SET label='Visualiser' WHERE iddes=5 AND langid='fre';
+UPDATE operationsdes SET label='Métadonnée' WHERE iddes=0 AND langid='fre';
+
+UPDATE operationsdes SET label='View' WHERE iddes=5 AND langid='eng';
+UPDATE operationsdes SET label='Metadata' WHERE iddes=0 AND langid='eng';
+UPDATE operationsdes SET label='Edit' WHERE iddes=2 AND langid='eng';
+
 
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
 
--- Update operation labels to be sorted in privileges
-﻿INSERT INTO operations(
-            id, name, reserved)
-    VALUES (7, 'ToRemove', 'n');
-
-update operations set name='Interactive Map' where id='1';
-update operations set name='Download' where id='5';
-
-update operationsdes set iddes=7 where iddes=1;
-update operationsdes set iddes=1 where iddes=5;
-update operationsdes set iddes=5 where iddes=7;
-
-delete from operations where id=7;
-
-update operationsdes set label='Visualiser' where iddes=1 and langid='fre';
-update operationsdes set label='Métadonnée' where iddes=0 and langid='fre';
-
-update operationsdes set label='View' where iddes=1 and langid='eng';
-update operationsdes set label='Metadata' where iddes=0 and langid='eng';
-update operationsdes set label='Edit' where iddes=2 and langid='eng';
