@@ -14,24 +14,24 @@ public class UpdateHarvesterIdsTask implements DatabaseMigrationTask {
 
 	@Override
 	public void update(SettingManager settings, Dbms dbms) throws SQLException {
-
+		final String tmpTable = "Harvester"+System.currentTimeMillis();
 		final int MIN_HARVEST_ID = 100000;
 		Element result = dbms
 				.select("select * from Settings where parentid = 2 and id < "
 						+ MIN_HARVEST_ID);
 
 		if (result.getChildren().size() > 0) {
-			dbms.execute("SELECT * INTO Harvester FROM Settings WHERE parentid = 2");
+			dbms.execute("SELECT * INTO "+tmpTable+" FROM Settings WHERE parentid = 2");
 			int changed = result.getChildren().size();
 			while(changed > 0) {
-				changed = dbms.execute("INSERT INTO Harvester SELECT * FROM Settings WHERE parentid IN (SELECT id FROM Harvester) AND NOT id IN (SELECT id FROM Harvester)");
+				changed = dbms.execute("INSERT INTO "+tmpTable+" SELECT * FROM Settings WHERE parentid IN (SELECT id FROM "+tmpTable+") AND NOT id IN (SELECT id FROM "+tmpTable+")");
 			}
 
-			dbms.execute("DELETE FROM Settings WHERE id IN (SELECT id FROM Harvester)");
+			dbms.execute("DELETE FROM Settings WHERE id IN (SELECT id FROM "+tmpTable+")");
 			int newHarvesterBaseIndex = Math.max(max(dbms), 100000);
 			@SuppressWarnings("unchecked")
 			List<Element> harvesterValues = dbms.select(
-					"SELECT * from Harvester").getChildren();
+					"SELECT * from "+tmpTable+"").getChildren();
 
 			Map<Integer, Integer> updates = new HashMap<Integer, Integer>();
 			updates.put(2,2);  //Add harvesting node parentid to id map
@@ -58,6 +58,7 @@ public class UpdateHarvesterIdsTask implements DatabaseMigrationTask {
 			}
 			builder.deleteCharAt(builder.length()-1);
 			dbms.execute(builder.toString());
+			dbms.execute("DROP TABLE "+tmpTable);
 		}
 
 	}
