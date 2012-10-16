@@ -1234,10 +1234,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Open the administration interface according to adminAppUrl properties.
      */
     admin: function(){
-        location.replace(this.adminAppUrl);
+        window.open(this.adminAppUrl);
     },
     metadataImport: function(){
-        location.replace(this.services.mdImport);
+    	window.open(this.services.mdImport);
     },
     /**	api: method[massiveOp]
      *  :param type: Type of massive operation. One of ``NewOwner``,

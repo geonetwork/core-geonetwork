@@ -322,36 +322,48 @@ cat.app = function() {
 			sortByCmp : Ext.getCmp('E_sortBy'),
 			metadataResultsView : metadataResultsView,
 			permalinkProvider: permalinkProvider,
-			autoWidth: true,
 			config : {
 				selectAction : false,
 				sortByAction : true,
 				templateView : true,
-				autoWidth: true,
 				otherActions : true
 			},
 			sortByStore : new Ext.data.ArrayStore({
-	            id: 0,
-	            fields: ['id', 'name'],
-	            data: [['relevance#', OpenLayers.i18n('relevance')], 
+				id: 0,
+				fields: ['id', 'name'],
+				data: [['relevance#', OpenLayers.i18n('relevance')], 
 	                    ['title#reverse', OpenLayers.i18n('title')], 
 	                    ['changeDate#', OpenLayers.i18n('changeDate')]]
 	        }),
 			items : [ previousAction, '|', nextAction, '|', {
-				xtype : 'tbtext',
-				text : '',
-				id : 'info'
-			}, ' ',' ', ' ', ' ', ' ', pdfAction ],
+					xtype : 'tbtext',
+					text : '',
+					id : 'info'
+				}, ' ',' ', ' ', ' ', ' ', 
+				pdfAction, 
+				new Ext.Toolbar.TextItem({
+					id: 'gn-sxt-restb-admin-btn',
+					cls: 'admin-btn-tbar',
+					text: '<div class="md-action-menu">&nbsp;<span class="icon"></span>'+ OpenLayers.i18n('administrer') + '<span class="list-icon"></span></div>'
+				})
+			],
 			createOtherActionMenu : function() {
 				this.actionMenu = new Ext.menu.Menu();
 				this.createAdminMenu(!this.catalogue.isIdentified());
-
-				this.actionOnSelectionMenu = new Ext.Button({
-					text : OpenLayers.i18n('administrer'),
-					menu : this.actionMenu,
-					hidden : !this.config.otherActions || !this.catalogue.isIdentified()
-				});
-				return this.actionOnSelectionMenu;
+				
+				this.on('afterrender', function() {
+					var adminBtn = this.getComponent('gn-sxt-restb-admin-btn');
+					adminBtn.on('afterrender', function(e){
+						e.el.on('click', function(evt, elt) {
+							var menuElt = e.el.child('.md-action-menu');
+							this.actionMenu.showAt([menuElt.getX(), menuElt.getY()+menuElt.getHeight()]);
+						}, this);
+					}, this);
+					this.actionOnSelectionMenu = adminBtn;
+					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isIdentified());
+				}, this);
+				
+				return ' ';
 			}
 		});
 		
@@ -388,6 +400,7 @@ cat.app = function() {
 			tbar : tBar,
 			items : metadataResultsView
 		});
+		
 		return resultPanel;
 	}
 
@@ -592,6 +605,7 @@ cat.app = function() {
 		searchForm.setHeight(height);
 		
 		Ext.getBody().setHeight(Ext.getBody().getViewSize().height);
+		o.doLayout();
 	}
 
 	return {

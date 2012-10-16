@@ -389,7 +389,7 @@ table, tbody, tr, td, th {
 
 .result-list li.md-full div.md-links div.wmsMenu, 
 .result-list li.md-full div.md-links div.downloadMenu, 
-.result-list li.md-full div.md-links div.md-action-menu {
+div.md-action-menu {
     display:inline;
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
@@ -411,10 +411,10 @@ table, tbody, tr, td, th {
 }
 .result-list li.md-full div.wmsMenu span,
 .result-list li.md-full div.downloadMenu span,
-.result-list li.md-full div.md-action-menu span {
+div.md-action-menu span {
 	padding-left:16px;
 }
-.result-list li.md-full div.md-action-menu span.icon{
+div.md-action-menu span.icon{
     background-image: url("../images/icons/wrench.png");
     margin-right: 4px;
 }
@@ -437,7 +437,7 @@ table, tbody, tr, td, th {
 }
 .result-list li.md-full div.wmsMenu span.list-icon,
 .result-list li.md-full div.downloadMenu span.list-icon,
-.result-list li.md-full div.md-action-menu span.list-icon {
+div.md-action-menu span.list-icon {
     margin-left:4px;
     background-image: url("../images/ui-icons_f28033_256x240.png");
     background-position: 0 -2px;
@@ -584,4 +584,8 @@ div#privileges .record-3 {
 }
 .mdviewer-mask-msg div {
 	display: none;
+}
+.admin-btn-tbar div.md-action-menu {
+	padding: 4px 1em 4px 1em;
+	margin-left: 100%;
 }
