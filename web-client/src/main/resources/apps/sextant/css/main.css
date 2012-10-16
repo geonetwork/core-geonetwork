@@ -585,7 +585,13 @@ div#privileges .record-3 {
 .mdviewer-mask-msg div {
 	display: none;
 }
+.admin-btn-tbar {
+	height:26px;
+}
 .admin-btn-tbar div.md-action-menu {
-	padding: 4px 1em 4px 1em;
-	margin-left: 100%;
+	position: absolute;
+	left:50%;
+	margin-left: -68px;
+	display: block;
+	margin-top: -2px;
 }

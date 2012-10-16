@@ -73,19 +73,11 @@ cat.app = function() {
 			hideLoginLabels : GeoNetwork.hideLoginLabels
 		});
 		
-//		catalogue.on('afterBadLogin', loginAlert, this);
-		
-		// Store user info in cookie to be displayed if user reload the page
-		// Register events to set cookie values
 		catalogue.on('afterLogin', function() {
 			cookie.set('user', catalogue.identifiedUser);
-//			Ext.getCmp('newMdAction').setVisible(catalogue.identifiedUser ? true : false);
-//			Ext.getCmp('adminAction').setVisible(catalogue.identifiedUser ? true : false);
 		});
 		catalogue.on('afterLogout', function() {
 			cookie.set('user', undefined);
-//			Ext.getCmp('newMdAction').setVisible(false);
-//			Ext.getCmp('adminAction').setVisible(false);
 		});
 
 		// Refresh login form if needed
@@ -360,34 +352,21 @@ cat.app = function() {
 						}, this);
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
+					tBar.changeMode(false);
 					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isIdentified());
 				}, this);
 				
 				return ' ';
+			},
+			changeMode: function(mode) {
+				this.items.each(function(it){
+					if( it.getId() != 'gn-sxt-restb-admin-btn') {
+						it.setVisible(mode);
+					}
+				}, this);
 			}
 		});
 		
-        tBar.add(new Ext.Action({
-            id: 'newMdAction',
-            iconCls: 'addIcon',
-            hidden: true,
-            tooltip: OpenLayers.i18n('newMetadata'),
-            handler: function(){
-                var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
-                actionCtn.createMetadataAction.handler.apply(actionCtn);
-            },
-            scope: this
-        }));
-        tBar.add(new Ext.Action({
-            id: 'adminAction',
-            iconCls: 'configIcon',
-            hidden: true,
-            tooltip: OpenLayers.i18n('administration'),
-            handler: function(){
-                catalogue.admin();
-            },
-            scope: this
-        }));
 
 		resultPanel = new Ext.Panel({
 			id : 'resultsPanel',
@@ -397,7 +376,6 @@ cat.app = function() {
 			cls : 'result-panel',
 			autoWidth : true,
 			layout : 'fit',
-			tbar : tBar,
 			items : metadataResultsView
 		});
 		
@@ -465,6 +443,7 @@ cat.app = function() {
 				elt[0].reset();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
+				tBar.changeMode(false);
 			},
 			resetBt : new Ext.Button({
 				text : OpenLayers.i18n('reset'),
@@ -527,7 +506,6 @@ cat.app = function() {
 					item.setVisible(true);
 					whatForm.body.removeClass('hidden');
 				});
-				//cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-advanced');
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
 			});
 			cpt.on('simplemode',function() {
@@ -535,7 +513,6 @@ cat.app = function() {
 					item.setVisible(false);
 					whatForm.body.addClass('hidden');
 				});
-				//cpt.header.child('#searchFormHeaderTitle').dom.innerHTML = OpenLayers.i18n('search-header-criteria-simple');
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
 			});
 		});
@@ -684,6 +661,7 @@ cat.app = function() {
 					region : 'center',
 					id : 'center',
 					split : true,
+					tbar : tBar,
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
 							tag : 'img',
@@ -782,6 +760,7 @@ cat.app = function() {
 			Ext.getCmp('center').syncSize();
 			Ext.ux.Lightbox.register('a[rel^=lightbox]');
 			
+			tBar.changeMode(true);
 			Ext.get('load-spinner').hide();
 		},
 	}
