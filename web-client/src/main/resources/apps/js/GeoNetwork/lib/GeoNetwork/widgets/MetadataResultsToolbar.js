@@ -158,6 +158,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         GeoNetwork.MetadataResultsToolbar.superclass.initComponent.call(this);
         
+        if(cmp[cmp.length-1] == ' ') {
+        	cmp.pop();
+        }
         if(cmp[cmp.length-1] == '|') {
         	cmp.pop();
         }
@@ -546,7 +549,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     	
     	if(this.ownerAction) adminActions.push(this.ownerAction);
     	if(this.adminAction) actions.push(this.adminAction);
-    	if(this.otherItem) actions.push(this.otherItem);
+    	//if(this.otherItem) actions.push(this.otherItem);
         
         Ext.each(actions, function(){
             this.setVisible(user);
