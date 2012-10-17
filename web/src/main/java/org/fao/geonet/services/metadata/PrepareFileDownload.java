@@ -139,8 +139,9 @@ public class PrepareFileDownload implements Service
 				//--- get file name and href
 				String fname = elem.getAttributeValue("name");
 				String href = elem.getAttributeValue("href");
+				String prot = elem.getAttributeValue("protocol","unknown");
 
-				if (href != null) {
+				if (href != null && prot.startsWith("WWW:DOWNLOAD")) {
 					boolean local = href.startsWith(siteURL);
 					boolean found = false;
 					long size = 0;
