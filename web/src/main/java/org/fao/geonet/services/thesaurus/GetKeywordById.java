@@ -34,91 +34,73 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
-import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
 /**
- * Returns a list of keywords given a list of thesaurus
+ * Returns a list of keywords given a list of thesaurus. Keywords are returned
+ * in raw format and XSL output may process the output according to the
+ * transformation parameter which must match a template name provided in a 
+ * schema plugin.
  * 
  * @author mcoudert
  */
 public class GetKeywordById implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	private enum Formats {
-	    iso,raw
-	}
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        String sThesaurusName = Util.getParam(params, "thesaurus");
+        String uri = Util.getParam(params, "id");
+        String lang = Util.getParam(params, "lang", context.getLanguage());
+        String langForThesaurus = IsoLanguagesMapper.getInstance()
+                .iso639_2_to_iso639_1(lang);
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+        boolean multiple = Util.getParam(params, "multiple", false);
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		String sThesaurusName = Util.getParam(params, "thesaurus");
-		String uri = Util.getParam(params, "id");
-		String lang = Util.getParam(params, "lang", context.getLanguage());
-        Formats format = Formats.valueOf(Util.getParam(params, "format", Formats.iso.toString()));
-        String langForThesaurus = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(lang);
-        
-		boolean multiple = Util.getParam(params, "multiple", false);
-		
-		KeywordsSearcher searcher = null;
+        KeywordsSearcher searcher = null;
 
-		// perform the search and save search result into session
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		ThesaurusManager thesaurusMan = gc.getThesaurusManager();
-		
-		searcher = new KeywordsSearcher(thesaurusMan);
-		KeywordBean kb = null;
-		Element root = null;
-		
-		if (!multiple) {
-			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
-			if (kb == null) {
-                switch (format) {
-        		    case iso: root = new Element ("null");
-        		    case raw: root = new Element("descKeys");
-    		    }
-			} else {
-                switch (format) {
-        		    case iso: root = kb.getIso19139();
-        		    case raw: root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
-    		    }
-	        }
-		} else {
-			String[] url = uri.split(",");
-			List<KeywordBean> kbList = new ArrayList<KeywordBean>();
-			for (int i = 0; i < url.length; i++) {
-				String currentUri = url[i];
-				kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
-				if (kb == null) {
-					root = new Element ("null");
-				} else {
-					kbList.add(kb);
-					kb = null;
-				}
-			}
-			switch (format) {
-			case iso:
-			    Element complexeKeywordElt = KeywordBean.getComplexIso19139Elt(kbList);
-			    root = (Element) complexeKeywordElt.detach();
-			case raw:
-			    root = new Element("descKeys");
-			    for (KeywordBean keywordBean : kbList) {
-                    KeywordsSearcher.toRawElement(root, keywordBean);
+        // perform the search and save search result into session
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+
+        searcher = new KeywordsSearcher(thesaurusMan);
+        KeywordBean kb = null;
+        Element root = null;
+
+        if (!multiple) {
+            kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
+            if (kb == null) {
+                root = new Element("descKeys");
+            } else {
+                root = KeywordsSearcher.toRawElement(new Element("descKeys"),
+                        kb);
+            }
+        } else {
+            String[] url = uri.split(",");
+            List<KeywordBean> kbList = new ArrayList<KeywordBean>();
+            for (int i = 0; i < url.length; i++) {
+                String currentUri = url[i];
+                kb = searcher.searchById(currentUri, sThesaurusName,
+                        langForThesaurus);
+                if (kb == null) {
+                    root = new Element("null");
+                } else {
+                    kbList.add(kb);
+                    kb = null;
                 }
-			}
-		}
-		return root;
-	}
+            }
+            root = new Element("descKeys");
+            for (KeywordBean keywordBean : kbList) {
+                KeywordsSearcher.toRawElement(root, keywordBean);
+            }
+        }
+        return root;
+    }
 }
 
 // =============================================================================
