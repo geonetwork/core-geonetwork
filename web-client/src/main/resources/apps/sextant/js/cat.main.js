@@ -492,6 +492,7 @@ cat.app = function() {
 			cpt.advanced = false;
 			cpt.addEvents('advancedmode', 'simplemode');
 			cpt.header.on('click', function() {
+				cookie.set('cat.searchform.advanced', !this.advanced)
 				if (this.advanced) {
 					this.fireEvent('simplemode', this);
 					this.advanced = false;
@@ -515,6 +516,10 @@ cat.app = function() {
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
 			});
+			if(cookie.get('cat.searchform.advanced')) {
+				this.fireEvent('advancedmode', this);
+				this.advanced = true;
+			}
 		});
 		return searchForm;
 	}
@@ -607,6 +612,8 @@ cat.app = function() {
 				expires : new Date(new Date().getTime()
 						+ (1000 * 60 * 60 * 24 * 365))
 			});
+			 Ext.state.Manager.setProvider(cookie);
+			 
 			
 			// Create connexion to the catalogue
 			catalogue = new GeoNetwork.Catalogue({
@@ -632,7 +639,6 @@ cat.app = function() {
 			//createLanguageSwitcher(cat.language);
 
 			edit();
-			// Search result
 			resultsPanel = createResultsPanel();
 
 			var viewport = new Ext.Panel({

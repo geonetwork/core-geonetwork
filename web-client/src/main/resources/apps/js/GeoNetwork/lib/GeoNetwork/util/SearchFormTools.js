@@ -844,6 +844,7 @@ GeoNetwork.util.SearchFormTools = {
             width : 120,
             vtype: 'daterange',
             endDateField: idTo,
+            stateId : 's',
             format: 'd/m/Y',
             listeners: {
                 change: changeCb,
@@ -854,6 +855,7 @@ GeoNetwork.util.SearchFormTools = {
             name: nameTo,
             id: idTo,
             width : 120,
+            stateId : 's',
             vtype: 'daterange',
             startDateField: idFrom,
             format: 'd/m/Y',

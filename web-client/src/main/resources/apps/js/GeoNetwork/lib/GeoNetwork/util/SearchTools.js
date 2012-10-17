@@ -205,7 +205,8 @@ GeoNetwork.util.SearchTools = {
                             // Force the value (ie. usually autocomplete combo)
                             cur.setValue(value, true);
                         }
-                    } else {
+                    } else if (cur.isXType('gn_categorytree')) {}
+                    else {
                         // Hack to set sort order which is based on 
                         // 2 inputs and one combo
                         // FIXME

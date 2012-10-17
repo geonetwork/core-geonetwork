@@ -63,7 +63,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
 	        		tag: 'label',
 	        		html: this.label+' :',
 	        		cls: 'x-form-item-label cat-root-node'
-	        	})
+	        	});
 	        });
         }
     },
@@ -83,6 +83,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     		}
             this.createNodes(this.root, r, 1);
         }
+    	this.restoreSearchedCat();
     },
     
     /**
@@ -99,7 +100,8 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
                 }
                 newNode = new GeoNetwork.CategoryTreeNode({
                 	text: newCategory,
-                	category: md
+                	category: md,
+                	expanded:true
                 });
                 node.appendChild(newNode);
             }
@@ -132,7 +134,28 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     			}
     		}
     	});
+    	
+    	Ext.util.Cookies.set('cat.searchform.categorytree', res);
     	return res;
+    },
+    
+    /**
+     * restore all checked value from cookie
+     */
+    restoreSearchedCat: function() {
+    	
+    	// node is created with expanded:true, then collapse here to allow to check hidden nodes
+    	this.root.collapse(true, false);
+    	
+    	var c = Ext.util.Cookies.get('cat.searchform.categorytree');
+    	var checkedCat = c ? c.split(' or ') : [];
+    	
+    	Ext.each(checkedCat, function(label) {
+    		var node = this.root.findChild('category', label, true);
+    		if(node) {
+    			node.getUI().toggleCheck(true);
+    		}
+    	},this);
     },
     
     /**
@@ -165,7 +188,6 @@ GeoNetwork.CategoryTreeNode = Ext.extend(Ext.tree.TreeNode, {
     },
     
     toggleCheck: function(n,c) {
-    	n.expand();
 		Ext.each(n.childNodes, function(child){
 			child.getUI().toggleCheck(c);
 		});
