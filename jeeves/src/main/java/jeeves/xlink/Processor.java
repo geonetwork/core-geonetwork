@@ -157,9 +157,9 @@ public final class Processor {
 	public static Element resolveXLink(String uri, String idSearch) throws IOException, JDOMException, CacheException {
 
 		cleanFailures();
-		if (failures.size()>MAX_FAILURES) {
-			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
-		}
+//		if (failures.size()>MAX_FAILURES) {
+//			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
+//		}
 
 		JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
 		Element remoteFragment = (Element) xlinkCache.get(uri.toLowerCase());
@@ -168,7 +168,7 @@ public final class Processor {
 			Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
 			
 			try {
-				URL url = new URL(uri.replaceAll("&amp;", "&"));
+				URL url = new URL(uri.replaceAll("&amp;", "&").replaceAll("#","%23"));
 				
 				URLConnection conn = url.openConnection();
 				conn.setConnectTimeout(1000);
@@ -182,8 +182,10 @@ public final class Processor {
 					in.close();
 				}
 			} catch (Exception e) {	// MalformedURLException, IOException
-				synchronized(Processor.class) {
-					failures.add (System.currentTimeMillis());
+				if (!uri.contains("localhost")) { // failures to localhost don't cost
+					synchronized(Processor.class) {
+						failures.add (System.currentTimeMillis());
+					}
 				}
 				Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri 
 						+ " with exception message " + e.getMessage());
