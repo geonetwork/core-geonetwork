@@ -59,7 +59,9 @@
     select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>
   <xsl:variable name="elementException"
     select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception/@for"/>
-
+  <xsl:variable name="flatException"
+    select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/flatException/@for"/>
+  
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- main schema mode selector -->
@@ -245,7 +247,7 @@
         <xsl:choose>
 
           <!-- display as a list -->
-          <xsl:when test="$flat=true()">
+          <xsl:when test="$flat=true() and not(contains($flatException, local-name(.)))">
 
             <!-- if it does not have children show it as a simple element -->
             <xsl:if

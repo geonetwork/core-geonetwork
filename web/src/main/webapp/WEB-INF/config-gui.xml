@@ -161,15 +161,20 @@
 
  -->
  <metadata-tab>
+   <!--   In flat mode, define custom configuration for a view:
+     * ancestorException: define which non existing children of the exception must be displayed (eg. use spatialResolution 
+     in order to be able to add spatialResolution in this view mode. spatialResolution is a complex element which provide a 
+     selection)
+     * exception: define which non existing element must be displayed (eg. pointOfContact)
+     * flatException: define which element to not display using flat mode (eg. topicCategory will allow to remove
+     or add element of that type even in flat mode but the element will be boxed).
+    -->
   <simple flat="true"/>
   <advanced/><!-- This view should not be removed as this is the only view to be able
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements
-  in a view : 
-  * In flat mode, define which non existing children of the exception must be displayed (using ancestorException)
-  * or which non existing element must be displayed (using exception)
-  -->
+  in a view.  -->
   <inspire flat="true">
    	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
      <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,distributionFormat,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
