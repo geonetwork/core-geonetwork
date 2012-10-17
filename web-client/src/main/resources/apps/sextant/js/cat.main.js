@@ -32,6 +32,7 @@ cat.app = function() {
 	function search() {
 		searching = true;
 		Ext.get('load-spinner').show();
+		cookie.set('cat.search.page', catalogue.startRecord);
 		catalogue.search('searchForm', app.loadResults, null,
 				catalogue.startRecord, true);
 	}
@@ -443,6 +444,7 @@ cat.app = function() {
 				elt[0].reset();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
+				cookie.set('cat.search.page', 0);
 				tBar.changeMode(false);
 			},
 			resetBt : new Ext.Button({
@@ -679,8 +681,15 @@ cat.app = function() {
 				} ],
 				listeners: {
 					afterrender: {
-						fn: fitHeightToBody
-					}
+						fn: function(o){
+							var searchPage = cookie.get('cat.search.page');
+							if(searchPage && searchPage > 0) {
+								catalogue.startRecord = searchPage;
+								search();
+							}
+							fitHeightToBody(o);
+						}
+					},
 				}
 			});
 			
