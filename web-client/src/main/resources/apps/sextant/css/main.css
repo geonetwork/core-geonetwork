@@ -595,3 +595,8 @@ div#privileges .record-3 {
 	display: block;
 	margin-top: -2px;
 }
+
+div.x-tip-body div.help {
+	background-image: none;
+	border-bottom: none;
+}
