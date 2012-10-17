@@ -77,7 +77,6 @@
           </div>
           <!-- FIN catalog -->
 
-    <a4j:loadScript src="resource:///org/ajax4jsf/framework.pack.js"/>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext/ext-all-debug.js"></script>
     <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/Rating/RatingItem.js"></script>
@@ -122,6 +121,9 @@
     	Ext.BLANK_IMAGE_URL = cat.imgPath+'images/s.gif';
     	cat.language = ("#{facesContext.externalContext.requestLocale}").split('_')[0];
     </script>
+    
+    <script type="text/javascript" src="#{contextPath}/faces/rfResorg.ajax4jsf.javascript.AjaxScript"></script>
+    <script type="text/javascript" src="#{contextPath}/mfRes/org/ajax4jsf/javascript/JSFAJAX.js"></script>
     
     </body>
 </html>

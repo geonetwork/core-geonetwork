@@ -80,30 +80,39 @@
    </context-param>
 
    <context-param>
+       <param-name>A4J.AJAX.Push.URL</param-name>
+       <param-value>/portlets/faces/a4j.push</param-value>
+   </context-param>
+   
+   <context-param>
        <param-name>org.ajax4jsf.RESOURCE_URI_PREFIX</param-name>
        <param-value>rfRes</param-value>
    </context-param>
 
     <context-param>
-        <param-name>org.richfaces.LoadStyleStrategy</param-name>
-        <param-value>NONE</param-value>
+	<param-name>org.richfaces.LoadStyleStrategy</param-name>
+	<param-value>NONE</param-value>
     </context-param>
    <context-param>
        <param-name>org.richfaces.LoadScriptStrategy</param-name>
        <param-value>NONE</param-value>
    </context-param>
 
-   <context-param>
-       <param-name>A4J.AJAX.Push.URL</param-name>
-       <param-value>/portlets/faces/a4j.push</param-value>
-   </context-param>
+	<context-param>
+		<param-name>org.ajax4jsf.COMPRESS_SCRIPT</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.ajax4jsf.COMPRESS_STYLE</param-name>
+		<param-value>true</param-value>
+	</context-param>
 
-   <filter>
-       <display-name>Ajax4jsf Filter</display-name>
-       <filter-name>ajax4jsf</filter-name>
-       <filter-class>org.ajax4jsf.Filter</filter-class>
-   </filter>
-   
+	<filter>
+		<display-name>Ajax4jsf Filter</display-name>
+		<filter-name>ajax4jsf</filter-name>
+		<filter-class>org.ajax4jsf.Filter</filter-class>
+	</filter>
+	
    <filter-mapping>
        <filter-name>ajax4jsf</filter-name>
        <servlet-name>Faces Servlet</servlet-name>

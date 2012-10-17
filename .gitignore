@@ -19,4 +19,8 @@ docs/*/users/build
 .props/
 web-client/src/main/resources/apps/js/GeoNetwork-mini*
 web-client/src/main/resources/apps/*/js/App-mini.js
-portlet/src/main/webapp/*
+portlet/src/main/webapp/js
+portlet/src/main/webapp/css
+portlet/src/main/webapp/images
+portlet/src/main/webapp/*html
+
