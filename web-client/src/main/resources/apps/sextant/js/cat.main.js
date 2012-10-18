@@ -295,6 +295,7 @@ cat.app = function() {
 			catalogue : catalogue,
 			displaySerieMembers : true,
 			displayContextualMenu : false,
+			autoHeight: true,
 			autoScroll : true,
 			templates : {
 	            SIMPLE: GeoNetwork.Templates.SIMPLE,
@@ -373,6 +374,7 @@ cat.app = function() {
 			id : 'resultsPanel',
 			border : false,
 			hidden : true,
+			autoHeight: true,
 			bodyCssClass : 'md-view',
 			cls : 'result-panel',
 			autoWidth : true,
@@ -669,6 +671,7 @@ cat.app = function() {
 					region : 'center',
 					id : 'center',
 					split : true,
+					autoScroll: true,
 					tbar : tBar,
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
