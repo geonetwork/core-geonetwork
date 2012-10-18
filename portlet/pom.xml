@@ -14,7 +14,7 @@
 	<artifactId>sxt-catalogue</artifactId>
 	<packaging>war</packaging>
 	<name>Catalogue</name>
-	<version>2.0-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<description> GeoNetwork portlet for Sextant V5</description>
 
 	<properties>
