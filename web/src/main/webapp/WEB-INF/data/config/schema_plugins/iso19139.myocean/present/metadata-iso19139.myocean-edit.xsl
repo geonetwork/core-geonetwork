@@ -413,6 +413,11 @@
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>
 				
+				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+					gmd:CI_Citation/gmd:edition">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+				</xsl:apply-templates>
 			</xsl:with-param>
 		</xsl:call-template>
 		
@@ -421,12 +426,12 @@
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/quicklookAndKeywords"/>
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/quicklookAndKeywords)"/>
 			<xsl:with-param name="content">
-				
+				<!--
 				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>
-				
+				-->
 				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 																[gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='MyOcean product type']">
 					<xsl:with-param name="schema" select="$schema"/>
@@ -588,7 +593,7 @@
 						
 						
 						<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-							[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporalScale']">
+							[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal']">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
 						</xsl:apply-templates>
@@ -607,7 +612,7 @@
 				
 				
 				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='processingLevel']">
+					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='processing-levels']">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>
@@ -640,7 +645,16 @@
 							<xsl:with-param name="edit"   select="$edit"/>
 						</xsl:apply-templates>
 						-->
-						<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+						
+						
+						<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
+							gmd:MD_MaintenanceInformation/gmd:updateScopeDescription/gmd:MD_ScopeDescription/gmd:other">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>
+						
+						
+						<!--<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent[not(gmd:description)]/gmd:temporalElement[1]/
 							gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:duration">
 							<xsl:with-param name="schema" select="$schema"/>
@@ -654,7 +668,7 @@
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
 							<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/>
-						</xsl:apply-templates>
+						</xsl:apply-templates>-->
 						
 					</xsl:with-param>
 				</xsl:call-template>
@@ -668,7 +682,7 @@
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/org)"/>
 			<xsl:with-param name="content">
 
-				<!-- Originator -->
+				<!-- Production center -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
 					<xsl:call-template name="complexElementGuiWrapper">
@@ -683,9 +697,8 @@
 					</xsl:call-template>
 				</xsl:for-each>
 				
-				<!-- Custodian -->
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
+				<!-- Product manager -->
+				<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact">
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgCustodian"/>
 						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgCustodian)"/>
@@ -699,6 +712,21 @@
 				</xsl:for-each>
 				
 				
+				<!-- Local service desk -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk"/>
+						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk)"/>
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="elementEP" select="*">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
+				
 				<xsl:if test="$edit">
 					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 
 																	'gmd:pointOfContact', 
@@ -710,25 +738,25 @@
 		</xsl:call-template>
 		
 		
-		<xsl:call-template name="complexElementGuiWrapper">
+		<!--<xsl:call-template name="complexElementGuiWrapper">
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/ancillaryInfo"/>
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/ancillaryInfo)"/>
 			<xsl:with-param name="content">
 				
-				<!-- TODO : to be replace by relation manager -->
+				<!-\- TODO : to be replace by relation manager 
 				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:aggregationInfo/gmd:MD_AggregateInformation">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
+				</xsl:apply-templates>-\->
 				
-				<!-- TODO : to be replace by relation manager -->
+				<!-\- TODO : to be replace by relation manager 
 				<xsl:apply-templates mode="elementEP" select="gmd:distributionInfo/*//gmd:CI_OnlineResource">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
+				</xsl:apply-templates>-\->
 			</xsl:with-param>
-		</xsl:call-template>
+		</xsl:call-template>-->
 		
 		
 		<xsl:call-template name="complexElementGuiWrapper">

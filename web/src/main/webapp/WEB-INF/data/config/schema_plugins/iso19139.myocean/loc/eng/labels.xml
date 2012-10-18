@@ -35,6 +35,9 @@
     <element name="gmd:supplementalInformation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation">
         <label>Temporal resolution</label>
         <description></description>
+        <helper>
+            <option value="N/A">Not known</option>
+        </helper>
     </element>
     <element name="gmd:abstract" context="gmd:MD_DataIdentification">
         <label>Overview</label>
@@ -109,5 +112,20 @@
         <label>Update schedule</label>
         <description>Information regarding specific requirements for maintaining the
             resource</description>
+    </element>
+    
+    
+    <element name="gmd:distance" id="61.0">
+        <label>Spatial resolution</label>
+        <description>Ground sample distance</description>
+        <condition>Provide a distance if no equivalent Scale is documented</condition>
+        <helper relAtt="uom">
+            <option value="0.10" title="cm">10 cm</option>
+            <option value="0.25" title="cm">25 cm</option>
+            <option value="0.50" title="cm">50 cm</option>
+            <option value="1" title="m">1 m</option>
+            <option value="30" title="m">30 m</option>
+            <option value="100" title="m">100 m</option>
+        </helper>
     </element>
 </labels>

@@ -470,6 +470,17 @@ INSERT INTO groupsdes (
   ) 
 );
 
+
+-- Add hidden element settings
+
+INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
+INSERT INTO Settings VALUES (957,956,'enable','false');
+INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
+
+
+
+-- Fix operation names 
+
 UPDATE Operations SET name = 'view' WHERE id = 0;
 UPDATE Operations SET name = 'download' WHERE id = 1;
 UPDATE Operations SET name = 'editing' WHERE id = 2;
