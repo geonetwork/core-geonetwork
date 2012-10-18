@@ -9,17 +9,18 @@
     <identification>Identification</identification>
     <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
     <spatioTemporalCoverage>Spatio-temporal extent</spatioTemporalCoverage>
-    <processingOperation>Processing information</processingOperation>
+    <processingOperation>Processing operations</processingOperation>
     <org>Organizations responsible for management and processing, point of contact</org>
     <metadataInfo>Metadata date stamps and versions</metadataInfo>
     <metadataInfoTitle>Product identification</metadataInfoTitle>
     <ancillaryInfo>Complementary information</ancillaryInfo>
-    <geoCoverage>Geographical coverage</geoCoverage>
+    <geoCoverage>Geographical extent</geoCoverage>
     <verticalCoverage>Vertical extent</verticalCoverage>
     <temporalCoverage>Temporal extent</temporalCoverage>
     
     <orgOriginator>Production center</orgOriginator>
-    <orgCustodian>Production unit</orgCustodian>
+    <orgCustodian>Product manager</orgCustodian>
+    <orgServiceDesk>Local service desk</orgServiceDesk>
     <slidingWindow>Sliding window of updates</slidingWindow>
     
     
