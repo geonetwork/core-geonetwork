@@ -3194,11 +3194,18 @@
 			<xsl:variable name="protocol" select="gmd:protocol[1]/gco:CharacterString"/>
 			<xsl:variable name="linkage"  select="normalize-space(gmd:linkage/gmd:URL)"/>
 			<xsl:variable name="name">
-				<xsl:for-each select="gmd:name">
-					<xsl:call-template name="localised">
-						<xsl:with-param name="langId" select="$langId"/>
-					</xsl:call-template>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="gmd:name/gmx:MimeFileType">
+						<xsl:value-of select="gmd:name/gmx:MimeFileType/text()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="gmd:name">
+							<xsl:call-template name="localised">
+								<xsl:with-param name="langId" select="$langId"/>
+							</xsl:call-template>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:variable>
 
 			<xsl:variable name="mimeType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
