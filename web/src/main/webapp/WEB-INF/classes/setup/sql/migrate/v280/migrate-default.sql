@@ -277,4 +277,4 @@ update settings set value='false' where name = 'ignored' and id=955;
 UPDATE settings SET value='0 0 0/2 * * ?' where name = 'every';
 
 UPDATE Settings SET value='2.8.0' WHERE name='version';
-UPDATE Settings SET value='RC1' WHERE name='subVersion';
+UPDATE Settings SET value='RC2' WHERE name='subVersion';
