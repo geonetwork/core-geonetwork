@@ -2448,9 +2448,9 @@ public class DataManager {
 		// Restrictive: new and inserted records should not be editable, 
 		// their resources can't be downloaded and any interactive maps can't be 
 		// displayed by users in the same group 
-		// setOperation(dbms, id, groupId, AccessManager.OPER_EDITING);
-		// setOperation(dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
-		// setOperation(dbms, id, groupId, AccessManager.OPER_DYNAMIC);
+		setOperation(context, dbms, id, groupId, AccessManager.OPER_EDITING);
+		setOperation(context, dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
+		setOperation(context, dbms, id, groupId, AccessManager.OPER_DYNAMIC);
 		// Ultimately this should be configurable elsewhere
 	}
 
