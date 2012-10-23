@@ -32,7 +32,7 @@
         <label>Version</label>
         <description>Version of the cited resource</description>
     </element>
-    <element name="gmd:supplementalInformation" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation">
+    <element name="gmd:descriptor">
         <label>Temporal resolution</label>
         <description></description>
         <helper>
@@ -120,12 +120,33 @@
         <description>Ground sample distance</description>
         <condition>Provide a distance if no equivalent Scale is documented</condition>
         <helper relAtt="uom">
-            <option value="0.10" title="cm">10 cm</option>
-            <option value="0.25" title="cm">25 cm</option>
-            <option value="0.50" title="cm">50 cm</option>
-            <option value="1" title="m">1 m</option>
-            <option value="30" title="m">30 m</option>
-            <option value="100" title="m">100 m</option>
+            <option value="" title="degree">degree</option>
+            <option value="" title="km">km</option>
+        </helper>
+    </element>
+    
+    <element name="gmd:code" id="207.0"
+        context="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
+        <label>Unique resource identifier</label>
+        <description>Alphanumeric value identifying an instance in the namespace.</description>
+        <help>
+        </help>
+        <condition>mandatory</condition>
+        <helper>
+            <!-- TODO ifremer : provide short list of code -->
+            <option value="WGS 84 (EPSG 4326)">WGS 84 (EPSG 4326)</option>
+            <option value="WGS84 / Simple Mercator (EPSG:41001)">WGS84 / Simple Mercator (EPSG:41001)</option>
+            <option value="Lambert Azimuthal Equal Area (EPSG 3035)">Lambert Azimuthal Equal Area (EPSG 3035)</option>
+            <option value="ETRS89 (EPSG 4258)">ETRS89 (EPSG 4258)</option>
+        </helper>
+    </element>
+    <element name="gmd:codeSpace" id="208.1">
+        <label>Codespace</label>
+        <description>Name or identifier of the person or organization responsible for
+            namespace</description>
+        <helper>
+            <option value="EPSG">OGP Surveying &amp; Positioning
+                Committee (EPSG)</option>
         </helper>
     </element>
 </labels>
