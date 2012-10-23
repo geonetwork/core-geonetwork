@@ -154,24 +154,9 @@
 	
 	<xsl:template name="options-wfsfeatures">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-
-		<table border="0">
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
-				<td class="padded">
-					<input id="wfsfeatures.every.days"  class="content" type="text" size="2"/> :
-					<input id="wfsfeatures.every.hours" class="content" type="text" size="2"/> :
-					<input id="wfsfeatures.every.mins"  class="content" type="text" size="2"/>
-					&#160;
-					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
-				<td class="padded"><input id="wfsfeatures.oneRunOnly" type="checkbox" value=""/></td>
-			</tr>			
-		</table>
+		<xsl:call-template name="schedule-widget">
+			<xsl:with-param name="type">wfsfeatures</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
@@ -237,5 +222,16 @@
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
-		
+
+    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
+        <option>
+            <xsl:attribute name="value">
+                <xsl:value-of select="."/>
+            </xsl:attribute>
+            <xsl:value-of select="@label"/>
+        </option>
+    </xsl:template>
+
+    <!-- ============================================================================================= -->
+
 </xsl:stylesheet>

@@ -50,10 +50,7 @@ function init()
 		{ id:'csw.capabUrl',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.capabUrl',    type:'url' },
 		{ id:'csw.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.every.days',  type:'integer',  minValue:0, maxValue:99 },
-		{ id:'csw.every.hours', type:'integer',  minValue:0, maxValue:23 },
-		{ id:'csw.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	shower = new Shower('csw.useAccount', 'csw.account');
@@ -93,10 +90,7 @@ function setData(node)
 
 	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
 	hvutil.setOption(site, 'icon',            'csw.icon');
-
-	// - issue GeoCat.ch #133730
-	hvutil.setOption(site, 'outputSchema', 'csw.outputSchema');
-
+	
 	//--- add search entries
 	
 	var list = searches.getElementsByTagName('search');
@@ -128,10 +122,7 @@ function getData()
 	
 	data.CAPAB_URL = $F('csw.capabUrl');
 	data.ICON      = $F('csw.icon');
-
-	// GeoCat issue #133730
-	data.OUTPUTSCHEMA = $F('csw.outputSchema');
-
+	
 	//--- retrieve search information
 	
 	var searchData = [];

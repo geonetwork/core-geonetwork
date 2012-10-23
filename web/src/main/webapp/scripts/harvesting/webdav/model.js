@@ -114,8 +114,10 @@ var updateTemp =
 '    </site>'+
     
 '    <options>'+
-'      <every>{EVERY}</every>'+
 '      <oneRunOnly>{ONE_RUN_ONLY}</oneRunOnly>'+
+
+'      <every>{EVERY}</every>'+
+
 '      <recurse>{RECURSE}</recurse>'+
 '      <subtype>{SUBTYPE}</subtype>'+
 '      <validate>{VALIDATE}</validate>'+

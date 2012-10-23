@@ -219,24 +219,9 @@
 	
 	<xsl:template name="options-thredds">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/options"/></h1>
-
-		<table border="0">
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/every"/></td>
-				<td class="padded">
-					<input id="thredds.every.days"  class="content" type="text" size="2"/> :
-					<input id="thredds.every.hours" class="content" type="text" size="2"/> :
-					<input id="thredds.every.mins"  class="content" type="text" size="2"/>
-					&#160;
-					<xsl:value-of select="/root/gui/harvesting/everySpec"/>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
-				<td class="padded"><input id="thredds.oneRunOnly" type="checkbox" value=""/></td>
-			</tr>			
-		</table>
+		<xsl:call-template name="schedule-widget">
+			<xsl:with-param name="type">thredds</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
@@ -308,4 +293,15 @@
 	
 	<!-- ============================================================================================= -->
 		
+    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
+		<option>
+			<xsl:attribute name="value">
+				<xsl:value-of select="."/>
+			</xsl:attribute>
+			<xsl:value-of select="@label"/>
+		</option>
+	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
 </xsl:stylesheet>

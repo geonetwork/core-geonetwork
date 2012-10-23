@@ -49,7 +49,7 @@ function Harvesting()
 	var geonet   = new Geonetwork(loader);
 	var geonet20 = new Geonetwork20(loader);
 	var webdav   = new WebDav(loader);
-    var csw      = new Csw(loader);
+	var csw      = new Csw(loader);
     var cgp      = new Cgp(loader);
 	var z3950    = new Z3950(loader);
 	var oaipmh   = new OaiPmh(loader);
@@ -103,7 +103,7 @@ function init()
 	view.register(geonet);
 	view.register(geonet20);
 	view.register(webdav);
-    view.register(csw);
+	view.register(csw);
     view.register(cgp);
 	view.register(ogcwxs);
 	view.register(thredds);
