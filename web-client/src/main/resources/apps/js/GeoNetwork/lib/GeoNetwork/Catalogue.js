@@ -1135,9 +1135,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         			var iframe = document.getElementById('casLoginFrame');
         			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         			var connectedDiv = innerDoc.getElementById('content_container');
-        			clearInterval (intervalID);
         			if(connectedDiv) {
-        				alert('RDY');
+        				clearInterval (intervalID);
         				app.isLoggedIn();
         			}
         		}
