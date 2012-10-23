@@ -574,17 +574,14 @@ cat.app = function() {
 	 * 
 	 **/
 	function fitHeightToBody(o) {
-		var portletContainer = Ext.Element.select('.portlet-content');
-		var height=0
-		if(portletContainer.getCount()==2) {
+		var portletContainer = Ext.Element.select('#column-1 .portlet-body');
+		var catalogDiv = Ext.Element.select('#catalogTab');
+		var height=0;
+		if(portletContainer.getCount()>0 && catalogDiv.getCount()==1) {
 			var d = Ext.get('main-viewport');
 			height=Ext.getBody().getViewSize().height -d.getY() - 20;
 		}
-		else if (portletContainer.getCount()>1) {
-			height=400;
-			o.setHeight(400);
-		}
-		else if (portletContainer.getCount()==0) {
+		else {
 			height=Ext.getBody().getViewSize().height-50;
 		}
 		o.setHeight(height);
