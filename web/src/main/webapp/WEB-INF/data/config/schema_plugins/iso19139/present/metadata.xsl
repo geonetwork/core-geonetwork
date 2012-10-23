@@ -216,6 +216,7 @@
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="text"   select="$text"/>
+			<xsl:with-param name="editAttributes" select="false()"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
