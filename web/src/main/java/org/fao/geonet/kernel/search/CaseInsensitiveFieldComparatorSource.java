@@ -1,22 +1,31 @@
 package org.fao.geonet.kernel.search;
 
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource {
 
     private static final long                                 serialVersionUID = 1L;
-    private static final CaseInsensitiveFieldComparatorSource instance         = new CaseInsensitiveFieldComparatorSource();
+    private static final CaseInsensitiveFieldComparatorSource languageInsensitiveInstance         = new CaseInsensitiveFieldComparatorSource(null);
+    private String searchLang;
 
+    /**
+     * @param searchLang if non-null then it will be attempted to translate each field before sorting
+     */
+    public CaseInsensitiveFieldComparatorSource(String searchLang) {
+        this.searchLang = searchLang;
+    }
     @Override
     public FieldComparator newComparator(String fieldname, int numHits, int sortPos, boolean reversed)
             throws IOException {
 
-        return new CaseInsensitiveFieldComparator(numHits, fieldname);
+        return new CaseInsensitiveFieldComparator(numHits, searchLang, fieldname);
     }
 
     public static final class CaseInsensitiveFieldComparator extends FieldComparator {
@@ -25,10 +34,12 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
         private String[]     currentReaderValues;
         private final String field;
         private String       bottom;
+        private String searchLang;
 
-        CaseInsensitiveFieldComparator(int numHits, String field) {
+        CaseInsensitiveFieldComparator(int numHits, String searchLang, String field) {
             values = new String[numHits];
             this.field = field;
+            this.searchLang = searchLang;
         }
 
         @Override
@@ -63,12 +74,22 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
 
         @Override
         public void copy(int slot, int doc) {
-            values[slot] = currentReaderValues[doc];
+            if(currentReaderValues[doc] != null) {
+                values[slot] = currentReaderValues[doc].trim();
+            }
         }
 
         @Override
         public void setNextReader(IndexReader reader, int docBase) throws IOException {
             currentReaderValues = FieldCache.DEFAULT.getStrings(reader, field);
+            if(searchLang != null) {
+                String[] shadowValues = FieldCache.DEFAULT.getStrings(reader, LuceneConfig.multilingualSortFieldName(field, searchLang));
+                for (int i = 0; i < shadowValues.length; i++) {
+                    if(shadowValues[i] != null && shadowValues[i].trim().length() != 0) {
+                        currentReaderValues[i] = shadowValues[i];
+                    }
+                }
+            }
         }
 
         @Override
@@ -81,7 +102,7 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
             return values[slot];
         }
     }
-    public static CaseInsensitiveFieldComparatorSource instance() {
-        return instance;
+    public static CaseInsensitiveFieldComparatorSource languageInsensitiveInstance() {
+        return languageInsensitiveInstance;
     }
 }

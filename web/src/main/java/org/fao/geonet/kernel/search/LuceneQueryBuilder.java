@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -665,23 +666,50 @@ public class LuceneQueryBuilder {
             analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
         }
 
+        query = constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString);
+        return query;
+    }
+
+    static Query constructQueryFromAnalyzedString(String string, String luceneIndexField, String similarity, Query query,
+            String analyzedString) {
         if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
             if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
-                // similarity is not set or is 1
-                if (similarity == null || similarity.equals("1")) {
-                    query = new TermQuery(new Term(luceneIndexField, analyzedString));
-                }
-                // similarity is not null and not 1
-                else {
-                    Float minimumSimilarity = Float.parseFloat(similarity);
-                    query = new FuzzyQuery(new Term(luceneIndexField, analyzedString), minimumSimilarity);
+                if (analyzedString.contains(" ")) {
+                    // if analyzer creates spaces (by converting ignored
+                    // characters like -) then make boolean query
+                    String[] terms = analyzedString.split(" ");
+                    BooleanQuery booleanQuery = new BooleanQuery();
+                    query = booleanQuery;
+                    for (String term : terms) {
+                        booleanQuery.add(createFuzzyOrTermQuery(luceneIndexField, similarity, term), Occur.MUST);
+                    }
+                } else {
+                    query = createFuzzyOrTermQuery(luceneIndexField, similarity, analyzedString);
                 }
             }
             // wildcards
             else {
                 query = new WildcardQuery(new Term(luceneIndexField, analyzedString));
             }
+        }
+        return query;
+    }
+
+    private static Query createFuzzyOrTermQuery(String luceneIndexField, String similarity, String analyzedString) {
+        Query query = null;
+        if (similarity != null) {
+            Float minimumSimilarity = Float.parseFloat(similarity);
+            
+            if (minimumSimilarity < 1) {
+                query  = new FuzzyQuery(new Term(luceneIndexField, analyzedString), minimumSimilarity);
+            } else if (minimumSimilarity > 1){
+                throw new IllegalArgumentException("similarity cannot be > 1.  The provided value was "+similarity);
+            }
+        }
+        
+        if (query == null) {
+            query = new TermQuery(new Term(luceneIndexField, analyzedString));
         }
         return query;
     }
@@ -1261,8 +1289,8 @@ public class LuceneQueryBuilder {
      * @param langCode
      * @return
      */
-    static Query addLocaleTerm( Query query, String langCode, boolean requestedLanguageOnly ) {
-        if (langCode == null) {
+    static Query addLocaleTerm( Query query, String langCode, String requestedLanguageOnly ) {
+        if (langCode == null || requestedLanguageOnly == null) {
             return query;
         }
 
@@ -1275,11 +1303,11 @@ public class LuceneQueryBuilder {
             booleanQuery.add(query, BooleanClause.Occur.MUST);
         }
 
-        if(requestedLanguageOnly) {
-            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.MUST);
+        if(requestedLanguageOnly.startsWith("only_")) {
+            booleanQuery.add(new TermQuery(new Term(requestedLanguageOnly.substring("only".length()), langCode)), BooleanClause.Occur.MUST);
         }
         else {
-            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(new TermQuery(new Term(requestedLanguageOnly.substring("prefer".length()), langCode)), BooleanClause.Occur.SHOULD);
         }
         return booleanQuery;
     }

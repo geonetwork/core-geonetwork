@@ -13,6 +13,7 @@ import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -223,5 +224,27 @@ public final class XslUtil
         
         return "";
     }
+    
+	public static String threeCharLangCode(String langCode) {
+	    if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
+
+		if(langCode.length() == 3) return langCode;
+
+		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
+	}
+    public static String twoCharLangCode(String langCode) throws Exception {
+        if (langCode.length() == 2){
+            return langCode;
+        } else {
+            return IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(langCode);
+        }
+    }
+
+	public static boolean match(Object src, Object pattern) {
+		if (src == null || src.toString().trim().isEmpty()) {
+			return false;
+		}
+		return src.toString().matches(pattern.toString());
+	}
 
 }

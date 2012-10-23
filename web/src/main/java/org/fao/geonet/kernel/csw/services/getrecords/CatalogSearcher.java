@@ -23,52 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.misc.ChainedFilter;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.Version;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.exceptions.CatalogException;
-import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.search.DuplicateDocFilter;
-import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.LuceneUtils;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.jdom.Element;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,6 +33,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.ChainedFilter;
+import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.exceptions.SearchExpiredEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.search.DuplicateDocFilter;
+import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.kernel.search.LuceneIndexField;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.LuceneUtils;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.search.spatial.Pair;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -93,6 +91,7 @@ public class CatalogSearcher {
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
+	private long          _searchToken;
 	
 	public CatalogSearcher(Element summaryConfig,
 			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
@@ -102,6 +101,8 @@ public class CatalogSearcher {
 		_selector = selector;
 		_uuidselector = uuidselector;
 		_summaryConfig = summaryConfig;
+		_searchToken = -1L;  // means we will get a new IndexSearcher when we
+		                     // ask for it first time
 	}
 	
 	// ---------------------------------------------------------------------------
@@ -144,23 +145,41 @@ public class CatalogSearcher {
 
         if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
-
-		try {
-			if (luceneExpr != null) {
-				convertPhrases(luceneExpr);
-                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                    Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n"+ Xml.getString(luceneExpr));
-			}
-
-            return performSearch(context,
-                    luceneExpr, filterExpr, filterVersion, sort, resultType,
-                    startPosition, maxRecords, maxHitsInSummary, cswServiceSpecificContraint);
-		}
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getSearchmanager();
+        GeonetworkMultiReader reader = null;
+        try {
+            if (luceneExpr != null) {
+                convertPhrases(luceneExpr);
+                if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
+            }
+            Pair<Long, GeonetworkMultiReader> searcherPair = sm.getIndexReader(_searchToken);
+            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + searcherPair.one() + " comparing with " + _searchToken);
+            if (_searchToken != -1L && searcherPair.one() != _searchToken) {
+                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
+            }
+            _searchToken = searcherPair.one();
+            reader = searcherPair.two();
+            return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
+                    maxHitsInSummary, cswServiceSpecificContraint, reader);
+        }
         catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
 			Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
 			throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
-		}
+        } finally {
+            try {
+                if (reader != null) {
+                    sm.releaseIndexReader(reader);
+                }
+            } catch (Exception ex) {
+                // eat it as it probably doesn't matter,
+                // but say what happened anyway
+                Log.error(Geonet.CSW_SEARCH, "Error while releasing index searcher ", ex);
+            }
+        }
 	}
 
 	// ---------------------------------------------------------------------------
@@ -180,34 +199,37 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
-		IndexReader _reader = sm.getIndexReader(context.getLanguage());
-		try {
-        Pair<TopDocs, Element> searchResults =
-			LuceneSearcher.doSearchAndMakeSummary( 
-					maxHits, 0, maxHits, Integer.MAX_VALUE, 
-					_lang, ResultType.RESULTS.toString(), _summaryConfig, 
-					_reader, _query, _filter, _sort, false,
-					_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
-			);
-		TopDocs tdocs = searchResults.one();
-		Element summary = searchResults.two();
+        Pair<Long, GeonetworkMultiReader> searcherPair = sm.getIndexReader(_searchToken);
 
-		int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+        try {
+            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + searcherPair.one() + " comparing with " + _searchToken);
+            if (searcherPair.one() != _searchToken) {
+                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
+            }
+            GeonetworkMultiReader _reader = searcherPair.two();
+            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, Integer.MAX_VALUE, _lang,
+                    ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false,
+                    _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder());
+            TopDocs tdocs = searchResults.one();
+            Element summary = searchResults.two();
 
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-            Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+            int numHits = Integer.parseInt(summary.getAttributeValue("count"));
 
-		// --- retrieve results
-		List<String> response = new ArrayList<String>();
-		
-		for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-			Document doc = _reader.document(sdoc.doc, _uuidselector);
-			String uuid = doc.get("_uuid");
-			if (uuid != null) response.add(uuid);
-		}
-		return response;
-		} finally {
-			sm.releaseIndexReader(_reader);
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+
+            // --- retrieve results
+            List<String> response = new ArrayList<String>();
+
+            for (ScoreDoc sdoc : tdocs.scoreDocs) {
+                Document doc = _reader.document(sdoc.doc, _uuidselector);
+                String uuid = doc.get("_uuid");
+                if (uuid != null)
+                    response.add(uuid);
+            }
+            return response;
+        } finally {
+			sm.releaseIndexReader(searcherPair.two());
 		}
 	}
 
@@ -362,7 +384,8 @@ public class CatalogSearcher {
 	private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
                                                           Element filterExpr, String filterVersion, Sort sort,
                                                           ResultType resultType, int startPosition, int maxRecords,
-                                                          int maxHitsInSummary, String cswServiceSpecificContraint)
+                                                          int maxHitsInSummary, String cswServiceSpecificContraint,
+                                                          GeonetworkMultiReader reader)
             throws Exception {
 
         if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -374,10 +397,7 @@ public class CatalogSearcher {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
-		UserSession session = context.getUserSession();
 
-         IndexReader indexReader = sm.getIndexReader(context.getLanguage());
-         try {
 		if (luceneExpr != null) {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
@@ -386,11 +406,20 @@ public class CatalogSearcher {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
-        // TODO do not just use context getlanguage ?
 
-		Query data = (luceneExpr == null) ? null : LuceneSearcher.makeLocalisedQuery(luceneExpr,
-                SearchManager.getAnalyzer(context.getLanguage(), false), _tokenizedFieldSet, _numericFieldSet,
-                context.getLanguage(), false);
+		_lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+		boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
+		
+        Query data;
+        if (luceneExpr == null) {
+            data = null;
+        } else {
+            PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
+            String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
+            data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
+                analyzer, _luceneConfig,
+                _lang, requestedLanguageOnly);
+        }
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
         Query cswCustomFilterQuery = null;
@@ -403,7 +432,7 @@ public class CatalogSearcher {
 		Query groups = getGroupsQuery(context);
 		if (sort == null) {
 			List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
-            sort = LuceneSearcher.makeSort(fields, context.getLanguage(), false);
+            sort = LuceneSearcher.makeSort(fields, _lang, requestedLanguageOnTop);
 		}
 
 		// --- put query on groups in AND with lucene query
@@ -454,10 +483,9 @@ public class CatalogSearcher {
 		_query = query;
 		_filter = new CachingWrapperFilter(cFilter);
 		_sort = sort;
-		_lang = context.getLanguage();
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, indexReader, query, cFilter,
+                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, reader, query, cFilter,
                 sort, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
@@ -481,7 +509,7 @@ public class CatalogSearcher {
 			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
 		}
 		for (;i < iMax; i++) {
-			Document doc = indexReader.document(hits.scoreDocs[i].doc, _selector);
+			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");
 			ResultItem ri = new ResultItem(id);
 			results.add(ri);
@@ -495,9 +523,6 @@ public class CatalogSearcher {
 		summary.setName("Summary");
 		summary.setNamespace(Csw.NAMESPACE_GEONET);
 		return Pair.read(summary, results);
-         } finally {
-        	 sm.releaseIndexReader(indexReader);
-         }
 	}
 
 	// ---------------------------------------------------------------------------
@@ -549,7 +574,7 @@ public class CatalogSearcher {
      */
     public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint) throws ParseException {
 
-        Query q = new QueryParser(Version.LUCENE_30, "title", SearchManager.getAnalyzer()).parse(cswServiceSpecificConstraint);
+        Query q = new QueryParser(Geonet.LUCENE_VERSION, "title", SearchManager.getAnalyzer()).parse(cswServiceSpecificConstraint);
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(

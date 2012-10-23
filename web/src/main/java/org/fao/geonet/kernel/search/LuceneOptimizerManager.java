@@ -115,7 +115,7 @@ public class LuceneOptimizerManager {
 		public void jobToBeExecuted(JobExecutionContext context) {
 			 if (context.getJobInstance() instanceof LuceneOptimizerJob) {
 				 LuceneOptimizerJob job = (LuceneOptimizerJob) context.getJobInstance();
-				 job.setIndexWriter(manager.getIndexWriter());
+				 job.setIndexTracker(manager.getIndexTracker());
 			 }
 		}
 

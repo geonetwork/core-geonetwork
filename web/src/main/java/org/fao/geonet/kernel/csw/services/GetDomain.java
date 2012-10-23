@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -186,7 +187,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager sm = gc.getSearchmanager();
 			
-			IndexReader reader = sm.getIndexReader(context.getLanguage());
+			GeonetworkMultiReader reader = sm.getNewIndexReader().two();
 			try {
 				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
                 BooleanQuery query = null;
@@ -227,8 +228,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
-							.contains(property))
+					if (reader.getFieldInfos().fieldInfo(property) != null)
 						continue;
 					
 					boolean isRange = false;

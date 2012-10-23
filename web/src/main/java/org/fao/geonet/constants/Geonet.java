@@ -27,6 +27,7 @@ import javax.xml.XMLConstants;
 
 import jeeves.constants.Jeeves;
 
+import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
 /**
@@ -559,6 +560,7 @@ public class Geonet {
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
+    public static final Version LUCENE_VERSION = Version.LUCENE_36;
 
     /**
      * Services.

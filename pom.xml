@@ -881,7 +881,7 @@
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.1</geotools.version>
-    <lucene.version>3.0.2</lucene.version>
+    <lucene.version>3.6.1</lucene.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
   </properties>

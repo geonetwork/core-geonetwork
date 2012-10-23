@@ -76,7 +76,7 @@ public class Remove implements Service
 		DataManager   dm = gc.getDataManager();
 
 		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.processWithFastIndexing();
+		s.process();
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

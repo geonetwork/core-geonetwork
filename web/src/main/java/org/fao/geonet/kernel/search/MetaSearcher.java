@@ -78,23 +78,32 @@ public abstract class MetaSearcher
 	protected void updateSearchRange(Element request)
 	{
 		// get request parameters
-		String sFrom = request.getChildText("from");
-		String sTo   = request.getChildText("to");
-		if (sFrom != null)
-		{
-			try { _from = Integer.parseInt(sFrom); }
-			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'from' parameter: " + sFrom); }
-		}
-		if (sTo != null)
-		{
-			try { _to = Integer.parseInt(sTo); }
-			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'to' parameter: " + sTo); }
-		}
+		_from = readFrom(request);
+		_to = readTo(request);
+
 
 		int count = getSize();
 		_from      = _from > count ? count : _from;
 		_to        = _to   > count ? count : _to;
 	}
+
+	protected int readFrom(Element request) {
+        return loadParam(request, "from");
+    }
+    
+    protected int readTo(Element request) {
+        return loadParam(request, "to");
+    }
+
+    private int loadParam(Element request, String name) {
+        String sFrom = request.getChildText(name);
+		if (sFrom != null)
+		{
+			try { return Integer.parseInt(sFrom); }
+			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad '"+name+"' parameter: " + sFrom); }
+		}
+		return _from;
+    }
 	
 	protected int getFrom()     { return _from; }
 	protected int getTo()       { return _to; }
