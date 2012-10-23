@@ -180,6 +180,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             id: 'sortByToolBar',
             triggerAction: 'all',
             value: 'relevance#',
+            editable: false,
             width: 130,
             store: this.sortByStore || GeoNetwork.util.SearchFormTools.getSortByStore(),
             valueField: 'id',
@@ -335,6 +336,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
+            iconCls: 'importmd',
             handler: function(){
                 this.catalogue.metadataImport();
             },
@@ -345,6 +347,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.adminAction = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
+            iconCls: 'adminmenu',
             handler: function(){
                 this.catalogue.admin();
             },

@@ -322,6 +322,15 @@ table.related * a:hover,
 .processMetadata {
   background-image : url(../images/default/table_gear.png) !important;
 }
+.category {
+  background-image : url(../images/default/tag_orange.png) !important;
+}
+.adminmenu {
+  background-image : url(../images/default/cog.png) !important;
+}
+.importmd {
+  background-image : url(../images/default/page_white_put.png) !important;
+}
 .repository {
   background-image : url(../images/default/database_yellow.png) !important;
   background-repeat : no-repeat;
