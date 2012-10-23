@@ -1117,7 +1117,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         	var framePanel = new Ext.Panel({
         		hidden: true,
         		renderTo: 'casLogin-frame-win',
-        		html:'<iframe frameborder="0" width="20" id="casLoginFrame" height="20" src="'+
+        		width: 800,
+        		height: 500,
+        		html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
         				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>',
         		
         	});
@@ -1130,8 +1132,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	                app.onAfterBadLogin();
         		} 
         		else if (framePanel.rendered) {
+        			var iframe = document.getElementById('casLoginFrame');
+        			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        			var connectedDiv = innerDoc.getElementById('content_container');
         			clearInterval (intervalID);
-        			app.isLoggedIn();
+        			if(connectedDiv) {
+        				alert('RDY');
+        				app.isLoggedIn();
+        			}
         		}
         	}, 500);
         } else {

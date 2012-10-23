@@ -235,11 +235,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                     this.add(this.editAction);
                     this.add(this.deleteAction);
                     this.add(this.duplicateAction);
-                    this.add(this.createChildAction);
                     this.add(this.adminAction);
+                    this.add(this.categoryAction);
+                    this.add(this.createChildAction);
                     this.add(this.statusAction);
                     this.add(this.versioningAction);
-                    this.add(this.categoryAction);
+                    
                 },
             });
         } else {

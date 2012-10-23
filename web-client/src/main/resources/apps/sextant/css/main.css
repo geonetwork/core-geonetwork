@@ -144,7 +144,31 @@ table, tbody, tr, td, th {
 }
 
 .cat_layout, .cat_layout div div.x-border-layout-ct {
-	background-color: grey;
+	background-color: #DEDEDE;
+}
+
+.cat_layout .x-layout-split-west .x-layout-mini {
+	background-image: url("../images/icons/vertical_handle.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin-left:1px;
+    width:11px;
+}
+
+.view-win .help {
+	background-image: none;
+}
+.cat_layout .x-layout-cmini-west .x-layout-mini {
+	background-image: url("../images/icons/vertical_handle.gif");
+}
+.cat_layout .x-layout-split, .cat_layout .x-layout-collapsed {
+	width:2px;
+	background-color: #DEDEDE;
+}
+.cat_layout #center.sxt-layout-border-white {
+	border-width: 1px;
+	border-color: white;
+	padding-left: 5px;
 }
 
 .search-panel-body {
@@ -428,7 +452,7 @@ div.md-action-menu span.icon{
 }
 
 .result-list li.md-full div.one-elt span.list-icon {
-	visibility: hidden;
+	display:none;
 }
 
 .result-list li.md-full div.downloadMenu span.icon{
@@ -599,4 +623,22 @@ div#privileges .record-3 {
 div.x-tip-body div.help {
 	background-image: none;
 	border-bottom: none;
+}
+
+.sextant .titleContainer span {
+font-size: 30px;
+}
+.sextant div#header div.titleContainer div.subtitle {
+	font-size: 20px;
+}
+
+#privileges thead th p {
+	position: absolute;
+	margin-top: -20px;
+}
+#privileges thead th.padded-center p {
+	padding-left:6px;
+}
+#privileges div.privilege_header {
+	margin-top:18px;
 }

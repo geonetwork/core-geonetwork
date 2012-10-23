@@ -9,7 +9,7 @@ cat.where = function() {
 				title : OpenLayers.i18n('Where'),
 				autoHeight : true,
 				autoWidth : true,
-				collapsible : false,
+				collapsible : true,
 				collapsed : false,
 				defaultType : 'checkbox',
 				layout: 'fit',
@@ -27,7 +27,15 @@ cat.where = function() {
 							bodyStyle: 'border: 1px solid #D0D0D0',
 							width : 300,
 							height : 280
-						})
+						}),
+				listeners: {
+					'afterrender': function(o) {
+						o.header.on('click', function() {
+							if(o.collapsed) o.expand();
+							else o.collapse();
+						});
+					}
+				}
 			});
 		}
 	}

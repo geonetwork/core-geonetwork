@@ -149,11 +149,12 @@ cat.app = function() {
 							},
 							scope : this
 						} ],
-						ctCls: 'view-win',
+						cls: 'view-win',
 						title : OpenLayers.i18n('mdEditor'),
 						id : 'editorWindow',
 						layout : 'fit',
 						modal : false,
+						closeAction: 'destroy',
 						items : this.editorPanel,
 						closeAction : 'hide',
 						collapsible : true,
@@ -541,6 +542,7 @@ cat.app = function() {
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,
+                border: false,
                 modal: true,
                 draggable: false,
                 movable: false,
@@ -557,14 +559,11 @@ cat.app = function() {
                         callback: cb || defaultCb,
                         scope: win
                     },
-                    border: false,
                     frame: false,
                     autoScroll: true
                 })
             });
             win.show(this);
-            //win.alignTo(Ext.getBody(), 't-t');
-            
         }
     }
 	
@@ -645,6 +644,7 @@ cat.app = function() {
 			var viewport = new Ext.Panel({
 				renderTo: 'main-viewport',
 				layout : 'border',
+				border: false,
 				id : 'vp',
 				cls : 'cat_layout',
 				items : [ {
@@ -657,9 +657,11 @@ cat.app = function() {
 					minWidth : 300,
 					width : 400,
 					maxWidth : 500,
+					margins: '0 7 0 0',
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
+					bodyStyle: 'border-color:white',
 					layoutConfig : {
 						animate : true
 					},
@@ -669,6 +671,8 @@ cat.app = function() {
 					id : 'center',
 					split : true,
 					autoScroll: true,
+					cls: 'sxt-layout-border-white',
+					margins: '0 0 0 4',
 					tbar : tBar,
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
