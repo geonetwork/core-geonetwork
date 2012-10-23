@@ -381,6 +381,7 @@
 
 					<!-- user and group services -->
 					<xsl:variable name="persInfoServices">
+						<xsl:if test="java:isCasEnabled()">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'user.pwedit'"/>
 							<xsl:with-param name="args"
@@ -401,6 +402,7 @@
 							<td class="spacer"/>
 						</tr>
 
+						
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'user.list'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/userManagement"/>
@@ -408,6 +410,7 @@
 							/>
 							<xsl:with-param name="icon">user.png</xsl:with-param>
 						</xsl:call-template>
+						</xsl:if>
 
 						<xsl:if test="java:isAccessibleService('group.update')">
 						<xsl:call-template name="addrow">
