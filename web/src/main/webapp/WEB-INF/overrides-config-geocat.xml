@@ -85,7 +85,7 @@
     </file>
     <file name=".*/WEB-INF/config-db.xml">
         <removeXML xpath="data/file" />
-        <removeXML xpath="data/migrate" />
+        <removeXML xpath="migrate" />
         <addXml xpath="data">
         	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
 		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-"/>
@@ -98,7 +98,7 @@
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-search-"/>		    
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>		    
         </addXml>
-		<addXml xpath="data">
+		<addXml xpath="">
 			<migrate>
 				<version id="110">
 					<file path="WEB-INF/classes/setup/sql/migrate/v110" filePrefix="migrate-" />
