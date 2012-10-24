@@ -4,6 +4,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;
 
@@ -16,15 +18,18 @@ import org.jdom.Element;
  * Date: 1/19/12
  * Time: 9:01 PM
  */
-public class SetSequentialExecution implements Service {
+public class SetSystemProperties implements Service {
 
     public void init(String appPath, ServiceConfig params) throws Exception {
         // empty
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
+        final String propertyName = Util.getParam(params, "name");
         final boolean newValue = Boolean.parseBoolean(Util.getParam(params, "value"));
-        System.setProperty(ThreadPool.SEQUENTIAL_EXECUTION, Boolean.toString(newValue));
+        if(propertyName.equalsIgnoreCase(ThreadPool.SEQUENTIAL_EXECUTION)) {
+            System.setProperty(ThreadPool.SEQUENTIAL_EXECUTION, Boolean.toString(newValue));
+        }
         return new Element("response").setText("ok");
     }
 }
