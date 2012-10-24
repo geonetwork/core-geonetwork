@@ -418,7 +418,7 @@ div.md-action-menu {
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
     color: #333333;
-    padding: 6px 1em 6px 1em;
+    padding: 6px 12px 6px 12px;
     font-family: Arial,Helvetica,sans-serif;
     font-size:   12px;
     font-weight: 700;
@@ -453,6 +453,9 @@ div.md-action-menu span.icon{
 
 .result-list li.md-full div.one-elt span.list-icon {
 	display:none;
+}
+.result-list li.md-full div.one-elt {
+	padding: 6px 22px 6px 22px !important;
 }
 
 .result-list li.md-full div.downloadMenu span.icon{
