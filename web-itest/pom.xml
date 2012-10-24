@@ -39,6 +39,22 @@
   </properties>
   <build>
     <plugins>
+      <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <filesets>
+              <fileset>
+                <directory>${project.basedir}</directory>
+                <includes>
+                  <include>*.db</include>
+                  <include>jcs_caching/**</include>
+                  <include>logs/**</include>
+                </includes>
+              </fileset>
+            </filesets>
+          </configuration>
+        </plugin>
       <!-- Setup test environment
           copy the war from the repository to (so that tests can be ran in a standalone mode)
           check out webspecs (test framework)

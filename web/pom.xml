@@ -29,6 +29,10 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
+	  <dependency>
+      	<groupId>net.sf.ehcache</groupId>
+      	<artifactId>ehcache-core</artifactId>
+      </dependency>
 
       <!-- rewrite url servletfilter -->
       <dependency>
@@ -81,12 +85,12 @@
       <artifactId>spring-jdbc</artifactId>
     </dependency>
 		-->
-    
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <artifactId>spring-context-support</artifactId>
     </dependency>
+    
+    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>
@@ -243,6 +247,10 @@
     <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
@@ -776,6 +784,7 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <archiveClasses>true</archiveClasses>
           <!-- Filter resources according to current profile properties
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
@@ -844,6 +853,20 @@
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>8190</port>
               <maxIdleTime>10000</maxIdleTime>
+              <headerBufferSize>20000</headerBufferSize>
+            </connector>
+            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+              <!-- Note: If another server needs to communicate with this one with
+                    https then it needs the environment variables set as follows:
+                    -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
+                    -->
+              <port>8443</port>
+              <keystore>${project.basedir}/keystore.jks</keystore>
+              <password>password</password>
+              <keyPassword>password</keyPassword>
+              <truststore>${project.basedir}/keystore.jks</truststore>
+              <trustPassword>password</trustPassword>
+              <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
           <webApp>${project.build.directory}/geonetwork</webApp>

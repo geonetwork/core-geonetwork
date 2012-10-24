@@ -228,7 +228,6 @@ public class SvnManager {
      */
 	private UserSession getDefaultSession() {
 		UserSession session = new UserSession();
-		session.authenticate("unknown", "unknown", "unknown", "unknown", "unknown", "unknown-email-address@nothing.com");
 		return session;
 	}
 

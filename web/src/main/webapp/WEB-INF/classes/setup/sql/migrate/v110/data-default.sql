@@ -1,15 +1,21 @@
--- TODO if needed to migrate 2.4.2 and previous version
+ALTER TABLE Users ADD security varchar(128);
+ALTER TABLE Users ADD authtype varchar(32);
 
-UPDATE Settings SET value='1.1.0' WHERE name='version';
-UPDATE Settings SET value='geocat' WHERE name='subVersion';
-UPDATE Settings SET value='prefer_locale' where name='only';
+UPDATE Users SET security='update_hash_required';
 
-INSERT INTO Settings VALUES (89,80,'bind',NULL);
-INSERT INTO Settings VALUES (102,86,'subtree','false');
-INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=org');
-INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
-INSERT INTO Settings VALUES (150,80,'anonBind','true');
+ALTER TABLE Users ALTER COLUMN password varchar(120) not null;
+
+-- Delete LDAP settings
+DELETE FROM Settings WHERE parentid=86;
+DELETE FROM Settings WHERE parentid=87;
+DELETE FROM Settings WHERE parentid=89;
+DELETE FROM Settings WHERE parentid=80;
+DELETE FROM Settings WHERE id=80;
 
 UPDATE settings SET value='0 0 1 * * ?' where name = 'every';
 
 ALTER TABLE HarvestHistory ADD elapsedTime int;
+
+UPDATE Settings SET value='1.1.0' WHERE name='version';
+UPDATE Settings SET value='geocat' WHERE name='subVersion';
+UPDATE Settings SET value='prefer_locale' where name='only';

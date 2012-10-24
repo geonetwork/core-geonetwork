@@ -2310,7 +2310,7 @@ public class DataManager {
      * @param file
      * @throws Exception
      */
-	public void setThumbnail(ServiceContext context, String id, boolean small, String file) throws Exception {
+	public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file) throws Exception {
 		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
@@ -2326,7 +2326,7 @@ public class DataManager {
 		env.addContent(new Element("port").setText(port));
 		env.addContent(new Element("baseUrl").setText(baseUrl));
 		
-		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
 
     /**
@@ -2336,10 +2336,10 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(ServiceContext context, String id, boolean small) throws Exception {
+	public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small) throws Exception {
 		Element env = new Element("env");
 
-		manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL);
 	}
 
     /**
@@ -2351,7 +2351,7 @@ public class DataManager {
      * @param styleSheet
      * @throws Exception
      */
-	private void manageThumbnail(ServiceContext context, String id, boolean small, Element env,
+	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
 										  String styleSheet) throws Exception {
 		
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
@@ -2361,11 +2361,8 @@ public class DataManager {
 			return;
 
 		md.detach();
-		
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String schema = getMetadataSchema(dbms, id);
 
-		//--- remove thumbnail from metadata
+		String schema = getMetadataSchema(dbms, id);
 
 		//--- setup environment
 		String type = small ? "thumbnail" : "large_thumbnail";

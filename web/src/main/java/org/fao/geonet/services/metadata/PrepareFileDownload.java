@@ -112,12 +112,12 @@ public class PrepareFileDownload implements Service
 		//--- process links to a file (have name field not blank)
 		//--- if they are a reference to a downloadable local file then get size 
 		//--- and date modified, if not then set local to false 
-		xp = XPath.newInstance ("link[@name!='']");
+		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
 		elems = xp.selectNodes(elBrief);
 		response = processDownloadLinks(context, id, dm.getSiteURL(), elems, response);
 
 		//--- now process web links so that they can be displayed as well
-		xp = XPath.newInstance ("link[@type='text/html']");
+		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:LINK')]");
 		elems = xp.selectNodes(elBrief);
 		response = processWebLinks(elems, response);
 

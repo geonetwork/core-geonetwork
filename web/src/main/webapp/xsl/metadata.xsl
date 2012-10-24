@@ -36,9 +36,7 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded" />
 
-		<xsl:variable name="schemaTemplate">
-				<xsl:value-of select="concat('metadata-',$schema)"/>
-		</xsl:variable>	
+		<xsl:variable name="schemaTemplate" select="concat('metadata-',$schema)"/>
 		<saxon:call-template name="{$schemaTemplate}"> 
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
@@ -227,6 +225,7 @@
 	<xsl:template mode="simpleElement" match="*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
+		<xsl:param name="editAttributes" select="true()"/>
 		<xsl:param name="overrideMandatory" select="''"/>
 		<xsl:param name="title">
 		
@@ -253,6 +252,7 @@
 				<xsl:call-template name="editSimpleElement">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="title"    select="$title"/>
+					<xsl:with-param name="editAttributes" select="$editAttributes"/>
 					<xsl:with-param name="text"     select="$text"/>
 					<xsl:with-param name="helpLink" select="$helpLink"/>
 					<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
@@ -474,6 +474,7 @@
 	<xsl:template name="editSimpleElement">
 		<xsl:param name="schema"/>
 		<xsl:param name="title"/>
+		<xsl:param name="editAttributes"/>
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
 		<xsl:param name="overrideMandatory" select="''"/>
@@ -528,6 +529,7 @@
 			<xsl:with-param name="downLink"   select="$downLink"/>
 			<xsl:with-param name="helpLink"   select="$helpLink"/>
 			<xsl:with-param name="validationLink" select="$validationLink"/>
+			<xsl:with-param name="editAttributes" select="$editAttributes"/>
 			<xsl:with-param name="edit"       select="true()"/>
 			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="overrideMandatory" select="$overrideMandatory"/>
@@ -776,6 +778,7 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="id" select="generate-id(.)"/>
 		<xsl:param name="visible" select="true()"/>
+		<xsl:param name="editAttributes" select="true()"/>
 		<xsl:param name="overrideMandatory" select="''"/>
 
 		<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
@@ -893,7 +896,7 @@
 				 	* empty field with nilReason attributes 
 				-->
 				<xsl:choose>
-					<xsl:when test="$edit 
+					<xsl:when test="$edit and $editAttributes
 						and count(geonet:attribute)&gt;0 
 						and count(*/geonet:attribute[@name='codeList'])=0 
 						and count(*/geonet:attribute[@name='gco:nilReason'])=0

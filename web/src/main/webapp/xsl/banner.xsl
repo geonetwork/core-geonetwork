@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="#all">
 
 	<xsl:variable name="modal" select="count(/root/gui/config/search/use-modal-box-for-banner-functions)"/>
 
@@ -107,33 +110,55 @@
                         <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/about.html"><xsl:value-of select="/root/gui/strings/nav/about"/></a>
                     </td></tr></table>
                 </td>
-                <xsl:choose>
-                    <xsl:when test="string(/root/gui/session/userId)!=''">
-                        <td align="right" class="banner-login">
-                            <form name="logout" action="user.logout" method="post">
-                                <xsl:value-of select="/root/gui/strings/user"/>
-                                <xsl:text>: </xsl:text>
-                                <xsl:value-of select="/root/gui/session/name"/>
-                                <xsl:text> </xsl:text>
-                                <xsl:value-of select="/root/gui/session/surname"/>
-                                <xsl:text> </xsl:text>
-                                <button id="logoutButton" class="banner" onclick="goSubmit('logout')"><xsl:value-of select="/root/gui/strings/logout"/></button>
-                            </form>
-                        </td>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <td align="right" class="banner-login">
-                            <form name="login" action="user.login" method="post">
-                                <input type="submit" style="display: none;" />
-                                <xsl:value-of select="/root/gui/strings/username"/>
-                                <input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>
-                                <xsl:value-of select="/root/gui/strings/password"/>
-                                <input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
-                                <button id="loginButton" class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
-                            </form>
-                        </td>
-                    </xsl:otherwise>
-                </xsl:choose>
+				<xsl:choose>
+					<xsl:when test="string(/root/gui/session/userId)!=''">
+						<td align="right" class="banner-login">
+							<form name="logout" action="{/root/gui/url}/j_spring_security_logout" method="post">
+								<xsl:value-of select="/root/gui/strings/user"/>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="/root/gui/session/name"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="/root/gui/session/surname"/>
+								<xsl:text> </xsl:text>
+								<button class="banner" onclick="doLogout()"><xsl:value-of select="/root/gui/strings/logout"/></button>
+							</form>
+						</td>
+					</xsl:when>
+					<xsl:when test="string(/root/gui/reqService) = 'login.form'">
+					<!-- let login page display fields -->
+					<td align="right" class="banner-login"></td>
+					</xsl:when>
+					<xsl:otherwise>
+						<td align="right" class="banner-login">
+							<xsl:choose>
+								<xsl:when test="java:isCasEnabled()">
+									<xsl:variable name="casparams">
+										<xsl:apply-templates mode="casParams" select="root/request/*"></xsl:apply-templates>
+									</xsl:variable>
+									<a class="banner" href="{/root/gui/locService}/{/root/gui/reqService}?casLogin{$casparams}">
+										<xsl:value-of select="/root/gui/strings/login"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<form name="login" action="{/root/gui/url}/j_spring_security_check" method="post">
+										<xsl:if test="string(/root/gui/env/shib/use)='true'">
+											<a class="banner" href="{/root/gui/env/shib/path}">
+												<xsl:value-of select="/root/gui/strings/shibLogin"/>
+											</a>
+											|
+										</xsl:if>
+										<input type="submit" style="display: none;" />
+										<xsl:value-of select="/root/gui/strings/username"/>
+										<input class="banner" type="text" id="username" name="username" size="10" onkeypress="return entSub('login')"/>
+										<xsl:value-of select="/root/gui/strings/password"/>
+										<input class="banner" type="password" id="password" name="password" size="10" onkeypress="return entSub('login')"/>
+										<button class="banner" onclick="goSubmit('login')"><xsl:value-of select="/root/gui/strings/login"/></button>
+									</form>
+								</xsl:otherwise>
+							</xsl:choose>
+						</td>
+					</xsl:otherwise>
+				</xsl:choose>
             </tr>
 
             <!-- FIXME: should also contain links to last results and metadata -->
@@ -178,5 +203,7 @@
     </xsl:template>
 
 
+	<xsl:template mode="casParams" match="casLogin" priority="10"></xsl:template>
+	<xsl:template mode="casParams" match="*">&amp;<xsl:value-of select="name(.)"/><xsl:if test="normalize-space(text())!=''">=<xsl:value-of select="text()"/></xsl:if></xsl:template>
 </xsl:stylesheet>
 

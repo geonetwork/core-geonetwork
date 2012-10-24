@@ -329,7 +329,13 @@
   <xsl:template mode="iso19139" match="gts:TM_PeriodDuration|gml:duration" priority="100">
     <xsl:param name="schema" />
     <xsl:param name="edit" />
-    
+    <xsl:param name="title">
+        <xsl:call-template name="getTitle">
+            <xsl:with-param name="name" select="name(.)"/>
+            <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+    </xsl:param>   
+ 
     <!--Set default value -->
     <xsl:variable name="p">
       <xsl:choose>
@@ -384,6 +390,7 @@
     <xsl:apply-templates mode="simpleElement" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="edit"   select="$edit"/>
+      <xsl:with-param name="title"   select="$title"/>
       <xsl:with-param name="text"   select="$text"/>
     </xsl:apply-templates>
   </xsl:template>
@@ -520,7 +527,6 @@
     <xsl:apply-templates mode="simpleElement" select=".">
       <xsl:with-param name="schema"   select="$schema"/>
       <xsl:with-param name="edit"     select="$edit"/>
-      <xsl:with-param name="title"    select="'Name'"/>
       <xsl:with-param name="text"     select="$text"/>
     </xsl:apply-templates>
   </xsl:template>
@@ -1416,12 +1422,19 @@
   <xsl:template mode="iso19139" match="gml:*[gml:beginPosition|gml:endPosition]|gml:TimeInstant[gml:timePosition]" priority="2">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
+    <xsl:param name="title">
+      <xsl:call-template name="getTitle">
+        <xsl:with-param name="name" select="name(.)"/>
+        <xsl:with-param name="schema" select="$schema"/>
+      </xsl:call-template>
+    </xsl:param>
     <xsl:for-each select="*">
     <xsl:choose>
       <xsl:when test="$edit=true() and (name(.)='gml:beginPosition' or name(.)='gml:endPosition' or name(.)='gml:timePosition')">
         <xsl:apply-templates mode="simpleElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="edit"   select="$edit"/>
+          <xsl:with-param name="title"   select="$title"/>
           <xsl:with-param name="text">
             <xsl:variable name="ref" select="geonet:element/@ref"/>
             <!-- 

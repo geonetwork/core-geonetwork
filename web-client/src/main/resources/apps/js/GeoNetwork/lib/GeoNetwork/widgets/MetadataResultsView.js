@@ -298,7 +298,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.acMenu.on('click', function(){
             this.createMenu(idx, this);
             this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
-        }.bind(this));
+        }, this);
         this.acMenu.show();
     },
     createMenu: function(id, dv){
@@ -523,9 +523,144 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         this.contextMenu = undefined;
         this.initRatingWidget();
         this.dislayLinks(records);
+        this.dislayRelations(records);
         //this.initMenu();
     },
     /** private: method[dislayLinks]
+     *  Create link menu in the div for each records
+     *  
+     */
+    dislayLinks: function (records) {
+        var view = this;
+        Ext.each(records, function (r) {
+            var links = r.get('links'),
+                id = r.get('id');
+            
+            if (links.length > 0) {
+                var div = Ext.query('#md-links-' + id, view.el.dom.body),
+                    el = Ext.get(div[0]);
+                
+                // The template may not defined a md-links placeholder
+                if (el) {
+                    var store = new Ext.data.ArrayStore({
+                        autoDestroy: true,
+                        idIndex: 0,  
+                        fields: [
+                            {name: 'href', mapping: 'href'}, 
+                            {name: 'name', mapping: 'name'}, 
+                            {name: 'protocol', mapping: 'protocol'}, 
+                            {name: 'title', mapping: 'title'}, 
+                            {name: 'type', mapping: 'type'}
+                        ],
+                        data: links
+                    });
+                    store.sort('type');
+                    
+                    
+                    var linkButton = [], label = null, currentType = null, bt,
+                         allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
+                         hasDownloadAction = false;
+                    
+                    store.each(function (record) {
+                        
+                        // Avoid empty URL
+                        if (record.get('href') !== '') {
+                            // Check that current record type is the same as the previous record
+                            // In such case, add the previous button if exist
+                            // or create a new button to be added later
+                            if (currentType === null || currentType !== record.get('type')) {
+                                if (linkButton.length !== 0) {
+                                    view.addLinkMenu(linkButton, label, currentType, el);
+                                }
+                                linkButton = [];
+                                currentType = record.get('type');
+                                label = OpenLayers.i18n('linklabel-' + currentType);
+                                if (currentType === 'application/x-compressed') {
+                                    hasDownloadAction = true;
+                                }
+                            }
+                            
+                            var text = null, handler = null;
+                            
+                            // Only display WMS link if dynamic property set to true for current user & record
+                            if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
+                                if (allowDynamic) {
+                                    linkButton.push({
+                                        text: record.get('title') || record.get('name'),
+                                        handler: function (b, e) {
+                                            // FIXME : ref to app
+                                            app.switchMode('1', true);
+                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), id]]);
+                                        }
+                                    });
+                                }
+                            } else {
+                                // If link is uploaded to GeoNetwork the resources.get service is used
+                                // Check if allowDownload 
+                                var displayLink = true;
+                                if (record.get('href').indexOf('resources.get') !== -1) {
+                                    displayLink = allowDownload;
+                                } else if (currentType === 'application/vnd.google-earth.kml+xml') {
+                                    // Google earth link is provided when a WMS is provided
+                                    displayLink = allowDynamic;
+                                }
+                                if (displayLink) {
+                                    linkButton.push({
+                                        text: (record.get('title') || record.get('name')),
+                                        href: record.get('href')
+                                    });
+                                }
+                            }
+                            
+                        }
+                        
+                    });
+                    // Add the latest button
+                    if (linkButton !== null) {
+                        view.addLinkMenu(linkButton, label, currentType, el);
+                    }
+                    
+                    // Add the download all button
+                    if (hasDownloadAction) {
+                        view.addLinkMenu([{
+                            text: 'download',
+                            handler: function () {
+                                // FIXME : this call require the catalogue to be named catalogue
+                                catalogue.metadataPrepareDownload(id);
+                            }
+                        }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
+                    }
+                }
+            }
+        }, this);
+    },
+    /** private: method[addLinkMenu]
+     *  Display a menu with links for a metadata record for a protocol.
+     *  If there is only one element in the linkButton array, display a menu
+     *  and display a dropdown menu if not.
+     */
+    addLinkMenu: function (linkButton, label, currentType, el) {
+        if (linkButton.length === 1) {
+            var handler = linkButton[0].handler || function () {
+                window.open(linkButton[0].href);
+            };
+            bt = new Ext.Button({
+                text: label,
+                tooltip: linkButton[0].text,
+                handler: handler,
+                iconCls: GeoNetwork.Util.protocolToCSS[currentType] || currentType,
+                renderTo: el
+            });
+        } else {
+            bt = new Ext.Button({
+                text: label,
+                menu: new Ext.menu.Menu({cls: 'links-mn', items: linkButton}),
+                iconCls: GeoNetwork.Util.protocolToCSS[currentType] || currentType,
+                renderTo: el
+            });
+        }
+    },
+    /** private: method[dislayRelations]
      *  Search for children for all records which are series.
      *  All members are displayed in a UL element identified by "md-relation-{metadata_id}".
      *  
@@ -536,7 +671,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  
      *  TODO : Improve search performance of relation service
      */
-    dislayLinks: function(records){
+    dislayRelations: function(records){
         var relationTypes = 'children', view = this;
         
         if (this.displaySerieMembers) {

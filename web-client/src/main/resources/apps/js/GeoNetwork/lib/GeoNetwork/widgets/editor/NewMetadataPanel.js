@@ -43,6 +43,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         border: false,
         frame: false,
         isTemplate: 'n',
+        singleSelect: true,
         layout: 'anchor'
     },
     editor: undefined,

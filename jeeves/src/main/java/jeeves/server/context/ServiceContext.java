@@ -74,7 +74,7 @@ public class ServiceContext extends BasicContext
     }
 
 
-    private UserSession    userSession;
+    private UserSession    userSession = new UserSession();
 	private ProfileManager profilMan;
 
 	private InputMethod    input;

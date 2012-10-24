@@ -446,7 +446,11 @@ dl.xml * dd {
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
-
+.alert-danger, .alert-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
 .alert * h2 {
     color: #C09853;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -474,11 +478,17 @@ dl.xml * dd {
     -moz-border-radius: 9px;
     border-radius: 9px;
 }
-.label-warning, .badge-warning, .badge-error {
-    background-color: #F89406;
-}
 .label-success, .badge-success {
     background-color: #468847;
+}
+.label-warning, .badge-warning {
+    background-color: #F89406;
+}
+.label-important, .badge-important, .label-error, .badge-error {
+    background-color: #B94A48;
+}
+.label-info, .badge-info {
+    background-color: #3A87AD;
 }
 .validation * h2, .validation * div {
     white-space: normal !important;

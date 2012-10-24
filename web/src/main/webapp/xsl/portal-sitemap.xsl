@@ -28,8 +28,6 @@
         <xsl:variable name="schemaid" select="schemaid"/>
         <xsl:variable name="changedate" select="changedate"/>
         
-        <xsl:value-of select="$format" />
-        
         <url>
           <loc>
             <xsl:choose>

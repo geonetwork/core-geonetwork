@@ -241,8 +241,8 @@ GeoNetwork.Lang.de = {
 'select':'Wählen',
 'username':'Benutzername',
 'password':'Kennwort',
-'login':'Login',
-'logout':'Logout',
+'login': 'Sign in',
+'logout': 'Sign out',
 'administration':'Verwaltung',
 'validationReport':'Validation Report',
 'status':'Status',
@@ -275,6 +275,7 @@ GeoNetwork.Lang.de = {
 'updateChildren':'Kinder Aktualisieren',
 'records':'Aufzeichnungen',
 'record':'Aufzeichnung',
+'recordsFound': ' record(s) found',
 'help':'Hilfe',
 'publishError':'Veröffentlichung fehlgeschlagen.',
 'outOfMemoryError':'Nicht genügend Speicher verfügbar.',
@@ -496,7 +497,17 @@ GeoNetwork.Lang.de = {
 'rule': 'rule',
 'schematron-rules-geonetwork': 'GeoNetwork validation',
 'schematron-rules-iso': 'ISO validation',
-'schematron-rules-inspire': 'INSPIRE validation'
+'schematron-rules-inspire': 'INSPIRE validation',
+'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+'linklabel-OGC:WMS': 'Add to map',
+'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+'linklabel-application/zip': 'Download',
+'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+'linklabel-application/x-compressed': 'Download',
+'linklabel-text/html': 'Web link',
+'linklabel-text/plain': 'Web link',
+'linklabel-image/png': 'Image link',
+'linklabel-': 'Link'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.Lang.de);
