@@ -65,7 +65,6 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         
         if(this.label) {
 	        this.on('afterrender', function(c) {
-	        	console.log('cattree rendered');
 	        	c.body.insertFirst({
 	        		tag: 'label',
 	        		html: this.label+' :',

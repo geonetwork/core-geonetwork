@@ -522,6 +522,7 @@ cat.app = function() {
 			cpt.on('advancedmode',function(cpt) {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(true);
+					if(!Ext.isIE) // temp
 					whatForm.body.removeClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
@@ -529,6 +530,7 @@ cat.app = function() {
 			cpt.on('simplemode',function() {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(false);
+					if(!Ext.isIE) //temp
 					whatForm.body.addClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
