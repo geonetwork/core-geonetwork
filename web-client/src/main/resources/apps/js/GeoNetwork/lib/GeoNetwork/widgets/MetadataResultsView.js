@@ -300,7 +300,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
 	            this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
-	        }.bind(this));
+	        }, this);
 	        this.acMenu.show();
         }
     },
@@ -317,7 +317,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         } else {
             this.contextMenu.setRecord(record);
         }
-        
     },
     /** private: method[zoomTo] 
      *  Zoom to metadata bounding boxes for all registered maps.
@@ -606,6 +605,9 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
                     
                     if (this.mapsProjection !== 'EPSG:4326') {
+                    	if(this.projectionTo.getCode() == 'EPSG:900913' && this.projectionFrom.getCode() == 'EPSG:4326') {
+                    		this.projectionTo.proj = null;
+                    	}
                         p1.transform(this.projectionFrom, this.projectionTo);
                         p2.transform(this.projectionFrom, this.projectionTo);
                         p3.transform(this.projectionFrom, this.projectionTo);
