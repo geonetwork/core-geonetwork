@@ -564,7 +564,7 @@
                         <xsl:choose>
                           <xsl:when
                             test="normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString)!=''">
-                            <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gco:CharacterString"/>
+                           <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gco:CharacterString"/>&#160;
                           </xsl:when>
                           <xsl:otherwise>
                             <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>

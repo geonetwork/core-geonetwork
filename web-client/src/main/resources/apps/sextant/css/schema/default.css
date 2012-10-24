@@ -224,7 +224,7 @@ div.result-metadata-modal-content table td {
     cursor:pointer;
 }
 .mdshow-tabpanel .file-link {
-    background-image:url("../../images/default/link.png");
+    background-image:url("../../images/default/link-over.png");
     background-repeat: no-repeat;
     border: medium none;
     height: 16px;
