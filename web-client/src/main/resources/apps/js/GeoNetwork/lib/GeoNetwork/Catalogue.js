@@ -1120,7 +1120,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         		width: 800,
         		height: 500,
         		html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
-        				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>',
+        				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>'
         		
         	});
         	

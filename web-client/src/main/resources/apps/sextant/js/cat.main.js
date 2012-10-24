@@ -458,7 +458,7 @@ cat.app = function() {
 						'<div class="btnText"></div>',
 						'<div class="btnRight">&#160;</div>',
 						'</div>'),
-						buttonSelector: '.btnText',
+						buttonSelector: '.btnText'
 				}),
 			searchCb : function() {
 
@@ -693,7 +693,7 @@ cat.app = function() {
 							}
 							fitHeightToBody(o);
 						}
-					},
+					}
 				}
 			});
 			
@@ -781,7 +781,7 @@ cat.app = function() {
 			
 			tBar.changeMode(true);
 			Ext.get('load-spinner').hide();
-		},
+		}
 	}
 }
 

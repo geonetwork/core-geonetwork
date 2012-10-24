@@ -9,7 +9,7 @@ cat.list = function() {
 	var createSelect = function(str, options) {
 		var disabled = (str.length) ? '' : 'disabled="disabled" ';
 		var btn = new Ext.Button({
-			fieldLabel : 'download',
+			fieldLabel : 'download'
 		});
 		return [
 				'  <div class="buttonSet ui-helper-clearfix field select id={uuid}">',

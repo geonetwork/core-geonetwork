@@ -44,7 +44,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 		            	this.curMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
 		            }
         		}
-	        }.bind(this));
+	        }, this);
         }
     },
     
@@ -159,7 +159,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             listeners: {
             	mouseout: {
             		fn: function(m) {
-            			//m.hide();
+            			m.hide();
             		}
             	}
             }
@@ -241,7 +241,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                     this.add(this.statusAction);
                     this.add(this.versioningAction);
                     
-                },
+                }
             });
         } else {
             this.contextMenu.setRecord(record);
