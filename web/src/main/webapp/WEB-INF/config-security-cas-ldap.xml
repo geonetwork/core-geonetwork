@@ -1,0 +1,26 @@
+<beans 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd" 
+          xmlns:sec="http://www.springframework.org/schema/security"
+          xmlns:ctx="http://www.springframework.org/schema/context"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns="http://www.springframework.org/schema/beans">
+
+	<!-- Depends on config-security-ldap.xml also being imported -->
+
+    <bean id="casUserService" class="org.springframework.security.ldap.userdetails.LdapUserDetailsService">
+        <constructor-arg index="0" ref="ldapUserSearch" />
+        <property name="userDetailsMapper" ref="ldapUserContextMapper" />
+    </bean>
+
+    <bean id="ldapUserSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+        <constructor-arg index="0" value="${ldap.sync.user.search.base}"/>
+        <constructor-arg index="1" value="${ldap.sync.user.search.filter}"/>
+        <constructor-arg index="2" ref="contextSource" />
+    </bean>
+
+</beans>

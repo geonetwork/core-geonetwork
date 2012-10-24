@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	exclude-result-prefixes="xsl geonet">
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="xsl geonet java">
 
 	<xsl:variable name="mylang" select="/root/gui/language"/>
 	<xsl:variable name="mcp" select="/root/gui/schemalist[name='iso19139.mcp']"/>
@@ -247,7 +248,7 @@
 				</xsl:if>
 					
 				<!-- Template -->
-				<xsl:if test="string(/root/gui/session/userId)!='' and /root/gui/services/service[@name='metadata.edit']">
+				<xsl:if test="string(/root/gui/session/userId)!='' and java:isAccessibleService('metadata.edit')">
 					<div class="row">
 						<span class="labelField"><xsl:value-of select="/root/gui/strings/kind"/></span>
 						

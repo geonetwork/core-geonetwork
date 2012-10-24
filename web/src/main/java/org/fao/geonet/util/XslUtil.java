@@ -3,16 +3,22 @@ package org.fao.geonet.util;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
+
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -56,6 +62,46 @@ public final class XslUtil
     {
         String result = src.toString().replaceAll(pattern.toString(), substitution.toString());
         return result;
+    }
+    
+    public static boolean isCasEnabled() {
+    	return existsBean("casEntryPoint");
+    }
+    /** 
+     * Check if bean is defined in the context
+     * 
+     * @param beanId id of the bean to look up
+     */
+    public static boolean existsBean(String beanId) {
+    	ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
+    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+    	if(springContext == null) return true;
+    	return springContext.containsBean(beanId);
+    }
+    /**
+     * Optimistically check if user can access a given url.  If not possible to determine then
+     * the methods will return true.  So only use to show url links, not check if a user has access
+     * for certain.  Spring security should ensure that users cannot access restricted urls though.
+     *  
+     * @param serviceName the raw services name (main.home) or (admin) 
+     * 
+     * @return true if accessible or system is unable to determine because the current
+     * 				thread does not have a ServiceContext in its thread local store
+     */
+    public static boolean isAccessibleService(Object serviceName) {
+    	ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
+    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+    	if(springContext == null) return true;
+    	WebInvocationPrivilegeEvaluator eval = springContext.getBean(WebInvocationPrivilegeEvaluator.class);
+    	SecurityContext context = SecurityContextHolder.getContext();
+    	if(eval == null || context == null) return true;
+		Authentication authentication = context.getAuthentication();
+		boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
+		return allowed;
     }
     /**
      * Takes the characters until the pattern is matched

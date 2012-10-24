@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.user;
 
+import javax.servlet.ServletContext;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Service;
@@ -30,6 +32,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -59,36 +62,18 @@ public class PwUpdate implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String password    = Util.getParam(params, Params.PASSWORD);
-		String newPassword = Util.scramble(Util.getParam(params, Params.NEW_PASSWORD));
+		ServletContext servletContext = context.getServlet().getServletContext();
+		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		UserSession session = context.getUserSession();
-		String      userId  = session.getUserId();
+		String      currentUserId  = session.getUserId();
 
-		if (userId == null) throw new UserNotFoundEx(null);
+		if (currentUserId == null) throw new UserNotFoundEx(null);
 
-		
-		// check valid user 
-		int iUserId = Integer.parseInt(userId);
-		Element elUser = dbms.select(	"SELECT * FROM Users WHERE id=?",iUserId);
-		if (elUser.getChildren().size() == 0)
-			throw new UserNotFoundEx(userId);
-
-		// check old password
-		String query = "SELECT * FROM Users WHERE id=? AND password=?";
-		elUser = dbms.select(query, iUserId, Util.scramble(password));
-		if (elUser.getChildren().size() == 0) {
-			// Check old password hash method
-			elUser = dbms.select(query, iUserId, Util.oldScramble(password));
-
-			if (elUser.getChildren().size() == 0)
-				throw new IllegalArgumentException("Old password is not correct");
-		}
-		
-		
-		// all ok so change password
-		dbms.execute("UPDATE Users SET password=? WHERE id=?", newPassword, new Integer(userId));
+		int iUserId = Integer.parseInt(currentUserId);
+		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
