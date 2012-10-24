@@ -511,7 +511,7 @@
   <sequence>Sequence</sequence>
 	<groupManagement>Group management</groupManagement>
 	<groupManDes>Add/modify/delete and show groups</groupManDes>
-	<groups>Groups</groups>
+	<groups>Catalogs</groups>
 	<harvestingManagement>Harvesting management</harvestingManagement>
 	<harvestingManDes>Add/modify/delete/start/stop harvesting tasks</harvestingManDes>
 	<help>Help</help>

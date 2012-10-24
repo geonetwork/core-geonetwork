@@ -28,5 +28,6 @@ cat.lang.fr = {
     ,"modalRedirect": "Accéder directement au "
     ,"wmsPortlet": "Geoviewer"
     ,"downloadPortlet":"Panier"
+    ,'chooseGroup': 'Selectionner un catalogue'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);
