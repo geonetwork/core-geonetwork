@@ -7,7 +7,7 @@
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<!-- ============================================================================================= -->
-	<!-- === Generate a table row for the harvesting's webdav privilege list -->
+	<!-- === Generate a table row for the harvesting's csw privilege list -->
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="/root/group">

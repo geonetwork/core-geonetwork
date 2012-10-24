@@ -4,9 +4,6 @@
 //===
 //=====================================================================================
 
-/*ker.include('calendar/calendar.js');
-ker.include('calendar/calendar-setup.js');
-ker.include('calendar/lang/calendar-en.js');*/
 ker.include('harvesting/cgp/model.js');
 ker.include('harvesting/cgp/view.js');
 
@@ -40,20 +37,9 @@ function Cgp(xmlLoader)
 	//===
 	//=====================================================================================
 
-	this.getType = function()
-	{
-		return "cgp";
-	}
-
-	this.getLabel = function()
-	{
-		return loader.eval("info[@type='cgp']/long");
-	}
-
-	this.getEditPanel = function()
-	{
-		return "cgp.editPanel";
-	}
+	this.getType = function() { return "cgp"; }
+	this.getLabel = function() { return loader.eval("info[@type='cgp']/long"); }
+	this.getEditPanel = function() { return "cgp.editPanel"; }
 
 	//=====================================================================================
 

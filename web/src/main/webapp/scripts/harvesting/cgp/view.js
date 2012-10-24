@@ -52,10 +52,7 @@ cgp.View = function(xmlLoader)
 					{ id:'cgp.url',         type:'length',   minSize :1,  maxSize :200 },
 					{ id:'cgp.url',         type:'url' },
 					{ id:'cgp.username',    type:'length',   minSize :0,  maxSize :200 },
-					{ id:'cgp.password',    type:'length',   minSize :0,  maxSize :200 },
-					{ id:'cgp.every.days',  type:'integer',  minValue:0, maxValue:99 },
-					{ id:'cgp.every.hours', type:'integer',  minValue:0, maxValue:23 },
-					{ id:'cgp.every.mins',  type:'integer',  minValue:0, maxValue:59 }
+					{ id:'cgp.password',    type:'length',   minSize :0,  maxSize :200 }
 				]);
 
 		shower = new Shower('cgp.useAccount', 'cgp.account');
