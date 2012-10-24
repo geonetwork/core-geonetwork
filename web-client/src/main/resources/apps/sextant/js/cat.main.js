@@ -397,11 +397,23 @@ cat.app = function() {
 		// Add hidden fields to be use by quick metadata links from the admin
 		// panel (eg. my metadata).
 		var ownerField = new Ext.form.TextField({
+			id: 'txtfield-E__owner',
 			name : 'E__owner',
 			hidden : true
 		});
 		var isHarvestedField = new Ext.form.TextField({
+			id: 'txtfield-E__isHarvested',
 			name : 'E__isHarvested',
+			hidden : true
+		});
+		var catalogueField = new Ext.form.TextField({
+			id: 'txtfield-E_siteId',
+			name : 'E_siteId',
+			hidden : true
+		});
+		var catalogueField = new Ext.form.TextField({
+			id: 'txtfield-E_template',
+			name : 'E_template',
 			hidden : true
 		});
 
@@ -409,7 +421,7 @@ cat.app = function() {
 		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
 				undefined);
 		optionsPanel.setVisible(false);
-		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
+		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel, ownerField, isHarvestedField, catalogueField);
 
 		// Add advanced mode criteria to simple form - end
 		var advandcedField = [];
@@ -686,12 +698,32 @@ cat.app = function() {
 				listeners: {
 					afterrender: {
 						fn: function(o){
+							
+							function setHiddenField(name) {
+								if(urlParameters['s_'+name]) {
+									searchForm.getComponent('txtfield-'+name).setValue(urlParameters['s_'+name]);
+								}
+							}
 							var searchPage = cookie.get('cat.search.page');
-							if(searchPage && searchPage > 0) {
+							if (urlParameters.s_search !== undefined) {
+								setHiddenField('E__owner');
+								setHiddenField('E__isHarvested');
+								setHiddenField('E_siteId');
+								setHiddenField('E_template');
+								search();
+							} else if(searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
 								search();
 							}
 							fitHeightToBody(o);
+							
+							var loadDiv = Ext.get('loading');
+							if(loadDiv) {
+								loadDiv.remove();
+								Ext.get('loading-mask').fadeOut({
+									remove : true
+								});
+							}
 						}
 					}
 				}
@@ -735,16 +767,6 @@ cat.app = function() {
 					}
 				});
 			});
-
-			// Hack to run search after all app is rendered within a sec ...
-			// It could have been better to trigger event in
-			// SearchFormPanel#applyState
-			// FIXME
-			if (urlParameters.s_search !== undefined) {
-				setTimeout(function() {
-					searchForm.fireEvent('search');
-				}, 500);
-			}
 		},
 
 		getCatalogue : function() {
@@ -796,15 +818,6 @@ Ext.onReady(function() {
 	GeoNetwork.Util.setLang(cat.language, '..');
 
 	Ext.QuickTips.init();
-	var loadDiv = Ext.get('loading');
-	if(loadDiv) {
-		setTimeout(function() {
-			loadDiv.remove();
-			Ext.get('loading-mask').fadeOut({
-				remove : true
-			});
-		}, 250);
-	}
 	cat.imgPath=cat.imgPath?cat.imgPath:'';
 	
 	app = new cat.app();
