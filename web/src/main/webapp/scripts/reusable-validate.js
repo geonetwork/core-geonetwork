@@ -1,7 +1,6 @@
 var locUrl;
 var editWin;
 var msgWin;
-var msgWinSubmit;
 var grid;
 var rejectBtnDefaultTxt;
 var dataStore;
@@ -9,7 +8,7 @@ var metadataWindow;
 
 function get(prefix, id) {
     var div = Ext.get(prefix + id);
-    if (div == null) {
+    if (div === null) {
         div = Ext.get(prefix + "contacts");
     }
     return div;
@@ -23,7 +22,7 @@ function show(id, buttonTxt) {
     dataStore.proxy.conn.url = locUrl + '/reusable.non_validated.list?type=' + id;
     dataStore.load();
 
-    if (id == 'deleted') {
+    if (id === 'deleted') {
         Ext.get('validate').hide();
         Ext.get('edit').hide();
         Ext.get('reject').update(buttonTxt);
@@ -36,7 +35,7 @@ function showDeletePage(buttonTxt) {
 
 function editWindows(url) {
     var localPrefix = "local://";
-    if (url.indexOf(localPrefix) == 0) {
+    if (url.indexOf(localPrefix) === 0) {
         url = Env.host + Env.locService + '/' + url.substring(localPrefix.length);
     }
     editWin = window.open(url,"_reusableObjectsEdit");
@@ -45,7 +44,7 @@ function editWindows(url) {
 function checked() {
     var results = "";
     grid.getSelectionModel().each(function (record) {
-        if (results.length > 0) results += ','
+        if (results.length > 0) results += ',';
         results += record.data.id;
 
     });
@@ -55,17 +54,17 @@ function checked() {
 function reject(button, submitLabel, cancelLabel) {
     var numChecked = checked();
 
-    if (numChecked == 0) {
+    if (numChecked === 0) {
         return;
     }
-    if (currentPage() == 'deleted') {
+    if (currentPage() === 'deleted') {
         var box = Ext.MessageBox.confirm("Delete Object?", "Are you sure you want to delete the selected objects?", function (choice) {
-            if (choice == 'yes') {
+            if (choice === 'yes') {
                 performOperation("reusable.delete");
             }
         });
     } else {
-        if (msgWin == null) {
+        if (msgWin === null) {
             msgWin = new Ext.Window({
                 applyTo: 'msg_win',
                 layout: 'fit',
@@ -110,11 +109,11 @@ function performOperation(operation, msg, noSelection) {
     noSelection = noSelection === undefined ? false : noSelection;
     var params = [];
     params.id = checked();
-    if (params.id.length == 0 && !noSelection) return;
+    if (params.id.length === 0 && !noSelection) return;
     var page = currentPage();
     params.type = page;
 
-    if (msg != null) {
+    if (msg !== null) {
         params.msg = msg;
     }
 
@@ -245,10 +244,17 @@ function createGrid() {
 
 
 function loadReferencingMetadata(record, body) {
-    var rowHeight = Ext.get(grid.view.getRow(dataStore.indexOf(record))).getHeight();
+    var containingRow = Ext.get(grid.view.getRow(dataStore.indexOf(record)));
+    var rowHeight = containingRow.getHeight();
+    var rowWidth = containingRow.getWidth() - 50;  // id is 50 pixels
+
+    var idWidth = 50;
+    var titleWidth = rowWidth * 0.4;
+    var nameWidth = rowWidth * 0.25;
+    var emailWidth = rowWidth * 0.35;
 
     var store = new Ext.data.Store({
-        url: locUrl + '/reusable.references?id=' + record.data['id'] + '&type=' + currentPage(),
+        url: locUrl + '/reusable.references?id=' + record.data.id + '&type=' + currentPage(),
         reader: new Ext.data.XmlReader({
             record: 'record',
             id: 'id'
@@ -259,24 +265,24 @@ function loadReferencingMetadata(record, body) {
         store: store,
         columns: [{
             header: "id",
-            width: 50,
+            width: idWidth,
             dataIndex: 'id',
             sortable: true
         }, {
             header: "title",
-            width: 500,
+            width: titleWidth,
             fixed: true,
             dataIndex: 'title',
             sortable: true
         }, {
             header: "name",
-            width: 120,
+            width: nameWidth,
             fixed: true,
             dataIndex: 'name',
             sortable: true
         }, {
             header: "email",
-            width: 120,
+            width: emailWidth,
             fixed: true,
             dataIndex: 'email',
             sortable: true
@@ -318,7 +324,7 @@ function loadReferencingMetadata(record, body) {
 
 
     store.load();
-};
+}
 
 function showMetadata(row, record) {
 
