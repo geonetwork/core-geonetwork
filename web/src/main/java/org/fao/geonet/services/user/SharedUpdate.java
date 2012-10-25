@@ -30,6 +30,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 
@@ -38,8 +39,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
-
-import java.util.ArrayList;
 
 //=============================================================================
 
@@ -155,7 +154,7 @@ public class SharedUpdate implements Service
 						"email1, phone1, facsimile1, email2, phone2, facsimile2, onlinename, onlinedescription, validated) "+
 						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, new Integer(id), username, Util.scramble(password), surname,
+				dbms.execute(query, new Integer(id), username, PasswordUtil.encode(context, password), surname,
 					 name, profile, address, state, zip, country, email, organ, kind,
 					 streetnb, street, postbox, city, phone, fac, position, online, hours,
 					 instruct, "y", orgacronym, directnumber, mobile, email1, phone1, fac1, email2, phone2, fac2, onlinename, onlinedesc, validated);
@@ -182,7 +181,7 @@ public class SharedUpdate implements Service
 							+ "orgacronym=?, directnumber=?, mobile=?, email1=?, phone1=?, facsimile1=?, "
 							+ "email2=?, phone2=?, facsimile2=?, onlinename=?, onlinedescription=? "
 							+ "WHERE id=?";
-					dbms.execute(query, username, Util.scramble(password),
+					dbms.execute(query, username, PasswordUtil.encode(context, password),
 							surname, name, address, state, zip, country, email,
 							organ, kind, profile, streetnb, street, postbox,
 							city, phone, fac, position, online, hours,
@@ -215,7 +214,7 @@ public class SharedUpdate implements Service
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
 					String query = "UPDATE Users SET password=? WHERE id=?";
-					dbms.execute (query, Util.scramble(password),new Integer(id));
+					dbms.execute (query, PasswordUtil.encode(context, password),new Integer(id));
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}

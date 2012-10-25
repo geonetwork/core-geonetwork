@@ -43,6 +43,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -65,7 +66,6 @@ public final class ContactsStrategy extends ReplacementStrategy
     private final Dbms   _dbms;
     private final String _styleSheet;
     //private final String _baseURL;
-    private final String _currentLocale;
     private final String _appPath;
     private SerialFactory _serialFactory;
 
@@ -76,7 +76,6 @@ public final class ContactsStrategy extends ReplacementStrategy
         this._dbms = dbms;
         _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
         this._appPath = appPath;
-        _currentLocale = currentLocale;
     }
 
     public Pair<Collection<Element>, Boolean> find(Element placeholder, Element originalElem, String defaultMetadataLang)
@@ -300,7 +299,8 @@ public final class ContactsStrategy extends ReplacementStrategy
         Integer parentInfo = processParent(originalElem, xml.getChild("parentInfo"), _serialFactory.getSerial(dbms, "Users"), dbms, metadataLang);
 
         String kind = "";
-        dbms.execute(query, username, Util.scramble(passwd), surname, name, address, state, zip, country, email1,
+        ServiceContext context = ServiceContext.get();
+        dbms.execute(query, username, PasswordUtil.encode(context, passwd), surname, name, address, state, zip, country, email1,
                 organ, kind, streetnb, street, postbox, city, phone1, fac1, position, online, hours, instruct, "y",
                 orgacronym, directnumber, mobile, validated ? "y" : "n", email2, phone2, fac2, email3, phone3, fac3,
                 onlinename, onlinedesc, parentInfo);

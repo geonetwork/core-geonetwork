@@ -27,6 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -228,7 +229,7 @@ class Harvester
 				} */
 
 		// Uuid from unique URL+objId
-		String uuid = Util.scramble(params.url + anObjectId);
+		String uuid = PasswordUtil.encode(context, params.url + anObjectId);
 
 		// Loading stylesheet
 
