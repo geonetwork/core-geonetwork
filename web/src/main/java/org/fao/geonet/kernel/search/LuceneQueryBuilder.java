@@ -1304,11 +1304,13 @@ public class LuceneQueryBuilder {
         }
 
         if(requestedLanguageOnly.startsWith("only_")) {
-            booleanQuery.add(new TermQuery(new Term(requestedLanguageOnly.substring("only".length()), langCode)), BooleanClause.Occur.MUST);
+            String fieldName = requestedLanguageOnly.substring("only".length());
+            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.MUST);
+        } else if(requestedLanguageOnly.startsWith("prefer")) {
+            String fieldName = requestedLanguageOnly.substring("prefer".length());
+            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.SHOULD);
         }
-        else {
-            booleanQuery.add(new TermQuery(new Term(requestedLanguageOnly.substring("prefer".length()), langCode)), BooleanClause.Occur.SHOULD);
-        }
+
         return booleanQuery;
     }
 }

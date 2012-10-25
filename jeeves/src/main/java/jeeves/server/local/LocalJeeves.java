@@ -1,10 +1,20 @@
 package jeeves.server.local;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.server.JeevesEngine;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.utils.Xml;
+
 import org.jdom.Element;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Provides JVM-local running/invokation of Jeeves engine.
@@ -129,7 +139,20 @@ public class LocalJeeves
 
 			// Make session with all permissions
 			session = new UserSession();
-			session.authenticate("0", "local", "Local", "User", ProfileManager.ADMIN, "local@localhost");
+			JeevesUser user = new JeevesUser(jeeves.getProfileManager())
+			.setId("0")
+			.setUsername("local")
+			.setName("local")
+			.setProfile(ProfileManager.ADMIN)
+			.setEmail( "local@localhost");
+		
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
+		authentication.setDetails(user);
+
+		if(SecurityContextHolder.getContext() == null) {
+			SecurityContextHolder.createEmptyContext();
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			// Add shutdown hook to destroy Jeeves on System.exit()
 			Runtime.getRuntime().addShutdownHook(new Thread()

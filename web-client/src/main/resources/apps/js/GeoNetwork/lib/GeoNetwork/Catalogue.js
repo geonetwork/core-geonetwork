@@ -223,6 +223,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  ``Number``	Number of selected records
      */
     selectedRecords: 0,
+    
+    /**
+     * private: property[casEnabled]
+     *  ``Boolean``	If is cas is the authentication
+     *  mechanism. getInfo will set this property
+     */
+    casEnabled : false,
+    
     /** private: property[info]
      *  ``Object``  Information about the catalog retrieved from xml.info service
      */
@@ -305,8 +313,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             fileDisclaimer: serviceUrl + 'file.disclaimer',
             fileDownload: serviceUrl + 'file.download',
             geopublisher: serviceUrl + 'geoserver.publisher',
-            login: serviceUrl + 'xml.user.login',
-            logout: serviceUrl + 'xml.user.logout',
+            login: this.URL + '/j_spring_security_check',
+            logout: this.URL + '/j_spring_security_logout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
             pdf: serviceUrl + 'pdf.selection.search',
@@ -337,11 +345,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
             metadataMassiveNewOwner: serviceUrl + 'metadata.batch.newowner',
+            getMyInfo: serviceUrl + 'xml.info?type=me',
             getGroups: serviceUrl + 'xml.info?type=groups',
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
             getUsers: serviceUrl + 'xml.info?type=users',
-            getSiteInfo: serviceUrl + 'xml.info?type=site',
+            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth',
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages: serviceUrl + 'isolanguages',
             schemaInfo: serviceUrl + 'xml.schema.info',
@@ -486,12 +495,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[getInfo]
      *  :param refresh: ``boolean`` force refreshing the catalog info if not available.
      *  
-     *  Return catalogue information (site name, organization, id).
+     *  Return catalogue information (site name, organization, id, casEnabled).
      */
     getInfo: function (refresh) {
         if (refresh || this.info === null) {
             this.info = {};
-            var properties = ['name', 'organization', 'siteId'];
+            var properties = ['name', 'organization', 'siteId', 'casEnabled'];
             var request = OpenLayers.Request.GET({
                 url: this.services.getSiteInfo,
                 async: false
@@ -506,6 +515,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     }
                 }, this);
             }
+            this.casEnabled = this.info.casEnabled === 'true';
         }
         return this.info;
     },
@@ -1051,26 +1061,31 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /** api: method[isLoggedIn]
      * 
-     *  Check a service available only for identified user. If user is not identified
-     *  response status is 403. If catalogue URL is wrong, response status is 404 (check catalogue URL).
+     *  Get the xml.info for me. If user is not identified
+     *  response xml will have a me element with an authenticated attribute. 
+     *  If catalogue URL is wrong, response status is 404 (check catalogue URL).
      *  In case of exception continue catalogue connection validation
      *  using the xml.main.error service (@see checkError).
      */
     isLoggedIn: function(){
         var response = OpenLayers.Request.GET({
-            url: this.services.admin, // FIXME : add a ping user info service in GeoNetwork
+            url: this.services.getMyInfo,
             async: false
-        }), exception;
+        }), exception, authenticated, me;
+       
+       me = response.responseXML.getElementsByTagName('me')[0];
+       authenticated = me.getAttribute('authenticated') == 'true';
        
         // Check status and also check than an Exception is not described in the HTML response
         // in case of bad startup
         exception = response.responseText.indexOf('Exception') !== -1;
         
-        if (response.status === 200 && !exception) {
+        if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                firstName: '',
-                surName: '',
-                role: ''
+                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
+                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
+                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
+                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
             };
             this.onAfterLogin();
             return true;
@@ -1102,31 +1117,39 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-
-        OpenLayers.Request.GET({
-            url: this.services.login,
-            params: {
-                username: username,
-                password: password,
-                info: 'true'
-            },
-            success: function(response){
-                user = response.responseXML.getElementsByTagName('record')[0];
-                
-                app.identifiedUser = {
-                    username: user ? user.getElementsByTagName('username')[0].firstChild.nodeValue : '-',
-                    name: user ? user.getElementsByTagName('name')[0].firstChild.nodeValue : '-',
-                    surname: user ? user.getElementsByTagName('surname')[0].firstChild.nodeValue : '-',
-                    role: user ? user.getElementsByTagName('profile')[0].firstChild.nodeValue : 'guest'
-                };
-                app.onAfterLogin();
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogin();
-                // TODO : Get Exception from GeoNetwork
-            }
-        });
+    	var intervalID;
+    	var loginAttempts = 0;
+    	var loginWindow;
+        if (this.casEnabled) {
+        	loginWindow = window.open(this.URL+'/srv/'+this.LANG+'/login.form?casLogin', '_casLogin', 'menubar=no,location=no,toolbar=no', true);
+        	intervalID = setInterval(function (){
+        		loginAttempts += 1;
+        		if(loginAttempts > (5*60*2)) {
+        			clearInterval (intervalID);
+        			app.identifiedUser = undefined;
+	                app.onAfterBadLogin();
+        		} else if(loginWindow.closed) {
+        			clearInterval (intervalID);
+        			app.isLoggedIn();
+        		}
+        	}, 500);
+        } else {
+			OpenLayers.Request.POST({
+			    url: this.services.login,
+			    data: OpenLayers.Util.getParameterString({username: username,password: password}),
+			    headers: {
+			        "Content-Type": "application/x-www-form-urlencoded"
+			    },
+	            success: function(response){
+	            	app.isLoggedIn();  // will get the user information and trigger after login event
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogin();
+	                // TODO : Get Exception from GeoNetwork
+	            }
+	        });
+        }
     },
     /**	api: method[logout]
      *	Log out from the catalogue.
@@ -1134,18 +1157,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Fires the afterLogout or afterBadLogout events
      */
     logout: function(){
-        var app = this;
-        OpenLayers.Request.GET({
-            url: this.services.logout,
-            success: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterLogout();
-            },
-            failure: function(response){
-                app.identifiedUser = undefined;
-                app.onAfterBadLogout();
-            }
-        });
+    	if (this.casEnabled) {
+        	window.location = this.services.logout;
+        } else {
+	        var app = this;
+	        OpenLayers.Request.GET({
+	            url: this.services.logout,
+	            success: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterLogout();
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogout();
+	            }
+	        });
+        }
     },
     /** api: method[checkError]
      *  Check if catalogue started correctly

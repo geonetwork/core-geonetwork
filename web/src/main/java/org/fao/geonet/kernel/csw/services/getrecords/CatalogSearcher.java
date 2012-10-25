@@ -84,7 +84,6 @@ public class CatalogSearcher {
 	private final Element _summaryConfig;
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
-	private final Map<String, LuceneConfigNumericField> _numericFieldSet;
 	private final FieldSelector _selector;
 	private final FieldSelector _uuidselector;
 	private Query         _query;
@@ -97,7 +96,6 @@ public class CatalogSearcher {
 			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
-		_numericFieldSet = luceneConfig.getNumericFields();
 		_selector = selector;
 		_uuidselector = uuidselector;
 		_summaryConfig = summaryConfig;
