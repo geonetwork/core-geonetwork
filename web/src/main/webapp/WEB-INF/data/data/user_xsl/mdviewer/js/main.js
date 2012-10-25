@@ -27,9 +27,13 @@ Ext.onReady(function() {
 		hostUrl : geonetworkUrl
 	});
 	
+	var store = GeoNetwork.data.MetadataResultsFastStore();
+	catalogue.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
+	var record = store.getAt(store.find('uuid', uuid));
+	
 	var formatterServiceUrl;
-	if(urlParameters.loader && urlParameters.loader=='HTTP' && urlParameters.url) {
-		formatterServiceUrl = catalogue.services.mdFormatter + '?loader=HTTP&xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
+	if(urlParameters.url) {
+		formatterServiceUrl = catalogue.services.mdFormatter + '?xsl=' + style + '&url=' + encodeURIComponent(urlParameters.url);
 	} else {
 		formatterServiceUrl = catalogue.services.mdFormatter + '?uuid=' + escape(uuid) + '&xsl=' + style;
 	}
@@ -43,6 +47,7 @@ Ext.onReady(function() {
 	        printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
 	        catalogue: catalogue,
 	        maximized: false,
+	        record: record,
 	        metadataUuid: uuid,
 	        viewMode: style, 
 	        modal: true,
@@ -67,6 +72,7 @@ Ext.onReady(function() {
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
             catalogue: catalogue,
             metadataUuid: uuid,
+            record:record,
             renderTo: Ext.getBody()
         });
 	}
