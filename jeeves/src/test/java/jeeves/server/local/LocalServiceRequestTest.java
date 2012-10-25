@@ -12,6 +12,15 @@ public class LocalServiceRequestTest {
 		assertNoLangNoParams(req);
 	}
 	@Test
+    public void testParseLocalURLNoLangURLWithLangInParams() throws Exception {
+        LocalServiceRequest req = LocalServiceRequest
+                .create("local://csw?thesaurus=external._none_.gemet&id=http%3A//www.eionet.europa.eu/gemet/concept/13275&locales=DE,FR,IT,EN");
+        assertNull("Expected Null but got: " + req.getLanguage(), req.getLanguage());
+        assertEquals("csw", req.getService());
+        assertEquals("request", req.getParams().getName());
+        assertEquals(3, req.getParams().getChildren().size());
+    }
+	@Test
 	public void testParseRelativeURLNoLangNoParams() throws Exception {
 		assertNoLangNoParams(LocalServiceRequest.create("/csw"));
 	}
