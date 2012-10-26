@@ -150,7 +150,7 @@ public class FragmentHarvester {
 	private void loadTemplate() {
 		try {
 			//--- Load template to be used to create metadata from fragments
-			metadataTemplate = dataMan.getMetadataNoInfo(context, params.templateId);
+			metadataTemplate = dataMan.getMetadata(dbms, params.templateId);
 			
 			//--- Build a list of all Namespaces in the metadata document
 			Namespace ns = metadataTemplate.getNamespace();
@@ -365,7 +365,7 @@ public class FragmentHarvester {
 
 				dataMan.setTemplateExt(dbms, iId, "s", title);
 				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadataGroup(dbms, id, false, context);
+				dataMan.indexMetadata(dbms, id, false, false, context);
 
         dbms.commit();
 
@@ -405,7 +405,7 @@ public class FragmentHarvester {
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id, false, context);
+		dataMan.indexMetadata(dbms, id, false, false, context);
 
 		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
@@ -569,7 +569,7 @@ public class FragmentHarvester {
         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
         addCategories(id);
 
-        dataMan.indexMetadataGroup(dbms, id, false, context);	
+        dataMan.indexMetadata(dbms, id, false, false, context);	
 
         dbms.commit();
 				harvestSummary.recordsUpdated++;
@@ -609,9 +609,10 @@ public class FragmentHarvester {
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id, false, context);
-		
-        if(log.isDebugEnabled()) log.debug("	- Commit "+id);
+		dataMan.indexMetadata(dbms, id, false, false, context);
+
+        if(log.isDebugEnabled())
+            log.debug("	- Commit "+id);
 		dbms.commit();
 		harvestSummary.recordsBuilt++;
 	}

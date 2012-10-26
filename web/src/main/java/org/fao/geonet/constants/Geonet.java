@@ -27,6 +27,7 @@ import javax.xml.XMLConstants;
 
 import jeeves.constants.Jeeves;
 
+import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
 /**
@@ -74,6 +75,7 @@ public class Geonet {
 		public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
 		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
+		public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
 		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
@@ -560,6 +562,7 @@ public class Geonet {
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
+    public static final Version LUCENE_VERSION = Version.LUCENE_36;
     public static final String MONITORING   = GEONETWORK + ".monitoring";
 
     /**

@@ -69,6 +69,7 @@ import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Email;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.gml3.GMLConfiguration;
@@ -225,8 +226,8 @@ public final class Utils {
 
         SearchManager searchManager = gc.getSearchmanager();
 
-        IndexReader reader = searchManager.getIndexReader(null);
-        Searcher searcher = new IndexSearcher(reader);
+        GeonetworkMultiReader reader = searchManager.getIndexReader(-1).two();
+        IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
             TreeSet<MetadataRecord> results = new TreeSet<MetadataRecord>(new Comparator<MetadataRecord>(){

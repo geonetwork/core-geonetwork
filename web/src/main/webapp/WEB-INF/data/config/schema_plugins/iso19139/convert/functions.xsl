@@ -146,7 +146,7 @@
     <xsl:template name="defaultTitle">
         <xsl:param name="isoDocLangId"/>
         
-        <xsl:variable name="poundLangId" select="concat('#',upper-case($isoDocLangId))" />
+        <xsl:variable name="poundLangId" select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))" />
 
         <xsl:variable name="identification" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification' or name(.)='srv:SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"></xsl:variable>
         <xsl:variable name="docLangTitle" select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>

@@ -353,13 +353,7 @@ public class Importer {
 					addOperations(context, dm, dbms, defaultPrivileges(), id.get(index), groupId);
 				}
 
-				if (indexGroup) {
-				    dm.doValidate(context, dbms, schema, id.get(index), md.get(index), context.getLanguage(), false);
-					dm.indexMetadataGroup(dbms, id.get(index), true, context);
-				}
-                else {
-                    dm.indexInThreadPool(context,id.get(index),dbms, true, true);
-				}
+				dm.indexMetadata(dbms, id.get(index), true, true, context, true);
 			}
 
             private Element defaultPrivileges() {

@@ -352,7 +352,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id, false, context);
+		dataMan.indexMetadata(dbms, id, false, false, context);
 		result.addedMetadata++;
 
 		return id;
@@ -638,7 +638,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id, false, context);
+		dataMan.indexMetadata(dbms, id, false, false, context);
 	}
 
 	/**

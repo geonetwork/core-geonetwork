@@ -29,6 +29,10 @@ public class SetSystemProperties implements Service {
         final boolean newValue = Boolean.parseBoolean(Util.getParam(params, "value"));
         if(propertyName.equalsIgnoreCase(ThreadPool.SEQUENTIAL_EXECUTION)) {
             System.setProperty(ThreadPool.SEQUENTIAL_EXECUTION, Boolean.toString(newValue));
+        } else if (propertyName.equalsIgnoreCase(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)){
+            System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(newValue));
+        } else {
+            throw new IllegalArgumentException("system property: "+propertyName+" is not permitted to be set via web API");
         }
         return new Element("response").setText("ok");
     }

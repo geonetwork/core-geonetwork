@@ -658,7 +658,7 @@ class Harvester
 			
 			dbms.commit();
 			
-			dataMan.indexMetadataGroup(dbms, reg.id, false, context);
+			dataMan.indexMetadata(dbms, reg.id, false, false, context);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

@@ -934,34 +934,13 @@ public final class XslUtil {
 
         return "";
     }
-
-    /**
-     * the basic way that {@linkplain #twoCharLangCode} works is by taking the first two letters of the
-     * language code.  However since there are multiple ways to map certain language or some time that method does not
-     * work this mapping contains the exceptions.
-     */
-    private static final Map<String,String> LANG_CODE_MAPPING;
-    static {
-        HashMap<String, String> hm = new HashMap<String, String>();
-        hm.put("deu", "ger");
-        hm.put("de", "ger");
-        hm.put("ge", "ger");
-        hm.put("fra", "fre");
-        hm.put("fr", "fre");
-        hm.put("en", "eng");
-        hm.put("it", "ita");
-
-        LANG_CODE_MAPPING = Collections.unmodifiableMap(hm);
-    }
-
+    
 	public static String threeCharLangCode(String langCode) {
 	    if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
 
-		String map = LANG_CODE_MAPPING.get(langCode);
+		if(langCode.length() == 3) return langCode;
 
-		if(map!=null) return map;
-
-		return langCode.toLowerCase();
+		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
 	}
     public static String twoCharLangCode(String langCode) throws Exception {
         if (langCode.length() == 2){

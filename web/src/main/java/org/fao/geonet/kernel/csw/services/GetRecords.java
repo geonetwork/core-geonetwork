@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
 import org.geotools.data.DataStore;
@@ -79,12 +80,17 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
 	private SearchController _searchController;
-	/**
+
+    private LuceneConfig _luceneConfig;
+
+    /**
+     * @param ds 
      * @param summaryConfig
      * @param luceneConfig
      */
 	public GetRecords(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
     	_searchController = new SearchController(ds, summaryConfig, luceneConfig);
+    	this._luceneConfig = luceneConfig;
     }
 
     /**
@@ -713,12 +719,16 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
             }
             else {
-                if (!field.equals(Geonet.SearchResult.SortBy.RELEVANCE)) sortFields.add(Pair.read(field, "DESC".equals(order)));
+                sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
-        if (sortFields.isEmpty()) return null;
+//        if (sortFields.isEmpty()) return null;
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getSearchmanager();
+        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
+		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}
 
 

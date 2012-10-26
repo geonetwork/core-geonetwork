@@ -14,6 +14,7 @@ import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 
 import com.yammer.metrics.core.HealthCheck;
 
@@ -33,14 +34,16 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                IndexReader reader = searchMan.getIndexReader(null);
+                GeonetworkMultiReader reader = searchMan.getIndexReader(-1).two();
+                IndexSearcher searcher = new IndexSearcher(reader);
+
                 try {
                     BooleanQuery query = new BooleanQuery();
                     TermQuery schemaIsIso19139CHE = new TermQuery(new Term("_schema", "iso19139.che"));
                     TermQuery notHarvested = new TermQuery(new Term("_isHarvested", "n"));
                     query.add(new BooleanClause(notHarvested, Occur.MUST));
                     query.add(new BooleanClause(schemaIsIso19139CHE, Occur.MUST_NOT));
-                    TopDocs hits = new IndexSearcher(reader).search(query, 1);
+                    TopDocs hits = searcher.search(query, 1);
                     if (hits.totalHits > 0) {
                         return Result.unhealthy("Found "+hits.totalHits+" metadata that were not harvested but do not have iso19139.che schema");
                     } else {

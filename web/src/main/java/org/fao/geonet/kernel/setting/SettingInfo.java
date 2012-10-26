@@ -111,13 +111,12 @@ public class SettingInfo
      * Whether search results should be only in the requested language.
      * @return
      */
-    public boolean getRequestedLanguageOnly() {
+    public String getRequestedLanguageOnly() {
         String value = sm.getValue("system/requestedLanguage/only");
-        if(value == null) {
-            return false;
-        }
-        else {
-            return value.equals("true");
+        if(value == null || value.trim().equalsIgnoreCase("off")) {
+            return null;
+        } else {
+            return value;
         }
     }
 
@@ -140,13 +139,7 @@ public class SettingInfo
      * @return
      */
     public boolean getIgnoreRequestedLanguage() {
-        String value = sm.getValue("system/requestedLanguage/ignored");
-        if(value == null) {
-            return false;
-        }
-        else {
-            return value.equals("true");
-        }
+        return getRequestedLanguageOnly() == null;
     }
 
     public boolean getLuceneIndexOptimizerSchedulerEnabled()

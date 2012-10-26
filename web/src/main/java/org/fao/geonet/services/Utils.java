@@ -23,6 +23,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.jdom.Element;
 
 public class Utils {
@@ -87,8 +88,9 @@ public class Utils {
 
         SearchManager searchManager = gc.getSearchmanager();
 
-        IndexReader reader = searchManager.getIndexReader(null);
-        Searcher searcher = new IndexSearcher(reader);
+        GeonetworkMultiReader reader = searchManager.getIndexReader(-1).two();
+        IndexSearcher searcher = new IndexSearcher(reader);
+
         try {
             TopDocs tdocs = searcher.search(query, 1);
 

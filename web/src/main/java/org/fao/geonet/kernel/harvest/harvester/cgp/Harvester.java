@@ -317,7 +317,7 @@ class Harvester
 		// Add to Lucene
 		try
 		{
-			dataMan.indexMetadataGroup(dbms, id, false, context);
+			dataMan.indexMetadata(dbms, id, false, false, context);
 			// Add Thumbnails ??
 			result.addedMetadata++;
 		} catch (Throwable t)

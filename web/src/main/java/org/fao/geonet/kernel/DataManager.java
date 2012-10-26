@@ -399,7 +399,6 @@ public class DataManager {
                 try {
                     if (ids.size() > 1) {
                         // servlet up so safe to index all metadata that needs indexing
-                        startIndexGroup();
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
@@ -412,7 +411,6 @@ public class DataManager {
                             }
                         }
                         finally {
-                            endIndexGroup();
                         }
                     }
                     else {
@@ -435,27 +433,7 @@ public class DataManager {
             }
         }
     }
-
-    /**
-     *
-     * @throws Exception
-     */
-	public void startIndexGroup() throws Exception {
-		searchMan.startIndexGroup();
-	}
-
-    /**
-     *
-     * @throws Exception
-     */
-	public void endIndexGroup() throws Exception {
-		searchMan.endIndexGroup();
-	}
-    public void indexMetadataGroup(Dbms dbms, String id, boolean processSharedObjects, ServiceContext srvContext) throws Exception {
-        indexMetadataGroup(dbms, id, processSharedObjects, srvContext, false);
-    }
-
-    /**
+   /**
      *
      * @param dbms
      * @param id

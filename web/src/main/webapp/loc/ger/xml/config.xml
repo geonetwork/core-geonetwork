@@ -22,10 +22,15 @@
 	<reasonForMore>Von der Anzahl Prozessoren</reasonForMore>
 
     <multilingual>Mehrsprachige Einstellungen</multilingual>
-    <autoDetectEnable>Aktivieren Sie die automatische Erkennung der Such-Sprache</autoDetectEnable>
-    <requestedlanguageonly>Suche nur in der gewünschten Sprache</requestedlanguageonly>
-    <requestedlanguagesorted>Suchergebnisse in der gewünschte Sprache sortieren</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorieren der gewünschten Sprache in der Suche</requestedlanguageignored>
+    <autoDetectEnable>Aktivieren Sie automatische Erkennung Suchabfrage Sprache</autoDetectEnable>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguagesorted>Suchergebnisse in gewünschte Sprache auf der Oberseite sortiert</requestedlanguagesorted>
+    <requestedlanguageignored>Ignorieren gewünschten Sprache auf der Suche</requestedlanguageignored>
 
 	<selectionmanager>Suchresultate</selectionmanager>
 	<maxrecords>Maximum der ausgewählten Einträge</maxrecords>

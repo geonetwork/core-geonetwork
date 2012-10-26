@@ -30,6 +30,7 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -53,35 +54,7 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
     private boolean enablePositionIncrements = true;
     private boolean ignoreCase = true;
     private char[] charsToIgnore;
-    
-    /*
-    private synchronized void readStopwords(File stopwordsDir) {
-        if(stopwordsMap.keySet().size() > 0) {
-            System.out.println("stopwords already loaded. Restart app to re-load");
-        }
-        if(!stopwordsDir.exists() || !stopwordsDir.isDirectory()) {
-            Log.warning("GeoNetworkAnalyzer", "Invalid stopwords directory " + stopwordsDir.getAbsolutePath() + ", not using any stopwords");
-            return;
-        }
-        else {
-            System.out.println("loading stopwords");
-            for(File stopwordsFile : stopwordsDir.listFiles()) {
-                System.out.println("stopwords file " + stopwordsFile.getName());
-                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                System.out.println("language: " + language);
-                if(language.length() != 2) {
-                    System.out.println("HUH " + language);
-                }
-                // look up stopwords for that language
-                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());         
-                if(stopwordsForLanguage != null) {
-                    stopwordsMap.put(language, stopwordsForLanguage);
-                }
-            }
-        }        
-    }
-    */
-        
+
     /**
      * Creates this analyzer using no stopwords.
      */

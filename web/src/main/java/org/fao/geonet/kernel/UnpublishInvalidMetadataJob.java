@@ -82,24 +82,19 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             List<MetadataRecord> metadataids = lookUpMetadataIds(dbms);
 
             DataManager dataManager = gc.getDataManager();
-            dataManager.startIndexGroup();
-            try {
-                for (MetadataRecord metadataRecord : metadataids) {
-                    String id = "" + metadataRecord.id;
-                    try {
-                        Record newTodayRecord = validate(gc, metadataRecord, dbms, dataManager);
-                        if (newTodayRecord != null) {
-                            newTodayRecord.insertInto(dbms);
-                        }
-                        dataManager.indexMetadataGroup(dbms, id, false, null, false);
-                    } catch (Exception e) {
-                        String error = Xml.getString(JeevesException.toElement(e));
-                        Log.error(Geonet.INDEX_ENGINE, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
-                                + error);
+            for (MetadataRecord metadataRecord : metadataids) {
+                String id = "" + metadataRecord.id;
+                try {
+                    Record newTodayRecord = validate(gc, metadataRecord, dbms, dataManager);
+                    if (newTodayRecord != null) {
+                        newTodayRecord.insertInto(dbms);
                     }
+                    dataManager.indexMetadata(dbms, id, false, false, null);
+                } catch (Exception e) {
+                    String error = Xml.getString(JeevesException.toElement(e));
+                    Log.error(Geonet.INDEX_ENGINE, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
+                            + error);
                 }
-            } finally {
-                dataManager.endIndexGroup();
             }
         } finally {
             running.set(false);

@@ -513,6 +513,7 @@
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>
+          <encoding>UTF-8</encoding>
           <nomunge>false</nomunge>
           <jswarn>${minify.verbose}</jswarn>
           <excludes>

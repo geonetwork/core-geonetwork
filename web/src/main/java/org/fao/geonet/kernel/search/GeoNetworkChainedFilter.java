@@ -1,13 +1,14 @@
 package org.fao.geonet.kernel.search;
 
+import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.misc.ChainedFilter;
 
 /**
  * Class to make avalaible the chained filters. Used in LanguageSearcher
  */
 public class GeoNetworkChainedFilter extends ChainedFilter {
-    private Filter[] filters;
+	private static final long serialVersionUID = 1L;
+	private Filter[] filters;
 
     public Filter[] getFilters() {
           return filters;

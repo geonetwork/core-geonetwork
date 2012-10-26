@@ -303,7 +303,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id, false, context);
+		dataMan.indexMetadata(dbms, id, false, false, context);
 	}
 
 	
@@ -340,7 +340,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id, false, context);
+		dataMan.indexMetadata(dbms, id, false, false, context);
 		return id;
 	}
 	
