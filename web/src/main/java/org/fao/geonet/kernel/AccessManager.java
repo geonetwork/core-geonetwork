@@ -230,7 +230,7 @@ public class AccessManager {
 			// add (-1) GUEST group 
 			hs.add("-1");
 
-			if (usrSess.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+			if (Geonet.Profile.ADMINISTRATOR.equals(usrSess.getProfile())) {
 				Element elUserGrp = dbms.select("SELECT id FROM Groups");
 
 				List list = elUserGrp.getChildren();
