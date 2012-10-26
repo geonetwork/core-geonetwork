@@ -60,6 +60,7 @@
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
 				<ref bean="exceptionTranslationFilter" />
+				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
@@ -78,7 +79,7 @@
 	</bean>
 
 	<bean id="securityContextRepository" class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
-      <property name="allowSessionCreation" value="false" />
+      <property name="allowSessionCreation" value="true" />
     </bean>
 	
 	<bean id="formLoginFilter"
