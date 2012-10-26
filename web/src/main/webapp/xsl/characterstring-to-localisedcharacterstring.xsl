@@ -90,6 +90,24 @@
 	    </xsl:choose>
    </xsl:template>
 
+	<xsl:template priority="5" match="gmd:language/gco:CharacterString">
+		<gco:CharacterString><xsl:call-template name="normalizeLang"><xsl:with-param name="lang" select="string(.)"/></xsl:call-template></gco:CharacterString>
+	</xsl:template>
+
+	<xsl:template priority="5" match="gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode">
+		<xsl:variable name="lang"><xsl:call-template name="normalizeLang"><xsl:with-param name="lang" select="@codeListValue"/></xsl:call-template></xsl:variable>
+		<gmd:LanguageCode codeList="{@codeList}" codeListValue="{$lang}"> </gmd:LanguageCode>
+	</xsl:template>
+	
+	<xsl:template name="normalizeLang">
+		<xsl:param name="lang" />
+
+		<xsl:choose>
+			<xsl:when test="$lang = 'fra'">fre</xsl:when>
+			<xsl:when test="$lang = 'deu'">ger</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$lang"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	<!-- find all multilingual elements and move CharacterString to LocalisedCharacterString elements 
         this captures all elements with CharacterString and below are the exceptions that should not be caught	
 	--> 

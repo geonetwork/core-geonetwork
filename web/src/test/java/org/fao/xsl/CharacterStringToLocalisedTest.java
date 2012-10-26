@@ -3,17 +3,42 @@ package org.fao.xsl;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import org.fao.xsl.support.*;
 
 import jeeves.utils.Xml;
 
 import org.fao.geonet.util.XslUtil;
+import org.fao.xsl.support.Finder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.Test;
 
 public class CharacterStringToLocalisedTest {
 
-    @Test
+	@Test
+	public void convertLocales() throws Exception {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/xsl/characterstring-to-localisedcharacterstring.xsl";
+		Element testData = Xml.loadString(
+				"<che:CHE_MD_Metadata  xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\" xsi:schemaLocation=\"http://www.geocat.ch/2008/che http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd\">" +
+				"<gmd:language><gco:CharacterString>deu</gco:CharacterString></gmd:language>" +
+				"<gmd:locale><gmd:PT_Locale id=\"DE\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"deu\">German</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
+				"<gmd:locale> <gmd:PT_Locale id=\"FR\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"fra\">French</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
+				"<gmd:locale> <gmd:PT_Locale id=\"IT\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"ita\">Italian</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
+				"<gmd:locale> <gmd:PT_Locale id=\"EN\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"eng\">English</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
+				"</che:CHE_MD_Metadata>", false);
+		Element transformed = Xml.transform(testData, pathToXsl);
+		System.out.println(Xml.getString(transformed));
+		findAndAssert(transformed, new Count(1, new Finder("language/CharacterString", new EqualText("ger"))));
+		findAndAssert(transformed, new Count(4, new Finder("locale/PT_Locale/languageCode")));
+		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "ger")));
+		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "fre")));
+		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "ita")));
+		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "eng")));
+	}
+    private void findAndAssert(Element transformed, Requirement finder) {
+		assertTrue(finder+" did not find a match in: \n"+Xml.getString(transformed), finder.eval(transformed));
+	}
+	@Test
     public void convertCharacterstrings() throws Exception {
         String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/xsl/characterstring-to-localisedcharacterstring.xsl";
         String testData = "/data/iso19139/contact_with_linkage.xml";
