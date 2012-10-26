@@ -3,7 +3,7 @@
 
 	<classpath>
 		<dir name="${project.basedir}/target/classes"/>
-		<dir name="${project.basedir}/../jeeves/target/test-classes"/>
+		<dir name="${project.basedir}/../jeeves/target/classes"/>
 	</classpath>
 
 	<web>

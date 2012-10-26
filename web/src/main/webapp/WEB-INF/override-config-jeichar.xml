@@ -10,7 +10,7 @@
         <postgis.max.idle>5</postgis.max.idle>
         <serverStage>jeichar</serverStage>
         <host>localhost</host>
-        <port>8190</port>
+        <port>9625</port>
     </properties>
     <file name=".*/WEB-INF/config-gui.xml">
         <replaceText xpath="geoserver.url">http://tc-geocat0i.bgdi.admin.ch/geoserver/</replaceText>
