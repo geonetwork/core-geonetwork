@@ -60,6 +60,7 @@
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
 				<ref bean="exceptionTranslationFilter" />
+				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>

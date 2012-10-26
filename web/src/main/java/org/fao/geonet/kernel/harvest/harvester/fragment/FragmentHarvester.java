@@ -150,7 +150,7 @@ public class FragmentHarvester {
 	private void loadTemplate() {
 		try {
 			//--- Load template to be used to create metadata from fragments
-			metadataTemplate = dataMan.getMetadataNoInfo(context, params.templateId);
+			metadataTemplate = dataMan.getMetadata(dbms, params.templateId);
 			
 			//--- Build a list of all Namespaces in the metadata document
 			Namespace ns = metadataTemplate.getNamespace();

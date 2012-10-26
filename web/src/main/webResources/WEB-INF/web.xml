@@ -13,7 +13,7 @@
 	      </param-value>
 	</context-param>
 	<!-- comma separated list of classes that implement 
-		 org.springframework.beans.factory.config.BeanPostProcessor
+		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
 
 		 This is an additional method of overriding the spring configuration
 		 besides multiple bean configuration files with overriding beans by using
