@@ -380,7 +380,7 @@ class EditUtils {
                 Element parent = editLib.findElement(md, ids[2]);
 
                 Element xlinkParent = findXlinkParent(parent);
-                if (xlinkParent != null && !ReusableObjManager.isValidated(xlinkParent)) {
+                if (xlinkParent != null && ReusableObjManager.isValidated(xlinkParent)) {
                     return true;
                 }
                 if (xlinkParent != null) {
