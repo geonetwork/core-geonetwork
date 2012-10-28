@@ -12,7 +12,7 @@ function View(strLoader)
 	this.validator = new Validator(strLoader);	
 	this.validator.add(
 	[
-		{ id:'editor.destin', type:'length', minSize :1, maxSize :60 }
+		{ id:'editor.destin', type:'length', minSize :1, maxSize :255 }
 	]);
 
 	$('editor.source').style.background = '#F0F0F0';
