@@ -182,11 +182,13 @@ public class AddLimitations implements Service
 		session.setProperty(Geonet.Session.FILE_DISCLAIMER, resourceData);
 
 		//--- now get the users name, organisation and email address to 
-		//--- prepopulate the feedback form
-		Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=?", session.getUserIdAsInt());
-		Element elRec = elUser.getChild("record");
-		if (elRec != null) {
-			response.addContent(elRec.cloneContent());
+		//--- prepopulate the feedback form (if they are logged in)
+		if (session.getUserId()	!= null) {
+			Element elUser = dbms.select ("SELECT Surname, Name, Email, Organisation FROM Users WHERE id=?", session.getUserIdAsInt());
+			Element elRec = elUser.getChild("record");
+			if (elRec != null) {
+				response.addContent(elRec.cloneContent());
+			}
 		}
 
 		return response;

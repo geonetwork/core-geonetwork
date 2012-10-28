@@ -109,7 +109,7 @@ CREATE TABLE Users
   (
     id            int,
     username      varchar2(256)    not null,
-    password      varchar2(40)    not null,
+    password      varchar2(120)    not null,
     surname       varchar2(32),
     name          varchar2(32),
     profile       varchar2(32)    not null,
@@ -121,6 +121,8 @@ CREATE TABLE Users
     email         varchar2(128),
     organisation  varchar2(128),
     kind          varchar2(16),
+    security      varchar(128) default '',
+    authtype      varchar(32),
     primary key(id),
     unique(username)
   );
@@ -197,6 +199,7 @@ CREATE TABLE HarvestHistory
   (
     id             int not null,
     harvestDate    varchar2(30),
+    elapsedTime    int,
     harvesterUuid  varchar2(250),
     harvesterName  varchar2(128),
     harvesterType  varchar2(128),
@@ -398,7 +401,7 @@ REM ======================================================================
 
 CREATE TABLE Thesaurus
   (
-    id   varchar2(250),
+    id   varchar2(250) not null,
     activated    varchar2(1),
     primary key(id)
   );

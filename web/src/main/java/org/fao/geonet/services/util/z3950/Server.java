@@ -23,7 +23,9 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
 import org.jzkit.z3950.server.Z3950Listener;
 import org.springframework.context.ApplicationContext;
 
@@ -40,7 +42,7 @@ public class Server
 
 	/** initializes the server
 	  */
-	public static void init(String host, String port, String appPath, ServiceContext context, ApplicationContext app_context)
+	public static void init(String port, ApplicationContext app_context)
 	{
 		try
 		{
@@ -53,7 +55,7 @@ public class Server
 		catch (Exception e)
 		{
 			//--- Z39.50 must not stop Geonetwork starting even if there are problems
-			context.warning("Cannot start Z39.50 server : "+ e.getMessage());
+			Log.warning(Geonet.Z3950_SERVER, "Cannot start Z39.50 server : "+ e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -348,7 +348,8 @@ public class SchemaLoader
 			}
 			mds.addType(cte.name, mdt);
 		}
-
+		
+		
 		// now set the schema to be editable and return
 		mds.setCanEdit(true);
 		return mds;

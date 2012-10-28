@@ -23,6 +23,13 @@
 
 package org.fao.geonet.services.main;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
@@ -31,22 +38,18 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -103,8 +106,10 @@ public class Info implements Service
 			String name = el.getName();
 			String type = el.getText();
 
-			if (type.equals("site"))
+
+			if (type.equals("site")) {
 				result.addContent(gc.getSettingManager().get("system", -1));
+			}
 
 			else if (type.equals("inspire"))
 				result.addContent(gc.getSettingManager().get("system/inspire", -1));
@@ -136,6 +141,12 @@ public class Info implements Service
 			else if (type.equals("z3950repositories"))
 				result.addContent(getZRepositories(context, sm));
 
+			else if (type.equals("me"))
+				result.addContent(getMyInfo(context));
+			
+			else if (type.equals("auth"))
+				result.addContent(getAuth(context));
+			
 			else
 				throw new BadParameterEx("Unknown type parameter value.", type);
 		}
@@ -145,11 +156,39 @@ public class Info implements Service
 		return Xml.transform(result, xslPath +"/info.xsl");
 	}
 
+	private Element getAuth(ServiceContext context) {
+		Element auth = new Element("auth");
+		Element cas = new Element("casEnabled").setText(Boolean.toString(XslUtil.isCasEnabled()));
+		auth.addContent(cas);
+
+		return auth;
+	}
+
+	
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
+
+
+	private Element getMyInfo(ServiceContext context) {
+		Element data = new Element("me");
+		UserSession userSession = context.getUserSession();
+		if (userSession.isAuthenticated()) {
+			data.setAttribute("authenticated","true");
+			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile()))
+				.addContent(new Element(GeonetworkUser.USERNAME_COLUMN).setText(userSession.getUsername()))
+				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
+				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
+				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
+				.addContent(new Element(Geonet.Elem.EMAIL).setText(userSession.getEmailAddr()));
+		} else {
+			data.setAttribute("authenticated","false");
+		}
+		return data;
+	}
 
 	private Element getGroups(ServiceContext context, Dbms dbms, String profile) throws SQLException
 	{

@@ -13,7 +13,11 @@
 	<por>Рortuguês</por> <!-- Do not translate! -->
 	<rus>Русский</rus> <!-- Do not translate! -->
 	<spa>Español</spa> <!-- Do not translate! -->
-
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
+	
+	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>

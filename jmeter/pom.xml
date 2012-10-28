@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>2.9.0-SNAPSHOT</version>
+  </parent>
+  <!-- =========================================================== -->
+  <!--     Module Description                                      -->
+  <!-- =========================================================== -->
+  <artifactId>performance</artifactId>
+  <packaging>pom</packaging>
+  <name>Performance testing module</name>
+  <description>
+    Performance testing module
+  </description>
+  <properties>
+    <!-- properties for jmeter test -->
+    <testserver.host>localhost</testserver.host>
+    <testserver.port>9234</testserver.port>
+    <testserver.protocol>http</testserver.protocol>
+    <admin.username>admin</admin.username>
+    <admin.password>admin</admin.password>
+    <base.url>/geonetwork/srv/eng</base.url>
+    <base.loc.url>/geonetwork/srv/eng</base.loc.url>
+    
+    <!-- jetty properties -->
+    <geonetworkWar>${basedir}/target/geonetworkWar</geonetworkWar>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>chronos-jmeter-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <jmeterVariables>
+            <testserver.host>${testserver.host}</testserver.host>
+            <testserver.port>${testserver.port}</testserver.port>
+            <testserver.protocol>${testserver.protocol}</testserver.protocol>
+            <admin.username>${admin.username}</admin.username>
+            <admin.password>${admin.password}</admin.password>
+            <base.loc.url>${base.loc.url}</base.loc.url>
+          </jmeterVariables>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <id>main_performance_test</id>
+            <goals>
+              <goal>jmeter</goal>
+              <goal>check</goal>
+              <goal>savehistory</goal>
+            </goals>
+            <configuration>
+              <input>${basedir}/src/main/resources/jmeter_test_plan.jmx</input>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <port>9000</port>
+          <tempWebappDirectory>${basedir}/target/site-web</tempWebappDirectory>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>chronos-report-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <title>Performance Report</title>
+          <description>The following reports are the result from running the jmeter testplan ${basedir}/src/main/resources/jmeter_test_plan.jmx</description>
+          <outputDirectory>target/site-web</outputDirectory>
+          <showaverage>true</showaverage>
+          <showpercentile>true</showpercentile>
+          <showinfotable>true</showinfotable>
+          <showtimeinfo>true</showtimeinfo>
+          <showsummary>true</showsummary>
+          <showdetails>true</showdetails>
+          <showresponse>true</showresponse>
+          <showhistogram>true</showhistogram>
+          <showthroughput>true</showthroughput>
+          <showgc>true</showgc>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  <profiles>
+    <profile>
+      <id>jmeterjetty</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Setup test environment
+              copy the war from the repository to (so that tests can be ran in a standalone mode)
+              check out webspecs (test framework)
+          -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+              <execution>
+                <id>copy-geonetwork-war</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>geonetwork-main</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${geonetworkWar}</outputDirectory>
+              <stripVersion>true</stripVersion>
+            </configuration>
+          </plugin>
+          <!-- start jetty before integration tests and shut it down after -->
+          <plugin>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
+            <configuration>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>${testserver.port}</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
+              <webApp>${geonetworkWar}/geonetwork-main.war</webApp>
+              <webAppConfig>
+                <contextPath>/geonetwork</contextPath>
+              </webAppConfig>
+              <stopKey>GEONETWORK_PTEST_STOP</stopKey>
+              <stopPort>8011</stopPort>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-jetty</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>run-war</goal>
+                </goals>
+                <configuration>
+                  <scanIntervalSeconds>0</scanIntervalSeconds>
+                  <daemon>true</daemon>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stop-jetty</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -229,6 +229,7 @@ GeoNetwork.Lang.nl = {
     'view': "Bekijk",
     'zoomTo': "Zoom naar",
     'saveXml': "Bewaar als XML",
+    'saveRdf': 'Save as RDF',
     'exportCsv': "Exporteer (CSV)",
     'exportZip': "Exporteer (ZIP)",
     'printSel': "Exporteer (PDF)",
@@ -277,6 +278,7 @@ GeoNetwork.Lang.nl = {
     'updateChildren': "Wijzigen kinderen",
     'records': "records",
     'record': "record",
+    'recordsFound': ' record(s) found',
     'help': "Help",
     'publishError': "Publicatie gefaald.",
     'outOfMemoryError': "Out of memory fout.",
@@ -496,7 +498,23 @@ GeoNetwork.Lang.nl = {
 	'What': "Wat",
 	'Searchforspatialdataon': "Zoek ruimtelijke data over",
 	'Advanced': "Geavanceerd",
-	'List': "Lijst"
+	'List': "Lijst",
+    'xsd': 'ISO schema',
+    'rules': 'rules',
+    'rule': 'rule',
+    'schematron-rules-geonetwork': 'GeoNetwork validation',
+    'schematron-rules-iso': 'ISO validation',
+    'schematron-rules-inspire': 'INSPIRE validation',
+    'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-OGC:WMS': 'Add to map',
+    'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+    'linklabel-application/zip': 'Download',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+    'linklabel-application/x-compressed': 'Download',
+    'linklabel-text/html': 'Web link',
+    'linklabel-text/plain': 'Web link',
+    'linklabel-image/png': 'Image link',
+    'linklabel-': 'Link'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

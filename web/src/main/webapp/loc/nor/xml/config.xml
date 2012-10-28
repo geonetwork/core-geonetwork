@@ -124,42 +124,8 @@
 		
 	<authentication>Authentication</authentication>
 	
-	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
 
-	<geonetworkdb>GeoNetwork Authentication</geonetworkdb>
-
-	<ldap>LDAP</ldap>
-	<defProfile>Default profile</defProfile>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
-	<subtree>Search Subtree</subtree>
-	<bindInfo>LDAP Bind Credentials</bindInfo>
-	<anonBind>Anonymous Bind</anonBind>
-	<bindDN>Bind DN</bindDN>
-	<bindPW>Bind Password</bindPW>
-	
-	<tip id="ldap.anonBind">
-		If set, the server does not need a valid set of credentials to connect to LDAP.
-	</tip>
-	<tip id="ldap.bindDN">
-		A valid user to use on initial connection to LDAP.
-	</tip>
-	<tip id="ldap.bindPW">
-		Password to use for initial connection to LDAP.
-	</tip>
-	<tip id="ldap.subtree">
-		When set, searches for users in the entire subtree rooted at the location specified by the distinguished names.
-	</tip>
-	
 	<shib>Shibboleth</shib>
 	<path>Path</path>
 	<attributes>Shibboleth attribute mapping</attributes>

@@ -79,6 +79,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
             // Force layout in order to render all form fields
             // If not, superboxselect field are not initialized
             this.doLayout(false, true);
+            
             GeoNetwork.util.SearchTools.populateFormFromParams(this, state);
            
             // We can't really trigger fire event yet
@@ -123,8 +124,12 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
         Ext.applyIf(this, this.defaultConfig);
         GeoNetwork.SearchFormPanel.superclass.initComponent.call(this);
         
-        this.addButton(this.resetBt, this.reset, this);
-        this.addButton(this.searchBt, this.search, this);
+        if (this.resetBt) {
+            this.addButton(this.resetBt, this.reset, this);
+        }
+        if (this.searchBt) {
+            this.addButton(this.searchBt, this.search, this);
+        }
         
         this.addEvents(
                 /** private: event[search]

@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" exclude-result-prefixes="#all">
+	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
 
@@ -199,10 +199,10 @@
 				<gmd:URL>
 					<xsl:choose>
 						<xsl:when test="/root/env/config/downloadservice/simple='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',$fname,'&amp;access=private')"/>
+							<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
 						<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-							<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?id=',/root/env/id,'&amp;fname=',$fname,'&amp;access=private')"/>
+							<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
 						</xsl:when>
 						<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
 							<xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -253,10 +253,10 @@
 			<xsl:attribute name="src">
 				<xsl:choose>
 					<xsl:when test="/root/env/config/downloadservice/simple='true'">
-						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+						<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
 					<xsl:when test="/root/env/config/downloadservice/withdisclaimer='true'">
-						<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?id=',/root/env/id,'&amp;fname=',.,'&amp;access=private')"/>
+						<xsl:value-of select="concat(/root/env/siteURL,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
 					</xsl:when>
 					<xsl:otherwise> <!-- /root/env/config/downloadservice/leave='true' -->
 						<xsl:value-of select="@src"/>
@@ -273,12 +273,26 @@
 		and constrain users to use uuidref attribute to link
 		service metadata to datasets. This will avoid to have
 		error on XSD validation. -->
-	<xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
-		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-		</xsl:copy>
-	</xsl:template>
 
+	<xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
+        <xsl:copy>
+        <xsl:copy-of select="@uuidref"/>
+        <xsl:if test="@uuidref">
+            <xsl:choose>
+                <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, /root/env/siteURL)">
+                    <xsl:attribute name="xlink:href">
+                        <xsl:value-of select="concat(/root/env/siteURL,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+                    </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="@xlink:href"/>
+                </xsl:otherwise>
+            </xsl:choose>
+
+        </xsl:if>
+        </xsl:copy>
+
+	</xsl:template>
 
 	<!-- ================================================================= -->
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids

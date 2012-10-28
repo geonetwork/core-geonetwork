@@ -45,6 +45,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -152,6 +153,10 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 				if (md != null)
 					response.addContent(md);
+				
+				if (CatalogConfiguration.is_increasePopularity()) {
+				    gc.getDataManager().increasePopularity(context, id);
+				}
 			}
 		} catch (Exception e) {
 			context.error("Raised : "+ e);

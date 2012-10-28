@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Nieodnalezione rekordy metadanych</notfound>
+	<notowner>Rekordy metadanych, dla których nie zaktualizowano wersji, ponieważ nie jestes ich właścicielem</notowner>
+	<updated>Rekordy metadanych, dla których zaktualizowano wersję</updated>
+</strings>

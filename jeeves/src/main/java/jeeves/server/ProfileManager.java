@@ -23,20 +23,28 @@
 
 package jeeves.server;
 
-import jeeves.constants.Jeeves;
-import jeeves.constants.Profiles;
-import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Element;
-
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
+import jeeves.constants.Profiles;
+import jeeves.utils.Xml;
+
+import org.jdom.Element;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 //=============================================================================
 
@@ -49,6 +57,7 @@ public class ProfileManager
 	public static final String ADMIN = "Administrator";
 
 	private Hashtable<String, Element> htProfiles;
+	private JeevesApplicationContext applicationContext;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -131,8 +140,47 @@ public class ProfileManager
 		return elResult;
 	}
 
-	//--------------------------------------------------------------------------
-
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getLowestProfile(String[] profiles) {
+		String lowestProfile = null;
+		int numberOfProfilesExtended = getProfilesSet(ADMIN).size();
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() < numberOfProfilesExtended) {
+				lowestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return lowestProfile;
+	}
+	
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getHighestProfile(String[] profiles) {
+		String highestProfile = null;
+		int numberOfProfilesExtended = 0;
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() > numberOfProfilesExtended) {
+				highestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return highestProfile;
+	}
 	public Set<String> getProfilesSet(String profile)
 	{
 		HashSet<String>   hs = new HashSet<String>();
@@ -148,6 +196,9 @@ public class ProfileManager
 			hs.add(profile);
 
 			Element elProfile = htProfiles.get(profile);
+			if (elProfile == null) {
+				return null;
+			}
 
 			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
 
@@ -167,51 +218,29 @@ public class ProfileManager
 	/** Returns all services accessible by the given profile
 	  */
 
-	@SuppressWarnings("unchecked")
-	public Element getAccessibleServices(String profile)
+	public Element getAccessibleServices()
 	{
-		HashSet<String>   hs = new HashSet<String>();
-		ArrayList<String> al = new ArrayList<String>();
-
-		al.add(profile);
-
-		while(!al.isEmpty())
-		{
-			profile = (String) al.get(0);
-			al.remove(0);
-
-			Element elProfile = (Element) htProfiles.get(profile);
-
-			//--- scan allow list
-
-			List<Element> allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
-
-			for (Element elAllow : allowList) {
-				String  sService = elAllow.getAttributeValue(Profiles.Attr.SERVICE);
-				hs.add(sService);
+		Collection<FilterSecurityInterceptor> chains = applicationContext.getBeansOfType(FilterSecurityInterceptor.class).values();
+		
+		for (FilterSecurityInterceptor chain : chains) {
+			System.out.println(chain);
+			Collection<ConfigAttribute> allConfigAttributes = chain.getSecurityMetadataSource().getAllConfigAttributes();
+			for (ConfigAttribute configAttribute : allConfigAttributes) {
+				System.out.println(configAttribute);
 			}
-
-			//--- ops, no allow found. Try an ancestor (if any)
-
-			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
-
-			if (extend != null)
-			{
-				StringTokenizer st = new StringTokenizer(extend, ",");
-
-				while(st.hasMoreTokens())
-					al.add(st.nextToken().trim());
-			}
+//			List<Filter> filters = chain.getFilters();
+//			for (Filter filter : filters) {
+//				System.out.println(filter);
+//			}
 		}
-
 		//--- build proper result
 
 		Element elRes = new Element(Jeeves.Elem.SERVICES);
-
-		for (String service : hs) {
-			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
-					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
-		}
+//
+//		for (String service : hs) {
+//			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
+//					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
+//		}
 
 		return elRes;
 	}
@@ -259,6 +288,10 @@ public class ProfileManager
 		}
 
 		return false;
+	}
+
+	public void setApplicationContext(JeevesApplicationContext jeevesAppContext) {
+		this.applicationContext = jeevesAppContext;
 	}
 }
 

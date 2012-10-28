@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>Metadane</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Tytuł</label>
+		<description>Nazwa zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Twórca lub autor</label>
+		<description>Osoba lub instytucja odpowiedzialna za utworzenie zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Temat i słowa kluczowe</label>
+		<description>Temat treści zasobu w postaci haseł i słów kluczowych.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Opis</label>
+		<description>Opis zawartości zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Wydawca</label>
+		<description>Osoba lub instytucja odpowiedzialna za udostępnianie zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>Współtwórca</label>
+		<description>Osoba lub instytucja współodpowiedzialna za tworzenie zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Data</label>
+		<description>Data wydarzenia związanego z zasobem.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Typ zasobu</label>
+		<description>Kategoria, rodzaje lub funkcje zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description>Fizyczny lub cyfrowy przejaw zasobu.Typowo format zawiera typ lub wymiary nośnika zasobu lub sposób zapisu zasobu cyfrowego. Format może być użyty do identyfikacji oprogramowania, sprzętu lub innego potrzebnego sprzętu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Identyfikator zasobu</label>
+		<description>Jednoznaczny, niepowtarzalny odnośnik do zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Źródło</label>
+		<description>Źródło, z którego pochodzi zasób.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Język</label>
+		<description>Język, w którym zapisany jest zasób.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>Relacja</label>
+		<description>Inny zasób będący w relacji zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Lokalizacja i czas</label>
+		<description>Zasięg przestrzenny i zakres czasowy zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Prawa własności</label>
+		<description>Informacja o prawach własności do zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Data modyfikacji</label>
+		<description>Data przeprowadzenia zmian w zasobie.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Streszczenie</label>
+		<description>Streszczenie treści zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Lokalizacja</label>
+		<description>Przestrzenna lokalizacja zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Użytkownicy</label>
+		<description>Typ odbiorcy, dla którego zasób jest przeznaczony lub użyteczny.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Metoda aktualizacji</label>
+		<description>Metoda aktualizowania obiektów w zasobie.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Częstotliwość aktualizacji</label>
+		<description>Częstotliwość, z którą obiekty są aktualizowane w zasobie.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Polityka aktualizacji</label>
+		<description>Polityka zarządzania związanego z aktualizacją obiektów w zasobie.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Metoda szkolenia</label>
+		<description>Proces nabywania wiedzy, zachowań i umiejętności, do utrzymania którego zasób jest zaprojektowany.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Pochodzenie</label>
+		<description>Zestawienie wszystkich zmian dotyczących posiadania i opieki nad zasobem od jego utworzenia, które są znaczące dla jego autentyczności, integralności i zrozumienia.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Posiadacz lub zarządca</label>
+		<description>Osoba lub organizacja posiadającą lub zarządzającą prawami do zasobu.</description>
+	</element>
+	<!-- ==================================================== -->
+</labels>

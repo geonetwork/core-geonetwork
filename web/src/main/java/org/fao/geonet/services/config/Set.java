@@ -26,6 +26,7 @@ package org.fao.geonet.services.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -37,6 +38,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -96,6 +98,9 @@ public class Set implements Service
 			dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
         }
         
+        SettingInfo info = new SettingInfo(context);
+		ServerBeanPropertyUpdater.updateURL(info.getSiteUrl()+context.getBaseUrl(), context.getServlet().getServletContext());
+		
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
@@ -197,23 +202,6 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "feedback/mailServer/port", "system/feedback/mailServer/port"),
 
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "removedMetadata/dir",      "system/removedMetadata/dir"),
-
-		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "ldap/use",                       "system/ldap/use"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/host",                      "system/ldap/host"),
-		new ConfigEntry(ConfigEntry.Type.INT,    false, "ldap/port",                      "system/ldap/port"),
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/defaultProfile",            "system/ldap/defaultProfile"),
-        new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/uidAttr",                   "system/ldap/uidAttr"),        
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/distinguishedNames/base",   "system/ldap/distinguishedNames/base"),
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/distinguishedNames/users",  "system/ldap/distinguishedNames/users"),
-		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "ldap/distinguishedNames/subtree","system/ldap/distinguishedNames/subtree"),
-		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "ldap/anonBind",                  "system/ldap/anonBind"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/bind/bindDn",               "system/ldap/bind/bindDn"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/bind/bindPw",               "system/ldap/bind/bindPw"),
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/name",          "system/ldap/userAttribs/name"),
-		new ConfigEntry(ConfigEntry.Type.STRING, true,  "ldap/userAttribs/password",      "system/ldap/userAttribs/password"),
-		new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/profile",       "system/ldap/userAttribs/profile"),
-        new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/userAttribs/group",         "system/ldap/userAttribs/group"),
-        new ConfigEntry(ConfigEntry.Type.STRING, false, "ldap/defaultGroup",              "system/ldap/defaultGroup"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "userSelfRegistration/enable",  "system/userSelfRegistration/enable"),
 

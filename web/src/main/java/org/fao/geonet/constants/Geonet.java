@@ -83,7 +83,7 @@ public class Geonet {
 		public static final String LICENSE_ANNEX       = "license-annex.html";
 		public static final String LICENSE_ANNEX_XSL   = "metadata-license-annex.xsl";
 		public static final String METADATA_BRIEF      = "metadata-brief.xsl";
-		public static final String METADATA_BASEBLANK  = "blanks/metadata-schema00.xsl";
+		public static final String METADATA_BASEBLANK  = "blanks/metadata-schema00";
 		public static final String METADATA_BLANK			 = "blanks/metadata-schema";
 		public static final int METADATA_MAX_BLANKS 	 = 20;
 	}

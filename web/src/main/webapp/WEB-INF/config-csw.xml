@@ -254,5 +254,8 @@
 				<format>application/xml</format>
 			</outputformat>
 		</operation>
+	    <operation name="GetRecordById">
+	        <increasePopularity>no</increasePopularity>
+	    </operation>
 	</operations>
 </geonet>

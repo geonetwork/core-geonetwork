@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<maxTimeMsg>Metaveri oluşturma ve son değişiklik zamanı arasındaki maksimum farkı seçiniz</maxTimeMsg>
+	<maxDiff>Maksimum Fark</maxDiff>
+	
+	<diffList>
+		<item id="5"   >5 dakika</item>
+		<item id="30"  >30 dakika</item>
+		<item id="1440">1 Gün</item>
+	</diffList>
+	
+	<search>Ara</search>
+</strings>

@@ -78,7 +78,7 @@ public class EditElement implements Service {
 				UserSession session = context.getUserSession();
 				KeywordsSearcher searcher = (KeywordsSearcher) session
 					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-				kb = searcher.getKeywordFromResults(id);
+				kb = searcher.getKeywordFromResultsById(id);
 			}else{
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				ThesaurusManager thesaurusMan = gc.getThesaurusManager();

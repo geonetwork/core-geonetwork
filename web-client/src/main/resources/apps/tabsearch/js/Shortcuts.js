@@ -3,7 +3,7 @@
  *
  * @return
  */
-function initShortcut(){
+function initShortcut() {
     
     // Define editor shortcut here.
     var searchConfig = [{
@@ -12,7 +12,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('focusOnAny'),
-        fn: function(){
+        fn: function () {
             var e = Ext.get('E_any');
             e.highlight();
             e.dom.focus(true);
@@ -23,10 +23,10 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('runSearch'),
-        fn: function(){
-            var e = Ext.getCmp('searchBt');
+        fn: function () {
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('search');
         }
     }, {
         key: Ext.EventObject.LEFT,
@@ -35,7 +35,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('previousPage'),
-        fn: function(){
+        fn: function () {
             Ext.getCmp('previousBt').handler();
         }
     }, {
@@ -45,7 +45,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('nextPage'),
-        fn: function(){
+        fn: function () {
             Ext.getCmp('nextBt').handler();
         }
     }, {
@@ -55,7 +55,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('upInPage'),
-        fn: function(){
+        fn: function () {
             catalogue.resultsView.getEl().scroll('t', 170, true);
         }
     }, {
@@ -65,7 +65,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('downInPage'),
-        fn: function(){
+        fn: function () {
             catalogue.resultsView.getEl().scroll('b', 170, true);
         }
     }, {
@@ -74,7 +74,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('hideSearchForm'),
-        fn: function(){
+        fn: function () {
             var r = Ext.getCmp('west');
             r.toggleCollapse();
         }
@@ -83,10 +83,10 @@ function initShortcut(){
         ctrl: true,
         shift: true,
         label: OpenLayers.i18n('resetSearchForm'),
-        fn: function(){
-            var e = Ext.getCmp('resetBt');
+        fn: function () {
+            var e = Ext.getCmp('searchForm');
             e.getEl().fadeIn();
-            e.fireEvent('click');
+            e.fireEvent('reset');
         }
     }, {
         key: "v",
@@ -94,7 +94,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('switchMode'),
-        fn: function(){
+        fn: function () {
             app.switchMode(null, true);
         }
     }, {
@@ -103,7 +103,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('toggleLayerManager'),
-        fn: function(){
+        fn: function () {
             var r = Ext.getCmp('layerManager');
             r.toggleCollapse();
         }
@@ -113,7 +113,7 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('focusOnLogin'),
-        fn: function(){
+        fn: function () {
             var e = Ext.get('username');
             if (e.isVisible()) {
                 e.highlight();
@@ -129,8 +129,22 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('openAdmin'),
-        fn: function(){
-            catalogue.admin();
+        fn: function () {
+            if (catalogue.isIdentified()) {
+                catalogue.admin();
+            }
+        }
+    }, {
+        key: "c",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('newMetadata'),
+        fn: function () {
+            if (catalogue.isIdentified()) {
+                var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                actionCtn.createMetadataAction.handler.apply(actionCtn);
+            }
         }
     }, {
         key: "i",
@@ -138,8 +152,15 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('displayInfoPanel'),
-        fn: function(){
-            app.getInfoWindow()
+        fn: function () {
+            var infoPanel = Ext.getCmp('infoPanel');
+            var resultsPanel = Ext.getCmp('resultsPanel');
+            if (resultsPanel.isVisible()) {
+                resultsPanel.hide();
+            }
+            if (!infoPanel.isVisible()) {
+                infoPanel.show();
+            }
         }
     }, {
         key: 'h', // FIXME
@@ -147,8 +168,13 @@ function initShortcut(){
         shift: true,
         stopEvent: true,
         label: OpenLayers.i18n('displayHelpPanel'),
-        fn: function(){
-            if (app.getHelpWindow()) app.getHelpWindow().show();
+        fn: function () {
+            var ss = Ext.getDom('shortcut').style;
+            if (ss.display === 'block') {
+                Ext.getDom('shortcut').style.display = 'none';
+            } else {
+                Ext.getDom('shortcut').style.display = 'block';
+            }
         }
     }];
     var map = new Ext.KeyMap(document, searchConfig);
@@ -176,8 +202,8 @@ function initShortcut(){
     // Launch search when enter key press
     var formMap = new Ext.KeyMap("searchForm", [{
         key: [10, 13],
-        fn: function(){
-            Ext.getCmp('searchBt').fireEvent('click');
+        fn: function () {
+            Ext.getCmp('searchForm').fireEvent('search');
         }
     }]);
     

@@ -47,14 +47,14 @@ public class HarvesterHistoryDao {
 		* @param node XML describing the harvester parameters (info node removed)
 		* @param result XML describing the result that the harvester produced
 		*/
-	public static void write(Dbms dbms, SerialFactory sf, String type, String name, String uuid, String runDate, Element node, Element result) {
+	public static void write(Dbms dbms, SerialFactory sf, String type, String name, String uuid, long elapsedTime, String runDate, Element node, Element result) {
 		try {
 			//--- generate a new id
 			int hhId = sf.getSerial(dbms, "HarvestHistory");
 			
 			String query = "INSERT INTO HarvestHistory (id,harvestDate,harvesterUuid,"
-						+        "harvesterName,harvesterType,deleted,info,params)";
-      query +=       "VALUES (?,?,?,?,?,?,?,?)";
+						+        "harvesterName,harvesterType,deleted,info,params,elapsedTime)";
+      query +=       "VALUES (?,?,?,?,?,?,?,?,?)";
       int res = dbms.execute(
           query,
           hhId,
@@ -64,7 +64,7 @@ public class HarvesterHistoryDao {
           type,
           "n",
           Xml.getString(result),
-          Xml.getString(node));
+          Xml.getString(node), elapsedTime);
 				dbms.commit();
     } catch (SQLException sqle) {
       	dbms.abort();

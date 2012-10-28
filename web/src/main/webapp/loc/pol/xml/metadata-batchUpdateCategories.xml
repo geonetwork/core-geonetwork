@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Nie znaleziono rekordu metadanych</notfound>
+	<notowner>Rekordy metadanych, które nie zostały przetransferowane, ponieważ nie jesteś właścicielem</notowner>
+	<updated>Rekordy metadanych, dla których zaktualizowano kategorię</updated>
+	<resultstitle>Wynik aktualizacji kategorii</resultstitle>
+</strings>

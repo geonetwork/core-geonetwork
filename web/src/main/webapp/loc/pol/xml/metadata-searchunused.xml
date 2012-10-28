@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<maxTimeMsg>Określ maksymalną różnicę czasu między utworzeniem metadanych i ich ostatnią modyfikacją</maxTimeMsg>
+	<maxDiff>Maksymalna różnica</maxDiff>
+	
+	<diffList>
+		<item id="5"   >5 minut</item>
+		<item id="30"  >30 minut</item>
+		<item id="1440">1 dzień</item>
+	</diffList>
+	
+	<search>Szukaj</search>
+</strings>

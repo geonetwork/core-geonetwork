@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<title>Küçükresim Yönetimi</title>
+	<text type="small">Küçük boy küçükresim</text>
+	<text type="large">Büyük boy küçükresim</text>
+	<scale>Görüntüyü ölçekle</scale>
+	<create>Küçük dosya oluştur</create>
+	<scaleWidth>Genişlik Ölçekleme</scaleWidth>
+	<scaleHeight>Yükseklik Ölçekleme</scaleHeight>
+	
+	<browse>Gözat</browse>
+	<add>Ekle</add>
+	<delete>Sil</delete>	
+	<button>Düzenlemeye geri dön</button>
+</strings>

@@ -47,9 +47,9 @@ public class OverlapsFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public OverlapsFilter(Query query, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
+    public OverlapsFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, geom, sourceAccessor);
+        super(query, numHits, geom, sourceAccessor);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,

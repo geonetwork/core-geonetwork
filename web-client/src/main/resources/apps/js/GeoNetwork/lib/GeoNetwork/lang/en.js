@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.namespace('GeoNetwork', 'GeoNetwork.lang');
+Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
-GeoNetwork.lang.en = {
+GeoNetwork.Lang.en = {
     'previousPage': 'Move to previous page',
     'nextPage': 'Move to next page',
     'upInPage': 'Scroll up in the results',
@@ -234,6 +234,7 @@ GeoNetwork.lang.en = {
     'view': 'View',
     'zoomTo': 'Zoom to',
     'saveXml': 'Save as XML',
+    'saveRdf': 'Save as RDF',
     'exportCsv': 'Export (CSV)',
     'exportZip': 'Export (ZIP)',
     'printSel': 'Export (PDF)',
@@ -248,8 +249,8 @@ GeoNetwork.lang.en = {
     'select': 'Select ',
     'username': 'User name',
     'password': 'password',
-    'login': 'Login',
-    'logout': 'Logout',
+    'login': 'Sign in',
+    'logout': 'Sign out',
     'administration': 'Administration',
     'validationReport': 'Validation report',
     'setStatus': 'Metadata status',
@@ -289,6 +290,7 @@ GeoNetwork.lang.en = {
     'updateChildren': 'Update children',
     'records': 'records',
     'record': 'record',
+    'recordsFound': ' record(s) found',
     'help': 'Help',
     'publishError': 'Publication failed.',
     'outOfMemoryError': 'Out of memory error.',
@@ -503,7 +505,24 @@ GeoNetwork.lang.en = {
     'when': "when",
     'Searchforspatialdataon': "Search for spatial data on",
     'Advanced': "Advanced",
-    'List': "List"
+    'List': "List",
+    'xsd': 'ISO schema',
+    'rules': 'rules',
+    'rule': 'rule',
+    'schematron-rules-geonetwork': 'GeoNetwork validation',
+    'schematron-rules-iso': 'ISO validation',
+    'schematron-rules-inspire': 'INSPIRE validation',
+    'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-OGC:WMS': 'Add to map',
+    'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+    'linklabel-application/zip': 'Download',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+    'linklabel-application/x-compressed': 'Download',
+    'linklabel-text/html': 'Web link',
+    'linklabel-text/plain': 'Web link',
+    'linklabel-image/png': 'Image link',
+    'linklabel-': 'Link'
+    
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

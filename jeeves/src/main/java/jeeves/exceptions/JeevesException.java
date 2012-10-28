@@ -26,11 +26,12 @@ package jeeves.exceptions;
 import jeeves.constants.Jeeves;
 
 import org.jdom.Element;
+import org.springframework.security.core.AuthenticationException;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class JeevesException extends Exception
+public abstract class JeevesException extends AuthenticationException
 {
 	//--------------------------------------------------------------------------
 	//---

@@ -73,6 +73,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -423,17 +425,35 @@ public final class Xml
      * @return
      * @throws TransformerException
      */
-  	public Source resolve(String href, String base) throws TransformerException {
-		 Resolver resolver = ResolverWrapper.getInstance();
-		 CatalogResolver catResolver = resolver.getCatalogResolver();
-          if(Log.isDebugEnabled(Log.XML_RESOLVER)) Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
-     Source s = catResolver.resolve(href, base);
-		 if (s != null) {
-             if(Log.isDebugEnabled(Log.XML_RESOLVER)) Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
-		 }
-		 return s;
-		}
-	}
+     public Source resolve(String href, String base) throws TransformerException {
+        Resolver resolver = ResolverWrapper.getInstance();
+        CatalogResolver catResolver = resolver.getCatalogResolver();
+        if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+            Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
+        }
+        Source s = catResolver.resolve(href, base);
+        // If resolver has a blank XSL file to replace non existing resolved file ...
+        String blankXSLFile = resolver.getBlankXSLFile();
+        if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
+            // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
+            try {
+                if (!(new File(new URI(s.getSystemId())).exists())) {
+                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
+                     }
+                     s.setSystemId(blankXSLFile);
+                 }
+             } catch (URISyntaxException e) {
+                 e.printStackTrace();
+             }
+         }
+         
+         if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
+             Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
+         }
+         return s;
+         }
+     }
 
 	//--------------------------------------------------------------------------
 

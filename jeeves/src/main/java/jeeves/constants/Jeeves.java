@@ -41,6 +41,8 @@ public final class Jeeves
 	public static final String XML_CATALOG_FILES = "jeeves.xml.catalog.files";
 	public static final String XML_CATALOG_VERBOSITY = "jeeves.xml.catalog.verbosity";
 
+    public static final String XML_CATALOG_BLANKXSLFILE = "jeeves.xml.catalog.blankxslfile";
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Url prefixes

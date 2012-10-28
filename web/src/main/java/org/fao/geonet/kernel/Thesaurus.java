@@ -689,7 +689,7 @@ public class Thesaurus {
                 AccessDeniedException {
 
             KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setCode(code)
+                .setUriCode(code)
                 .setValue(prefLab, lang)
                 .setDefinition(note, lang);
             
@@ -703,7 +703,7 @@ public class Thesaurus {
                                String north, String lang) throws IOException, AccessDeniedException, GraphException {
             
             return addElement(new KeywordBean(getIsoLanguageMapper())
-                        .setCode(code)
+                        .setUriCode(code)
                         .setValue(prefLab, lang)
                         .setDefinition(note, lang)
                         .setCoordEast(east)
