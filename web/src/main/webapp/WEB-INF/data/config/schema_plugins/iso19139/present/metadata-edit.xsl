@@ -1260,13 +1260,14 @@
     
     <!-- TODO : escape quote
          TODO : multilingual md
+         TODO : identify current mode
     -->
     <!-- Create a div which contains the configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
       config="{{thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
       }',keywords: ['{string-join(gmd:keyword/*[1], ''',''')
-      }'], transformations: ['to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink']}}"/>
+      }'], transformations: ['to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'], transformation: 'to-iso19139-keyword'}}"/>
     
     <!-- Create a div which will be used for initializing the client widget -->
     <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
@@ -1274,7 +1275,7 @@
     <!-- Create a textarea which contains the XML snippet for updates.
     The name of the element starts with _X which means XML snippet update mode.
     -->
-    <textarea id="thesaurusPicker_{../geonet:element/@ref}_xml" name="_X{../geonet:element/@ref}" rows="" cols="">
+    <textarea id="thesaurusPicker_{../geonet:element/@ref}_xml" name="_X{../geonet:element/@ref}" rows="" cols="" class="debug">
       <xsl:apply-templates mode="geonet-cleaner" select="."/>
     </textarea>
   </xsl:template>

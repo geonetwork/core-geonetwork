@@ -500,3 +500,8 @@ dl.xml * dd {
     max-height: 16px;
     vertical-align: middle;
 }
+
+
+.debug {
+    display: none;
+}
