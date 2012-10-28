@@ -133,8 +133,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             layout: 'fit',
             bodyStyle: 'padding: 5px;',
             border: false,
-            tbar: [this.getSearchField()],
-            items: [this.getSubTemplateItemSelector()]
+            items: [this.getSearchField(), this.getSubTemplateItemSelector()]
         }];
         
         this.subTemplateStore.on({

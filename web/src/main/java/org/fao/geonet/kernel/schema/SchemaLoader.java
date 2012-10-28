@@ -27,13 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import jeeves.utils.Xml;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +34,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 
 //==============================================================================
 
@@ -158,7 +160,7 @@ public class SchemaLoader
                 Logger.log();
                 type = recurseOnSubstitutionLinks(elem);
                 if (type == null) {
-                    System.out.println("WARNING: Cannot find type for " + elem + ": assuming string");
+                    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: Cannot find type for " + elem + ": assuming string");
                     type = "string";
                 }
                 else {
@@ -387,7 +389,7 @@ public class SchemaLoader
 				if (ee.simpleType.alEnum != null) // add enumerations if any
 					elemRestr.addAll(ee.simpleType.alEnum);
 			} else {
-				System.out.println("WARNING: Could not find type for "+ee.name+" - assuming string");
+			    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: Could not find type for "+ee.name+" - assuming string");
 				ee.type = "string";
 			} 
 		}
@@ -421,7 +423,7 @@ public class SchemaLoader
             for (Object ssO : ssOs) {
                 String altSub = (String) ssO;
                 if (validSubs != null && !validSubs.contains(altSub)) {
-                    System.out.println("WARNING: schema-substitutions.xml specified " + altSub + " for element " + elementName + " but the schema does not define this as a valid substitute");
+                    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: schema-substitutions.xml specified " + altSub + " for element " + elementName + " but the schema does not define this as a valid substitute");
                 }
                 for (ElementEntry ee : subs) {
                     if (ee.name.equals(altSub)) {
@@ -430,7 +432,7 @@ public class SchemaLoader
                 }
             }
 			if (results.size() == 0 && validSubs != null) {
-				System.out.println("WARNING: schema-substitutions.xml has wiped out XSD substitution list for "+elementName);
+			    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: schema-substitutions.xml has wiped out XSD substitution list for "+elementName);
 			}
 			return results;
 		}
@@ -496,7 +498,7 @@ public class SchemaLoader
 		} else if (!isAbstract) {
 			mdt.addRefElementWithType(ee.ref,type,ee.min,ee.max);
 		} else {
-			System.out.println("WARNING: element "+ee.ref+" from "+baseName+" has fallen through the logic (abstract: "+isAbstract+") - ignoring");
+		    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: element "+ee.ref+" from "+baseName+" has fallen through the logic (abstract: "+isAbstract+") - ignoring");
 		}
 	}
 
@@ -565,7 +567,7 @@ public class SchemaLoader
 					mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), "");
 					mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 				} else {
-					System.out.println("WARNING: group element ref is NULL in "+baseName+extension+baseNr);
+				    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: group element ref is NULL in "+baseName+extension+baseNr);
 				}
 
 			// SEQUENCE
@@ -821,7 +823,7 @@ public class SchemaLoader
 		else
 		{
 			if (ee.type == null && ee.substGroup == null) {
-				System.out.println("WARNING: "+ee.name+" is a global element without a type - assuming a string");
+			    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: "+ee.name+" is a global element without a type - assuming a string");
 				ee.type ="string";
 			}
 			hmElements.put(ee.name, ee.type);

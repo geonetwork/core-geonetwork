@@ -929,6 +929,8 @@ function initCalendar() {
 				    value : value,
 		            dateFormat : 'Y-m-d',
 		            timeFormat : 'H:i',
+		            dateAltFormats:null,
+		            timeAltFormats:null,
 		            hiddenFormat : 'Y-m-d\\TH:i:s',
 		            dtSeparator : 'T'
 				});
@@ -939,7 +941,18 @@ function initCalendar() {
 				    id : id,
 				    width : 160, 
 				    value : value,
-				    format : 'Y-m-d'
+				    format : 'Y-m-d',
+				    altFormats:null,
+				    beforeBlur: function(){}, // don't perform check on blur which may changes the value.
+				    // override the setValue so that we allow freeform text in the input box during the initialload.
+				    setValue : function(date){
+				          // If the parsed date not equal to the date supplied then we will assume that it does not follow
+				          // the date format and it is in freeform. In which case, we set the superclass to the date supplied.
+				          if (!(date instanceof Date) && this.formatDate(this.parseDate(date))!==date)
+				               Ext.form.DateField.superclass.setValue.call(this, date);
+				          else // All other occurences are from when the user selects the date picker.
+				               Ext.form.DateField.superclass.setValue.call(this, this.formatDate(this.parseDate(date)));
+				    }
 				});
 			}
 			

@@ -1,21 +1,21 @@
 [submodule "installer"]
 	path = installer
-	url = git://github.com/geonetwork/core-installer.git
+	url = https://github.com/geonetwork/core-installer.git
 [submodule "gast"]
 	path = gast
-	url = git://github.com/geonetwork/core-gast.git
+	url = https://github.com/geonetwork/core-gast.git
 [submodule "maven_repo"]
 	path = maven_repo
-	url = git://github.com/geonetwork/core-maven-repo.git
+	url = https://github.com/geonetwork/core-maven-repo.git
 [submodule "release"]
 	path = release
-	url = git://github.com/geonetwork/core-release.git
+	url = https://github.com/geonetwork/core-release.git
 [submodule "docs"]
 	path = docs
-	url = git://github.com/geonetwork/core-doc-sources.git
+	url = https://github.com/geonetwork/core-doc-sources.git
 [submodule "geoserver"]
 	path = geoserver
-	url = git://github.com/geonetwork/core-geoserver.git
+	url = https://github.com/geonetwork/core-geoserver.git
 [submodule "web-itest/webspecs"]
 	path = web-itest/webspecs
-	url = git://github.com/camptocamp/webspecs.git
+	url = https://github.com/camptocamp/webspecs.git

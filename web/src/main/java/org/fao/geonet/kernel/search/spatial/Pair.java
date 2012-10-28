@@ -17,6 +17,7 @@ public class Pair<R, L> {
     private R one;
     private L two;
 
+    protected Pair() {}
     private Pair(R one, L two) {
         super();
         this.one = one;

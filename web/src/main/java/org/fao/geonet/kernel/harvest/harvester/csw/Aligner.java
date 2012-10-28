@@ -219,13 +219,14 @@ public class Aligner
 		{
 			String name = localCateg.getName(catId);
 
-			if (name == null)
-                if(log.isDebugEnabled())
+			if (name == null) {
+                if(log.isDebugEnabled()) {
                     log.debug("    - Skipping removed category with id:"+ catId);
-			else
-			{
-                if(log.isDebugEnabled())
+                }
+			} else {
+                if(log.isDebugEnabled()) {
                     log.debug("    - Setting category : "+ name);
+                }
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
@@ -240,29 +241,31 @@ public class Aligner
 		for (Privileges priv : params.getPrivileges())
 		{
 			String name = localGroups.getName(priv.getGroupId());
-
-			if (name == null)
-                if(log.isDebugEnabled())
+			
+            if (name == null) {
+                if(log.isDebugEnabled()) {
                     log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-			else
-			{
-                if(log.isDebugEnabled())
+                }
+            } else {
+                if(log.isDebugEnabled()) {
                     log.debug("    - Setting privileges for group : "+ name);
-
+                }
+                
 				for (int opId: priv.getOperations())
 				{
 					name = dataMan.getAccessManager().getPrivilegeName(opId);
 
 					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
-					{
-                        if(log.isDebugEnabled())
+					if (opId == 0 || opId == 5 || opId == 6) {
+                        if(log.isDebugEnabled()) {
                             log.debug("       --> "+ name);
+                        }
 						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
+					} else {
+						if(log.isDebugEnabled()) {
+							log.debug("       --> "+ name +" (skipped)");
+						}
 					}
-					else
-                    if(log.isDebugEnabled())
-                        log.debug("       --> "+ name +" (skipped)");
 				}
 			}
 		}
@@ -278,27 +281,26 @@ public class Aligner
 	{
 		String date = localUuids.getChangeDate(ri.uuid);
 
-		if (date == null)
-            if(log.isDebugEnabled())
+		if (date == null) {
+            if(log.isDebugEnabled()) {
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
-		else
-		{
-			if (!ri.isMoreRecentThan(date))
-			{
-                if(log.isDebugEnabled())
+            }
+		} else {
+			if (!ri.isMoreRecentThan(date)) {
+                if(log.isDebugEnabled()) {
                     log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
+                }
 				result.unchangedMetadata++;
-			}
-			else
-			{
-                if(log.isDebugEnabled())
+			} else {
+                if(log.isDebugEnabled()) {
                     log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
-
+                }
 				Element md = retrieveMetadata(ri.uuid);
 
-				if (md == null)
+				if (md == null) {
 					return;
-
+				}
+				
                 //
                 // update metadata
                 //

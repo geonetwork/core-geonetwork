@@ -14,121 +14,120 @@
 	</xsl:template>
 	
 	<!--
-	additional scripts
+		additional scripts
 	-->
 	<xsl:template mode="script" match="/">
 	
-        <!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
-        <xsl:choose>
-            <xsl:when test="/root/request/debug">
-                <script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"></script>
-            </xsl:when>
-            <xsl:otherwise>
-              <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"></script>      
-            </xsl:otherwise>
-        </xsl:choose>
-    
+		<!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
+		<xsl:choose>
+			<xsl:when test="/root/request/debug">
+				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/><xsl:text>&#10;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/><xsl:text>&#10;</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+
 		<xsl:call-template name="geoHeader"/>
-		
+
 		<!-- Required by keyword selection panel -->
 		<xsl:if test="/root/gui/config/search/keyword-selection-panel">
 			<xsl:call-template name="ext-ux"/>
 		</xsl:if>
 		
-         <xsl:choose>
-            <xsl:when test="/root/request/debug">         	
-                <script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"></script>
+		<xsl:choose>
+			<xsl:when test="/root/request/debug">         	
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"></script>
-                
-                <!--link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
-                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css" />
+				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"/><xsl:text>&#10;</xsl:text>
 
-                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css" />
-                <link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" /-->
-         
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"></script>
+				<!--link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
+				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css"/>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"></script>
+				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css"/>
+				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" /-->
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"></script>				
-                <script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/OGCUtil.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/MapStateManager.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/CatalogueInterface.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/core/WMCManager.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ExtentBox.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/es.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/OGCUtil.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/MapStateManager.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/CatalogueInterface.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/WMCManager.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ExtentBox.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSListGenerator.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSTreeGenerator.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/BrowserPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerInfoPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerStylesPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/PreviewPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/WMSLayerInfo.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/es.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/FeatureInfoPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/LegendPanel.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/OpacitySlider.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/PrintAction.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/ProjectionSelector.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/TimeSelector.js"></script>
-                
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/BaseWindow.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/SingletonWindowManager.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/AddWMS.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/FeatureInfo.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Opacity.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LoadWmc.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WMSTime.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LayerStyles.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Disclaimer.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"/><xsl:text>&#10;</xsl:text>
 
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_settings.js"></script>		
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_minimap.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/ol_map.js"></script>
-                
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
-            </xsl:when>
-            <xsl:otherwise>             
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"></script>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSListGenerator.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSTreeGenerator.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/BrowserPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerInfoPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerStylesPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/PreviewPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/WMSLayerInfo.js"/><xsl:text>&#10;</xsl:text>
 
-                <!-- Editor JS is still required here at least for batch operation -->
-        		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
-                <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.map.js"></script>              
-            </xsl:otherwise>
-         </xsl:choose>
-            
-            
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"></script>
-		
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/FeatureInfoPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/LegendPanel.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/OpacitySlider.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/PrintAction.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/ProjectionSelector.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/TimeSelector.js"/><xsl:text>&#10;</xsl:text>
+
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/BaseWindow.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/SingletonWindowManager.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/AddWMS.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/FeatureInfo.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Opacity.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LoadWmc.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WMSTime.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LayerStyles.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Disclaimer.js"/><xsl:text>&#10;</xsl:text>
+
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_settings.js"/><xsl:text>&#10;</xsl:text>	
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_minimap.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_map.js"/><xsl:text>&#10;</xsl:text>
+
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/><xsl:text>&#10;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>             
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"/><xsl:text>&#10;</xsl:text>
+
+				<!-- Editor JS is still required here at least for batch operation -->
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.map.js"/><xsl:text>&#10;</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/><xsl:text>&#10;</xsl:text>
+
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
 		<xsl:variable name="uuid"><xsl:copy-of select="/root/request/uuid"/></xsl:variable>
 		<xsl:variable name="id"><xsl:copy-of select="/root/request/id"/></xsl:variable>
@@ -136,39 +135,37 @@
 		<xsl:variable name="typeWMS"><xsl:copy-of select="/root/request/type"/></xsl:variable>
 		<xsl:variable name="tab"><xsl:copy-of select="/root/request/tab"/></xsl:variable>
 		<xsl:variable name="search"><xsl:copy-of select="/root/request/search"/></xsl:variable>
-		
+
 		<script type="text/javascript">
 
 			function init() {};
 
 
-			var getIMServiceURL = function(service)
-			{
+			var getIMServiceURL = function(service){
 				// FIXME: the "/intermap/" context should be parametrized
 				return "/intermap/srv/"+Env.lang+"/"+service;
 			};
 
-			function doSubmit()
-			{
+			function doSubmit(){
 				if (checkSubmit())
 					document.search.submit();
 			}
 
 			Ext.onReady(function(){
-                $("loading").hide();
+				$("loading").hide();
 
 				var GNCookie = new Ext.state.CookieProvider({
-				  	expires: new Date(new Date().getTime()+(1000*60*60*24*365))
-											//1 year from now
-								});
+					expires: new Date(new Date().getTime()+(1000*60*60*24*365))
+										//1 year from now
+					});
 
-                Ext.state.Manager.setProvider(GNCookie);
+				Ext.state.Manager.setProvider(GNCookie);
 
-                GeoNetwork.MapStateManager.loadMapState();
-                
+				GeoNetwork.MapStateManager.loadMapState();
+
 				initMapViewer();
 				var mapViewport =  GeoNetwork.mapViewer.getViewport();
-				
+
 				var categories = new Ext.Panel({
 					region: 'south',
 					layout:'fit',
@@ -180,7 +177,7 @@
 					border:false
 				});
 				
-			    var recent = new Ext.Panel({
+				var recent = new Ext.Panel({
 					region: 'south',
 					layout:'fit',
 					contentEl: 'recent_pnl',
@@ -190,45 +187,45 @@
 					collapsible:true,
 					border:false	
 				});
-		
-			    var searchTabs = new Ext.TabPanel({
+
+				var searchTabs = new Ext.TabPanel({
 					renderTo: 'search_tabs',
 					activeTab : 0,
 					deferredRender: false,
 					border: false,
 					bodyBorder: false,
 					items: [ {
-										itemId: 'default',
-                                        bodyStyle: 'padding:15px',
-										autoScroll: true,
-										title: '<xsl:value-of select="/root/gui/strings/simpleSearch"/>',
-										contentEl: 'simple_search_pnl'
-									 }
-									,{
-										itemId: 'advanced',
-                                        bodyStyle: 'padding:15px',
-										autoScroll: true,
-										title: '<xsl:value-of select="/root/gui/strings/advancedSearch"/>',
-										contentEl: 'advanced_search_pnl'
-									}
-									<xsl:if test="/root/gui/config/search/show-remote-search">
-										,{
-											itemId: 'remote',
-                                            bodyStyle: 'padding:15px',
-										    autoScroll: true,
-											title: '<xsl:value-of select="/root/gui/strings/remoteSearch"/>',
-											contentEl: 'remote_search_pnl'
-										}
-									</xsl:if>
-										
-								]
+								itemId: 'default',
+								bodyStyle: 'padding:15px',
+								autoScroll: true,
+								title: '<xsl:value-of select="/root/gui/strings/simpleSearch"/>',
+								contentEl: 'simple_search_pnl'
+							 }
+							,{
+								itemId: 'advanced',
+								bodyStyle: 'padding:15px',
+								autoScroll: true,
+								title: '<xsl:value-of select="/root/gui/strings/advancedSearch"/>',
+								contentEl: 'advanced_search_pnl'
+							}
+							<xsl:if test="/root/gui/config/search/show-remote-search">
+								,{
+									itemId: 'remote',
+									bodyStyle: 'padding:15px',
+									autoScroll: true,
+									title: '<xsl:value-of select="/root/gui/strings/remoteSearch"/>',
+									contentEl: 'remote_search_pnl'
+								}
+							</xsl:if>
+								
+							]
 				});
 
-				 searchTabs.on('tabchange', function() {
+				searchTabs.on('tabchange', function() {
 					GNCookie.set('search',{searchTab: this.getActiveTab().itemId}); 
 				});
 
-			   var viewport = new Ext.Panel({
+				var viewport = new Ext.Panel({
 					region: 'center',
 					layout:'border',
 					border:false,
@@ -240,70 +237,68 @@
 							contentEl :'header',
 							border:false
 						},
-						
+
 						// Center: Content
 						{
-							region:'center',                
+							region:'center',
 							layout:'border',
 							border:false,
 							layoutConfig:{
-								animate:true
-							}, 
-							items:[
-								{region:'center',   
+							animate:true
+						}, 
+						items:[
+							{region:'center',   
+							border:false,
+							layout: 'border',
+							items: 
+								[{region:'west',
+								xtype: 'panel',
+								layout: 'fit',
+								border:false,
+								width: 400,
+								minSize: 300,
+								maxSize: 450,
+								autoScroll: true,
+								collapsible: true,
+								collapseMode: "mini",
+								split: 'true',
+								useSplitTips:true,
+								collapsibleSplitTip: 'Drag to rezise the search panel. Double click to show/hide it',
+								items: [searchTabs] 
+								},
+								{region:'center', 
+								id: 'main-viewport',
 								border:false,
 								layout: 'border',
-								items: 
-									[{region:'west',
-									xtype: 'panel',
-                                    layout: 'fit',
+								items: [
+									{region:'north',
+									id: 'north-map-panel',
+									title: '<xsl:value-of select="/root/gui/strings/mapViewer"/>',
 									border:false,
-									width: 400,
-									minSize: 300,
-									maxSize: 450,
-									autoScroll: true,
 									collapsible: true,
-									collapseMode: "mini",
-									split: 'true',
-									useSplitTips:true,
-									collapsibleSplitTip: 'Drag to rezise the search panel. Double click to show/hide it',
-									items: [searchTabs] 
+									collapsed: true,
+									split: true,
+									height: 450,
+									minSize: 300,
+									//maxSize: 500,
+									layout: 'fit',
+									listeners: {
+											collapse: collapseMap,
+											expand: expandMap
+											},
+									items: [mapViewport]
+									
 									},
 									{region:'center', 
-										id: 'main-viewport',
-										border:false,
-										layout: 'border',
-										items: [
-											{region:'north',
-											id: 'north-map-panel',
-											title: '<xsl:value-of select="/root/gui/strings/mapViewer"/>',
-											border:false,
-											collapsible: true,
-											collapsed: true,
-											split: true,
-											height: 450,
-											minSize: 300,
-											//maxSize: 500,
-											layout: 'fit',
-											listeners: {
-												  collapse: collapseMap,
-												  expand: expandMap
-											   },
-											items: [mapViewport]
-											
-											},
-											{region:'center', 
-											contentEl :'content',
-											border:false,
-											autoScroll: true
-											}
-										]
-										
-									}]
+									contentEl :'content',
+									border:false,
+									autoScroll: true
+								}]
 							}]
-						}]});
-						
-						
+						}]
+					}]
+				});
+
 				mainViewport = new Ext.Viewport({
 							layout:'border',
 							border:false,
@@ -311,8 +306,8 @@
 							items:[viewport]
 				});
 
-                // Initialize small maps for search
-                initMapsSearch();
+				// Initialize small maps for search
+				initMapsSearch();
 
 				var requestTab="<xsl:value-of select="$tab"/>";
 				var search="<xsl:value-of select="$search"/>";
@@ -321,40 +316,40 @@
 				var cookie = GNCookie.get('search');
 				if (cookie) currentSearch = cookie.searchTab;
 				<!-- show tab requested otherwise show last tab selected -->
-                if (requestTab == 'simple') {
+				if (requestTab == 'simple') {
 					searchTabs.setActiveTab(requestTab);
 					showSimpleSearch(search);
 
-                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
-                    initAdvancedSearch();
+					// Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+					initAdvancedSearch();
 
-                } else if (requestTab == 'advanced') {
+				} else if (requestTab == 'advanced') {
 					searchTabs.setActiveTab(requestTab);
-                    showAdvancedSearch(search);
-                } else if (requestTab == 'remote') {
+					showAdvancedSearch(search);
+				} else if (requestTab == 'remote') {
 					searchTabs.setActiveTab(requestTab);
-                    showRemoteSearch(search);
+					showRemoteSearch(search);
 
-                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
-                    initAdvancedSearch();
+					//  Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+						initAdvancedSearch();
 
-                } else if (currentSearch == 'advanced') {
+				} else if (currentSearch == 'advanced') {
 					searchTabs.setActiveTab(currentSearch);
-                    showAdvancedSearch(search);
-                } else if (currentSearch == 'remote') {
-                    searchTabs.setActiveTab(currentSearch);
-                    showRemoteSearch(search);
+					showAdvancedSearch(search);
+				} else if (currentSearch == 'remote') {
+					searchTabs.setActiveTab(currentSearch);
+					showRemoteSearch(search);
 
-                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
-                    initAdvancedSearch();
+					// Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+					initAdvancedSearch();
 
-                } else {
-                    searchTabs.setActiveTab('default');
-                    showSimpleSearch(search);
+				} else {
+					searchTabs.setActiveTab('default');
+					showSimpleSearch(search);
 
-                    // Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
-                    initAdvancedSearch();
-                }
+					// Init of advanced tab, otherwise when selected doesn't show "When" fields as not initialized
+					initAdvancedSearch();
+				}
 				<!-- If a UUID is passed, it will be opened within the AJAX page -->
 				var uuid="<xsl:value-of select="$uuid"/>";
 				if (uuid!='') {
@@ -363,11 +358,11 @@
 
 				var id="<xsl:value-of select="$id"/>";
 				if (id!='') {
-						gn_showSingleMetadata(id);
+					gn_showSingleMetadata(id);
 				}
 
 				<!-- If a WMS server & layername(s) are passed, it will be opened 
-						 in the map viewer the large map viewer will also be opened -->
+					 in the map viewer the large map viewer will also be opened -->
 				var urlWMS="<xsl:value-of select="$urlWMS"/>";
 				var typeWMS="<xsl:value-of select="$typeWMS"/>";
 				servicesWMS = new Array();
@@ -383,59 +378,58 @@
 					}
 				}
 			});
-			
-            
-            function initMapViewer() {
-                var mapOptions = <xsl:value-of select='/root/gui/config/mapViewer/@options'/>;
-                
-                // Load layers defined in config file
-                var layers = [];
-                
-                <xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
-                   layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
-                </xsl:for-each>
-                
-                // Init projection list
-                <xsl:for-each select="/root/gui/config/mapViewer/proj/crs">
-                GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);                
-                </xsl:for-each>
-                
-                  // Init WMS server list
-                <xsl:for-each select="/root/gui/config/mapViewer/servers/server">
-                GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);                
-                </xsl:for-each>
+
+			function initMapViewer() {
+				var mapOptions = <xsl:value-of select='/root/gui/config/mapViewer/@options'/>;
+
+				// Load layers defined in config file
+				var layers = [];
+
+				<xsl:for-each select="/root/gui/config/mapViewer/layers/layer">
+					layers.push(["<xsl:value-of select='@tocName'/>","<xsl:value-of select='@server'/>",<xsl:value-of select='@params'/>, <xsl:value-of select='@options'/>]);                           
+				</xsl:for-each>
+
+				// Init projection list
+				<xsl:for-each select="/root/gui/config/mapViewer/proj/crs">
+				GeoNetwork.ProjectionList.push(["<xsl:value-of select='@code'/>","<xsl:value-of select='@name'/>"]);                
+				</xsl:for-each>
+
+				// Init WMS server list
+				<xsl:for-each select="/root/gui/config/mapViewer/servers/server">
+				GeoNetwork.WMSList.push(["<xsl:value-of select='@name'/>","<xsl:value-of select='@url'/>"]);                
+				</xsl:for-each>
 
  				var scales = <xsl:value-of select='/root/gui/config/mapViewer/scales/@values'/>;
 
-                // Initialize map viewer
-                GeoNetwork.mapViewer.init(backgroundLayers, mapOptions, scales);
-            }
-            
-            function initMapsSearch() {
-                var mapOptions1 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
-                var mapOptions2 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
-                var mapOptions3 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
+				// Initialize map viewer
+				GeoNetwork.mapViewer.init(backgroundLayers, mapOptions, scales);
+				}
 
-								var simpleAoiIds = {
-										eastBL: 'eastBL_simple',
-										westBL: 'westBL_simple',
-										northBL: 'northBL_simple',
-										southBL: 'southBL_simple'
-								};
+			function initMapsSearch() {
+				var mapOptions1 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
+				var mapOptions2 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
+				var mapOptions3 = <xsl:value-of select='/root/gui/config/mapSearch/@options'/>;
 
-								var advancedAoiIds = {
-										eastBL: 'eastBL',
-										westBL: 'westBL',
-										northBL: 'northBL',
-										southBL: 'southBL'
-								};
+				var simpleAoiIds = {
+						eastBL: 'eastBL_simple',
+						westBL: 'westBL_simple',
+						northBL: 'northBL_simple',
+						southBL: 'southBL_simple'
+				};
 
-								var remoteAoiIds = {
-										eastBL: 'eastBL_remote',
-										westBL: 'westBL_remote',
-										northBL: 'northBL_remote',
-										southBL: 'southBL_remote'
-								};
+				var advancedAoiIds = {
+						eastBL: 'eastBL',
+						westBL: 'westBL',
+						northBL: 'northBL',
+						southBL: 'southBL'
+				};
+
+				var remoteAoiIds = {
+						eastBL: 'eastBL_remote',
+						westBL: 'westBL_remote',
+						northBL: 'northBL_remote',
+						southBL: 'southBL_remote'
+				};
 
                 // Initialize minimaps
                 GeoNetwork.minimapSimpleSearch.init("ol_minimap1", "region_simple", backgroundLayersMapSearch, mapOptions1, simpleAoiIds);
@@ -501,11 +495,11 @@
 	</xsl:template>
 
 	<xsl:template name="categories_latestupdates">
-    <xsl:call-template name="categories"/>
-        <div id="latest_updates">
-            <xsl:call-template name="latestUpdates"/>
-        </div>
-  </xsl:template>	
+		<xsl:call-template name="categories"/>
+		<div id="latest_updates">
+			<xsl:call-template name="latestUpdates"/>
+		</div>
+	</xsl:template>	
 
 	<!--
 	page content - search results etc
@@ -543,14 +537,14 @@
 	<!--
 	loading indicator	
 	-->
-  <xsl:template mode="loading" match="/" priority="2">
-    <div id="loading">
-      <div class="loading-indicator">
-        <img src="{/root/gui/url}/images/spinner.gif" width="32" height="32"/>GeoNetwork opensource catalogue<br />
-        <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
-      </div>
-    </div>
-  </xsl:template>
+	<xsl:template mode="loading" match="/" priority="2">
+		<div id="loading">
+			<div class="loading-indicator">
+				<img src="{/root/gui/url}/images/spinner.gif" width="32" height="32"/>GeoNetwork opensource catalogue<br />
+				<span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
+			</div>
+		</div>
+	</xsl:template>
 
 	<!--
 	featured map

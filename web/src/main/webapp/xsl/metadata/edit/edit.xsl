@@ -24,7 +24,7 @@
     <xsl:for-each select="$metadata">
       
       
-      <div class="metadata">
+      <div class="metadata {$currTab}">
         <form id="editForm" name="mainForm" accept-charset="UTF-8" method="POST"
           action="{/root/gui/locService}/metadata.update">
           <input type="hidden" id="schema" value="{geonet:info/schema}"/>

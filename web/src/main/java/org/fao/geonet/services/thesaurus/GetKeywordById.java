@@ -80,7 +80,7 @@ public class GetKeywordById implements Service {
 			kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
 			if (kb == null) {
                 switch (format) {
-        		    case iso: new Element ("<null/>");
+        		    case iso: new Element ("null");
         		    case raw: new Element("descKeys");
     		    }
 			} else {
@@ -96,7 +96,7 @@ public class GetKeywordById implements Service {
 				String currentUri = url[i];
 				kb = searcher.searchById(currentUri, sThesaurusName, langForThesaurus);
 				if (kb == null) {
-					return new Element ("<null/>");
+					return new Element ("null");
 				} else {
 					kbList.add(kb);
 					kb = null;

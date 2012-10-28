@@ -39,7 +39,7 @@
 					<xsl:copy-of select="gmd:parentIdentifier"/>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="node()[name()!='gmd:language' and name()!='gmd:characterSet']"/>
+			<xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -132,7 +132,7 @@
 	
 	<xsl:template match="*[gco:CharacterString]">
 		<xsl:copy>
-			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:apply-templates select="@*[not(name()='gco:nilReason')]"/>
 			<xsl:choose>
 				<xsl:when test="normalize-space(gco:CharacterString)=''">
 					<xsl:attribute name="gco:nilReason">
@@ -146,8 +146,7 @@
 					<xsl:copy-of select="@gco:nilReason"/>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="gco:CharacterString"/>
-			<xsl:apply-templates select="*[not(self::gco:CharacterString)]"/>
+			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
 
@@ -282,53 +281,90 @@
 
 
 	<!-- ================================================================= -->
-	<!-- Set local identifier to the first 2 letters of iso code. Locale ids
+	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
-		<xsl:variable name="id" select="upper-case(
-			substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+		<xsl:element name="gmd:{local-name()}">
+			<xsl:variable name="id" select="upper-case(
+				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
 
-		<xsl:choose>
-			<xsl:when test="@id and (normalize-space(@id)!='' and normalize-space(@id)=$id)">
-				<xsl:copy-of select="."/>
-			</xsl:when>
-			<xsl:otherwise>
-				<gmd:PT_Locale>
-					<xsl:attribute name="id">
-						<xsl:value-of select="$id"/>
-					</xsl:attribute>
-					<xsl:copy-of select="./*"/>
-				</gmd:PT_Locale>
-			</xsl:otherwise>
-		</xsl:choose>
+			<xsl:apply-templates select="@*"/>
+			<xsl:if test="@id and (normalize-space(@id)='' or normalize-space(@id)!=$id)">
+				<xsl:attribute name="id">
+					<xsl:value-of select="$id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="node()"/>
+		</xsl:element>
 	</xsl:template>
 
 	<!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
 	<xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
 	<xsl:template  match="gmd:LocalisedCharacterString">
-		<xsl:copy>
-			<xsl:variable name="currentLocale" select="replace(normalize-space(@locale), '^#', '')"/>
+		<xsl:element name="gmd:{local-name()}">
+			<xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
 			<xsl:variable name="ptLocale" select="$language[@id=string($currentLocale)]"/>
 			<xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
-			<xsl:copy-of select="@*[not(name()='locale')]"/>
-			<xsl:choose>
-				<xsl:when test="@locale and $currentLocale!='' and currentLocale=$id">
-					<xsl:copy-of select="."/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="locale">
-						<xsl:value-of select="concat('#',$id)"/>
-					</xsl:attribute>
-					<xsl:copy-of select="node()"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:apply-templates select="gmd:LocalisedCharacterString"/>
-			<xsl:apply-templates select="*[not(self::gmd:LocalisedCharacterString)]"/>
-		</xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
+				<xsl:attribute name="locale">
+					<xsl:value-of select="concat('#',$id)"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="node()"/>
+		</xsl:element>
 	</xsl:template>
 
 	<!-- ================================================================= -->
+	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
+		element. The assumption is that the name is in the format of  <ns:element> 
+		however in some cases it is in the format of <element xmlns=""> so the 
+		following will convert them back to the expected value. This also corrects the issue 
+		where the <element xmlns=""> loose the xmlns="" due to the exclude-result-prefixes="#all" -->
+	<!-- Note: Only included prefix gml, gmd and gco for now. -->
+	<!-- TODO: Figure out how to get the namespace prefix via a function so that we don't need to hard code them -->
+	<!-- ================================================================= -->
+
+	<xsl:template name="correct_ns_prefix">
+		<xsl:param name="element" />
+		<xsl:param name="prefix" />
+		<xsl:choose>
+			<xsl:when test="local-name($element)=name($element) and $prefix != '' ">
+				<xsl:element name="{$prefix}:{local-name($element)}">
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:apply-templates select="@*|node()"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="gmd:*">
+		<xsl:call-template name="correct_ns_prefix">
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="prefix" select="'gmd'"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="gco:*">
+		<xsl:call-template name="correct_ns_prefix">
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="prefix" select="'gco'"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="gml:*">
+		<xsl:call-template name="correct_ns_prefix">
+			<xsl:with-param name="element" select="."/>
+			<xsl:with-param name="prefix" select="'gml'"/>
+		</xsl:call-template>
+	</xsl:template>
+
+<!-- ================================================================= -->
 	<!-- copy everything else as is -->
 	
 	<xsl:template match="@*|node()">

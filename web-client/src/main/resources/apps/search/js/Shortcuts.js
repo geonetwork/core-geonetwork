@@ -133,6 +133,16 @@ function initShortcut(){
             catalogue.admin();
         }
     }, {
+        key: "c",
+        ctrl: true,
+        shift: true,
+        stopEvent: true,
+        label: OpenLayers.i18n('newMetadata'),
+        fn: function(){
+            var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+            actionCtn.createMetadataAction.handler.apply(actionCtn);
+        }
+    }, {
         key: "i",
         ctrl: true,
         shift: true,

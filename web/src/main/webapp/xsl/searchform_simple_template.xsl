@@ -13,6 +13,8 @@
 			<div class="row">  <!-- div row-->
 				<h1 class="labelFieldSmall"><xsl:value-of select="/root/gui/strings/what"/></h1>
 				<input name="any" id="any" class="content" size="31" value="{/root/gui/searchDefaults/any}"/>
+				<!--Dummy field - requires at least 2 fields to ensure the return key does not auto submit to the current url. See Ticket #662 for more details -->
+				<input name="dummyfield" id="dummfield" style="visibility:hidden;display:none;" size="0" value=""/>
 			</div>
 		
 			<!-- Where --> 

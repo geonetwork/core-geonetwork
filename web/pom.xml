@@ -213,10 +213,12 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
+		<!-- Not permitted under oracle licensing rules
     <dependency>
       <groupId>ojdbc</groupId>
       <artifactId>ojdbc</artifactId>
     </dependency>
+		-->
     <dependency>
       <groupId>javax.persistence</groupId>
       <artifactId>persistence-api</artifactId>

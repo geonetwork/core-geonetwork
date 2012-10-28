@@ -289,6 +289,7 @@
     <xsl:param name="schema"/>
     <xsl:param name="edit" select="false()"/>
     <xsl:param name="editAttributes" select="true()"/>
+    <xsl:param name="refs"/>
     <xsl:param name="title">
       <xsl:call-template name="getTitle">
         <xsl:with-param name="name" select="name(.)"/>
@@ -316,6 +317,7 @@
           <xsl:with-param name="editAttributes" select="$editAttributes"/>
           <xsl:with-param name="text" select="$text"/>
           <xsl:with-param name="helpLink" select="$helpLink"/>
+          <xsl:with-param name="refs" select="$refs"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -542,14 +544,20 @@
     <xsl:param name="editAttributes"/>
     <xsl:param name="text"/>
     <xsl:param name="helpLink"/>
+    <!-- A comma separated values of reference to element to be deleted by (-). 
+      No (+) and (down) are displayed.
+    -->
+    <xsl:param name="refs"/>
 
     <!-- if it's the last brother of it's type and there is a new brother make addLink -->
 
     <xsl:variable name="id" select="geonet:element/@uuid"/>
     <xsl:variable name="addLink">
-      <xsl:call-template name="addLink">
-        <xsl:with-param name="id" select="$id"/>
-      </xsl:call-template>
+      <xsl:if test="$refs=''">
+        <xsl:call-template name="addLink">
+          <xsl:with-param name="id" select="$id"/>
+        </xsl:call-template>
+      </xsl:if>
     </xsl:variable>
     <xsl:variable name="addXMLFragment">
       <xsl:call-template name="addXMLFragment">
@@ -558,7 +566,7 @@
     </xsl:variable>
     <xsl:variable name="removeLink">
       <xsl:value-of
-        select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+        select="concat('doRemoveElementAction(',$apos,'metadata.elem.delete.new',$apos,',',$apos, if ($refs!='') then $refs else geonet:element/@ref,$apos,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
       <xsl:if test="not(geonet:element/@del='true')">
         <xsl:text>!OPTIONAL</xsl:text>
       </xsl:if>
@@ -571,10 +579,12 @@
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="downLink">
-      <xsl:value-of
-        select="concat('doMoveElementAction(',$apos,'metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
-      <xsl:if test="not(geonet:element/@down='true')">
-        <xsl:text>!OPTIONAL</xsl:text>
+      <xsl:if test="$refs=''">
+        <xsl:value-of
+          select="concat('doMoveElementAction(',$apos,'metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+        <xsl:if test="not(geonet:element/@down='true')">
+          <xsl:text>!OPTIONAL</xsl:text>
+        </xsl:if>
       </xsl:if>
     </xsl:variable>
     <!-- xsd and schematron validation info -->
@@ -1691,6 +1701,31 @@
           <!-- Check if divs could be used instead ? -->
           <table class="gn" id="toggled{$id}">
             <tbody>
+              <xsl:if test="count(geonet:attribute[@name='gco:nilReason']) > 0">
+                
+                <!-- Display attributes if used and not only contains a gco:nilReason = missing. 
+                Only support gco:nilReason attribute for complex element.
+                -->
+                <xsl:variable name="visibleAttributes" select="count(@*[name(.)!='nilReason' and  normalize-space()!='missing']) > 0"/>
+                <tr>
+                  <td>
+                    <div class="toggle-attr">
+                      <xsl:attribute name="style">
+                        <xsl:if test="not($visibleAttributes)">display:none;</xsl:if>
+                      </xsl:attribute>
+                      <table>
+                        <tbody>
+                          <xsl:apply-templates mode="simpleAttribute" select="@gco:nilReason|geonet:attribute[@name='gco:nilReason']">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="edit" select="$edit"/>
+                          </xsl:apply-templates>
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </xsl:if>
+              
               <xsl:copy-of select="$content"/>
             </tbody>
           </table>

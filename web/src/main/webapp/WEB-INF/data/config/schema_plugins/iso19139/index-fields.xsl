@@ -139,7 +139,11 @@
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
-
+			
+			<xsl:for-each select="gmd:credit/gco:CharacterString">
+				<Field name="credit" string="{string(.)}" store="true" index="true"/>
+			</xsl:for-each>
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="*/gmd:EX_Extent">

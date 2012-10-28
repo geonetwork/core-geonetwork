@@ -66,11 +66,13 @@ public class DeleteElement implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id      		= Util.getParam(params, Params.ID);
-		String ref     		= Util.getParam(params, Params.REF);
+		String[] ref     		= Util.getParam(params, Params.REF).split(",");
 		String parentRef	= Util.getParam(params, Params.PARENT);
 
-		Element child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref, parentRef);
-
+		Element child = null;
+		for (int i = 0; i < ref.length; i++) {
+			child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref[i], parentRef);
+		}
 		return child;
 	}
 }

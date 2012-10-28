@@ -47,10 +47,9 @@ public class EqualsFilter extends SpatialFilter
 
     private static final long serialVersionUID = 1114543251684147194L;
 
-    public EqualsFilter(Query query, Geometry geom,
-            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource, SpatialIndex index) throws IOException
+    public EqualsFilter(Query query, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, geom, featureSource, index);
+        super(query, geom, sourceAccessor);
     }
 
     protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,

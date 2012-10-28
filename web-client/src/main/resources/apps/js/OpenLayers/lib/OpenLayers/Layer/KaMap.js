@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 
@@ -22,18 +22,6 @@ OpenLayers.Layer.KaMap = OpenLayers.Class(OpenLayers.Layer.Grid, {
      */    
     isBaseLayer: true,
 
-    /**
-     * APIProperty: units
-     * {?}
-     */    
-    units: null,
-
-    /**
-     * APIProperty: resolution
-     * {Float}
-     */
-    resolution: OpenLayers.DOTS_PER_INCH,
-    
     /**
      * Constant: DEFAULT_PARAMS
      * {Object} parameters set by default. The default parameters set 
@@ -62,9 +50,7 @@ OpenLayers.Layer.KaMap = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *     extends, can be overridden through the options parameter. 
      */
     initialize: function(name, url, params, options) {
-        var newArguments = [];
-        newArguments.push(name, url, params, options);
-        OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, arguments);
         this.params = OpenLayers.Util.applyDefaults(
             this.params, this.DEFAULT_PARAMS
         );
@@ -94,22 +80,6 @@ OpenLayers.Layer.KaMap = OpenLayers.Class(OpenLayers.Layer.Grid, {
                       });
     },
 
-    /**
-     * Method: addTile
-     * 
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
-     * position - {<OpenLayers.Pixel>}
-     * 
-     * Returns:
-     * {<OpenLayers.Tile.Image>}
-     */    
-    addTile:function(bounds,position) {
-        var url = this.getURL(bounds);
-        return new OpenLayers.Tile.Image(this, position, bounds, 
-                                             url, this.tileSize);
-    },
-
     /** 
      * Method: calculateGridLayout
      * ka-Map uses the center point of the map as an origin for 
@@ -118,14 +88,14 @@ OpenLayers.Layer.KaMap = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *
      * Parameters:
      * bounds - {<OpenLayers.Bound>}
-     * extent - {<OpenLayers.Bounds>}
+     * origin - {<OpenLayers.LonLat>}
      * resolution - {Number}
      *
      * Returns:
-     * Object containing properties tilelon, tilelat, tileoffsetlat,
+     * {Object} Object containing properties tilelon, tilelat, tileoffsetlat,
      * tileoffsetlat, tileoffsetx, tileoffsety
      */
-    calculateGridLayout: function(bounds, extent, resolution) {
+    calculateGridLayout: function(bounds, origin, resolution) {
         var tilelon = resolution*this.tileSize.w;
         var tilelat = resolution*this.tileSize.h;
         

@@ -89,12 +89,13 @@ public class Unset implements Service
 		if (result == null)
 			throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
 
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
 		dataMan.unsetThumbnail(context, id, type.equals("small"));
+		
 		
 		File thumbnail = new File(file);
 		if (thumbnail.exists()) {
@@ -149,13 +150,39 @@ public class Unset implements Service
 		if (result == null)
 			throw new OperationAbortedEx("Metadata has no thumbnail", id);
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
 		
 		if (!new File(file).delete())
 			context.error("Error while deleting thumbnail : "+file);
 		
 		
 	} 
+	
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Return file name from full url thumbnail formated as
+	 * http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
+	 * @param file
+	 * @return
+	 */
+	private String getFileName(String file)
+	{
+		if(file.indexOf(FNAME_PARAM) < 0) {
+			return file;
+		}
+		else {
+			return file.substring(file.lastIndexOf(FNAME_PARAM)+FNAME_PARAM.length());
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+		//---
+		//--- Variables
+		//---
+		//--------------------------------------------------------------------------
+
+		private static final String FNAME_PARAM   = "fname=";
 
 }
 

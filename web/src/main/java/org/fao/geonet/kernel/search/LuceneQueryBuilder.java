@@ -276,16 +276,16 @@ public class LuceneQueryBuilder {
                             }
                         }
                         else {
-                            BooleanQuery ooleanQuery = new BooleanQuery();
+                            BooleanQuery orBooleanQuery = new BooleanQuery();
                             while (st.hasMoreTokens()) {
                                 String token = st.nextToken();
                                 Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
                                 if (subQuery != null) {
-                                    BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
-                                    booleanQuery.add(subClause);
+                                    BooleanClause subClause = new BooleanClause(subQuery, occur);
+                                    orBooleanQuery.add(subClause);
                                 }
                             }
-                            anyClause = new BooleanClause(ooleanQuery, tokenOccur);
+                            anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
                         }
                     }
                     if (StringUtils.isNotEmpty(anyClause.toString())) {
@@ -295,7 +295,7 @@ public class LuceneQueryBuilder {
                 else {
                     if (!_tokenizedFieldSet.contains(fieldName)) {
                         // TODO : use similarity when needed
-                        TermQuery termQuery = new TermQuery(new Term(fieldName, "\""+fieldValue.trim()+"\""));
+                        TermQuery termQuery = new TermQuery(new Term(fieldName, fieldValue.trim()));
                         BooleanClause clause = new BooleanClause(termQuery, tokenOccur);
                         booleanQuery.add(clause);
                     }

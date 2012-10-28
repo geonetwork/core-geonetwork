@@ -14,7 +14,7 @@
       </head>
       <body>-->
     <xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']">
-      <div class="metadata">
+      <div class="metadata {$currTab}">
         <div>
           <!-- Tabs -->
           <xsl:call-template name="tab">

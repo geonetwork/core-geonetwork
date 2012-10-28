@@ -23,33 +23,53 @@
 
 package org.fao.geonet.services.main;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.jdom.Element;
-
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.jdom.Attribute;
+import org.jdom.Element;
+
 /**
- * Browse the index for a field and return a list of suggestion. Suggested terms
- * <b>contains</b> the query string.
+ * Return a list of suggestion for a field. The values could be filtered and only 
+ * values contained in field values are returned. 
+ * 
+ * Two modes are defined. First one is browse the index for a field and return a list of suggestion.
+ * For this origin should be set to INDEX_TERM_VALUES. The second mode,
+ * using origin RECORDS_FIELD_VALUES, perform a search and extract the field for
+ * all docs and return the matching values.
+ * 
+ * If no origin is set, a RECORDS_FIELD_VALUES mode is done and if no suggestion
+ * found, a INDEX_TERM_VALUES mode is done.
+ * 
  * 
  * The response body is converted to JSON using search-suggestion.xsl
  * 
- * To be improved : does not take care of privileges. Suggested terms could come
- * from private metadata records.
  * 
  * OpenSearch suggestion specification:
  * http://www.opensearch.org/Specifications/
  * OpenSearch/Extensions/Suggestions/1.0
  */
 public class SearchSuggestion implements Service {
+	private static final String RECORDS_FIELD_VALUES = "RECORDS_FIELD_VALUES";
+
+	private static final String INDEX_TERM_VALUES = "INDEX_TERM_VALUES";
+
+	private static final String ORIGIN_ATTR = "origin";
+
 	/**
 	 * Max number of term's values to look in the index. For large catalogue
 	 * this value should be increased in order to get better results. If this
@@ -69,6 +89,8 @@ public class SearchSuggestion implements Service {
 	 */
 	private static String _defaultSearchField = "any";
 
+	private ServiceConfig _config;
+
 	/**
 	 * Set default parameters
 	 */
@@ -77,6 +99,7 @@ public class SearchSuggestion implements Service {
 		_maxNumberOfTerms = Integer.valueOf(config
 				.getValue("max_number_of_terms"));
 		_defaultSearchField = config.getValue("default_search_field");
+		_config = config;
 	}
 
 	/**
@@ -84,31 +107,90 @@ public class SearchSuggestion implements Service {
 	 */
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-		Element suggestions = new Element("items");
-
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getSearchmanager();
-
-		String searchValue = Util.getParam(params, "q", "");
+		// The field to search in
 		String fieldName = Util.getParam(params, "field", _defaultSearchField);
+		// The value to search for
+		String searchValue = Util.getParam(params, "q", "");
+		// Search index term and/or index records
+		String origin = Util.getParam(params, "origin", "");
+		// The max number of terms to return - only apply while searching terms
+		int maxNumberOfTerms = Util.getParam(params, "maxNumberOfTerms",
+				_maxNumberOfTerms);
+		// The minimum frequency for a term value to be proposed in suggestion -
+		// only apply while searching terms
+		int threshold = Util.getParam(params, "threshold", _threshold);
 
-		List<SearchManager.TermFrequency> termList = sm.getTermsFequency(
-				fieldName, searchValue, _maxNumberOfTerms, _threshold);
-		Collections.sort(termList);
-		Collections.reverse(termList);
-
-		Iterator<SearchManager.TermFrequency> iterator = termList.iterator();
-		while (iterator.hasNext()) {
-			SearchManager.TermFrequency freq = (SearchManager.TermFrequency) iterator
-					.next();
-			suggestions.addContent(new Element("item").setAttribute("term",
-					freq.getTerm()).setAttribute("freq",
-					String.valueOf(freq.getFrequency())));
+		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			Log.debug(Geonet.SEARCH_ENGINE, "Autocomplete on field: '"
+					+ fieldName + "'" + "\tsearching: '" + searchValue + "'"
+					+ "\tthreshold: '" + threshold + "'"
+					+ "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'"
+					+ "\tfrom: '" + origin + "'"
+					);
 		}
 
-		// TODO : Could we output JSON directly from a Jeeves service
-		// whithout having the XSL transformation ?
-		return suggestions;
+
+
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		SearchManager sm = gc.getSearchmanager();
+		// The response element
+		Element suggestionsResponse = new Element("items");
+		List<String> listOfSuggestions = new ArrayList<String>();
+
+		// If a field is stored, field values could be retrieved from the index
+		// The main advantage is that only values from records visible to the
+		// user are returned, because the search filter the results first.
+		if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
+			LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(
+					SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+			Collection<String> result = searcher.getSuggestionForFields(context,
+					fieldName, searchValue, _config, maxNumberOfTerms, threshold);
+
+			listOfSuggestions.addAll(result);
+		}
+
+		// No values found from the index records field value ...
+		if (origin.equals(INDEX_TERM_VALUES) 
+				|| (listOfSuggestions.size() == 0 && origin.equals(""))) {
+			// If a field is not stored, field values could not be retrieved
+			// In that cas search the index
+			List<SearchManager.TermFrequency> termList = sm.getTermsFequency(
+					fieldName, searchValue, maxNumberOfTerms, threshold);
+			Collections.sort(termList);
+			Collections.reverse(termList);
+
+			Iterator<SearchManager.TermFrequency> iterator = termList
+					.iterator();
+			while (iterator.hasNext()) {
+				SearchManager.TermFrequency freq = (SearchManager.TermFrequency) iterator
+						.next();
+				listOfSuggestions.add(freq.getTerm());
+				// Term frequency not returned :
+				// String.valueOf(freq.getFrequency());
+			}
+		}
+		
+		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			Log.debug(Geonet.SEARCH_ENGINE, "  Found: "
+					+ listOfSuggestions.size() + " suggestions from " + origin + ".");
+		}
+		
+		
+		// TODO : test sorting with accent, numbers, capital letter
+		Collections.sort(listOfSuggestions, Collator.getInstance());
+		suggestionsResponse.setAttribute(new Attribute(ORIGIN_ATTR,
+				origin));
+		
+		for (String suggestion : listOfSuggestions) {
+			Element md = new Element("item");
+			// md.setAttribute("term", suggestion.replaceAll("\"",""));
+			md.setAttribute("term", suggestion);
+			md.setAttribute("freq", "");
+			suggestionsResponse.addContent(md);
+		}
+
+		return suggestionsResponse;
+
 	}
 }

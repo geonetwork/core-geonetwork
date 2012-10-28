@@ -287,7 +287,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                             });
                     
                     this.newMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('newMetadata'),
+                        title: OpenLayers.i18n('newMetadataTitle'),
                         width: 600,
                         height: 420,
                         layout: 'fit',
@@ -504,7 +504,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             }
         });
         
-        this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
+        this.mdSelectionInfoCmp && this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
     },
     /** api: method[updatePrivileges] 
      *  Update privileges after user login
