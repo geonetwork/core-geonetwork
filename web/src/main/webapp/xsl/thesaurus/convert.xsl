@@ -36,24 +36,21 @@
 	<xsl:include href="blanks/metadata-schema20/convert/thesaurus-transformation.xsl"/>
 	
 	<xsl:template match="/">
-		<response>
+		<xsl:variable name="tpl"
+			select="if (/root/request/transformation and /root/request/transformation != '') 
+			then /root/request/transformation else $defaultTpl"/>
+		<!--				TODO catch error
+				<saxon:try>
+				<saxon:catch errors="*">
+					<error>No template '<xsl:value-of select="$tpl"/>' defined
+					</error>
+				</saxon:catch>
+			</saxon:try>-->
+		<xsl:for-each-group select="/root/*[name() != 'gui' and name() != 'request']/keyword"
+			group-by="thesaurus">
 
-			<xsl:variable name="tpl"
-				select="if (/root/request/transformation and /root/request/transformation != '') 
-				then /root/request/transformation else $defaultTpl"/>
-			<!--				TODO catch error
-					<saxon:try>
-					<saxon:catch errors="*">
-						<error>No template '<xsl:value-of select="$tpl"/>' defined
-						</error>
-					</saxon:catch>
-				</saxon:try>-->
-			<xsl:for-each-group select="/root/*[name() != 'gui' and name() != 'request']/keyword"
-				group-by="thesaurus">
-
-				<saxon:call-template name="{$tpl}"/>
-				<!--<xsl:copy-of select="."></xsl:copy-of>-->
-			</xsl:for-each-group>
-		</response>
+			<saxon:call-template name="{$tpl}"/>
+			<!--<xsl:copy-of select="."></xsl:copy-of>-->
+		</xsl:for-each-group>
 	</xsl:template>
 </xsl:stylesheet>

@@ -58,7 +58,8 @@ GeoNetwork.data.ThesaurusStore = function(config){
             field: 'id',
             direction: 'ASC'
         },
-        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated']
+        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated'],
+        listeners: config.listeners
     });
     
     if (config.allOption) {

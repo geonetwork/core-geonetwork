@@ -953,6 +953,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.validateMetadataFields();
         this.catalogue.extentMap.initMapDiv();
         
+        // Create concept selection widgets where relevant
+        GeoNetwork.editor.ConceptSelectionPanel.init();
+        
         // TODO : Update toolbar metadata type value according to form content
         //Ext.get('template').dom.value=item.value;
         

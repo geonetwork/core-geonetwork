@@ -510,7 +510,11 @@ GeoNetwork.Lang.en = {
     'rule': 'rule',
     'schematron-rules-geonetwork': 'GeoNetwork validation',
     'schematron-rules-iso': 'ISO validation',
-    'schematron-rules-inspire': 'INSPIRE validation'
+    'schematron-rules-inspire': 'INSPIRE validation',
+    'to-iso19139-keyword': 'Text mode',
+    'to-iso19139-keyword-as-xlink': 'Link mode',
+    'to-iso19139-keyword-with-anchor': 'Anchor mode'
+    
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

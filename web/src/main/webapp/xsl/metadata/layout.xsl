@@ -9,7 +9,7 @@
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:date="http://exslt.org/dates-and-times"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date xs">
+  exclude-result-prefixes="#all">
 
   <xsl:import href="../text-utilities.xsl"/>
 

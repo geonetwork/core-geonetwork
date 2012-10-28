@@ -1224,6 +1224,61 @@
     </xsl:choose>
   </xsl:template>
   
+  <!--
+  Keyword editing using classic mode (ie. one field per XML tag)
+  based on geonet:element/@ref.
+  -->
+  <xsl:template match="gmd:MD_Keywords" mode="classic-editor">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    
+    <!-- FIXME : layout should move to metadata.xsl -->
+    <col>
+      <xsl:apply-templates mode="elementEP" select="gmd:keyword|geonet:child[string(@name)='keyword']">
+        <xsl:with-param name="schema" select="$schema"/>
+        <xsl:with-param name="edit"   select="$edit"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="elementEP" select="gmd:type|geonet:child[string(@name)='type']">
+        <xsl:with-param name="schema" select="$schema"/>
+        <xsl:with-param name="edit"   select="$edit"/>
+      </xsl:apply-templates>
+    </col>
+    <col>                    
+      <xsl:apply-templates mode="elementEP" select="gmd:thesaurusName|geonet:child[string(@name)='thesaurusName']">
+        <xsl:with-param name="schema" select="$schema"/>
+        <xsl:with-param name="edit"   select="$edit"/>
+      </xsl:apply-templates>
+    </col>
+  </xsl:template>
+  
+  <!-- 
+  Widget editor based on edition of an XML snippet.
+  -->
+  <xsl:template match="gmd:MD_Keywords" mode="snippet-editor">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    
+    <!-- TODO : escape quote
+         TODO : multilingual md
+    -->
+    <!-- Create a div which contains the configuration -->
+    <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
+      config="{{thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
+      }',keywords: ['{string-join(gmd:keyword/*[1], ''',''')
+      }'], transformations: ['to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink']}}"/>
+    
+    <!-- Create a div which will be used for initializing the client widget -->
+    <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
+    
+    <!-- Create a textarea which contains the XML snippet for updates.
+    The name of the element starts with _X which means XML snippet update mode.
+    -->
+    <textarea id="thesaurusPicker_{../geonet:element/@ref}_xml" name="_X{../geonet:element/@ref}" rows="" cols="">
+      <xsl:apply-templates mode="geonet-cleaner" select="."/>
+    </textarea>
+  </xsl:template>
+  
   <!-- ============================================================================= -->
   <!-- descriptiveKeywords -->
   <!-- ============================================================================= -->
@@ -1234,35 +1289,37 @@
     <xsl:choose>
       <xsl:when test="$edit=true()">
     
-        <xsl:variable name="content">
-          <xsl:for-each select="gmd:MD_Keywords">
-            <!-- FIXME : layout should move to metadata.xsl -->
-            <col>
-                      <xsl:apply-templates mode="elementEP" select="gmd:keyword|geonet:child[string(@name)='keyword']">
-                        <xsl:with-param name="schema" select="$schema"/>
-                        <xsl:with-param name="edit"   select="$edit"/>
-                      </xsl:apply-templates>
-                      <xsl:apply-templates mode="elementEP" select="gmd:type|geonet:child[string(@name)='type']">
-                        <xsl:with-param name="schema" select="$schema"/>
-                        <xsl:with-param name="edit"   select="$edit"/>
-                      </xsl:apply-templates>
-            </col>
-            <col>                    
-                      <xsl:apply-templates mode="elementEP" select="gmd:thesaurusName|geonet:child[string(@name)='thesaurusName']">
-                        <xsl:with-param name="schema" select="$schema"/>
-                        <xsl:with-param name="edit"   select="$edit"/>
-                      </xsl:apply-templates>
-            </col>
-          </xsl:for-each>
-        </xsl:variable>
         
         <xsl:apply-templates mode="complexElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="edit"    select="$edit"/>
           <xsl:with-param name="content">
-            <xsl:call-template name="columnElementGui">
-              <xsl:with-param name="cols" select="$content"/>
-            </xsl:call-template>
+            
+            
+            <xsl:choose>
+              <!-- If a thesaurus is attached to that keyword group 
+              use a snippet editor -->
+              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName">
+                <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
+                  <xsl:with-param name="edit" select="$edit"/>
+                  <xsl:with-param name="schema" select="$schema"/>
+                </xsl:apply-templates>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:variable name="content">
+                  <xsl:apply-templates select="gmd:MD_Keywords" mode="classic-editor">
+                    <xsl:with-param name="edit" select="$edit"/>
+                    <xsl:with-param name="schema" select="$schema"/>
+                  </xsl:apply-templates>
+                </xsl:variable>
+                
+                <xsl:call-template name="columnElementGui">
+                  <xsl:with-param name="cols" select="$content"/>
+                </xsl:call-template>
+              </xsl:otherwise>
+            </xsl:choose>
+            
+            
           </xsl:with-param>
         </xsl:apply-templates>
       </xsl:when>
