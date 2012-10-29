@@ -53,7 +53,10 @@
 	<field name="gmd:MD_ScopeCode">
         <substitute name="gmd:MD_ScopeCode"/>
     </field>
-    
+  <field name="gmd:URL">
+    <substitute name="che:LocalisedURL"/>
+  </field>
+
     <field name="gmd:MD_Identifier">
         <!-- We don't want RS_Identifier -->
     </field>
