@@ -11,10 +11,6 @@
 		<suggest name="gmx:Anchor"/>
 	</field>
 	
-	<field name="gmd:keyword">
-		<suggest name="gco:CharacterString"/>
-		<suggest name="gmx:Anchor"/>
-	</field>
 	
 	<field name="gmx:Anchor">
 		<suggest name="xlink:href"/>

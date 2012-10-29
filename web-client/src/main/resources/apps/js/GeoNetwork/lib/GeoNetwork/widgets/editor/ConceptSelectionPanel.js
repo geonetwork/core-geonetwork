@@ -133,7 +133,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      * Provide a simple combo box for selection of one keyword
      */
     generateSimpleCombo: function () {
-        // TODO : load current keyword
         // TODO : Validate mode : combo mode is only available if number of keyword
         // is 0 or 1
         var combo = new Ext.form.ComboBox({
@@ -145,10 +144,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listWidth: 200,
             listeners: {
                 select: function (combo, record, index) {
-                    console.log("Keyword selected");
                     this.selectedKeywordStore.add([record]);
-                    console.log(this.selectedKeywordStore);
-                    
                 },
                 scope: this
             }
@@ -211,7 +207,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             //toData: [],
             toStore: this.selectedKeywordStore,
             msWidth: 350,
-            msHeight: 200,
+            msHeight: 260,
             valueField: "value",
             toSortField: undefined,
             fromTpl: tpl,
@@ -534,17 +530,18 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
             var id = thesaurusPicker.getAttribute("id"), 
                 config = thesaurusPicker.getAttribute("config"),
                 jsonConfig = Ext.decode(config);
-            
-            console.log(jsonConfig);
-            var panel = new GeoNetwork.editor.ConceptSelectionPanel({
-                catalogue: catalogue,
-                thesaurus: jsonConfig.thesaurus,
-                initialKeyword: jsonConfig.keywords,
-                transformations: jsonConfig.transformations,
-                transformation: jsonConfig.transformation,
-                xmlField: id + '_xml',
-                renderTo: id + '_panel'
-            });
+            var p = Ext.get(id + '_panel');
+            if (p.dom.innerHTML === '') {
+                var panel = new GeoNetwork.editor.ConceptSelectionPanel({
+                    catalogue: catalogue,
+                    thesaurus: jsonConfig.thesaurus,
+                    initialKeyword: jsonConfig.keywords,
+                    transformations: jsonConfig.transformations,
+                    transformation: jsonConfig.transformation,
+                    xmlField: id + '_xml',
+                    renderTo: id + '_panel'
+                });
+            }
         }
     }
 };

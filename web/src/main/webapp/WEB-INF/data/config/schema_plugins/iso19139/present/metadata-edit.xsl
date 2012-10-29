@@ -1315,13 +1315,11 @@
     <xsl:choose>
       <xsl:when test="$edit=true()">
     
-        
         <xsl:apply-templates mode="complexElement" select=".">
           <xsl:with-param name="schema"  select="$schema"/>
           <xsl:with-param name="edit"    select="$edit"/>
           <xsl:with-param name="content">
             
-            <xsl:message><xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName"/>|<xsl:value-of select="gmd:MD_Keywords/@xlink:href"/></xsl:message>
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor -->
