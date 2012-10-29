@@ -2395,7 +2395,8 @@
     <description>Nom des formats de transfert des données</description>
     <help>Nom du format de transfert de données, par exemple TIFF, ZIP, etc.</help>
     <condition>Obligatoire</condition>
-    <helper rel="gmd:version">
+    <!-- commented out as in ch we have this as shared object, so this is confusing for users
+      <helper rel="gmd:version">
       <option value="Texte">Texte</option>
       <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
       <option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
@@ -2405,7 +2406,7 @@
       <option value="TIFF">TIFF</option>
       <option value="ECW">ECW</option>
       <option value="ZIP">ZIP</option>
-    </helper>
+    </helper>-->
   </element>
   <element name="gmd:name" id="307.0" context="gmd:MD_ExtendedElementInformation">
     <label>Nom</label>
