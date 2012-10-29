@@ -28,60 +28,36 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.util.Set;
-
-//=============================================================================
-
-/** Service used to return all groups in the system
-  */
-
-public class GetMine implements Service
-{
-	String profile;
-	
+/**
+ * Service used to return all groups and profiles for current user.
+ */
+public class GetMineWithProfiles implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		profile = params.getValue("profile");
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
 		UserSession session = context.getUserSession();
 
 		if (!session.isAuthenticated())
 			return new Element(Geonet.Elem.GROUPS);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
-		//--- retrieve user groups
-
+		// --- retrieve user groups
 		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
-			return Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
+			String query = "SELECT id, '' as profile FROM Groups WHERE id > 1";
+			return dbms.select(query);
 		} else {
-			Element list = null;
-			if (profile == null) {
-				String query = "SELECT groupId AS id FROM UserGroups WHERE groupId > 1 AND userId=?";
-				list = dbms.select(query, session.getUserIdAsInt());
-			} else {
-				String query = "SELECT groupId AS id FROM UserGroups WHERE groupId > 1 AND userId=? and profile=?";
-				list = dbms.select(query, session.getUserIdAsInt(), profile);
-			}
-			Set<String> ids = Lib.element.getIds(list);
-			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
-
-			return Lib.element.pruneChildren(groups, ids);
+			String query = "SELECT groupId as id, profile FROM UserGroups WHERE groupId > 1 "
+					+ "AND userId=?";
+			return dbms.select(query, session.getUserIdAsInt());
 		}
 	}
 }
-
-//=============================================================================
-

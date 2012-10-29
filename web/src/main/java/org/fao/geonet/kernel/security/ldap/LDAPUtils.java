@@ -102,10 +102,12 @@ public class LDAPUtils {
 		if (importPrivilegesFromLdap && !Profile.ADMINISTRATOR.equals(user.getProfile())) {
 			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
 			for(Map.Entry<String, String> privilege : user.getPrivileges().entries()) {
-				// TODO : add profile info if multiple profile proposal pass the CFV
+				// Add group privileges for each groups
 				
 				// Retrieve group id
 				String groupName = privilege.getKey();
+				String profile = privilege.getValue();
+				
 				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", groupName);
 				Element groupRecord = groupIdRequest.getChild("record");
 				String groupId = null;
@@ -129,7 +131,7 @@ public class LDAPUtils {
 						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 					}
 					
-					Update.addGroup(dbms, id, groupId);
+					Update.addGroup(dbms, new Integer(id), new Integer(groupId), profile);
 				} else {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Can't create LDAP group " + groupName + " for user. " +

@@ -16,5 +16,6 @@ DELETE FROM Settings WHERE id=80;
 ALTER TABLE HarvestHistory ADD elapsedTime int;
 
 
+
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';

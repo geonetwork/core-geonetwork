@@ -21,7 +21,8 @@
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
 	<!-- end new strings -->
-
+	
+	<isAdmin>Is administrator ?</isAdmin>
 	<createChild>Çocuk (child)oluştur</createChild>
 	<updateChildren>Çocuk (child) güncelle</updateChildren>
 	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>

@@ -99,15 +99,13 @@ public class Info implements Service
 
 		Element result = new Element("root");
 
-		for (Iterator i=params.getChildren().iterator(); i.hasNext();)
+		for (Iterator i=params.getChildren("type").iterator(); i.hasNext();)
 		{
 			Element el = (Element) i.next();
 
 			String name = el.getName();
 			String type = el.getText();
 
-			if (!name.equals("type"))
-				continue;
 
 			if (type.equals("site")) {
 				result.addContent(gc.getSettingManager().get("system", -1));
@@ -120,7 +118,7 @@ public class Info implements Service
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));
 
 			else if (type.equals("groups"))
-				result.addContent(getGroups(context, dbms));
+				result.addContent(getGroups(context, dbms, params.getChildText("profile")));
 
 			else if (type.equals("operations"))
 				result.addContent(Lib.local.retrieve(dbms, "Operations"));
@@ -150,9 +148,9 @@ public class Info implements Service
 				result.addContent(getAuth(context));
 			
 			else
-				throw new BadParameterEx("type", type);
+				throw new BadParameterEx("Unknown type parameter value.", type);
 		}
-
+		
 		result.addContent(getEnv(context));
 
 		return Xml.transform(result, xslPath +"/info.xsl");
@@ -174,6 +172,7 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
+
 	private Element getMyInfo(ServiceContext context) {
 		Element data = new Element("me");
 		UserSession userSession = context.getUserSession();
@@ -191,7 +190,7 @@ public class Info implements Service
 		return data;
 	}
 
-	private Element getGroups(ServiceContext context, Dbms dbms) throws SQLException
+	private Element getGroups(ServiceContext context, Dbms dbms, String profile) throws SQLException
 	{
 		UserSession session = context.getUserSession();
 
@@ -205,9 +204,16 @@ public class Info implements Service
 			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 		else
 		{
-			String query = "SELECT groupId as id FROM UserGroups WHERE userId=?";
+			Element list = null;
+			if (profile == null) {
+				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
+				list = dbms.select(query, session.getUserIdAsInt());
+			} else {
+				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=? and profile=?";
+				list = dbms.select(query, session.getUserIdAsInt(), profile);
+			}
 
-			Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserIdAsInt()));
+			Set<String> ids = Lib.element.getIds(list);
 			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 
 			return Lib.element.pruneChildren(groups, ids);

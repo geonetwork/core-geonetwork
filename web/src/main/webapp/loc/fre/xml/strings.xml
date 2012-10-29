@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
 	<warning>Attention</warning>
+	<isAdmin>Est administrateur ?</isAdmin>
     <anyLanguage>n'importe quelle langue</anyLanguage>
 	<nodata>Vide</nodata>
 	<!-- new strings - 2.7 -->
