@@ -135,7 +135,7 @@
 
     <!-- ============================================================================= -->
 
-    <xsl:template mode="iso19139" match="gmd:contact|gmd:pointOfContact|gmd:distributorContact|gmd:citedResponsibleParty|*[@gco:isoType='gmd:CI_ResponsibleParty']" priority="5">
+    <xsl:template mode="iso19139" match="gmd:contact|gmd:pointOfContact|gmd:distributorContact|gmd:citedResponsibleParty|gmd:userContactInfo|*[@gco:isoType='gmd:CI_ResponsibleParty']" priority="5">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
 

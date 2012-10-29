@@ -943,3 +943,11 @@ OpenLayers.Format.Filter.v1.prototype.writers.ogc.CONTAINS = function(filter) {
     node.appendChild(child.firstChild);
     return node;
 };
+
+function waitFor(millis) {
+ var date = new Date();
+ var curDate = null;
+ do { curDate = new Date(); }
+ while(curDate-date < millis);
+ return '';
+}
