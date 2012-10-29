@@ -81,6 +81,12 @@
         </result>
     </xsl:template>
     
+        <xsl:template mode="convert-url-iso-to-inner" match="che:LocalisedURL">
+        <xsl:if test="string(text())!=''">
+          <DE><xsl:value-of select="."/></DE>
+        </xsl:if>
+    </xsl:template>
+    
     <xsl:template mode="convert-url-iso-to-inner" match="che:PT_FreeURL/che:URLGroup/che:LocalisedURL">
           <xsl:variable name="code" select="substring(string(@locale),2)"/>
         <xsl:if test="string(text())!='' and ($urlMetadataLang!=$code or string(../../../gmd:URL)='')">
