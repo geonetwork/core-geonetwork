@@ -46,7 +46,7 @@ public class BasicContext
 	private   String baseUrl;
 	private   String appPath;
 
-	private Hashtable<String, Object> htContexts;
+	protected Hashtable<String, Object> htContexts;
     private MonitorManager monitorManager;
 
     //--------------------------------------------------------------------------
