@@ -1727,7 +1727,7 @@ public class DataManager {
 		String version = null;
 
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
-			if (doXLinks) Processor.processXLink(md,srvContext);
+			if (doXLinks) Processor.processXLink(md, srvContext);
 			String schema = getMetadataSchema(dbms, id);
 			
 			if (withEditorValidationErrors) {
@@ -1741,7 +1741,7 @@ public class DataManager {
         else {
 			if (doXLinks) {
 			    if (keepXlinkAttributes) {
-			        Processor.processXLink(md,srvContext);
+			        Processor.processXLink(md, srvContext);
 			    } else {
 			        Processor.detachXLink(md,srvContext);
 			    }

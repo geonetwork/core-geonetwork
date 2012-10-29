@@ -1,18 +1,15 @@
 package org.fao.geonet.monitor.health;
 
-import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.requests.GetCapabilitiesRequest;
 import org.jdom.Element;
+
+import com.yammer.metrics.core.HealthCheck;
 
 /**
  * Checks to ensure that the CSW subsystem is accessible and functioning

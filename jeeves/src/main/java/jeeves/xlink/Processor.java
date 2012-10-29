@@ -77,7 +77,7 @@ public final class Processor {
    /**
     * Resolve all XLinks of the input XML document.
     */
-	public static Element processXLink(Element xml,ServiceContext srvContext) {
+	public static Element processXLink(Element xml, ServiceContext srvContext) {
 		searchXLink(xml, ACTION_RESOLVE, srvContext);
 		searchLocalXLink(xml, ACTION_RESOLVE);
 		return xml;
@@ -87,8 +87,8 @@ public final class Processor {
   /**
     * Uncache all XLinks child of the input XML document.
     */
-	public static Element uncacheXLink(Element xml,ServiceContext srvContext) {
-		searchXLink(xml, ACTION_UNCACHE,srvContext);
+	public static Element uncacheXLink(Element xml) {
+		searchXLink(xml, ACTION_UNCACHE, null);
 		return xml;
 	}
 
@@ -97,7 +97,7 @@ public final class Processor {
     * Remove all XLinks child of the input XML document.
     */
 	public static Element removeXLink(Element xml) {
-		searchXLink(xml, ACTION_REMOVE,null);
+		searchXLink(xml, ACTION_REMOVE, null);
 		searchLocalXLink(xml, ACTION_REMOVE);
 		return xml;
 	}
@@ -154,9 +154,9 @@ public final class Processor {
 
 	//--------------------------------------------------------------------------
 	/** Resolves an xlink */
-	public static Element resolveXLink(String uri,ServiceContext srvContext) throws IOException, JDOMException, CacheException {
+	public static Element resolveXLink(String uri, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 		String idSearch = null;
-		return resolveXLink(uri, idSearch,srvContext);
+		return resolveXLink(uri, idSearch, srvContext);
 	}
 
 	//--------------------------------------------------------------------------
@@ -178,7 +178,6 @@ public final class Processor {
 			Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
 			
 			try {
-				
 				if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
 					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
 					request.setDebug(false);
@@ -189,14 +188,15 @@ public final class Processor {
 					remoteFragment = srvContext.execute(request);
 				} else {
 					URL url = new URL(uri.replaceAll("&amp;", "&"));
+					
 					URLConnection conn = url.openConnection();
 					conn.setConnectTimeout(1000);
 				
 					BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
 					try {
 						remoteFragment = Xml.loadStream(in);
-                        if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-						  Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
+	                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
+	                        Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
 					} finally {
 						in.close();
 					}
@@ -297,16 +297,19 @@ public final class Processor {
 		return xlinks;
 	}
 				
-	
-	/**
-	 * Search for local:// XLinks in XML document. Load and cache resource if needed.
-	 *
-	 * @param action
-	 *            Define what to do with XLink ({@link #ACTION_DETACH,
-	 *            #ACTION_REMOVE, #ACTION_RESOLVE}).
-	 * @param srvContext 
-	 *
-	 */
+	//--------------------------------------------------------------------------
+  /**
+    * Search for Remote XLinks in XML document. Load and cache remote resource 
+		* if needed.
+    * <p/>
+    * TODO : Maybe don't wait to much to load a remote resource. Add timeout
+    * param?
+    *
+    * @param action
+    *            Define what to do with XLink ({@link #ACTION_DETACH,
+    *            #ACTION_REMOVE, #ACTION_RESOLVE}).
+    *
+    */
 	private static void searchXLink(Element md, String action, ServiceContext srvContext) {
 		List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
@@ -324,7 +327,7 @@ public final class Processor {
 			}
 			
 			if (hash != 0) { // skip local xlinks eg. xlink:href="#details"
-				doXLink(hrefUri, idSearch, xlink, action,srvContext);
+				doXLink(hrefUri, idSearch, xlink, action, srvContext);
 			}
 		}
 	}
@@ -420,12 +423,13 @@ public final class Processor {
 					}
 				} else {
 					try {
-						Element remoteFragment = resolveXLink(hrefUri, idSearch,srvContext);
+						Element remoteFragment = resolveXLink(hrefUri, idSearch, srvContext);
+						
 						// Not resolved in cache or using href
 						if (remoteFragment == null)
 							return;
 						
-						searchXLink(remoteFragment, action,srvContext);
+						searchXLink(remoteFragment, action, srvContext);
 						
 						if (show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
 							// replace this element with the fragment

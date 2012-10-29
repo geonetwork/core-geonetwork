@@ -365,7 +365,6 @@ public class ServiceManager
 		dispatch(req, session, context);
 	}
 
-	
 	//---------------------------------------------------------------------------
 	//---
 	//--- Dispatching methods

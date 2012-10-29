@@ -23,6 +23,9 @@
 
 package jeeves.server.context;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
@@ -181,6 +184,10 @@ public class ServiceContext extends BasicContext
 		this.headers = headers;
 	}
 
+	public JeevesServlet getServlet() {
+        return servlet;
+    }
+
 	public Element execute(LocalServiceRequest request) throws Exception {
 		ServiceContext context = new ServiceContext(request.getService(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
 			public ResourceManager getResourceManager() {
@@ -230,10 +237,6 @@ public class ServiceContext extends BasicContext
 			throw new ServiceExecutionFailedException(request.getService(),e);
 		}
 	}
-
-	public JeevesServlet getServlet() {
-        return servlet;
-    }
 
 }
 
