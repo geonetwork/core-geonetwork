@@ -478,6 +478,9 @@ dl.xml * dd {
     -moz-border-radius: 9px;
     border-radius: 9px;
 }
+.badge.ux-mselect-selected {
+    border: 1px solid black !important;
+}
 .label-success, .badge-success {
     background-color: #468847;
 }
@@ -502,7 +505,9 @@ dl.xml * dd {
 .thesaurusPicker * legend {
     color: #777 !important;
 }
-
+.thesaurusPicker * .thesaurusInfo span {
+    padding-right: 5px;
+}
 .x-superboxselect-item img {
     max-height: 16px;
     vertical-align: middle;

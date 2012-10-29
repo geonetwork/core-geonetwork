@@ -58,6 +58,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         border: false,
 //        autoHeight: true,
         layout: 'table',
+        thesaurusInfoTpl: new Ext.XTemplate(
+                '<tpl for=".">',
+                    '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
+                '</tpl>'
+        ),
         keywordsTpl: new Ext.XTemplate(
             '<tpl for=".">',
                 // TODO : add definiton ?
@@ -78,13 +83,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     transformations: [],
     transformation: null,
+    defaultTransformation: 'to-iso19139-keyword',
     /**
      * array of thesaurus (use to override the server configuration)
      */
     thesaurus: null,
     thesaurusIdentifier: null,
     thesaurusSelector: null,
-    
+    nbResultsField: null,
     /**
      * Store of select keyword (uri, value, thesaurus, xmin, ymin, xmax, ymax)
      */
@@ -136,7 +142,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             mode: 'local',
             displayField: 'value',
             valueField: 'uri',
-            listWidth: 250,
+            listWidth: 200,
             listeners: {
                 select: function (combo, record, index) {
                     console.log("Keyword selected");
@@ -151,7 +157,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     },
     generateFilterField: function () {
         return new GeoNetwork.form.SearchField({
-            width: 240,
+            width: 200,
             store: this.keywordStore,
             paramName: 'pKeyword'
         });
@@ -169,7 +175,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             tpl: this.keywordsTpl,
             //autoHeight: true,
             multiSelect: false,
-            boxMaxHeight: 300,
+            boxMaxHeight: 350,
             height: 100,
             overClass: 'badge-success',
             itemSelector: 'div',
@@ -221,12 +227,15 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             drawTopIcon: false,
             drawBotIcon: false,
             imagePath: '../js/ext-ux/images', // FIXME
-            fromTBar: [this.generateFilterField()],
+            fromTBar: [this.generateFilterField(), '->', 
+                       OpenLayers.i18n('maxResults'), this.getLimitInput()],
             toTBar: [{
+                // control to clear all select keywwords and refresh the XML.
                 text: OpenLayers.i18n('clear'),
                 handler: function () {
-                    var i = this.getForm().findField("itemselector");
+                    var i = this.itemSelector;
                     i.reset.call(i);
+                    this.generateXML();
                 },
                 scope: this
             }]
@@ -247,11 +256,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             this.transformation = this.transformations[0];
         } else if (this.transformations.length > 1) {
             Ext.each(this.transformations, function (item, idx) {
-                console.log(idx);
                 radios.push(new Ext.form.Radio({
-                    checked: (idx === 0 ? true : false), // TODO : Add default transformation
+                    checked: (item === self.transformation ? true : false), // Check current transformation if defined
                     boxLabel: OpenLayers.i18n(item),
-                    name: self.thesaurusIdentifier + '_transformation',
+                    name: self.thesaurusIdentifier + '_transformation', // FIXME : if more than one block with same thesaurus
                     inputValue: item
                 }));
             });
@@ -302,10 +310,20 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             scope: this,
             success: function (response) {
                 // Populate formField
-                console.log(response);
                 document.getElementById(this.xmlField).value = response.responseText;
             }
         });
+    },
+    /**
+     * Get combo box for limiting the number of results
+     */
+    getLimitInput: function () {
+        this.nbResultsField = new Ext.form.TextField({
+            name: 'maxResults',
+            value: '50',
+            width: 40
+        });
+        return this.nbResultsField;
     },
     /**
      * Create thesaurus store and thesaurus selector
@@ -350,7 +368,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 select: function (combo, record, index) {
                     this.keywordStore.removeAll();
                     this.keywordStore.baseParams.pThesauri = self.thesaurusSelector.getValue();
-                    
+                    if (this.nbResultsField !== null) {
+                        this.keywordStore.baseParams.maxResults = this.nbResultsField.getValue();
+                    }
                     
                     // Once a thesaurus is selected, search or load
                     // all keywords
@@ -365,8 +385,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         return this.thesaurusSelector;
     },
     setThesaurusInfo: function (record) {
-        console.log(record);
-        console.log(this.infoField);
+        this.thesaurusInfoTpl.overwrite(this.infoField.body, record.data);
     },
     /**
      * Create keyword store and selector
@@ -397,9 +416,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 exception: function (misc) {
                     console.log(misc);
                 },
+                'beforeload': function (store, options) {
+                    if (this.nbResultsField !== null) {
+                        this.keywordStore.baseParams.maxResults = this.nbResultsField.getValue();
+                    }
+                },
                 load: function (store, records, options) {
-
-                }
+                },
+                scope: this
             }
         });
         
@@ -429,7 +453,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // Search by name to get list of identifiers.
         Ext.each(this.initialKeyword, function (item) {
             // Search for that keyword and add it to the current selection if found
-            this.keywordSearch(this.thesaurusIdentifier, item);
+            if (item !== "") {
+                this.keywordSearch(this.thesaurusIdentifier, item);
+            }
         }, this);
     },
     /**
@@ -454,7 +480,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             },
             scope: this,
             success: function (response) {
-                console.log(response);
                 this.selectedKeywordStore.loadData(response.responseXML, true);
                 // TODO : if current keyword is not found - avoid error
             }
@@ -469,7 +494,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         GeoNetwork.editor.ConceptSelectionPanel.superclass.initComponent.call(this);
         
         this.infoField = new Ext.Panel({
-                html: 'thesaurus info',
+                html: '&nbsp;',
                 border: false
             });
         var fields = [this.infoField];
@@ -510,13 +535,13 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                 config = thesaurusPicker.getAttribute("config"),
                 jsonConfig = Ext.decode(config);
             
-            
+            console.log(jsonConfig);
             var panel = new GeoNetwork.editor.ConceptSelectionPanel({
                 catalogue: catalogue,
                 thesaurus: jsonConfig.thesaurus,
                 initialKeyword: jsonConfig.keywords,
                 transformations: jsonConfig.transformations,
-                html: 'Keyword from thesaurus: ' + jsonConfig.thesaurus,
+                transformation: jsonConfig.transformation,
                 xmlField: id + '_xml',
                 renderTo: id + '_panel'
             });

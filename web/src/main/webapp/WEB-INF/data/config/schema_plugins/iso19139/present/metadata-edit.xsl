@@ -1264,16 +1264,35 @@
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
-    <!-- TODO : escape quote
-         TODO : multilingual md
-         TODO : identify current mode
+    <!-- 
+        TODO : multilingual md
+       
     -->
-    <!-- Create a div which contains the configuration -->
+    <!-- Create a div which contains the JSON configuration 
+    * thesaurus: thesaurus to use
+    * keywords: list of keywords in the element
+    * transformations: list of transformations
+    * transformation: current transformation
+    -->
+    
+    <!-- Single quote are escaped inside keyword. -->
+    <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+    
+    <!-- Get current transformation mode based on XML fragement analysis -->
+    <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
+                                                else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+                                                else 'to-iso19139-keyword'"/>
+
+    <!-- TODO : retrieve from configuration -->
+    <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
+    <xsl:message>##<xsl:value-of select="$transformation"/></xsl:message>
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
       config="{{thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
-      }',keywords: ['{string-join(gmd:keyword/*[1], ''',''')
-      }'], transformations: ['to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'], transformation: 'to-iso19139-keyword'}}"/>
+      }',keywords: ['{$listOfKeywords
+      }'], transformations: [{$listOfTransformations
+      }], transformation: '{$transformation
+      }'}}"/>
     
     <!-- Create a div which will be used for initializing the client widget -->
     <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
@@ -1302,7 +1321,7 @@
           <xsl:with-param name="edit"    select="$edit"/>
           <xsl:with-param name="content">
             
-            
+            <xsl:message><xsl:value-of select="gmd:MD_Keywords/gmd:thesaurusName"/>|<xsl:value-of select="gmd:MD_Keywords/@xlink:href"/></xsl:message>
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor -->

@@ -513,7 +513,7 @@ GeoNetwork.Lang.en = {
     'schematron-rules-iso': 'ISO validation',
     'schematron-rules-inspire': 'INSPIRE validation',
     'to-iso19139-keyword': 'Text mode',
-    'to-iso19139-keyword-as-xlink': 'Link mode',
+    'to-iso19139-keyword-as-xlink': 'Linked mode',
     'to-iso19139-keyword-with-anchor': 'Anchor mode',
     'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
     'linklabel-OGC:WMS': 'Add to map',

@@ -39,18 +39,20 @@
 		<xsl:variable name="tpl"
 			select="if (/root/request/transformation and /root/request/transformation != '') 
 			then /root/request/transformation else $defaultTpl"/>
-		<!--				TODO catch error
-				<saxon:try>
-				<saxon:catch errors="*">
-					<error>No template '<xsl:value-of select="$tpl"/>' defined
-					</error>
-				</saxon:catch>
-			</saxon:try>-->
-		<xsl:for-each-group select="/root/*[name() != 'gui' and name() != 'request']/keyword"
-			group-by="thesaurus">
-
-			<saxon:call-template name="{$tpl}"/>
-			<!--<xsl:copy-of select="."></xsl:copy-of>-->
-		</xsl:for-each-group>
+		
+		<xsl:variable name="keywords" select="/root/*[name() != 'gui' and name() != 'request']/keyword"/>
+		
+		<xsl:choose>
+			<xsl:when test="$keywords">
+				<xsl:for-each-group select="$keywords"
+					group-by="thesaurus">
+					<saxon:call-template name="{$tpl}"/>
+				</xsl:for-each-group>
+			</xsl:when>
+			<xsl:otherwise>
+				<saxon:call-template name="{$tpl}"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:template>
 </xsl:stylesheet>

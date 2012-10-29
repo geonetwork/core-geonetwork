@@ -29,13 +29,16 @@
 		<gmd:MD_Keywords>
 			<xsl:choose>
 				<xsl:when test="$withXlink">
+					<xsl:variable name="multiple" select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
 					<xsl:attribute name="xlink:href"
 						select="concat($serviceUrl, '/xml.keyword.get?thesaurus=', thesaurus/key, 
-										'&amp;id=', uri, '&amp;multiple=false')"/>
-					
+						'&amp;id=', /root/request/id, '&amp;multiple=', $multiple)"/>
+					<xsl:attribute name="xlink:show">replace</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:variable name="currentThesaurus" select="thesaurus/key"/>
+					<!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
+					<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
+					
 					<!-- Loop on all keyword from the same thesaurus -->
 					<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
 						<gmd:keyword>
@@ -71,14 +74,14 @@
 							<gmd:CI_Citation>
 								<gmd:title>
 									<gco:CharacterString>
-										<xsl:value-of select="thesaurus/title"/>
+										<xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/title"/>
 									</gco:CharacterString>
 								</gmd:title>
 								<gmd:date>
 									<gmd:CI_Date>
 										<gmd:date>
 											<gco:Date>
-												<xsl:value-of select="thesaurus/date"/>
+												<xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date"/>
 											</gco:Date>
 										</gmd:date>
 										<gmd:dateType>
@@ -91,9 +94,9 @@
 								<gmd:identifier>
 									<gmd:MD_Identifier>
 										<gmd:code>
-											<gmx:Anchor xlink:href="{thesaurus/url}"
+											<gmx:Anchor xlink:href="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/url}"
 												>geonetwork.thesaurus.<xsl:value-of
-													select="thesaurus/key"/></gmx:Anchor>
+													select="$currentThesaurus"/></gmx:Anchor>
 										</gmd:code>
 									</gmd:MD_Identifier>
 								</gmd:identifier>

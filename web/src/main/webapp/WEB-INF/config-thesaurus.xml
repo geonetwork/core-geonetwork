@@ -31,7 +31,9 @@
         
       </documentation>
       <class name=".services.thesaurus.GetKeywordById"/>
-      <output sheet="thesaurus/convert.xsl"/>
+      <output sheet="thesaurus/convert.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
     </service>
 
     <service name="xml.thesaurus.upload">
