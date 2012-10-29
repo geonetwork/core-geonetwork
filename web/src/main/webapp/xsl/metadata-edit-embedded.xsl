@@ -13,7 +13,7 @@
 	<xsl:include href="metadata.xsl"/>
 
 	<xsl:template match="/">
-		<xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']">
+		<xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']//*[@geonet:addedObj = 'true']">
 			<xsl:apply-templates mode="elementEP" select=".">
 				<xsl:with-param name="edit" select="true()"/>
 				<xsl:with-param name="schema">
