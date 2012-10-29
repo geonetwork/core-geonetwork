@@ -510,12 +510,22 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        // TODO : this.ownerAction visible to userAdmin only #781
-        var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
-                        this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
-                        this.mdImportAction, this.adminAction, this.otherItem];
+        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
+                        this.updatePrivilegesAction, this.createMetadataAction,
+                        this.mdImportAction],
+            adminActions = [this.ownerAction],
+            actions = [this.adminAction, this.otherItem];
+        
         Ext.each(actions, function(){
             this.setVisible(user);
+        });
+        // Do not display editing action for registered users
+        Ext.each(editingActions, function(){
+            this.setVisible(user && user.role !== 'RegisteredUser');
+        });
+        // Change owners are only available for admins (#781)
+        Ext.each(adminActions, function(){
+            this.setVisible(user && (user.role === 'Administrator' || user.role === 'UserAdmin'));
         });
     },
     /** private: method[onDestroy] 

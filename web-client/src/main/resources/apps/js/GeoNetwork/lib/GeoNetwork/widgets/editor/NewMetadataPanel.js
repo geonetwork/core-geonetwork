@@ -96,8 +96,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         
         GeoNetwork.editor.NewMetadataPanel.superclass.initComponent.call(this);
         
-        this.groupStore = GeoNetwork.data.GroupStore(this.getGroupUrl);
-        // TODO filter internet and al groups
+        this.groupStore = GeoNetwork.data.GroupStore(this.getGroupUrl + '&profile=Editor');
         this.groupStore.load();
         
         var cmp = [];

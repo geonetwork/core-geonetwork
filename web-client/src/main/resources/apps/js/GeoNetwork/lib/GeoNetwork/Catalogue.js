@@ -424,7 +424,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *    
      */
     onAfterLogin: function(){
-        this.fireEvent('afterLogin', this, this.isIdentified());
+        this.fireEvent('afterLogin', this, this.identifiedUser);
     },
     /** api: method[onAfterBadLogin]
      *  :param e: ``Object``
@@ -433,7 +433,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      */
     onAfterBadLogin: function(){
-        this.fireEvent('afterBadLogin', this, this.isIdentified());
+        this.fireEvent('afterBadLogin', this, this.identifiedUser);
     },
     /** api: method[onAfterLogout]
      *  :param e: ``Object``
@@ -441,7 +441,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  The "onAfterLogout" listener.
      */
     onAfterLogout: function(){
-        this.fireEvent('afterLogout', this, this.isIdentified());
+        this.fireEvent('afterLogout', this, this.identifiedUser);
     },
     /** api: method[onAfterBadLogout]
      *  :param e: ``Object``
@@ -449,7 +449,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  The "onAfterBadLogout" listener.
      */
     onAfterBadLogout: function(){
-        this.fireEvent('afterBadLogout', this, this.isIdentified());
+        this.fireEvent('afterBadLogout', this, this.identifiedUser);
     },
     /** api: method[onAfterDelete]
      *  :param e: ``Object``

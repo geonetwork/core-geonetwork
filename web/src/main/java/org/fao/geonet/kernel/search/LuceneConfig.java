@@ -26,6 +26,8 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
