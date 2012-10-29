@@ -460,7 +460,7 @@ public class MEFLib {
 		AccessManager am = gc.getAccessManager();
 
 		Set<String> userGroups = am.getUserGroups(dbms, context
-				.getUserSession(), context.getIpAddress());
+				.getUserSession(), context.getIpAddress(), false);
 
 		// --- scan query result to collect info
 

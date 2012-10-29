@@ -168,7 +168,7 @@ public class AccessManager {
 		UserSession usrSess = context.getUserSession();
 
         // build group list
-		Set<String>  groups = getUserGroups(dbms, usrSess, ip);
+		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
 		StringBuffer groupList = new StringBuffer();
 
 		for (Iterator i = groups.iterator(); i.hasNext(); ) {
@@ -185,7 +185,7 @@ public class AccessManager {
 		query.append("FROM   OperationAllowed ");
 		query.append("WHERE  groupId IN (");
 		query.append(groupList.toString());
-		query.append(") AND    metadataId = ?");
+		query.append(") AND  metadataId = ?");
 		
 		Element operations = dbms.select(query.toString(), new Integer(mdId));
 
@@ -213,10 +213,11 @@ public class AccessManager {
      * @param dbms
      * @param usrSess
      * @param ip
+     * @param editingGroupsOnly TODO
      * @return
      * @throws Exception
      */
-	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip) throws Exception {
+	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
 		Set<String> hs = new HashSet<String>();
 
 		// add All (1) network group
@@ -230,7 +231,7 @@ public class AccessManager {
 			// add (-1) GUEST group 
 			hs.add("-1");
 
-			if (usrSess.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+			if (Geonet.Profile.ADMINISTRATOR.equals(usrSess.getProfile())) {
 				Element elUserGrp = dbms.select("SELECT id FROM Groups");
 
 				List list = elUserGrp.getChildren();
@@ -242,7 +243,12 @@ public class AccessManager {
                 }
 			}
 			else {
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",usrSess.getUserIdAsInt());
+				StringBuffer query = new StringBuffer("SELECT distinct(groupId) FROM UserGroups WHERE ");
+				if (editingGroupsOnly) {
+					query.append("profile='"+Geonet.Profile.EDITOR+"' AND ");
+				}
+				query.append("userId=?");
+				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
 
 				List list = elUserGrp.getChildren();
 
@@ -368,7 +374,7 @@ public class AccessManager {
 		if (info.groupOwner == null)
 			return false;
 
-		for (String userGroup : getUserGroups(dbms, us, null)) {
+		for (String userGroup : getUserGroups(dbms, us, null, true)) {
 			if (userGroup.equals(info.groupOwner))
 				return true;
 		}
@@ -425,7 +431,7 @@ public class AccessManager {
 				"JOIN UserGroups ug on m.groupOwner = ug.groupId "+
 				"JOIN Users u on u.id = ug.userId "+
 				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
-				"AND u.profile = '"+Geonet.Profile.REVIEWER+"' "+
+				"AND ug.profile = '"+Geonet.Profile.REVIEWER+"' "+
 				"ORDER BY u.id";
 
         return dbms.select(query);
@@ -470,8 +476,13 @@ public class AccessManager {
 		UserSession us = context.getUserSession();
 		if (!us.isAuthenticated())
 			return false;
+		
+		
 		//--- check if the user is an editor and has edit rights over the metadata record
-		if (us.getProfile().equals(Geonet.Profile.EDITOR)) {
+		String isEditorQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Element isEditorRes = dbms.select(isEditorQuery, Integer.parseInt(us.getUserId()), Geonet.Profile.EDITOR);
+		if (isEditorRes.getChildren().size() != 0) {
 			Set<String> hsOper = getOperations(context, id, context.getIpAddress());
 			if (hsOper.contains(OPER_EDITING)) return true;
 		}

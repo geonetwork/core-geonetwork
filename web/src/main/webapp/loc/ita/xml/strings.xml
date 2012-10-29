@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
 	
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>

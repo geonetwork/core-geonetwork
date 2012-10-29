@@ -1616,13 +1616,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public Filter filter(org.apache.lucene.search.Query query, Element filterExpr, String filterVersion)
+        public Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)
                 throws Exception {
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
                 Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
-                return OgcGenericFilters.create(query, filterExpr, accessor , filterParser);
+                return OgcGenericFilters.create(query, numHits, filterExpr, accessor , filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
@@ -1643,13 +1643,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public SpatialFilter filter(org.apache.lucene.search.Query query,
+        public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
                 Geometry geom, Element request) throws Exception {
             _lock.lock();
             try {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                return _types.get(relation).newInstance(query, geom, new SpatialIndexAccessor());
+                return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
             }
             finally {
                 _lock.unlock();
@@ -1753,7 +1753,7 @@ public class SearchManager {
      */
     private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
             throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, Pair.class);
+        return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
     }
 
 	LuceneIndexWriterFactory getIndexWriter() {

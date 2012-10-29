@@ -66,7 +66,7 @@ public class Get implements Service
 
 		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals("UserAdmin") || myUserId.equals(id)) {
+		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals(Geonet.Profile.USER_ADMIN) || myUserId.equals(id)) {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
@@ -76,16 +76,17 @@ public class Get implements Service
 
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-			java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",Integer.valueOf(id)).getChildren();
+			java.util.List list =dbms.select("SELECT groupId, profile FROM UserGroups WHERE userId=?",Integer.valueOf(id)).getChildren();
 
 			for(int i=0; i<list.size(); i++)
 			{
-				String grpId = ((Element)list.get(i)).getChildText("groupid");
+				Element grp = (Element)list.get(i);
+				String grpId = grp.getChildText("groupid");
 
-				elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
+				elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getChildText("profile")));
 			}
 
-			if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info

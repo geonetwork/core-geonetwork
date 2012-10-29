@@ -17,7 +17,8 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
     <anyLanguage>Dowolny język</anyLanguage>
-
+	
+	<isAdmin>Is administrator ?</isAdmin>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>

@@ -29,6 +29,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
@@ -2144,7 +2145,7 @@ public class DataManager {
      * @param file
      * @throws Exception
      */
-	public void setThumbnail(ServiceContext context, String id, boolean small, String file) throws Exception {
+	public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file) throws Exception {
 		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
@@ -2160,7 +2161,7 @@ public class DataManager {
 		env.addContent(new Element("port").setText(port));
 		env.addContent(new Element("baseUrl").setText(baseUrl));
 		
-		manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL);
 	}
 
     /**
@@ -2170,10 +2171,10 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(ServiceContext context, String id, boolean small) throws Exception {
+	public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small) throws Exception {
 		Element env = new Element("env");
 
-		manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL);
 	}
 
     /**
@@ -2185,7 +2186,7 @@ public class DataManager {
      * @param styleSheet
      * @throws Exception
      */
-	private void manageThumbnail(ServiceContext context, String id, boolean small, Element env,
+	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
 										  String styleSheet) throws Exception {
 		
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
@@ -2195,11 +2196,8 @@ public class DataManager {
 			return;
 
 		md.detach();
-		
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String schema = getMetadataSchema(dbms, id);
 
-		//--- remove thumbnail from metadata
+		String schema = getMetadataSchema(dbms, id);
 
 		//--- setup environment
 		String type = small ? "thumbnail" : "large_thumbnail";
@@ -2334,15 +2332,66 @@ public class DataManager {
 	}
 
     /**
-     *
+     * Set metadata privileges.
+     * 
+     * Administrator can set operation for any groups.
+     * 
+     * For reserved group (ie. Internet, Intranet & Guest), user MUST be reviewer of one group.
+     * For other group, if "Only set privileges to user's groups" is set in catalog configuration
+     * user MUST be a member of the group.
+     * 
      * @param context
      * @param dbms
-     * @param mdId
-     * @param grpId
-     * @param opId
+     * @param mdId The metadata identifier
+     * @param grpId The group identifier
+     * @param opId The operation identifier
+     * 
      * @throws Exception
      */
 	public void setOperation(ServiceContext context, Dbms dbms, int mdId, int grpId, int opId) throws Exception {
+        // Check user privileges
+        // Session may not be defined when a harvester is running
+        if (context.getUserSession() != null) {
+            String userProfile = context.getUserSession().getProfile();
+            if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+                int userId = Integer.parseInt(context.getUserSession()
+                        .getUserId());
+                // Reserved groups
+                if (grpId <= 1) {
+                    // If user is reviewer, user can change operation for groups
+                    // -1, 0, 1
+                    String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+                    Element isReviewerRes = dbms.select(isReviewerQuery,
+                            userId, Geonet.Profile.REVIEWER);
+                    if (isReviewerRes.getChildren().size() == 0) {
+                        throw new ServiceNotAllowedEx(
+                                "User can't set operation for group "
+                                        + grpId
+                                        + " because the user in not a Reviewer of any group.");
+                    }
+                } else {
+
+                    GeonetContext gc = (GeonetContext) context
+                            .getHandlerContext(Geonet.CONTEXT_NAME);
+                    String userGroupsOnly = settingMan
+                            .getValue("system/metadataprivs/usergrouponly");
+                    if (userGroupsOnly.equals("true")) {
+                        // If user is member of the group, user can set
+                        // operation
+                        String isMemberQuery = "SELECT groupId FROM UserGroups WHERE groupId=? AND userId=?";
+                        Element isMemberRes = dbms.select(isMemberQuery, grpId,
+                                userId);
+                        if (isMemberRes.getChildren().size() == 0) {
+                            throw new ServiceNotAllowedEx(
+                                    "User can't set operation for group "
+                                            + grpId
+                                            + " because the user in not member of this group.");
+                        }
+                    }
+                }
+            }
+        }
+		// Set operation
 		String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
 		Element elRes = dbms.select(query, mdId, grpId, opId);
 		if (elRes.getChildren().size() == 0) {

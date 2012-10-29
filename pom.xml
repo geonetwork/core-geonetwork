@@ -206,7 +206,11 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-
+      <dependency>
+      	<groupId>net.sf.ehcache</groupId>
+      	<artifactId>ehcache-core</artifactId>
+      	<version>2.5.3</version>
+      </dependency>
         <!-- rewrite url servletfilter -->
         <dependency>
             <groupId>org.tuckey</groupId>
@@ -438,11 +442,6 @@
  
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>2.5.3</version>
-      </dependency>
-      <dependency>
         <groupId>org.dspace</groupId>
         <artifactId>cql-java</artifactId>
         <version>1.0</version>
@@ -549,6 +548,12 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-annotations</artifactId>
         <version>3.2.0.ga</version>
+        <exclusions>
+          <exclusion>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>javax.media</groupId>
@@ -564,6 +569,20 @@
         <groupId>eu.medsea.mimeutil</groupId>
         <artifactId>mime-util</artifactId>
         <version>2.1.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- Load slf4g to match other dependency version (eg. quartz)
+      and replace the one loaded by eu.medsea.mimeutil.
+      -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>joda-time</groupId>
@@ -707,6 +726,43 @@
             <version>1.2.0</version>
         </dependency>
         <!-- end language detection -->
+
+         <!-- Spring dependencies -->
+         <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-context</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-context-support</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-core</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-cas</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-config</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-ldap</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
+         <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-web</artifactId>
+           <version>${spring.version}</version>
+         </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -733,7 +789,6 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
-     
   </dependencies>
 
   <!-- ================================================================== -->
@@ -862,6 +917,12 @@
         <module>geoserver</module>
       </modules>
     </profile>
+    <profile>
+      <id>jmeter</id>
+      <modules>
+        <module>jmeter</module>
+      </modules>
+    </profile>
   </profiles>
 
   <distributionManagement>
@@ -876,6 +937,7 @@
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.1</geotools.version>
     <lucene.version>3.0.2</lucene.version>
+    <spring.version>3.1.1.RELEASE</spring.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
   </properties>

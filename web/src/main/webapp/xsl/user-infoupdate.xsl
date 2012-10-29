@@ -5,29 +5,6 @@
 	<xsl:include href="user-update-utils.xsl"/>
 	
 	<!--
-	additional scripts
-	-->
-	<xsl:template mode="script" match="/">
-<script type="text/javascript" language="JavaScript">
-			
-			function profileChanged()
-			{
-				var profile = $F('user.profile');
-
-				if (profile == 'Administrator')
-					Element.hide('group.list');
-				else
-					Element.show('group.list');
-			}
-			
-			function init()
-			{
-				profileChanged();
-			}
-</script>
-	</xsl:template>
-	
-	<!--
 	page content
 	-->
 	<xsl:template name="content">

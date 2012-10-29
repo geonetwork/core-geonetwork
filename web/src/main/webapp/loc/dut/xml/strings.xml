@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Ongeacht welke taal</anyLanguage>
 	<nodata>Null</nodata>
 	<!-- new strings - 2.7 -->

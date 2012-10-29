@@ -6,6 +6,35 @@
             version="2.4">
 
     <display-name>geonetwork</display-name>
+	<context-param>
+		<param-name>contextClass</param-name>
+ 		<param-value>
+	          jeeves.config.springutil.JeevesApplicationContext
+	      </param-value>
+	</context-param>
+	<!-- comma separated list of classes that implement 
+		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
+
+		 This is an additional method of overriding the spring configuration
+		 besides multiple bean configuration files with overriding beans by using
+		 same id in multiple files. 
+		  -->
+	<context-param>
+		<param-name>applicationContextPostProcessors</param-name>
+		<param-value></param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/config-security.xml</param-value>
+	</context-param>
+    <listener>
+        <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+	    <listener-class>
+	        org.springframework.web.context.request.RequestContextListener
+	    </listener-class>
+    </listener>
     <!--<context-param>-->
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
         <!--<param-value>Joe</param-value>-->
@@ -21,7 +50,22 @@
             org.apache.jcs.utils.servlet.JCSServletContextListener
         </listener-class>
     </listener>
-
+    <filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
+	
     <!-- url rewrite filter -->
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -55,7 +99,23 @@
             <param-value>/status</param-value>
         </init-param>
     </filter>
-
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	
+	<!-- Spring security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
     <!-- Resources servlet -->
     <filter>
         <filter-name>resources</filter-name>
@@ -76,19 +136,6 @@
         <filter-class>org.fao.geonet.monitor.webapp.MetricsRegistryInitializerFilter</filter-class>
     </filter>
 
-    <filter>
-        <filter-name>MonitorSecurityFilter</filter-name>
-        <filter-class>org.fao.geonet.monitor.MonitorSecurityFilter</filter-class>
-        <init-param>
-            <!--
-                White-list is comma seperated list of trusted source that can call monitor.
-                For example nagios server -->
-            <param-name>white-list</param-name>
-            <param-value>localhost</param-value>
-        </init-param>
-
-    </filter>
-
     <!--  Monitors the number of Active requests, request length and return codes -->
     <filter>
         <filter-name>webappMetricsFilter</filter-name>
@@ -98,34 +145,6 @@
     <filter-mapping>
         <filter-name>MetricsRegistryInitializerFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>MonitorSecurityFilter</filter-name>
-        <url-pattern>/monitor/*</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>MonitorSecurityFilter</filter-name>
-        <url-pattern>/criticalhealthcheck</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>MonitorSecurityFilter</filter-name>
-        <url-pattern>/warninghealthcheck</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>MonitorSecurityFilter</filter-name>
-        <url-pattern>/expensivehealthcheck</url-pattern>
-    </filter-mapping>
-
-
-    <filter-mapping>
-        <filter-name>UrlRewriteFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
     <filter-mapping>

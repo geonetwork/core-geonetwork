@@ -285,7 +285,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					false, 
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
-            identified = this.catalogue.isIdentified();
+            identified = this.catalogue.isIdentified() && 
+                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser');
 
         /* Actions and menu visibility for logged in user */
         if (!identified) {

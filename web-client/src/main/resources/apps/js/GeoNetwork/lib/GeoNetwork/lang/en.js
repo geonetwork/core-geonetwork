@@ -249,8 +249,8 @@ GeoNetwork.Lang.en = {
     'select': 'Select ',
     'username': 'User name',
     'password': 'password',
-    'login': 'Login',
-    'logout': 'Logout',
+    'login': 'Sign in',
+    'logout': 'Sign out',
     'administration': 'Administration',
     'validationReport': 'Validation report',
     'setStatus': 'Metadata status',
@@ -290,6 +290,7 @@ GeoNetwork.Lang.en = {
     'updateChildren': 'Update children',
     'records': 'records',
     'record': 'record',
+    'recordsFound': ' record(s) found',
     'help': 'Help',
     'publishError': 'Publication failed.',
     'outOfMemoryError': 'Out of memory error.',
@@ -513,8 +514,17 @@ GeoNetwork.Lang.en = {
     'schematron-rules-inspire': 'INSPIRE validation',
     'to-iso19139-keyword': 'Text mode',
     'to-iso19139-keyword-as-xlink': 'Link mode',
-    'to-iso19139-keyword-with-anchor': 'Anchor mode'
-    
+    'to-iso19139-keyword-with-anchor': 'Anchor mode',
+    'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-OGC:WMS': 'Add to map',
+    'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+    'linklabel-application/zip': 'Download',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+    'linklabel-application/x-compressed': 'Download',
+    'linklabel-text/html': 'Web link',
+    'linklabel-text/plain': 'Web link',
+    'linklabel-image/png': 'Image link',
+    'linklabel-': 'Link'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

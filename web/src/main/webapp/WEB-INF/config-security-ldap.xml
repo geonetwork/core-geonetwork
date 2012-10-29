@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd" 
+          xmlns:sec="http://www.springframework.org/schema/security"
+          xmlns:ctx="http://www.springframework.org/schema/context"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns="http://www.springframework.org/schema/beans">
+          
+    <ctx:property-override location="WEB-INF/config-security-overrides.properties"/>
+
+	<!-- Add ldap authentication to authentication manager -->
+	<bean id="ldapAuthenticationProviderPostProcessor"
+		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+		<constructor-arg ref="ldapAuthProvider"/>
+	</bean>
+	
+	
+    <!-- LDAP configuration-->
+    <bean id="contextSource"
+        class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="${ldap.base.provider.url}/${ldap.base.dn}"/>
+        <!-- For non anonymous binding -->
+        <property name="userDn" value="${ldap.security.principal}"/>
+        <property name="password" value="${ldap.security.credentials}"/>
+    </bean>
+    
+    <bean id="ldapAuthProvider"
+        class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <constructor-arg>
+            <!--
+                A PasswordComparisonAuthenticator
+            <bean class="org.springframework.security.ldap.authentication.PasswordComparisonAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userDnPatterns">
+                    <list><value>${ldap.base.dn.pattern}</value></list>
+                </property>
+                <property name="passwordAttributeName" value="userPassword"/>
+                <property name="passwordEncoder">
+                   <!- - <bean class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>- ->
+                    <bean class="org.springframework.security.authentication.encoding.LdapShaPasswordEncoder"/>
+                </property>
+            </bean>
+        -->
+        <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+                <constructor-arg ref="contextSource"/>
+                <property name="userDnPatterns">
+                    <list><value>${ldap.base.dn.pattern}</value></list>
+                </property>
+        </bean>
+        </constructor-arg>
+        <property name="userDetailsContextMapper" ref="ldapUserContextMapper" />
+    </bean>
+    
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.GeoNetworkLDAPUserDetailsContextMapper">
+        <property name="mapping">
+            <map/>
+         </property>
+        <property name="profileMapping">
+            <map/>
+        </property>
+        <!-- Privileges extraction
+         * current trunk only support one group.
+         * here we support more than one group
+         * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
+        -->
+        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
+        <property name="privilegePattern" value="${ldap.privilege.pattern}" />
+        <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
+        <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
+        
+        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+    </bean>
+    
+    <bean id="scheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+    </bean>
+    
+    <bean name="ldapSynchronizer" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.kernel.security.ldap.LDAPSynchronizerJob"/>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="contextSource" value-ref="contextSource" />
+                <entry key="ldapSearchBase" value="${ldap.sync.user.search.base}" />
+                <entry key="ldapSearchFilter" value="${ldap.sync.user.search.filter}" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="ldapSynchronizer" />
+        <property name="cronExpression" value="${ldap.sync.cron}" />
+        <property name="startDelay" value="${ldap.sync.startDelay}"/>
+    </bean>
+    
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory">
+            <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
+        </property>
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
+
+</beans>

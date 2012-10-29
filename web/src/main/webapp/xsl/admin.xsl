@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="#all">
 
 	<xsl:include href="main.xsl"/>
 
@@ -26,7 +29,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:if test="/root/gui/services/service/@name=$service">
+		<xsl:if test="java:isAccessibleService($service)">
 			<xsl:variable name="url">
 				<xsl:choose>
 					<xsl:when test="normalize-space($link)!=''">
@@ -406,7 +409,7 @@
 							<xsl:with-param name="icon">user.png</xsl:with-param>
 						</xsl:call-template>
 
-						<xsl:if test="/root/gui/services/service/@name='group.update'">
+						<xsl:if test="java:isAccessibleService('group.update')">
 						<xsl:call-template name="addrow">
 						  <xsl:with-param name="service" select="'group.list'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/groupManagement"/>
@@ -462,7 +465,7 @@
 
 					<xsl:variable name="indexConfiguration">
 						<xsl:if
-							test="/root/gui/services/service/@name='metadata.admin.index.rebuild' and /root/gui/services/service/@name='metadata.admin.index.optimize'">
+							test="java:isAccessibleService('metadata.admin.index.rebuild') and java:isAccessibleService('metadata.admin.index.optimize')">
 							<xsl:call-template name="admin-index"/>
 						</xsl:if>
 					</xsl:variable>
