@@ -344,17 +344,19 @@ public class ServiceManager
 		return context;
 	}
 
+	public void dispatch(ServiceRequest req, UserSession session) {
+		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		dispatch(req, session, context);
+	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void dispatch(ServiceRequest req, UserSession session)
+	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
-
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
-
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());
 		context.setUserSession(session);

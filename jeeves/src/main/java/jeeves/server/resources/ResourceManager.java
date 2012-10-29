@@ -316,11 +316,11 @@ public class ResourceManager
 
     Map<Object, TimerContext> timerContexts = new HashMap<Object, TimerContext>();
 
-    private void openMetrics(Object resource) {
+    protected void openMetrics(Object resource) {
         timerContexts.put(resource, resourceManagerResourceIsOpenTimer.time());
     }
 
-    private void closeMetrics(Object resource) {
+    protected void closeMetrics(Object resource) {
         TimerContext context = timerContexts.get(resource);
         if(context == null) {
             Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");

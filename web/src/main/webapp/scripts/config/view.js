@@ -354,22 +354,6 @@ ConfigView.prototype.getData = function()
 		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,
-		
-		LDAP_USE           : $('ldap.use').checked,
-		LDAP_HOST          : $F('ldap.host'),
-		LDAP_PORT          : $F('ldap.port'),
-		LDAP_DEF_PROFILE   : $F('ldap.defProfile'),
-        LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
-		LDAP_DN_BASE       : $F('ldap.baseDN'),
-		LDAP_DN_USERS      : $F('ldap.usersDN'),
-		LDAP_SUBTREE       : $('ldap.subtree').checked,
-		LDAP_ANON_BIND     : $('ldap.anonBind').checked,
-		LDAP_DN_BIND       : $F('ldap.bindDN'),
-		LDAP_PW_BIND       : $F('ldap.bindPW'),
-		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
-		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
-        LDAP_ATTR_GROUP    : $F('ldap.groupAttr'),
-        LDAP_DEF_GROUP    : $F('ldap.defGroup'),
 
 		SHIB_USE              : $('shib.use').checked,
 		SHIB_PATH             : $('shib.path').value,
