@@ -90,7 +90,6 @@ public class LocalServiceRequest extends ServiceRequest
 
 	public Element getResult() throws IOException, JDOMException
 	{
-		
 		String resultString = getResultString();
 		if(resultString.trim().isEmpty()) return null;
 		else return Xml.loadString(resultString, false);

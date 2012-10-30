@@ -69,7 +69,13 @@ public class DeleteElement implements Service
 		for (int i = 0; i < ref.length; i++) {
 			child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref[i], parentRef);
 		}
-		return child;
+
+		// -- The metadata-edit-embedded.xsl searches for a taged element to
+		// -- transform so tag the element for display
+		Element cloned = (Element) child.clone();
+		EditLib.tagForDisplay(cloned);
+
+		return cloned;
 	}
 }
 
