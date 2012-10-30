@@ -14,7 +14,8 @@
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
     <xsl:include href="metadata-che-layouts.xsl"/>
-	<xsl:include href="metadata-che-fop.xsl"/>
+	<xsl:include href="metadata-che-fop.xsl""/>
+	<xsl:include href="xml-to-string.xsl"/>
   
 	<xsl:template name="iso19139.che-javascript"/>
     <xsl:template name="iso19139.cheCompleteTab">
@@ -664,8 +665,7 @@
         <xsl:param name="edit" />
         
     <xsl:variable name="text">
-        <xsl:variable name="ref"
-                      select="geonet:element/@ref" />
+        <xsl:variable name="ref" select="geonet:element/@ref" />
         <xsl:variable name="data">
             <xsl:apply-templates mode="xml-to-string">
                 <xsl:with-param name="depth">10</xsl:with-param>
@@ -673,9 +673,9 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="$edit = true()">
-                <textarea class="md" name="_B{$ref}" id="_B{$ref}" cols="50" rows="5" style="display:block">
-                    <xsl:value-of select="normalize-space($data)"/>
-                </textarea>
+                 <textarea class="md" name="_B{$ref}" id="_B{$ref}" cols="50" rows="5" style="display:block">
+					<xsl:value-of select="normalize-space($data)"/>
+				</textarea>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$data"/>

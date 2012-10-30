@@ -14,6 +14,7 @@
 	</field>
 	
 	<field name="gmd:CI_OnlineResource">
+		<suggest name="gmd:linkage"/>
 		<suggest name="gmd:protocol"/>
 		<suggest name="gmd:name"/>
 		<suggest name="gmd:description"/>

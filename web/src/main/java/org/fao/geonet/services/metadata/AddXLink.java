@@ -20,11 +20,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -33,14 +28,11 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.xlink.XLink;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 //=============================================================================
@@ -90,10 +82,9 @@ public class AddXLink implements Service {
 		// -- build the element to be added and return it
 		AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
 		Element element = ajaxEditUtils.addXLink(dbms, session, id, ref, name, xLink);
-		Attribute attribute = new Attribute("xlinkedObj","true", Edit.NAMESPACE);
-		element.setAttribute(attribute);
+		EditLib.tagForDisplay(element);
 		Element md = (Element) findRoot(element).clone();
-        element.removeAttribute(attribute);
+		EditLib.removeDisplayTag(element);
         return md;
 	}
 

@@ -218,7 +218,7 @@
         <service name="metadata.xlink.add">
             <class name=".services.metadata.AddXLink"/>
 
-			<output sheet="metadata-add-xlink.xsl">
+			<output sheet="metadata-edit-embedded.xsl">
 				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
 				<call name="groups"        class =".guiservices.groups.GetMine"/>

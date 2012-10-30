@@ -22,6 +22,7 @@ import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+import org.jdom.input.JDOMParseException;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -121,6 +122,15 @@ public class AjaxEditUtils extends EditUtils {
                 xmlInputs.put(ref, value);
                 continue;
             }
+            // Catch element starting with a B (stands for blackbox content)
+            // and add cdata 
+            boolean blackboxContent = false;
+            if (ref.startsWith("B"))
+            {
+                ref = ref.substring(1);
+                blackboxContent = true;
+            }
+		
 
             if (updatedLocalizedTextElement(md, ref, value, editLib, updatedXLinks) || updatedLocalizedURLElement(md, ref, value, editLib, updatedXLinks)) {
                 continue;
@@ -153,6 +163,15 @@ public class AjaxEditUtils extends EditUtils {
                 Namespace attrNS = attInfo.one();
                 if (el.getAttribute(localname, attrNS) != null) {
                     el.setAttribute(new Attribute(localname, value, attrNS));
+                }
+            } else if( blackboxContent ) {
+                el.removeContent();
+
+                try{
+                    el.addContent(Xml.loadString(value, false));
+                }catch (JDOMParseException ex) {
+                    // the blackbox data is can also just be a string
+                    el.setText(value);
                 }
             } else {
                 // Process element value

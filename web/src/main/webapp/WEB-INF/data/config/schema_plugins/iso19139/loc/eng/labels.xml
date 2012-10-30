@@ -1385,6 +1385,7 @@
         <description>Name of the data transfer format(s)</description>
         <help>name of the data transfer format(s)</help>
         <condition>mandatory</condition>
+<!-- confusing for geocat.ch users, as formats are shared objects
         <helper rel="gmd:version">
             <option value="Text">Text</option>
             <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
@@ -1395,7 +1396,7 @@
             <option value="TIFF">TIFF</option>
             <option value="ECW">ECW</option>
             <option value="ZIP">ZIP</option>
-        </helper>
+        </helper> -->
     </element>
     <element name="gmd:name" context="gmd:MD_ExtendedElementInformation" id="307.0">
         <label>Name</label>
