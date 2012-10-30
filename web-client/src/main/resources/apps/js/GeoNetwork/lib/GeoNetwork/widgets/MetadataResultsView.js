@@ -300,6 +300,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
 	            this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
+	            this.ownerCt.ownerCt.body.on('scroll', function(e,t,o){
+            		this.contextMenu.hide();
+            	}, this, {
+            		single: true
+            	});
 	        }, this);
 	        this.acMenu.show();
         }

@@ -297,7 +297,7 @@ cat.app = function() {
 			displaySerieMembers : true,
 			displayContextualMenu : false,
 			autoHeight: true,
-			autoScroll : true,
+			autoScroll : false,
 			templates : {
 	            SIMPLE: GeoNetwork.Templates.SIMPLE,
 	            THUMBNAIL: GeoNetwork.Templates.THUMBNAIL,
