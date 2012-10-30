@@ -195,11 +195,11 @@ public class Thesaurus {
 		// needs to have term/concept id tacked onto the end
 	}
 
-	public LocalRepository getRepository() {
+	public synchronized LocalRepository getRepository() {
 		return repository;
 	}
 
-	public Thesaurus setRepository(LocalRepository repository) {
+	public synchronized Thesaurus setRepository(LocalRepository repository) {
 		this.repository = repository;
 		return this;
 	}
@@ -214,7 +214,7 @@ public class Thesaurus {
      * @throws QueryEvaluationException
      * @throws AccessDeniedException
      */
-	public QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
+	public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
             QueryEvaluationException, AccessDeniedException {
         if(Log.isDebugEnabled(Geonet.THESAURUS))
             Log.debug(Geonet.THESAURUS, "Query : " + query);
@@ -255,7 +255,7 @@ public class Thesaurus {
 	 * @throws AccessDeniedException
 	 * @throws GraphException
 	 */
-    public URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
+    public synchronized URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -324,7 +324,7 @@ public class Thesaurus {
      * @throws IOException
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
+    public synchronized Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
             QueryEvaluationException, IOException, AccessDeniedException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
@@ -339,7 +339,7 @@ public class Thesaurus {
      * @param code
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
+    public synchronized Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
@@ -351,7 +351,11 @@ public class Thesaurus {
                 repository.getGraph().remove(node, null, null);
             }
         }
-        myGraph.remove(subject, null, null);
+        int removedItems = myGraph.remove(subject, null, null);
+        if(Log.isDebugEnabled(Geonet.THESAURUS)) {
+        	String msg = "Removed "+removedItems+" elements from thesaurus "+this.title+" with uri: "+subject;
+        	Log.debug(Geonet.THESAURUS, msg);
+        }
         return this;
     }
 
@@ -375,7 +379,7 @@ public class Thesaurus {
 	 * @throws QueryEvaluationException
 	 * @throws GraphException
 	 */
-	public URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
+	public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
 	        MalformedQueryException, QueryEvaluationException, GraphException {
 	    
         // Get thesaurus graph
@@ -496,7 +500,7 @@ public class Thesaurus {
      * @return
      * @throws AccessDeniedException
      */
-	public boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
+	public synchronized boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
 		boolean res = true;				
 		Graph myGraph = repository.getGraph();
 		ValueFactory myFactory = myGraph.getValueFactory();		
@@ -524,7 +528,7 @@ public class Thesaurus {
      * @throws AccessDeniedException
      * @throws IOException
      */
-	public Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+	public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
 		Graph myGraph = repository.getGraph();
 		
 		ValueFactory myFactory = myGraph.getValueFactory();
@@ -664,7 +668,7 @@ public class Thesaurus {
          * @param related the relation between the two keywords
          * @param relatedSubject
          */
-        public void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
+        public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
         MalformedQueryException, QueryEvaluationException, GraphException {
             
             Graph myGraph = repository.getGraph();      
