@@ -250,13 +250,13 @@ table.related * a:hover,
 .WWWLINK {
   background-image : url(../images/default/link.png);
 }
-.WWWDOWNLOAD {
+.WWWDOWNLOAD, .FILE, .COPYFILE, .DB{
   background-image : url(../images/default/database_yellow.png);
 }
-.OGCWMS {
+.OGCWMS{
   background-image : url(../images/default/map/server_picture.png);
 }
-.OGCWFS {
+.OGCWFS, .WFS{
   background-image : url(../images/default/map/server_vector.png);
 }
 

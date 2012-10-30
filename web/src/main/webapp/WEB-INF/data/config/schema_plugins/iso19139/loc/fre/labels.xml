@@ -2863,6 +2863,11 @@
 			<option show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</option>
 			<option show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
 			<option show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</option>
+			<option show="-" value="DB">Base de données</option>
+			<option show="y" value="WFS">OGC-WFS Web Feature Service (ver 1.0.0)</option>
+			<option show="-" value="FILE">Fichier</option>
+			<option show="-" value="COPYFILE">Copie de fichier</option>
+			<option show="y" value="WCS">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
 			<option show="-" value="UKST">Unknown Service Type</option>
 		</helper>
     <condition/>
