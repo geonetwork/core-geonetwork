@@ -665,8 +665,9 @@ cat.app = function() {
 					region : 'west',
 					id : 'west',
 					bodyCssClass: 'west-panel-body',
+					cls: 'sxt-layout-border-white',
 					split : true,
-					border : true,
+					border : false,
 					frame : false,
 					minWidth : 300,
 					width : 400,
@@ -675,7 +676,6 @@ cat.app = function() {
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
-					bodyStyle: 'border-color:white',
 					layoutConfig : {
 						animate : true
 					},

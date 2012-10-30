@@ -312,6 +312,7 @@ table.gn > tbody > tr > th.main {
 
 table.map > tbody > tr > td {
   text-align : center;
+  vertical-align: middle;
 }
 table.map > tbody > tr > td > input,
 table.map > tbody > tr > td > label {

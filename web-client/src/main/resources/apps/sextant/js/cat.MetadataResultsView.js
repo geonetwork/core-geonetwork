@@ -159,7 +159,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             listeners: {
             	mouseout: {
             		fn: function(m) {
-            			m.hide();
+//            			m.hide();
             		}
             	}
             }
