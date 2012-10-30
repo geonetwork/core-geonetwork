@@ -53,7 +53,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /**
          * trigger search on load
          */
-        searchOnLoad: null,
+        searchOnThesaurusSelection: false,
         mode: null,
         border: false,
 //        autoHeight: true,
@@ -283,7 +283,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     /**
      * Build XML snippet according to configuration
      */
-    generateXML: function () {
+    generateXML: function (cb) {
         var xml = "", ids = [], self = this, 
             serviceUrl = this.catalogue.services.getKeyword, // FIXME : depends on app
             transfo = (this.transformation ? "&transformation=" + this.transformation : "");
@@ -304,7 +304,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             url: url,
             method: 'GET',
             scope: this,
-            success: function (response) {
+            success: cb || function (response) {
                 // Populate formField
                 document.getElementById(this.xmlField).value = response.responseText;
             }
@@ -362,6 +362,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listWidth: 250,
             listeners: {
                 select: function (combo, record, index) {
+                    // Clean current content and init thesaurus store parameter
                     this.keywordStore.removeAll();
                     this.keywordStore.baseParams.pThesauri = self.thesaurusSelector.getValue();
                     if (this.nbResultsField !== null) {
@@ -370,9 +371,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     
                     // Once a thesaurus is selected, search or load
                     // all keywords
-                    this.keywordStore.reload();
-                    
-                    // TODO : only if no search fields are provided
+                    if (this.searchOnThesaurusSelection) {
+                            this.keywordStore.reload();
+                    }
                 },
                 scope: this
             }
@@ -469,7 +470,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             method: 'POST', 
             params: {
                 pNewSearch: true,
-                pTypeSearch: 0, // Exact match
+                pTypeSearch: 2, // Exact match
                 pMode: 'searchBox',
                 pKeyword: value,
                 pThesauri: thesaurus
@@ -545,6 +546,64 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
         }
     }
 };
+
+
+/**
+ * Create a thesaurus selection menu which when clicking on a 
+ * thesaurus build a XML fragment, add a form element with the fragment
+ * and trigger the save action of the editor.
+ */
+GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, type, formBt) {
+    // Get the list of thesaurus
+    var thesaurusStore = new GeoNetwork.data.ThesaurusStore({
+        url: catalogue.services.getThesaurus,
+        activatedOnly: true,
+        listeners: {
+            load: function (store, records, options) {
+                
+                store.sort('title');
+                
+                var items = [{
+                    xtype: 'menutextitem',
+                    text: 'Add from thesaurus ...'
+                }];
+                store.each(function (thesaurus) {
+                    items.push({
+                        text: thesaurus.get('title'),
+                        handler: function () {
+                            // Get an XML fragment to add the thesaurus to the current record
+                            var url = catalogue.services.getKeyword + 
+                                                '?thesaurus=' + thesaurus.get('id') + 
+                                                '&id=' + 
+                                                '&multiple=false' +
+                                                '&transformation=to-iso19139-keyword';
+                            
+                            Ext.Ajax.request({
+                                url: url,
+                                method: 'GET',
+                                scope: this,
+                                success: function (response) {
+                                    // Add the fragment and save the metadata
+                                    var keywords = ["<gmd:descriptiveKeywords xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
+                                                     response.responseText + "</gmd:descriptiveKeywords>"];
+                                    GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, Ext.getCmp('editorPanel'));
+                                }
+                            });
+                        }
+                    });
+                });
+                
+                // Display the floating menu
+                var contextMenu = new Ext.menu.Menu({
+                    floating: true,
+                    items: items
+                });
+                contextMenu.showAt([Ext.get(formBt).getX(), Ext.get(formBt).getY() + Ext.get(formBt).getHeight()]);
+            }
+        }
+    });
+};
+
 
 /** api: xtype = gn_editor_conceptselectionpanel */
 Ext.reg('gn_editor_conceptselectionpanel', GeoNetwork.editor.ConceptSelectionPanel);

@@ -1285,7 +1285,7 @@
 
     <!-- TODO : retrieve from configuration -->
     <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
-    <xsl:message>##<xsl:value-of select="$transformation"/></xsl:message>
+
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
       config="{{thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
@@ -1322,8 +1322,11 @@
             
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
-              use a snippet editor -->
-              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName">
+              use a snippet editor. 
+              TODO : check that the thesaurus is available in the catalogue to not 
+              to try to initialize a widget with a non existing thesaurus. -->
+              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
+                gmd:identifier/gmd:MD_Identifier/gmd:code">
                 <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
                   <xsl:with-param name="edit" select="$edit"/>
                   <xsl:with-param name="schema" select="$schema"/>

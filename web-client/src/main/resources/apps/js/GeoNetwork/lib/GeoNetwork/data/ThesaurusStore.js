@@ -54,8 +54,8 @@ GeoNetwork.data.ThesaurusStore = function(config){
         reader: new Ext.data.XmlReader({
             record: 'thesaurus'
         }, DataRecord),
-        sortInfo: {
-            field: 'id',
+        sortInfo: config.sortInfo || {
+            field: 'title',
             direction: 'ASC'
         },
         fields: ['filename', 'theme', 'id', 'title', 'type', 'activated'],

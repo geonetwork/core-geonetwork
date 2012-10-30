@@ -498,6 +498,7 @@ dl.xml * dd {
 }
 .thesaurusPicker * div.badge {
     margin: 3px;
+    white-space: normal;
 }
 .thesaurusPicker * fieldset {
     border: none !important;

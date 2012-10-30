@@ -72,7 +72,6 @@ public class GetList implements Service {
 		
 		return response;
 	}
-
 	
 	/**
 	 * @param thTable
@@ -84,7 +83,6 @@ public class GetList implements Service {
 		Element elRoot = new Element("thesauri");
 		
 		Collection<Thesaurus> e = thTable.values();
-		
 		for (Thesaurus currentTh : e) {
 	        Element elLoop = new Element("thesaurus");
 			

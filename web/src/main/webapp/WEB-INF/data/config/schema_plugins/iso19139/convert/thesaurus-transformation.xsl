@@ -4,27 +4,43 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
-
+	
+	
+	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
+	
+	
+	
 	<xsl:include href="../process/process-utility.xsl"/>
 	
-
-	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
-
+	
+	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
+		for each keywords pointing to the concept URI-->
 	<xsl:template name="to-iso19139-keyword-with-anchor">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
+	
 
+	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
+	will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withXlink" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
 	
+	
+	<!-- Convert a concept to an ISO19139 keywords.
+	If no keyword is provided, only thesaurus section is adaded.
+	-->
 	<xsl:template name="to-iso19139-keyword">
 		<xsl:param name="withAnchor" select="false()"/>
 		<xsl:param name="withXlink" select="false()"/>
+		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
+		It's recommended to use it in order to have the thesaurus widget inline editor
+		which use the thesaurus identifier for initialization. -->
+		<xsl:param name="withThesaurusAnchor" select="true()"/>
 
 		<gmd:MD_Keywords>
 			<xsl:choose>
@@ -32,7 +48,7 @@
 					<xsl:variable name="multiple" select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
 					<xsl:attribute name="xlink:href"
 						select="concat($serviceUrl, '/xml.keyword.get?thesaurus=', thesaurus/key, 
-						'&amp;id=', /root/request/id, '&amp;multiple=', $multiple)"/>
+						'&amp;id=', replace(/root/request/id, '#', '%23'), '&amp;multiple=', $multiple)"/>
 					<xsl:attribute name="xlink:show">replace</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
@@ -63,7 +79,7 @@
 						</gmd:keyword>
 					</xsl:for-each>
 					
-					<!-- TODO : add thesaurus theme -->
+					<!-- Add thesaurus theme -->
 					<gmd:type>
 						<gmd:MD_KeywordTypeCode
 							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
@@ -91,15 +107,17 @@
 										</gmd:dateType>
 									</gmd:CI_Date>
 								</gmd:date>
-								<gmd:identifier>
-									<gmd:MD_Identifier>
-										<gmd:code>
-											<gmx:Anchor xlink:href="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/url}"
-												>geonetwork.thesaurus.<xsl:value-of
-													select="$currentThesaurus"/></gmx:Anchor>
-										</gmd:code>
-									</gmd:MD_Identifier>
-								</gmd:identifier>
+								<xsl:if test="$withThesaurusAnchor">
+									<gmd:identifier>
+										<gmd:MD_Identifier>
+											<gmd:code>
+												<gmx:Anchor xlink:href="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/url}"
+													>geonetwork.thesaurus.<xsl:value-of
+														select="$currentThesaurus"/></gmx:Anchor>
+											</gmd:code>
+										</gmd:MD_Identifier>
+									</gmd:identifier>
+								</xsl:if>
 							</gmd:CI_Citation>
 						</gmd:thesaurusName>
 					</xsl:if>
@@ -110,13 +128,9 @@
 	
 	
 	
-	
-	
-	
-	<!-- Extent -->
+	<!-- Convert a concept to an ISO19139 extent -->
 	<xsl:template name="to-iso19139-extent">
 		<xsl:param name="isService" select="false()"/>
-		
 		
 		<xsl:variable name="currentThesaurus" select="thesaurus/key"/>
 		<!-- Loop on all keyword from the same thesaurus -->
