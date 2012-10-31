@@ -552,7 +552,7 @@ cat.app = function() {
                 }
             };
             win = new Ext.Window({
-                id: 'modalWindow',
+            	id: 'gn-modalWindow',
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,

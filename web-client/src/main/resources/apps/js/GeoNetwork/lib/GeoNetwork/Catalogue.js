@@ -1279,7 +1279,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             };
             win = new Ext.Window({
-                id: 'modalWindow',
+                id: 'gn-modalWindow',
                 layout: 'fit',
                 width: 700,
                 height: 400,

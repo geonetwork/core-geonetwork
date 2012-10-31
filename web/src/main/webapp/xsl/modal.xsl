@@ -10,7 +10,9 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<xsl:call-template name="header"/>
+				<xsl:call-template name="header">
+					<xsl:with-param name="css" select="'geonetwork-modal.css'"/>
+				</xsl:call-template>
 				<xsl:apply-templates mode="script" select="/"/>
 			</head>
 			<!-- <body onload="init()"> -->
