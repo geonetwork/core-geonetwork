@@ -482,6 +482,7 @@ div.md-action-menu span.list-icon {
     background-position: 0 -2px;
 }
 .result-list li.md-full div.unabled {
+	filter: alpha(opacity = 35) !important;
 	opacity: 0.35 !important;
 	background-image: none !important;
 	cursor: default !important;
