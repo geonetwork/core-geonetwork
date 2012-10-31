@@ -32,69 +32,124 @@ Ext.namespace('GeoNetwork.editor');
  *  .. class:: ConceptSelectionPanel()
  *
  *     Create a GeoNetwork keyword selection panel
- *     using thesaurus loaded in GeoNetwork.
+ *     using a thesaurus loaded in GeoNetwork.
+ *     
+ *     Keyword selection could be handle with different mode:
+ *     
+ *     - combo to use a simple combo box
+ *     
+ *     - list to use a selection list (limited to one item)
+ *     
+ *     - multiplelist to use a multiple selection list
+ *     
+ *     - (default) an item selector.
  *
- *
+ *  TODO: Multilingual keyword support and thesaurus search language
  */
 GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
-        /**
-         * thesaurus identifier to select by default (null by default)
+        /** api: config[defaultThesaurus] 
+         *  ``String`` thesaurus identifier to select by default (null by default).
+         *  If defined, the thesaurus selector is not displayed.
          */
         defaultThesaurus: null,
-        /**
-         * search language (default is GUI language)
+        /** api: config[lang] 
+         *  ``String`` search language (default is GUI language)
+         *  
+         *  TODO : add support for changing search language
          */
         lang: null,
-        /**
-         * display search filter or not (default is true)
-         */
-        allowSearch: null,
-        /**
-         * trigger search on load
+        /** api: config[searchOnThesaurusSelection] 
+         *  ``String`` trigger search when thesaurus change. Only for default mode. 
+         *  if combo or list mode use, the list of keyword is loaded automatically.
          */
         searchOnThesaurusSelection: false,
+        /** api: config[mode] 
+         *  ``String`` The widget mode:
+         *     
+         *     - combo to use a simple combo box
+         *     
+         *     - list to use a selection list (limited to one item)
+         *     
+         *     - multiplelist to use a multiple selection list
+         *     
+         *     - (default) an item selector.
+         */
         mode: null,
+        /** api: config[maxKeywords] 
+         *  ``Integer`` The maximum number of item to load if widget mode is combo or list.
+         *  In default mode, the maximum number of results could be changed using the input field.
+         */
+        maxKeywords: 100,
+        /** api: config[border] 
+         *  ``boolean`` false by default.
+         */
         border: false,
-//        autoHeight: true,
-        layout: 'table',
+        /** api: config[layout] 
+         *  ``String`` auto by default. Delegate rendering to the browser.
+         */
+        layout: 'auto',
+        /** api: config[autoHeight] 
+         *  ``boolean`` true by default.
+         */
+        autoHeight: true,
+        /** api: config[thesaurusInfoTpl] 
+         *  ``Ext.XTemplate`` template to use to render thesaurus information in the widget header.
+         */
         thesaurusInfoTpl: new Ext.XTemplate(
                 '<tpl for=".">',
                     '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
                 '</tpl>'
         ),
+        /** api: config[keywordsTpl] 
+         *  ``Ext.XTemplate`` template to use to render keyword in data views.
+         */
         keywordsTpl: new Ext.XTemplate(
             '<tpl for=".">',
-                // TODO : add definiton ?
-                '<div class="badge">{value}<span class="ctrl">x</span></div>',
+                // TODO : add keyword definiton ?
+                '<div class="ux-mselect-item">{value}</div>',
             '</tpl>'
-        )
+        ),
+        /** api: config[renderTo] 
+         *  ``String`` Id of the element
+         */
+        renderTo: null,
+        /** api: config[transformations] 
+         *  ``Array`` array of transformations (use to override the server configuration).
+         *  The list of transformation is used to create radio control on the widget footer
+         *  to define which transformation to use when requesting the XML fragment.
+         */
+        transformations: ['to-iso19139-keyword'],
+        /** api: config[transformation] 
+         *  ``String`` The default transformation to use. Default is to-iso19139-keyword.
+         */
+        transformation: 'to-iso19139-keyword',
+        /** api: config[thesaurus] 
+         *  ``String`` thesaurus to use.
+         */
+        thesaurus: null,
+        /** api: config[initialKeyword] 
+         *  ``Array`` A list of initial keywords
+         */
+        initialKeyword: []
     },
-    /**
-     * null if popup mode, identifier of the DOM element for inline mode
+    /** private: property[thesaurusIdentifier] 
+     *  ``String`` thesaurus identifier to use.
      */
-    renderTo: null,
-    /**
-     * element type to edit (eg. gmd:descriptiveKeywords)
-     */
-    elementType: null,
-    /**
-     * array of transformations (use to override the server configuration)
-     */
-    transformations: [],
-    transformation: null,
-    defaultTransformation: 'to-iso19139-keyword',
-    /**
-     * array of thesaurus (use to override the server configuration)
-     */
-    thesaurus: null,
     thesaurusIdentifier: null,
-    thesaurusSelector: null,
-    nbResultsField: null,
-    /**
-     * Store of select keyword (uri, value, thesaurus, xmin, ymin, xmax, ymax)
+    /** private: property[thesaurusSelector] 
+     *  ``Ext.form.ComboBox`` thesaurus combo box.
      */
+    thesaurusSelector: null,
+    /** private: property[nbResultsField] 
+     *  ``Ext.form.TextField`` number of results field.
+     */
+    nbResultsField: null,
+
     keywords: null,
+    /** private: property[KeywordRecord] 
+     *  ``Ext.data.Record`` A record object for the keyword
+     */
     KeywordRecord: Ext.data.Record.create([{
             name: 'value'
         }, {
@@ -103,54 +158,64 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         }, {
             name: 'uri'
         }]),
+    /** private: property[keywordStore] 
+     *  ``Ext.data.Store`` Store of keywords in current search
+     */
     keywordStore: null,
+    /** private: property[selectedKeywordStore] 
+     *  ``Ext.data.Store`` Store of selected keywords
+     */
     selectedKeywordStore: null,
-    initialKeyword: [],
-    loadKeywords: function () {
-        
-    },
-    generateDataView: function () {
-        
-        // Add keyword view
-        var dv = new Ext.DataView({
-            store: this.selectedKeywordStore,
-            tpl: this.keywordsTpl,
-            autoHeight: true,
-            multiSelect: false,
-            overClass: 'badge-warning',
-            itemSelector: 'div',
-            listeners: {
-                // Remove clicked element from the selection store
-                click: function (dv, index, node, e) {
-                    dv.getStore().removeAt(index);
-                }
-            }
-        });
-        
-        return dv;
-    },
-    /**
-     * Provide a simple combo box for selection of one keyword
+    /** private: method[generateSimpleCombo]
+     * 
+     *  Create a simple combo box for selection of only one keyword in a thesaurus.
+     *  When created the full list of keyword is loaded (with a limit based 
+     *  on the maxKeywords property).
      */
     generateSimpleCombo: function () {
-        // TODO : Validate mode : combo mode is only available if number of keyword
-        // is 0 or 1
+        var self = this, 
+            initKeyword = (self.initialKeyword.length === 1 && self.initialKeyword[0] !== '') ? self.initialKeyword[0] : null;
+        
         var combo = new Ext.form.ComboBox({
             store: this.keywordStore,
             triggerAction: 'all',
             mode: 'local',
             displayField: 'value',
             valueField: 'uri',
-            listWidth: 200,
             listeners: {
                 select: function (combo, record, index) {
+                    this.selectedKeywordStore.removeAll();
                     this.selectedKeywordStore.add([record]);
                 },
                 scope: this
             }
         });
-        return [combo, this.generateDataView()];
+        
+        // Load all keyword for the current thesaurus
+        this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
+        this.keywordStore.baseParams.maxResults = this.maxKeywords;
+        this.keywordStore.reload();
+        this.keywordStore.on('load', function () {
+            
+            // Custom callback which load response to the selected set
+            // and set the combo box value.
+            var cb = function (response) {
+                self.selectedKeywordStore.loadData(response.responseXML, true);
+                combo.setValue(initKeyword);
+            };
+
+            // Get the first initial keyword in combo mode
+            if (initKeyword) {
+                self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
+            }
+        });
+        return [combo];
     },
+    /** private: method[generateFilterField]
+     * 
+     *  Create a simple search field linked to the keywordStore. 
+     *  When searching the store is updated.
+     */
     generateFilterField: function () {
         return new GeoNetwork.form.SearchField({
             width: 200,
@@ -158,47 +223,67 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             paramName: 'pKeyword'
         });
     },
-    /**
-     * Provide a multiple selection list for selecting keywords
+    /** private: method[generateSelectionList]
+     * 
+     *  Create a multiple selection list for selecting keywords.
+     *  If the mode is multiplelist, the multiple selection is allowed.
      */
     generateSelectionList: function (withFilter) {
-        // TODO : Validate mode : combo mode is only available if number of keyword
-        // is 0 or 1
-        var search = this.generateFilterField();
+        var search = this.generateFilterField(), self = this;
         
+        // Custom number of max items
         var dv = new Ext.DataView({
             store: this.keywordStore,
             tpl: this.keywordsTpl,
             //autoHeight: true,
-            multiSelect: false,
-            boxMaxHeight: 350,
-            height: 100,
-            overClass: 'badge-success',
-            itemSelector: 'div',
+            simpleSelect: true,
+            multiSelect: this.mode === 'multiplelist' ? true : false,
+            singleSelect: true,
+            width: 350,
+            selectedClass: 'ux-mselect-selected',
+            itemSelector: 'div.ux-mselect-item',
             listeners: {
-                // Remove clicked element from the selection store
-                click: function (dv, index, node, e) {
-                    this.selectedKeywordStore.add([dv.getStore().getAt(index)]);
-                    dv.getStore().removeAt(index);
+                // On selection, remove all current selection 
+                // and add the selected one
+                // to the selected keyword store selection.
+                selectionchange: function (dv, selections) {
+                    this.selectedKeywordStore.removeAll();
+                    var records = [];
+                    Ext.each(selections, function (node) {
+                        records.push(dv.getStore().getAt(dv.indexOf(node)));
+                    });
+                    self.selectedKeywordStore.add(records);
                 },
                 scope: this
             }
         });
+        
+        // Load all keyword for the current thesaurus
+        this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
+        this.keywordStore.baseParams.maxResults = this.maxKeywords;
+        this.keywordStore.on('load', function () {
+            
+            // Custom callback which load response to the selected set
+            // and set the dataview values.
+            var cb = function (response) {
+                self.selectedKeywordStore.loadData(response.responseXML, true);
+            };
+
+            // Get initial keyword in the data view and select them
+            Ext.each(self.initialKeyword, function (initKeyword) {
+                dv.select(self.keywordStore.find('value', initKeyword), true);
+                self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
+            });
+        });
+        this.keywordStore.reload();
+
         return [search, dv];
     },
-    /**
-     * Provide a multiple item selector
+    /** private: method[getKeywordsItemSelector]
+     * 
+     *  Create a multiple item selector.
      */
     getKeywordsItemSelector: function (withFilter) {
-    
-        var tpl = '<tpl for="."><div class="badge ux-mselect-item';
-        if (Ext.isIE || Ext.isIE7) {
-            tpl += '" unselectable=on';
-        } else {
-            tpl += ' x-unselectable"';
-        }
-        tpl += '>{id} {value} </div></tpl>';
-        //<span class="ux-mselect-item-thesaurus">({thesaurus})</span>
         
         this.itemSelector = new Ext.ux.ItemSelector({
             name: "itemselector",
@@ -210,8 +295,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             msHeight: 260,
             valueField: "value",
             toSortField: undefined,
-            fromTpl: tpl,
-            toTpl: tpl,
+            fromTpl: this.keywordsTpl,
+            toTpl: this.keywordsTpl,
             toLegend: OpenLayers.i18n('selectedKeywords'),
             fromLegend: OpenLayers.i18n('foundKeywords'),
             fromStore: this.keywordStore,
@@ -246,10 +331,15 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         
         return this.itemSelector;
     },
+    /** private: method[generateTransformationSelector]
+     *  
+     *  Create a group of radio for each transformation mode.
+     */
     generateTransformationSelector: function () {
         var radios = [], self = this;
         if (this.transformations.length === 1) {
             this.transformation = this.transformations[0];
+            return null;
         } else if (this.transformations.length > 1) {
             Ext.each(this.transformations, function (item, idx) {
                 radios.push(new Ext.form.Radio({
@@ -261,11 +351,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             });
                 
             return new Ext.form.RadioGroup({
-                fieldLabel: 'Auto Layout',
-    //            autoHeight: true,
-    //            autoWidth: true,
-                height: 100,
-                width: 300,
+                autoHeight: true,
+                width: 350,
                 items: radios,
                 listeners: {
                     change: function (group, checked) {
@@ -279,13 +366,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             console.log('No transformation defined. Using default transformation');
         }
     },
-    
-    /**
-     * Build XML snippet according to configuration
+    /** private: method[generateXML]
+     *  
+     *  Build XML fragment according to configuration and popuplate the hidden
+     *  textarea which contains the XML fragment.
      */
     generateXML: function (cb) {
         var xml = "", ids = [], self = this, 
-            serviceUrl = this.catalogue.services.getKeyword, // FIXME : depends on app
+            serviceUrl = this.catalogue.services.getKeyword,
             transfo = (this.transformation ? "&transformation=" + this.transformation : "");
         
         // Encode "#" as "%23"
@@ -308,10 +396,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 // Populate formField
                 document.getElementById(this.xmlField).value = response.responseText;
             }
+            // TODO : Error
         });
     },
-    /**
-     * Get combo box for limiting the number of results
+    /** private: method[getLimitInput]
+     *  
+     *  Create combo box for limiting the number of results. Default value is 50.
+     *  
+     *  TODO : only allow integer
      */
     getLimitInput: function () {
         this.nbResultsField = new Ext.form.TextField({
@@ -321,17 +413,18 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         });
         return this.nbResultsField;
     },
-    /**
-     * Create thesaurus store and thesaurus selector
+    /** private: method[getThesaurusSelector]
+     *  
+     *  Create thesaurus store and thesaurus selector.
      */
     getThesaurusSelector: function () {
         var self = this;
-        // TODO : load registered thesaurus for this element
-        // TODO : the list of thesaurus could be shared for all widgets, but load events may be overlapping ?
+        // TODO : cache the list of thesaurus to share it for all widgets
         this.thesaurusStore = new GeoNetwork.data.ThesaurusStore({
             url: this.catalogue.services.getThesaurus,
-// Display all options if searching across all thesaurus is required
-//            allOption: false,
+            // Display all options if searching across all thesaurus is required
+            // Not available in this widget
+            // allOption: false,
             activatedOnly: true, 
             listeners: {
                 load: function (store, records, options) {
@@ -342,16 +435,15 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         self.setThesaurusInfo(thesaurus.get(0));
                         self.thesaurusSelector.fireEvent('select');
                     } else {
+                        // TODO : improve alert
                         console.log('Error: thesaurus not found in catalog.');
                     }
                 }
             }
         });
         
-        
         this.thesaurusSelector = new Ext.form.ComboBox({
             width: 150,
-//            value: this.thesaurusIdentifier,
             store: this.thesaurusStore,
             triggerAction: 'all',
             mode: 'remote',
@@ -372,7 +464,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     // Once a thesaurus is selected, search or load
                     // all keywords
                     if (this.searchOnThesaurusSelection) {
-                            this.keywordStore.reload();
+                        this.keywordStore.reload();
                     }
                 },
                 scope: this
@@ -381,18 +473,23 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         
         return this.thesaurusSelector;
     },
+    /** private: method[setThesaurusInfo]
+     *  
+     *  Update thesaurus information in widget header.
+     */
     setThesaurusInfo: function (record) {
         this.thesaurusInfoTpl.overwrite(this.infoField.body, record.data);
     },
-    /**
-     * Create keyword store and selector
+    /** private: method[initKeywordStore]
+     *  
+     *  Create keyword store and selected keyword store
      */
     initKeywordStore: function () {
         var self = this;
         
         this.keywordStore = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
-                url: this.catalogue.services.searchKeyword, // FIXME : global var
+                url: this.catalogue.services.searchKeyword,
                 method: 'GET'
             }),
             baseParams: {
@@ -411,6 +508,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             },
             listeners: {
                 exception: function (misc) {
+                    // TODO : improve error
                     console.log(misc);
                 },
                 'beforeload': function (store, options) {
@@ -418,11 +516,13 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         this.keywordStore.baseParams.maxResults = this.nbResultsField.getValue();
                     }
                 },
-                load: function (store, records, options) {
-                },
                 scope: this
             }
         });
+        
+        var cb = function () {
+            this.generateXML();
+        };
         
         // One store for current selection
         this.selectedKeywordStore = new Ext.data.Store({
@@ -432,15 +532,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }, this.KeywordRecord),
             fields: ["value", "thesaurus", "uri"],
             listeners: {
-                load: function () {
-                    this.generateXML();
-                },
-                add: function () {
-                    this.generateXML();
-                },
-                remove: function () {
-                    this.generateXML();
-                },
+                load: cb,
+                add: cb,
+                remove: cb,
                 scope: this
             }
         });
@@ -455,14 +549,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }
         }, this);
     },
-    /**
-     * Method: retrieveKeywordData
-     *
-     * Load keyword data,
+    /** private: method[keywordSearch]
+     *  
+     *  Search for the keyword by exact match on the name
+     *  to populate the selected keyword store.
      */
-    retrieveKeywordData: function (url) {
-
-    },
     keywordSearch: function (thesaurus, value, cb) {
         // Call transformation service
         Ext.Ajax.request({
@@ -476,52 +567,72 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 pThesauri: thesaurus
             },
             scope: this,
-            success: function (response) {
+            success: cb || function (response) {
                 this.selectedKeywordStore.loadData(response.responseXML, true);
                 // TODO : if current keyword is not found - avoid error
             }
         });
     },
+    /** private: method[constructor]
+     *  Initializes the concept selection panel
+     *
+     */
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
         
         this.thesaurusIdentifier = this.thesaurus.replace('geonetwork.thesaurus.', '');
         this.initKeywordStore();
         
-        GeoNetwork.editor.ConceptSelectionPanel.superclass.initComponent.call(this);
         
+        // Add the header with thesaurus name information
         this.infoField = new Ext.Panel({
                 html: '&nbsp;',
                 border: false
             });
         var fields = [this.infoField];
         
+        
         // Add thesaurus choice
         fields.push(this.getThesaurusSelector());
         
         
         // Add keyword selection
-        if (this.mode === null) {
-            //fields.push(this.generateSimpleCombo());
+        // * in combobox mode
+        if (this.mode === 'combo') {
+            fields.push(this.generateSimpleCombo());
             //fields.push(this.generateSelectionList());
+        } else if (this.mode === 'list' || this.mode === 'multiplelist') {
+            fields.push(this.generateSelectionList());
+        } else {
+            // * Default is an item selector with 2 lists
             fields.push(this.getKeywordsItemSelector());
         }
-        //this.add(fields);
+        
         
         // Choose transformation field
         var r = this.generateTransformationSelector();
-        fields.push(r);
+        if (r !== null) {
+            fields.push(r);
+        }
         
-        var p = new Ext.Panel({
-            layout: 'vbox',
-            border: false,
-            height: 300,    // TODO : autoHeight ?
-            items: fields
-        });
-        this.add(p);
+        this.items = fields;
+        
+        GeoNetwork.editor.ConceptSelectionPanel.superclass.initComponent.call(this);
     }
 });
 
+/** api: method[GeoNetwork.editor.ConceptSelectionPanel.init]
+ *  
+ *  Search for div element with class thesaurusPickerCfg 
+ *  in order to initialize the concept selection widget.
+ *  
+ *  .. code-block:: javascript
+ *  
+ *    <div class="thesaurusPickerCfg" id="thesaurusPicker_444" 
+ *       config="{{mode: '', thesaurus:'', keywords: [''], 
+ *       transformations: [], 
+ *       transformation: ''}}"/>
+ */
 GeoNetwork.editor.ConceptSelectionPanel.init = function () {
     var thesaurusPickers = Ext.DomQuery.select('.thesaurusPickerCfg');
     
@@ -532,10 +643,12 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                 config = thesaurusPicker.getAttribute("config"),
                 jsonConfig = Ext.decode(config);
             var p = Ext.get(id + '_panel');
+            
             if (p.dom.innerHTML === '') {
                 var panel = new GeoNetwork.editor.ConceptSelectionPanel({
                     catalogue: catalogue,
                     thesaurus: jsonConfig.thesaurus,
+                    mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
@@ -548,10 +661,11 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
 };
 
 
-/**
- * Create a thesaurus selection menu which when clicking on a 
- * thesaurus build a XML fragment, add a form element with the fragment
- * and trigger the save action of the editor.
+/** api: method[GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector]
+ *  
+ *  Create a thesaurus selection menu which when clicking on a 
+ *  thesaurus build a XML fragment, add a form element with the fragment
+ *  and trigger the save action of the editor.
  */
 GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, type, formBt) {
     // Get the list of thesaurus
@@ -603,7 +717,6 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
         }
     });
 };
-
 
 /** api: xtype = gn_editor_conceptselectionpanel */
 Ext.reg('gn_editor_conceptselectionpanel', GeoNetwork.editor.ConceptSelectionPanel);

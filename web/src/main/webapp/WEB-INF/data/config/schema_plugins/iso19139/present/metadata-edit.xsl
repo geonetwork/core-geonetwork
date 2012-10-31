@@ -1283,18 +1283,34 @@
                                                 else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
                                                 else 'to-iso19139-keyword'"/>
 
-    <!-- TODO : retrieve from configuration -->
+    <!-- Define the list of transformation mode available.
+      TODO : retrieve from schema configuration 
+        <xsl:variable name="listOfTransformations">'to-iso19139-keyword'</xsl:variable>
+    -->
     <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
-
+    
+    <!-- Create custom widget: 
+      * '' for item selector, 
+      * 'combo' for simple combo, 
+      * 'list' for selection list, 
+      * 'multiplelist' for multiple selection list
+      
+      TODO : retrieve from schema configuration per thesaurus
+     <xsl:variable name="widgetMode" select="if (contains(gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1], 'inspire')) then 'multiplelist' else ''"/>
+      -->
+    <xsl:variable name="widgetMode" select="''"/>
+    
+    <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
-      config="{{thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
+      config="{{mode: '{$widgetMode}', thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
       }'}}"/>
     
-    <!-- Create a div which will be used for initializing the client widget -->
+    <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
     
     <!-- Create a textarea which contains the XML snippet for updates.

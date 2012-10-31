@@ -478,8 +478,10 @@ dl.xml * dd {
     -moz-border-radius: 9px;
     border-radius: 9px;
 }
-.badge.ux-mselect-selected {
-    border: 1px solid black !important;
+
+.ux-mselect-selected {
+    background-color: #767676 !important;
+    color: #FFF;
 }
 .label-success, .badge-success {
     background-color: #468847;
@@ -501,7 +503,7 @@ dl.xml * dd {
     white-space: normal;
 }
 .thesaurusPicker * fieldset {
-    border: none !important;
+    border: 1px solid #B3D4E6 !important;
 }
 .thesaurusPicker * legend {
     color: #777 !important;
