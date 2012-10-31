@@ -25,11 +25,28 @@
 		<xsl:call-template name="langId19139"/>
 	</xsl:variable>
 
-	<xsl:template match="/">
+    <xsl:template match="/">
+        <Documents>
+            <xsl:for-each select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale">
+            	<xsl:call-template name="document">
+            		<xsl:with-param name="isoLangId" select="java:threeCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))"></xsl:with-param>
+            		<xsl:with-param name="langId" select="@id"></xsl:with-param>
+            	</xsl:call-template>
+            </xsl:for-each>
+            <xsl:if test="count(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale//gmd:LanguageCode[@codeListValue = $isoDocLangId]) = 0">
+            	<xsl:call-template name="document">
+            		<xsl:with-param name="isoLangId" select="$isoDocLangId"></xsl:with-param>
+            		<xsl:with-param name="langId" select="java:twoCharLangCode(normalize-space(string($isoDocLangId)))"></xsl:with-param>
+            	</xsl:call-template>
+            </xsl:if>
+        </Documents>
+    </xsl:template>
+    
+	<!-- ========================================================================================= -->
+		<xsl:template name="document">
+  			<xsl:param name="isoLangId"/>
+  			<xsl:param name="langId"/>
 
-		<Documents>
-			<xsl:for-each select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale">
-				<xsl:variable name="langId" select="@id" />
 				<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
 				<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
 				<Document locale="{$isoLangId}">
