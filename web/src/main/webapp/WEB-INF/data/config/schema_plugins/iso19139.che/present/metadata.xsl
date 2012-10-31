@@ -14,7 +14,7 @@
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
     <xsl:include href="metadata-che-layouts.xsl"/>
-	<xsl:include href="metadata-che-fop.xsl""/>
+	<xsl:include href="metadata-che-fop.xsl"/>
 	<xsl:include href="xml-to-string.xsl"/>
   
 	<xsl:template name="iso19139.che-javascript"/>
