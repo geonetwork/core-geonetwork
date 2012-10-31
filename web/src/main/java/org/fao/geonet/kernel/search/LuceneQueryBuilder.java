@@ -666,16 +666,16 @@ public class LuceneQueryBuilder {
             analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
         }
 
-        query = constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString);
+        query = constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, _tokenizedFieldSet);
         return query;
     }
 
     static Query constructQueryFromAnalyzedString(String string, String luceneIndexField, String similarity, Query query,
-            String analyzedString) {
+            String analyzedString, Set<String> tokenizedFieldSet) {
         if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
             if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
-                if (analyzedString.contains(" ")) {
+                if (tokenizedFieldSet.contains(luceneIndexField) && analyzedString.contains(" ")) {
                     // if analyzer creates spaces (by converting ignored
                     // characters like -) then make boolean query
                     String[] terms = analyzedString.split(" ");

@@ -1110,7 +1110,7 @@ public class LuceneSearcher extends MetaSearcher {
                 analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, analyzer, tokenizedFieldSet);
             }
 
-            return LuceneQueryBuilder.constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString);
+            return LuceneQueryBuilder.constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, tokenizedFieldSet);
         }
 
     /**

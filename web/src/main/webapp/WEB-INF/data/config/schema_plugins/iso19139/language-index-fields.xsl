@@ -53,10 +53,10 @@
 					<!-- not tokenized title for sorting -->
 					<xsl:choose>
                     	<xsl:when test="normalize-space($title) = ''">
-                    		<Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
+                    		<Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
                     	</xsl:when>
                     	<xsl:otherwise>
-                    		<Field name="_title" string="{string($title)}" store="true" index="true" token="false" />
+                    		<Field name="_title" string="{string($title)}" store="true" index="true" />
                     	</xsl:otherwise>
 					</xsl:choose>
 
