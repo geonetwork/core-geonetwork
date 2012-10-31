@@ -31,6 +31,7 @@ cat.what = function() {
 	        });
 	        var catalogueField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
+	            width: 230,
 	            minChars: 0,
 	            queryParam: 'q',
 	            hideTrigger: false,
@@ -47,14 +48,14 @@ cat.what = function() {
 				url : services.getCategories,
 				rootVisible: false,
 				label: OpenLayers.i18n('Themes'),
-				width: 250
+				autoWidth: true
 			});
 			
 			var sep1 = createSep();
 			var sep2 = createSep();
 			
 			var searchField = new GeoNetwork.form.OpenSearchSuggestionTextField({
-				width: 160,
+				width: 230,
 				minChars: 2,
 				loadingText: '...',
 				fieldLabel: OpenLayers.i18n('fullTextSearch'),

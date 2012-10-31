@@ -490,14 +490,12 @@ cat.app = function() {
 			padding : 5,
 			autoScroll: true,
 			defaults : {
-				padding : 15,
-				width : 180,
 				cls : 'search_panel',
 				margins : '10 0 0 0',
 				frame : false,
 				cls : 'search-form-panel',
 				collapsedCls : 'search-form-panel-collapsed',
-				bodyStyle : 'background-color:white',
+				bodyStyle : 'background-color:white;padding:15px',
 				border : false
 			},
 			items : formItems
@@ -540,6 +538,7 @@ cat.app = function() {
 				this.advanced = true;
 			}
 		});
+		
 		return searchForm;
 	}
 	
@@ -670,7 +669,7 @@ cat.app = function() {
 					border : false,
 					frame : false,
 					minWidth : 300,
-					width : 400,
+					width : 442,
 					maxWidth : 500,
 					margins: '0 7 0 0',
 					collapsible : true,
@@ -708,6 +707,7 @@ cat.app = function() {
 							}
 							var searchPage = cookie.get('cat.search.page');
 							if (urlParameters.s_search !== undefined) {
+								searchForm.reset();
 								setHiddenField('E__owner');
 								setHiddenField('E__isHarvested');
 								setHiddenField('E_siteId');
@@ -828,10 +828,7 @@ Ext.onReady(function() {
 
 	/* Focus on full text search field */
 	Ext.getDom('E_any').focus(true);
-
-	// Should be in Search field configuration
-	Ext.get('E_any').setWidth(254);
-	Ext.get('E_any').setHeight(30);
+	Ext.get('E_any').setHeight(28);
 	
 	initShortcut();
 });

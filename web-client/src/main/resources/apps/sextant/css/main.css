@@ -71,6 +71,10 @@ table, tbody, tr, td, th {
 .search-form-panel .where-toolbar .x-toolbar {
     border: none;
 }
+.search-form-panel .where-toolbar .x-toolbar-ct {
+    padding-right:10px;
+}
+
 .search-form-panel {
 	margin-bottom: 5px;
 }
@@ -652,4 +656,20 @@ font-size: 30px;
 }
 #privileges div.privilege_header {
 	margin-top:18px;
+}
+.x-superboxselect-input input {
+	margin-top: 1px;
+	margin-bottom: 0px;
+	background-image: none;
+}
+.x-superboxselect li {
+	line-height: 12px;
+}
+.x-superboxselect-item-close {
+	top: -1px;
+}
+.sextant .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-size: 10px;
+	padding: 0;
+	padding-bottom: 2px;
 }
