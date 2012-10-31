@@ -105,7 +105,7 @@
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
       <field name="_edit" tagName="edit"/>
-      <field name="_title" tagName="title" multilingualSortField="true"/>
+      <field name="title" tagName="title" multilingualSortField="true"/>
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>

@@ -388,6 +388,8 @@
 		<xsl:param name="langId" />
 		<xsl:param name="widget" />
 		<xsl:param name="validator" />
+
+		<xsl:variable name="twoLetterCode" select="substring($langId,0,4)"/>		
 		<xsl:choose>
 			<xsl:when test="gmd:PT_FreeText">
 				<xsl:for-each select="gmd:PT_FreeText">
@@ -396,7 +398,7 @@
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="rows" select="$rows" />
 						<xsl:with-param name="cols" select="$cols" />
-						<xsl:with-param name="langId" select="$langId" />
+						<xsl:with-param name="langId" select="$twoLetterCode" />
 						<xsl:with-param name="validator" select="$validator" />
 					</xsl:call-template>
 				</xsl:for-each>
@@ -408,7 +410,7 @@
 						<xsl:with-param name="schema" select="$schema" />
 						<xsl:with-param name="rows" select="$rows" />
 						<xsl:with-param name="cols" select="$cols" />
-						<xsl:with-param name="langId" select="$langId" />
+						<xsl:with-param name="langId" select="$twoLetterCode" />
 						<xsl:with-param name="validator" select="$validator" />
 					</xsl:call-template>
 				</xsl:for-each>
