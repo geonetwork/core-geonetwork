@@ -680,6 +680,8 @@ public class SearchManager {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE, "indexing metadata, opening Writer from index");
         
+        deleteIndexDocument(id, false);
+        
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
         
@@ -743,6 +745,8 @@ public class SearchManager {
     public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title) throws Exception {
         
+        deleteIndexDocument(id, true);
+        
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
@@ -779,7 +783,22 @@ public class SearchManager {
 
 		_spatial.writer().delete(txt);
 	}
+	
+	private void deleteIndexDocument(String id, boolean group) throws Exception {
+	    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
+	    }
+        if (group) {
+            deleteGroup("_id", id);
+        } else {
+            delete("_id", id);
+        }
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
+        }
 
+	}
+	
     /**
      * TODO javadoc.
      *
@@ -797,13 +816,7 @@ public class SearchManager {
                                    List<Element> moreFields, String isTemplate, String title, 
                                    boolean group) throws Exception
      {
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
-		if (group) deleteGroup("_id", id);
-		else delete("_id", id);
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-            Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
-
+        
 		Element xmlDoc;
 
 		// check for subtemplates
