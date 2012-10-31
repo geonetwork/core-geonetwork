@@ -771,6 +771,10 @@ public class JeevesEngine
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }
 	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
 
+	public ServiceManager getServiceManager() {
+		return serviceMan;
+	}
+
 	public ProfileManager getProfileManager() { return serviceMan.getProfileManager(); }
 }
 

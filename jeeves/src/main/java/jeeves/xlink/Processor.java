@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import jeeves.JeevesJCS;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.local.LocalServiceRequest;
+import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -70,8 +73,8 @@ public final class Processor {
    /**
     * Resolve all XLinks of the input XML document.
     */
-	public static Element processXLink(Element xml) {
-		searchXLink(xml, ACTION_RESOLVE);
+	public static Element processXLink(Element xml, ServiceContext srvContext) {
+		searchXLink(xml, ACTION_RESOLVE, srvContext);
 		searchLocalXLink(xml, ACTION_RESOLVE);
 		return xml;
 	}
@@ -81,7 +84,7 @@ public final class Processor {
     * Uncache all XLinks child of the input XML document.
     */
 	public static Element uncacheXLink(Element xml) {
-		searchXLink(xml, ACTION_UNCACHE);
+		searchXLink(xml, ACTION_UNCACHE, null);
 		return xml;
 	}
 
@@ -90,7 +93,7 @@ public final class Processor {
     * Remove all XLinks child of the input XML document.
     */
 	public static Element removeXLink(Element xml) {
-		searchXLink(xml, ACTION_REMOVE);
+		searchXLink(xml, ACTION_REMOVE, null);
 		searchLocalXLink(xml, ACTION_REMOVE);
 		return xml;
 	}
@@ -100,7 +103,7 @@ public final class Processor {
     * Detach all XLinks child of the input XML document.
     */
 	public static Element detachXLink(Element xml) {
-		searchXLink(xml, ACTION_DETACH);
+		searchXLink(xml, ACTION_DETACH, null);
 		searchLocalXLink(xml, ACTION_DETACH);
 		return xml;
 	}
@@ -147,14 +150,15 @@ public final class Processor {
 
 	//--------------------------------------------------------------------------
 	/** Resolves an xlink */
-	public static Element resolveXLink(String uri) throws IOException, JDOMException, CacheException {
+	public static Element resolveXLink(String uri, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 		String idSearch = null;
-		return resolveXLink(uri, idSearch);
+		return resolveXLink(uri, idSearch, srvContext);
 	}
 
 	//--------------------------------------------------------------------------
-	/** Resolves an xlink */
-	public static Element resolveXLink(String uri, String idSearch) throws IOException, JDOMException, CacheException {
+	/** Resolves an xlink 
+	 */
+	public static Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 
 		cleanFailures();
 		if (failures.size()>MAX_FAILURES) {
@@ -168,18 +172,28 @@ public final class Processor {
 			Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
 			
 			try {
-				URL url = new URL(uri.replaceAll("&amp;", "&"));
+				if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
+					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+					request.setDebug(false);
+					if(request.getLanguage() == null) {
+						request.setLanguage(srvContext.getLanguage());
+					}
+					request.setInputMethod(InputMethod.GET);
+					remoteFragment = srvContext.execute(request);
+				} else {
+					URL url = new URL(uri.replaceAll("&amp;", "&"));
+					
+					URLConnection conn = url.openConnection();
+					conn.setConnectTimeout(1000);
 				
-				URLConnection conn = url.openConnection();
-				conn.setConnectTimeout(1000);
-			
-				BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-				try {
-					remoteFragment = Xml.loadStream(in);
-                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                        Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
-				} finally {
-					in.close();
+					BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
+					try {
+						remoteFragment = Xml.loadStream(in);
+	                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
+	                        Log.debug(Log.XLINK_PROCESSOR,"Read:\n"+Xml.getString(remoteFragment));
+					} finally {
+						in.close();
+					}
 				}
 			} catch (Exception e) {	// MalformedURLException, IOException
 				synchronized(Processor.class) {
@@ -272,7 +286,7 @@ public final class Processor {
     *            #ACTION_REMOVE, #ACTION_RESOLVE}).
     *
     */
-	private static void searchXLink(Element md, String action) {
+	private static void searchXLink(Element md, String action, ServiceContext srvContext) {
 		List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
         if(Log.isDebugEnabled(Log.XLINK_PROCESSOR)) Log.debug(Log.XLINK_PROCESSOR, "returned "+xlinks.size()+" elements");
@@ -289,7 +303,7 @@ public final class Processor {
 			}
 
 			if (hash != 0) { // skip local xlinks eg. xlink:href="#details"
-				doXLink(hrefUri, idSearch, xlink, action);
+				doXLink(hrefUri, idSearch, xlink, action, srvContext);
 			}
 		}
 	}
@@ -356,7 +370,7 @@ public final class Processor {
 	}
 
 	//--------------------------------------------------------------------------
-	private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action) {
+	private static void doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
 		Element element = xlink.getParent();
 
         // Don't process XLink for operatesOn
@@ -385,13 +399,13 @@ public final class Processor {
 					}
 				} else {
 					try {
-						Element remoteFragment = resolveXLink(hrefUri, idSearch);
+						Element remoteFragment = resolveXLink(hrefUri, idSearch, srvContext);
 						
 						// Not resolved in cache or using href
 						if (remoteFragment == null)
 							return;
 						
-						searchXLink(remoteFragment, action);
+						searchXLink(remoteFragment, action, srvContext);
 						
 						if (show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
 							// replace this element with the fragment
