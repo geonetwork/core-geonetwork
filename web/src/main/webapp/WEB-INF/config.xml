@@ -425,6 +425,11 @@
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
+		<service name="service-not-allowed">
+			<output sheet="service-not-allowed.xsl">
+				
+			</output>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

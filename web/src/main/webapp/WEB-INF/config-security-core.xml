@@ -145,7 +145,7 @@
 
 	<bean id="accessDeniedHandler"
 		class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="/accessDenied.htm" />
+		<property name="errorPage" value="/accessDenied.jsp" />
 	</bean>
 
 <!-- TODO remember me.  
