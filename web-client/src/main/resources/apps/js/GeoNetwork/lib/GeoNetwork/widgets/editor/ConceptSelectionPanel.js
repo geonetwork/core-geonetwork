@@ -712,7 +712,12 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                     floating: true,
                     items: items
                 });
-                contextMenu.showAt([Ext.get(formBt).getX(), Ext.get(formBt).getY() + Ext.get(formBt).getHeight()]);
+                
+                // Add the contextual menu to the binocular control
+                // Keep the current control as far as the old ThesaurusSelection is not deprecated.
+                // TODO improve element control by using only the + control
+                var binocular = Ext.get(formBt);
+                contextMenu.showAt([binocular.getX(), binocular.getY() + binocular.getHeight()]);
             }
         }
     });
