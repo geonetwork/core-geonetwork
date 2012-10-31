@@ -23,30 +23,39 @@
 
 package org.fao.geonet.guiservices.metadata;
 
+import java.util.List;
+
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
-import org.jdom.Element;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 
-import java.util.Iterator;
-import java.util.Set;
+import org.jdom.Element;
 
 //=============================================================================
 
-/** Service used to return all categories in the system
+/** Service used to return most recently updated records using Lucene
   */
 
 public class GetLatestUpdated implements Service
 {
-	private int     _maxItems;
-	private long    _timeBetweenUpdates;
+	private int      			 _maxItems;
+	private long    			 _timeBetweenUpdates;
 
-	private Element _response;
-	private long    _lastUpdateTime;
+	private Element        _response;
+	private long    			 _lastUpdateTime;
+
+	private ServiceConfig  _config;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -58,9 +67,9 @@ public class GetLatestUpdated implements Service
 	{
 		String sMaxItems           = config.getValue("maxItems",           "10");
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
-
-		_maxItems           = Integer.parseInt(sMaxItems);
 		_timeBetweenUpdates = Integer.parseInt(sTimeBetweenUpdates) * 1000;
+		_maxItems           = Integer.parseInt(sMaxItems);
+		_config             = config;
 	}
 
 	//--------------------------------------------------------------------------
@@ -71,43 +80,45 @@ public class GetLatestUpdated implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+
+		 Element _request = new Element(Jeeves.Elem.REQUEST);
+		_request.addContent(new Element("query").setText(""));
+		_request.addContent(new Element("sortBy").setText("changeDate"));
+		_request.addContent(new Element("from").setText("1"));
+		_request.addContent(new Element("to")  .setText(""));
+
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			AccessManager am = gc.getAccessManager();
-
+			SearchManager searchMan = gc.getSearchmanager();
+			DataManager dataMan = gc.getDataManager();
 			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-			Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress());
+			_request.getChild("to").setText(""+_maxItems);
 
-			// only get public metadata (group 1: internet) viewable (operation O: view)
+			_response = new Element(Jeeves.Elem.RESPONSE);
 
-			String query = "SELECT DISTINCT id, changeDate FROM Metadata, OperationAllowed "+
-								"WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";
-
-			String aux = "";
-
-			for (String grpId : groups)
-				aux += " OR groupId="+grpId;
-
-			query += aux.substring(4);
-			query += ") ORDER BY changeDate DESC";
-
-			Element result = dbms.select(query);
-
-			_response = new Element("response");
-			int numItems = 0;
-
-			for (Iterator iter = result.getChildren().iterator(); iter.hasNext() && numItems++ < _maxItems; )
-			{
-				Element rec = (Element)iter.next();
-				String  id = rec.getChildText("id");
-
-				Element md = gc.getDataManager().getMetadata(context, id, false);
-				_response.addContent(md);
+			// perform the search and return the results read from the index
+			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+			searcher.search(context, _request, _config);
+			List<String> uuids = ((LuceneSearcher)searcher).getAllUuids(_maxItems);
+			for (String uuid : uuids) {
+				try {
+					String id = dataMan.getMetadataId(dbms, uuid);
+					boolean forEditing = false;
+					boolean withValidationErrors = false;
+					boolean keepXlinkAttributes = false;
+					Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors);
+					_response.addContent(md);
+				} catch (Exception e) {
+					Log.error(Geonet.SEARCH_ENGINE, "Exception in latest update searcher "+e.getMessage());
+					e.printStackTrace();
+				}
 			}
+
 			_lastUpdateTime = System.currentTimeMillis();
 		}
+
 		return (Element)_response.clone();
 	}
 }
