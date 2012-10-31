@@ -57,7 +57,7 @@ GeoNetwork.Util = {
         OpenLayers.Lang.setCode(openlayerLang);
         var s = document.createElement("script");
         s.type = 'text/javascript';
-        s.src = baseUrl + "/js/ext/src/locale/ext-lang-" + openlayerLang + ".js";
+        s.src = baseUrl + "/ext/src/locale/ext-lang-" + openlayerLang + ".js";
         document.getElementsByTagName("head")[0].appendChild(s);
     },
     /** api: method[setLang] 

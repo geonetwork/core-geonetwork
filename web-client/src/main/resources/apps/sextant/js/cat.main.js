@@ -817,7 +817,7 @@ Ext.onReady(function() {
 	if(cat.language == 'fr') cat.language = 'fre';
 	else if(cat.language == 'en') cat.language = 'eng';
 
-	GeoNetwork.Util.setLang(cat.language, '..');
+	GeoNetwork.Util.setLang(cat.language, cat.imgPath?cat.imgPath+'js/lib':'../js');
 
 	Ext.QuickTips.init();
 	cat.imgPath=cat.imgPath?cat.imgPath:'';
