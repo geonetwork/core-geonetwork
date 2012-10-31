@@ -1080,4 +1080,6 @@
     <custom-elementset-add>Eleman Ekle</custom-elementset-add>
 
 
+	<monitor>Monitor</monitor>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>
