@@ -9,6 +9,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
     exclude-result-prefixes="xlink">
 	
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
@@ -21,10 +22,7 @@
 
 	<xsl:param name="includeInfo"/>
 
-    <xsl:variable name="UPPER">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-    <xsl:variable name="LOWER">abcdefghijklmnopqrstuvwxyz</xsl:variable>
-
-	<xsl:variable name="langId" select="substring(translate(concat('#',/*/gmd:language/gco:CharacterString), $LOWER, $UPPER),1,3)" />
+	<xsl:variable name="langId" select="concat('#',upper-case(java:twoCharLangCode(/*/gmd:language/gco:CharacterString)))" />
 	
 	<xsl:template match="/root">
 		<xsl:choose>
