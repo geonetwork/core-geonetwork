@@ -91,6 +91,7 @@ public class List implements Service
             sortBy = "username";
         }
 
+        boolean findingShared = true;
         String profilesParam = params.getChildText(Params.PROFILE);
         String extraWhere;
         switch(type) {
@@ -107,6 +108,7 @@ public class List implements Service
             extraWhere = " profile='"+Geocat.Profile.SHARED+"'";
             break;
         default:
+        	findingShared = false;
             if( profilesParam!=null && profileSet.contains(profilesParam)){
                 profileSet.retainAll(Collections.singleton(profilesParam));
             }
@@ -137,7 +139,7 @@ public class List implements Service
 
 		java.util.List<Element> alToRemove = new ArrayList<Element>();
 
-		if (!session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+		if (!findingShared && !session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
 			for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
 			{
 				Element elRec = (Element) i.next();
