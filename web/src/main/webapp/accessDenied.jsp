@@ -1,8 +1,9 @@
 <%@page import="java.util.Enumeration"%><html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 	<head>
+	<% String baseURL = "/geonetwork"; %>
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache,no-store">
-		<link rel="stylesheet" type="text/css" href="geonetwork.css">
+		<link rel="stylesheet" type="text/css" href="<%= baseURL %>/geonetwork.css">
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
@@ -20,7 +21,8 @@
 				language = request.getHeader(found);
 			}
 			%>
-			var userLang = "<%= language %>"
+			var userLang = '<%= language %>'
+			var referer = window.location.pathname
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 
@@ -43,7 +45,7 @@
 				userLang = "ita";
 			}
 	
-		  	window.location="srv/"+userLang+"/login.form";
+		  	window.location="<%= baseURL %>/srv/"+userLang+"/service-not-allowed?referer="+referer;
 		}
 		</script>
 	</head>
