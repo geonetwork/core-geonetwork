@@ -416,7 +416,7 @@
     <xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@xlink:show|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@xlink:show|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@xlink:show|@gco:isoType|@gco:nilReason"/>
-	<xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
+	<xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:addedObj" priority="2"/>
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->

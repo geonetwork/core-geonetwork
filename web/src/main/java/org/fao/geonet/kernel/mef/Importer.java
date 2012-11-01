@@ -108,6 +108,7 @@ public class Importer {
 
 			public void handleMetadataFiles(File[] Files, int index)
 					throws Exception {
+                String lastUnknownMetadataFolderName=null;
                 if(Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "Multiple metadata files");
 
@@ -129,7 +130,7 @@ public class Importer {
                             if (metadataSchema.equals(preferredSchema)) {
                                 if(Log.isDebugEnabled(Geonet.MEF)) {
                                     Log.debug(Geonet.MEF, "Found metadata file "
-                                        + file.getName()
+                                        + file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator + file.getName()
                                         + " with preferred schema ("
                                         + preferredSchema + ").");
                                 }
@@ -139,12 +140,18 @@ public class Importer {
                             else {
                                 if(Log.isDebugEnabled(Geonet.MEF)) {
                                     Log.debug(Geonet.MEF, "Found metadata file "
-                                        + file.getName() + " with known schema ("
+                                        + file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator + file.getName()
+                                        + " with known schema ("
                                         + metadataSchema + ").");
                                 }
                                 metadataValidForImport = metadata;
                             }
                         } catch (NoSchemaMatchesException e) {
+                            // Important folder name to identify metadata should be ../../
+                            lastUnknownMetadataFolderName=file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator;
+                            Log.debug(Geonet.MEF, "No schema match for "
+                                + lastUnknownMetadataFolderName + file.getName() 
+                                + ".");
                             continue;
                         }
                     }
@@ -157,8 +164,8 @@ public class Importer {
 							.debug(Geonet.MEF,
 									"Importing metadata with valide schema but not preferred one.");
 					handleMetadata(metadataValidForImport, index);
-                } else
-					throw new BadFormatEx("No valid metadata file found.");
+                } else 
+					throw new BadFormatEx("No valid metadata file found" + ((lastUnknownMetadataFolderName==null)?"":(" in " + lastUnknownMetadataFolderName)) + ".");
 			}
 
 			// --------------------------------------------------------------------

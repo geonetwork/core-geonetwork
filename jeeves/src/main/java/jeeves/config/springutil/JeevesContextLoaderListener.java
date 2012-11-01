@@ -39,17 +39,19 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 
 	private void processBeanFactoryPostProcessorParam(
 			ConfigurableWebApplicationContext applicationContext, String param) {
-		if (param != null) {
-		for (String className: param.split(",")) {
-			try {
-				Class<?> class1 = Class.forName(className.trim());
-				BeanFactoryPostProcessor postProcessor = (BeanFactoryPostProcessor) class1.newInstance();
-				applicationContext.addBeanFactoryPostProcessor(postProcessor);
-			} catch (Throwable e) {
-				Log.error(Log.JEEVES, "Unable to create Bean Post processor");
-			}
-		}
-		}
+        if (param != null) {
+            for (String className : param.split(",")) {
+                if (!className.trim().isEmpty()) {
+                    try {
+                        Class<?> class1 = Class.forName(className.trim());
+                        BeanFactoryPostProcessor postProcessor = (BeanFactoryPostProcessor) class1.newInstance();
+                        applicationContext.addBeanFactoryPostProcessor(postProcessor);
+                    } catch (Throwable e) {
+                        Log.error(Log.JEEVES, "Unable to create Bean Post processor");
+                    }
+                }
+            }
+        }
 	}
 	
 	@Override
