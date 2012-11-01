@@ -161,6 +161,13 @@ public class LuceneIndexLanguageTracker {
     public synchronized void close() throws IOException {
         List<Throwable> errors = new ArrayList<Throwable>(5);
 
+        for (GeonetworkNRTManager manager: searchManagers.values()) {
+            try {
+                manager.close();
+            } catch (Throwable e) {
+                errors.add(e);
+            }
+        }
         for (TrackingIndexWriter writer: trackingWriters.values()) {
             try {
                 writer.getIndexWriter().close(true);
@@ -176,13 +183,13 @@ public class LuceneIndexLanguageTracker {
             } catch (Throwable e) {
                 errors.add(e);
             }
-        }        
-        for (GeonetworkNRTManager manager: searchManagers.values()) {
-            try {
-                manager.close();
-            } catch (Throwable e) {
-                errors.add(e);
+        }
+        
+        if(!errors.isEmpty()) {
+            for (Throwable throwable : errors) {
+                Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
             }
+            throw new RuntimeException("There were errors while closing lucene indices");
         }
     }
     public synchronized void optimize() throws CorruptIndexException, IOException {

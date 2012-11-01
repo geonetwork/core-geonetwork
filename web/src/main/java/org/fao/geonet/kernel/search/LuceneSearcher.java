@@ -193,7 +193,8 @@ public class LuceneSearcher extends MetaSearcher {
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
 		performQuery(getFrom()-1, getTo(), buildSummary);
-
+		updateSearchRange(request);
+		
 		SettingInfo si = new SettingInfo(srvContext);
 		if (si.isSearchStatsEnabled()) {
 			if (_sm.getLogAsynch()) {

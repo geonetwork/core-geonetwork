@@ -21,11 +21,12 @@
 	<xsl:include href="convert/functions.xsl"/>
 
 	<!-- ========================================================================================= -->
-	<xsl:variable name="isoDocLangId">
-		<xsl:call-template name="langId19139"/>
-	</xsl:variable>
+    <xsl:variable name="isoDocLangId">
+      <xsl:call-template name="langId19139"/>
+    </xsl:variable>
 
     <xsl:template match="/">
+
         <Documents>
             <xsl:for-each select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale">
             	<xsl:call-template name="document">
@@ -46,44 +47,42 @@
 		<xsl:template name="document">
   			<xsl:param name="isoLangId"/>
   			<xsl:param name="langId"/>
-
-				<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
-				<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
-				<Document locale="{$isoLangId}">
-
-					<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
-					<Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
-
-					<xsl:variable name="poundLangId" select="concat('#',$langId)" />
-					<xsl:variable name="_defaultTitle">
-						<xsl:call-template name="defaultTitle">
-							<xsl:with-param name="isoDocLangId" select="$isoLangId"/>
-						</xsl:call-template>
-					</xsl:variable>
-					<xsl:if test="$isoLangId!=$isoDocLangId">
-						<!-- not tokenized title for sorting -->
-						<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
-					</xsl:if>
-					<xsl:variable name="title"
-						select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
-
+		
+			<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
+			<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
+			<Document locale="{$isoLangId}">
+		
+				<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
+				<Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
+		
+				<xsl:variable name="poundLangId" select="concat('#',$langId)" />
+				<xsl:variable name="_defaultTitle">
+					<xsl:call-template name="defaultTitle">
+						<xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:if test="$isoLangId!=$isoDocLangId">
 					<!-- not tokenized title for sorting -->
-					<xsl:choose>
-                    	<xsl:when test="normalize-space($title) = ''">
-                    		<Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
-                    	</xsl:when>
-                    	<xsl:otherwise>
-                    		<Field name="_title" string="{string($title)}" store="true" index="true" />
-                    	</xsl:otherwise>
-					</xsl:choose>
-
-					<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
-						<xsl:with-param name="langId" select="$poundLangId"/>
-					</xsl:apply-templates>
-
-				</Document>
-			</xsl:for-each>
-		</Documents>
+					<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
+				</xsl:if>
+				<xsl:variable name="title"
+					select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+		
+				<!-- not tokenized title for sorting -->
+				<xsl:choose>
+                 	<xsl:when test="normalize-space($title) = ''">
+                 		<Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
+                 	</xsl:when>
+                 	<xsl:otherwise>
+                 		<Field name="_title" string="{string($title)}" store="true" index="true" />
+                 	</xsl:otherwise>
+				</xsl:choose>
+		
+				<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
+					<xsl:with-param name="langId" select="$poundLangId"/>
+				</xsl:apply-templates>
+		
+			</Document>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->

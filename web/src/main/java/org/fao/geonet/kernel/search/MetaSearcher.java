@@ -88,21 +88,21 @@ public abstract class MetaSearcher
 	}
 
 	protected int readFrom(Element request) {
-        return loadParam(request, "from");
+        return loadParam(request, "from", _from);
     }
     
     protected int readTo(Element request) {
-        return loadParam(request, "to");
+        return loadParam(request, "to", _to);
     }
 
-    private int loadParam(Element request, String name) {
+    private int loadParam(Element request, String name, int defaultVal) {
         String sFrom = request.getChildText(name);
 		if (sFrom != null)
 		{
 			try { return Integer.parseInt(sFrom); }
 			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad '"+name+"' parameter: " + sFrom); }
 		}
-		return _from;
+		return defaultVal;
     }
 	
 	protected int getFrom()     { return _from; }
