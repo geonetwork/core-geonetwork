@@ -71,7 +71,7 @@
 	<!--
 	online resources: download
 	-->
-	<xsl:template match="linkage[parent::onLineSrc and matches(following-sibling::protocol,'^WWW:DOWNLOAD-.*-http--download$') and following-sibling::orName]">
+	<xsl:template match="linkage[parent::onLineSrc and matches(following-sibling::protocol,'^WWW:DOWNLOAD-.*-http--download.*') and following-sibling::orName]">
 		<linkage>
 			<xsl:choose>
 				<xsl:when test="/root/env/config/downloadservice/simple='true'">

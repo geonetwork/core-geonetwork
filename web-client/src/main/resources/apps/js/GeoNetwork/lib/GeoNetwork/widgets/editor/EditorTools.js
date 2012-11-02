@@ -469,7 +469,7 @@ function checkForFileUpload(fref, pref){
     var protocolSelect = protoSelect.value;  // Selected protocol
     var protocolIn = protoIn.value;          // currently set protocol
     //Can protocol be a file
-    var regex = new RegExp( '^WWW:DOWNLOAD-.*-http--download$');
+    var regex = new RegExp( '^WWW:DOWNLOAD-.*-http--download.*');
     var protocolDownloadSelect = (regex.test(protocolSelect));
     var protocolDownloadIn = (regex.test(protocolIn));
 
