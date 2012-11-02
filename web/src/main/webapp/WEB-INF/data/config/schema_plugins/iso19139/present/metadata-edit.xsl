@@ -2513,7 +2513,7 @@
         </xsl:apply-templates>
         
         <xsl:choose>
-          <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' 
+          <xsl:when test="matches(gmd:protocol[1]/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download$') 
             and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
             <xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
               <xsl:with-param name="access" select="'private'"/>
@@ -2663,7 +2663,7 @@
   <!-- online resources: download -->
   <!-- ============================================================================= -->
 
-  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]" priority="2">
+  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download$') and gmd:name]" priority="2">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
@@ -2765,7 +2765,7 @@
         <xsl:variable name="pref" select="../gmd:protocol/gco:CharacterString/geonet:element/@ref"/>
         <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref|gmx:MimeFileType/geonet:element/@ref"/>
         <xsl:variable name="value" select="gco:CharacterString|gmx:MimeFileType"/>
-        <xsl:variable name="button" select="starts-with($protocol,'WWW:DOWNLOAD') and contains($protocol,'http') and normalize-space($value)=''"/>
+        <xsl:variable name="button" select="matches($protocol,'^WWW:DOWNLOAD-.*-http--download$') and normalize-space($value)=''"/>
 
         <xsl:call-template name="simpleElementGui">
           <xsl:with-param name="schema" select="$schema"/>
@@ -3002,7 +3002,7 @@
 
         <!-- The old links still in use by some systems. Deprecated -->
         <xsl:choose>
-          <xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and not(contains($linkage,$download_check))">
+          <xsl:when test="matches($protocol,'^WWW:DOWNLOAD-.*-http--download$') and not(contains($linkage,$download_check))">
             <link type="download"><xsl:value-of select="$linkage"/></link>
           </xsl:when>
           <xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
