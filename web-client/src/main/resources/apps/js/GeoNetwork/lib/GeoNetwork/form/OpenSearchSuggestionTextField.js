@@ -73,8 +73,8 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
 
     defaultConfig: {
         hideLabel: true,
+        autoWidth: true,
         startwith: false,
-        width: 400,
         minChars: 2,
         loadingText: '...',
         hideTrigger: true,

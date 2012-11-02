@@ -1959,6 +1959,11 @@
 			<option show="-" value="DB:ORACLE">ORACLE database table</option>
 			<option show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
 			<option show="y" value="RBNB:DATATURBINE">Data Turbine</option>
+			<option show="-" value="DB">Database</option>
+			<option show="y" value="WFS">OGC-WFS Web Feature Service (ver 1.0.0)</option>
+			<option show="-" value="FILE">File</option>
+			<option show="-" value="COPYFILE">Copy file</option>
+			<option show="y" value="WCS">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
 			<option show="-" value="UKST">Unknown Service Type</option>
 
 		</helper>

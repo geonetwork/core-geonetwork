@@ -1,0 +1,726 @@
+#gn-modalWindow {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	margin: 0px;
+	color: #064377;
+	background-color: #fff;
+	font-size: 100%;
+}
+#gn-modalWindow div {
+	margin: 0px;
+}
+
+#gn-modalWindow table, #gn-modalWindow tr, #gn-modalWindow td {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	padding: 0px;
+	vertical-align: top; /*ETJ*/
+}
+
+#gn-modalWindow td.padded-content-box {
+	border-style: solid;
+	border-width: 1px;
+	padding: 4px;
+}
+
+#gn-modalWindow th {
+	text-align: left;
+	border-width: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	font-size: 0.9em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+#gn-modalWindow img {
+	border-width: 0px;
+}
+
+#gn-modalWindow h1 {
+	text-transform: uppercase;
+	font: bold 10px Verdana, Arial, Geneva, Helvetica, sans-serif;
+}
+
+#gn-modalWindow h2 {
+	font-size: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+#gn-modalWindow a {
+	/*
+	color: #266377;
+	text-decoration: none;
+	*/
+	color: #064377;
+}
+
+#gn-modalWindow td.padded a {
+  font-weight: bolder;
+}
+
+#gn-modalWindow a:hover
+{
+	text-decoration: underline;
+}
+
+#gn-modalWindow a.no-help:hover {
+	text-decoration: none;
+}
+
+#gn-modalWindow.arrow{
+	background-image: url('images/arrow.gif');
+
+	background-repeat:no-repeat;
+
+	padding:0 0 3px 7px;
+	/*
+	text-align: left;
+	text-transform: uppercase;
+	font-weight: bold;
+	*/
+}
+
+/*******************************************************************************
+content
+*******************************************************************************/
+
+#gn-modalWindow.padded-content {
+	/*background: #e7edf5;*/
+	padding: 5px;
+}
+
+#gn-modalWindow.text-aligned-left {
+    text-align: left;
+}
+
+#gn-modalWindow.hit {
+	border-top: 1px solid silver;
+	padding-top: 10px;	
+	margin-top: 10px;
+}
+
+#gn-modalWindow.results_header {
+	margin-top: 5px; 
+	margin-bottom: 5px; 
+    overflow-x: hidden;	
+	overflow-y: auto;	
+	width: 100%;
+}
+
+#gn-modalWindow td.green-content {
+	color: #ffffff;
+	background: #beb800;
+	font-weight: bold;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+#gn-modalWindow td.blue-content {
+	color: #ffffff;
+	background: #266397;
+	/*
+	background-image: url('images/blue-background.gif');
+	*/
+	height: 30px;
+}
+
+#gn-modalWindow input.content, #gn-modalWindow select.content, #gn-modalWindow textarea.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+#gn-modalWindow textarea.md {
+    resize: both !important;
+}
+
+#gn-modalWindow.checkbox_results {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	margin-right: 2px;
+}
+
+#gn-modalWindow select.banner-content {
+	font-size: 7pt !important;
+}
+
+#gn-modalWindow input.error, #gn-modalWindow textarea.error, #gn-modalWindow select.error {
+    color: #FF2211 !important;
+    border: 3px solid #FF2211 !important;
+}
+
+#gn-modalWindow select.lang_selector {
+	max-width: 70px;
+}
+
+#gn-modalWindow a.content, #gn-modalWindow button.content {
+	font-family: Verdana;
+	font-size: 9pt;
+	color: #064377;
+	max-width: 400px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	background-color: #e7e7e7;
+	text-shadow: gray 2px 2px 3px;
+}
+
+#gn-modalWindow.downloadsummary {
+  margin: 0px;
+}
+
+#gn-modalWindow.downloadsummary button.content, #gn-modalWindow button.dscontent {
+  font-family: Verdana;
+  font-size: 9pt;
+  font-weight: bold;
+  min-width: 10.2em;
+  width: 10.2em;
+  max-width: 400px;
+  cursor: pointer;
+  cursor: hand;
+  border: 1px solid #064367; /* moved here from tr since IE accepts it only here */
+  text-shadow: 2px 1px 1px #062347 !important;
+  color: #FDFDFD;
+  background-color: #4784b8;
+}
+
+#gn-modalWindow button.dscontent {
+  min-width: 12.2em;
+  width: 12.2em;
+  max-width: 600px;
+}
+
+#gn-modalWindow button.content img.icon {
+    width: 15px;
+    height: 15px;
+    align: absmiddle;
+    margin-right: 2px;
+}
+
+#gn-modalWindow a.content {
+    padding: 1px 10px 1px 10px;
+}
+
+#gn-modalWindow a.content:hover {
+    text-decoration: none
+}
+
+#gn-modalWindow input.content-small, #gn-modalWindow button.content-small {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	min-width: 150px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+}
+
+#gn-modalWindow td.padded p {
+    padding-bottom:2px;
+}
+
+#gn-modalWindow fieldset.metadata-block {
+    margin-top: 30px;
+	border-top: 3px #266397 solid;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right: 3px #266397 solid;
+}
+
+#gn-modalWindow fieldset.metadata-block * fieldset {
+	margin-top: 2px;
+	border: 1px #266397 solid;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	padding: 2px;
+}
+
+#gn-modalWindow fieldset.metadata-block legend {
+    text-transform:uppercase;
+	font-weight: bold;
+	font-size:large;
+}
+
+#gn-modalWindow fieldset.metadata-block * legend {
+    font-size:medium;
+    text-transform: none;
+}
+
+#gn-modalWindow fieldset.metadata-block * fieldset * legend {
+    font-size:small;
+    text-transform: none;
+}
+
+
+#gn-modalWindow legend span div {
+    font-size:x-small;
+    text-transform: none;
+}
+
+#gn-modalWindow td.separator {
+	background: #ffffff;
+	height: 4px;
+	width: 4px;
+}
+
+#gn-modalWindow td.dots {
+	width: 0;
+	height: 0;
+	border-top: 1px inset #266397;
+}
+
+#gn-modalWindow th.padded, #gn-modalWindow td.padded {
+	padding: 2px;
+}
+
+#gn-modalWindow th.padded-center {
+	text-align:  center;
+	padding: 2px;
+}
+
+#gn-modalWindow a.image:hover
+{
+	background: transparent;
+}
+
+#gn-modalWindow td.spacer {
+	height: 16px;
+}
+
+#gn-modalWindow div.track  {
+	background: #064377;
+	margin-top:2px;
+}
+
+#gn-modalWindow div.handle {
+	background: #beb800;
+	cursor:move;
+}
+
+#gn-modalWindow.dots 
+{
+	height: 1px;
+	width: 1px;
+	border-left: 1px solid #266397;
+}
+
+/*******************************************************************************
+Ajax styles
+*******************************************************************************/
+
+#gn-modalWindow.tooltip
+{
+	position: absolute;
+	background-color: #f0f0ff;
+	border:  solid black 1px;
+	padding: 4px;
+}
+
+#gn-modalWindow.tipRow
+{
+	margin: 10px;
+	padding: 15px;
+}
+
+#gn-modalWindow.tipHeader
+{
+	text-align:    left;
+	font-weight:   bold;
+	padding-left:  2px;
+	padding-right: 2px;
+}
+
+#gn-modalWindow.tipCell
+{
+	text-align: left;
+}
+
+#gn-modalWindow.policyGroup 
+{
+	margin: 5px;
+	border-style:dashed;
+	border-width:0px 0px 1px 0px;
+}
+
+/*******************************************************************************
+Other action buttons
+*******************************************************************************/
+
+#gn-modalWindow.oAcEle {
+    border: 1px solid #266397;
+    background-color: #e7e7e7;
+    position: absolute;
+    opacity: .9;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.9;
+    z-index:1;
+}
+
+#gn-modalWindow.oAcEle button {
+    text-align:left;
+    font-family: Verdana;
+    color: #064377;
+    font-size: 8pt;
+    cursor: pointer;
+    cursor: hand;
+    width:98%;
+    border-width: 0px;
+}
+#gn-modalWindow.oAcEle button:hover {
+	text-decoration: underline;
+}
+
+/*******************************************************************************
+Ajax Keyword list
+*******************************************************************************/
+#gn-modalWindow div.keywordSelectorFrame {
+        background: #fff;
+		position: absolute;
+		padding: 2px;
+		left: 10px;
+		top: 140px;
+}
+
+#gn-modalWindow div.keywordSelector {
+	    height: expression( this.scrollHeight > 201 ? "200px" : "auto" ); /* sets min-height for IE */
+}
+
+#gn-modalWindow div.keywordSelector {
+        background: #fff;
+        border: 4px solid #064377;
+		margin: 2px;
+		padding: 5px;
+        cursor: pointer;
+        overflow: auto;
+		max-height: 200px;
+		max-width: 300px;
+		width: 300px;
+}
+
+#gn-modalWindow div.keywordList {
+        background: #fff;
+        cursor: pointer;
+        overflow: auto;
+		max-height: 200px;
+}
+
+
+#gn-modalWindow div.keywordList ul {
+        border: 1px solid #888;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        list-style-type: circle;
+        cursor: pointer;
+        overflow: hidden;
+}
+
+div.keywordList ul li {
+        margin: 0;
+        padding: 1px;
+        cursor: pointer;
+	 	list-style-type:none;
+}
+
+div.keywordList ul li.selected {
+        background-color: #beb800;
+        cursor: pointer;
+}
+
+div.keywordList ul strong.highlight {
+        color: #800;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+}
+
+div.keywordList ul li span {
+	display :none;
+}
+
+div.keywordResults ul {
+        margin: 3px;
+        padding: 0;
+		border-style:dashed;
+		border-width:1px 0px 0px 1px;
+		list-style-type:none;
+}
+
+div.keywordResults ul li {
+        margin: 4px;
+		list-style-type:none;
+}
+
+span.searchHelpFrame {
+        background: #fff;
+    position: relative;
+    border-style: solid;
+    margin: 2px;
+    padding: 2px;
+}
+
+div.legend {
+        margin: 3px;
+        padding: 3px;
+		border-style:dashed;
+		border-width:1px 1px 1px 1px;
+		font-style: italic;
+}
+div.broader {
+        background-color: #8ba4c5;
+}
+div.related {
+        background-color: #d5dfec;
+}
+div.narrower {
+        background-color: #f7faff;
+}
+
+div.important {
+	width: 70%;
+	border-style: inset;
+	border-width: 1px;
+	text-align: justify;
+	margin: 15px;
+	padding: 10px;
+}
+
+div.suggestion {
+	font-style:italic;
+	padding: 2px;
+}
+
+div.keywordResults ul li.selected {
+        background-color: #beb800;
+        cursor: pointer;
+}
+
+
+
+#gn-modalWindow div.modalbox{
+    padding: 3px;
+}
+
+#gn-modalWindow div.modalbox * label {
+    padding-left: 5px;
+}
+
+#gn-modalWindow div.modalbox * li {
+    font-size: small
+}
+
+#gn-modalWindow div.modalbox * li * li {
+    font-size: smaller
+}
+
+#gn-modalWindow div.row {
+  margin-bottom: 5px;
+}
+
+#gn-modalWindow span.labelField {
+    display: table-cell;
+    display: inline-block;
+    width: 180px;
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
+#gn-modalWindow span.labelFieldDisabled {
+    display: table-cell;
+    display: inline-block;
+    width: 180px;
+    vertical-align: top;
+    font-size: 0.9em;
+    color: #b4b4b4;
+}
+
+#gn-modalWindow span.labelFieldSmall {
+    display: table-cell;
+    display: inline-block;
+    width: 60px;
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
+#gn-modalWindow div.inspireThemeTitle {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+#gn-modalWindow span.inspireThemeElement {
+    /*display: table-cell;
+    display: inline-block; */
+	vertical-align:top;
+}
+
+#gn-modalWindow.advsearchinspire {
+	margin-top: 5px;
+}
+
+#gn-modalWindow.xlinked {
+     font-style: italic;
+}
+
+
+
+/*******************************
+ Loading application panel
+ *******************************/
+#gn-modalWindow #loading {
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    margin-left: -45px;
+    padding: 2px;
+    z-index: 20001;
+    height: auto;
+    border: 1px solid #ccc;
+}
+
+#gn-modalWindow #loading a {
+    color: #225588;
+}
+
+#gn-modalWindow #loading .loading-indicator {
+    background: white;
+    color: #444;
+    font: bold 13px tahoma, arial, helvetica;
+    padding: 10px;
+    margin: 0;
+    height: auto;
+}
+
+#gn-modalWindow #loading .loading-indicator img {
+    margin-right: 8px;
+    float: left;
+    vertical-align: top;
+}
+
+#gn-modalWindow #loading-msg {
+    font: normal 10px arial, tahoma, sans-serif;
+}
+
+/*******************************
+ Content panel in ExtJS layout
+ *******************************/
+#gn-modalWindow  #content ul {
+    list-style:disc outside none;
+    padding-left: 20px;
+}
+
+#gn-modalWindow #content p {
+    margin: 1em 0px;
+}
+
+#gn-modalWindow #content h1, #gn-modalWindow #content h2, #gn-modalWindow #content h3 {
+    margin-bottom: 6px;
+    margin-top: 8px;
+}
+
+#gn-modalWindow div.table-container {
+	  width: 80%;
+	  margin: auto;
+		padding:0;
+		display: table;
+}
+
+#gn-modalWindow div.table-row  {
+   display: table-row;
+}
+
+#gn-modalWindow div.table-left {
+		width: 33%;
+		padding:1em;
+		display: table-cell;
+}
+
+#gn-modalWindow div.table-right {
+		width: 33%;
+		padding:1em;
+    display: table-cell;
+}
+
+#gn-modalWindow div.table-middle {
+		width: 33%;
+		padding: 1em;
+    display: table-cell;
+}
+
+#gn-modalWindow.Bt{
+	float: left;
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 15px;
+}
+
+#gn-modalWindow.rightBt{
+	background-image: url(images/bullet_arrow_right.png);
+}
+#gn-modalWindow.downBt{
+	background-image: url(images/bullet_arrow_down.png);
+}
+
+#gn-modalWindow fieldset .attributes {
+	float: none;
+	width: 200px !important;
+	border-width: 0px !important;
+}
+
+#gn-modalWindow img.configTitle {
+	width:20px;
+	vertical-align: middle;
+}
+
+#gn-modalWindow td.configOption {
+	width: 50px;
+	text-align: right;
+}
+#gn-modalWindow img.configOption {
+	width: 15px;
+	vertical-align: middle;
+}
+
+#gn-modalWindow td.configTitle {
+	font-size: 120%;
+	padding: 2px;
+}
+
+#gn-modalWindow div#privileges {
+	max-height: 650px;
+}
+#gn-modalWindow.logo-wrap div img {
+  max-height: 80px;
+  max-width: 80px;
+}
+#gn-modalWindow.logo-wrap {
+  height: 90px;
+  width: 90px;
+  float: left;
+  margin: 4px;
+  margin-right: 0;
+  padding: 5px;
+  border: 1px solid #fff;
+}
+#gn-modalWindow.logo-wrap span {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+}
+#gn-modalWindow.logo-over {
+  border: 1px solid #dddddd;
+}
+#gn-modalWindow.logo-selected {
+  border: 1px solid #99bbe8;
+  background-color: #dddddd;
+  padding: 4px;
+}
+

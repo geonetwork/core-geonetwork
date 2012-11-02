@@ -25,6 +25,7 @@ cat.lang.en = {
     ,"modalRedirect": "Access directly to the "
     ,"wmsPortlet": "Geoviewer"
     ,"downloadPortlet": "Basket"
+    ,'chooseGroup': 'Select a catalog'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

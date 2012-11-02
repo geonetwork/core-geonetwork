@@ -24,6 +24,9 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     
     /** form element name to match with Geonetwork search **/
     name: 'E_category',
+    
+    /** Tells if the tree has been loaded from the categories service */
+    loaded: false,
         
     defaultConfig: {
         border: false,
@@ -57,6 +60,9 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         	callback: this.loadCategories,
         	scope: this
         });
+        
+        this.addEvents('afterload');
+        
         if(this.label) {
 	        this.on('afterrender', function(c) {
 	        	c.body.insertFirst({
@@ -109,6 +115,11 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
     
+    afterLoad: function() {
+    	this.loaded = true;
+    	this.fireEvent('afterload', this);
+    },
+    
     /**
      * Add getName function as ext FormField elements
      */
@@ -122,6 +133,10 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      * ex : 'Imagery/Optic or Imagery/Radar'
      */
     getSearchedCat: function() {
+    	if(!this.loaded) {
+    		return cookie.get('cat.searchform.categorytree');
+    	}
+    	
     	var selNodes = this.getChecked();
     	var res = '';
     	
@@ -134,8 +149,8 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     			}
     		}
     	});
-    	
-    	Ext.util.Cookies.set('cat.searchform.categorytree', res);
+
+    	cookie.set('cat.searchform.categorytree', res);
     	return res;
     },
     
@@ -145,17 +160,18 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     restoreSearchedCat: function() {
     	
     	// node is created with expanded:true, then collapse here to allow to check hidden nodes
-    	this.root.collapse(true, false);
+    	this.getRootNode().collapse(true, false);
     	
-    	var c = Ext.util.Cookies.get('cat.searchform.categorytree');
+    	var c = cookie.get('cat.searchform.categorytree');
     	var checkedCat = c ? c.split(' or ') : [];
-    	
     	Ext.each(checkedCat, function(label) {
     		var node = this.root.findChild('category', label, true);
     		if(node) {
     			node.getUI().toggleCheck(true);
     		}
     	},this);
+    	
+    	this.afterLoad();
     },
     
     /**

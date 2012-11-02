@@ -149,11 +149,12 @@ cat.app = function() {
 							},
 							scope : this
 						} ],
-						ctCls: 'view-win',
+						cls: 'view-win',
 						title : OpenLayers.i18n('mdEditor'),
 						id : 'editorWindow',
 						layout : 'fit',
 						modal : false,
+						closeAction: 'destroy',
 						items : this.editorPanel,
 						closeAction : 'hide',
 						collapsible : true,
@@ -296,7 +297,7 @@ cat.app = function() {
 			displaySerieMembers : true,
 			displayContextualMenu : false,
 			autoHeight: true,
-			autoScroll : true,
+			autoScroll : false,
 			templates : {
 	            SIMPLE: GeoNetwork.Templates.SIMPLE,
 	            THUMBNAIL: GeoNetwork.Templates.THUMBNAIL,
@@ -396,11 +397,23 @@ cat.app = function() {
 		// Add hidden fields to be use by quick metadata links from the admin
 		// panel (eg. my metadata).
 		var ownerField = new Ext.form.TextField({
+			id: 'txtfield-E__owner',
 			name : 'E__owner',
 			hidden : true
 		});
 		var isHarvestedField = new Ext.form.TextField({
+			id: 'txtfield-E__isHarvested',
 			name : 'E__isHarvested',
+			hidden : true
+		});
+		var catalogueField = new Ext.form.TextField({
+			id: 'txtfield-E_siteId',
+			name : 'E_siteId',
+			hidden : true
+		});
+		var catalogueField = new Ext.form.TextField({
+			id: 'txtfield-E_template',
+			name : 'E_template',
 			hidden : true
 		});
 
@@ -408,7 +421,7 @@ cat.app = function() {
 		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
 				undefined);
 		optionsPanel.setVisible(false);
-		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel);
+		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel, ownerField, isHarvestedField, catalogueField);
 
 		// Add advanced mode criteria to simple form - end
 		var advandcedField = [];
@@ -457,7 +470,7 @@ cat.app = function() {
 						'<div class="btnText"></div>',
 						'<div class="btnRight">&#160;</div>',
 						'</div>'),
-						buttonSelector: '.btnText',
+						buttonSelector: '.btnText'
 				}),
 			searchCb : function() {
 
@@ -477,14 +490,12 @@ cat.app = function() {
 			padding : 5,
 			autoScroll: true,
 			defaults : {
-				padding : 15,
-				width : 180,
 				cls : 'search_panel',
 				margins : '10 0 0 0',
 				frame : false,
 				cls : 'search-form-panel',
 				collapsedCls : 'search-form-panel-collapsed',
-				bodyStyle : 'background-color:white',
+				bodyStyle : 'background-color:white;padding:15px',
 				border : false
 			},
 			items : formItems
@@ -509,6 +520,7 @@ cat.app = function() {
 			cpt.on('advancedmode',function(cpt) {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(true);
+					if(!Ext.isIE) // temp
 					whatForm.body.removeClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
@@ -516,6 +528,7 @@ cat.app = function() {
 			cpt.on('simplemode',function() {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(false);
+					if(!Ext.isIE) //temp
 					whatForm.body.addClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
@@ -525,6 +538,7 @@ cat.app = function() {
 				this.advanced = true;
 			}
 		});
+		
 		return searchForm;
 	}
 	
@@ -537,10 +551,11 @@ cat.app = function() {
                 }
             };
             win = new Ext.Window({
-                id: 'modalWindow',
+            	id: 'gn-modalWindow',
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,
+                border: false,
                 modal: true,
                 draggable: false,
                 movable: false,
@@ -557,14 +572,11 @@ cat.app = function() {
                         callback: cb || defaultCb,
                         scope: win
                     },
-                    border: false,
                     frame: false,
                     autoScroll: true
                 })
             });
             win.show(this);
-            //win.alignTo(Ext.getBody(), 't-t');
-            
         }
     }
 	
@@ -574,17 +586,14 @@ cat.app = function() {
 	 * 
 	 **/
 	function fitHeightToBody(o) {
-		var portletContainer = Ext.Element.select('.portlet-content');
-		var height=0
-		if(portletContainer.getCount()==2) {
+		var portletContainer = Ext.Element.select('#column-1 .portlet-body');
+		var catalogDiv = Ext.Element.select('#catalogTab');
+		var height=0;
+		if(portletContainer.getCount()>0 && catalogDiv.getCount()==1) {
 			var d = Ext.get('main-viewport');
 			height=Ext.getBody().getViewSize().height -d.getY() - 20;
 		}
-		else if (portletContainer.getCount()>1) {
-			height=400;
-			o.setHeight(400);
-		}
-		else if (portletContainer.getCount()==0) {
+		else {
 			height=Ext.getBody().getViewSize().height-50;
 		}
 		o.setHeight(height);
@@ -648,18 +657,21 @@ cat.app = function() {
 			var viewport = new Ext.Panel({
 				renderTo: 'main-viewport',
 				layout : 'border',
+				border: false,
 				id : 'vp',
 				cls : 'cat_layout',
 				items : [ {
 					region : 'west',
 					id : 'west',
 					bodyCssClass: 'west-panel-body',
+					cls: 'sxt-layout-border-white',
 					split : true,
-					border : true,
+					border : false,
 					frame : false,
 					minWidth : 300,
-					width : 400,
+					width : 442,
 					maxWidth : 500,
+					margins: '0 7 0 0',
 					collapsible : true,
 					hideCollapseTool : true,
 					collapseMode : 'mini',
@@ -672,6 +684,8 @@ cat.app = function() {
 					id : 'center',
 					split : true,
 					autoScroll: true,
+					cls: 'sxt-layout-border-white',
+					margins: '0 0 0 4',
 					tbar : tBar,
 					items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
 						autoEl : {
@@ -685,14 +699,35 @@ cat.app = function() {
 				listeners: {
 					afterrender: {
 						fn: function(o){
+							
+							function setHiddenField(name) {
+								if(urlParameters['s_'+name]) {
+									searchForm.getComponent('txtfield-'+name).setValue(urlParameters['s_'+name]);
+								}
+							}
 							var searchPage = cookie.get('cat.search.page');
-							if(searchPage && searchPage > 0) {
+							if (urlParameters.s_search !== undefined) {
+								searchForm.reset();
+								setHiddenField('E__owner');
+								setHiddenField('E__isHarvested');
+								setHiddenField('E_siteId');
+								setHiddenField('E_template');
+								search();
+							} else if(searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
 								search();
 							}
 							fitHeightToBody(o);
+							
+							var loadDiv = Ext.get('loading');
+							if(loadDiv) {
+								loadDiv.remove();
+								Ext.get('loading-mask').fadeOut({
+									remove : true
+								});
+							}
 						}
-					},
+					}
 				}
 			});
 			
@@ -734,16 +769,6 @@ cat.app = function() {
 					}
 				});
 			});
-
-			// Hack to run search after all app is rendered within a sec ...
-			// It could have been better to trigger event in
-			// SearchFormPanel#applyState
-			// FIXME
-			if (urlParameters.s_search !== undefined) {
-				setTimeout(function() {
-					searchForm.fireEvent('search');
-				}, 500);
-			}
 		},
 
 		getCatalogue : function() {
@@ -780,7 +805,7 @@ cat.app = function() {
 			
 			tBar.changeMode(true);
 			Ext.get('load-spinner').hide();
-		},
+		}
 	}
 }
 
@@ -792,18 +817,9 @@ Ext.onReady(function() {
 	if(cat.language == 'fr') cat.language = 'fre';
 	else if(cat.language == 'en') cat.language = 'eng';
 
-	GeoNetwork.Util.setLang(cat.language, '..');
+	GeoNetwork.Util.setLang(cat.language, cat.imgPath?cat.imgPath+'js/lib':'../js');
 
 	Ext.QuickTips.init();
-	var loadDiv = Ext.get('loading');
-	if(loadDiv) {
-		setTimeout(function() {
-			loadDiv.remove();
-			Ext.get('loading-mask').fadeOut({
-				remove : true
-			});
-		}, 250);
-	}
 	cat.imgPath=cat.imgPath?cat.imgPath:'';
 	
 	app = new cat.app();
@@ -812,10 +828,7 @@ Ext.onReady(function() {
 
 	/* Focus on full text search field */
 	Ext.getDom('E_any').focus(true);
-
-	// Should be in Search field configuration
-	Ext.get('E_any').setWidth(254);
-	Ext.get('E_any').setHeight(30);
+	Ext.get('E_any').setHeight(28);
 	
 	initShortcut();
 });

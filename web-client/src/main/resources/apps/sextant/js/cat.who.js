@@ -15,6 +15,7 @@ cat.who = function() {
 	        });
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
+	            width: 230,
 	            minChars: 0,
 	            queryParam: 'q',
 	            hideTrigger: false,
@@ -24,7 +25,6 @@ cat.who = function() {
 	            valueField: 'value',
 	            displayField: 'value',
 	            valueDelimiter: ' or ',
-//	            tpl: tpl,
 	            fieldLabel: OpenLayers.i18n('orgs')
 	        });
 				
@@ -36,9 +36,6 @@ cat.who = function() {
 			    collapsed: true,
 			    defaultType: 'checkbox',
 			    layout: 'form',
-			    defaults: {
-			        width: 160
-			    },
 			    listeners: {
 			    	'afterrender': function(o) {
 			    		o.header.on('click', function() {

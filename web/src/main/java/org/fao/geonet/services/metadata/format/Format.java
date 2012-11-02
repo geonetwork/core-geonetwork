@@ -59,7 +59,6 @@ public class Format extends AbstractFormatService {
         ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, "xsl", null);
-        String loaderParam = Util.getParam(params, Params.LOADER, Loader.SHOW.name());
 
         File formatDir = getAndVerifyFormatDir("xsl", xslid);
         File viewXslFile = new File(formatDir, VIEW_XSL_FILENAME);
@@ -73,7 +72,7 @@ public class Format extends AbstractFormatService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         String url = new SettingInfo(gc.getSettingManager()).getSiteUrl() + context.getBaseUrl();
         
-        Loader loader = Loader.fromString(loaderParam);
+        Loader loader = Loader.fromParam(params);
         
         if(loader.equals(Loader.HTTP) && !config.isRemoteAllowed()) {
         	throw new IllegalArgumentException("The bundle is not allowed to use remote http request. Set the property loader.http.permitRemoteRequests to true if you want to allow it.");

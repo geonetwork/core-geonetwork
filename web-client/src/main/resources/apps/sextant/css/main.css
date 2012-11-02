@@ -49,6 +49,7 @@ table, tbody, tr, td, th {
 	font-size: 12px;
 	font-weight:700;
 	cursor: pointer;
+	border-radius: 4px 4px 4px 4px;
 }
 .search-panel .search-panel-header .x-panel-header-text{
 	padding-left:10px;
@@ -70,6 +71,10 @@ table, tbody, tr, td, th {
 .search-form-panel .where-toolbar .x-toolbar {
     border: none;
 }
+.search-form-panel .where-toolbar .x-toolbar-ct {
+    padding-right:10px;
+}
+
 .search-form-panel {
 	margin-bottom: 5px;
 }
@@ -144,7 +149,38 @@ table, tbody, tr, td, th {
 }
 
 .cat_layout, .cat_layout div div.x-border-layout-ct {
-	background-color: grey;
+	background-color: #DEDEDE;
+}
+
+.cat_layout .x-layout-split-west .x-layout-mini {
+	background-image: url("../images/icons/vertical_handle.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin-left:1px;
+    width:11px;
+}
+
+.view-win .help {
+	background-image: none;
+}
+.cat_layout .x-layout-cmini-west .x-layout-mini {
+	background-image: url("../images/icons/vertical_handle.gif");
+}
+.cat_layout .x-layout-split, .cat_layout .x-layout-collapsed {
+	width:2px;
+	background-color: transparent;
+}
+.cat_layout #center.sxt-layout-border-white {
+	border-width: 1px;
+	border-color: white;
+	padding-left: 5px;
+	border-radius: 4px 4px 4px 4px;
+}
+.cat_layout #west.sxt-layout-border-white {
+	border-width: 1px;
+	border-color: white;
+	border-radius: 4px 4px 4px 4px;
+	padding-right:5px;
 }
 
 .search-panel-body {
@@ -394,7 +430,7 @@ div.md-action-menu {
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
     color: #333333;
-    padding: 6px 1em 6px 1em;
+    padding: 6px 12px 6px 12px;
     font-family: Arial,Helvetica,sans-serif;
     font-size:   12px;
     font-weight: 700;
@@ -428,7 +464,10 @@ div.md-action-menu span.icon{
 }
 
 .result-list li.md-full div.one-elt span.list-icon {
-	visibility: hidden;
+	display:none;
+}
+.result-list li.md-full div.one-elt {
+	padding: 6px 22px 6px 22px !important;
 }
 
 .result-list li.md-full div.downloadMenu span.icon{
@@ -443,6 +482,7 @@ div.md-action-menu span.list-icon {
     background-position: 0 -2px;
 }
 .result-list li.md-full div.unabled {
+	filter: alpha(opacity = 35) !important;
 	opacity: 0.35 !important;
 	background-image: none !important;
 	cursor: default !important;
@@ -609,4 +649,37 @@ div.x-tip-body div.help {
  */
 .myocean * .gmdalternateTitle span.buttons {
     display: none !important;
+}
+.sextant .titleContainer span {
+font-size: 30px;
+}
+.sextant div#header div.titleContainer div.subtitle {
+	font-size: 20px;
+}
+
+#privileges thead th p {
+	position: absolute;
+	margin-top: -20px;
+}
+#privileges thead th.padded-center p {
+	padding-left:6px;
+}
+#privileges div.privilege_header {
+	margin-top:18px;
+}
+.x-superboxselect-input input {
+	margin-top: 1px;
+	margin-bottom: 0px;
+	background-image: none;
+}
+.x-superboxselect li {
+	line-height: 12px;
+}
+.x-superboxselect-item-close {
+	top: -1px;
+}
+.sextant .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-size: 10px;
+	padding: 0;
+	padding-bottom: 2px;
 }

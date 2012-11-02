@@ -9,9 +9,10 @@ cat.where = function() {
 				title : OpenLayers.i18n('Where'),
 				autoHeight : true,
 				autoWidth : true,
-				collapsible : false,
+				collapsible : true,
 				collapsed : false,
 				defaultType : 'checkbox',
+				padding : '10px 45px 20px 45px',
 				layout: 'fit',
 				items : GeoNetwork.util.SearchFormTools.getSimpleMap(
 						GeoNetwork.map.BACKGROUND_LAYERS,
@@ -25,9 +26,17 @@ cat.where = function() {
 							},
 							mousePosition: false,
 							bodyStyle: 'border: 1px solid #D0D0D0',
-							width : 300,
+							autoWidth: true,
 							height : 280
-						})
+						}),
+				listeners: {
+					'afterrender': function(o) {
+						o.header.on('click', function() {
+							if(o.collapsed) o.expand();
+							else o.collapse();
+						});
+					}
+				}
 			});
 		}
 	}

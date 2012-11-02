@@ -210,7 +210,11 @@ GeoNetwork.map.ExtentMap = function(){
             
             // reproject if another projection is used
             if (mainProjCode !== wgsProj) {
-            	boundsForMap.transform(new OpenLayers.Projection(wgsProjCode), new OpenLayers.Projection(mainProjCode));
+            	var p = new OpenLayers.Projection(mainProjCode);
+            	if(mainProjCode == 'EPSG:900913') {
+            		p.proj = null;
+            	}
+            	boundsForMap.transform(new OpenLayers.Projection(wgsProjCode), p);
             }
         } else {
         	// Update bounding box from input fields which
@@ -233,12 +237,20 @@ GeoNetwork.map.ExtentMap = function(){
             
             // Reproject bounds to map projection if needed
             if (toProj !== mainProjCode) {
-            	boundsForMap.transform(new OpenLayers.Projection(toProj), new OpenLayers.Projection(mainProjCode));
+            	var p = new OpenLayers.Projection(mainProjCode);
+            	if(mainProjCode == 'EPSG:900913' && toProj == 'EPSG:4326') {
+            		p.proj = null;
+            	}
+            	boundsForMap.transform(new OpenLayers.Projection(toProj), p);
             }
             
             // Reproject coordinates to WGS84 to set lat long in coordinates hidden inputs
             if (toProj !== wgsProjCode) {
-                bounds.transform(new OpenLayers.Projection(toProj), new OpenLayers.Projection(wgsProjCode));
+            	var p = new OpenLayers.Projection(toProj);
+            	if(toProj == 'EPSG:900913') {
+            		p.proj = null;
+            	}
+                bounds.transform(p, new OpenLayers.Projection(wgsProjCode));
             } 
             // Set main projection coordinates
             Ext.get("_" + wsen[0]).dom.value = bounds.left;
@@ -287,6 +299,9 @@ GeoNetwork.map.ExtentMap = function(){
             var bounds = OpenLayers.Bounds.fromString(l + "," + b + "," + r + "," + t);
             
             if (!toProj.equals(wgsProj)) {
+            	if(toProj.getCode() == 'EPSG:900913') {
+            		toProj.proj = null;
+            	}
                 bounds.transform(wgsProj, toProj);
             }
             if (w !== "") {
@@ -762,6 +777,9 @@ GeoNetwork.map.ExtentMap = function(){
                 });
                 
                 if (children.length > 0) {
+                	if(mainProj.getCode() == 'EPSG:900913') {
+                		mainProj.proj = null;
+                	}
                     readFeature(children[0].innerHTML, {
                         format: 'WKT',
                         zoomToFeatures: true,

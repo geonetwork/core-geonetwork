@@ -147,7 +147,7 @@ public enum Loader {
 
 				if (uuid == null && id == null) {
 					throw new IllegalArgumentException("Either '" + Params.UUID
-							+ "' or '" + Params.ID + "'is a required parameter");
+							+ "' or '" + Params.ID + " is a required parameter");
 				}
 			}
 			
@@ -209,6 +209,18 @@ public enum Loader {
 			// if loader parameter is null or doesn't match with any enumeration
 			catch(Exception e) {
 				throw new IllegalArgumentException(Params.LOADER+" "+name+" is not a valid loader for the formatter");
+			}
+			return l;
+		}
+		
+		public static Loader fromParam(Element params) {
+			String urlParam = Util.getParam(params, Params.URL, null);
+			Loader l = null;
+			if(urlParam == null) {
+				l = Loader.SHOW;
+			}
+			else {
+				l = Loader.HTTP;
 			}
 			return l;
 		}

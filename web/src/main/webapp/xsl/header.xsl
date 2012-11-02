@@ -7,6 +7,8 @@
 	main html header
 	-->
 	<xsl:template name="header">
+		<xsl:param name="css" select="'geonetwork.css'"/>
+		
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 
 		<!-- title -->
@@ -66,7 +68,7 @@
 		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- stylesheet -->
-		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/{$css}"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		<xsl:apply-templates mode="css" select="/"/>
 

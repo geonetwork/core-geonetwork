@@ -42,9 +42,14 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 		            this.curMenu = this.createLinksMenu(idx, this, node, type);
 		            if(this.curMenu) {
 		            	this.curMenu.showAt([menuElt.getX(), menuElt.getY() + menuElt.getHeight()]);
+		            	this.ownerCt.ownerCt.body.on('scroll', function(e,t,o){
+		            		this.curMenu.hide();
+		            	}, this, {
+		            		single: true
+		            	});
 		            }
         		}
-	        }.bind(this));
+	        }, this);
         }
     },
     
@@ -159,7 +164,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             listeners: {
             	mouseout: {
             		fn: function(m) {
-            			//m.hide();
+//            			m.hide();
             		}
             	}
             }
@@ -235,12 +240,13 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                     this.add(this.editAction);
                     this.add(this.deleteAction);
                     this.add(this.duplicateAction);
-                    this.add(this.createChildAction);
                     this.add(this.adminAction);
+                    this.add(this.categoryAction);
+                    this.add(this.createChildAction);
                     this.add(this.statusAction);
                     this.add(this.versioningAction);
-                    this.add(this.categoryAction);
-                },
+                    
+                }
             });
         } else {
             this.contextMenu.setRecord(record);
@@ -249,6 +255,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     },
     
 	initComponent: function(){
+		
 		this.addListener('mouseenter', function(dv, idx, node, e){
             this.linkMenuInit(idx, node, 'wms');
             this.linkMenuInit(idx, node, 'download');

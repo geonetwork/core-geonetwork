@@ -520,7 +520,7 @@
   <sequence>Séquence</sequence>
 	<groupManagement>Gestion des groupes</groupManagement>
 	<groupManDes>Ajouter/Modifier/Supprimer et visualiser les groupes</groupManDes>
-	<groups>Groupes</groups>
+	<groups>Catalogues</groups>
 	<harvestingManagement>Gestion du moissonnage</harvestingManagement>
 	<harvestingManDes>Ajouter/modifier/supprimer/lancer/arrêter les moissons (récupération de métadonnées depuis un n&#339;ud distant)</harvestingManDes>
 	<help>Aide</help>

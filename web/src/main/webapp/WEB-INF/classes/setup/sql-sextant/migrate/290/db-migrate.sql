@@ -500,3 +500,23 @@ UPDATE operationsdes SET label='Edit' WHERE iddes=2 AND langid='eng';
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
 
+INSERT INTO StatusValues VALUES  (0,'unknown','y');
+INSERT INTO StatusValues VALUES  (1,'draft','y');
+INSERT INTO StatusValues VALUES  (2,'approved','y');
+INSERT INTO StatusValues VALUES  (3,'retired','y');
+INSERT INTO StatusValues VALUES  (4,'submitted','y');
+INSERT INTO StatusValues VALUES  (5,'rejected','y');
+
+INSERT INTO StatusValuesDes VALUES (0,'fre','Inconnu');
+INSERT INTO StatusValuesDes VALUES (1,'fre','Brouillon');
+INSERT INTO StatusValuesDes VALUES (2,'fre','Validé');
+INSERT INTO StatusValuesDes VALUES (3,'fre','Retiré');
+INSERT INTO StatusValuesDes VALUES (4,'fre','A valider');
+INSERT INTO StatusValuesDes VALUES (5,'fre','Rejeté');
+
+INSERT INTO StatusValuesDes VALUES (0,'eng','Unknown');
+INSERT INTO StatusValuesDes VALUES (1,'eng','Draft');
+INSERT INTO StatusValuesDes VALUES (2,'eng','Approved');
+INSERT INTO StatusValuesDes VALUES (3,'eng','Retired');
+INSERT INTO StatusValuesDes VALUES (4,'eng','Submitted');
+INSERT INTO StatusValuesDes VALUES (5,'eng','Rejected');

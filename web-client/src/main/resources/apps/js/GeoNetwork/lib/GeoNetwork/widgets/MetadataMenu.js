@@ -157,6 +157,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.categoryAction = new Ext.Action({
             text: OpenLayers.i18n('categories'),
+            iconCls : 'category',
             //iconCls : 'md-mn-copy',
             handler: function(){
                 var id = this.record.get('id');
