@@ -26,9 +26,6 @@
     <xsl:variable name="isoDocLangId">
       <xsl:call-template name="langId19139"/>
     </xsl:variable>
-    <xsl:variable name="locales">
-      
-    </xsl:variable>
 
     <xsl:template match="/">
 

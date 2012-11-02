@@ -24,6 +24,8 @@
 package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.JeevesClientEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -124,7 +126,9 @@ public class Export implements Service {
                     .getSelection(SelectionManager.SELECTION_METADATA);
         }
 
-
+		if(uuids.size() > 50) {
+			throw new BadParameterEx("You have selected "+uuids.size()+" for export.  You are allowed a maximum of 50 records to be exported with a single request", null);
+		}
 		// MEF version 1 only support one metadata record by file.
 		// Uuid parameter MUST be set and add to selection manager before
 		// export.
