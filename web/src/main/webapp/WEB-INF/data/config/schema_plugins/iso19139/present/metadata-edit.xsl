@@ -2817,10 +2817,10 @@
       <xsl:with-param name="text">
         <table width="100%"><tr>
           <xsl:variable name="ref" select="geonet:element/@ref"/>
-          <td width="70%">
-            <xsl:value-of select="string(.)"/>
-          </td>
+          <xsl:variable name="value" select="string(.)"/>
+          <td width="70%"><xsl:value-of select="$value"/></td>
           <td align="right">
+            <input type="hidden" id="_{$ref}" value="{$value}"/>
             <button type="button" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del.new','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button>
             <xsl:if test="$geo">
               <xsl:call-template name="iso19139GeoPublisherButton">

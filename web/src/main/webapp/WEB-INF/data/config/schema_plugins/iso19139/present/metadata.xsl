@@ -3081,8 +3081,10 @@
 			<xsl:with-param name="text">
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
-					<td width="70%"><xsl:value-of select="string(.)"/></td>
+					<xsl:variable name="value" select="string(.)"/>
+					<td width="70%"><xsl:value-of select="$value"/></td>
 					<td align="right">
+						<input type="hidden" id="_{$ref}" value="{$value}"/>
 						<button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button>
 						<xsl:call-template name="iso19139GeoPublisherButton">
 							<xsl:with-param name="access" select="$access"></xsl:with-param>

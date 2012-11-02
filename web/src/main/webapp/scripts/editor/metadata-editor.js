@@ -561,20 +561,28 @@ function doEditorAlert(divId, imgId)
 
 
 // called when protocol select field changes in metadata form
-function checkForFileUpload(fref, pref)
-{
-	var fileName = $('_'+fref);     // the file name input field
+function checkForFileUpload(fref, pref) {
+	//protocol object
 	var protoSelect = $('s_'+pref); // the protocol <select>
 	var protoIn = $('_'+pref);        // the protocol input field to be submitted
+	//protocol value
+	var protocolSelect = protoSelect.value;
+	var protocolIn = protoIn.value;
+	//Can protocol be a file
+	var protocolDownloadSelect = (protocolSelect.startsWith('WWW:DOWNLOAD') && protocolSelect.indexOf('-http--download')>0);
+	var protocolDownloadIn = (protocolIn.startsWith('WWW:DOWNLOAD') && protocolIn.indexOf('-http--download')>0);
 
-	var fileUploaded = (fileName != null && fileName.value.length > 0);
-    var protocol = protoSelect.value;
-	var protocolDownload = (protocol.startsWith('WWW:DOWNLOAD') && protocol.indexOf('http')>0);
+	// This is just the input field that may contain the filename - it is not a guaranteed filename
+	// The input field is assumed to be one of 2 fields. 
+	//    If the gmd:name is used then it will be this input field
+	//    If the gmx:filename is used then it will be a hidden input field 
+	var possibleFileNameObj = $('_'+fref);     // the file name input field
+	var possibleFileUploaded = (possibleFileNameObj != null && possibleFileNameObj.value.length > 0);
 
 	// don't let anyone change the protocol if a file has already been uploaded 
-	// unless its between downloaddata and downloadother
-	if (fileUploaded) {
-		if (!protocolDownload ) {
+	// unless the old and the new are downloadable.
+	if (possibleFileUploaded) {
+		if (protocolDownloadIn && !protocolDownloadSelect) {
 			alert(translate("errorChangeProtocol"));
 			// protocol change is not ok so reset the protocol value
 			protoSelect.value = protoIn.value; 
@@ -590,7 +598,7 @@ function checkForFileUpload(fref, pref)
 	finput = $('di_'+fref);
 	fbuttn = $('db_'+fref);
     
-	if (protocolDownload) {
+	if (protocolDownloadSelect) {
 		if (finput != null) finput.hide();
 		if (fbuttn != null) fbuttn.show();
 	} else {
