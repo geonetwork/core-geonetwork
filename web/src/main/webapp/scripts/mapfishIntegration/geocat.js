@@ -1497,9 +1497,20 @@ var geocat = {
             var id = q.selectValue("identifier", record);
             var bboxes = q.select("BoundingBox", record);
             for (var j = 0; j < bboxes.length; ++j) {
+            	var tmp;
                 var bbox = bboxes[j];
                 var ll = q.selectValue("LowerCorner", bbox).split(" ");
                 var ur = q.selectValue("UpperCorner", bbox).split(" ");
+                if(parseInt(ur[0]) > parseInt(ur[1])) {
+                	tmp = ur[0];
+                	ur[0] = ur[1];
+                	ur[1] = tmp;
+                }
+                if(parseInt(ll[0]) > parseInt(ll[1])) {
+                	tmp = ll[0];
+                	ll[0] = ll[1];
+                	ll[1] = tmp;
+                }
                 var bounds = new OpenLayers.Bounds(ll[0], ll[1], ur[0], ur[1]).transform(wgs84, geocat.map.getProjectionObject());
                 var feature = new OpenLayers.Feature.Vector(bounds.toGeometry(), {id: id}, geocat.defaultStyle);
                 geocat.contours.push(feature);
