@@ -94,6 +94,14 @@ public class BasicContext
 		return htContexts.get(contextName);
 	}
 
+	/**
+	 * Copy of the contexts
+	 * @return
+	 */
+	public Hashtable<String, Object> allContexts() {
+		return new Hashtable<String, Object>(htContexts);
+	}
+
 	//--------------------------------------------------------------------------
 
 	public ProviderManager getProviderManager()

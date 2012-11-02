@@ -24,6 +24,8 @@
 package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.JeevesClientEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;

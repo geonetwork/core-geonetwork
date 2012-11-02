@@ -172,7 +172,7 @@
 						        </xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:if test="string(/root/gui/session/profile) = 'Administrator'">
+<!-- 						<xsl:if test="string(/root/gui/session/profile) = 'Administrator'">
 							<xsl:call-template name="addrow">
 								<xsl:with-param name="service" select="'main.search'"/>
 						        <xsl:with-param name="args" select="'hitsPerPage=10&amp;editable=true&amp;metadata_broken_xlink=1'"/>
@@ -184,7 +184,7 @@
 								</xsl:with-param>
 							</xsl:call-template>
 						</xsl:if>						
-
+ -->
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'transfer.ownership'"/>
 							<xsl:with-param name="title"
@@ -306,12 +306,12 @@
 							<xsl:with-param name="desc" select="/root/gui/strings/xmlInsert"/>
 						</xsl:call-template>
 
-						<xsl:call-template name="addrow">
+<!-- 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.batchimport.form'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/batchImportTitle"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/batchImport"/>
 						</xsl:call-template>
-
+ -->
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'harvesting'"/>
 							<xsl:with-param name="title"
@@ -387,7 +387,14 @@
 							<xsl:with-param name="desc"
 								select="/root/gui/strings/unpublishReportDes"/>
 						</xsl:call-template>
-
+						<xsl:call-template name="addrow">
+							<xsl:with-param name="service" select="'download.backup'"/>
+					        <xsl:with-param name="title" select="/root/gui/strings/downloadBackup"/>
+							<xsl:with-param name="desc">
+								Find all metadata with xlinks that don't resolve to a valid reusable object
+							</xsl:with-param>
+						</xsl:call-template>
+ 
 					</xsl:variable>
 
 
@@ -617,7 +624,7 @@
 				<img src="{/root/gui/url}/images/loading.gif" id="waitIdx" style="display:none;"/>
 			</td>
 		</tr>
-		<tr>
+		<!-- <tr>
 			<td/>
 			<td class="padded">
 				<xsl:value-of select="/root/gui/strings/unpublish_invalid_metadata_desc"/>
@@ -630,7 +637,7 @@
 				</button>
 				<img src="{/root/gui/url}/images/loading.gif" id="waitIdxUnpublish" style="display:none;"/>
 			</td>
-		</tr>
+		</tr> -->
 		<tr>
 			<td/>
 			<td class="padded">
