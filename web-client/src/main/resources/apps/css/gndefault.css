@@ -478,6 +478,11 @@ dl.xml * dd {
     -moz-border-radius: 9px;
     border-radius: 9px;
 }
+
+.ux-mselect-selected {
+    background-color: #767676 !important;
+    color: #FFF;
+}
 .label-success, .badge-success {
     background-color: #468847;
 }
@@ -493,8 +498,25 @@ dl.xml * dd {
 .validation * h2, .validation * div {
     white-space: normal !important;
 }
-
+.thesaurusPicker * div.badge {
+    margin: 3px;
+    white-space: normal;
+}
+.thesaurusPicker * fieldset {
+    border: 1px solid #B3D4E6 !important;
+}
+.thesaurusPicker * legend {
+    color: #777 !important;
+}
+.thesaurusPicker * .thesaurusInfo span {
+    padding-right: 5px;
+}
 .x-superboxselect-item img {
     max-height: 16px;
     vertical-align: middle;
+}
+
+
+.debug {
+    display: none;
 }

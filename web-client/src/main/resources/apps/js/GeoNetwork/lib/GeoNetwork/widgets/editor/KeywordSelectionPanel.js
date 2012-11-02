@@ -44,7 +44,8 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
     Keyword: Ext.data.Record.create([{
         name: 'value'
     }, {
-        name: 'thesaurus'
+        name: 'thesaurus',
+        mapping: 'thesaurus/key'
     }, {
         name: 'uri'
     }]),

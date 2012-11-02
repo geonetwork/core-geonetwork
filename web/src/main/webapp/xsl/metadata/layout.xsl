@@ -9,7 +9,7 @@
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:date="http://exslt.org/dates-and-times"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date xs">
+  exclude-result-prefixes="#all">
 
   <xsl:import href="../text-utilities.xsl"/>
 
@@ -194,7 +194,7 @@
           </xsl:variable>
           <xsl:if test="normalize-space($function)!=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,');')"
+              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos, ', this);')"
             />
           </xsl:if>
         </xsl:variable>
@@ -740,7 +740,7 @@
           <xsl:when
             test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);')"
             />
           </xsl:when>
           <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
@@ -752,7 +752,7 @@
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of
-                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"
+                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,', this);')"
                 />
               </xsl:otherwise>
             </xsl:choose>
@@ -760,7 +760,7 @@
           <!-- place optional +/x for use when re-ordering etc -->
           <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);!OPTIONAL')"
             />
           </xsl:when>
           <!-- place +/x because schema insists but no geonet:child nextBrother 
