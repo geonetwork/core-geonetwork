@@ -22,7 +22,7 @@ public class DownloadBackup implements Service {
 	@Override
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-		Log.info(Geonet.GEONETWORK, context.getIpAddress()+" has started to download backup archive");
+		Log.info(Geonet.GEONETWORK, "User "+context.getUserSession().getUsername()+" from IP: "+context.getIpAddress()+" has started to download backup archive");
 		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
 		File backupDir = new File(datadir, ArchiveAllMetadataJob.BACKUP_DIR);
 		if (!backupDir.exists()) {

@@ -253,4 +253,8 @@
 	</xsl:template>
 	
 
+	<xsl:template priority="5" match="*/@xlink:href">
+		<xsl:attribute name="xlink:href"><xsl:value-of select="replace(., 'amp;','')"/></xsl:attribute>
+	</xsl:template>
+
 </xsl:stylesheet>

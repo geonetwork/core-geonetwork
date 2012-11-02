@@ -6,6 +6,7 @@ import java.util.List;
 import org.fao.xsl.support.*;
 
 import jeeves.utils.Xml;
+import jeeves.xlink.XLink;
 
 import org.fao.geonet.util.XslUtil;
 import org.fao.xsl.support.Finder;
@@ -14,6 +15,18 @@ import org.jdom.Namespace;
 import org.junit.Test;
 
 public class CharacterStringToLocalisedTest {
+	
+	@Test
+	public void fixBrokenKeywordXLinks() throws Exception {
+		String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/xsl/characterstring-to-localisedcharacterstring.xsl";
+		Element testData = Xml.loadString(
+				"<descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A//geocat.ch/concept%23154&amp;amp;locales=DE,FR,IT,EN\"/>", false);
+		Element transformed = Xml.transform(testData, pathToXsl);
+		System.out.println(Xml.getString(transformed));
+		String expected = "local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A//geocat.ch/concept%23154&locales=DE,FR,IT,EN";
+		assertEquals(expected, transformed.getAttributeValue("href", XLink.NAMESPACE_XLINK));
+		assertFalse(Xml.getString(transformed).contains("&amp;amp;"));
+	}
 
 	@Test
 	public void convertLocales() throws Exception {
@@ -27,7 +40,6 @@ public class CharacterStringToLocalisedTest {
 				"<gmd:locale> <gmd:PT_Locale id=\"EN\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"eng\">English</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
 				"</che:CHE_MD_Metadata>", false);
 		Element transformed = Xml.transform(testData, pathToXsl);
-		System.out.println(Xml.getString(transformed));
 		findAndAssert(transformed, new Count(1, new Finder("language/CharacterString", new EqualText("ger"))));
 		findAndAssert(transformed, new Count(4, new Finder("locale/PT_Locale/languageCode")));
 		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "ger")));
