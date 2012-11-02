@@ -231,6 +231,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     casEnabled : false,
     
+    /** private: property[info]
+     *  ``Object``  Information about the catalog retrieved from xml.info service
+     */
+    info: null,
     /** private: method[constructor]
      *  Initializes the catalogue connection configuration
      *  and service URL.
@@ -274,6 +278,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdShow: serviceUrl + 'metadata.show.embedded',
             mdMEF: serviceUrl + 'mef.export',
             mdXMLGet: serviceUrl + 'xml.metadata.get',
+            mdRDFGet: serviceUrl + 'rdf.metadata.get',
             mdXMLGet19139: serviceUrl + 'xml_iso19139',
             mdXMLGetDC: serviceUrl + 'xml_dublin-core',
             mdXMLGetFGDC: serviceUrl + 'xml_fgdc-std',
@@ -489,9 +494,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.fireEvent('selectionchange', this, this.getSelectedRecords());
     },
     /** api: method[getInfo]
+     *  :param refresh: ``boolean`` force refreshing the catalog info if not available.
      *  
      *  Return catalogue information (site name, organization, id, casEnabled).
      */
+	// TODO MERGE-GN
     getInfo: function(){
         var info = {};
         var properties = ['name', 'organization', 'siteId', 'casEnabled'];
@@ -508,6 +515,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     info[item] = children.childNodes[0].nodeValue;
                 }
             });
+            
+            if (request.responseXML) {
+                var xml = request.responseXML.documentElement;
+                Ext.each(properties, function(item, idx){
+                    var children = xml.getElementsByTagName(item)[0];
+                    if (children) {
+                        info[item] = children.childNodes[0].nodeValue;
+                    }
+                }, this);
+            }
+            this.casEnabled = info.casEnabled === 'true';
         }
         this.casEnabled = info.casEnabled === 'true';
         return info;
@@ -1114,6 +1132,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     	var loginAttempts = 0;
     	var loginWindow;
         if (this.casEnabled) {
+        	// TODO MERGE-GN
         	var framePanel = new Ext.Panel({
         		hidden: true,
         		renderTo: 'casLogin-frame-win',
@@ -1124,6 +1143,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         		
         	});
         	
+//        	loginWindow = window.open(this.URL+'/srv/'+this.LANG+'/login.form?casLogin', '_casLogin', 'menubar=no,location=no,toolbar=no', true);
         	intervalID = setInterval(function (){
         		loginAttempts += 1;
         		if(loginAttempts > (5*60*2)) {
@@ -1139,6 +1159,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         				clearInterval (intervalID);
         				app.isLoggedIn();
         			}
+//        		} else if(loginWindow.closed) {
+//        			clearInterval (intervalID);
+//        			app.isLoggedIn();
         		}
         	}, 500);
         } else {

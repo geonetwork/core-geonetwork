@@ -545,6 +545,7 @@ public class JeevesEngine
 			srvContext.setLanguage(defaultLang);
 			srvContext.setLogger(appHandLogger);
 			srvContext.setServlet(servlet);
+			srvContext.setAsThreadLocal();
 
 			try
 			{
@@ -769,6 +770,10 @@ public class JeevesEngine
 	private void warning(String message) { Log.warning(Log.ENGINE, message); }
 	private void error  (String message) { Log.error  (Log.ENGINE, message); }
 	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
+
+	public ServiceManager getServiceManager() {
+		return serviceMan;
+	}
 
 	public ProfileManager getProfileManager() { return serviceMan.getProfileManager(); }
 }

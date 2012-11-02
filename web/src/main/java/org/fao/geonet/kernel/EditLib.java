@@ -1416,4 +1416,19 @@ public class EditLib {
 		}
 	}
 
+	// -- The following methods are used by services that use metadata-edit-embedded so the
+	// -- classes know which element to transform
+	/**
+	 * Tag the element so the metaata-edit-embedded.xsl know which element is the element for display
+	 */
+    public static void tagForDisplay(Element elem) {
+        elem.setAttribute("addedObj","true", Edit.NAMESPACE);
+    }
+    /**
+     * Remove the tag element so the tag does not stay in the actual metadata.
+     */
+    public static void removeDisplayTag(Element elem) {
+        elem.removeAttribute("addedObj", Edit.NAMESPACE);
+    }
+
 }

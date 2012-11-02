@@ -44,7 +44,8 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
     Keyword: Ext.data.Record.create([{
         name: 'value'
     }, {
-        name: 'thesaurus'
+        name: 'thesaurus',
+        mapping: 'thesaurus/key'
     }, {
         name: 'uri'
     }]),
@@ -283,7 +284,7 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/MultiselectItemSelector-3.0/icons', // FIXME
+            imagePath: '../js/ext-ux/images', // FIXME
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){

@@ -94,6 +94,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
@@ -1517,7 +1518,7 @@ public class SearchManager {
         private final Parser                          _gmlParser;
         private final Lock                            _lock;
         private SpatialIndexWriter                    _writer;
-        private Committer                             _committerTask;
+        private volatile Committer                             _committerTask;
 
         /**
          * TODO javadoc.
@@ -1567,9 +1568,13 @@ public class SearchManager {
             boolean rebuildIndex;
             try {
                 _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
-                rebuildIndex = _writer.getFeatureSource().getSchema() == null;
+				rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             }
-            catch (Exception e) {
+            catch (Throwable e) {
+
+				if (_writer == null) {
+					throw new RuntimeException(e);
+				}
                 String exceptionString = Xml.getString(JeevesException.toElement(e));
                 Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:" +
                         exceptionString);
@@ -1611,13 +1616,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public Filter filter(org.apache.lucene.search.Query query, Element filterExpr, String filterVersion)
+        public Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)
                 throws Exception {
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
                 Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
-                return OgcGenericFilters.create(query, filterExpr, accessor , filterParser);
+                return OgcGenericFilters.create(query, numHits, filterExpr, accessor , filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
@@ -1638,13 +1643,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public SpatialFilter filter(org.apache.lucene.search.Query query,
+        public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
                 Geometry geom, Element request) throws Exception {
             _lock.lock();
             try {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                return _types.get(relation).newInstance(query, geom, new SpatialIndexAccessor());
+                return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
             }
             finally {
                 _lock.unlock();
@@ -1748,7 +1753,7 @@ public class SearchManager {
      */
     private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
             throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, Pair.class);
+        return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
     }
 
 	LuceneIndexWriterFactory getIndexWriter() {

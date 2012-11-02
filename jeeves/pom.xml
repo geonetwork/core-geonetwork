@@ -33,7 +33,7 @@
     <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>config-migration</artifactId>
-        <version>${project.version}</version>
+        <version>2.9.0</version>
     </dependency>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -98,10 +98,6 @@
     <dependency>
     	<groupId>xml-resolver</groupId>
      	<artifactId>xml-resolver</artifactId>
-    </dependency>
-    <dependency>
-     <groupId>org.geotools</groupId>
-     <artifactId>gt-postgis</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools.jdbc</groupId>

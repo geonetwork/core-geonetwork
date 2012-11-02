@@ -54,7 +54,7 @@
 				if (e.keyCode == 13) {
 					<xsl:if test="string(/root/gui/session/userId)=''">
 					if ($('username').value != '') { // login action
-						goSubmit('login')
+						goSubmit('login');
 						return;
 						}
 					</xsl:if>
@@ -84,7 +84,6 @@
 		function (ie. translate('key');).
 	-->
 	<xsl:template match="*" mode="js-translations">
-		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"
-		<xsl:if test="position()!=last()">,</xsl:if>
+		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

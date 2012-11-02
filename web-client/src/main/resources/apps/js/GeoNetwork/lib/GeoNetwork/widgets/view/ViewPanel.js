@@ -74,7 +74,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
          *  Set to '' to display all.
          */
-        relationTypes: 'service|children|related|parent|dataset'
+        relationTypes: 'service|children|related|parent|dataset|fcat'
     },
     serviceUrl: undefined,
     catalogue: undefined,

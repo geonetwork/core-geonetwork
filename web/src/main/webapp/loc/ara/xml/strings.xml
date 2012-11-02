@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin>  <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
 	<ger>Deutsch</ger> <!-- Do not translate! -->
 	<ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
+	<nor>Norsk</nor>  <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
 	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
 
+	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>	
     <anyLanguage>أي لغة</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -1344,4 +1348,5 @@
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

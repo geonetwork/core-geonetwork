@@ -87,7 +87,6 @@ public class Get implements Service
 			}
 
 			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
-				// TODO : check groups
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info

@@ -113,6 +113,7 @@ public class Csw {
 					public static final String GET_CAPABILITIES = "GetCapabilities";
 					public static final String GET_DOMAIN = "GetDomain";
 					public static final String DESCRIBE_RECORD = "DescribeRecord";
+					public static final String GET_RECORD_BY_ID = "GetRecordById";
 				}
 			}
 
@@ -124,6 +125,7 @@ public class Csw {
 				public static final String NUMBER_OF_KEYWORDS = "numberOfKeywords";
 				public static final String MAX_NUMBER_OF_RECORDS_FOR_KEYWORDS = "maxNumberOfRecordsForKeywords";
 				public static final String MAX_NUMBER_OF_RECORDS_FOR_PROPERTY_NAMES = "maxNumberOfRecordsForPropertyNames";
+                public static final String INCREASE_POPULARITY = "increasePopularity";
 			}
 		}
 

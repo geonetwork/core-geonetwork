@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Nie znaleziono rekordu metadanych</notfound>
+	<notowner>Nie można usunąć rekordu metadanych - nie jesteś ich właścicielem</notowner>
+	<updated>Usunięto rekord metadanych</updated>
+</strings>

@@ -358,7 +358,7 @@ ConfigView.prototype.getData = function()
 		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,
-		
+
 		SHIB_USE              : $('shib.use').checked,
 		SHIB_PATH             : $('shib.path').value,
 		SHIB_ATTRIB_USERNAME  : $('shib.attrib.username').value,

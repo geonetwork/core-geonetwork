@@ -13,8 +13,11 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
-    <isAdmin>Is administrator ?</isAdmin>
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
+    
+	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Any language</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -742,7 +745,7 @@
   <visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Results matching the coordinate search </resultsCoordinate>
 	<resultsFreeText>Results matching the Free Text Word </resultsFreeText>
-	<resultsMatching>Aggregate Results matching search criteria :</resultsMatching>
+	<resultsMatching>Aggregated results matching search criteria :</resultsMatching>
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
@@ -1342,4 +1345,5 @@
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

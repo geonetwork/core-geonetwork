@@ -69,6 +69,7 @@ public class XLink {
 	public static final String SHOW = "show";
     public static final String SHOW_REPLACE = "replace";
     public final static String SHOW_EMBED = ROLE_EMBED;
+	public static final String LOCAL_PROTOCOL = "local://";
 	
 	/**
 	 * Create a simple XLink element

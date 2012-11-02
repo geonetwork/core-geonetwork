@@ -221,6 +221,7 @@
 	<xsl:template mode="simpleElement" match="*">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
+		<xsl:param name="editAttributes" select="true()"/>
 		<xsl:param name="title">
 			<xsl:call-template name="getTitle">
 				<xsl:with-param name="name"   select="name(.)"/>
@@ -245,6 +246,7 @@
 				<xsl:call-template name="editSimpleElement">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="title"    select="$title"/>
+					<xsl:with-param name="editAttributes" select="$editAttributes"/>
 					<xsl:with-param name="text"     select="$text"/>
 					<xsl:with-param name="helpLink" select="$helpLink"/>
 				</xsl:call-template>
@@ -406,7 +408,7 @@
     <xsl:template mode="element" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="simpleElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
     <xsl:template mode="complexElement" match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType|@gco:nilReason"/>
-	<xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
+	<xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:addedObj" priority="2"/>
 	<!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->
@@ -464,6 +466,7 @@
 	<xsl:template name="editSimpleElement">
 		<xsl:param name="schema"/>
 		<xsl:param name="title"/>
+		<xsl:param name="editAttributes"/>
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
 		
@@ -517,6 +520,7 @@
 			<xsl:with-param name="downLink"   select="$downLink"/>
 			<xsl:with-param name="helpLink"   select="$helpLink"/>
 			<xsl:with-param name="validationLink" select="$validationLink"/>
+			<xsl:with-param name="editAttributes" select="$editAttributes"/>
 			<xsl:with-param name="edit"       select="true()"/>
 			<xsl:with-param name="id" select="$id"/>
 		</xsl:call-template>
@@ -762,6 +766,7 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="id" select="generate-id(.)"/>
 		<xsl:param name="visible" select="true()"/>
+		<xsl:param name="editAttributes" select="true()"/>
 
 		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 		<xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
@@ -835,7 +840,7 @@
 				 	* empty field with nilReason attributes 
 				-->
 				<xsl:choose>
-					<xsl:when test="$edit 
+					<xsl:when test="$edit and $editAttributes
 						and count(geonet:attribute)&gt;0 
 						and count(*/geonet:attribute[@name='codeList'])=0 
 						and count(*/geonet:attribute[@name='gco:nilReason'])=0

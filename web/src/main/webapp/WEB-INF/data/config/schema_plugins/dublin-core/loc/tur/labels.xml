@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:dct = "http://purl.org/dc/terms/">
+	<!-- ==================================================== -->
+	<element name="simpledc">
+		<label>ÜstVeri</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:title">
+		<label>Başlık</label>
+		<description>Kaynağa verilen ad. Genellikle başlık, kaynağın resmi olarak bilinen adı olacaktır.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:creator">
+		<label>Oluşturan</label>
+		<description>Kaynağın içeriğini oluşturmaya üst düzeyde yetkili olan varlıktır.</description>
+      	<example>Örneğin oluşturan, bir kişi, bir kuruluş veya bir servistir. Genellikle, Oluşturanın adı varlığı(entity) göstermede kullanılabilir.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:subject">
+		<label>Konu ve Kısaltmalar</label>
+		<description>Kaynak içeriğinin konusudur. Genellikle Konu, anahtar kelimeler, anahtar deyişler yada kaynağın temasını tanımlayan sınıflandırılmış kodlardır.</description>
+		<example>Tavsiye edilen en iyi uygulama, kontrol edilmiş sözlükten bir değer seçilmesi veya onaylanmış tasarım kategorileridir.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:description">
+		<label>Açıklama</label>
+		<description>Kaynak içeriğinin tarifidir.</description>
+		<example>Açıklama örnekleri kısıtlanmamakla birlikte, özet, içindekiler, içeriğin grafik gösterimine ilişkin bilgiler yada içeriğin sözel anlatımını içerir. </example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:publisher">
+		<label>Yayımlayan</label>
+		<description>Kaynağı kullanılabilir hale getirmeye sorumlu olan varlıktır.</description>
+		<example>Örneğin yayımlayan, bir kişi, bir kuruluş veya bir servistir. Genellikle, Yayımlayanın adı, varlığı(entity) göstermede kullanılabilir.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:contributor">
+		<label>İştirakçi</label>
+		<description>Kaynağın içeriğini oluşturmaya katkıda bulunan varlıktır.</description>
+		<example>Örneğin İştirakçi, bir kişi, bir kuruluş veya bir servistir. Genellikle, İştirakçinin adı varlığı(entity) göstermede kullanılabilir.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:date">
+		<label>Tarih</label>
+		<description>Kaynağın yaşam döngüsünde gerçekleşen bir olayın tarihidir. Genellikle tarih, kaynağın oluşturulduğu veya hazır olduğu zamanla ilişkilendirilecektir.</description>
+		<example>Tarih değeri kodlaması için tavsiye edilen en iyi uygulama ISO 8601 profilinde tanımlanan YYYY-MM-DD tarih formudur.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:type">
+		<label>Kaynak Tipi</label>
+		<description>Kaynağın içeriğinin tarzı veya yapısıdır. Tip, içerik için genel kategorileri, fonksiyonları, türleri veya bir araya gelmiş katmanları açıklayan terimler içerir.</description>
+		<example>Tavsiye edilen en iyi uygulama, kontrol edilmiş sözlükten bir değer seçilmesi (öreğin, DCMI*** Tip Sözlüğü). Kaynağın fiziksel veya sayısal görünümünü anlatmak için format*** eleman kullanın. To describe the physical or digital manifestation of the resource, use the Format element.</example>
+		<helper>
+			<option value="dataset">VeriKümesi</option>
+			<option value="service">Servis</option>
+		</helper>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:format">
+		<label>Format</label>
+		<description>Kaynağın fiziksel yada sayısal görünümüdür. Genellikle Format, kaynağın boyutlarını veya tipini içerecektir. Format; yazılımı, donanımı veya kaynağı yönetecek-gösterecek diğer ekipmanları tanımlayabilir.</description>
+		<example>Boyut örnekleri, ölçüleri ve süreçleri içerir. Tavsiye edilen en iyi uygulama, kontrol edilmiş sözlükten bir değer seçilmesidir (örneğin, Internet Medya Tipleri bilgisayar medya formatlarını tanımlar).</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:identifier">
+		<label>Kaynak Tanımlayıcı</label>
+		<description>An unambiguous reference to the resource within a given context.***</description>
+		<example>Kaynağı tanımlamak için tavsiye edilen en iyi uygulama, onaylanmış tanımlama sisteminde dizgi(string) yada rakam uygunluğu kullanmaktır. Recommended best practice is to identify the resource by means of a string or number conforming to a formal identification system***. Onaylanmış tanımlama sistemi URI (Uniform Resource Identifier) (içinde bulunan Uniform Resource Locator (URL)), DOI (Digital Object Identifier) ve ISBN (International Standard Book Number) içerir.*** Formal identification systems include but are not limited to the Uniform Resource Identifier (URI) (including the Uniform Resource Locator (URL)), the Digital Object Identifier (DOI), and the International Standard Book Number (ISBN)***.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:source">
+		<label>Kaynak</label>
+		<description>Kaynağın mevcut olan son halini gösterir.***A Reference to a resource from which the present resource is derived. Mevcut kaynak bütünden yada kaynağın bir bölümünden türetilmiş olabilir.***The present resource may be derived from the Source resource in whole or in part.</description>
+		<example>Kaynağı tanımlamak için tavsiye edilen en iyi uygulama, onaylanmış tanımlama sisteminde dizgi(string) yada rakam uygunluğu kullanmaktır.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:language">
+		<label>Dil</label>
+		<description>Dil, kaynağın akıllı içeriklerindendir.Tavsiye edilen en iyi uygulama isteğe bağlı olarak iki- ve üç- dil etiketi (tags) tanımlanan ISO 639 ile birlikte çalışan RFC 3066 kullanmaktır.</description>
+		<example>Örneğin İngilizce için "en" veya "eng", Akatça için "akk" ve İngiliz ingilizcesi için "en-GB" kullanılabilir.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:relation">
+		<label>İlişki</label>
+		<description>İlişkili olduğu kaynağı gösterir.</description>
+		<example>Kaynağı tanımlamak için tavsiye edilen en iyi uygulama, onaylanmış tanımlama sisteminde dizgi(string) yada rakam uygunluğu kullanmaktır.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:coverage">
+		<label>Konum</label>
+		<description>Kaynak içeriğinin kapsamı veya ölçüsüdür. Genellikle Konum, mekansal durumu (yer adı veya coğrafik koordinat olarak), geçici süreci (süre tanımı, tarih veya tarih aralığı) yada   Typically, Coverage will include spatial location (a place name or geographic coordinates), temporal period (a period label, date, or date range), or jurisdiction (such as a named administrative entity). </description>
+		<example>For example: "North 90, South -90, East 180, West -180. Global".
+		Recommended best practice is to select a value from a controlled vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and to use, where appropriate, named places or time periods in preference to numeric identifiers such as sets of coordinates or date ranges.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dc:rights">
+		<label>Rights Management</label>
+		<description>Information about rights held in and over the resource.</description>
+		<example>Typically, Rights will contain a rights management statement for the resource, or reference a service providing such information. Rights information often encompasses Intellectual Property Rights (IPR), Copyright, and various Property Rights. If the Rights element is absent, no assumptions may be made about any rights held in or over the resource.</example>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:modified">
+		<label>Değiştirilme Tarihi</label>
+		<description>Veri üstverisi değiştirilmiştir.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:abstract">
+		<label>Özet</label>
+		<description>Kaynak içeriklerinin özetlenmesi.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:spatial">
+		<label>Mekansal</label>
+		<description>Kaynağın akıllı içeriklerinin mekansal özellikleri.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:audience">
+		<label>Audience</label>
+		<label>Audience</label>
+		<description>A class of entity for whom the resource is intended or useful.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualMethod">
+		<label>Artış Metodu</label>
+		<description>Kütüphaneye hangi öğelerin eklendiğini gösteren metod.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPeriodicity">
+		<label>Artış Peryodu</label>
+		<description>Kütüphaneye eklenen öğelerin eklenme sıklığı.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:accrualPolicy">
+		<label>Artış Güvenliği</label>
+		<description>Kütüphaneye eklenen öğelerin güvenlik yönetimi.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:instructionalMethod">
+		<label>Instructional Method</label>
+		<description>A process, used to engender knowledge, attitudes and skills, that the resource is designed to support.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:provenance">
+		<label>Provenance</label>
+		<description>A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity and interpretation.</description>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dct:rightsHolder">
+		<label>Rights Holder</label>
+		<description>A person or organization owning or managing rights over the resource.</description>
+	</element>
+	<!-- ==================================================== -->
+</labels>

@@ -167,7 +167,7 @@ public class JeevesServlet extends HttpServlet
 			session = new UserSession();
 
 			httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
-			session.setsHttpSession(httpSession);
+			session.setsHtṯpSession(httpSession);
 
             if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session created for client : " + ip);
 		}
@@ -213,6 +213,11 @@ public class JeevesServlet extends HttpServlet
 	}
 
 	public boolean isInitialized() { return initialized; }
+
+	public JeevesEngine getEngine() {
+		return jeeves;
+		
+	}
 }
 
 //=============================================================================

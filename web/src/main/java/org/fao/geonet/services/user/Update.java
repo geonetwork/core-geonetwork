@@ -211,12 +211,11 @@ public class Update implements Service
 			addGroup(dbms, userId, groupId, Geonet.Profile.EDITOR);
 		}
 	}
-
-	public static void addGroup(Dbms dbms, int userId, int groupId, String profile) throws Exception
-	{
-		dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
-				 userId, groupId, profile);
-	}
+	
+	public static void addGroup(Dbms dbms, int userId, int groupId, String profile) throws Exception {
+        dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
+                 userId, groupId, profile);
+    }
 }
 
 //=============================================================================

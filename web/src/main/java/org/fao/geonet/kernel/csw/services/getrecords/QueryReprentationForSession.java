@@ -4,7 +4,6 @@ import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 
 public class QueryReprentationForSession {

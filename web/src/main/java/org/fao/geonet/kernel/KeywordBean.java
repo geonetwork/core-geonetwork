@@ -327,7 +327,7 @@ public class KeywordBean {
 	/**
 	 * Returns the URI of the keyword concept.
 	 */
-	public String getCode() {
+	public String getUriCode() {
 		return code;
 	}
 
@@ -359,7 +359,7 @@ public class KeywordBean {
 			return "#";
 	}
 
-	public KeywordBean setCode(String code) {
+	public KeywordBean setUriCode(String code) {
 		this.code = code;
 		return this;
 	}
@@ -453,10 +453,10 @@ public class KeywordBean {
 		Element el = new Element("keyword", Namespaces.GMD);
 		Element an = new Element("Anchor", Namespaces.GMX);
 		Element cs = new Element("CharacterString", Namespaces.GCO);
-		if (getCode() != null && getCode().length() != 0) {
+		if (getUriCode() != null && getUriCode().length() != 0) {
 			try {
 				an.setText(getDefaultValue());
-				an.setAttribute("href", URIUtil.encodeQuery(keywordUrl+getCode()), Namespaces.XLINK);
+				an.setAttribute("href", URIUtil.encodeQuery(keywordUrl+getUriCode()), Namespaces.XLINK);
 				el.addContent(an);
 			} catch (URIException e) { // what to do here? Just add the value
 				cs.setText(getDefaultValue());
@@ -527,10 +527,10 @@ public class KeywordBean {
 		
 		for (KeywordBean kb : kbList) {
 			Element keyword = new Element("keyword", Namespaces.GMD);
-			if (kb.getCode() != null && kb.getCode().length() != 0) {
+			if (kb.getUriCode() != null && kb.getUriCode().length() != 0) {
 				try {
 					an.setText(kb.getDefaultValue());
-					an.setAttribute("href", URIUtil.encodeQuery(kb.keywordUrl+kb.getCode()), Namespaces.XLINK);
+					an.setAttribute("href", URIUtil.encodeQuery(kb.keywordUrl+kb.getUriCode()), Namespaces.XLINK);
 					keyword.addContent((Content) an.clone());
 				} catch (URIException e) {
 					cs.setText(kb.getDefaultValue());
@@ -683,14 +683,14 @@ public class KeywordBean {
 
             Element elValue = new Element("value");
             elValue.addContent(values.get(language));
-            elValue.setAttribute("lang", language.toUpperCase());
+            elValue.setAttribute("lang", getIsoLanguageMapper().iso639_2_to_iso639_1(language, language.substring(2)).toUpperCase());
             elKeyword.addContent(elValue);
         }
 
         Element elDefiniton = new Element("definition");
         elDefiniton.addContent(getDefaultDefinition());
         Element elUri = new Element("uri");
-        elUri.addContent(this.getCode());
+        elUri.addContent(this.getUriCode());
 
         String thesaurusType = this.getThesaurusKey();
         thesaurusType = thesaurusType.replace('.', '-');

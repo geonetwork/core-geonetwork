@@ -44,7 +44,12 @@ public final class Resolver implements ProxyInfoObserver
 	private ProxyInfo proxyInfo;
 	private XmlResolver xmlResolver;
 	private CatalogResolver catResolver;
-
+	
+	/**
+	 * When path is resolved to a non existing file, return this file.
+	 */
+	private String blankXSLFile;
+	
 	/** Active readers count */
 	private static int activeReaders = 0;
 	/** Active writers count */
@@ -70,6 +75,9 @@ public final class Resolver implements ProxyInfoObserver
 		String catFiles = System.getProperty(Jeeves.XML_CATALOG_FILES);
 		if (catFiles == null) catFiles="";
         if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
+
+        setBlankXSLFile(System.getProperty(Jeeves.XML_CATALOG_BLANKXSLFILE));
+        
 		catMan.setCatalogFiles(catFiles);
 		catMan.setIgnoreMissingProperties(true);
 		catMan.setPreferPublic(true);
@@ -188,7 +196,15 @@ public final class Resolver implements ProxyInfoObserver
   private synchronized void afterWrite() {
     --activeWriters;
     notifyAll();
-  }	
+  }
+
+    public String getBlankXSLFile() {
+        return blankXSLFile;
+    }
+    
+    public void setBlankXSLFile(String blankXSLFile) {
+        this.blankXSLFile = blankXSLFile;
+    }
 
 }
 

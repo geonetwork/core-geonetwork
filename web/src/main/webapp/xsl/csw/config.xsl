@@ -91,16 +91,16 @@
 
             <table>
             	<tr>
-					<td class="padded" width="{$width}"><xsl:value-of select="/root/gui/strings/cswServerEnable"/></td>
+            		<td class="padded" width="{$width}"><label for="csw.enable"><xsl:value-of select="/root/gui/strings/cswServerEnable"/></label></td>
 					<td class="padded"><input id="csw.enable" name="csw.enable" class="content" type="checkbox"/></td>
 				</tr>
  				<tr>
-                    <td class="padded"><xsl:value-of select="/root/gui/strings/cswServerMetadataPublic"/></td>
+ 					<td class="padded"><label for="csw.metadataPublic"><xsl:value-of select="/root/gui/strings/cswServerMetadataPublic"/></label></td>
                     <td class="padded"><input id="csw.metadataPublic" name="csw.metadataPublic" class="content" type="checkbox"/></td>
                 </tr>
 
                 <tr>
-            		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerContact"/></td>
+                	<td class="padded"><label for="csw.contactId"><xsl:value-of select="/root/gui/strings/cswServerContact"/></label></td>
             		<td class="padded">
             			<select name="csw.contactId" id="csw.contactId">
             				<option value="-1"></option>
@@ -141,19 +141,19 @@
 
 
             	<tr>
-            		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerTitle"/></td>
+            		<td class="padded"><label for="csw.title"><xsl:value-of select="/root/gui/strings/cswServerTitle"/></label></td>
             		<td class="padded"><input id="csw.title" class="content" type="text" value="" size="40"/></td>
             	</tr>
             	<tr>
-            		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerAbstract"/></td>
+            		<td class="padded"><label for="csw.abstract"><xsl:value-of select="/root/gui/strings/cswServerAbstract"/></label></td>
             		<td class="padded"><textarea id="csw.abstract" class="content" value="" rows="5" cols="38"/></td>
             	</tr>
             	<tr>
-            		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerFees"/></td>
+            		<td class="padded"><label for="csw.fees"><xsl:value-of select="/root/gui/strings/cswServerFees"/></label></td>
             		<td class="padded"><input id="csw.fees" class="content" type="text" value="" size="40"/></td>
             	</tr>
             	<tr>
-            		<td class="padded"><xsl:value-of select="/root/gui/strings/cswServerAccessConstraints"/></td>
+            		<td class="padded"><label for="csw.accessConstraints"><xsl:value-of select="/root/gui/strings/cswServerAccessConstraints"/></label></td>
             		<td class="padded"><input id="csw.accessConstraints" class="content" type="text" value="" size="40"/></td>
             	</tr>
             	<tr>

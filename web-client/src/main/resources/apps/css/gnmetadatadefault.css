@@ -423,14 +423,6 @@ div.button {
 .flagRed {
   background-image : url(../images/default/flag_red.png) !important;
 }
-.valid-1 {
-  background-image : url(../images/default/flag_green.png) !important;
-}
-.valid-0 {
-  background-image : url(../images/default/flag_red.png) !important;
-}
-.valid--1 {
-}
 .cat-children, .cat-parent {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
@@ -538,6 +530,8 @@ be use for custom styling in view mode */
 /* duration field: inline input elements 
   class name is on the label, so select the next sibling which is the container.
 * */
+/* TODO MERGE-GN*/
+.gtsTMPeriodDuration + * input,
 .gmlduration + * input {
     float: none !important;
 }

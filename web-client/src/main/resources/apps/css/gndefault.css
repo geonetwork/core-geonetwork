@@ -274,6 +274,9 @@ table.related * a:hover,
 .xmlIcon {
   background-image : url(../images/default/page_code.png);
 }
+.rdfIcon {
+  background-image : url(../images/default/sw-cube.png);
+}
 .addIcon {
   background-image : url(../images/default/add.png) !important;
 }
@@ -429,4 +432,91 @@ dl.xml * dd {
 }
 .gn-bt-main * button {
     font-weight: bold;
+}
+.alert {
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    color: #C09853;
+    font-weight: normal;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.alert-danger, .alert-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
+.alert * h2 {
+    color: #C09853;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.label, .badge {
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    color: white;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #999;
+}
+.label {
+    padding: 1px 4px 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.badge {
+    padding: 1px 9px 2px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+}
+
+.ux-mselect-selected {
+    background-color: #767676 !important;
+    color: #FFF;
+}
+.label-success, .badge-success {
+    background-color: #468847;
+}
+.label-warning, .badge-warning {
+    background-color: #F89406;
+}
+.label-important, .badge-important, .label-error, .badge-error {
+    background-color: #B94A48;
+}
+.label-info, .badge-info {
+    background-color: #3A87AD;
+}
+.validation * h2, .validation * div {
+    white-space: normal !important;
+}
+.thesaurusPicker * div.badge {
+    margin: 3px;
+    white-space: normal;
+}
+.thesaurusPicker * fieldset {
+    border: 1px solid #B3D4E6 !important;
+}
+.thesaurusPicker * legend {
+    color: #777 !important;
+}
+.thesaurusPicker * .thesaurusInfo span {
+    padding-right: 5px;
+}
+.x-superboxselect-item img {
+    max-height: 16px;
+    vertical-align: middle;
+}
+
+
+.debug {
+    display: none;
 }

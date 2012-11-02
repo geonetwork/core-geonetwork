@@ -88,7 +88,7 @@ public class OgcGenericFilters
      * @throws Exception
      */
     @SuppressWarnings("serial")
-    public static SpatialFilter create(Query query,
+    public static SpatialFilter create(Query query, int numHits,
             Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
         Name geometryColumn = sourceAccessor.one().getSchema().getGeometryDescriptor().getName();
@@ -102,7 +102,7 @@ public class OgcGenericFilters
 
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter");
-        Filter fullFilter = (org.opengis.filter.Filter) parser
+        Object parseResult = parser
                 .parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){
         	Log.error(Geonet.SEARCH_ENGINE,"Errors occurred when trying to parse a filter:");
@@ -112,6 +112,10 @@ public class OgcGenericFilters
 	        }
         	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
         }
+        if(!(parseResult instanceof Filter)) {
+        	return null;
+        }
+        Filter fullFilter = (org.opengis.filter.Filter) parseResult;
         final FilterFactory2 filterFactory2 = CommonFactoryFinder
                 .getFilterFactory2(GeoTools.getDefaultHints());
 
@@ -146,7 +150,7 @@ public class OgcGenericFilters
 
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
-            return new FullScanFilter(query, bounds, sourceAccessor){
+            return new FullScanFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
@@ -154,7 +158,7 @@ public class OgcGenericFilters
                 }
             };
         }else{
-            return new SpatialFilter(query, bounds, sourceAccessor){
+            return new SpatialFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
@@ -175,12 +179,9 @@ public class OgcGenericFilters
             {
 
                 @Override
-                public boolean evaluate(Object feature)
-                {
-                    Geometry leftGeom = getLeftGeometry(feature);
-                    Geometry rightGeom = getRightGeometry(feature);
+                public boolean evaluateInternal(Geometry leftGeom, Geometry rightGeom) {
                     boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
-                    return equals2 || super.evaluate(feature);
+                    return equals2 || super.evaluateInternal(leftGeom, rightGeom);
                 }
             };
         };

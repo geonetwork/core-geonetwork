@@ -61,16 +61,16 @@ public class FullScanFilter extends SpatialFilter
     private static final long serialVersionUID = 1114543251684147194L;
     private Set<String>       _matches;
 
-    public FullScanFilter(Query query, Geometry geom,
+    public FullScanFilter(Query query, int numHits, Geometry geom,
             Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, geom, sourceAccessor);
+        super(query, numHits, geom, sourceAccessor);
     }
 
-    protected FullScanFilter(Query query, Envelope bounds,
+    protected FullScanFilter(Query query, int numHits, Envelope bounds,
             Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        super(query, bounds, sourceAccessor);
+        super(query, numHits, bounds, sourceAccessor);
     }
 
     public BitSet bits(final IndexReader reader) throws IOException

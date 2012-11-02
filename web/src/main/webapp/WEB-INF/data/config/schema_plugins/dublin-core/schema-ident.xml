@@ -3,7 +3,7 @@
 	<gns:name>dublin-core</gns:name>
 	<gns:id>3785ae4c-dde3-11df-a813-001c2346de4c</gns:id>
 	<gns:version>1.0</gns:version>
-	<gns:schemaLocation>http://www.dublincore.org/schemas/xmls/qdc/2008/02/11/simpledc.xsd</gns:schemaLocation>
+	<gns:schemaLocation/>
 	<gns:autodetect>
 		<gns:elements type="root">
 			<simpledc/>

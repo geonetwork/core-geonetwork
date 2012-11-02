@@ -208,8 +208,8 @@
 	<threddsCreateThumbnails>Crea miniature di qualsiasi dataset forniti da WMS</threddsCreateThumbnails>
 	<threddsModifiedOnly>Harvest new or modified datasets only</threddsModifiedOnly>
 	<threddsServiceMd>Crea metadati ISO19119 per tutti i servizi nel catalogo</threddsServiceMd>
-	<threddsCollectionDataset>Crea i metadati per le Collection Dataset</threddsCollectionDataset19115>
-	<threddsAtomicDataset>Crea i metadati per gli Atomic Dataset</threddsAtomicDataset19115>
+	<threddsCollectionDataset>Crea i metadati per le Collection Dataset</threddsCollectionDataset>
+	<threddsAtomicDataset>Crea i metadati per gli Atomic Dataset</threddsAtomicDataset>
 	<threddsTemplate>Seleziona il template da combnare con i frammenti</threddsTemplate>
 	
 	<wfsFeaturesLang>Metadata language</wfsFeaturesLang>
@@ -293,6 +293,7 @@
 	<noHistory>Disattiva cronologia</noHistory>
 	<dateDesc>Data (più recente per primo)</dateDesc>
 	<date>Data</date>
+	<elapsedTime>Time</elapsedTime>
 	<detail>Dettagli</detail>
 	<grandTotal>Totale</grandTotal>
 	<counter>su</counter>

@@ -14,7 +14,7 @@
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/js/ext-ux/FileUploadField/file-upload.css"/>
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmapdefault.css"/>
 		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/gnmetadatadefault.css"/>
-		<link rel="stylesheet" type="text/css" href="{$widgetPath}/js/GeoNetwork/resources/css/metadata-view.css"/>
+		<link rel="stylesheet" type="text/css" href="{$widgetPath}/css/metadata-view.css"/>
 	</xsl:template>
 
 	<xsl:template mode="script" match="/" priority="2">

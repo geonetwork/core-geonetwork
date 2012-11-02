@@ -5,7 +5,7 @@
 	<codelist name="gmd:CI_DateTypeCode">
 		<entry>
 			<code>creation</code>
-			<label>>Creació</label>
+			<label>Creació</label>
 			<description>data en que el recurs va ser creat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

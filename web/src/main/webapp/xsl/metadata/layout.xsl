@@ -9,7 +9,7 @@
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:date="http://exslt.org/dates-and-times"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date xs">
+  exclude-result-prefixes="#all">
 
   <xsl:import href="../text-utilities.xsl"/>
 
@@ -59,7 +59,9 @@
     select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>
   <xsl:variable name="elementException"
     select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception/@for"/>
-
+  <xsl:variable name="flatException"
+    select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/flatException/@for"/>
+  
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- main schema mode selector -->
@@ -192,7 +194,7 @@
           </xsl:variable>
           <xsl:if test="normalize-space($function)!=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,');')"
+              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos, ', this);')"
             />
           </xsl:if>
         </xsl:variable>
@@ -245,7 +247,7 @@
         <xsl:choose>
 
           <!-- display as a list -->
-          <xsl:when test="$flat=true()">
+          <xsl:when test="$flat=true() and not(contains($flatException, local-name(.)))">
 
             <!-- if it does not have children show it as a simple element -->
             <xsl:if
@@ -482,7 +484,7 @@
     match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
   <xsl:template mode="complexElement"
     match="geonet:null|geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@geonet:xsderror|@xlink:type|@gco:isoType"/>
-  <xsl:template mode="simpleAttribute" match="@geonet:xsderror" priority="2"/>
+  <xsl:template mode="simpleAttribute" match="@geonet:xsderror|@geonet:addedObj" priority="2"/>
   <!--
 	prevent drawing of attributes starting with "_", used in old GeoNetwork versions
 	-->
@@ -776,7 +778,7 @@
           <xsl:when
             test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);')"
             />
           </xsl:when>
           <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
@@ -788,7 +790,7 @@
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of
-                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"
+                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,', this);')"
                 />
               </xsl:otherwise>
             </xsl:choose>
@@ -796,7 +798,7 @@
           <!-- place optional +/x for use when re-ordering etc -->
           <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);!OPTIONAL')"
             />
           </xsl:when>
           <!-- place +/x because schema insists but no geonet:child nextBrother 

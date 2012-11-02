@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<groups>Kullanıcının bagli oldugu grubu secin</groups>
+	<notfound>Metaveri kayıtları bulunamadı</notfound>
+	<notowner>Metaveri kayıtları sahibi olmadıgınız icin transfer edilemedi</notowner>
+	<updated>Metaveri kayıtları yeni sahiplerine transfer edildi</updated>
+	<resultstitle>Yeni Sahibe Transfer Sonuçları</resultstitle>
+	<users>Kayıtların Yeni sahibi olacak kullanıcıyı seçin</users>
+</strings>

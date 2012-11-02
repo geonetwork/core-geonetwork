@@ -40,8 +40,12 @@ GeoNetwork.Util = {
             ['it', 'Italiano', 'ita'], 
             ['nl', 'Nederlands', 'dut'], 
             ['no', 'Norsk', 'nor'],
+            ['pl', 'Polski', 'pol'], 
             ['pt', 'Рortuguês', 'por'], 
-            ['ru', 'Русский', 'rus']
+            ['ru', 'Русский', 'rus'],
+            ['fi', 'Suomeksi', 'fin'],
+            ['tr', 'Türkçe', 'tur']
+                       
     ],
     /** api: method[setLang] 
      *  :param lang: String ISO 3 letters code
@@ -116,7 +120,20 @@ GeoNetwork.Util = {
     getBaseUrl: function(url){
         return url.substring(0, url.indexOf('?') || url.indexOf('#') || url.length);
     },
-
+    /** api: property[protocolToCSS] 
+     *  
+     *  Provide a mapping between various GeoNetwork protocol and the CSS icon class
+     */
+    protocolToCSS: {
+        'application/vnd.ogc.wms_xml': 'addLayerIcon',
+        'OGC:WMS': 'addLayer',
+        'application/vnd.google-earth.kml+xml': 'md-mn-kml',
+        'application/zip': 'md-mn-zip',
+        'WWW:DOWNLOAD-1.0-http--download': 'md-mn-zip',
+        'application/x-compressed': 'md-mn-zip',
+        'text/html': 'md-mn-www',
+        'text/plain': 'md-mn-www'
+    },
     // TODO : add function to compute color map
     defaultColorMap: [
                        "#2205fd", 
@@ -145,6 +162,63 @@ GeoNetwork.Util = {
             colors[i] = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
         }
         return colors;
+    },
+    /** api: method[updateHeadInfo] 
+     *  :param info: Object with the following properties
+     *  
+     *   - title: a title properties to be use as document title
+     *   
+     *   - meta: an Object of element to be added 
+     *  as meta tags.
+     *  
+     *   - tagsToRemove: an Object of META name to remove (default is subject, author, keywords).
+     *  
+     */
+    updateHeadInfo: function (info) {
+        if (info && info.title) {
+            document.title = info.title;
+        }
+        GeoNetwork.Util.removeMetaTags(info.tagsToRemove || {'subject': true, 'author': true, 'keywords': true});
+        
+        if (info) {
+            for (var key in info.meta) {
+                if (info.meta.hasOwnProperty(key)) {
+                    var values = info.meta[key];
+                    Ext.each(values, function (item) {
+                        GeoNetwork.Util.addMetaTag(key, item);
+                    });
+                }
+            }
+        }
+    },
+    /** api: method[addMetaTag] 
+     *  :param name: the name of the META tag
+     *  :param content: the content of the META tag
+     *  
+     *  Add a META tag with name and content to the HEAD.
+     *  
+     */
+    addMetaTag: function (name, content) {
+        var meta = document.createElement('meta');
+        meta.name = name;
+        meta.content = content;
+        document.getElementsByTagName('head')[0].appendChild(meta);
+    },
+    /** api: method[removeMetaTags] 
+     *  :param tagToRemove: Object with the list of tag to remove
+     *  
+     *  Remove all META tags from HEAD which names match one of the
+     *  tag to remove.
+     *  
+     */
+    removeMetaTags: function (tagsToRemove) {
+        var metas = Ext.DomQuery.jsSelect('head > meta');
+        Ext.each(metas, function (meta) {
+            var name = meta.getAttribute('name');
+            if (tagsToRemove[name]) {
+                Ext.get(meta).remove();
+            }
+        });
     },
     /** api: method[buildPermalinkMenu] 
      *  :param l: String or Function If String the link is added as is, if a function

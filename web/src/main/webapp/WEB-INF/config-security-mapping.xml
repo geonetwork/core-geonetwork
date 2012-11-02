@@ -11,7 +11,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="securityMetadataSource">
             <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/.*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/\w*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.+/service-not-allowed(|!)" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.+/login.form(|!)" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.+/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -102,7 +104,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/stat.tableExport!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.config.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/csw-publication!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.customelementset.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.customelementset.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/test.i18n!?.*" access="hasRole('Administrator')"></sec:intercept-url>

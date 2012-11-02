@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+	<select>Seçiniz</select>
+	<name>İsim</name>
+	<directoryname>Dizin</directoryname>
+	<type>Tip</type>
+	<status>Durum</status>
+	<errors>Hatalar</errors>
+	<every>Her</every>
+	<lastRun>Son çalıştırma</lastRun>
+	<operation>İşlem,operasyon</operation>
+
+	<!-- harvesting types - - - - - - - - - - - - - - - - - - - - -->
+	
+	<info type="geonetwork">
+		<short>GeoNetwork</short>
+		<long>GeoNetwork v2.1 uzak nokta</long>
+	</info>
+	
+	<info type="geonetwork20">
+		<short>GeoNetwork 2.0</short>
+		<long>GeoNetwork v2.0 uzak nokta</long>
+	</info>
+	
+	<info type="webdav">
+		<short>Web DAV</short>
+		<long>Web DAV sunucusu</long>
+	</info>
+	
+	<info type="csw">
+		<short>CSW/ISO 2.0</short>
+		<long>Web ISO Profili 2.0 Katalog Servisleri</long>
+	</info>
+	
+	<info type="z3950">
+		<short>Z3950</short>
+		<long>Z3950 Uzaktan arama</long>
+	</info>
+	
+	<info type="oaipmh">
+		<short>OAIPMH</short>
+		<long>OAI Metadata Harvesting 2.0 Protokolü</long>
+	</info>
+	
+	<info type="ogcwxs">
+		<short>OGC WxS</short>
+		<long>OGC Web servisleri (ör. WMS, WFS, WCS, WPS)</long>
+	</info>
+
+	<info type="arcsde">
+	<short>ArcSDE</short>
+		<long>ArcSDE sunucusu</long>
+	</info>
+
+	<info type="thredds">
+		<short>Thredds</short>
+		<long>Thredds Katalog</long>
+	</info>
+	
+	<info type="metadatafragments">
+		<short>WFS Fragmanları</short>
+		<long>OGC WFS Metaveri Fragmanları</long>
+	</info>
+
+	<info type="filesystem">
+		<short>Local Dosya Sistemi</short>
+		<long>Lokal Dosya Sistemi Biçme(harvesting)***</long>
+	</info>	
+
+    <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<site>Site</site>
+
+	<wxstype>OGC Web Servisi Tipi</wxstype>
+	<wxstypes>
+		<type value="WMS1.0.0">OGC Web Harita Servisi (WMS) Versiyon 1.0.0</type>
+		<type value="WMS1.1.1">OGC Web Harita Servisi (WMS) Versiyon 1.1.1 - tercih edilen</type>
+		<type value="WMS1.3.0">OGC Web Harita Servisi (WMS) Versiyon 1.3.0</type>
+		<type value="WFS1.0.0">OGC Web Özellikler Servisi (WFS) Versiyon 1.0.0</type>
+		<type value="WFS1.1.0">OGC Web Özellikler Servise (WFS) Versiyon 1.1.0 - tercih edilen</type>
+		<type value="WCS1.0.0">OGC Web Kapsama Alanı Servisi (WCS) Versiyon 1.0.0</type>
+        <type value="WPS0.4.0">OGC Web İşleme Servisi (WPS) Versiyon 0.4.0</type>
+        <type value="WPS1.0.0">OGC Web İşleme Servisi (WPS) Versiyon 1.0.0</type>        
+	</wxstypes>
+	
+	<wxslang>Metaveri tipi</wxslang>
+	<wxsImp>Import tipi</wxsImp>
+	<wxs119Only>Varsayılan modda, GetCapabilities ISO19119 servislerindeki veri için metaveri üretir</wxs119Only>
+	<wxs139>GetCapabilities bilgisi ile katman verisine yönelik metaveri oluştur</wxs139>
+	<wxs139Layer>MetadataURL özellikleri kullanarak katman elemanlarına ait metaveri oluştur(Bu yöntem mevcut olmadığı için çalışmazsa GetCapabilities kullan)</wxs139Layer>
+	
+	<createThumbnails>WMS katmanları için küçük resim oluştur</createThumbnails>
+	
+	<serviceCategory>Servis Kategorisi</serviceCategory>
+	<datasetCategory>Veriseti Kategorisi</datasetCategory>
+	
+	<host>Host</host>
+	<port>Port</port>
+	<servlet>Servlet</servlet>
+	<useAccount>Kullanılacak Hesap</useAccount>
+	<username>Kullanıcı Adı</username>
+    <password>Şifre</password>
+<search>Arama Kriterleri</search>
+<siteName>Site adı</siteName>
+<freeText>Serbest metin</freeText>
+<title>Başlık</title>
+<abstract>Özet</abstract>
+<keywords>Anahtar kelimeler</keywords>
+<subject>Konu</subject>
+<digital>Dijital</digital>
+<hardcopy>Basılı</hardcopy>
+<siteId>Site kimliği</siteId>
+<retrieve>Al</retrieve>
+<warn>Sadece site bölümünü doldurduktan sonra alabilirsiniz</warn>
+
+<content>Hasat İçerik</content>
+<importxslt>Hasat kayıtlara bu XSLT'yi uygula</importxslt>
+
+<options>Seçenekler</options>
+<everySpec>(gün: saat: dakika)</everySpec>
+<oneRun>Sadece bir kez çalıştır</oneRun>
+<createGroups>Grupları oluştur</createGroups>
+<createCateg>Kategorileri oluştur</createCateg>
+<active>Aktif</active>
+<inactive>Pasif</inactive>
+<retrieveSources>kaynakları al</retrieveSources>
+<retrieveGroups>grupları al</retrieveGroups>
+<retrieveInfo>Bilgi al</retrieveInfo>
+<source>Kaynak</source>
+<criteria>Kriterler</criteria>
+<validate>Doğrula</validate>
+<recurse>Tekrarla</recurse>
+<nodelete>Kaynakta silinmiş ise yerel bilgisayarda sakla</nodelete>
+<server>Sunucu</server>
+<database>Veritabanı</database>
+<privileges>Yetki/Haklar</privileges>
+<categories>Kategoriler</categories>
+<url>URL</url>
+<capabUrl>Servis URL</capabUrl>
+<icon>Simge</icon>
+<group>Grup</group>
+<groups>Gruplar</groups>
+<remoteGroup>Uzak grup</remoteGroup>
+<copyPolicy>Politikayı Kopyala</copyPolicy>
+<allGroup>Tüm Gruplar</allGroup>
+
+<policy>
+		<copy>Kopyala</copy>
+		<createAndCopy>Oluştur ve Kopyala</createAndCopy>
+		<copyToIntranet>Intranet grubuna kopyala</copyToIntranet>
+		<dontCopy>Kopyalama</dontCopy>
+	</policy>
+	
+	<from>Buradan</from>
+	<until>Kadar</until>
+	<set>Set Et***</set>
+	<prefix>Ön ek</prefix>
+	<stylesheet>Biçim Şablonu-Stylesheet***</stylesheet>
+	
+	<!-- Buttons -->
+	
+	<add>Ekle</add>
+	<edit>Düzenle</edit>
+	<save>Kaydet</save>
+	<activate>Aktive Et</activate>
+	<deactivate>Pasif Hale Getir</deactivate>
+	<run>Çalıştır</run>
+	<remove>Kaldır</remove>
+	<refresh>Yenile</refresh>
+	
+	<days>gün</days>
+	<hours>saat</hours>
+	<mins>dakika</mins>
+	
+	<threddslang>Metaveri Dili</threddslang>
+	<threddsImp>Import Türü</threddsImp>
+	<threddsServiceMdOnly19119>ISO19119 kullanarak katalogdaki bütün servisler için metaveri oluştur.</threddsServiceMdOnly19119>
+	<threddsCollectionDataset19115>Koleksiyon verisetleri için metaveri oluştur</threddsCollectionDataset19115>
+	<threddsAtomicDataset19115>Atomik verisetleri için metaveri oluştur</threddsAtomicDataset19115>
+	<threddsCreateDefaultMd>Varsayılan metaveri oluştur</threddsCreateDefaultMd>
+	<threddsCreateFragments>Fragman kullanarak özelleştirilmiş metaveri oluştur</threddsCreateFragments>
+  <threddsFragmentStylesheetForCollections>Stylesheet toplama veri setleri meta verileri parçaları oluşturmak için kullanılacak</threddsFragmentStylesheetForCollections>
+  <collectionFragmentStylesheet>Koleksiyon(Toplama) Biçim Şablonu</collectionFragmentStylesheet>
+  <threddsFragmentStylesheetForAtomics>Atomik veri setlerinden metaveri parçası oluşturmak için biçim şablonu</threddsFragmentStylesheetForAtomics>
+  <atomicFragmentStylesheet>Atomik Biçim Şablonu</atomicFragmentStylesheet>
+<threddsCreateSubtemplates>Parça için altşabloun oluştur.(oluşan metaveride xlink kullanılacaktır)</threddsCreateSubtemplates>
+<threddsIgnoreHarvestOnCollections>Katalogda yeralan toplama veri setleri üzerinde hasat özelliklerini yoksay</threddsIgnoreHarvestOnCollections>
+<threddsOSCollections>Toplama meta kayıtları için şema seçiniz</threddsOSCollections>
+<threddsIgnoreHarvestOnAtomics>Atomik veri setleri üzerinde hasat özelliklerini yoksay</threddsIgnoreHarvestOnAtomics>
+<threddsOSAtomics>Atomik meta kayıtları için şema seçiniz</threddsOSAtomics>
+<threddsCreateThumbnails>WMS veri seti  için küçük resim oluştur</threddsCreateThumbnails>
+<metadataFragmentsStylesheet>Parça oluşturmak için biçim şablonu</metadataFragmentsStylesheet>
+<template>parça kullanarak metaveri oluşturma şablonu</template>
+<fragmentCategory>Parçalar için kategori</fragmentCategory>
+<recordCategory>Bağlantılı parçalar ile yapılmış kayıtlar kategorisi</recordCategory>
+<z3950repositories>Z3950 Sunucu (lar)</z3950repositories>
+<z3950query>Z3950 Sorgusu</z3950query>
+<cataUrl>Katalog URL'si</cataUrl>
+
+<validator>
+		<length>
+			<cannotBeEmpty>'{NAME}' alanı boş bırakılamaz</cannotBeEmpty>
+			<invalidMinSize>'{NAME}' alanı en az {VALUE} karakter olmalıdır</invalidMinSize>
+			<invalidMaxSize>'{NAME}' alanı en fazla {VALUE} karakter olmalıdır</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>'{NAME}' alanı sayı olmalıdır</notInt>
+			<invalidMinValue>'{NAME}' alanı &gt;= {VALUE} olmalıdır</invalidMinValue>
+			<invalidMaxValue>'{NAME}' alanı &lt;= {VALUE} olmalıdır</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>'{NAME}' alanı alfanumerik karakter olmalıdır (ilk karakter harf olmak zorundadır)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>'{NAME}' alanı geçerli bir sunucu adı değildir</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>'{NAME}' alanı geçerli bir URL değildir</notURL>
+		</url>
+	</validator>
+	
+	
+	
+	
+<pleaseSelect>En az bir girdi/alan seçiniz</pleaseSelect>
+<pleaseSelectGroup>En az bir grup seçiniz</pleaseSelectGroup>
+<cannotAdd>Yeni bir giriş/alan eklenemiyor</cannotAdd>
+<cannotGet>İlgili alan/lar alınamıyor</cannotGet>
+<cannotRemove>Seçilen alan / lar silinemiyor</cannotRemove>
+<cannotStart>seçilen alan / lar etkinleştirilemiyor</cannotStart>
+<cannotStop>seçilen alan / lar devre dışı bırakılamıyor</cannotStop>
+<cannotRun>Seçilen alan/lar çalıştırılamıyor</cannotRun>
+<confirmRemove>Seçilen alanlar kaldırılsın mı? Noktalar ve tüm hasat metadata silinecektir.</confirmRemove>
+<everyZero>hasat dönemi 00:00:00 olamaz</everyZero>
+<pleaseRetrieve>Önce alan/arazi verisini alınız</pleaseRetrieve>
+<cannotRetrieve>Bilgi alınamadı</cannotRetrieve>
+<cannotUpdate>Sunucuda bilgi güncellemesi yapılamadı</cannotUpdate>
+<supplyHost>sunucu' parametresi veriniz</supplyHost>
+<supplyServlet>servlet' parametresi veriniz</supplyServlet>
+<pleaseSpecifySiteId>SiteID belirtiniz</pleaseSpecifySiteId>
+<cannotQueryOai>OAI-PMH sunucusu sorgulanamadı</cannotQueryOai>
+<gn20Unsafe>Eski GeoNetwork üzerinde hasat yapmak güvenli olmayabilir. 
+ 					Önceki nokta(düğüm)lerin tekil kimlikleri olmadığından beklenmedik sonuçlar çıkabilir
+					(ör:başka hasatlara ait noktalarda silme veya değişiklik).</gn20Unsafe>
+	<supplyUrl>Lütfen Geçerli bir URL giriniz</supplyUrl>
+	<oper>
+		<op id="0">Görüntüle</op>
+		<op id="1">İndir</op>
+		<op id="2">Düzenle</op>
+		<op id="3">Uyarı Görüntüle</op>
+		<op id="4">Yönetici</op>
+		<op id="5">Interaktif Harita</op>
+		<op id="6">Öne çıkan***</op>
+	</oper>
+	
+	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<statusTip>
+		<inactive>Pasif</inactive>
+		<active>Aktif</active>
+		<running>Çalışıyor</running>
+	</statusTip>
+	
+	<tipHeader>
+	<cannotQueryOai>OAI-PMH sunucusu sorgulanamadı</cannotQueryOai>
+<total></total>
+<total>Toplam</total>
+<added>Eklenen</added>
+<removed>Kaldırılan</removed>
+<updated>Güncellenen</updated>
+<unchanged>Değişmeyen</unchanged>
+<unknownSchema>Bilinmeyen şema</unknownSchema>
+<unretrievable>Alınamayan</unretrievable>
+<badFormat>Kötü XML formatı</badFormat>
+<doesNotValidate>Doğrulanmıyor</doesNotValidate>
+<datasetAdded>Veri setleri</datasetAdded>
+<datasetExist>Mevcut Veri Setleri</datasetExist>
+<datasetMdUrl>Kullanılan meta URL</datasetMdUrl>
+<thumbnails>Küçükresim</thumbnails>
+<thumbnailsFailed>Başarısız küçük resim</thumbnailsFailed>
+<serviceRecords>Eklenen Servisler</serviceRecords>
+<collectionDatasetRecords>Eklenen Koleksiyonlar</collectionDatasetRecords>
+<atomicDatasetRecords>Eklenen Atomikler</atomicDatasetRecords>
+        <fragmentsAdded>Eklenen parçalar</fragmentsAdded>
+        <subtemplatesAdded>Eklenen alt şablonlar</subtemplatesAdded>
+        <fragmentsRemoved>Kaldırılan parçalar</fragmentsRemoved>
+        <subtemplatesRemoved>Kaldırılan altşablonar</subtemplatesRemoved>
+<fragmentsUnknownSchema>Şeması bilinmeyen parçalar</fragmentsUnknownSchema>
+<fragmentsReturned>Geri dönen parçalar</fragmentsReturned>
+<fragmentsMatched>Eşlenen parçalar</fragmentsMatched>
+<recordsBuilt>Oluşan kayıtlar</recordsBuilt>
+</tipHeader>
+	
+	<notRun>Waiting for the first run</notRun>
+	
+	<tips>
+		<!-- geonetwork harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="gn.name">
+			Hasat noktasını belirlemek için jenerik isim
+		</tip>
+		
+		<tip id="gn.host">
+			Uzak bağlantı yapılacak olan bilgisayarın adresi
+		</tip>
+		
+		<tip id="gn.retrieveSources">
+			<i>sunucu</i>, <i>port</i> ve <i>servlet</i> parametrelerini girin and ilgili bütün verileri almak için bu düğmeye basın
+		</tip>
+		
+		<tip id="gn.retrieveGroups">
+			S<i>sunucu</i>, <i>port</i> ve <i>servlet</i> parametrelerini girin ve uzaktaki noktaya ait erişilebilir grupları almak için bu düğmeye basın
+		</tip>
+		
+		<tip id="gn.addSearch">
+			Uzak noktaya ait bir arama tanımlayın. Metaveri almak için en az bir arama tanımlamalısınız.
+		</tip>
+		
+		<tip id="gn.categories">
+			Hasat metaverisine bir veya daha fazla kategori tanımlayabilirsiniz. <b>&lt;CTRL&gt;</b> kullarak birden fazla kategori seçebilirsiniz.
+		</tip>
+	
+		<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+	
+		<tip id="z3950.repositories">
+			Bir veya daha fazla Z3950 sunucusu seçiniz
+		</tip>
+		
+		<tip id="z3950.query">
+			Sorgu geçerli bir Z3950 sorgusu olmalıdır ör. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
+		</tip>
+	
+		<tip id="z3950.profile">
+			 Z3950 sunucu profili(Grubu) seçiniz
+		</tip>
+		
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="csw.capabUrl">
+			Verilen URL yetkinlik dokümanına erişmelidir. URL formatı şu şekilde olmalıdır:<br/>
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+		</tip>
+		
+		<tip id="csw.addSearch">
+			Uzak sunucuya bir arama ekleyin. Metaveri almak için en az bir arama tanımlamalısınız.
+		</tip>
+		
+		<tip id="csw.groups">
+			Hasat metaveriye yetki ve ayrıcalık için seçim yapabilirsiniz.
+		</tip>
+			
+	<tip id="csw.addGroups">
+			Soldaki panelden grup veya grupları seçerek( <b>&lt;CTRL&gt;</b> kullanarak) bu düğmeye basınız.
+		</tip>
+		
+		<tip id="csw.categories">
+			Hasat metaveriye bir veya daha fazla kategori tanımlayabilirsiniz. U <b>&lt;CTRL&gt;</b> 
+			kullanarak birden çok kategori seçebilirsiniz.
+		</tip>
+	
+		<!-- OGCWXS harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="ogcwxs.wxstype">
+			OGC web servisi tipleri.	
+		</tip>
+		
+		<tip id="ogcwxs.version">
+			OGC web servisi versiyonu.	
+		</tip>
+		
+		<tip id="ogcwxs.lang">
+			Üretilen metaveri dili.	
+		</tip>
+		
+		<tip id="ogcwxs.capabUrl">
+			URL web servisi giriş noktasına erişmelidir. URL şu şekilde olmalıdır:<br/>
+			http://HOST/PATH			
+		</tip>
+		
+		
+		
+		<tip id="ogcwxs.addSearch">
+			Uzak sunucuya bir arama ekleyin. Metaveri almak için en az bir arama tanımlamalısınız.
+		</tip>
+		
+		<tip id="ogcwxs.groups">
+			Hasat metaveriye yetki ve ayrıcalık tanımları için seçim yapabilirsiniz.
+		</tip>
+		<tip id="ogcwxs.addGroups">
+			Soldaki panelden grup veya grupları seçerek( <b>&lt;CTRL&gt;</b> kullanarak) bu düğmeye basınız.
+		</tip>
+		
+		<tip id="ogcwxs.categories">
+			Hasat metaveriye bir veya daha fazla kategori tanımlayabilirsiniz. U <b>&lt;CTRL&gt;</b> 
+			kullanarak birden çok kategori seçebilirsiniz.
+		
+		</tip>
+
+	
+		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<tip id="oai.url">
+			URL  OAI-PMH sunucusuna erişmelidir.
+		</tip>
+		
+		<tip id="oai.addSearch">
+			Uzak sunucuya arama ekleyin. Arama eklenemdiği takdirde,  'oai_dc' metaveri biçiminde kısıt bulundurmayan bir arama gerçekleşir.
+		</tip>
+		
+		<tip id="oai.groups">
+			Hasat metaveriye ilişkin ayrıcalık/yetki seçimi yapabilirsiniz.
+		</tip>
+		
+		<tip id="oai.addGroups">
+			Soldaki panelden grup veya grupları seçerek( <b>&lt;CTRL&gt;</b> kullanarak) bu düğmeye basınız.
+		</tip>
+		
+		<tip id="oai.categories">
+		    Hasat metaveriye bir veya daha fazla kategori tanımlayabilirsiniz.<b>&lt;CTRL&gt;</b> 
+			kullanarak birden çok kategori seçebilirsiniz.
+		
+		</tip>
+	
+		<tip id="oai.validate">
+			Yalnızca Şeması ile doğrulanan metaverileri hasatlar.
+		</tip>
+		<!-- OAI-PMH harvesting type : dynamic search part -->
+		
+		<tip id="oai.remove">
+			Bu arama kriterini kaldır
+		</tip>
+		
+		<tip id="oai.from">
+			Hasat işlemi başlangıç tarihi (Opsiyonel)
+		</tip>
+		
+		<tip id="oai.from.set">
+			Başlama('aa.gg.yyyy'dan itibaren) tarihini ayarlamak için diyalog görüntüle
+		</tip>
+		
+		<tip id="oai.from.clear">
+			FROM*** parametresini temizle
+		</tip>
+		
+		<tip id="oai.until">
+		Hasat işlemi sonlandırma tarihi(opsiyonel)
+		</tip>
+		
+		<tip id="oai.until.set">
+			KADAR('aa.gg.yyyy''a kadar) zamanını ayarlamak için diyalog görüntüle
+		</tip>
+		
+		<tip id="oai.until.clear">
+			KADAR parametresini temizle
+		</tip>
+	
+		<tip id="oai.set">
+			Hasat işlemini uzakta mevcut olan metaveriye göre özel olarak tanımlayabilirsiniz.
+		</tip>
+		
+		<tip id="oai.prefix">
+			Hasat için metaveri tipini seçiniz.
+		</tip>
+	</tips>
+</strings>
+
