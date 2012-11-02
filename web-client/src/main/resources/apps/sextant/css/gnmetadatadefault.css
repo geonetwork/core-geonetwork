@@ -537,6 +537,8 @@ be use for custom styling in view mode */
 /* duration field: inline input elements 
   class name is on the label, so select the next sibling which is the container.
 * */
+/* TODO MERGE-GN*/
+.gtsTMPeriodDuration + * input,
 .gmlduration + * input {
     float: none !important;
 }

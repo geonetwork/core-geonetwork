@@ -36,7 +36,7 @@
    <xsl:param xmlns:svrl="http://purl.oclc.org/dsdl/svrl" name="thesaurusDir"/>
    <xsl:param xmlns:svrl="http://purl.oclc.org/dsdl/svrl" name="rule"/>
    <xsl:variable xmlns:svrl="http://purl.oclc.org/dsdl/svrl" name="loc"
-                 select="document(concat('loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/>
+                 select="document(concat('../loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/>
 
    <!--XSD TYPES FOR XSLT2-->
 

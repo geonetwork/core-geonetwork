@@ -7,9 +7,9 @@
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
-	<xsl:import href="metadata-iso19139.emodnet.hydrography-fop.xsl"/>
+	<xsl:import href="metadata-fop.xsl"/>
 
-  <xsl:template name="iso19139.emodnet.hydrographyBrief">
+  <xsl:template name="iso19139.sextantBrief">
     <metadata>
 			<xsl:choose>
 		    <xsl:when test="geonet:info/isTemplate='s'">
@@ -26,7 +26,7 @@
   </xsl:template>
 
 
-  <xsl:template name="iso19139.emodnet.hydrographyCompleteTab">
+  <xsl:template name="iso19139.sextantCompleteTab">
     <xsl:param name="tabLink"/>
     <xsl:param name="schema"/>
     
@@ -36,8 +36,8 @@
     </xsl:call-template>
   </xsl:template>
 
-	<!-- main template - the way into processing iso19139.emodnet.hydrography -->
-	<xsl:template name="metadata-iso19139.emodnet.hydrography">
+	<!-- main template - the way into processing iso19139.sextant -->
+	<xsl:template name="metadata-iso19139.sextant">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="embedded"/>
@@ -68,7 +68,7 @@
 		<xsl:param name="tabLink"/>
 		<xsl:param name="schema"/>
 	  
-	  <xsl:if test="$schema='iso19139.emodnet.hydrography'">
+	  <xsl:if test="$schema='iso19139.sextant'">
 			<!-- FRA tabs -->
 			<xsl:if test="/root/gui/config/metadata-tab/fra">
 				<xsl:call-template name="displayTab">
@@ -295,7 +295,6 @@
 				</xsl:call-template>
 			</xsl:when>
 			
-			<!-- TODO EMODNET tab -->
 			
 			<!-- default -->
 			<xsl:otherwise>
@@ -312,6 +311,6 @@
 	<!-- =================================================================== -->
 	<!-- === Javascript used by functions in this presentation XSLT          -->
 	<!-- =================================================================== -->
-	<xsl:template name="iso19139.emodnet.hydrography-javascript"/>
+	<xsl:template name="iso19139.sextant-javascript"/>
 
 </xsl:stylesheet>
