@@ -600,3 +600,13 @@ div.x-tip-body div.help {
 	background-image: none;
 	border-bottom: none;
 }
+
+/**
+ * In myocean view, do not display controls for alternate title which is mandatory 
+ * in the editor > myocean view.
+ * This could have been better in the XSD schema, but making a complete new ISO profile
+ * is not an option.
+ */
+.myocean * .gmdalternateTitle span.buttons {
+    display: none !important;
+}
