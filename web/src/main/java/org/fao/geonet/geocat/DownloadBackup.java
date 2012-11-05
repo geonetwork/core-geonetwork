@@ -10,7 +10,10 @@ import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetworkDataDirectory;
+<<<<<<< HEAD
 import org.fao.geonet.constants.Geonet;
+=======
+>>>>>>> origin/geocat_stable
 import org.jdom.Element;
 
 public class DownloadBackup implements Service {
@@ -22,7 +25,11 @@ public class DownloadBackup implements Service {
 	@Override
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
+<<<<<<< HEAD
 		Log.info(Geonet.GEONETWORK, "User "+context.getUserSession().getUsername()+" from IP: "+context.getIpAddress()+" has started to download backup archive");
+=======
+		Log.info(ArchiveAllMetadataJob.BACKUP_LOG, context.getIpAddress()+" has started to download backup archive");
+>>>>>>> origin/geocat_stable
 		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
 		File backupDir = new File(datadir, ArchiveAllMetadataJob.BACKUP_DIR);
 		if (!backupDir.exists()) {
@@ -35,11 +42,19 @@ public class DownloadBackup implements Service {
 		return BinaryFile.encode(200, files[0].getPath(), false);
 	}
 
+<<<<<<< HEAD
 	private void throw404() {
+=======
+	private void throw404() throws JeevesException {
+>>>>>>> origin/geocat_stable
 		throw new JeevesException("Backup file does not yet exist", null) {
 			private static final long serialVersionUID = 1L;
 			{
 				this.code = 404;
+<<<<<<< HEAD
+=======
+				this.id = "NoBackup";
+>>>>>>> origin/geocat_stable
 			}
 		};
 	}
