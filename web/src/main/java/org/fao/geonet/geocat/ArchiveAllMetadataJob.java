@@ -62,7 +62,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		Log.info(BACKUP_LOG, "Starting backup of all metadata");
 		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 		@SuppressWarnings("unchecked")
-		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not(isharvested='y')").getChildren();
+		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
 
 		Set<String> uuids = new HashSet<String>();
 		for (Element uuidElement : uuidQuery) {
