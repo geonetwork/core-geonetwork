@@ -30,6 +30,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 
 	static final String BACKUP_FILENAME = "geocat_backup";
 	static final String BACKUP_DIR = "geocat_backups";
+	public static final String BACKUP_LOG  = Geonet.GEONETWORK + ".backup";
 	private String stylePath;
 
 	@Override
@@ -58,7 +59,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 	private void createBackup(ServiceContext serviceContext) throws Exception, SQLException,
 			IOException {
 		try {
-		Log.info(Geonet.GEONETWORK, "Starting backup of all metadata");
+		Log.info(BACKUP_LOG, "Starting backup of all metadata");
 		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 		@SuppressWarnings("unchecked")
 		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not(isharvested='y')").getChildren();
@@ -68,7 +69,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 			uuids.add(uuidElement.getChildText("uuid"));
 		}
 
-		Log.info(Geonet.GEONETWORK, "Backing up "+uuids.size()+" metadata");
+		Log.info(BACKUP_LOG, "Backing up "+uuids.size()+" metadata");
 		
 		String format = "full";
 		boolean resolveXlink = true;
@@ -85,9 +86,9 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		if(!destFile.exists()) {
 			throw new Exception("Moving backup file failed!");
 		}
-		Log.info(Geonet.GEONETWORK, "Backup finished.  Backup file: "+destFile);
+		Log.info(BACKUP_LOG, "Backup finished.  Backup file: "+destFile);
 		} catch (Throwable t) {
-			Log.error(Geonet.GEONETWORK, "Failed to create a back up of metadata", t);
+			Log.error(BACKUP_LOG, "Failed to create a back up of metadata", t);
 		}
 	}
 
