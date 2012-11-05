@@ -34,6 +34,7 @@ import java.util.Vector;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -96,6 +97,7 @@ public class ServiceManager
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String,String> startupErrors;
+    private JeevesApplicationContext jeevesApplicationContext;
 
     //---------------------------------------------------------------------------
 	//---
@@ -112,6 +114,8 @@ public class ServiceManager
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
+    public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
+
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
@@ -328,9 +332,9 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public ServiceContext createServiceContext(String name)
+	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, monitorManager, providMan, serialFact, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -345,7 +349,7 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, monitorManager, providMan, serialFact, profilMan, htContexts);
 		dispatch(req, session, context);
 	}
 

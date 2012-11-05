@@ -26,6 +26,7 @@ package jeeves.server.context;
 import java.util.Hashtable;
 import java.util.Map;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
@@ -91,9 +92,9 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
 	{
-		super(mm, pm, sf, contexts);
+		super(jeevesApplicationContext, mm, pm, sf, contexts);
 
 		profilMan    = p;
 		setService(service);
@@ -181,7 +182,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
 			public ResourceManager getResourceManager() {
 				return new ResourceManager(getMonitorManager(), getProviderManager()) {
 					@Override

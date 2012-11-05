@@ -393,6 +393,11 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Metadata notifier ...");
 
+        
+        //------------------------------------------------------------------------
+        //--- initialize metadata notifier subsystem
+        logger.info("  - Metadata notifier ...");
+        
 		//------------------------------------------------------------------------
 		//--- return application context
 

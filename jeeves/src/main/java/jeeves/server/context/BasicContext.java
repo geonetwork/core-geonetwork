@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
@@ -48,6 +49,7 @@ public class BasicContext
 
 	protected Hashtable<String, Object> htContexts;
     private MonitorManager monitorManager;
+    private final JeevesApplicationContext jeevesApplicationContext;
 
     //--------------------------------------------------------------------------
 	//---
@@ -55,10 +57,11 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
 	{
 		resMan = new ResourceManager(mm, pm);
 
+		this.jeevesApplicationContext = jeevesApplicationContext;
         this.monitorManager = mm;
 		provMan    = pm;
 		serialFact = sf;
@@ -105,6 +108,12 @@ public class BasicContext
 
     public MonitorManager getMonitorManager() {
         return monitorManager;
+    }
+
+    //--------------------------------------------------------------------------
+
+    public JeevesApplicationContext getApplicationContext() {
+        return jeevesApplicationContext;
     }
 
 	//--------------------------------------------------------------------------

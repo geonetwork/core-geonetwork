@@ -150,9 +150,22 @@ public class JeevesEngine
 			info("Path    : "+ appPath);
 			info("BaseURL : "+ baseUrl);
 
+            JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+
+            info("Initializing profiles...");
+            ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
+
+            // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
+            jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
+            profileManager.setApplicationContext(jeevesAppContext);
+            jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
+            jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
+
+            
 			serviceMan.setAppPath(appPath);
 			serviceMan.setProviderMan(providerMan);
 			serviceMan.setMonitorMan(monitorManager);
+			serviceMan.setApplicationContext(jeevesAppContext);
 			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);
 			serviceMan.setServlet(servlet);
@@ -160,26 +173,17 @@ public class JeevesEngine
 			scheduleMan.setAppPath(appPath);
 			scheduleMan.setProviderMan(providerMan);
 			scheduleMan.setMonitorManager(monitorManager);
+			scheduleMan.setApplicationContext(jeevesAppContext);
 			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
-			info("Initializing profiles...");
-			ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
-            
-			 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
-			 // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
-			 jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-			 profileManager.setApplicationContext(jeevesAppContext);
-			 jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
-			 jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
-		
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
 
 			for(int i=0; i<appHandList.size(); i++)
-				initAppHandler((Element) appHandList.get(i), servlet);
+				initAppHandler((Element) appHandList.get(i), servlet, jeevesAppContext);
 
 			info("Starting schedule manager...");
 			scheduleMan.start();
@@ -522,7 +526,7 @@ public class JeevesEngine
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception
+	private void initAppHandler(Element handler, JeevesServlet servlet, JeevesApplicationContext jeevesApplicationContext) throws Exception
 	{
 		if (handler == null)
 			info("Handler not found");
@@ -541,7 +545,7 @@ public class JeevesEngine
 
 			ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-			ServiceContext srvContext = serviceMan.createServiceContext("AppHandler");
+			ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", jeevesApplicationContext);
 			srvContext.setLanguage(defaultLang);
 			srvContext.setLogger(appHandLogger);
 			srvContext.setServlet(servlet);

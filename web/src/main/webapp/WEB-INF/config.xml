@@ -625,6 +625,20 @@
 			<class name=".services.region.Get" />
 		</service>
 
+		<service name="xml.regions.list">
+			<class name=".services.region.List" />
+		</service>
+
+		<service name="region.getmap">
+			<class name=".services.region.GetMap" />
+		</service>
+
+		<service name="wkt.region.geom">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="wkt"/>
+			</class>
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
 

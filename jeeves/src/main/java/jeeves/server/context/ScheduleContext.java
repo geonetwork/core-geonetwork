@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
@@ -45,9 +46,9 @@ public class ScheduleContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ScheduleContext(String name, MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public ScheduleContext(String name,JeevesApplicationContext appContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
 	{
-		super(mm, pm, sf, contexts);
+		super(appContext, mm, pm, sf, contexts);
 
 		logger = Log.createLogger(Log.SCHEDULER +"."+ name);
 		this.scheduleName = name;
