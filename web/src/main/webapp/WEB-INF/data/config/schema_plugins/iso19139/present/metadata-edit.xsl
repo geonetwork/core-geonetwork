@@ -2513,7 +2513,7 @@
         </xsl:apply-templates>
         
         <xsl:choose>
-          <xsl:when test="string(gmd:protocol[1]/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' 
+          <xsl:when test="matches(gmd:protocol[1]/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') 
             and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
             <xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
               <xsl:with-param name="access" select="'private'"/>
@@ -2663,7 +2663,7 @@
   <!-- online resources: download -->
   <!-- ============================================================================= -->
 
-  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]" priority="2">
+  <xsl:template mode="iso19139" match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]" priority="2">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
@@ -2724,7 +2724,7 @@
             <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
             <xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
             <input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
-            <select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}', '{$value}');" class="md">
+            <select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
               <xsl:if test="$isXLinked"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
               <xsl:if test="$value=''">
                 <option value=""/>
@@ -2765,7 +2765,7 @@
         <xsl:variable name="pref" select="../gmd:protocol/gco:CharacterString/geonet:element/@ref"/>
         <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref|gmx:MimeFileType/geonet:element/@ref"/>
         <xsl:variable name="value" select="gco:CharacterString|gmx:MimeFileType"/>
-        <xsl:variable name="button" select="starts-with($protocol,'WWW:DOWNLOAD') and contains($protocol,'http') and normalize-space($value)=''"/>
+        <xsl:variable name="button" select="matches($protocol,'^WWW:DOWNLOAD-.*-http--download.*') and normalize-space($value)=''"/>
 
         <xsl:call-template name="simpleElementGui">
           <xsl:with-param name="schema" select="$schema"/>
@@ -2817,10 +2817,10 @@
       <xsl:with-param name="text">
         <table width="100%"><tr>
           <xsl:variable name="ref" select="geonet:element/@ref"/>
-          <td width="70%">
-            <xsl:value-of select="string(.)"/>
-          </td>
+          <xsl:variable name="value" select="string(.)"/>
+          <td width="70%"><xsl:value-of select="$value"/></td>
           <td align="right">
+            <input type="hidden" id="_{$ref}" value="{$value}"/>
             <button type="button" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del.new','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button>
             <xsl:if test="$geo">
               <xsl:call-template name="iso19139GeoPublisherButton">
@@ -3002,7 +3002,7 @@
 
         <!-- The old links still in use by some systems. Deprecated -->
         <xsl:choose>
-          <xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and not(contains($linkage,$download_check))">
+          <xsl:when test="matches($protocol,'^WWW:DOWNLOAD-.*-http--download.*') and not(contains($linkage,$download_check))">
             <link type="download"><xsl:value-of select="$linkage"/></link>
           </xsl:when>
           <xsl:when test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($name)!=''">
