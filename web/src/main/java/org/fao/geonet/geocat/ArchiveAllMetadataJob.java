@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
@@ -32,6 +33,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 	static final String BACKUP_DIR = "geocat_backups";
 	public static final String BACKUP_LOG  = Geonet.GEONETWORK + ".backup";
 	private String stylePath;
+	private AtomicBoolean backupIsRunning = new AtomicBoolean(false);
 
 	@Override
 	public void init(String appPath, ServiceConfig params) throws Exception {
@@ -58,37 +60,42 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 
 	private void createBackup(ServiceContext serviceContext) throws Exception, SQLException,
 			IOException {
+	    if(!backupIsRunning.compareAndSet(false, true)) {
+	        return;
+	    }
 		try {
-		Log.info(BACKUP_LOG, "Starting backup of all metadata");
-		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-		@SuppressWarnings("unchecked")
-		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
+    		Log.info(BACKUP_LOG, "Starting backup of all metadata");
+    		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+    		@SuppressWarnings("unchecked")
+    		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
 
-		Set<String> uuids = new HashSet<String>();
-		for (Element uuidElement : uuidQuery) {
-			uuids.add(uuidElement.getChildText("uuid"));
-		}
+    		Set<String> uuids = new HashSet<String>();
+    		for (Element uuidElement : uuidQuery) {
+    			uuids.add(uuidElement.getChildText("uuid"));
+    		}
 
-		Log.info(BACKUP_LOG, "Backing up "+uuids.size()+" metadata");
+    		Log.info(BACKUP_LOG, "Backing up "+uuids.size()+" metadata");
 		
-		String format = "full";
-		boolean resolveXlink = true;
-		boolean removeXlinkAttribute = false;
-		File srcFile = new File(MEFLib.doMEF2Export(serviceContext, uuids, format, false, stylePath, resolveXlink , removeXlinkAttribute));
+    		String format = "full";
+    		boolean resolveXlink = true;
+    		boolean removeXlinkAttribute = false;
+    		File srcFile = new File(MEFLib.doMEF2Export(serviceContext, uuids, format, false, stylePath, resolveXlink , removeXlinkAttribute));
 		
-		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
-		File backupDir = new File(datadir, BACKUP_DIR);
-		String today = new SimpleDateFormat("-yyyy-MM-dd").format(new Date());
-		File destFile = new File(backupDir, BACKUP_FILENAME+today+".zip");
-		FileUtils.deleteDirectory(backupDir);
-		destFile.getParentFile().mkdirs();
-		FileUtils.moveFile(srcFile, destFile);
-		if(!destFile.exists()) {
-			throw new Exception("Moving backup file failed!");
-		}
-		Log.info(BACKUP_LOG, "Backup finished.  Backup file: "+destFile);
+    		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
+    		File backupDir = new File(datadir, BACKUP_DIR);
+    		String today = new SimpleDateFormat("-yyyy-MM-dd").format(new Date());
+    		File destFile = new File(backupDir, BACKUP_FILENAME+today+".zip");
+    		FileUtils.deleteDirectory(backupDir);
+    		destFile.getParentFile().mkdirs();
+    		FileUtils.moveFile(srcFile, destFile);
+    		if(!destFile.exists()) {
+    			throw new Exception("Moving backup file failed!");
+    		}
+    		Log.info(BACKUP_LOG, "Backup finished.  Backup file: "+destFile);
 		} catch (Throwable t) {
 			Log.error(BACKUP_LOG, "Failed to create a back up of metadata", t);
+		} finally {
+		    backupIsRunning.set(false);
 		}
 	}
 
