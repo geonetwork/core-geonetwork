@@ -57,16 +57,19 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 
 	private void createBackup(ServiceContext serviceContext) throws Exception, SQLException,
 			IOException {
+		try {
 		Log.info(Geonet.GEONETWORK, "Starting backup of all metadata");
 		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
 		@SuppressWarnings("unchecked")
-		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata").getChildren();
+		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not(isharvested='y')").getChildren();
 
 		Set<String> uuids = new HashSet<String>();
 		for (Element uuidElement : uuidQuery) {
 			uuids.add(uuidElement.getChildText("uuid"));
 		}
 
+		Log.info(Geonet.GEONETWORK, "Backing up "+uuids.size()+" metadata");
+		
 		String format = "full";
 		boolean resolveXlink = true;
 		boolean removeXlinkAttribute = false;
@@ -83,7 +86,9 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 			throw new Exception("Moving backup file failed!");
 		}
 		Log.info(Geonet.GEONETWORK, "Backup finished.  Backup file: "+destFile);
-
+		} catch (Throwable t) {
+			Log.error(Geonet.GEONETWORK, "Failed to create a back up of metadata", t);
+		}
 	}
 
 }

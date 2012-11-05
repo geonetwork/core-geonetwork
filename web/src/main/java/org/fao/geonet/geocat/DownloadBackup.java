@@ -40,6 +40,7 @@ public class DownloadBackup implements Service {
 			private static final long serialVersionUID = 1L;
 			{
 				this.code = 404;
+				this.id = "NoBackup";
 			}
 		};
 	}
