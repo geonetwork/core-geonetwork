@@ -52,9 +52,9 @@ import java.util.List;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
- * the system setting "localrating/enabled" is false (the default), the user's rating is shared
+ * the system setting "localrating/enable" is false (the default), the user's rating is shared
  * between GN nodes partaking in this harvesting network. If the metadata was not harvested or
- * if "localrating/enabled" is true then 'local rating' is applied, counting only rating from
+ * if "localrating/enable" is true then 'local rating' is applied, counting only rating from
  * users of this node itself.
  *
  * When a remote rating is applied, the local rating is not updated. It will be updated 
@@ -107,9 +107,9 @@ public class Rate implements Service
 
 		String harvUuid = getHarvestingUuid(dbms, id);
 
-		// look up value of localrating/enabled
+		// look up value of localrating/enable
 		SettingManager settingManager = gc.getSettingManager();
-		boolean localRating = settingManager.getValueAsBool("system/localrating/enabled", false);
+		boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
 		
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
