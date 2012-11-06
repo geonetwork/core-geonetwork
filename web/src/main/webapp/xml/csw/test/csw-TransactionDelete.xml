@@ -4,7 +4,7 @@
     <csw:Delete>
         <csw:Constraint version="1.0.0">
             <ogc:Filter>
-                <ogc:PropertyIsLike wildCard="%" singleChar="_" escape="/">
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="/">
                     <ogc:PropertyName>apiso:identifier</ogc:PropertyName>
                     <ogc:Literal>bf7ab961-a69f-48e9-a6da-61c207de86d6</ogc:Literal>
                 </ogc:PropertyIsLike>
