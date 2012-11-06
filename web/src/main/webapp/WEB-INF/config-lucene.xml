@@ -240,7 +240,7 @@
     <Field name="any"/>
     <Field name="abstract"/>
     <Field name="title"/>
-    <Field name="altTitle"/>
+    <!-- <Field name="altTitle"/> -->
     <Field name="keywordType"/>
     <!--<Field name="orgName"/>-->
     <Field name="specificationTitle"/>
