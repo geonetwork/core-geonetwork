@@ -1,83 +1,93 @@
 package org.fao.geonet.services.region;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
+
+import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.rdf.Query;
-import org.fao.geonet.kernel.rdf.QueryBuilder;
-import org.fao.geonet.kernel.rdf.Selectors;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
-import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
+import org.fao.geonet.util.LangUtils;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
-import org.openrdf.sesame.config.AccessDeniedException;
-import org.openrdf.sesame.query.MalformedQueryException;
-import org.openrdf.sesame.query.QueryEvaluationException;
 
-public class ThesaurusRequest implements Request {
+public class ThesaurusRequest extends Request {
 
     
-    private final java.util.List<String> localesToLoad;
-    private final Thesaurus thesaurus;
+    private static final String NO_CATEGORY = "_none_";
 
-    private String labelParam;
-    private String categoryIdParam;
-    private int maxRecordsParam = -1;
+    private WeakHashMap<String, Map<String, String>> categoryTranslations;
+    private ServiceContext serviceContext;
+    private KeywordSearchParamsBuilder searchBuilder;
+
+    private SingleThesaurusFinder finder;
     
     
-    public ThesaurusRequest(Set<String> localesToLoad, Thesaurus thesaurus) {
-        this.localesToLoad = new ArrayList<String>(localesToLoad);
-        this.thesaurus = thesaurus;
+    public ThesaurusRequest(ServiceContext context, WeakHashMap<String, Map<String, String>> categoryTranslations, Set<String> localesToLoad, Thesaurus thesaurus) {
+        this.serviceContext = context;
+        this.categoryTranslations = categoryTranslations;
+        this.searchBuilder = new KeywordSearchParamsBuilder(thesaurus.getIsoLanguageMapper());
+        for (String lang : localesToLoad) {
+            searchBuilder.addLang(lang);
+        }
+        searchBuilder.addThesaurus(thesaurus.getKey());
+        searchBuilder.requireBoundedBy(true);
+        this.finder = new SingleThesaurusFinder(thesaurus);
     }
 
     @Override
-    public Request setLabel(String labelParam) {
-        this.labelParam = labelParam;
+    public Request label(String labelParam) {
+        searchBuilder.keyword(labelParam, KeywordSearchType.CONTAINS, true);
         return this;
     }
 
     @Override
-    public Request setCategoryId(String categoryIdParam) {
-        this.categoryIdParam = categoryIdParam;
+    public Request categoryId(String categoryIdParam) {
+        if(categoryIdParam.equals(NO_CATEGORY)) {
+            categoryIdParam = "";
+        }
+        searchBuilder.relationship(categoryIdParam, KeywordRelation.BROADER, KeywordSearchType.MATCH, false);
         return this;
     }
 
     @Override
-    public Request setMaxRecords(int maxRecordsParam) {
-        this.maxRecordsParam = maxRecordsParam;
+    public Request maxRecords(int maxRecordsParam) {
+        searchBuilder.maxResults(maxRecordsParam);
         return this;
     }
 
     @Override
     public Collection<Region> execute() throws Exception {
-        IsoLanguagesMapper languageMapper = thesaurus.getIsoLanguageMapper();
-        QueryBuilder<KeywordBean> queryBuilder = QueryBuilder.keywordQueryBuilder(languageMapper, this.localesToLoad);
-        if(labelParam != null) {
-            for(String locale: localesToLoad) {
-                queryBuilder.select(Selectors.prefLabel(locale, languageMapper), false);
-            }
-        }
-        if(categoryIdParam != null) {
-            queryBuilder.select(Selectors.related(categoryIdParam, KeywordRelation.BROADER), true);
-        }
-        if(maxRecordsParam > 0) {
-            queryBuilder.limit(maxRecordsParam);
-        }
-
-        Query<KeywordBean> query = queryBuilder.build();
-        List<KeywordBean> keywords = query.execute(this.thesaurus);
+       
+        List<KeywordBean> keywords = searchBuilder.build().search(finder);
         List<Region> regions = new ArrayList<Region>(keywords.size());
         for (KeywordBean keywordBean : keywords) {
             String id = keywordBean.getUriCode();
-            Map<String, String> labels;
-            String categoryId;
-            Map<String, String> categoryLabels;
+            Map<String, String> labels = keywordBean.getValues();
+            String categoryId = keywordBean.getBroaderRelationship();
+            if(categoryId.trim().isEmpty()) {
+                categoryId = NO_CATEGORY;
+            }
+            String categoryLabelKey = categoryId;
+            if (categoryLabelKey.equals(NO_CATEGORY)) {
+                categoryLabelKey = "none";
+            }
+            if(categoryLabelKey.indexOf('#') > -1) {
+                categoryLabelKey = categoryLabelKey.substring(categoryLabelKey.lastIndexOf('#')+1);
+            }
+            Map<String, String> categoryLabels = categoryTranslations.get(categoryLabelKey);
+            if(categoryLabels == null) {
+                categoryLabels = LangUtils.translate(serviceContext, categoryLabelKey);
+                categoryTranslations.put(categoryLabelKey, categoryLabels);
+            }
             boolean hasGeom = false;
             double west = Double.parseDouble(keywordBean.getCoordWest());
             double east = Double.parseDouble(keywordBean.getCoordEast());
@@ -87,7 +97,13 @@ public class ThesaurusRequest implements Request {
             Region region = new Region(id, labels, categoryId, categoryLabels, hasGeom, bbox);
             regions.add(region);
         }
-        return null;
+        return regions;
+    }
+
+    @Override
+    public Request id(String regionId) {
+        searchBuilder.uri(regionId);
+        return this;
     }
 
 }

@@ -6,8 +6,24 @@
 
 	<import resource="config-security.xml"/>
 	
-	<util:l
+	<util:set id="languages">
+		<value>ara</value>
+		<value>cat</value>
+		<value>chi</value>
+		<value>dut</value>
+		<value>eng</value>
+		<value>fin</value>
+		<value>fre</value>
+		<value>ger</value>
+		<value>ita</value>
+		<value>nor</value>
+		<value>pol</value>
+		<value>por</value>
+		<value>rus</value>
+		<value>spa</value>
+		<value>tur</value>
+	</util:set>
 	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
-		
+		<constructor-arg ref="languages"></constructor-arg>
 	</bean>
 </beans>

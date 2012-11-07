@@ -73,9 +73,9 @@ public class List implements Service
 		int maxRecordsParam = Util.getParam(params, RegionParams.MAX_RECORDS, -1);
 		
 		Request request = dao.createSearchRequest(context);
-		if(labelParam != null) { request.setLabel(labelParam); }
-		if(categoryIdParam != null) { request.setCategoryId(categoryIdParam); }
-		if(maxRecordsParam > 0) { request.setMaxRecords(maxRecordsParam); }
+		if(labelParam != null) { request.label(labelParam); }
+		if(categoryIdParam != null) { request.categoryId(categoryIdParam); }
+		if(maxRecordsParam > 0) { request.maxRecords(maxRecordsParam); }
 		
 		Collection<Region> regions = request.execute();
 		

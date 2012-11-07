@@ -52,6 +52,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
@@ -85,6 +86,7 @@ public class ServiceManager
     private ProviderManager providMan;
     private ProfileManager  profilMan;
     private MonitorManager monitorManager;
+    private XmlCacheManager xmlCacheManager;
 
 	private SerialFactory   serialFact;
     private String  appPath;
@@ -114,6 +116,7 @@ public class ServiceManager
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
+	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
     public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
 
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
@@ -334,7 +337,7 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -349,7 +352,7 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
 		dispatch(req, session, context);
 	}
 

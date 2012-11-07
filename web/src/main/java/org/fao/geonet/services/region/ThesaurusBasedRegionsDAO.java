@@ -1,22 +1,23 @@
 package org.fao.geonet.services.region;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.WeakHashMap;
+
+import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.context.ServiceContext;
-
 public class ThesaurusBasedRegionsDAO implements RegionsDAO {
 
     private static final String REGIONS_THESAURUS_NAME = "external.place.regions";
     private final Set<String> localesToLoad;
+    private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
 
     public ThesaurusBasedRegionsDAO(java.util.Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);
@@ -26,7 +27,7 @@ public class ThesaurusBasedRegionsDAO implements RegionsDAO {
     public Request createSearchRequest(ServiceContext context) throws Exception {
         Thesaurus thesaurus = getThesaurus(context);
         
-        return new ThesaurusRequest(localesToLoad, thesaurus);
+        return new ThesaurusRequest(context, this.categoryIdMap , localesToLoad, thesaurus);
     }
 
     private Thesaurus getThesaurus(ServiceContext context) throws Exception {

@@ -57,4 +57,13 @@ public class Region {
         }
         return latlongBbox;
     }
+    
+    @Override
+    public String toString() {
+        String label = labels.get("eng");
+        if(label == null && !labels.isEmpty()){
+            label = labels.values().iterator().next();
+        }
+        return categoryId+":"+label;
+    }
 }

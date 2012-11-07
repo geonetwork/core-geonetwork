@@ -2,14 +2,34 @@ package org.fao.geonet.services.region;
 
 import java.util.Collection;
 
-public interface Request {
+public abstract class Request {
 
-    Request setLabel(String labelParam);
+    /**
+     * 
+     * @param labelParam
+     * @return
+     */
+    public abstract Request label(String labelParam);
 
-    Request setCategoryId(String categoryIdParam);
+    public abstract Request categoryId(String categoryIdParam);
 
-    Request setMaxRecords(int maxRecordsParam);
+    public abstract Request maxRecords(int maxRecordsParam);
 
-    Collection<Region> execute();
+    public abstract Collection<Region> execute() throws Exception;
+
+    public Region get() throws Exception {
+        Collection<Region> regions = execute();
+        if(regions.size() > 1) {
+            throw new IllegalStateException("there is more than one region found");
+        }
+        if(regions.isEmpty()) {
+            return null;
+        } else {
+            return regions.iterator().next();
+        }
+    }
+
+    public abstract Request id(String regionId);
+
 
 }

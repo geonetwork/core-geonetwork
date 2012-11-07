@@ -53,6 +53,7 @@ import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest;
@@ -98,6 +99,7 @@ public class JeevesEngine
 	private List<Element> appHandList = new ArrayList<Element>();
 	private Vector<ApplicationHandler> vAppHandlers = new Vector<ApplicationHandler>();
 	private Vector<Activator> vActivators = new Vector<Activator>();
+	private XmlCacheManager xmlCacheManager = new XmlCacheManager();
     private MonitorManager monitorManager;
 
     //---------------------------------------------------------------------------
@@ -165,6 +167,7 @@ public class JeevesEngine
 			serviceMan.setAppPath(appPath);
 			serviceMan.setProviderMan(providerMan);
 			serviceMan.setMonitorMan(monitorManager);
+			serviceMan.setXmlCacheManager(xmlCacheManager );
 			serviceMan.setApplicationContext(jeevesAppContext);
 			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);

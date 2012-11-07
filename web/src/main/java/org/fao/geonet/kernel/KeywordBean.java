@@ -64,6 +64,7 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
+    private String broader;
 	private static final Namespace NS_GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 	private static final Namespace NS_GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 	private static final Namespace NS_GMX = Namespace.getNamespace("gmx", "http://www.isotc211.org/2005/gmx");
@@ -799,5 +800,19 @@ public class KeywordBean {
     public KeywordBean removeDefinition(String lang) {
         definitions.remove(lang);
         return this;
+    }
+
+    public String getBroaderRelationship() {
+        return broader;
+    }
+    
+    public KeywordBean setBroaderRelationship(String broader) {
+        this.broader = broader;
+        return this;
+    }
+    
+    @Override
+    public String toString() {
+        return getUriCode()+" : "+getDefaultValue();
     }
 }
