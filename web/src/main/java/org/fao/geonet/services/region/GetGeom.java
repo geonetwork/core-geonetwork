@@ -27,18 +27,27 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 //=============================================================================
 
 /** Returns a specific region and coordinates given its id
   */
 
-public class Get implements Service
+public class GetGeom implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	private static final String SIMPLIFIED_PARAM = null;
+	
+	private GeomFormat format;
+
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        format = GeomFormat.valueOf(params.getMandatoryValue("format"));
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -49,17 +58,18 @@ public class Get implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		String id = params.getChildText(Params.ID);
+		boolean simplified = Util.getParam(params, SIMPLIFIED_PARAM, false);
 
 		if (id == null)
 			return new Element(Jeeves.Elem.RESPONSE);
 
 		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Region region = dao.createSearchRequest(context).id(id).get();
-		if (region == null) {
+		Geometry geom = dao.getGeom(context, id, simplified);
+		if (geom == null) {
 		    throw  new RegionNotFoundEx(id);
 		}
 		
-		return new Element(List.REGIONS_EL).addContent(List.toElement(region));
+		return format.toElement(geom);
 	}
 }
 

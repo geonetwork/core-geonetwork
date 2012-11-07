@@ -152,17 +152,8 @@ public class JeevesEngine
 			info("Path    : "+ appPath);
 			info("BaseURL : "+ baseUrl);
 
+			// obtain application context so we can configure the serviceManager with it but we will configure it a bit later
             JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
-
-            info("Initializing profiles...");
-            ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
-
-            // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
-            jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-            profileManager.setApplicationContext(jeevesAppContext);
-            jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
-            jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
-
             
 			serviceMan.setAppPath(appPath);
 			serviceMan.setProviderMan(providerMan);
@@ -181,6 +172,15 @@ public class JeevesEngine
 			scheduleMan.setBaseUrl(baseUrl);
 
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
+
+            info("Initializing profiles...");
+            ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
+
+            // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
+            jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
+            profileManager.setApplicationContext(jeevesAppContext);
+            jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
+            jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded

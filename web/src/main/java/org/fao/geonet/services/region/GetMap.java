@@ -36,7 +36,7 @@ import org.jdom.Element;
 /** Returns a specific region and coordinates given its id
   */
 
-public class Get implements Service
+public class GetMap implements Service
 {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 

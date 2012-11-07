@@ -13,12 +13,16 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 public class ThesaurusBasedRegionsDAO implements RegionsDAO {
 
     private static final String REGIONS_THESAURUS_NAME = "external.place.regions";
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
-
+    private GeometryFactory factory = new GeometryFactory();
+    
     public ThesaurusBasedRegionsDAO(java.util.Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);
     }
@@ -26,7 +30,7 @@ public class ThesaurusBasedRegionsDAO implements RegionsDAO {
     @Override
     public Request createSearchRequest(ServiceContext context) throws Exception {
         Thesaurus thesaurus = getThesaurus(context);
-        
+
         return new ThesaurusRequest(context, this.categoryIdMap , localesToLoad, thesaurus);
     }
 
@@ -45,6 +49,16 @@ public class ThesaurusBasedRegionsDAO implements RegionsDAO {
         }
         
         return null;
+    }
+
+    @Override
+    public Geometry getGeom(ServiceContext context, String id, boolean simplified) throws Exception {
+        Region region = createSearchRequest(context).id(id).get();
+        if(region == null) {
+            return null;
+        }
+       
+        return factory.toGeometry(region.getBBox());
     }
 
 }

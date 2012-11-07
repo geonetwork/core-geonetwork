@@ -26,14 +26,14 @@ public class LangUtils {
         String appPath = context.getAppPath();
         XmlCacheManager cacheManager = context.getXmlCacheManager();
         File loc = new File(appPath, "loc");
-        String typeWithExtension = type+".xml";
+        String typeWithExtension = "xml"+File.separator+type+".xml";
         Map<String, String> translations = new HashMap<String, String>();
         
         for (File file : loc.listFiles()) {
             if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
                 Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
                 String translation = Xml.selectString(xml, key);
-                if(translation != null) {
+                if(translation != null && !translation.trim().isEmpty()) {
                     translations.put(file.getName(), translation);
                 }
             }

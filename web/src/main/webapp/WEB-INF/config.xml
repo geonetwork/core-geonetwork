@@ -623,6 +623,10 @@
 
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 		</service>
 
 		<service name="xml.regions.list">
@@ -631,12 +635,20 @@
 
 		<service name="region.getmap">
 			<class name=".services.region.GetMap" />
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 		</service>
 
 		<service name="wkt.region.geom">
 			<class name=".services.region.GetGeom">
-				<param name="format" value="wkt"/>
+				<param name="format" value="WKT"/>
 			</class>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

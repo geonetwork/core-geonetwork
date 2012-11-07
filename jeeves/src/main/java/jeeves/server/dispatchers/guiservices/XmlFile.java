@@ -79,7 +79,14 @@ public class XmlFile implements GuiService
 
 	public Element exec(Element response, ServiceContext context) throws Exception
 	{
-        Element element = context.getXmlCacheManager().get(context, localized, base, file, language, defaultLang);
+
+        String lang = context.getLanguage();
+
+        String preferedLanguage = language;
+        if(localized || preferedLanguage  == null) preferedLanguage = lang;
+        if(preferedLanguage == null) preferedLanguage = defaultLang;
+
+        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang);
         element.setName(name);
         return element;
 	}

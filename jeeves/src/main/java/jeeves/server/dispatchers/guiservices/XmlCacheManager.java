@@ -31,11 +31,6 @@ public class XmlCacheManager {
 
         Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
         
-        String lang = context.getLanguage();
-
-        if(localized || preferedLanguage == null) preferedLanguage = lang;
-        if(preferedLanguage == null) preferedLanguage = defaultLang;
-
         String appPath = context.getAppPath();
         String xmlFilePath;
 

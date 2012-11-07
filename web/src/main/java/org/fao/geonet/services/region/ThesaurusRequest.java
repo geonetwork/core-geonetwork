@@ -2,8 +2,11 @@ package org.fao.geonet.services.region;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -29,9 +32,12 @@ public class ThesaurusRequest extends Request {
     private KeywordSearchParamsBuilder searchBuilder;
 
     private SingleThesaurusFinder finder;
+
+    private Set<String> localesToLoad;
     
     
     public ThesaurusRequest(ServiceContext context, WeakHashMap<String, Map<String, String>> categoryTranslations, Set<String> localesToLoad, Thesaurus thesaurus) {
+        this.localesToLoad = localesToLoad;
         this.serviceContext = context;
         this.categoryTranslations = categoryTranslations;
         this.searchBuilder = new KeywordSearchParamsBuilder(thesaurus.getIsoLanguageMapper());
@@ -71,7 +77,15 @@ public class ThesaurusRequest extends Request {
         List<Region> regions = new ArrayList<Region>(keywords.size());
         for (KeywordBean keywordBean : keywords) {
             String id = keywordBean.getUriCode();
-            Map<String, String> labels = keywordBean.getValues();
+            Map<String, String> unfilteredLabels = keywordBean.getValues();
+            Map<String, String> labels = new HashMap<String, String>((int)(unfilteredLabels.size() * 1.25));
+            Iterator<Entry<String, String>> iter = unfilteredLabels.entrySet().iterator();
+            while(iter.hasNext()) {
+                Entry<String, String> next = iter.next();
+                if(!next.getValue().trim().isEmpty()) {
+                    labels.put(next.getKey(), next.getValue());
+                }
+            }
             String categoryId = keywordBean.getBroaderRelationship();
             if(categoryId.trim().isEmpty()) {
                 categoryId = NO_CATEGORY;
@@ -85,8 +99,13 @@ public class ThesaurusRequest extends Request {
             }
             Map<String, String> categoryLabels = categoryTranslations.get(categoryLabelKey);
             if(categoryLabels == null) {
-                categoryLabels = LangUtils.translate(serviceContext, categoryLabelKey);
+                categoryLabels = LangUtils.translate(serviceContext, "categories", categoryLabelKey);
                 categoryTranslations.put(categoryLabelKey, categoryLabels);
+            }
+            if (categoryLabels.isEmpty()) {
+                for (String loc : localesToLoad) {
+                    categoryLabels.put(loc, categoryLabelKey);
+                }
             }
             boolean hasGeom = false;
             double west = Double.parseDouble(keywordBean.getCoordWest());
