@@ -65,13 +65,12 @@
         <label>Protocol</label>
         <description>Connection protocol to be used</description>
         <helper>
-            <option value="WWW:LINK-1.0-http--link">Web link (URL)</option>
-            <option value="FILE">File</option>
-            <option value="COPYFILE">Copying files (no GDAL/OGR interaction)</option>
-            <option value="DB">Database</option>
-            <option value="OGC:WMS-1.1.1-http-get-map">Web Map Service (OGC)</option>
-            <option value="WFS">Web Feature Service (OGC)</option>
-            <option value="WCS">Web Coverage Service (OGC)</option>
+            <option value="WWW:FTP">FTP</option>
+            <option value="WWW:MAIL">Mail</option>
+            <option value="WWW:LINK">Web link</option>
+            <option value="OGC:WMS">Web Map Service (OGC)</option>
+            <option value="MYO:MOTU-REST">MOTU (REST)</option>
+            <option value="MYO:MOTU-DGF">MOTU (DGF)</option>
         </helper>
     </element>
     <element name="gmd:fileName" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName">
