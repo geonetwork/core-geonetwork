@@ -160,10 +160,10 @@ public class Aligner
 			{
 				String id = dataMan.getMetadataId(dbms, ri.uuid);
 
-				// look up value of localrating/enabled
+				// look up value of localrating/enable
 				GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				SettingManager settingManager = gc.getSettingManager();
-				boolean localRating = settingManager.getValueAsBool("system/localrating/enabled", false);
+				boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
 				
 				if (id == null)	{
 					addMetadata(ri, localRating);

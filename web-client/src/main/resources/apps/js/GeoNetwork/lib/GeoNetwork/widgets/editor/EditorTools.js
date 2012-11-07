@@ -455,18 +455,29 @@ function doFileRemoveAction(action, ref, access, id){
  * Called when protocol select field changes in metadata form.
  * Protocol could not be changed if file is already uploaded.
  */
-function checkForFileUpload(fref, pref, protocolBeforeEdit){
-    var fileName = Ext.getDom('_' + fref); // the file name input field
-    var protoSelect = Ext.getDom('s_' + pref); // the protocol <select>
-    var protoIn = Ext.getDom('_' + pref); // the protocol input field to be submitted
-    var fileUploaded = OpenLayers.String.startsWith(protocolBeforeEdit, 'WWW:DOWNLOAD'); // File name not displayed in editor if downloaded
-    var protocol = protoSelect.value;
-    var protocolDownload = (OpenLayers.String.startsWith(protocol, 'WWW:DOWNLOAD') && protocol.indexOf('http') > 0);
-    
+function checkForFileUpload(fref, pref){
+    //protocol object
+    var protoSelect = Ext.getDom('s_' + pref); // the protocol <select> - user selected value
+    var protoIn = Ext.getDom('_' + pref);      // the protocol input field to be submitted - currently value
+    //protocol value
+    var protocolSelect = protoSelect.value;  // Selected protocol
+    var protocolIn = protoIn.value;          // currently set protocol
+    //Can protocol be a file
+    var regex = new RegExp( '^WWW:DOWNLOAD-.*-http--download.*');
+    var protocolDownloadSelect = (regex.test(protocolSelect));
+    var protocolDownloadIn = (regex.test(protocolIn));
+
+    // This is just the input field that may contain the filename - it is not a guaranteed filename
+    // The input field is assumed to be one of 2 fields. 
+    //    If the gmd:name is used then it will be this input field
+    //    If the gmx:filename is used then it will be a hidden input field 
+    var possibleFileNameObj = Ext.getDom('_' + fref);     // the file name input field
+    var possibleFileUploaded = (possibleFileNameObj != null && possibleFileNameObj.value.length > 0);
+
     // don't let anyone change the protocol if a file has already been uploaded 
-    // unless its between downloaddata and downloadother
-    if (fileUploaded) {
-        if (!protocolDownload) {
+    // unless the old and the new are downloadable.
+    if (possibleFileUploaded) {
+        if (protocolDownloadIn && !protocolDownloadSelect) {
             alert(OpenLayers.i18n("errorChangeProtocol")); 
             // protocol change is not ok so reset the protocol value
             protoSelect.value = protoIn.value;
@@ -482,10 +493,10 @@ function checkForFileUpload(fref, pref, protocolBeforeEdit){
     var finput = Ext.get('di_' + fref);
     var fbuttn = Ext.get('db_' + fref);
     
-    // protocol change is ok so set the protocol value to that selected
-    protoIn.value = protoSelect.value;
+	// protocol change is ok so set the protocol value to that selected
+	protoIn.value = protoSelect.value;
 
-    if (protocolDownload) {
+    if (protocolDownloadSelect) {
         if (finput !== null) {
             finput.hide();
         }
