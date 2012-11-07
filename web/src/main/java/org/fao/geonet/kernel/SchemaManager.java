@@ -431,7 +431,6 @@ public class SchemaManager {
      * @return
 	 */
 	public List<Element> getConversionElements(String name) throws Exception {
-
 		beforeRead();
 		try {
 			Schema schema = hmSchemas.get(name);
@@ -445,7 +444,30 @@ public class SchemaManager {
 			afterRead();
 		}
 	}
+	
+	/**
+     * Returns the schema transformation elements for a schema (as a list of cloned elements).
+     *
+     * @param name the metadata schema we want search
+     * @throws Exception if schema is not registered
+     * @return
+     */
+    public List<Element> getTransformationElements(String name) throws Exception {
 
+        beforeRead();
+        try {
+            Schema schema = hmSchemas.get(name);
+            List<Element> childs = schema.getAssociationElements();
+            List<Element> dChilds = new ArrayList<Element>();
+            for (Element child : childs) {
+                if (child != null) dChilds.add((Element)child.clone());
+            }
+            return dChilds;
+        } finally {
+            afterRead();
+        }
+    }
+    
 	/**
      * Return the schema converter(s) that produce the specified namespace.
 	 *
@@ -850,7 +872,9 @@ public class SchemaManager {
 	 * @param conversionsFile name of XML conversions file
      * @throws Exception
 	 */
-	private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
+	private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, 
+	        String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, 
+	        String conversionsFile, String associationsFile) throws Exception {
 		String path = new File(xmlSchemaFile).getParent();
 
 		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
@@ -909,6 +933,7 @@ public class SchemaManager {
 									true, // all schemas are plugin schemas now
 									extractSchemaLocation(xmlIdFile),
 									extractConvElements(conversionsFile),
+									extractAssociationElements(associationsFile),
 									extractDepends(xmlIdFile));
 
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
@@ -1090,12 +1115,14 @@ public class SchemaManager {
 	 * @param isPlugin true if schema is a plugin schema
 	 * @param schemaLocation namespaces and URLs of their xsds
 	 * @param convElems List of elements in conversion file
+	 * @param transformationElems List of elements in the transformation file
 	 * @param dependElems List of depend XML elements (as JDOM Elements) 
 	 */
 	private void putSchemaInfo(String name, String id, String version, MetadataSchema mds, String schemaDir,
                                SchemaSuggestions sugg, List<Element> adElems, Map<String, XmlFile> xfMap,
-                               boolean isPlugin, String schemaLocation, List<Element> convElems,
-															 List<Element> dependElems) {
+                               boolean isPlugin, String schemaLocation, 
+                               List<Element> convElems, List<Element> transformationElems,
+                               List<Element> dependElems) {
 		
 		Schema schema = new Schema();
 
@@ -1109,6 +1136,7 @@ public class SchemaManager {
 		schema.setPluginSchema(isPlugin);
 		schema.setSchemaLocation(schemaLocation);
 		schema.setConversionElements(convElems);
+        schema.setAssociationElements(transformationElems);
 		schema.setDependElements(dependElems);
 
 		hmSchemas.put(name, schema);
@@ -1172,7 +1200,9 @@ public class SchemaManager {
     String idFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ID;
     String oasisCatFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_OASIS;
     String conversionsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
-   
+    String associationsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ASSOCIATIONS;
+    
+    
 	 	String stage = "";
     try {
 			// validate the schema-ident file before reading it
@@ -1185,7 +1215,8 @@ public class SchemaManager {
 				Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchema+" already exists - cannot add!");
 			} else {
 	 			stage = "adding the schema information";
-    		addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
+    		addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, 
+    		        substitutesFile, idFile, oasisCatFile, conversionsFile, associationsFile);
 			}
 		} catch (Exception e) {
 			String errStr = "Failed whilst "+stage+". Exception message if any is "+e.getMessage();
@@ -1349,6 +1380,30 @@ public class SchemaManager {
 		return result;
 	}
 
+    /**
+     * Extract associations configuration from association file.
+     *
+     * @param xmlFile name of schema XML conversions file
+     * @return
+     * @throws Exception
+     */
+    private List<Element> extractAssociationElements(String xmlFile) throws Exception {
+        List<Element> result = new ArrayList<Element>();
+        if (!(new File(xmlFile).exists())) {
+            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+                Log.debug(Geonet.SCHEMA_MANAGER, "Schema transformation file not defined.");
+            }
+        } else {
+            Element root = Xml.loadFile(xmlFile);
+            // Could be better to do XSD validation
+            if (root.getName() != "associations") {
+                throw new IllegalArgumentException("Schema association file " + xmlFile 
+                        + " is invalid, no <associations> root element");
+            }
+            result = root.getChildren();
+        }
+        return result;
+    }
 	/**
      * Extract schemaLocation info from identification file.
 	 *

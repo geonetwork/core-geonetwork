@@ -668,9 +668,12 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
  *  and trigger the save action of the editor.
  */
 GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, type, formBt) {
+    var tagName = 'gmd:descriptiveKeywords', editorPanel = Ext.getCmp('editorPanel');
+    
     // Get the list of thesaurus
     var thesaurusStore = new GeoNetwork.data.ThesaurusStore({
-        url: catalogue.services.getThesaurus,
+        // Only retrieve thesaurus for this type of element (and for this metadata schema)
+        url: catalogue.services.getThesaurus + "?element=" + tagName + "&schema=" + editorPanel.metadataSchema,
         activatedOnly: true,
         listeners: {
             load: function (store, records, options) {
@@ -698,9 +701,9 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                 scope: this,
                                 success: function (response) {
                                     // Add the fragment and save the metadata
-                                    var keywords = ["<gmd:descriptiveKeywords xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
-                                                     response.responseText + "</gmd:descriptiveKeywords>"];
-                                    GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, Ext.getCmp('editorPanel'));
+                                    var keywords = ["<" + tagName + " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
+                                                     response.responseText + "</" + tagName + ">"];
+                                    GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, editorPanel);
                                 }
                             });
                         }

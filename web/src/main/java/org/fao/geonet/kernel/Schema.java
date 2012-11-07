@@ -191,9 +191,11 @@ public class Schema {
 	public void setPluginSchema(boolean plugin) {
 		this.plugin = plugin; 
 	}
-
+	
 	private List<Element> conversionElements = new ArrayList<Element>();
-
+	
+	private List<Element> associationElements = new ArrayList<Element>();
+	
 	/**
 	 * Get List of XML elements that describes how to convert metadata records that belong to this schema to other
      * schemas.
@@ -202,6 +204,13 @@ public class Schema {
      */
 	public List<Element> getConversionElements() { return conversionElements; }
 
+    /**
+     * Get List of XML elements that can be convert from a concept in a thesaurus.
+     *
+     * @return
+     */
+    public List<Element> getAssociationElements() { return associationElements; }
+    
 	/**
 	 * Set List of XML elements that describes how to convert metadata records that belong to this schema to other
      * schemas.
@@ -213,6 +222,17 @@ public class Schema {
 		this.conversionElements = conversionElements; 
 	}
 
+    /**
+     * Set List of XML elements that describes how to transform some elements in this schema based on 
+     * concept stored in a thesaurus.
+     *
+     * @param associationElements List of JDOM elements
+     *
+     */
+    public void setAssociationElements(List<Element> associationElements) { 
+        this.associationElements = associationElements; 
+    }
+    
 	private List<Element> dependElements = new ArrayList<Element>();
 
 	/**

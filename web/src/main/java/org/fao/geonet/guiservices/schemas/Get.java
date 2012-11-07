@@ -72,9 +72,16 @@ public class Get implements Service
 				conv.addContent(convElems);
 				elem.addContent(conv);
 			}
-			schemas.addContent(elem);
+			
+            // get the conversion information and add it too
+            List<Element> transfoElems = schemaMan.getTransformationElements(schema);
+            if (transfoElems.size() > 0) {
+                Element transfo = new Element("associations");
+                transfo.addContent(transfoElems);
+                elem.addContent(transfo);
+            }
+            schemas.addContent(elem);
 		}
-
 		return schemas;
 	}
 }
