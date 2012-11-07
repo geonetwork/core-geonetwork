@@ -709,7 +709,6 @@
 	<progressChoice value="planned">计划中</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	
 	<pubdate>出版日期</pubdate>
 	<publicationDate>出版日期</publicationDate>
 	<publisher>出版商</publisher>
