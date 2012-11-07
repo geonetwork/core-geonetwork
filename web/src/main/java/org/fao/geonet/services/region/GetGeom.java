@@ -41,7 +41,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class GetGeom implements Service
 {
-	private static final String SIMPLIFIED_PARAM = null;
+	private static final String SIMPLIFIED_PARAM = "simplified";
 	
 	private GeomFormat format;
 

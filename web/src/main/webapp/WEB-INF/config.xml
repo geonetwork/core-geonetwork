@@ -633,9 +633,11 @@
 			<class name=".services.region.List" />
 		</service>
 
-		<service name="region.getmap">
-			<class name=".services.region.GetMap" />
-			
+		<service name="pdf.region.getmap">
+			<class name=".services.region.GetMap" >
+				 <param name="format" value="pdf"/>
+			 </class>
+			<output file="true"  contentType="image/pdf"/>
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
 				<xml name="error" file="xml/file-not-found-error.xml" />
 			</error>
@@ -645,6 +647,8 @@
 			<class name=".services.region.GetGeom">
 				<param name="format" value="WKT"/>
 			</class>
+			
+			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
 				<xml name="error" file="xml/file-not-found-error.xml" />
