@@ -75,11 +75,12 @@
       <class name=".services.thesaurus.DeleteElement"/>
     </service>
 
-    <service name="xml.thesaurus.getList" type="xml">
+    <service name="xml.thesaurus.getList">
       <documentation xml:lang="en">
         Get list of available thesaurus
       </documentation>
       <class name=".services.thesaurus.GetList"/>
+      <output sheet="thesaurus/getlist.xsl" contentType="application/xml; charset=UTF-8"/>
     </service>
 
     <service name="thesaurus.activate" type="xml">

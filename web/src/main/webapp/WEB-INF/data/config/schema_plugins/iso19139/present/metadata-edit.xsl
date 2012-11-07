@@ -1284,10 +1284,13 @@
                                                 else 'to-iso19139-keyword'"/>
 
     <!-- Define the list of transformation mode available.
-      TODO : retrieve from schema configuration 
-        <xsl:variable name="listOfTransformations">'to-iso19139-keyword'</xsl:variable>
     -->
-    <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
+    <xsl:variable name="parentName" select="name(..)"/>
+    <xsl:variable name="elementTransformations" select="/root/gui/schemalist/*[text()=$schema]/
+      associations/registerTransformation[@element = $parentName]"/>
+    <xsl:variable name="listOfTransformations" select="if ($elementTransformations) 
+      then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
+      else 'to-iso19139-keyword'"/>
     
     <!-- Create custom widget: 
       * '' for item selector, 
@@ -1301,25 +1304,60 @@
       -->
     <xsl:variable name="widgetMode" select="''"/>
     
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    identifier should be defined in the citation identifier. By default, GeoNetwork
+    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
+    gco:CharacterString. 
+    
+    TODO : Add lenient detection on thesaurus title.
+    -->
+    <xsl:variable name="thesaurusId" select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])"/>
+    
+    
+    <!-- The element identifier in the metadocument-->
+    <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
+    
+    <xsl:call-template name="snippet-editor">
+      <xsl:with-param name="elementRef" select="$elementRef"/>
+      <xsl:with-param name="widgetMode" select="$widgetMode"/>
+      <xsl:with-param name="thesaurusId" select="$thesaurusId"/>
+      <xsl:with-param name="listOfKeywords" select="$listOfKeywords"/>
+      <xsl:with-param name="listOfTransformations" select="$listOfTransformations"/>
+      <xsl:with-param name="transformation" select="$transformation"/>
+    </xsl:call-template>
+    
+  </xsl:template>
+  
+  
+  <xsl:template name="snippet-editor">
+    <xsl:param name="elementRef"/>
+    <xsl:param name="widgetMode" select="''"/>
+    <xsl:param name="thesaurusId"/>
+    <xsl:param name="listOfKeywords"/>
+    <xsl:param name="listOfTransformations"/>
+    <xsl:param name="transformation"/>
+    
     <!-- The widget configuration -->
-    <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
-      config="{{mode: '{$widgetMode}', thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
+    <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
+      config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
       }'}}"/>
     
     <!-- The widget container -->
-    <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
+    <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>
     
     <!-- Create a textarea which contains the XML snippet for updates.
     The name of the element starts with _X which means XML snippet update mode.
     -->
-    <textarea id="thesaurusPicker_{../geonet:element/@ref}_xml" name="_X{../geonet:element/@ref}" rows="" cols="" class="debug">
+    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}" rows="" cols="" class="debug">
       <xsl:apply-templates mode="geonet-cleaner" select="."/>
     </textarea>
+    
   </xsl:template>
+  
   
   <!-- ============================================================================= -->
   <!-- descriptiveKeywords -->

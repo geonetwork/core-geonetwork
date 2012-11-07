@@ -307,7 +307,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/images', // FIXME
+            imagePath: '../../apps/js/ext-ux/images',
             fromTBar: [this.generateFilterField(), '->', 
                        OpenLayers.i18n('maxResults'), this.getLimitInput()],
             toTBar: [{
@@ -668,9 +668,12 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
  *  and trigger the save action of the editor.
  */
 GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, type, formBt) {
+    var tagName = 'gmd:descriptiveKeywords', editorPanel = Ext.getCmp('editorPanel');
+    
     // Get the list of thesaurus
     var thesaurusStore = new GeoNetwork.data.ThesaurusStore({
-        url: catalogue.services.getThesaurus,
+        // Only retrieve thesaurus for this type of element (and for this metadata schema)
+        url: catalogue.services.getThesaurus + "?element=" + tagName + "&schema=" + editorPanel.metadataSchema,
         activatedOnly: true,
         listeners: {
             load: function (store, records, options) {
@@ -698,9 +701,9 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                 scope: this,
                                 success: function (response) {
                                     // Add the fragment and save the metadata
-                                    var keywords = ["<gmd:descriptiveKeywords xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
-                                                     response.responseText + "</gmd:descriptiveKeywords>"];
-                                    GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, Ext.getCmp('editorPanel'));
+                                    var keywords = ["<" + tagName + " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
+                                                     response.responseText + "</" + tagName + ">"];
+                                    GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment({ref: ref, name: type}, keywords, editorPanel);
                                 }
                             });
                         }
@@ -712,7 +715,12 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                     floating: true,
                     items: items
                 });
-                contextMenu.showAt([Ext.get(formBt).getX(), Ext.get(formBt).getY() + Ext.get(formBt).getHeight()]);
+                
+                // Add the contextual menu to the binocular control
+                // Keep the current control as far as the old ThesaurusSelection is not deprecated.
+                // TODO improve element control by using only the + control
+                var binocular = Ext.get(formBt);
+                contextMenu.showAt([binocular.getX(), binocular.getY() + binocular.getHeight()]);
             }
         }
     });
