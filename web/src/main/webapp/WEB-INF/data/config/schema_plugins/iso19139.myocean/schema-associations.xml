@@ -10,11 +10,15 @@
 	
 	-->
 	<registerAssociation registerId="local://thesaurus/local.areaOfBenefit.myocean.area.of.benefit" element="gmd:descriptiveKeywords"/>
-	<registerAssociation registerId="local://thesaurus/local.parametersGroup.myocean.ocean.variable" element="gmd:descriptiveKeywords"/>	
-	<registerAssociation registerId="local://thesaurus/local.scale.myocean.geographical.scale" element="gmd:descriptiveKeywords"/>   
-	<registerAssociation registerId="local://thesaurus/local.scale.myocean.temporal.scale" element="gmd:descriptiveKeywords"/>   
-	<registerAssociation registerId="local://thesaurus/local.theme.myocean.mission.type" element="gmd:descriptiveKeywords"/>   
-	<registerAssociation registerId="local://thesaurus/local.theme.myocean.product.origin" element="gmd:descriptiveKeywords"/>   
+	<registerAssociation registerId="local://thesaurus/local.parametersGroup.myocean.ocean.variable" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.scale.myocean.geographical.scale" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/temporal.scale.myocean.temporal.scale" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.discipline.myocean.product.origin" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.theme.myocean.mission.type" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.my-ocean-areas.myocean.geographical-area" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.processing-levels.myocean.processing-level" element="gmd:descriptiveKeywords"/>
+	<registerAssociation registerId="local://thesaurus/local.stratum.myocean.vertical.coverage" element="gmd:descriptiveKeywords"/>
+	
 	<registerAssociation registerId="local://thesaurus/external.theme.inspire-theme" element="gmd:descriptiveKeywords"/>
 	
 	<!-- 
