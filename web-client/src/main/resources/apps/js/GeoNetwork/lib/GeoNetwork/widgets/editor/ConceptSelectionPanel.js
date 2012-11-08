@@ -179,7 +179,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var combo = new Ext.form.ComboBox({
             store: this.keywordStore,
             triggerAction: 'all',
-            mode: 'local',
+            mode: 'remote',
             displayField: 'value',
             valueField: 'uri',
             listeners: {
@@ -194,9 +194,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // Load all keyword for the current thesaurus
         this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
         this.keywordStore.baseParams.maxResults = this.maxKeywords;
-        this.keywordStore.reload();
-        this.keywordStore.on('load', function () {
-            
+        this.keywordStore.on('load', function (store, records) {
+
             // Custom callback which load response to the selected set
             // and set the combo box value.
             var cb = function (response) {
@@ -209,6 +208,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
             }
         });
+        this.keywordStore.reload();
         return [combo];
     },
     /** private: method[generateFilterField]
@@ -235,11 +235,12 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var dv = new Ext.DataView({
             store: this.keywordStore,
             tpl: this.keywordsTpl,
-            //autoHeight: true,
+            autoHeight: true,
             simpleSelect: true,
             multiSelect: this.mode === 'multiplelist' ? true : false,
             singleSelect: true,
             width: 350,
+//            height: 250,
             selectedClass: 'ux-mselect-selected',
             itemSelector: 'div.ux-mselect-item',
             listeners: {
@@ -254,29 +255,31 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     });
                     self.selectedKeywordStore.add(records);
                 },
+                afterrender: function () {
+                    // Load all keyword for the current thesaurus
+                    this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
+                    this.keywordStore.baseParams.maxResults = this.maxKeywords;
+                    this.keywordStore.on('load', function () {
+                        
+                        // Custom callback which load response to the selected set
+                        // and set the dataview values.
+                        var cb = function (response) {
+                            self.selectedKeywordStore.loadData(response.responseXML, true);
+                        };
+
+                        // Get initial keyword in the data view and select them
+                        Ext.each(self.initialKeyword, function (initKeyword) {
+                            dv.select(self.keywordStore.find('value', initKeyword), true);
+                            self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
+                        });
+                    });
+                    this.keywordStore.reload();
+                },
                 scope: this
             }
         });
         
-        // Load all keyword for the current thesaurus
-        this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
-        this.keywordStore.baseParams.maxResults = this.maxKeywords;
-        this.keywordStore.on('load', function () {
-            
-            // Custom callback which load response to the selected set
-            // and set the dataview values.
-            var cb = function (response) {
-                self.selectedKeywordStore.loadData(response.responseXML, true);
-            };
-
-            // Get initial keyword in the data view and select them
-            Ext.each(self.initialKeyword, function (initKeyword) {
-                dv.select(self.keywordStore.find('value', initKeyword), true);
-                self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
-            });
-        });
-        this.keywordStore.reload();
-
+        
         return [search, dv];
     },
     /** private: method[getKeywordsItemSelector]
@@ -600,7 +603,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // * in combobox mode
         if (this.mode === 'combo') {
             fields.push(this.generateSimpleCombo());
-            //fields.push(this.generateSelectionList());
         } else if (this.mode === 'list' || this.mode === 'multiplelist') {
             fields.push(this.generateSelectionList());
         } else {
