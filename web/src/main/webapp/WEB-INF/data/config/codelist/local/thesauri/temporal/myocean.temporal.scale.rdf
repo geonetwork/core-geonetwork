@@ -5,7 +5,7 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
     xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
     <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/product/database#">
-        <dc:title>MyOcean delay modes</dc:title>
+        <dc:title>Temporal scale</dc:title>
         <dc:description>Temporal scale or domain.</dc:description>
         <dcterms:issued>2009-06-12</dcterms:issued>
         <dcterms:modified>2009-06-12</dcterms:modified>
