@@ -357,7 +357,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <!-- Region services -->
                 <sec:intercept-url pattern="/srv/.*/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.regions.list!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/region.getmap!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/region.getmap.png!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/wkt.region.geom!?.*" access="permitAll"></sec:intercept-url>
                 
                 

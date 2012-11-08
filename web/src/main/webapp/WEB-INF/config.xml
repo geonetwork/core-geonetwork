@@ -633,11 +633,11 @@
 			<class name=".services.region.List" />
 		</service>
 
-		<service name="pdf.region.getmap">
+		<service name="region.getmap.png">
 			<class name=".services.region.GetMap" >
-				 <param name="format" value="pdf"/>
+				 <param name="format" value="png"/>
 			 </class>
-			<output file="true"  contentType="image/pdf"/>
+			<output file="true" contentType="image/png"/>
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
 				<xml name="error" file="xml/file-not-found-error.xml" />
 			</error>

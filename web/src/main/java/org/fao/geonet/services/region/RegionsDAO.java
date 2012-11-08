@@ -12,7 +12,7 @@ public interface RegionsDAO {
     Request createSearchRequest(ServiceContext context) throws Exception;
 
     /**
-     * Get the geometry object for the region.  The srs code must be available with the geometry's getUserData()
+     * Get the geometry object for the region.  The CRS must be available with the geometry's getUserData()
      * method. 
      * @param context
      * @param id id of the region ot fetch
@@ -20,7 +20,7 @@ public interface RegionsDAO {
      * be true when the UI wants to display the geometry.  The region is simplified so the javascript can deal with it better
      * and so it downloads faster.
      * 
-     * @return the geometry containing the srs code
+     * @return the geometry containing the CRS
      */
     Geometry getGeom(ServiceContext context, String id, boolean simplified) throws Exception;
 
