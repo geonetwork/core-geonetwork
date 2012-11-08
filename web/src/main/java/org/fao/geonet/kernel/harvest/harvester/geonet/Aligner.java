@@ -228,7 +228,7 @@ public class Aligner
 
 				//--------------------------------------------------------------------
 				
-				public void handleMetadataFiles(File[] files, int index) throws Exception {}
+				public void handleMetadataFiles(File[] files, Element info, int index) throws Exception {}
 				
 				//--------------------------------------------------------------------
 
@@ -529,7 +529,7 @@ public class Aligner
 
 					//-----------------------------------------------------------------
 					
-					public void handleMetadataFiles(File[] files, int index) throws Exception
+					public void handleMetadataFiles(File[] files, Element info, int index) throws Exception
 					{
 						//md[index] = mdata;
 					}
