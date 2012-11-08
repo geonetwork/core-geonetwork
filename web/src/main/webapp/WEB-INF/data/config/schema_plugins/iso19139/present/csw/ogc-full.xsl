@@ -54,6 +54,14 @@
 					</dc:title>
 				</xsl:for-each>
 				
+				<xsl:for-each select="gmd:alternateTitle">
+					<dct.alternative>
+						<xsl:apply-templates mode="localised" select=".">
+								<xsl:with-param name="langId" select="$langId"/>
+						</xsl:apply-templates>
+					</dct.alternative>
+				</xsl:for-each>
+				
 				<!-- Type - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 				
 				<xsl:for-each select="../../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">

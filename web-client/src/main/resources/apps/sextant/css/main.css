@@ -411,7 +411,8 @@ table, tbody, tr, td, th {
 }
 
 .result-list li.md-full div.md-links {
-    margin-top:27px;
+    margin-top:12px;
+    padding-top: 15px;
     padding-bottom:8px;
     float:right;
     padding-right:15px;
@@ -426,7 +427,8 @@ table, tbody, tr, td, th {
 .result-list li.md-full div.md-links div.wmsMenu, 
 .result-list li.md-full div.md-links div.downloadMenu, 
 div.md-action-menu {
-    display:inline;
+    display:inline-block;
+    zoom:1;
     border: 1px solid #BBBBBB;
     border-radius: 4px 4px 4px 4px;
     color: #333333;
@@ -436,6 +438,7 @@ div.md-action-menu {
     font-weight: 700;
     background-color:#F8F8F8;
     cursor:pointer;
+    *display: inline; // IE hack to achieve inline-block behavior
 }
 
 .result-list li.md-full div.md-links div.btn-separator {
@@ -448,7 +451,7 @@ div.md-action-menu {
 .result-list li.md-full div.wmsMenu span,
 .result-list li.md-full div.downloadMenu span,
 div.md-action-menu span {
-	padding-left:16px;
+	padding-left:13px;
 }
 div.md-action-menu span.icon{
     background-image: url("../images/icons/wrench.png");
@@ -482,8 +485,9 @@ div.md-action-menu span.list-icon {
     background-position: 0 -2px;
 }
 .result-list li.md-full div.unabled {
-	filter: alpha(opacity = 35) !important;
 	opacity: 0.35 !important;
+	filter: alpha(opacity = 35);
+	display: inline-block;
 	background-image: none !important;
 	cursor: default !important;
 }
