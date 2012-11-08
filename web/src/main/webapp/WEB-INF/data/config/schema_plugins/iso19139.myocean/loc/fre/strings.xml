@@ -10,6 +10,7 @@
     <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
     <spatioTemporalCoverage>Spatio-temporal extent</spatioTemporalCoverage>
     <processingOperation>Processing operations</processingOperation>
+    <processingSchedule>Processing Schedule</processingSchedule>
     <org>Organizations responsible for management and processing, point of contact</org>
     <metadataInfo>Metadata date stamps and versions</metadataInfo>
     <metadataInfoTitle>Product identification</metadataInfoTitle>
@@ -30,5 +31,15 @@
     <endDate>End date</endDate>
     <startPeriod>Start period</startPeriod>
     <endPeriod>End period</endPeriod>
+    <month>Months</month>
+    <day>Days</day>
+    <hour>Hours</hour>
     <temporalResolution>Temporal resolution</temporalResolution>
+    <temporalScale>Temporal scale</temporalScale>
+    <missionType>Mission type</missionType>
+    <featureType>Feature type</featureType>
+    <areaOfBenefit>Area of benefit</areaOfBenefit>
+    <oceanVariables>Ocean variables</oceanVariables>
+    <refArea>MyOcean reference areas</refArea>
+    <processingLevel>Processing level</processingLevel>
 </strings>
