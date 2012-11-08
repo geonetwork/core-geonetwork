@@ -650,6 +650,12 @@ div.x-tip-body div.help {
 .myocean * .gmdalternateTitle span.buttons {
     display: none !important;
 }
+.myocean * .thesaurusInfo {
+    display: none !important;
+}
+.myocean * .slidingWindow * input {
+    float: none !important;
+}
 .sextant .titleContainer span {
 font-size: 30px;
 }

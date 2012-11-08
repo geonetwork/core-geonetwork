@@ -1015,3 +1015,19 @@ function updateChildren(div, url, onFailureMsg) {
     });
 }
 
+/* MyOcean specific */
+/**
+ * TODO : check if syntax is correct
+ */
+function updateSlidingWindow(targetElementId) {
+    document.getElementById(targetElementId).value = 
+        "P" + 
+        document.getElementById(targetElementId + "_s_month").value + "M" +
+        document.getElementById(targetElementId + "_s_day").value + "D" +
+        document.getElementById(targetElementId + "_s_hour").value + "H" +
+        "#" + 
+        "P" + 
+        document.getElementById(targetElementId + "_e_month").value + "M" +
+        document.getElementById(targetElementId + "_e_day").value + "D" +
+        document.getElementById(targetElementId + "_e_hour").value + "H";
+}
