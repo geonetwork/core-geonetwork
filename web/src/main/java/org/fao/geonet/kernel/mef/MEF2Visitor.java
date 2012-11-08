@@ -104,7 +104,7 @@ public class MEF2Visitor implements IVisitor {
                         info = Xml.loadFile(fileInfo);
                     }
 
-                    v.handleMetadataFiles(xmlFiles, nbMetadata);
+                    v.handleMetadataFiles(xmlFiles, info, nbMetadata);
                     v.handleFeatureCat(fc, nbMetadata);
                     v.handleInfo(info, nbMetadata);
 
