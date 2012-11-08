@@ -1172,13 +1172,19 @@ public class SchemaManager {
 	 */
 	private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
 
-    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
     String schemaFile  = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA;
     String suggestFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
     String substitutesFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
     String idFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ID;
     String oasisCatFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_OASIS;
     String conversionsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
+
+		if (!(new File(idFile).exists())) {
+			Log.error(Geonet.SCHEMA_MANAGER, "    Skipping : " +saSchema+" as it doesn't have "+Geonet.File.SCHEMA_ID);
+			return;
+		}
+
+    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
    
 	 	String stage = "";
     try {
