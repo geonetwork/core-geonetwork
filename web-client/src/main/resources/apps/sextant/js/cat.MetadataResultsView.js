@@ -141,8 +141,9 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	
     	for (var i=0;i<a.length;i++) {
     		if(a[i].firstChild) {
+    			var txt = a[i].firstChild.data;
     			its.push(new Ext.Action({
-    				text: a[i].firstChild.wholeText,
+    				text: txt,
     				type: type,
     				cfg: a[i].children ? a[i].lastChild.innerHTML:'',
     				handler: function(action) {

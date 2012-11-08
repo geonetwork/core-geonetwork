@@ -339,7 +339,7 @@ cat.app = function() {
 				new Ext.Toolbar.TextItem({
 					id: 'gn-sxt-restb-admin-btn',
 					cls: 'admin-btn-tbar',
-					text: '<div class="md-action-menu">&nbsp;<span class="icon"></span>'+ OpenLayers.i18n('administrer') + '<span class="list-icon"></span></div>'
+					text: '<div class="md-action-menu"><span class="icon">&nbsp;</span>'+ OpenLayers.i18n('administrer') + '<span class="list-icon">&nbsp;</span></div>'
 				})
 			],
 			createOtherActionMenu : function() {
