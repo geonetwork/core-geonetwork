@@ -107,6 +107,8 @@ public class LuceneQueryBuilder {
     public LuceneQueryBuilder(Set<String> tokenizedFieldSet,
                               Map<String, LuceneConfig.LuceneConfigNumericField> numericFieldSet,
                               PerFieldAnalyzerWrapper analyzer, String langCode) {
+        BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
+        
         _tokenizedFieldSet = tokenizedFieldSet;
         _numericFieldSet = numericFieldSet;
         _analyzer = analyzer;
