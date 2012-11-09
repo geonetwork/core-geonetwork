@@ -132,6 +132,17 @@ public class LDAPUtils {
 					}
 					
 					Update.addGroup(dbms, new Integer(id), new Integer(groupId), profile);
+					
+					try {
+						if (profile.equals(Profile.REVIEWER)) {
+							Update.addGroup(dbms, new Integer(id), new Integer(
+									groupId), Profile.EDITOR);
+						}
+					} catch (Exception e) {
+						Log.debug(Geonet.LDAP,
+								"  - User is already editor for that group."
+										+ e.getMessage());
+					}
 				} else {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Can't create LDAP group " + groupName + " for user. " +
