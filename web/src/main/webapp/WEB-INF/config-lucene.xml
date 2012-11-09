@@ -143,7 +143,7 @@
     
   -->
   <fieldSpecificAnalyzer>
-    <Field name="_uuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="_uuid" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
     <Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
