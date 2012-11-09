@@ -515,6 +515,9 @@ dl.xml * dd {
     max-height: 16px;
     vertical-align: middle;
 }
+.validatePanel * .x-grid3-cell-inner {
+    white-space: normal !important;
+}
 
 
 .debug {

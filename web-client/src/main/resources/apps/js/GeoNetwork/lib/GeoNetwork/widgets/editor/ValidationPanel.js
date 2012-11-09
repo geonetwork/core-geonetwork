@@ -46,7 +46,8 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         frame: false,
         collapsible: true,
         collapsed: true,
-        iconCls: 'validateMetadata'
+        iconCls: 'validateMetadata',
+        cls: 'validatePanel'
     },
     validate: function () {
         this.editor.validate(function () {
