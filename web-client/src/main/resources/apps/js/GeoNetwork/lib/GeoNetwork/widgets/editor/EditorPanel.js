@@ -812,7 +812,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Initialized the metadata editor. The method could be used to create a metadata record
      *  from a template or from a parent metadata record.
      */
-    init: function(metadataId, create, group, child, isTemplate){
+    init: function(metadataId, create, group, child, isTemplate, fullPrivileges){
         var url;
         
         this.metadataId = metadataId;
@@ -824,6 +824,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
             if (isTemplate) {
                 url += "&isTemplate=" + isTemplate;
+            }
+            if (fullPrivileges) {
+                url += "&fullPrivileges=" + fullPrivileges;
             }
         } else {
             url = this.editUrl + '?id=' + this.metadataId;

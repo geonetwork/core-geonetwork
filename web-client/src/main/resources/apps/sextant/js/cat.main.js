@@ -173,7 +173,7 @@ cat.app = function() {
 
 		if (metadataId) {
 			this.editorWindow.show();
-			this.editorPanel.init(metadataId, create, group, child);
+			this.editorPanel.init(metadataId, create, group, child, undefined, true);
 		}
 	}
 
