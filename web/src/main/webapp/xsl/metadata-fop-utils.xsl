@@ -11,7 +11,7 @@
 
   <xsl:template mode="elementFop" match="*|@*">
     <xsl:param name="schema"/>
-    
+
     <xsl:choose>
     <!-- Is a localized element -->
       <xsl:when test="contains($schema, 'iso19139') and gmd:PT_FreeText">

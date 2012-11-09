@@ -99,11 +99,11 @@
           <fo:table-row>
             <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
               <fo:block>
-                <fo:external-graphic content-width="35pt">
+                <!--<fo:external-graphic content-width="35pt">
                   <xsl:attribute name="src">url('<xsl:value-of
                     select="concat('http://', /root/gui/env/server/host, ':', /root/gui/env/server/port , /root/gui/url, '/images/logos/', $source, '.gif')"/>')"</xsl:attribute>
                 </fo:external-graphic>
-                
+                -->
               </fo:block>
             </fo:table-cell>
             <fo:table-cell display-align="center">

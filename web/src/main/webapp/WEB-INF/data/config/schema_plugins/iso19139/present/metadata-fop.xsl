@@ -7,7 +7,14 @@
   xmlns:date="http://exslt.org/dates-and-times" xmlns:exslt="http://exslt.org/common"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
 
-  <xsl:template name="metadata-fop-iso19139-unused">
+  <xsl:template name="metadata-fop-iso19139">
+    <xsl:param name="schema"/>
+    <xsl:apply-templates mode="elementFOPiso19139">
+      <xsl:with-param name="schema" select="$schema"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template mode="elementFOPiso19139" match="*|@*">
     <xsl:param name="schema"/>
     
     <!-- TODO improve block level element using mode -->
@@ -43,9 +50,34 @@
       </xsl:call-template>
     </xsl:for-each>
   </xsl:template>
+  
+  <xsl:template mode="elementFOPiso19139" match="geonet:*" priority="99"/>
+  
+  <xsl:template mode="elementFOPiso19139" match="gmd:identificationInfo|gmd:distributionInfo|
+    gmd:descriptiveKeywords|gmd:spatialRepresentationInfo|gmd:pointOfContact|
+    gmd:dataQualityInfo|gmd:referenceSystemInfo|gmd:equivalentScale|
+    gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:geographicBox|
+    gmd:EX_TemporalExtent|gmd:MD_Distributor|gmd:CI_ResponsibleParty" priority="99">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
 
+    <xsl:call-template name="complexElementFop">
+      <xsl:with-param name="title">
+        <xsl:call-template name="getTitle">
+          <xsl:with-param name="name" select="name(.)"/>
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="text"></xsl:with-param>
+      <xsl:with-param name="content">
+        <xsl:apply-templates mode="elementFOPiso19139" select="*">
+          <xsl:with-param name="schema" select="$schema"/>
+        </xsl:apply-templates>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
 
-  <xsl:template name="metadata-fop-iso19139">
+  <xsl:template name="metadata-fop-iso19139-simple">
     <xsl:param name="schema"/>
 
     <!-- Title -->
