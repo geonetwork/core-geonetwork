@@ -63,6 +63,7 @@ public class Create implements Service
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String id = "";
 		String uuid = "";
+		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
 		
 		// does the request contain a UUID ?
 		try {
@@ -100,7 +101,7 @@ public class Create implements Service
 
 		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
-												  (child.equals("n")?null:uuid), isTemplate);
+												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
