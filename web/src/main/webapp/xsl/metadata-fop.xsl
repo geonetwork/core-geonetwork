@@ -6,27 +6,35 @@
 
 
   <!-- Some colors -->
-  <xsl:variable name="background-color">#d6e2f7</xsl:variable>
+  <xsl:variable name="background-color">#ffffff</xsl:variable>
   <xsl:variable name="background-color-banner">#ffffff</xsl:variable>
-  <xsl:variable name="background-color-thumbnail">#f1f2f3</xsl:variable>
-  <xsl:variable name="border-color">#b3c6e6</xsl:variable>
-
+  <xsl:variable name="background-color-thumbnail">#DBDBDB</xsl:variable>
+  <xsl:variable name="border-color">#ffffff</xsl:variable>
+  
   <xsl:variable name="header-border">2pt solid #2e456b</xsl:variable>
 
   <!-- Some font properties -->
   <xsl:variable name="font-color">#707070</xsl:variable>
   <xsl:variable name="font-size">8pt</xsl:variable>
   <xsl:variable name="font-family">verdana</xsl:variable>
-  <xsl:variable name="title-color">#2e456b</xsl:variable>
+  <xsl:variable name="title-color">#00000</xsl:variable>
   <xsl:variable name="title-size">12pt</xsl:variable>
   <xsl:variable name="title-weight">bold</xsl:variable>
-  <xsl:variable name="header-color">#2e456b</xsl:variable>
+  <xsl:variable name="header-color">#00000</xsl:variable>
   <xsl:variable name="header-size">16pt</xsl:variable>
   <xsl:variable name="header-weight">bold</xsl:variable>
   <xsl:variable name="note-size">6pt</xsl:variable>
 
   <!-- Date format for footer information -->
   <xsl:variable name="df">[Y0001]-[M01]-[D01]</xsl:variable>
+
+  <!-- Limit the number of thumbnail to retrieve. According to the server
+  this is usually a cause of OutOfMemory error or UnsupportedOperationException : 
+  readRaster not supported! 
+  FIXME : Support more thumbnails
+  -->
+  <xsl:variable name="max-number-of-thumbnail" select="300"/>
+
 
 
   <!-- ======================================================
@@ -92,7 +100,7 @@
         <fo:block>
           <fo:table width="100%" table-layout="fixed">
             <fo:table-column column-width="3cm"/>
-            <fo:table-column column-width="12cm"/>
+            <fo:table-column column-width="15cm"/>
             <fo:table-column column-width="1cm"/>
             <fo:table-body>
               <fo:table-row border-top-style="solid" border-right-style="solid"
@@ -155,7 +163,7 @@
               </xsl:if>
               <fo:table width="100%" table-layout="fixed">
                 <fo:table-column column-width="5cm"/>
-                <fo:table-column column-width="15cm"/>
+                <fo:table-column column-width="11cm"/>
                 <fo:table-body>
                   <xsl:copy-of select="$block"/>
                 </fo:table-body>
@@ -190,11 +198,11 @@
           border-left-color="{$background-color}">
           <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
             <fo:block>
-              <fo:external-graphic content-width="35pt">
+              <!--<fo:external-graphic content-width="35pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
                     select="concat($server/protocol, '://', $server/host,':', $server/port, $gui/url, '/images/logos/', $source , '.gif')"
                   />')" </xsl:attribute>
-              </fo:external-graphic>
+              </fo:external-graphic>-->
             </fo:block>
           </fo:table-cell>
           <fo:table-cell display-align="center">
@@ -259,10 +267,17 @@
                       </fo:block>
                     </fo:table-cell>
                     <fo:table-cell background-color="{$background-color-thumbnail}">
-                      <xsl:call-template name="metadata-thumbnail-block">
-                        <xsl:with-param name="metadata" select="$metadata"/>
-                        <xsl:with-param name="server" select="$server"/>
-                      </xsl:call-template>
+                      <xsl:choose>
+                        <xsl:when test="position() &lt; $max-number-of-thumbnail">
+                            <xsl:call-template name="metadata-thumbnail-block">
+                                <xsl:with-param name="metadata" select="$metadata"/>
+                                <xsl:with-param name="server" select="$server"/>
+                              </xsl:call-template>
+                          </xsl:when>
+                        <xsl:otherwise>
+                            <fo:block></fo:block>
+                          </xsl:otherwise>
+                      </xsl:choose>
                     </fo:table-cell>
                   </fo:table-row>
                 </fo:table-body>
@@ -369,10 +384,7 @@
     </xsl:call-template>
   </xsl:template>
 
-
-  <!--
-		main pdf banner
-	-->
+<!-- Sextant banner -->
   <xsl:template name="banner">
     <fo:table table-layout="fixed" width="100%">
       <fo:table-column column-width="20cm"/>
@@ -385,11 +397,40 @@
             <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
               font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
               padding-left="4pt">
-              <fo:external-graphic padding-right="4pt">
+              <fo:external-graphic content-width="19cm">
+                   <xsl:attribute name="src">
+                    url('<xsl:value-of
+                       select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/sextant-pdf-header.png')" />')"
+                        </xsl:attribute>
+               </fo:external-graphic>
+            </fo:block>
+          </fo:table-cell>
+        </fo:table-row>
+      </fo:table-body>
+    </fo:table>
+  </xsl:template>
+
+
+  <!--
+		main pdf banner
+	-->
+  <xsl:template name="banner-geonetwork">
+    <fo:table table-layout="fixed" width="100%">
+      <fo:table-column column-width="20cm"/>
+      <!--<fo:table-column column-width="4cm"/>-->
+      <fo:table-body>
+        <fo:table-row border-bottom-style="solid" border-bottom-color="{$header-color}"
+          border-bottom-width="1pt">
+          <fo:table-cell display-align="center" background-color="{$background-color-banner}">
+            <!-- FIXME : align all text on top and capitalize ? -->
+            <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
+              font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
+              padding-left="4pt">
+              <!--<fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
                     select="concat( //server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
                   />')" </xsl:attribute>
-              </fo:external-graphic>
+              </fo:external-graphic>-->
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of
                 select="upper-case(/root/gui/env/site/organization)"/>) </fo:block>
           </fo:table-cell>
