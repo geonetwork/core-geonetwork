@@ -360,11 +360,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param ref: ``String``  Form element identifier (eg. 235).
      *  :param name: ``String``  Sub template type name (eg. CI_ResponsibleParty).
      *  :param elementName: ``String``  Element tag name (eg. gmd:pointOfContact).
+     *  :param namespaces: ``String``  Element namespaces to append (eg. xmlns:gmd="http://www.isotc211.org/2005/gmd").
      *  
      *  Display contact selection panel
      *  Not available in trunk.
      */
-    showSubTemplateSelectionPanel: function(ref, name, elementName){
+    showSubTemplateSelectionPanel: function(ref, name, elementName, namespaces){
         var editorPanel = this;
         
         // Destroy all previously created windows which may
@@ -398,6 +399,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.subTemplateSelectionWindow.items.get(0).setRef(ref);
         this.subTemplateSelectionWindow.items.get(0).setName(name);
         this.subTemplateSelectionWindow.items.get(0).setElementName(elementName);
+        this.subTemplateSelectionWindow.items.get(0).setNamespaces(namespaces);
         
         this.subTemplateSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.CONTACT);
         this.subTemplateSelectionWindow.show();
