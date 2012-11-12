@@ -117,6 +117,8 @@ public class Params {
     public static final String XPATH_TITLE = "xpathTitle";
 		public static final String EXTRACT_TITLE = "extractTitle";
     public static final String DOCHANGES = "doChanges";
+    
+    public static final String FULL_PRIVILEGES = "fullPrivileges";
 
     /**
      * TODO javadoc.
