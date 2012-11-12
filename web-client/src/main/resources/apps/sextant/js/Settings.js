@@ -54,6 +54,7 @@ GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 GeoNetwork.Settings.latestQuery = "from=1&to=6&sortBy=changeDate&fast=index";
 GeoNetwork.Settings.latestTpl = GeoNetwork.Templates.THUMBNAIL;
 GeoNetwork.Settings.results = {
+        maxResultsInPDF: 200,
         // Parameters to set bounding box highlighter colors
         // Use a custom single color for bounding box
         featurecolor: 'orange',
@@ -68,6 +69,7 @@ GeoNetwork.Settings.results = {
         //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
         featurecolorCSS: undefined
 };
+
 GeoNetwork.MapModule = true;
 GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];
 GeoNetwork.WMSList = [['Geoserver', 'http://localhost/geoserver/wms?']];
