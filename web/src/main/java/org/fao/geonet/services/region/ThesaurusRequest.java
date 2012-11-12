@@ -11,7 +11,9 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
@@ -20,12 +22,26 @@ import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 public class ThesaurusRequest extends Request {
 
     
     private static final String NO_CATEGORY = "_none_";
+
+    private static final CoordinateReferenceSystem WGS84;
+    static {
+        CoordinateReferenceSystem wgs84;
+        try {
+            wgs84 = CRS.decode("EPSG:4326", true);
+        } catch (Exception e) {
+            Log.error(Geonet.SPATIAL, "Unable to create EPSG:4326 crs, are correct geotools jars on the class path?.  Defaulting to DefaultGeographicCRS.WGS84");
+            wgs84 = DefaultGeographicCRS.WGS84;
+        }
+        WGS84 = wgs84;
+    }
 
     private WeakHashMap<String, Map<String, String>> categoryTranslations;
     private ServiceContext serviceContext;
@@ -112,7 +128,7 @@ public class ThesaurusRequest extends Request {
             double east = Double.parseDouble(keywordBean.getCoordEast());
             double north = Double.parseDouble(keywordBean.getCoordNorth());
             double south = Double.parseDouble(keywordBean.getCoordSouth());
-            ReferencedEnvelope bbox = new ReferencedEnvelope(west, east, south, north, DefaultGeographicCRS.WGS84);
+            ReferencedEnvelope bbox = new ReferencedEnvelope(west, east, south, north, WGS84);
             Region region = new Region(id, labels, categoryId, categoryLabels, hasGeom, bbox);
             regions.add(region);
         }

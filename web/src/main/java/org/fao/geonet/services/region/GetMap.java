@@ -35,7 +35,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -57,9 +57,21 @@ import com.vividsolutions.jts.geom.Geometry;
 //=============================================================================
 
 /**
- * Returns a specific region and coordinates given its id
+ * Return an image of the region as a polygon against an optional background.  If the background is provided it is assumed to
+ * be a url with placeholders for width, height, srs, minx,maxx,miny and maxy.  For example:
+ * 
+ *  http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2CBorders%2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX={MINX},{MINY},{MAXX},{MAXY}&WIDTH={WIDTH}&HEIGHT={HEIGHT}
+ *  
+ *  the placeholders must either be all uppercase or all lowercase
+ *  
+ *  The parameters to the service are:
+ *  
+ *  id - id of the region to render
+ *  srs - (optional) default is EPSG:4326 otherwise it is the project to use when rendering the image
+ *  width - (optional) width of the image that is created.  Only one of width and height are permitted
+ *  height - (optional) height of the image that is created.  Only one of width and height are permitted
+ *  background - URL for loading a background image for regions.  a WMS Getmap request is the typical example
  */
-
 public class GetMap implements Service {
     public static final String SRS_PARAM = "SRS";
     public static final String WIDTH_PARAM = "WIDTH";
@@ -80,18 +92,22 @@ public class GetMap implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         String id = params.getChildText(Params.ID);
         String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
-        int width = Util.getParamAsInt(params, WIDTH_PARAM);
-        int height = Util.getParamAsInt(params, HEIGHT_PARAM);
+        String widthString = params.getChildText(WIDTH_PARAM);
+        String heightString = params.getChildText(HEIGHT_PARAM);
         String background = params.getChildText(BACKGROUND_PARAM);
 
-        if (id == null)
-            return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null) {
+            throw new BadParameterEx(Params.ID, Params.ID+" cannot be null");
+        }
 
+        // see calculateImageSize for more parameter checks
+        
         RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
         Geometry region = dao.getGeom(context, id, false);
         CoordinateReferenceSystem geometryCRS = (CoordinateReferenceSystem) region.getUserData();
-        CoordinateReferenceSystem desiredCRS = CRS.decode(srs);
-        if (!CRS.equalsIgnoreMetadata(geometryCRS, desiredCRS)) {
+        CoordinateReferenceSystem desiredCRS = CRS.decode(srs, true);
+        Integer geomCode = CRS.lookupEpsgCode(geometryCRS, false);
+        if (geomCode == null || !srs.equalsIgnoreCase("EPSG:"+geomCode) && !CRS.equalsIgnoreMetadata(geometryCRS, desiredCRS)) {
             MathTransform transform = CRS.findMathTransform(geometryCRS, desiredCRS, true);
             region = JTS.transform(region, transform);
         }
@@ -103,14 +119,28 @@ public class GetMap implements Service {
         Envelope bboxOfImage = new Envelope(region.getEnvelopeInternal());
         double expandFactor = 0.2;
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
+        Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
         if (background != null) {
 
             String minx = Double.toString(bboxOfImage.getMinX());
             String maxx = Double.toString(bboxOfImage.getMaxX());
             String miny = Double.toString(bboxOfImage.getMinY());
             String maxy = Double.toString(bboxOfImage.getMaxY());
-            background.replace("{minx}", minx).replace("{maxx}", maxx).replace("{miny}", miny).replace("{maxy}", maxy)
-                    .replace("{width}", Integer.toString(width)).replace("{height}", Integer.toString(height));
+            background = background.
+                replace("{minx}", minx).
+                replace("{maxx}", maxx).
+                replace("{miny}", miny).
+                replace("{maxy}", maxy).
+                replace("{srs}", srs).
+                replace("{width}", Integer.toString(imageDimenions.width)).
+                replace("{height}", Integer.toString(imageDimenions.height)).
+                replace("{MINX}", minx).
+                replace("{MAXX}", maxx).
+                replace("{MINY}", miny).
+                replace("{MAXY}", maxy).
+                replace("{SRS}", srs).
+                replace("{WIDTH}", Integer.toString(imageDimenions.width)).
+                replace("{HEIGHT}", Integer.toString(imageDimenions.height));
 
             URL imageUrl = new URL(background);
             InputStream in = imageUrl.openStream();
@@ -121,13 +151,13 @@ public class GetMap implements Service {
 
             }
         } else {
-            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            image = new BufferedImage(imageDimenions.width, imageDimenions.height, BufferedImage.TYPE_INT_ARGB);
         }
 
         Graphics2D graphics = image.createGraphics();
         try {
             ShapeWriter shapeWriter = new ShapeWriter();
-            AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, new Dimension(width, height));
+            AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
             MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
             Geometry screenGeom = JTS.transform(region, mathTransform);
             Shape shape = shapeWriter.toShape(screenGeom);
@@ -144,6 +174,29 @@ public class GetMap implements Service {
         File tmpFile = File.createTempFile("GetMap", "."+format);
         ImageIO.write(image, format, tmpFile);
         return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
+    }
+
+    private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {
+
+        if (widthString != null && heightString != null) {
+            throw new BadParameterEx(WIDTH_PARAM, "Only one of " + WIDTH_PARAM + " and " + HEIGHT_PARAM
+                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+        }
+        if(widthString==null && heightString==null) {
+            throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
+                    + " parameters must be included in the request");
+            
+        }
+
+        int width, height;
+        if(widthString != null) {
+            width = Integer.parseInt(widthString);
+            height = (int) Math.round(bboxOfImage.getWidth()/bboxOfImage.getHeight()/width);
+        } else {
+            height = Integer.parseInt(heightString);
+            width = (int) Math.round(bboxOfImage.getWidth()/bboxOfImage.getHeight()*height);
+        }
+        return new Dimension(width, height);
     }
 
     public static AffineTransform worldToScreenTransform(Envelope mapExtent, Dimension screenSize) {
