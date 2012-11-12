@@ -23,25 +23,12 @@
 
 package org.fao.geonet.services.region;
 
-import java.util.Collection;
-import java.util.Map;
-
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.jdom.Element;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 //=============================================================================
 
@@ -50,18 +37,6 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class List implements Service
 {
-	public static final String REGION_EL = "region";
-    static final String REGIONS_EL = "regions";
-    static final String ID_ATT = "id";
-    static final String HAS_GEOM_ATT = "hasGeom";
-    static final String CATEGORY_ID_ATT = "categoryId";
-    static final String COUNT_ATT = "count";
-    static final String NORTH_EL = "north";
-    static final String SOUTH_EL = "south";
-    static final String EAST_EL = "east";
-    static final String WEST_EL = "west";
-    private static final String LABEL_EL = "label";
-    private static final String CATEGORY_EL = "categoryLabel";
 
     public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -83,44 +58,11 @@ public class List implements Service
 		if(categoryIdParam != null) { request.categoryId(categoryIdParam); }
 		if(maxRecordsParam > 0) { request.maxRecords(maxRecordsParam); }
 		
-		Collection<Region> regions = request.execute();
+		Element regions = request.xmlResult();
 		
-		Element result = new Element(REGIONS_EL);
-		result.setAttribute(COUNT_ATT, Integer.toString(regions.size()));
-		for (Region region : regions) {
-		    result.addContent(toElement(region));
-        }
-		
-		return result;
+		return regions;
 	}
 
-    static Element toElement(Region region) throws TransformException, FactoryException {
-        Element regionEl = new Element(REGION_EL);
-        
-        regionEl.setAttribute(ID_ATT, region.getId());
-        regionEl.setAttribute(CATEGORY_ID_ATT, region.getCategoryId());
-        regionEl.setAttribute(HAS_GEOM_ATT, Boolean.toString(region.hasGeom()));
-        
-        ReferencedEnvelope bbox = region.getLatLongBBox();
-        regionEl.addContent(new Element(NORTH_EL).setText(Double.toString(bbox.getMaxY())));
-        regionEl.addContent(new Element(SOUTH_EL).setText(Double.toString(bbox.getMinY())));
-        regionEl.addContent(new Element(WEST_EL).setText(Double.toString(bbox.getMinX())));
-        regionEl.addContent(new Element(EAST_EL).setText(Double.toString(bbox.getMaxX())));
-        
-        Element labelEl = new Element(LABEL_EL);
-        regionEl.addContent(labelEl);
-        for (Map.Entry<String, String> entry : region.getLabels().entrySet()) {
-            labelEl.addContent(new Element(entry.getKey()).setText(entry.getValue()));
-        }
-
-        Element categoryEl = new Element(CATEGORY_EL);
-        regionEl.addContent(categoryEl);
-        for (Map.Entry<String, String> entry : region.getCategoryLabels().entrySet()) {
-            categoryEl.addContent(new Element(entry.getKey()).setText(entry.getValue()));
-        }
-        
-        return regionEl;
-    }
 }
 
 //=============================================================================

@@ -54,12 +54,12 @@ public class Get implements Service
 			return new Element(Jeeves.Elem.RESPONSE);
 
 		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Region region = dao.createSearchRequest(context).id(id).get();
-		if (region == null) {
+		Element result = dao.createSearchRequest(context).id(id).xmlResult();
+		if (result.getChildren().isEmpty()) {
 		    throw  new RegionNotFoundEx(id);
 		}
 		
-		return new Element(List.REGIONS_EL).addContent(List.toElement(region));
+		return result;
 	}
 }
 

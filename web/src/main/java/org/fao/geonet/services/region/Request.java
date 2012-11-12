@@ -2,7 +2,11 @@ package org.fao.geonet.services.region;
 
 import java.util.Collection;
 
+import org.jdom.Element;
+
 public abstract class Request {
+    public static final String REGIONS_EL = "regions";
+    private static final String COUNT_ATT = "count";
 
     /**
      * 
@@ -30,6 +34,16 @@ public abstract class Request {
     }
 
     public abstract Request id(String regionId);
+
+    public Element xmlResult() throws Exception {
+        Collection<Region> regions = execute();
+        Element result = new Element(REGIONS_EL);
+        result.setAttribute(COUNT_ATT, Integer.toString(regions.size()));
+        for (Region region : regions) {
+            result.addContent(region.toElement());
+        }
+        return result;
+    }
 
 
 }

@@ -5,10 +5,22 @@ import java.util.Map;
 
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.jdom.Element;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
 public class Region {
+    public static final String REGION_EL = "region";
+    private static final String ID_ATT = "id";
+    private static final String HAS_GEOM_ATT = "hasGeom";
+    private static final String CATEGORY_ID_ATT = "categoryId";
+    private static final String NORTH_EL = "north";
+    private static final String SOUTH_EL = "south";
+    private static final String EAST_EL = "east";
+    private static final String WEST_EL = "west";
+    private static final String LABEL_EL = "label";
+    private static final String CATEGORY_EL = "categoryLabel";
+
     private final String id;
     private final Map<String, String> labels;
     private final String categoryId;
@@ -65,5 +77,33 @@ public class Region {
             label = labels.values().iterator().next();
         }
         return categoryId+":"+label;
+    }
+
+    public Element toElement() throws TransformException, FactoryException {
+        Element regionEl = new Element(REGION_EL);
+        
+        regionEl.setAttribute(ID_ATT, getId());
+        regionEl.setAttribute(CATEGORY_ID_ATT, getCategoryId());
+        regionEl.setAttribute(HAS_GEOM_ATT, Boolean.toString(hasGeom()));
+        
+        ReferencedEnvelope bbox = getLatLongBBox();
+        regionEl.addContent(new Element(NORTH_EL).setText(Double.toString(bbox.getMaxY())));
+        regionEl.addContent(new Element(SOUTH_EL).setText(Double.toString(bbox.getMinY())));
+        regionEl.addContent(new Element(WEST_EL).setText(Double.toString(bbox.getMinX())));
+        regionEl.addContent(new Element(EAST_EL).setText(Double.toString(bbox.getMaxX())));
+        
+        Element labelEl = new Element(LABEL_EL);
+        regionEl.addContent(labelEl);
+        for (Map.Entry<String, String> entry : getLabels().entrySet()) {
+            labelEl.addContent(new Element(entry.getKey()).setText(entry.getValue()));
+        }
+
+        Element categoryEl = new Element(CATEGORY_EL);
+        regionEl.addContent(categoryEl);
+        for (Map.Entry<String, String> entry : getCategoryLabels().entrySet()) {
+            categoryEl.addContent(new Element(entry.getKey()).setText(entry.getValue()));
+        }
+        
+        return regionEl;
     }
 }

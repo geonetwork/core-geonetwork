@@ -45,8 +45,12 @@ public class KeywordSearchParams {
     private List<KeywordBean> executeOne(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
         List<KeywordBean> results = new ArrayList<KeywordBean>();
         int id = 0;
-        Thesaurus thesaurus = finder.getThesaurusByName(thesauriNames.iterator().next());
+        String thesaurusName = thesauriNames.iterator().next();
+        Thesaurus thesaurus = finder.getThesaurusByName(thesaurusName);
         Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
+        if (thesaurus == null) {
+            throw new IllegalArgumentException("The thesaurus "+thesaurusName+" does not exist, there for the query cannot be excuted: '"+query+"'" );
+        }
         for (KeywordBean keywordBean : query.execute(thesaurus)) {
             keywordBean.setId(id);
             results.add(keywordBean);
