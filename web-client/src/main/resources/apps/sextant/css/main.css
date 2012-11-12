@@ -687,3 +687,10 @@ font-size: 30px;
 	padding: 0;
 	padding-bottom: 2px;
 }
+body.x-body-masked .x-window-plain .x-window-mc {
+	background-color: white;
+}
+.x-window-dlg button {
+	background-image: none !important;
+	background-color: transparent !important;
+}
