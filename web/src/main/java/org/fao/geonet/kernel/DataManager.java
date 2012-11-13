@@ -1424,12 +1424,13 @@ public class DataManager {
      * @param owner
      * @param parentUuid
      * @param isTemplate TODO
+     * @param fullRightsForGroup TODO
      * @return
      * @throws Exception
      */
 	public String createMetadata(ServiceContext context, Dbms dbms, String templateId, String groupOwner,
 										  SerialFactory sf, String source, int owner,
-										  String parentUuid, String isTemplate) throws Exception {
+										  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
 		int iTemplateId = new Integer(templateId);
 		String query = "SELECT schemaId, data FROM Metadata WHERE id=?";
 		List listTempl = dbms.select(query, iTemplateId).getChildren();
@@ -1454,7 +1455,7 @@ public class DataManager {
 		
 		//--- store metadata
 		String id = xmlSerializer.insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, null, owner, groupOwner, "", context);
-		copyDefaultPrivForGroup(context, dbms, id, groupOwner);
+		copyDefaultPrivForGroup(context, dbms, id, groupOwner, fullRightsForGroup);
 
 		//--- store metadata categories copying them from the template
 		List categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
@@ -1518,7 +1519,7 @@ public class DataManager {
         //--- store metadata
         xmlSerializer.insert(dbms, schema, metadata, id, source, uuid, createDate, changeDate, isTemplate, title, owner, group, docType, context);
 
-        copyDefaultPrivForGroup(context, dbms, id$, group);
+        copyDefaultPrivForGroup(context, dbms, id$, group, false);
 
         if (category != null) {
             setCategory(context, dbms, id$, category);
@@ -2409,9 +2410,10 @@ public class DataManager {
      * @param dbms the database
      * @param id metadata id
      * @param groupId group id
+     * @param fullRightsForGroup TODO
      * @throws Exception hmmm
      */
-	public void copyDefaultPrivForGroup(ServiceContext context, Dbms dbms, String id, String groupId) throws Exception {
+	public void copyDefaultPrivForGroup(ServiceContext context, Dbms dbms, String id, String groupId, boolean fullRightsForGroup) throws Exception {
         if(StringUtils.isBlank(groupId)) {
             Log.info(Geonet.DATA_MANAGER, "Attempt to set default privileges for metadata " + id + " to an empty groupid");
             return;
@@ -2424,9 +2426,11 @@ public class DataManager {
 		// Restrictive: new and inserted records should not be editable, 
 		// their resources can't be downloaded and any interactive maps can't be 
 		// displayed by users in the same group 
-		// setOperation(dbms, id, groupId, AccessManager.OPER_EDITING);
-		// setOperation(dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
-		// setOperation(dbms, id, groupId, AccessManager.OPER_DYNAMIC);
+		if(fullRightsForGroup) {
+			setOperation(context, dbms, id, groupId, AccessManager.OPER_EDITING);
+			setOperation(context, dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
+			setOperation(context, dbms, id, groupId, AccessManager.OPER_DYNAMIC);
+		}
 		// Ultimately this should be configurable elsewhere
 	}
 

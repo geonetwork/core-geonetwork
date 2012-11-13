@@ -547,10 +547,39 @@ public class SchemaManager {
 			Schema schema = hmSchemas.get(name);
 
 			if (schema == null)
-				throw new IllegalArgumentException("Schema suggestions not registered : " + name);
+				throw new IllegalArgumentException("Schema not registered : " + name);
 
 			MetadataSchema mds = schema.getMetadataSchema();
 			return mds.getNS(prefix);
+		} finally {
+			afterRead();
+		}
+	}
+
+	/**
+   * Gets the namespaces from schema information (XSD) as a string for use
+	 * as a list of namespaces.
+	 *
+	 * @param name the metadata schema whose namespaces we want
+   * @return
+	 */
+	public String getNamespaceString(String name) {
+
+		beforeRead();
+		try {
+			Schema schema = hmSchemas.get(name);
+
+			if (schema == null)
+				throw new IllegalArgumentException("Schema not registered : " + name);
+
+			MetadataSchema mds = schema.getMetadataSchema();
+			StringBuilder sb = new StringBuilder();
+			for (Namespace ns : mds.getSchemaNS()) {
+				if (ns.getPrefix().length() != 0 && ns.getURI().length() != 0) {
+					sb.append("xmlns:"+ns.getPrefix()+"=\""+ns.getURI()+"\" ");
+				}
+			}
+			return sb.toString().trim();
 		} finally {
 			afterRead();
 		}
@@ -1164,13 +1193,19 @@ public class SchemaManager {
 	 */
 	private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
 
-    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
     String schemaFile  = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA;
     String suggestFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
     String substitutesFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
     String idFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ID;
     String oasisCatFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_OASIS;
     String conversionsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
+
+		if (!(new File(idFile).exists())) {
+			Log.error(Geonet.SCHEMA_MANAGER, "    Skipping : " +saSchema+" as it doesn't have "+Geonet.File.SCHEMA_ID);
+			return;
+		}
+
+    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
    
 	 	String stage = "";
     try {
