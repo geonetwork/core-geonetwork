@@ -16,12 +16,13 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
-public class ThesaurusBasedRegionsDAO implements RegionsDAO {
+public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 
     private static final String REGIONS_THESAURUS_NAME = "external.place.regions";
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
     private GeometryFactory factory = new GeometryFactory();
+    private Request allRegions;
     
     public ThesaurusBasedRegionsDAO(java.util.Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);

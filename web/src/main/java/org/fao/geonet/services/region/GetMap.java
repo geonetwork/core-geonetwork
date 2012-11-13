@@ -70,7 +70,9 @@ import com.vividsolutions.jts.geom.Geometry;
  *  srs - (optional) default is EPSG:4326 otherwise it is the project to use when rendering the image
  *  width - (optional) width of the image that is created.  Only one of width and height are permitted
  *  height - (optional) height of the image that is created.  Only one of width and height are permitted
- *  background - URL for loading a background image for regions.  a WMS Getmap request is the typical example
+ *  background - URL for loading a background image for regions.   A WMS Getmap request is the typical example.  
+ *      the URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height and optionally srs
+ *      
  */
 public class GetMap implements Service {
     public static final String SRS_PARAM = "SRS";

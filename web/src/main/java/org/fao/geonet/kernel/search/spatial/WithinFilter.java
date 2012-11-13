@@ -52,7 +52,7 @@ public class WithinFilter extends SpatialFilter
         super(query, numHits, geom, sourceAccessor);
     }
 
-    protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
+    public SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
         return filterFactory.within(geomPropertyName, geomExpression);

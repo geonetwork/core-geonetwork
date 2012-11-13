@@ -39,6 +39,8 @@ import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
+import org.geotools.data.memory.MemoryFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
@@ -151,7 +153,7 @@ public class SpatialIndexWriter implements FeatureListener
                     schemaDir, metadata, _parser);
 
             if (geometry != null) {
-                FeatureCollection<SimpleFeatureType, SimpleFeature> features = FeatureCollections.newCollection();
+                MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
                 Object[] data;
                 SimpleFeatureType schema = _featureStore.getSchema();
 				if(schema.getDescriptor(0) == schema.getGeometryDescriptor()){

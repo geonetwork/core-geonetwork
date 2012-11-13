@@ -86,6 +86,7 @@ public class Region {
         regionEl.setAttribute(CATEGORY_ID_ATT, getCategoryId());
         regionEl.setAttribute(HAS_GEOM_ATT, Boolean.toString(hasGeom()));
         
+        regionEl.addContent(new Element(ID_ATT).setText(getId()));
         ReferencedEnvelope bbox = getLatLongBBox();
         regionEl.addContent(new Element(NORTH_EL).setText(Double.toString(bbox.getMaxY())));
         regionEl.addContent(new Element(SOUTH_EL).setText(Double.toString(bbox.getMinY())));

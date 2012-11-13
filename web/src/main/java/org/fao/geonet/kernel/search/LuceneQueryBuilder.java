@@ -257,61 +257,62 @@ public class LuceneQueryBuilder {
         BooleanQuery booleanQuery = new BooleanQuery();
         for(String fieldName : fields) {
 
-            Set<String> fieldValues = searchCriteria.get(fieldName) ;
-            String fieldValue = fieldValues.iterator().next();
-
-            if (fieldValue.contains(OR_SEPARATOR)) {
-                // TODO : change OR separator
-                // Add all separated values to the boolean query
-                addSeparatedTextField(fieldValue, OR_SEPARATOR, fieldName, booleanQuery);
-            }
-            else {
-                if (LuceneIndexField.ANY.equals(fieldName) || "all".equals(fieldName)) {
-                    BooleanClause anyClause = null;
-                    if (!onlyWildcard(fieldValue)) {
-                        // tokenize searchParam
-                        StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
-                        if (st.countTokens() == 1) {
-                            String token = st.nextToken();
-                            Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
-                            if (subQuery != null) {
-                                anyClause = new BooleanClause(subQuery, tokenOccur);
-                            }
-                        }
-                        else {
-                            BooleanQuery orBooleanQuery = new BooleanQuery();
-                            while (st.hasMoreTokens()) {
+            Set<String> fieldValues = searchCriteria.get(fieldName);
+            for (String fieldValue : fieldValues) {
+    
+                if (fieldValue.contains(OR_SEPARATOR)) {
+                    // TODO : change OR separator
+                    // Add all separated values to the boolean query
+                    addSeparatedTextField(fieldValue, OR_SEPARATOR, fieldName, booleanQuery);
+                }
+                else {
+                    if (LuceneIndexField.ANY.equals(fieldName) || "all".equals(fieldName)) {
+                        BooleanClause anyClause = null;
+                        if (!onlyWildcard(fieldValue)) {
+                            // tokenize searchParam
+                            StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
+                            if (st.countTokens() == 1) {
                                 String token = st.nextToken();
                                 Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
                                 if (subQuery != null) {
-                                    BooleanClause subClause = new BooleanClause(subQuery, occur);
-                                    orBooleanQuery.add(subClause);
+                                    anyClause = new BooleanClause(subQuery, tokenOccur);
                                 }
                             }
-                            anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
+                            else {
+                                BooleanQuery orBooleanQuery = new BooleanQuery();
+                                while (st.hasMoreTokens()) {
+                                    String token = st.nextToken();
+                                    Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                                    if (subQuery != null) {
+                                        BooleanClause subClause = new BooleanClause(subQuery, occur);
+                                        orBooleanQuery.add(subClause);
+                                    }
+                                }
+                                anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
+                            }
+                        }
+                        if (StringUtils.isNotEmpty(anyClause.toString())) {
+                            booleanQuery.add(anyClause);
                         }
                     }
-                    if (StringUtils.isNotEmpty(anyClause.toString())) {
-                        booleanQuery.add(anyClause);
-                    }
-                }
-                else {
-                    if (!_tokenizedFieldSet.contains(fieldName)) {
-                        // TODO : use similarity when needed
-                        TermQuery termQuery = new TermQuery(new Term(fieldName, fieldValue.trim()));
-                        BooleanClause clause = new BooleanClause(termQuery, tokenOccur);
-                        booleanQuery.add(clause);
-                    }
                     else {
-                        // tokenize searchParam
-                        StringTokenizer st = new StringTokenizer(fieldValue.trim(), STRING_TOKENIZER_DELIMITER);
-
-                        while (st.hasMoreTokens()) {
-                            String token = st.nextToken();
-                            Query subQuery = textFieldToken(token, fieldName, similarity);
-                            if (subQuery != null) {
-                                BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
-                                booleanQuery.add(subClause);
+                        if (!_tokenizedFieldSet.contains(fieldName)) {
+                            // TODO : use similarity when needed
+                            TermQuery termQuery = new TermQuery(new Term(fieldName, fieldValue.trim()));
+                            BooleanClause clause = new BooleanClause(termQuery, tokenOccur);
+                            booleanQuery.add(clause);
+                        }
+                        else {
+                            // tokenize searchParam
+                            StringTokenizer st = new StringTokenizer(fieldValue.trim(), STRING_TOKENIZER_DELIMITER);
+    
+                            while (st.hasMoreTokens()) {
+                                String token = st.nextToken();
+                                Query subQuery = textFieldToken(token, fieldName, similarity);
+                                if (subQuery != null) {
+                                    BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
+                                    booleanQuery.add(subClause);
+                                }
                             }
                         }
                     }
