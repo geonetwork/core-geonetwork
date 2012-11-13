@@ -23,17 +23,15 @@
 
 package jeeves.server.dispatchers.guiservices;
 
+import java.util.WeakHashMap;
+
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.BadInputEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.XmlFileCacher;
-import org.jdom.Element;
 
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.util.WeakHashMap;
+import org.jdom.Element;
 
 //=============================================================================
 
@@ -42,13 +40,12 @@ import java.util.WeakHashMap;
 
 public class XmlFile implements GuiService
 {
-	private String  name;
-	private String  file;
-	private String  base;
-	private String  language;
-	private String  defaultLang;
-	private boolean localized;
-	private WeakHashMap<String,XmlFileCacher> xmlCaches = new WeakHashMap<String, XmlFileCacher>(4);
+	private final String  name;
+	private final String  file;
+	private final String  base;
+	private final String  language;
+	private final String  defaultLang;
+	private final boolean localized;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -80,45 +77,18 @@ public class XmlFile implements GuiService
 	//---
 	//--------------------------------------------------------------------------
 
-	public synchronized Element exec(Element response, ServiceContext context) throws Exception
+	public Element exec(Element response, ServiceContext context) throws Exception
 	{
-		String lang = context.getLanguage();
 
-        if(localized || language == null) language = lang;
-        if(language == null) language = defaultLang;
+        String lang = context.getLanguage();
 
-		String appPath = context.getAppPath();
-		String xmlFilePath;
+        String preferedLanguage = language;
+        if(localized || preferedLanguage  == null) preferedLanguage = lang;
+        if(preferedLanguage == null) preferedLanguage = defaultLang;
 
-        boolean isBaseAbsolutePath = (new File(base)).isAbsolute();
-        String rootPath = (isBaseAbsolutePath) ? base : appPath + base;
-
-		if (localized) xmlFilePath = rootPath + File.separator + lang +File.separator + file;
-		else xmlFilePath = appPath + file;
-
-        ServletContext servletContext = null;
-        if(context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
-
-        XmlFileCacher xmlCache = xmlCaches.get(language);
-		if (xmlCache == null){
-            xmlCache = new XmlFileCacher(new File(xmlFilePath),servletContext,appPath);
-            xmlCaches.put(language, xmlCache);
-        }
-
-		Element result;
-		try {
-			result = (Element)xmlCache.get().clone();
-		} catch (Exception e) {
-            Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language");
-            Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);
-			String xmlDefaultLangFilePath = rootPath + File.separator + defaultLang + File.separator + file;
-			xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
-            xmlCaches.put(language, xmlCache);
-            result = (Element)xmlCache.get().clone();
-		}
-		return result.setName(name);
+        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang);
+        element.setName(name);
+        return element;
 	}
 }
 

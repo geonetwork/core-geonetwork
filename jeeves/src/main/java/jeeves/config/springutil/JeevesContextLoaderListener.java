@@ -30,11 +30,13 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 		}
 		String key = webappName+POST_PROCESSOR_INIT_PARAM;
 		String param = System.getProperty(key);
-		if(param != null) {
-			processBeanFactoryPostProcessorParam(applicationContext, param);
-		} else {
-			processBeanFactoryPostProcessorParam(applicationContext, "geonetwork."+POST_PROCESSOR_INIT_PARAM);
+		if (param == null) {
+		    param = System.getProperty("geonetwork."+POST_PROCESSOR_INIT_PARAM);
 		}
+        if (param == null) {
+            param = servletContext.getInitParameter(POST_PROCESSOR_INIT_PARAM);
+        }
+		processBeanFactoryPostProcessorParam(applicationContext, param);
 	}
 
 	private void processBeanFactoryPostProcessorParam(

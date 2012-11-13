@@ -5,23 +5,23 @@ package org.fao.geonet.kernel.search.keyword;
  *  
  * @author jeichar
  */
-public abstract class KeywordRelation {
+public enum KeywordRelation {
 
-    public static final KeywordRelation RELATED = new KeywordRelation("related") {
+    RELATED("related") {
         @Override
         public KeywordRelation opposite() {
             return this;
         }
-    };
-    public static final KeywordRelation NARROWER = new KeywordRelation("narrower") {
+    },
+    NARROWER("narrower") {
 
         @Override
         public KeywordRelation opposite() {
             return BROADER;
         }
         
-    };
-    public static final KeywordRelation BROADER = new KeywordRelation("broader") {
+    },
+    BROADER("broader") {
 
         @Override
         public KeywordRelation opposite() {
@@ -32,7 +32,7 @@ public abstract class KeywordRelation {
     
     public final String name;
 
-    public KeywordRelation(String name) {
+    private KeywordRelation(String name) {
         this.name = name;
     }
     

@@ -1,10 +1,11 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:exslt="http://exslt.org/common" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+  xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
   xmlns:date="http://exslt.org/dates-and-times" xmlns:saxon="http://saxon.sf.net/"
   extension-element-prefixes="saxon"
-  exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date">
+  exclude-result-prefixes="#all">
 
   <!-- ================================================================================ -->
   <!-- 
@@ -199,6 +200,16 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-
+  
+  <!-- Copy all elements and attributes excluding GeoNetwork elements. 
+    This could be useful to get the source XML when working on a metadocument.
+  -->
+  <xsl:template match="@*|node()[namespace-uri()!='http://www.fao.org/geonetwork']" mode="geonet-cleaner">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="node()" mode="geonet-cleaner"/>
+    </xsl:copy>
+  </xsl:template>
+  
+  
 </xsl:stylesheet>

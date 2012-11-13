@@ -25,12 +25,10 @@ package org.fao.geonet.services.region;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
+
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -55,9 +53,13 @@ public class Get implements Service
 		if (id == null)
 			return new Element(Jeeves.Elem.RESPONSE);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		return Lib.local.retrieveById(dbms, "Regions", id).setName(Jeeves.Elem.RESPONSE);
+		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+		Element result = dao.createSearchRequest(context).id(id).xmlResult();
+		if (result.getChildren().isEmpty()) {
+		    throw  new RegionNotFoundEx(id);
+		}
+		
+		return result;
 	}
 }
 

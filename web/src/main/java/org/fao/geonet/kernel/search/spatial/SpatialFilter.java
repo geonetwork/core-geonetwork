@@ -326,11 +326,11 @@ public abstract class SpatialFilter extends Filter
         return filter;
     }
 
-    protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
+    public org.opengis.filter.Filter createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
         throw new UnsupportedOperationException(
-                "createGeomFilter must be overridden if createFilter is not overridden");
+                "createGeomFilter must be overridden ");
     }
 
     public Query getQuery() {

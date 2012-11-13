@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.monitor.MonitorManager;
@@ -16,6 +17,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
@@ -43,7 +45,8 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		MonitorManager monitorManager = context.getMonitorManager();
 		ProviderManager providerManager = context.getProviderManager();
 		SerialFactory serialFactory = context.getSerialFactory();
-		ServiceContext serviceContext = new ServiceContext("none", monitorManager, providerManager, serialFactory, null, context.allContexts());
+		JeevesApplicationContext appContext = context.getApplicationContext();
+		ServiceContext serviceContext = new ServiceContext("none", appContext , new XmlCacheManager() , monitorManager, providerManager, serialFactory, null, context.allContexts());
 		
 		createBackup(serviceContext);
 	}

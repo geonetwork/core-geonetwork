@@ -90,8 +90,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @param summaryConfig
      * @param luceneConfig
      */
-	public GetRecords(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(ds, summaryConfig, luceneConfig);
+	public GetRecords(File summaryConfig, LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(summaryConfig, luceneConfig);
     	this._luceneConfig = luceneConfig;
     }
 

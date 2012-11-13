@@ -80,8 +80,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     private SearchController _searchController;
 
-    public GetRecordById(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
-        _searchController = new SearchController(ds, summaryConfig, luceneConfig);
+    public GetRecordById(File summaryConfig, LuceneConfig luceneConfig) {
+        _searchController = new SearchController(summaryConfig, luceneConfig);
     }
 
 

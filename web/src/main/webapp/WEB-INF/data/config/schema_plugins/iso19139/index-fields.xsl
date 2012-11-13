@@ -190,7 +190,7 @@
 
 			<xsl:for-each select="//gmd:MD_Keywords">
 			  
-				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="lower-case(.)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
 					
@@ -224,7 +224,7 @@
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
-			<xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString">
+			<xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
 				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
 				
 				<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
@@ -527,7 +527,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<xsl:for-each select="gmd:contact/*/gmd:organisationName/gco:CharacterString">
+		<xsl:for-each select="gmd:contact/*/gmd:organisationName/gco:CharacterString|gmd:contact/*/gmd:organisationName/gmx:Anchor">
 			<Field name="metadataPOC" string="{string(.)}" store="true" index="true"/>
 			
 			<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>

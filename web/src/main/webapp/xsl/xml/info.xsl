@@ -112,17 +112,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="regions">
-		<xsl:copy>
-			<xsl:for-each select="record">
-				<region id="{id}">
-					<xsl:copy-of select="north"/>
-					<xsl:copy-of select="south"/>
-					<xsl:copy-of select="west"/>
-					<xsl:copy-of select="east"/>
-					<xsl:copy-of select="label"/>
-				</region>
-			</xsl:for-each>
-		</xsl:copy>
+		<xsl:copy-of select="."/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

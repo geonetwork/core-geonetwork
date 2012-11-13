@@ -23,6 +23,7 @@
 
 package org.fao.geonet.guiservices.schemas;
 
+import java.io.File;
 import java.util.List;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -36,6 +37,7 @@ import org.jdom.Element;
 
 public class Get implements Service
 {
+	private String   FS         = File.separator;
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -55,6 +57,8 @@ public class Get implements Service
 		for (String schema : schemaMan.getSchemas()) {
 			Element elem = new Element("name").setText(schema);
 			elem.setAttribute("plugin","true"); // all schemas are plugins
+			elem.setAttribute("schemaConvertDirectory",schemaMan.getSchemaDir(schema)+"convert"+FS);
+			elem.setAttribute("namespaces",schemaMan.getNamespaceString(schema));
 			// is it editable?
 			if (schemaMan.getSchema(schema).canEdit()) {
 				elem.setAttribute("edit","true");

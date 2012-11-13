@@ -1,26 +1,3 @@
-//==============================================================================
-//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
-
 package org.fao.geonet.util;
 
 import java.io.File;
@@ -38,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import jeeves.utils.XmlFileCacher;
 
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
@@ -459,6 +436,40 @@ public final class LangUtils
         }
         
         return null;
+    }
+
+    /**
+     * Find all the translations for a given key in the <type>.xml file.  normally you will want 
+     * 'type' to == 'string'.  In fact the 2 parameter method can be used for this.
+     * 
+     * @param type the type of translations file, typically strings
+     * @param key the key to look up.  may contain / but cannot start with one.  for example: categories/water
+     * @return
+     */
+    public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
+        String appPath = context.getAppPath();
+        XmlCacheManager cacheManager = context.getXmlCacheManager();
+        File loc = new File(appPath, "loc");
+        String typeWithExtension = "xml"+File.separator+type+".xml";
+        Map<String, String> translations = new HashMap<String, String>();
+        
+        for (File file : loc.listFiles()) {
+            if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
+                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
+                String translation = Xml.selectString(xml, key);
+                if(translation != null && !translation.trim().isEmpty()) {
+                    translations.put(file.getName(), translation);
+                }
+            }
+        }
+        
+        return translations;
+    }
+    /**
+     * same as translate(context, "string", key)
+     */
+    public static Map<String, String> translate(ServiceContext context, String key) throws JDOMException, IOException {
+        return translate(context, "strings", key);
     }
 
 }

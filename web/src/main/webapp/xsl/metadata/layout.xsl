@@ -8,7 +8,8 @@
   xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:date="http://exslt.org/dates-and-times"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
-  exclude-result-prefixes="exslt xlink gco gmd geonet svrl saxon date xs">
+	xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  exclude-result-prefixes="#all">
 
   <xsl:import href="../text-utilities.xsl"/>
 
@@ -193,7 +194,7 @@
           </xsl:variable>
           <xsl:if test="normalize-space($function)!=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos,');')"
+              select="concat('javascript:', $function, '(',$parentName,',',$apos,$name,$apos, ', this);')"
             />
           </xsl:if>
         </xsl:variable>
@@ -201,6 +202,7 @@
           <xsl:call-template name="addXMLFragment">
             <xsl:with-param name="id" select="$id"/>
             <xsl:with-param name="subtemplate" select="true()"/>
+        		<xsl:with-param name="schema" select="$schema"/>
           </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="helpLink">
@@ -563,6 +565,7 @@
     <xsl:variable name="addXMLFragment">
       <xsl:call-template name="addXMLFragment">
         <xsl:with-param name="id" select="$id"/>
+        <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="removeLink">
@@ -667,6 +670,7 @@
   <xsl:template name="addXMLFragment">
     <xsl:param name="id"/>
     <xsl:param name="subtemplate" select="false()"/>
+		<xsl:param name="schema"/>
 
 
     <xsl:variable name="name" select="name(.)"/>
@@ -693,6 +697,9 @@
     </xsl:variable>
 
 
+		<xsl:variable name="namespaces">
+			<xsl:value-of select="/root/gui/schemalist/name[text()=$schema]/@namespaces"/>
+		</xsl:variable>
 
     <xsl:choose>
       <!-- Create link only when a function is available -->
@@ -739,19 +746,19 @@
           <xsl:when
             test="$newBrother/* and not($newBrother/*/geonet:choose) and $nextBrother/@prefix=''">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);')"
             />
           </xsl:when>
           <xsl:when test="$newBrother/* and not($newBrother/*/geonet:choose)">
             <xsl:choose>
               <xsl:when test="$subtemplate">
                 <xsl:value-of
-                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos, ',', $apos, $subTemplateName, $apos,');')"
+                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos, ',', $apos, $subTemplateName, $apos, ',', $apos, $namespaces, $apos, ');')"
                 />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of
-                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,');')"
+                  select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@prefix,':',$nextBrother/@name,$apos,', this);')"
                 />
               </xsl:otherwise>
             </xsl:choose>
@@ -759,7 +766,7 @@
           <!-- place optional +/x for use when re-ordering etc -->
           <xsl:when test="geonet:element/@add='true' and name($nextBrother)=name(.)">
             <xsl:value-of
-              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,');!OPTIONAL')"
+              select="concat('javascript:', $function, '(',../geonet:element/@ref,',',$apos,$nextBrother/@name,$apos,', this);!OPTIONAL')"
             />
           </xsl:when>
           <!-- place +/x because schema insists but no geonet:child nextBrother 
@@ -775,7 +782,7 @@
           -->
           <xsl:when test="$name='geonet:child' and (@action='replace' or @action='before')">
             <xsl:value-of
-              select="concat('javascript:', $function, '(', ../geonet:element/@ref, ', ', $apos, $elementName,  $apos, ',', $apos, $subTemplateName, $apos,');')"
+              select="concat('javascript:', $function, '(', ../geonet:element/@ref, ', ', $apos, $elementName,  $apos, ',', $apos, $subTemplateName, $apos, ',', $apos, $namespaces, $apos, ');')"
             />
           </xsl:when>
         </xsl:choose>
@@ -833,12 +840,14 @@
       <xsl:call-template name="addXMLFragment">
         <xsl:with-param name="id" select="$id"/>
         <xsl:with-param name="subtemplate" select="false()"/>
+        <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="addXmlFragmentSubTemplate">
       <xsl:call-template name="addXMLFragment">
         <xsl:with-param name="id" select="$id"/>
         <xsl:with-param name="subtemplate" select="true()"/>
+        <xsl:with-param name="schema" select="$schema"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="removeLink">

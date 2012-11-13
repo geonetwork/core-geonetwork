@@ -58,58 +58,65 @@ public class GetList implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context)
-            throws Exception {
-        Element response = new Element(Jeeves.Elem.RESPONSE);
-        
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        ThesaurusManager th = gc.getThesaurusManager();
-        Map<String, Thesaurus> thTable = th.getThesauriMap();
-        
-        response.addContent(buildResultfromThTable(thTable, dbms));
-        
-        return response;
-    }
-
-    
-    /**
-     * @param thTable
-     * @return {@link Element}
-     * @throws SQLException 
-     */
-    private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
-        
-        Element elRoot = new Element("thesauri");
-        
-        Collection<Thesaurus> e = thTable.values();
-        
-        for (Thesaurus currentTh : e) {
-            Element elLoop = new Element("thesaurus");
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		Element response = new Element(Jeeves.Elem.RESPONSE);
+		
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		ThesaurusManager th = gc.getThesaurusManager();
+		Map<String, Thesaurus> thTable = th.getThesauriMap();
+		
+		response.addContent(buildResultfromThTable(thTable, dbms));
+		
+		return response;
+	}
+	
+	/**
+	 * @param thTable
+	 * @return {@link Element}
+	 * @throws SQLException 
+	 */
+	private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
+		
+		Element elRoot = new Element("thesauri");
+		
+		Collection<Thesaurus> e = thTable.values();
+		for (Thesaurus currentTh : e) {
+	        Element elLoop = new Element("thesaurus");
+			
+			Element elKey = new Element("key");
+			String key = currentTh.getKey();
+			elKey.addContent(key);
+			
+			Element elDname = new Element("dname");
+			String dname = currentTh.getDname();
+			elDname.addContent(dname);
+			
+			Element elFname = new Element("filename");
+			String fname = currentTh.getFname();
+			elFname.addContent(fname);
+			
+			Element elTitle = new Element("title");
+			String title = currentTh.getTitle();
+			elTitle.addContent(title);
+			
+			Element elType = new Element("type");
+			String type = currentTh.getType();
+			elType.addContent(type);
+			
+			Element elDate = new Element("date");
+            String date = currentTh.getDate();
+            elDate.addContent(date);
             
-            Element elKey = new Element("key");
-            String key = currentTh.getKey();
-            elKey.addContent(key);
+            Element elUrl = new Element("url");
+            String url = currentTh.getDownloadUrl();
+            elUrl.addContent(url);
             
-            Element elDname = new Element("dname");
-            String dname = currentTh.getDname();
-            elDname.addContent(dname);
-            
-            Element elFname = new Element("filename");
-            String fname = currentTh.getFname();
-            elFname.addContent(fname);
-            
-            Element elTitle = new Element("title");
-            String title = currentTh.getTitle();
-            elTitle.addContent(title);
-            
-            Element elType = new Element("type");
-            String type = currentTh.getType();
-            elType.addContent(type);
-            
-            Element elActivated= new Element("activated");
-            String activated = "y";
+	        
+			Element elActivated= new Element("activated");
+			String activated = "y";
                         // Thesaurus are activated by default
                         String checkQuery = "SELECT count(*) as disabled FROM Thesaurus WHERE id = ? and activated = 'n'";
                         Element records = dbms.select(checkQuery, currentTh.getKey());
@@ -117,19 +124,21 @@ public class GetList implements Service {
                             activated = "n";
                         }
                         elActivated.setText(activated);
-            
-            elLoop.addContent(elKey);
-            elLoop.addContent(elDname);
-            elLoop.addContent(elFname);
-            elLoop.addContent(elTitle);
-            elLoop.addContent(elType);
-            elLoop.addContent(elActivated);
-            
-            elRoot.addContent(elLoop);
-        }
-        
-        return elRoot;
-    }
+			
+			elLoop.addContent(elKey);
+			elLoop.addContent(elDname);
+			elLoop.addContent(elFname);
+			elLoop.addContent(elTitle);
+            elLoop.addContent(elDate);
+            elLoop.addContent(elUrl);
+			elLoop.addContent(elType);
+			elLoop.addContent(elActivated);
+			
+			elRoot.addContent(elLoop);
+		}
+		
+		return elRoot;
+	}
 }
 
 // =============================================================================

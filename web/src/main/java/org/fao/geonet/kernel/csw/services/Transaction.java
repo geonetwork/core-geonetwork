@@ -75,8 +75,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 
    private SearchController _searchController;
 
-	public Transaction(DataStore ds, File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(ds, summaryConfig, luceneConfig);
+	public Transaction(File summaryConfig, LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(summaryConfig, luceneConfig);
     }
 
 

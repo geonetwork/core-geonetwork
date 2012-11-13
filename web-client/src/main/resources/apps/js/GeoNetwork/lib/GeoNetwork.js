@@ -133,6 +133,7 @@
             "GeoNetwork/widgets/view/ViewWindow.js",
             "GeoNetwork/widgets/view/ViewPanel.js",
             "GeoNetwork/widgets/editor/KeywordSelectionPanel.js",
+            "GeoNetwork/widgets/editor/ConceptSelectionPanel.js",
             "GeoNetwork/widgets/editor/CRSSelectionPanel.js",
             "GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js",
             "GeoNetwork/widgets/editor/NewMetadataPanel.js",

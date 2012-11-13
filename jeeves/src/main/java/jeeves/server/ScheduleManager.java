@@ -31,6 +31,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.UUID;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
@@ -56,6 +57,7 @@ public class ScheduleManager
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
+    private JeevesApplicationContext jeevesApplicationContext;
 
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
 	private Scheduler scheduler;
@@ -95,6 +97,7 @@ public class ScheduleManager
 
     public void setProviderMan  (ProviderManager p) { providMan  = p; }
     public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
+    public void setApplicationContext (JeevesApplicationContext jap) { jeevesApplicationContext  = jap; }
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setAppPath(String  path)  { appPath = path;  }
 
@@ -105,6 +108,7 @@ public class ScheduleManager
     public ProviderManager getProvidMan() {return providMan;}
     public SerialFactory getSerialFact() {return serialFact;}
     public MonitorManager getMonitorManager() {return monitorManager;}
+    public JeevesApplicationContext getApplicationContext() { return jeevesApplicationContext; }
     public Hashtable<String, Object> getHtContexts() {return htContexts;}
 
     //--------------------------------------------------------------------------

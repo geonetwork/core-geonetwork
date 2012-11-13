@@ -25,7 +25,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config-security.xml</param-value>
+		<param-value>/WEB-INF/config-spring-geonetwork.xml</param-value>
 	</context-param>
     <listener>
         <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
@@ -58,6 +58,16 @@
 		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
 	</listener>
 	
+    <!-- Spring security -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <!-- url rewrite filter -->
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -96,16 +106,6 @@
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	
-	<!-- Spring security -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
     <!-- Resources servlet -->

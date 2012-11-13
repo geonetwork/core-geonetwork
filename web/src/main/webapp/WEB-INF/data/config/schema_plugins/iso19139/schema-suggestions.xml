@@ -10,6 +10,17 @@
 		<suggest name="gmx:FileName"/>
 	</field>
 	
+	
+	<field name="gmx:Anchor">
+		<suggest name="xlink:href"/>
+	</field>
+	
+	<field name="gmd:code">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmx:FileName"/>
+		<suggest name="gmx:Anchor"/>
+	</field>
+
 	<field name="gmd:language">
 		<suggest name="gco:CharacterString"/>
 		<suggest name="gmd:LanguageCode"/>
