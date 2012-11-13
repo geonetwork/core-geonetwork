@@ -4,7 +4,8 @@
 						xmlns:exslt="http://exslt.org/common"
 						exclude-result-prefixes="xsl exslt geonet">
 
-	<xsl:include href="metadata.xsl"/>
+	<xsl:import href="metadata.xsl"/>
+	<xsl:include href="metadata-fop.xsl"/>
 	<xsl:include href="utils.xsl"/>
 
 	<xsl:template match="/root">
