@@ -70,17 +70,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Utility panel properties
          */
         utilityPanelConfig: {
-            /** api: config[utilityPanelConfig.thumbnailPanel] 
-             *  Collapsed thumbnail panel on startup. Default is false.
-             */
-            thumbnailPanel: {
-                collapsed: false
-            },
+//            /** api: config[utilityPanelConfig.thumbnailPanel] 
+//             *  Collapsed thumbnail panel on startup. Default is false.
+//             */
+//            thumbnailPanel: {
+//                collapsed: false
+//            },
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
             relationPanel: {
-                collapsed: true
+                collapsed: false
             },
             /** api: config[utilityPanelConfig.validationPanel] 
              *  Collapsed validation panel on startup. Default is true.
@@ -108,7 +108,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     relationPanel: undefined,
     helpPanel: undefined,
     suggestionPanel: undefined,
-    thumbnailPanel: undefined,
+//    thumbnailPanel: undefined,
     editorMainPanel: undefined,
     metadataId: undefined,
     versionId: undefined,
@@ -1315,18 +1315,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.relationPanel = new GeoNetwork.editor.LinkedMetadataPanel(Ext.applyIf({
             editor: this,
             metadataId: this.metadataId,
+            metadataUuid: this.metadataUuid,
             metadataSchema: this.metadataSchema,
-            serviceUrl: this.catalogue.services.mdRelation
+            catalogue: this.catalogue
         }, this.utilityPanelConfig.relationPanel));
         
-        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
-            metadataId: this.metadataId,
-            editor: this,
-            getThumbnail: this.catalogue.services.mdGetThumbnail,
-            setThumbnail: this.catalogue.services.mdSetThumbnail,
-            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
-        }, this.utilityPanelConfig.thumbnailPanel));
-        
+//        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
+//            metadataId: this.metadataId,
+//            editor: this,
+//            getThumbnail: this.catalogue.services.mdGetThumbnail,
+//            setThumbnail: this.catalogue.services.mdSetThumbnail,
+//            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
+//        }, this.utilityPanelConfig.thumbnailPanel));
+//        
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
             editor: this,
@@ -1345,7 +1346,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             minWidth: 280,
             width: 280,
             items: [
-                this.thumbnailPanel, 
+                //this.thumbnailPanel, 
                 this.relationPanel, 
                 this.suggestionPanel,
                 this.validationPanel, 
