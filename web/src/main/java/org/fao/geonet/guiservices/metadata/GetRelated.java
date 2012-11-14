@@ -206,9 +206,15 @@ public class GetRelated implements Service {
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
-
         }
 
+        // XSL transformation is used on the metadata record to extract
+        // distribution information or thumbnails
+        if (type.equals("") || type.contains("online") || type.contains("thumbnail")) {
+            relatedRecords.addContent(new Element("metadata").addContent(md));
+        }
+        
+        
         return relatedRecords;
 
     }
@@ -219,11 +225,14 @@ public class GetRelated implements Service {
         boolean first = true;
         while (i.hasNext()) {
             Element e = i.next();
-            if (first) {
-                uuids.append(e.getAttributeValue("uuidref"));
-                first = false;
-            } else {
-                uuids.append(" or " + e.getAttributeValue("uuidref"));
+            String uuid = e.getAttributeValue("uuidref");
+            if (!"".equals(uuid)) {
+                if (first) {
+                    uuids.append(uuid);
+                    first = false;
+                } else {
+                    uuids.append(" or " + uuid);
+                }
             }
         }
         return uuids;
@@ -247,7 +256,7 @@ public class GetRelated implements Service {
             if ("children".equals(type))
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             else if ("services".equals(type))
-                parameters.addContent(new Element("operatesOn").setText(uuid));
+                parameters.addContent(new Element("c").setText(uuid));
             else if ("hasfeaturecat".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type))

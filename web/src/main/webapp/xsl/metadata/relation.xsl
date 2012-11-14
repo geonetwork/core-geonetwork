@@ -6,6 +6,7 @@
       + super-brief representation.
 -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:geonet="http://www.fao.org/geonetwork" 
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="geonet exslt">
@@ -26,6 +27,28 @@
 
   <!-- Bypass summary elements -->
   <xsl:template mode="relation" match="summary" priority="99"/>
+
+  <!-- Relation contained in the metadata record has to be returned 
+  It could be document or thumbnails
+  -->
+  <xsl:template mode="relation" match="metadata[gmd:MD_Metadata]" priority="99">
+    
+    <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:graphicOverview']/*">
+      <relation type="thumbnail">
+        <id><xsl:value-of select="gmd:fileName/gco:CharacterString"/></id>
+        <title><xsl:value-of select="gmd:fileDescription/gco:CharacterString"/></title>
+      </relation>
+    </xsl:for-each>
+    
+    <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:onLine']/*">
+      <relation type="onlinesrc">
+        <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
+        <title><xsl:value-of select="gmd:name/gco:CharacterString"/></title>
+        <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
+      </relation>
+    </xsl:for-each>
+  </xsl:template>
+  
 
   <!-- In Lucene only mode, metadata are retrieved from 
   the index and pass as a simple XML with one level element.
