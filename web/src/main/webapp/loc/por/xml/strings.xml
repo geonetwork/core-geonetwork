@@ -583,6 +583,7 @@
 	<login>Iniciar sessão</login>
 	<loginCardTitle>Iniciar sessão / Registar-se</loginCardTitle>
 	<loginwarning>Só necessário para a administração da página</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Sair</logout>
 	<logoutDes>Efectuar saída</logoutDes>
 	<longitude>Longitude (entre -180 e 180) em graus</longitude>

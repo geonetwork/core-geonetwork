@@ -418,6 +418,7 @@ GeoNetwork.Lang.en = {
     'printLayer': 'Print page',
     'relatedservices': 'Related services',
     'relatedparent': 'Parent',
+    'relatedsibling': 'Related records',
     'relateddatasets': 'Related datasets',
     'relatedchildren': 'Children',
     'relatedrelated': 'Feature catalogue/dataset link',

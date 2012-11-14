@@ -574,6 +574,7 @@
 	<login>Inloggen</login>
 	<loginCardTitle>Login / Aanmelden</loginCardTitle>
 	<loginwarning>Enkel nodig voor beheer van de site</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Uitloggen</logout>
 	<logoutDes>Uitloggen</logoutDes>
 	<longitude>Lengte (tussen -180 and 180) in graden</longitude>

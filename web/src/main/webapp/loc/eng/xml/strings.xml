@@ -886,6 +886,7 @@
 	<login>Login</login>
 	<loginCardTitle>Login / Signup</loginCardTitle>
 	<loginwarning>Only required for site administration</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Logout</logout>
 	<logoutDes>Performs a logout</logoutDes>
 	<longitude>Longitude (between -180 and 180) in degrees</longitude>

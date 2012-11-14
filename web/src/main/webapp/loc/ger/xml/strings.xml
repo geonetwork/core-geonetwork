@@ -858,6 +858,7 @@ Ihr geocat.ch-Team</msg>
 	<login>Login</login>
 	<loginCardTitle>Login / Anmelden</loginCardTitle>
 	<loginwarning>Nur für Seitenadministration benötigt</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Abmelden</logout>
 	<logoutDes>Abmeldung durchführen</logoutDes>
 	<longitude>geografische Länge (zwischen -180 und 180) in Grad</longitude>

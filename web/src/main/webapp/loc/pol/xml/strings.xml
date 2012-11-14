@@ -594,6 +594,8 @@
 	<login>Login</login>
 	<loginCardTitle>Login / Signup</loginCardTitle>
 	<loginwarning>Wymagane tylko do administrowania</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
+
 	<logout>Wyloguj</logout>
 	<logoutDes>Wyloguj</logoutDes>
 	<longitude>Longitude (między -180 i 180) w stopniach</longitude>
