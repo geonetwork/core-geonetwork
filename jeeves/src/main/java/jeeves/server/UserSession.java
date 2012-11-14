@@ -69,7 +69,7 @@ public class UserSession
 	/**
 	 * @param sHttpSession the sHttpSession to set
 	 */
-	public void setsHtṯpSession(HttpSession sHttpSession) {
+	public void setsHttpSession(HttpSession sHttpSession) {
 		this.sHttpSession = sHttpSession;
 	}
 

@@ -410,6 +410,7 @@
 	<login>Giriş</login>
 	<loginCardTitle>Giriş/ Üyelik</loginCardTitle>
 	<loginwarning>Sadece site yönetimi için gereklidir</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Çıkış</logout>
 	<logoutDes>Çıkış eylemini gerçekleştirir</logoutDes>
 	<longitude>Boylam derecesi (-180 ve 180 arasında) </longitude>

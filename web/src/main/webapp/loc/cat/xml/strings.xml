@@ -576,6 +576,7 @@
 	<login>Iniciar sessió</login>
 	<loginCardTitle>Connectar / Autenticar-se</loginCardTitle>
 	<loginwarning>És necessari que us identifiqueu com a usuari per poder administrar el catàleg</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Tancar sessió</logout>
 	<logoutDes>Tancar sessió d'usuari</logoutDes>
 	<longitude>Longitud (entre -180 i 180) en graus</longitude>

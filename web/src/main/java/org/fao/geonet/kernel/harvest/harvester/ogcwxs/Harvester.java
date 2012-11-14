@@ -583,8 +583,9 @@ class Harvester
 						if (exist) {
 							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
 							result.layerUuidExist ++;
-							// FIXME : return null, service and metadata will not be linked by default.
-							return null;
+							// Return the layer info even if it exists in order
+							// to link to the service record.
+							return reg;
 						}
 						
 						if (schema == null) {

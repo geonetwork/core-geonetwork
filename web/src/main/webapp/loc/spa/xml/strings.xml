@@ -584,6 +584,7 @@
 	<login>Iniciar Sesión</login>
 	<loginCardTitle>Accesar / Autenticarse</loginCardTitle>
 	<loginwarning>Es necesario que se identifique como usuario para poder administrar el catálogo</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Cerrar sesión</logout>
 	<logoutDes>Cerrar sesión de usuario</logoutDes>
 	<longitude>Longitud (entre -180 y 180) en grados</longitude>
