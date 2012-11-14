@@ -25,5 +25,6 @@
 	</util:set>
 	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
 		<constructor-arg ref="languages"></constructor-arg>
+		<property name="cacheAllRegionsInMemory" value="true"/>
 	</bean>
 </beans>
