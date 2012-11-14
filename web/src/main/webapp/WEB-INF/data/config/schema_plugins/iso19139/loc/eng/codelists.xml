@@ -1613,6 +1613,14 @@
 				pollution, waste storage and treatment, environmental impact assessment, monitoring
 				environmental risk, nature reserves, landscape</description>
 		</entry>
+		<entry>
+			<code>environment_EnvironmentalProtection</code>
+			<label>Environmental protection</label>
+		</entry>
+		<entry>
+			<code>environment_NatureConservation</code>
+			<label>Nature conservation</label>
+		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
@@ -1621,6 +1629,18 @@
 				processes, geology, minerals, sciences dealing with the composition, structure and
 				origin of the earth s rocks, risks of earthquakes, volcanic activity, landslides,
 				gravity information, soils, permafrost, hydrogeology, erosion</description>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_Geology</code>
+			<label>Geology</label>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_Soils</code>
+			<label>Soils</label>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_NaturalHazards</code>
+			<label>Natural hazards</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1636,6 +1656,14 @@
 			<label>Imagery base maps earth cover</label>
 			<description>Base maps. Examples: land cover, topographic maps, imagery, unclassified
 				images, annotations</description>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_EarthCover</code>
+			<label>Earth cover</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_Imagery</code>
+			<label>Imagery</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1672,6 +1700,14 @@
 			<label>Planning cadastre</label>
 			<description>Information used for appropriate actions for future use of the land. Examples:
 				land use maps, zoning maps, cadastral surveys, land ownership</description>
+		</entry>
+		<entry>
+			<code>planningCadastre_Planning</code>
+			<label>Planning</label>
+		</entry>
+		<entry>
+			<code>planningCadastre_Cadastre</code>
+			<label>Cadastre</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>

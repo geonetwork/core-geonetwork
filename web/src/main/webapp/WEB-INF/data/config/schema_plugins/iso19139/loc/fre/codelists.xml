@@ -1523,11 +1523,31 @@
 			<label>Environnement</label>
 			<description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
 		</entry>
+		<entry>
+			<code>environment_NatureConservation</code>
+			<label>Protection de l'environnement</label>
+		</entry>
+		<entry>
+			<code>NatureConservation</code>
+			<label>Conservation de la nature</label>
+		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
 			<label>Sciences de la terre, géosciences</label>
 			<description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_Geology</code>
+			<label>Géologie</label>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_Soils</code>
+			<label>Sols</label>
+		</entry>
+		<entry>
+			<code>geoscientificInformation_NaturalHazards</code>
+			<label>Risques naturels</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1540,6 +1560,18 @@
 			<code>imageryBaseMapsEarthCover</code>
 			<label>Carte de référence de la couverture terrestre</label>
 			<description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et satellitale, carte thématiques, carte topographiques</description>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_BaseMaps</code>
+			<label>Cartes de base</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_EarthCover</code>
+			<label>Couverture terrestre</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_Imagery</code>
+			<label>Imagerie satellite</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1570,6 +1602,14 @@
 			<code>planningCadastre</code>
 			<label>Cadastre, aménagement</label>
 			<description>Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques</description>
+		</entry>
+		<entry>
+			<code>planningCadastre_Planning</code>
+			<label>Aménagement</label>
+		</entry>
+		<entry>
+			<code>planningCadastre_Cadastre</code>
+			<label>Cadastre</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
