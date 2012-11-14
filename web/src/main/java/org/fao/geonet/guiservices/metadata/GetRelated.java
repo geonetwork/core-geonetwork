@@ -159,7 +159,7 @@ public class GetRelated implements Service {
             }
 						Element response = new Element("response");
             if (md != null) {
-                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode and string(gmd:associationType/gmd:DS_AssociationTypeCode)='crossReference']", nsList);
+                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode and string(gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue)='crossReference']", nsList);
 								for (Object o : sibs) {
 									if (o instanceof Element) {
 										Element sib = (Element)o;
@@ -170,7 +170,7 @@ public class GetRelated implements Service {
 														.getChild("code", gmd)
 														.getChildText("CharacterString", gco);
 										String initType = sib.getChild("initiativeType", gmd) 
-																 .getChildText("DS_InitiativeTypeCode", gmd);
+																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
 
 										if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 										Element sibContent = getRecord(sibUuid, context, dbms, dm);

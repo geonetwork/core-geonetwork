@@ -518,7 +518,10 @@ dl.xml * dd {
 .validatePanel * .x-grid3-cell-inner {
     white-space: normal !important;
 }
-
+.relation-type {
+    text-transform: uppercase;
+    margin-left: 3px;
+}
 
 .debug {
     display: none;

@@ -105,7 +105,7 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints">
+              gmd:metadataConstraints|gmd:aggregationInfo">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     

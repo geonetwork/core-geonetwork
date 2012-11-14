@@ -265,7 +265,8 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
 );
 
 GeoNetwork.Templates.Relation = {
+        // TODO : subType should be translated
         SHORT: ['<li class="{type}">',
-									 '<table><tr><td style="text-transform:capitalize;vertical-align:top;color:red">{subType}</td><td><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a></td></tr></table>',
+                  '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a><span class="badge relation-type">{subType}</span>',
                  '</li>']
 };
