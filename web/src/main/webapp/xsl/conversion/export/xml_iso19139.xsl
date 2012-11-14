@@ -90,5 +90,9 @@
 			<xsl:apply-templates select="@*|node()[name(self::*)!='geonet:info']"/>
 		</xsl:copy>
 	</xsl:template>
+	
+	<!-- Remove all extended categories -->
+	<xsl:template match="gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'_')]" >
+	</xsl:template>
 
 </xsl:stylesheet>

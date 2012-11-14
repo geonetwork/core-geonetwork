@@ -293,9 +293,11 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:topicCategory">
-        <GM03_2Core.Core.MD_TopicCategoryCode_>
-          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
-        </GM03_2Core.Core.MD_TopicCategoryCode_>
+	    <xsl:if test="not(contains(gmd:MD_TopicCategoryCode,'_'))">
+	        <GM03_2Core.Core.MD_TopicCategoryCode_>
+	          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
+	        </GM03_2Core.Core.MD_TopicCategoryCode_>
+	    </xsl:if>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:language">
