@@ -130,7 +130,7 @@
 				</bean>
 			</list>
 		</constructor-arg>
-		<property name="filterProcessesUrl" value="j_spring_security_logout"/>
+		<property name="filterProcessesUrl" value="/j_spring_security_logout"/>
 	</bean>
 
     <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
