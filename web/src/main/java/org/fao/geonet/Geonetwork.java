@@ -305,6 +305,7 @@ public class Geonetwork implements ApplicationHandler {
 			throw new IllegalArgumentException("GeoTools datastore creation failed - check logs for more info/exceptions");
 		}
 
+		context.getApplicationContext().getBeanFactory().registerSingleton(Geonet.BeanId.DATASTORE, dataStore);
 		String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
 		int maxWritesInTransaction = SpatialIndexWriter.MAX_WRITES_IN_TRANSACTION;
 		try {

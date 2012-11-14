@@ -886,6 +886,7 @@ Votre équipe geocat.ch</msg>
 	<login>Connecter</login>
 	<loginCardTitle>Connexion / identification</loginCardTitle>
 	<loginwarning>Nécessaire uniquement pour l'administration du site</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Déconnecter</logout>
 	<logoutDes>Se déconnecter</logoutDes>
 	<longitude>Longitude (entre -180 et 180) en degrés</longitude>

@@ -564,6 +564,11 @@ public class Geonet {
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
     public static final Version LUCENE_VERSION = Version.LUCENE_36;
     public static final String MONITORING   = GEONETWORK + ".monitoring";
+    
+    
+    public class BeanId {
+    	public static final String DATASTORE = "datastore";
+    }
 
     /**
      * Services.

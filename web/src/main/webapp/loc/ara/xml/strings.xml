@@ -587,6 +587,7 @@
 	<login>دخول أعضاء</login>
 	<loginCardTitle>دخول / تسجيل</loginCardTitle>
 	<loginwarning>فقط مطلوبة على موقع إدارة الموقع</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>خروج</logout>
 	<logoutDes>جاري الخروج</logoutDes>
 	<longitude>خط عرض بين 180 و 180- درجة</longitude>
