@@ -43,7 +43,7 @@
 				userLang = "ita";
 			}
 	
-		  	window.location="srv/"+userLang+"/login.form";
+		  	window.location="srv/"+userLang+"/login.form"+window.location.search;
 		}
 		</script>
 	</head>

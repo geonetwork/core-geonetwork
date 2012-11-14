@@ -584,6 +584,7 @@
 	<login>Login</login>
 	<loginCardTitle>Login / Accedi</loginCardTitle>
 	<loginwarning>Richiesto solamente per l'amministrazione del sito</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Logout</logout>
 	<logoutDes>Scollegamento</logoutDes>
 	<longitude>Longitudine (tra -180 e 180) in gradi</longitude>
