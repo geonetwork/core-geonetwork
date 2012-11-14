@@ -529,6 +529,10 @@ dl.xml * dd {
 .linkPanel * h2 span {
     float: right;
 }
+.relation-type {
+    text-transform: uppercase;
+    margin-left: 3px;
+}
 
 .debug {
     display: none;
