@@ -140,6 +140,14 @@
         <from>^/robots.txt$</from>
         <to type="forward">/srv/eng/robots.txt</to>
     </rule>
+        
+    <rule>
+        <note>
+            map the old xml.user.login to the new login url
+        </note>
+        <from>^.*/.*/xml.user.login(\?.*)</from>
+        <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
+    </rule>
     
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">

@@ -578,6 +578,7 @@
 	<login>登录</login>
 	<loginCardTitle>登录/注册</loginCardTitle>
 	<loginwarning>只有站点管理才需要</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>注销</logout>
 	<logoutDes>执行注销操作</logoutDes>
 	<longitude>经度(-180 至 180，单位：度)</longitude>

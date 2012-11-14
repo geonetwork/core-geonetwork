@@ -1163,6 +1163,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	        var app = this;
 	        OpenLayers.Request.GET({
 	            url: this.services.logout,
+	            async: false,  // logout does not seem to work when it is asynchronous request
 	            success: function(response){
 	                app.identifiedUser = undefined;
 	                app.onAfterLogout();

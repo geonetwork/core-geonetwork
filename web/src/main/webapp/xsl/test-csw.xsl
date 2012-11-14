@@ -95,7 +95,7 @@
 				</div>
 				<div class="test-submit">
 					<input type="button" onclick="submit();" name="submit" value="Send request (POST)"/>
-					<input type="button" onclick="loginAndRun();" name="submit" value="Log in and send request (POST)" 
+					<input type="button" onclick="loginAndRun('{/root/gui/url}');" name="submit" value="Log in and send request (POST)" 
 						alt="Use this option to test transaction operation."
 						title="Use this option to test transaction operation."/>
 				</div>

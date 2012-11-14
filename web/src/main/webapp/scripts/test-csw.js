@@ -137,35 +137,35 @@ function submit() {
  * 
  * @return
  */
-function loginAndRun() {
+function loginAndRun(context) {
 	// Logout first
 	var request = OpenLayers.Request.GET(
-			{url: 'xml.user.logout'});
+			{async:false, url: context+'/j_spring_security_logout'});
 
 	// Login
 	var opts = {
-		url: 'xml.user.login?username=' 
-			+ document.getElementById('username').value 
-			+ '&password='
-			+ document.getElementById('password').value
+		data: "username="+document.getElementById('username').value+"&password="+document.getElementById('password').value,
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		url: context+'/j_spring_security_check',
+	    async: false
 	};
-	OpenLayers.Util.applyDefaults(opts, {
-		success : function(response) {
-			document.getElementById('response').value = response.responseText;
-		}
-	});
-	var request = OpenLayers.Request.GET(opts);
+	var request = OpenLayers.Request.POST(opts);
 	
 	// Run the request
-	opts = {
+	var opts = {
+			user: document.getElementById('username').value,
+			password: document.getElementById('password').value,
 			url :document.getElementById('url').value,
-			data :document.getElementById('body').value
+			data :document.getElementById('body').value,
+		    async: false
 		};
 	OpenLayers.Util.applyDefaults(opts, {
 		success : function(response) {
 			document.getElementById('response').value = response.responseText;
 		}
 	});
-	request = OpenLayers.Request.POST(opts);
+	var request = OpenLayers.Request.POST(opts);
 }
 
