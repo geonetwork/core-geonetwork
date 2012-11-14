@@ -11,6 +11,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:util="java:org.fao.geonet.util.XslUtil"
+	xmlns:exslt="http://exslt.org/common"
 	xmlns:xalan = "http://xml.apache.org/xalan">
 
     <xsl:include href="metadata-che-layouts.xsl"/>
@@ -1857,6 +1858,84 @@ priority="40">
     </xsl:apply-templates>
 </xsl:template>
 
+<!--
+    =============================================================================
+-->
+	<xsl:template mode="iso19139" match="gmd:topicCategory[gmd:MD_TopicCategoryCode='environment']|
+				gmd:topicCategory[gmd:MD_TopicCategoryCode='geoscientificInformation']|
+				gmd:topicCategory[gmd:MD_TopicCategoryCode='planningCadastre']|
+				gmd:topicCategory[gmd:MD_TopicCategoryCode='imageryBaseMapsEarthCover']" priority="10">
+	</xsl:template>
+	
+	<xsl:template mode="iso19139" match="gmd:MD_TopicCategoryCode" priority="10">
+ 		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:variable name="name"  select="name(.)"/>
+		<xsl:variable name="value" select="string(.)"/>
+		
+		<xsl:variable name="list">
+			<items>
+				<xsl:for-each select="geonet:element/geonet:text">
+					<xsl:variable name="choiceValue" select="string(@value)"/>							
+					<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+					
+					<item>
+						<value>
+							<xsl:if test="contains(@value,'_')">
+								<xsl:attribute name="parent"><xsl:value-of select="substring-before(@value, '_')" /></xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="@value"/>
+						</value>
+						<label>
+							<xsl:choose>
+								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+							</xsl:choose>									
+						</label>
+					</item>
+				</xsl:for-each>
+			</items>
+		</xsl:variable>
+		
+		<select class="md" name="_{geonet:element/@ref}" size="1">
+			<option name=""/>
+			
+			<xsl:for-each select="exslt:node-set($list)//item">
+				<xsl:sort select="value" />
+				<xsl:variable name="curValue" select="value"/>
+				<xsl:choose>
+					<xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">
+						<optgroup>
+							<xsl:attribute name="label"><xsl:value-of select="label" /></xsl:attribute>
+							<xsl:for-each select="exslt:node-set($list)//item[value/@parent=$curValue]">
+								<option>
+									<xsl:if test="value=$value">
+										<xsl:attribute name="selected" />
+									</xsl:if>
+									<xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
+									<xsl:value-of select="label" />
+								</option>
+							</xsl:for-each>
+						</optgroup>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="not(value/@parent)">
+							<option>
+								<xsl:if test="value=$value">
+									<xsl:attribute name="selected" />
+								</xsl:if>
+								<xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
+									<xsl:value-of select="label" />
+							</option>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			
+			</xsl:for-each>
+			
+		</select>
+    </xsl:template>
 <!--
     =============================================================================
 -->
