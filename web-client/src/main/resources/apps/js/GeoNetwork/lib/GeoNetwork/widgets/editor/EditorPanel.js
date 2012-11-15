@@ -40,6 +40,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     border: false,
     editUrl: undefined,
     updateUrl: undefined,
+    
+    /**
+     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
+     */
+    selectionPanelImgPath: undefined,
+    
     frame: false,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
@@ -49,6 +55,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  View mode is keep in user session (on the server).
          */
     	defaultViewMode: 'simple',
+    	selectionPanelImgPath: '../js/ext-ux/MultiselectItemSelector-3.0/icons',
         layout: 'border',
         height: 800,
         /** api: config[xlinkOptions] 
@@ -377,6 +384,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             var selectionPanel = new GeoNetwork.editor.SubTemplateSelectionPanel({
                         width : 620,
                         height : 300,
+                        imagePath: this.selectionPanelImgPath,
                         catalogue: this.catalogue,
                         listeners : {
                             subTemplateSelected : function(panel, subtemplates) {
@@ -423,6 +431,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.keywordSelectionWindow) {
             this.keywordSelectionPanel = new GeoNetwork.editor.KeywordSelectionPanel({
                 catalogue: this.catalogue,
+                imagePath: this.selectionPanelImgPath,
                 listeners: {
                     keywordselected: function(panel, keywords){
                         GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment(panel, keywords, editorPanel);
@@ -432,7 +441,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             
             this.keywordSelectionWindow = new Ext.Window({
                 title: OpenLayers.i18n('keywordSelectionWindowTitle'),
-                width: 620,
+                width: 720,
                 height: 300,
                 layout: 'fit',
                 modal: true,
@@ -460,6 +469,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.crsSelectionWindow) {
             this.crsSelectionPanel = new GeoNetwork.editor.CRSSelectionPanel({
                 catalogue: this.catalogue,
+                imagePath: this.selectionPanelImgPath,
                 listeners: {
                     crsSelected: function(xml){
                         var id = '_X' + ref + '_' + name.replace(":", "COLON");
@@ -1266,7 +1276,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.editUrl = this.catalogue.services.mdEdit;
         this.createUrl = this.catalogue.services.mdCreate;
         this.updateUrl = this.catalogue.services.mdUpdate;
-        
         
         GeoNetwork.editor.EditorPanel.superclass.initComponent.call(this);
         
