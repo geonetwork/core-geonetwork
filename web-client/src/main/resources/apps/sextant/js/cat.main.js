@@ -127,6 +127,7 @@ cat.app = function() {
 		if (!this.editorWindow) {
 			this.editorPanel = new GeoNetwork.editor.EditorPanel({
 				defaultViewMode : GeoNetwork.Settings.editor.defaultViewMode,
+				selectionPanelImgPath: cat.libPath + '/ext-ux/MultiselectItemSelector-3.0/icons',
 				catalogue : catalogue,
 				xlinkOptions : {
 					CONTACT : true
@@ -816,8 +817,9 @@ Ext.onReady(function() {
 	
 	if(cat.language == 'fr') cat.language = 'fre';
 	else if(cat.language == 'en') cat.language = 'eng';
-
-	GeoNetwork.Util.setLang(cat.language, cat.imgPath?cat.imgPath+'js/lib':'../js');
+	
+	cat.libPath = cat.imgPath?cat.imgPath+'js/lib':'../js';
+	GeoNetwork.Util.setLang(cat.language, cat.libPath);
 
 	Ext.QuickTips.init();
 	cat.imgPath=cat.imgPath?cat.imgPath:'';
