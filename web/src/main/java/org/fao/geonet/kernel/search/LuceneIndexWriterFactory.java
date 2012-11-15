@@ -88,6 +88,7 @@ public class LuceneIndexWriterFactory {
     }
 
     public synchronized void addDocument(String locale, Document doc, List<CategoryPath> categories) throws Exception {
+        IndexWriter writer = getWriter(locale);
         // Add taxonomy first
         try {
             CategoryDocumentBuilder categoryDocBuilder = new CategoryDocumentBuilder(_taxoIndexWriter);
@@ -104,7 +105,7 @@ public class LuceneIndexWriterFactory {
                 e.printStackTrace();
         }
         
-        getWriter(locale).addDocument(doc);
+        writer.addDocument(doc);
     }
 
     /**
