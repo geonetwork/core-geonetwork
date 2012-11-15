@@ -24,6 +24,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public abstract class DatastoreMapper {
 
 	protected static final String THE_GEOM = "the_geom";
+
+	public static final String SIMPLIFIED_ATT = "simplified";
 	
 	protected final ServiceContext context;
 	protected final WeakHashMap<String, Map<String, String>> categoryIdMap;
@@ -44,13 +46,13 @@ public abstract class DatastoreMapper {
 
 	public abstract String categoryId();
 	
-	protected abstract SimpleFeatureSource getFeatureSource(boolean simplified) throws IOException;
+	protected abstract SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong) throws IOException;
 
 	public abstract  String[] propNames(boolean simplified, boolean includeGeom);
 
 	public abstract Region constructRegion(SimpleFeature next) throws JDOMException, IOException;
 
-	public abstract String getBackingDatastoreName(boolean simplified);
+	public abstract String getBackingDatastoreName(boolean simplified, boolean inLatLong);
 
 	public final Filter idFilter(String regionId) {
 		Expression propertyExpression = filterFactory.property(idPropertyName());
@@ -61,8 +63,9 @@ public abstract class DatastoreMapper {
 	public final void loadRegions(Collection<Region> results, int maxRegions,Filter filter) throws IOException,
 			JDOMException {
 		boolean simplified = true;
-		SimpleFeatureSource featureSource = getFeatureSource(simplified);
-		Query query = createQuery(simplified, maxRegions, filter);
+		boolean inLatLong = false;
+		SimpleFeatureSource featureSource = getFeatureSource(simplified, inLatLong);
+		Query query = createQuery(simplified, maxRegions, filter, inLatLong);
 		SimpleFeatureIterator features = featureSource.getFeatures(query).features();
 		try {
 			while (features.hasNext()) {
@@ -74,8 +77,8 @@ public abstract class DatastoreMapper {
 		}
 	}
 
-	private Query createQuery(boolean simplified, int maxRegions, Filter filter) {
-		Query query = new Query(getBackingDatastoreName(simplified), filter);
+	private Query createQuery(boolean simplified, int maxRegions, Filter filter, boolean inLatLong) {
+		Query query = new Query(getBackingDatastoreName(simplified, inLatLong), filter);
 		query.setMaxFeatures(maxRegions);
 		query.setPropertyNames(propNames(simplified, false));
 		return query;
@@ -102,8 +105,8 @@ public abstract class DatastoreMapper {
 		
 	}
 
-	public Geometry getGeometry(boolean simplified, String regionId) throws IOException {
-		SimpleFeatureSource featureSource = getFeatureSource(simplified);
+	public Geometry getGeometry(boolean simplified, String regionId, boolean inLatLong) throws IOException {
+		SimpleFeatureSource featureSource = getFeatureSource(simplified, inLatLong);
 		SimpleFeatureIterator features = featureSource.getFeatures(idFilter(regionId)).features();
 		try {
 			if(features.hasNext()) {
@@ -111,7 +114,14 @@ public abstract class DatastoreMapper {
 				if(features.hasNext()) {
 					throw new IllegalStateException("there is more than one region found");
 				}
-				return (Geometry) feature.getDefaultGeometry();
+				Geometry geometry;
+				if (simplified && feature.getAttribute(SIMPLIFIED_ATT)!=null) {
+					geometry = (Geometry) feature.getAttribute(SIMPLIFIED_ATT);
+				} else {
+					geometry = (Geometry) feature.getDefaultGeometry();
+				}
+				geometry.setUserData(featureSource.getSchema().getGeometryDescriptor().getCoordinateReferenceSystem());
+				return geometry;
 			} else {
 				return null;
 			}

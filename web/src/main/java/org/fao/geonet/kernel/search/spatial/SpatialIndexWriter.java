@@ -154,16 +154,13 @@ public class SpatialIndexWriter implements FeatureListener
 
             if (geometry != null) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
-                Object[] data;
                 SimpleFeatureType schema = _featureStore.getSchema();
-				if(schema.getDescriptor(0) == schema.getGeometryDescriptor()){
-					data = new Object[] { geometry, id };
-                } else {
-                	data = new Object[] { id, geometry};
-                }
-                	
-                features.add(SimpleFeatureBuilder.build(schema, data,
-                        SimpleFeatureBuilder.createDefaultFeatureId()));
+                
+                SimpleFeature template = SimpleFeatureBuilder.template(schema,
+                        SimpleFeatureBuilder.createDefaultFeatureId());
+                template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
+                template.setAttribute(_IDS_ATTRIBUTE_NAME, id);
+				features.add(template);
 
                 List<FeatureId> ids = _featureStore.addFeatures(features);
                 for (FeatureId featureId : ids) {
@@ -377,8 +374,10 @@ public class SpatialIndexWriter implements FeatureListener
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn));
-                _index.insert(((Geometry) feature.getDefaultGeometry())
-                        .getEnvelopeInternal(), data);
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                if(defaultGeometry != null) {
+                	_index.insert(defaultGeometry.getEnvelopeInternal(), data);
+                }
             }
 
         } finally {

@@ -17,10 +17,10 @@ public class KantoneMapper extends DatastoreMapper {
 	private static final String[] PROPS_WITH_GEOM = new String[] {
 		KANTONE_ID, KANTONE_NAME, THE_GEOM };
 	private static final String[] PROPS_WITHOUT_GEOM = new String[] { KANTONE_ID, KANTONE_NAME };
-	private static final String CATEGORY_ID = "kanton";
+	private static final String CATEGORY_ID = "kantone";
 	private static final String PREFIX = CATEGORY_ID + ":";
-	private static final String SIMPLIFIED_BACKING_DS = "kantoneBB";
-	private static final String BACKING_DS = "kantone_searching";
+	private static final String CH1903_BACKING_DS = "kantoneBB";
+	private static final String WGS84_BACKING_DS = "kantone_search";
 
 	public KantoneMapper(ServiceContext context, DatastoreCache datastoreCache,
 			FilterFactory2 filterFactory,
@@ -59,14 +59,14 @@ public class KantoneMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String getBackingDatastoreName(boolean simplified) {
-		return simplified ? SIMPLIFIED_BACKING_DS : BACKING_DS;
+	public String getBackingDatastoreName(boolean simplified, boolean inLatLong) {
+		return inLatLong ? WGS84_BACKING_DS : CH1903_BACKING_DS;
 	}
 
 	@Override
-	protected SimpleFeatureSource getFeatureSource(boolean simplified)
+	protected SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong)
 			throws IOException {
-		return datastoreCache.getCached(context, this, simplified);
+		return datastoreCache.getCached(context, this, simplified, inLatLong);
 	}
 
 }

@@ -17,8 +17,8 @@ public class CountryMapper extends DatastoreMapper {
 	private static final String COUNTRY_ID = "ID";
 	private static final String CATEGORY_ID = "country";
 	private static final String PREFIX = CATEGORY_ID+":";
-	private static final String SIMPLIFIED_BACKING_DS = "countries";
-	private static final String BACKING_DS = "countries_search";
+	private static final String CH1903_BACKING_DS = "countries";
+	private static final String WGS84_BACKING_DS = "countries_search";
 
 	public CountryMapper(ServiceContext context, DatastoreCache datastoreCache, FilterFactory2 filterFactory, WeakHashMap<String,Map<String,String>> categoryIdMap) {
 		super(context, categoryIdMap, filterFactory, datastoreCache);
@@ -61,13 +61,13 @@ public class CountryMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String getBackingDatastoreName(boolean simplified) {
-		return simplified ? SIMPLIFIED_BACKING_DS: BACKING_DS ;
+	public String getBackingDatastoreName(boolean simplified, boolean inLatLong) {
+		return inLatLong ? WGS84_BACKING_DS : CH1903_BACKING_DS;
 	}
 
 	@Override
-	protected SimpleFeatureSource getFeatureSource(boolean simplified) throws IOException {
-		return datastoreCache.getCached(context, this, simplified);
+	protected SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong) throws IOException {
+		return datastoreCache.getCached(context, this, simplified, inLatLong);
 	}
 
 }

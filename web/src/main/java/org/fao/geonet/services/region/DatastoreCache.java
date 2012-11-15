@@ -19,11 +19,11 @@ import org.opengis.filter.Filter;
 public class DatastoreCache {
 	private MemoryDataStore cache = new MemoryDataStore(); 
 
-	private SimpleFeatureSource loadIntoMemory(ServiceContext context, DatastoreMapper mapper, boolean simplified)
+	private SimpleFeatureSource loadIntoMemory(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong)
 			throws IOException {
 		String[] propNames = mapper.propNames(simplified, true);
-		String sourceTypeName = mapper.getBackingDatastoreName(simplified);
-		String cacheTypeName = mapper.getBackingDatastoreName(simplified);
+		String sourceTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
+		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 
 		DataStore postgis = (DataStore) context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE);
 		SimpleFeatureSource kantonBB = postgis.getFeatureSource(sourceTypeName);
@@ -40,13 +40,13 @@ public class DatastoreCache {
 		return featureStore;
 	}
 
-	public SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified) throws IOException {
+	public SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong) throws IOException {
 		SimpleFeatureSource featureSource;
-		String typeName = mapper.getBackingDatastoreName(simplified);
+		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		try {
-			featureSource = cache.getFeatureSource(typeName);
+			featureSource = cache.getFeatureSource(cacheTypeName);
 		} catch (SchemaNotFoundException e) {
-			featureSource = loadIntoMemory(context, mapper, simplified);
+			featureSource = loadIntoMemory(context, mapper, simplified, inLatLong);
 		}
 		return featureSource;
 	}

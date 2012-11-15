@@ -291,7 +291,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 		params.put(PostgisNGDataStoreFactory.PASSWD.key, passwd);
 		params.put(PostgisNGDataStoreFactory.HOST.key, getHost(url, values));
 		params.put(PostgisNGDataStoreFactory.PORT.key, getPort(url, values));
-		params.put(PostgisNGDataStoreFactory.EXPOSE_PK.key, false);
+		params.put(PostgisNGDataStoreFactory.EXPOSE_PK.key, true);
 
 		PostgisNGDataStoreFactory factory = new PostgisNGDataStoreFactory();
 		newDataStore = factory.createDataStore(params);

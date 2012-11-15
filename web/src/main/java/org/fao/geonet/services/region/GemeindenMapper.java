@@ -20,8 +20,8 @@ public class GemeindenMapper extends DatastoreMapper {
 	private static final String GEMEINDEN_ID = "OBJECTVAL";
 	private static final String CATEGORY_ID = "gemeinden";
 	private static final String PREFIX = CATEGORY_ID + ":";
-	private static final String SIMPLIFIED_BACKING_DS = "gemeindenBB";
-	private static final String BACKING_DS = "gemeinden_search";
+	private static final String CH1903_BACKING_DS = "gemeindenBB";
+	private static final String WGS84_BACKING_DS = "gemeinden_search";
 
 	public GemeindenMapper(ServiceContext context,
 			DatastoreCache datastoreCache, FilterFactory2 filterFactory,
@@ -66,13 +66,13 @@ public class GemeindenMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String getBackingDatastoreName(boolean simplified) {
-		return simplified ? SIMPLIFIED_BACKING_DS: BACKING_DS ;
+	public String getBackingDatastoreName(boolean simplified, boolean inLatLong) {
+		return inLatLong ? WGS84_BACKING_DS : CH1903_BACKING_DS;
 	}
 
 	@Override
-	protected SimpleFeatureSource getFeatureSource(boolean simplified) throws IOException {
-		String typeName = getBackingDatastoreName(simplified);
+	protected SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong) throws IOException {
+		String typeName = getBackingDatastoreName(simplified, inLatLong);
 		DataStore ds = context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE, DataStore.class);
 		return ds.getFeatureSource(typeName);
 	}
