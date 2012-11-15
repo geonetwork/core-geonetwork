@@ -39,7 +39,7 @@ public class GeonetworkFilterSecurityInterceptor extends FilterSecurityIntercept
             }
 
             InterceptorStatusToken token = super.beforeInvocation(fi);
-            if (fi.getRequest() != null) {
+            if (fi.getRequest() != null && token != null) {
             	fi.getRequest().setAttribute(GN_SECURITY_ACCEPTED, Boolean.TRUE);
             }
 
