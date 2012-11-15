@@ -283,6 +283,7 @@ cat.app = function() {
 		});
 		
 		var pdfAction = new Ext.Action({
+			id: 'pdfPrintResults',
             iconCls: 'md-mn-pdf',
             tooltip: OpenLayers.i18n('printSel'),
             handler: function(){
@@ -796,7 +797,10 @@ cat.app = function() {
 				Ext.getCmp('sortByToolBar').setValue(
 						Ext.getCmp('E_sortBy').getValue());
 			}
-
+			
+			
+			Ext.getCmp('pdfPrintResults').setDisabled(catalogue.metadataStore.totalLength > GeoNetwork.Settings.results.maxResultsInPDF);
+			
 			resultsPanel.syncSize();
 			resultsPanel.setHeight(Ext.getCmp('center').getHeight());
 
