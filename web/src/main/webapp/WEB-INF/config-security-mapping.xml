@@ -61,6 +61,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/harvesting.history!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/harvesting.history.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/thesaurus.clear!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.upload!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -353,6 +354,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>
     </bean>
