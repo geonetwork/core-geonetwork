@@ -698,8 +698,8 @@ public class LuceneSearcher extends MetaSearcher {
 		    // Use RegionsData rather than fetching from the DB everytime
 		    //
 		    //request.addContent(Lib.db.select(dbms, "Regions", "region"));
-			RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
-		    request.addContent(dao.getAllRegionsAsXml(srvContext));
+//			RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
+//		    request.addContent(dao.getAllRegionsAsXml(srvContext));
 		}
 
         /*
