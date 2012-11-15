@@ -59,8 +59,9 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
             return null;
         }
        
-        Geometry geometry = factory.toGeometry(region.getBBox());
+        Geometry geometry = factory.toGeometry(region.getBBox(projection));
         geometry.setUserData(region.getBBox().getCoordinateReferenceSystem());
+        
         return geometry;
     }
 

@@ -38,6 +38,8 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.sesame.admin.AdminListener;
+import org.openrdf.sesame.admin.DummyAdminListener;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.config.ConfigurationException;
@@ -772,5 +774,9 @@ public class Thesaurus {
             
             return updateElement(bean, true);
         }
+		public synchronized void clear() throws IOException, AccessDeniedException {
+			AdminListener listener = new DummyAdminListener();
+			repository.clear(listener);
+		}
 
 }
