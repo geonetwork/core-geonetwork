@@ -12,6 +12,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -22,7 +23,6 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
     private GeometryFactory factory = new GeometryFactory();
-    private Request allRegions;
     
     public ThesaurusBasedRegionsDAO(java.util.Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);
@@ -53,7 +53,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     }
 
     @Override
-    public Geometry getGeom(ServiceContext context, String id, boolean simplified) throws Exception {
+    public Geometry getGeom(ServiceContext context, String id, boolean simplified, CoordinateReferenceSystem projection) throws Exception {
         Region region = createSearchRequest(context).id(id).get();
         if(region == null) {
             return null;

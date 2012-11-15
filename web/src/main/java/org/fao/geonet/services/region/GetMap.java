@@ -44,10 +44,8 @@ import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 import org.jdom.Element;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.awt.ShapeWriter;
@@ -105,14 +103,7 @@ public class GetMap implements Service {
         // see calculateImageSize for more parameter checks
         
         RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-        Geometry region = dao.getGeom(context, id, false);
-        CoordinateReferenceSystem geometryCRS = (CoordinateReferenceSystem) region.getUserData();
-        CoordinateReferenceSystem desiredCRS = CRS.decode(srs, true);
-        Integer geomCode = CRS.lookupEpsgCode(geometryCRS, false);
-        if (geomCode == null || !srs.equalsIgnoreCase("EPSG:"+geomCode) && !CRS.equalsIgnoreMetadata(geometryCRS, desiredCRS)) {
-            MathTransform transform = CRS.findMathTransform(geometryCRS, desiredCRS, true);
-            region = JTS.transform(region, transform);
-        }
+        Geometry region = dao.getGeom(context, id, false, srs);
         if (region == null) {
             throw new RegionNotFoundEx(id);
         }
