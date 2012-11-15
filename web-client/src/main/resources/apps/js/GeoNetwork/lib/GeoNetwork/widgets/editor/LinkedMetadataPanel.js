@@ -58,6 +58,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         'children-remove': 'parentIdentifier-remove',
         'fcats-remove': 'update-detachFeatureCatalogue',
         'datasets-remove': 'update-srv-detachDataset',
+        'sibling-remove': 'sibling-remove',
         'thumbnail-remove': 'thumbnail-from-url-remove'
     },
     defaultConfig: {
@@ -69,7 +70,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         collapsible: true,
         collapsed: false,
         resourcesTypes: {
-            iso19139: ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats'],
+            iso19139: ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
             'dublin-core': ['children']
         }, // TODO : add missing ones
         tpl: null
@@ -169,6 +170,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         } else if (type === 'datasets') {
             parameters += "&uuidref=" + uuid;
             // TODO ? detach the service in the dataset record ?
+        } else if (type === 'sibling') {
+            parameters += "&uuidref=" + uuid;
         }
         
         
@@ -222,7 +225,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                   '</li>',
                 '</tpl>',
                 '<tpl if="this.isThumbnail(type) == false">',
-                  '<li alt="{abstract}">{title} <span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
+                  '<li alt="{abstract}">{title} ' + 
+                    '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
+                    '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
                 '</tpl>',
               '</tpl>',
             '</tpl>',
@@ -249,7 +254,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         
         
         this.store.on('load', function (store, records) {
-            
+            console.log(records);
             // Generate HTML layout
             var html = '';
             Ext.each(this.resourcesTypes[this.metadataSchema], function (type) {
