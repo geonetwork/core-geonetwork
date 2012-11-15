@@ -1643,7 +1643,11 @@ public class SearchManager {
             _lock.lock();
             try {
                 if (_committerTask != null) {
-                    _committerTask.cancel();
+                    try {
+                        _committerTask.cancel();
+                    } catch (IllegalStateException e) {
+                        // ignore, already done but hasn't updated variable yet
+                    }
                 }
                 _committerTask = new Committer();
                 _timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS);
