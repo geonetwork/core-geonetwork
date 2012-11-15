@@ -52,10 +52,7 @@
 	<xsl:template match="gmd:linkage" priority="10">
 	  <xsl:choose>
 	    <xsl:when test="
-    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'postgis') or 
-    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'oracle') or 
-    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'wcs') or 
-    	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'wfs') or 
+	    	contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'db') or 
     	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'file')">
   			<gmd:linkage gco:nilReason="withheld">
   			  <xsl:apply-templates select="@*"/>
