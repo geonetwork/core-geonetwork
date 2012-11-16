@@ -44,7 +44,7 @@
   <xsl:template name="fop-master">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="simpleA4" page-height="29.7cm" page-width="21cm"
-        margin-top=".2cm" margin-bottom=".2cm" margin-left=".6cm" margin-right=".2cm">
+        margin-top=".6cm" margin-bottom=".6cm" margin-left=".6cm" margin-right=".2cm">
         <fo:region-body margin-top="0cm"/>
         <fo:region-after extent=".2cm"/>
       </fo:simple-page-master>
@@ -195,8 +195,8 @@
 
       <xsl:if test="$metadata/geonet:info/id != ''">
         <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
-          border-top-color="{$background-color}" border-right-color="{$background-color}"
-          border-left-color="{$background-color}">
+          border-top-color="#2e456b" border-right-color="{$background-color}"
+          border-left-color="{$background-color}" border-top-width="1pt">
           <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
             <fo:block>
               <!--<fo:external-graphic content-width="35pt">
@@ -213,7 +213,7 @@
             </fo:block>
           </fo:table-cell>
         </fo:table-row>
-        <fo:table-row border-bottom-style="solid" border-right-style="solid"
+        <fo:table-row border-top-color="none" border-bottom-style="solid" border-right-style="solid"
           border-left-style="solid" border-bottom-color="{$background-color}"
           border-right-color="{$background-color}" border-left-color="{$background-color}">
           <fo:table-cell number-columns-spanned="2">
@@ -362,12 +362,16 @@
               select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/eng/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
             <xsl:value-of select="$gui/strings/show"/> <xsl:text>(XML)</xsl:text>
-          </fo:basic-link> <xsl:text>|</xsl:text> <fo:basic-link text-decoration="underline" color="blue">
-            <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/fre/pdf?uuid=', $metadata/geonet:info/uuid)"
-            />') </xsl:attribute>
-            <xsl:value-of select="$gui/strings/show"/> <xsl:text>(PDF)</xsl:text>
-          </fo:basic-link> <xsl:text>|</xsl:text> </xsl:when>
+          </fo:basic-link> 
+            <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text>|</xsl:text> 
+              <fo:basic-link text-decoration="underline" color="blue">
+              <xsl:attribute name="external-destination"> url('<xsl:value-of
+                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/fre/pdf?uuid=', $metadata/geonet:info/uuid)"
+              />') </xsl:attribute>
+              <xsl:value-of select="$gui/strings/show"/> <xsl:text>(PDF)</xsl:text>
+            </fo:basic-link> <xsl:text>|</xsl:text> 
+            </xsl:if>
+          </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
               <xsl:text>Z3950: </xsl:text>
