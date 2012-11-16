@@ -90,4 +90,8 @@ public abstract class RegionsDAO {
         this.cacheAllRegionsInMemory = cacheAllRegionsInMemory;
     }
 
+    protected synchronized void clearCaches() {
+        allRegions.clear();
+    }
+
 }
