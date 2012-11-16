@@ -940,13 +940,13 @@ public final class XslUtil {
 
 		if(langCode.length() == 3) return langCode;
 
-		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
+		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode, langCode);
 	}
     public static String twoCharLangCode(String langCode) throws Exception {
         if (langCode.length() == 2){
             return langCode;
         } else {
-            return IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(langCode);
+            return IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(langCode, langCode.substring(0,2));
         }
     }
 

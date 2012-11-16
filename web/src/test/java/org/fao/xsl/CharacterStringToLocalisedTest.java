@@ -17,6 +17,28 @@ import org.junit.Test;
 public class CharacterStringToLocalisedTest {
 	
 	@Test
+    public void convertLinkageLocalisedURLWithoutURLGroup() throws Exception
+    {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/xsl/characterstring-to-localisedcharacterstring.xsl";
+
+        Element testData = Xml.loadString(
+                "<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\"> " +
+                "<gmd:language xmlns:xalan=\"http://xml.apache.org/xalan\"> <gco:CharacterString>fra</gco:CharacterString> </gmd:language> " +
+                "<gmd:linkage xsi:type=\"che:PT_FreeURL_PropertyType\"> " +
+                "<che:LocalisedURL>http://www.mapage.ch</che:LocalisedURL> " +
+                "<che:PT_FreeURL> <che:URLGroup> <che:LocalisedURL locale=\"#DE\">http://www.meineseite.ch</che:LocalisedURL> </che:URLGroup> </che:PT_FreeURL> " +
+                "</gmd:linkage> " +
+                "</che:CHE_MD_Metadata>", false);
+
+        Element transformed = Xml.transform(testData, pathToXsl);
+        findAndAssert(transformed, new Count(1, new Finder("linkage/PT_FreeURL")));
+        findAndAssert(transformed, new Count(0, new Finder("linkage/LocalisedURL")));
+        findAndAssert(transformed, new Count(2, new Finder("LocalisedURL")));
+        findAndAssert(transformed, new Count(1, new Attribute("LocalisedURL", "locale", "#DE")));
+        findAndAssert(transformed, new Count(1, new Attribute("LocalisedURL", "locale", "#FR")));
+    }
+
+	@Test
 	public void fixBrokenKeywordXLinks() throws Exception {
 		String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/xsl/characterstring-to-localisedcharacterstring.xsl";
 		Element testData = Xml.loadString(
@@ -129,9 +151,6 @@ public class CharacterStringToLocalisedTest {
     }
     private void assertLocalisationString(Element data, String baseXPath) throws Exception {
         assertLocalisation(data, baseXPath, "gmd:PT_FreeText", "gco:CharacterString", "gmd:PT_FreeText_PropertyType");
-    }
-    private void assertNoLocalisationURL(Element data, String baseXPath) throws Exception {
-        assertNoLocalisation(data, baseXPath, "che:LocalisedURL", "gmd:URL");
     }
     private void assertLocalisationURL(Element data, String baseXPath) throws Exception {
         assertLocalisation(data, baseXPath, "che:LocalisedURL", "gmd:URL", "che:PT_FreeURL_PropertyType");
