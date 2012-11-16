@@ -256,8 +256,13 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         this.store.on('load', function (store, records) {
             console.log(records);
             // Generate HTML layout
-            var html = '';
-            Ext.each(this.resourcesTypes[this.metadataSchema], function (type) {
+            var html = '', schema = this.metadataSchema;
+            
+            // Hack to move to iso19139 schema for profil
+            if (this.metadataSchema.indexOf('iso19139.') !== -1) {
+                schema = 'iso19139';
+            }
+            Ext.each(this.resourcesTypes[schema], function (type) {
                 // Group title with a place for actions
                 var id = 'add' + this.sep + type;
                 html += '<h2>' + OpenLayers.i18n(type) + '<span class="button" id="' + id + '"></span>' + 
