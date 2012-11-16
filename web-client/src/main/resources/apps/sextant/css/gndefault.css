@@ -525,6 +525,24 @@ dl.xml * dd {
     vertical-align: middle;
 }
 
+.validatePanel * .x-grid3-cell-inner {
+    white-space: normal !important;
+}
+.linkPanel * h2 {
+    width: 100%;
+    border-bottom: 1px solid #B3D4E6;
+}
+.linkPanel * ul {
+    list-style: circle;
+    padding-left: 16px;
+}
+.linkPanel * h2 span {
+    float: right;
+}
+.relation-type {
+    text-transform: uppercase;
+    margin-left: 3px;
+}
 
 .debug {
     display: none;
