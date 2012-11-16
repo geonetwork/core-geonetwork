@@ -55,11 +55,11 @@
 				</xsl:for-each>
 				
 				<xsl:for-each select="gmd:alternateTitle">
-					<dct.alternative>
+					<dct:alternative>
 						<xsl:apply-templates mode="localised" select=".">
 								<xsl:with-param name="langId" select="$langId"/>
 						</xsl:apply-templates>
-					</dct.alternative>
+					</dct:alternative>
 				</xsl:for-each>
 				
 				<!-- Type - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
