@@ -954,7 +954,7 @@
 													id="_{$id}_e_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before($start, 'M')}" size="5"/>
+													value="{substring-before($end, 'M')}" size="5"/>
 												<label for="_{$id}_e_month">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
