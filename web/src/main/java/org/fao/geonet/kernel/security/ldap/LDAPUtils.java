@@ -135,10 +135,13 @@ public class LDAPUtils {
 					
 					try {
 						if (profile.equals(Profile.REVIEWER)) {
-							Update.addGroup(dbms, new Integer(id), new Integer(groupId), Profile.EDITOR);
+							Update.addGroup(dbms, new Integer(id), new Integer(
+									groupId), Profile.EDITOR);
 						}
 					} catch (Exception e) {
-						Log.debug(Geonet.LDAP, "  - User is already editor for that group." + e.getMessage());
+						Log.debug(Geonet.LDAP,
+								"  - User is already editor for that group."
+										+ e.getMessage());
 					}
 				} else {
 					if (Log.isDebugEnabled(Geonet.LDAP)){

@@ -341,7 +341,7 @@ public class EditLib {
             fragElt = Xml.loadString(fragment, false);
         }
         catch (JDOMException e) {
-            Log.error("EditLib : Error parsing XML fragment, ", e.toString());
+            Log.error(Geonet.EDITORADDELEMENT, "EditLib : Error parsing XML fragment " + fragment);
             throw new IllegalStateException("EditLib : Error when loading XML fragment, " + e.getMessage());
         }
         
@@ -528,7 +528,7 @@ public class EditLib {
 
 					if (
 							(schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) ||
-							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion)
+							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion && minCard == 0)
 						) {
 						String name   = getUnqualifiedName(childName);
 						String ns     = getNamespace(childName, md, schema);

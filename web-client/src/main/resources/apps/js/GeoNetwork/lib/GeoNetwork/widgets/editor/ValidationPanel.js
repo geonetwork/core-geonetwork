@@ -46,7 +46,8 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         frame: false,
         collapsible: true,
         collapsed: true,
-        iconCls: 'validateMetadata'
+        iconCls: 'validateMetadata',
+        cls: 'validatePanel'
     },
     validate: function () {
         this.editor.validate(function () {
@@ -110,7 +111,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
         };
         var tpl = function(value, p, record){
             return String.format(
-                    '<h3>{0} {1}</h3><div title="{2}">{3}</div>',
+                    '<h3 title="{2}">{0} {1}</h3><div>{3}</div>',
                     record.data.statusIcon, record.data.title, record.data.details, record.data.msg);
         };
         

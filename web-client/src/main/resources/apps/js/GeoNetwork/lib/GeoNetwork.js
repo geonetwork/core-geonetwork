@@ -139,6 +139,7 @@
             "GeoNetwork/widgets/editor/NewMetadataPanel.js",
             "GeoNetwork/widgets/editor/LogoSelectionPanel.js",
             "GeoNetwork/widgets/editor/LinkedMetadataSelectionPanel.js",
+            "GeoNetwork/widgets/editor/LinkResourcesWindow.js",
             "GeoNetwork/widgets/editor/EditorTools.js",
             "GeoNetwork/widgets/editor/SuggestionsPanel.js",
             "GeoNetwork/widgets/editor/HelpPanel.js",

@@ -321,6 +321,36 @@
 					<xsl:if test="/root/gui/searchDefaults/output = 'full'">
 						<div class="thumbnail_results">
 						
+							<!-- Category icon -->
+
+							<xsl:if test="/root/gui/config/category/display-in-search"> 
+									<xsl:choose> 
+										<xsl:when test="/root/gui/config/category/display-in-search/@mode = 'all' and count($metadata/geonet:info/category)>0">
+											<div style="float: right;;width:18px;">
+												<xsl:for-each select="$metadata/geonet:info/category">
+													<img class="category" src="../../images/category/{.}.png"/><br/>
+												</xsl:for-each>
+											</div>
+										</xsl:when>
+										<xsl:when test="/root/gui/config/category/display-in-search/@mode = 'internal' and count($metadata/geonet:info/category[@internal])>0">
+											<div style="float: right;;width:18px;">
+												<xsl:for-each select="$metadata/geonet:info/category[@internal]">
+													<img class="category" src="../../images/category/{.}.png"/><br/>
+												</xsl:for-each>
+											</div>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:if test="count($metadata/geonet:info/category[not(@internal)])>0">
+												<div style="float: right;;width:18px;">
+													<xsl:for-each select="$metadata/geonet:info/category[not(@internal)]">
+														<img class="category" src="../../images/category/{.}.png"/><br/>
+													</xsl:for-each> 
+												</div>
+											</xsl:if>
+										</xsl:otherwise>
+									</xsl:choose>
+							</xsl:if>
+
 							<!-- metadata rating -->
 							
 							<xsl:call-template name="rating">

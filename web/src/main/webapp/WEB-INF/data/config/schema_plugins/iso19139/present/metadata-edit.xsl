@@ -106,7 +106,7 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints">
+              gmd:metadataConstraints|gmd:aggregationInfo">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
@@ -3439,10 +3439,11 @@
 
 
    <!--
-        Open a popup to select a parent and set the parent identifier field.
-        In view mode display an hyperlink to the parent metadata record.
+        Open a popup to select a parent and set the parent identifier field or
+				select a related metadata record as a sibling.
+        In view mode display an hyperlink to the parent or sibling metadata record.
     -->
-    <xsl:template mode="iso19139" match="gmd:parentIdentifier"
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier|gmd:code[name(../..)='gmd:aggregateDataSetIdentifier']"
         priority="2">
         <xsl:param name="schema" />
         <xsl:param name="edit" />
