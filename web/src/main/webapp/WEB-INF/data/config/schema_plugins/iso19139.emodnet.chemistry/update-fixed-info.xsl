@@ -69,6 +69,7 @@
 		<xsl:choose>
 			<xsl:when test="
 				contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'db') or 
+				contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'copyfile') or 
 				contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'file')">
   			<gmd:linkage gco:nilReason="withheld">
   			  <xsl:apply-templates select="@*"/>
