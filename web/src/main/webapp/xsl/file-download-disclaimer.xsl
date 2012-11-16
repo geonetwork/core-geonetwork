@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
+	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
 	<xsl:include href="modal.xsl"/>
@@ -26,11 +26,11 @@
 					<table align="center">
 						<tr class="padded"><td colspan="2">
 							<xsl:choose>
-							<xsl:when test="(/root/response/metadata/gmd:MD_Metadata or /root/response/metadata/*[gco:isoType='gmd:MD_Metadata']) and /root/response/metadata/*/gmd:identificationInfo/*/gmd:resourceConstraints">
+							<xsl:when test="(/root/response/metadata/gmd:MD_Metadata or /root/response/metadata/*[@gco:isoType='gmd:MD_Metadata']) and /root/response/metadata/*/gmd:identificationInfo/*/gmd:resourceConstraints">
 								<!-- display usage, legal, security constraints -->
 								<xsl:for-each select="/root/response/metadata/*/gmd:identificationInfo/*/gmd:resourceConstraints">
 									<xsl:apply-templates mode="elementEP" select="*">
-										<xsl:with-param name="schema" select="'iso19139'"/>
+										<xsl:with-param name="schema" select="/root/response/metadata/*/geonet:info/schema"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
 							</xsl:when>
