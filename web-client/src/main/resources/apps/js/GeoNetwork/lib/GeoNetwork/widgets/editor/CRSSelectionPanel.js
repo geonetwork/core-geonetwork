@@ -53,6 +53,11 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
     first: null,
     
     /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
+    /**
      * Property: itemSelector
      */
     itemSelector: null,
@@ -256,7 +261,7 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/MultiselectItemSelector-3.0/icons',
+            imagePath: this.imagePath,
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){

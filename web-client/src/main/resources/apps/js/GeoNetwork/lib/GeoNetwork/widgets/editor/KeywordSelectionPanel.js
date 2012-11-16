@@ -48,6 +48,12 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
     }, {
         name: 'uri'
     }]),
+    
+    /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
     keywordStore: undefined,
     
     border: false,
@@ -283,7 +289,7 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/MultiselectItemSelector-3.0/icons', // FIXME
+            imagePath: this.imagePath,
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){

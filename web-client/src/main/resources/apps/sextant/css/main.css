@@ -1,4 +1,4 @@
-.emodnet\.chemistry * legend, .emodnet\.hydrography * legend, .sextant * legend {
+.emodnet.chemistry * legend, .emodnet.hydrography * legend {
     background-color: #FFFF99;
     width: 100%;
     text-align: center;
@@ -693,4 +693,21 @@ body.x-body-masked .x-window-plain .x-window-mc {
 .x-window-dlg button {
 	background-image: none !important;
 	background-color: transparent !important;
+}
+
+/* Position jumelles */
+.x-panel-tl .searchIcon, .x-window-tl .searchIcon {
+	background-position: 4px 4px;
+}
+.buttons a.findsub span, a.findsub.buttons span {
+	background-position: 4px -2px;
+}
+
+/* liferay input size */
+input[type="text"] {
+	padding: 0;
+}
+input[type="text"] {
+	padding: 1px 3px;
+	height:16px;
 }
