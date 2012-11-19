@@ -37,6 +37,8 @@
         <description></description>
         <helper>
             <option value="N/A">Not known</option>
+            <option value="daily mean">Daily mean</option>
+            <option value="hourly mean">Hourly mean</option>
         </helper>
     </element>
     <element name="gmd:abstract" context="gmd:MD_DataIdentification">
