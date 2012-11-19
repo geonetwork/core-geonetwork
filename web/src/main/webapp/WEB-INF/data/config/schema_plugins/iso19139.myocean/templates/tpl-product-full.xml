@@ -5,8 +5,7 @@
     xmlns:gml="http://www.opengis.net/gml"
     xmlns:gco="http://www.isotc211.org/2005/gco" 
     xmlns:gmx="http://www.isotc211.org/2005/gmx"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd">
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <gmd:fileIdentifier>
         <gco:CharacterString>ifremer.fr/ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
     </gmd:fileIdentifier>
@@ -109,7 +108,7 @@
                 <gco:CharacterString>Short text describing the product</gco:CharacterString>
             </gmd:abstract>
             <gmd:credit>
-                <gco:CharacterString>display priority: 100</gco:CharacterString>
+                <gco:CharacterString>0</gco:CharacterString>
             </gmd:credit>
             <gmd:pointOfContact>
                 <gmd:CI_ResponsibleParty>
@@ -494,9 +493,6 @@
                     </gmd:description>
                     <gmd:geographicElement>
                         <gmd:EX_GeographicBoundingBox>
-                            <gmd:extentTypeCode>
-                                <gco:Boolean>true</gco:Boolean>
-                            </gmd:extentTypeCode>
                             <gmd:westBoundLongitude>
                                 <gco:Decimal>-180.0</gco:Decimal>
                             </gmd:westBoundLongitude>
