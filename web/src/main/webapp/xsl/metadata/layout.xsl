@@ -1161,7 +1161,6 @@
 		onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
 		class="md" >
         <option/>
-        <option/>
         <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
         <xsl:copy-of select="$list/*"/>
       </select>) </xsl:if>
