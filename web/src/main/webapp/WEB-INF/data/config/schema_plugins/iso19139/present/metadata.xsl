@@ -614,7 +614,7 @@
 			<xsl:with-param name="delButton" select="normalize-space(gmx:FileName)!=''"/>
 			<xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
 			<xsl:with-param name="visible" select="false()"/>
-			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -3037,7 +3037,7 @@
 					<xsl:with-param name="edit" select="$edit"/>
 					<xsl:with-param name="title" select="/root/gui/strings/file"/>
 					<xsl:with-param name="text">
-						<button class="content" onclick="startFileUpload({/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id}, '{$ref}');" type="button">
+						<button class="content" onclick="startFileUpload({/root/*/geonet:info/id}, '{$ref}');" type="button">
 							<xsl:value-of select="/root/gui/strings/insertFileMode"/>
 						</button>
 					</xsl:with-param>
