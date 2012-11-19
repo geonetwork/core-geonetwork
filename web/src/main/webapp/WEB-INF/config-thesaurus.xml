@@ -85,6 +85,9 @@
     <service name="thesaurus.activate" type="xml">
       <class name=".services.thesaurus.Activate"/>
     </service>
+    <service name="thesaurus.clear" type="xml">
+      <class name=".services.thesaurus.Clear"/>
+    </service>
 
   </services>
 </geonet>

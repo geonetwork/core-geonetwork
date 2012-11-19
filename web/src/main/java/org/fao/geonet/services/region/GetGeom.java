@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
+import org.geotools.referencing.CRS;
 import org.jdom.Element;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -42,6 +43,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public class GetGeom implements Service
 {
 	private static final String SIMPLIFIED_PARAM = "simplified";
+
+    private static final String SRS_PARAM = "srs";
 	
 	private GeomFormat format;
 
@@ -59,12 +62,13 @@ public class GetGeom implements Service
 	{
 		String id = params.getChildText(Params.ID);
 		boolean simplified = Util.getParam(params, SIMPLIFIED_PARAM, false);
+		String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
 
 		if (id == null)
 			return new Element(Jeeves.Elem.RESPONSE);
 
 		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Geometry geom = dao.getGeom(context, id, simplified);
+		Geometry geom = dao.getGeom(context, id, simplified, CRS.decode(srs, true));
 		if (geom == null) {
 		    throw  new RegionNotFoundEx(id);
 		}

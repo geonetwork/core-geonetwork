@@ -91,6 +91,8 @@ CREATE TABLE countries (
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
+create unique index countries_id_idx on countries("ID");
+create unique index countries_search_idx on countries("SEARCH");
 
 ALTER TABLE public.countries OWNER TO "www-data";
 
@@ -145,9 +147,14 @@ CREATE TABLE "gemeindenBB" (
     "DESC" text
 );
 
+alter table "gemeindenBB" add CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2));
+alter table "gemeindenBB" add CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL)));
+alter table "gemeindenBB" add CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781));
+
 
 ALTER TABLE public."gemeindenBB" OWNER TO "www-data";
-
+create unique index gemeindenBB_id_idx on "gemeindenBB"("OBJECTVAL");
+create index gemeindenBB_SEARCH_idx on "gemeindenBB"("SEARCH");
 --
 -- Name: gemeinden_gid_seq; Type: SEQUENCE; Schema: public; Owner: www-data
 --
@@ -194,11 +201,16 @@ CREATE TABLE "kantoneBB" (
     "KUERZEL" character varying(4),
     "BOUNDING" character varying(254),
     "SEARCH" character varying(254),
-    the_geom geometry
+    the_geom geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
-
 ALTER TABLE public."kantoneBB" OWNER TO "www-data";
+
+create unique index kantonebb_id_idx on "kantoneBB"("KANTONSNR");
+create index kantonebb_search_idx on "kantoneBB"("SEARCH");
 
 --
 -- Name: kantone_gid_seq; Type: SEQUENCE; Schema: public; Owner: www-data
@@ -252,6 +264,8 @@ CREATE TABLE non_validated (
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
+create unique index non_validated_id_idx on "non_validated"("ID");
+create index non_validated_search_idx on "non_validated"("SEARCH");
 
 ALTER TABLE public.non_validated OWNER TO "www-data";
 
@@ -341,6 +355,8 @@ CREATE TABLE xlinks (
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
+create unique index xlinks_id_idx on "xlinks"("ID");
+create unique index xlinks_search_idx on "xlinks"("SEARCH");
 
 ALTER TABLE public.xlinks OWNER TO "www-data";
 
@@ -402,10 +418,13 @@ CREATE TABLE countries_search (
     "LAND" character varying(254),
     the_geom geometry
 );
+alter table "countries_search" add CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2));
+alter table "countries_search" add CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 4326));
 
+
+CREATE INDEX countries_search_the_geom_gist ON countries_search USING gist (the_geom);
 
 ALTER TABLE public.countries_search OWNER TO "www-data";
-
 --
 -- Name: gemeinden_search; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
 --
@@ -416,8 +435,11 @@ CREATE TABLE gemeinden_search (
     the_geom geometry
 );
 
+alter table "gemeinden_search" add CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2));
+alter table "gemeinden_search" add CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 4326));
 
 ALTER TABLE public.gemeinden_search OWNER TO "www-data";
+CREATE INDEX gemeinden_search_the_geom_gist ON gemeinden_search USING gist (the_geom);
 
 --
 -- Name: kantone_search; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
@@ -428,7 +450,10 @@ CREATE TABLE kantone_search (
     "NAME" character varying(254),
     the_geom geometry
 );
+alter table "kantone_search" add CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2));
+alter table "kantone_search" add CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 4326));
 
+CREATE INDEX kantone_search_the_geom_gist ON kantone_search USING gist (the_geom);
 
 ALTER TABLE public.kantone_search OWNER TO "www-data";
 

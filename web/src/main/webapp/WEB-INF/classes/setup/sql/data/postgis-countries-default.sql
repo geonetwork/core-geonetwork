@@ -55,8 +55,3 @@ REVOKE ALL ON SEQUENCE countries_gid_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE countries_gid_seq FROM "www-data";
 GRANT ALL ON SEQUENCE countries_gid_seq TO "www-data";
 
-
---
--- PostgreSQL database dump complete
---
-

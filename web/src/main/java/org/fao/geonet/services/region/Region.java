@@ -3,10 +3,15 @@ package org.fao.geonet.services.region;
 import java.util.Collections;
 import java.util.Map;
 
+import jeeves.utils.Log;
+
+import org.fao.geonet.constants.Geonet;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
 
 public class Region {
@@ -20,6 +25,16 @@ public class Region {
     private static final String WEST_EL = "west";
     private static final String LABEL_EL = "label";
     private static final String CATEGORY_EL = "categoryLabel";
+    public static final CoordinateReferenceSystem WGS84;
+    static {
+        CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+        try {
+            crs = CRS.decode("EPSG:4326", true);
+        } catch (Exception e) {
+            Log.error(Geonet.REGION, "Unable to create latlong crs, something is wrong with Geotools dependencies", e);
+        }
+        WGS84 = crs;
+    }
 
     private final String id;
     private final Map<String, String> labels;
@@ -59,11 +74,15 @@ public class Region {
         return bbox;
     }
 
+    public ReferencedEnvelope getBBox(CoordinateReferenceSystem projection) throws TransformException, FactoryException {
+        return bbox.transform(projection, true);
+    }
+
     public ReferencedEnvelope getLatLongBBox() throws TransformException, FactoryException {
         if(latlongBbox == null) {
             synchronized (bbox) {
                 if(latlongBbox == null) {
-                    latlongBbox = bbox.transform(DefaultGeographicCRS.WGS84, true);
+                    latlongBbox = bbox.transform(WGS84, true);
                 }
             }
         }

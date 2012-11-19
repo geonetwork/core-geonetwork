@@ -150,6 +150,42 @@
 	    </xsl:choose>
    </xsl:template>
 
+	<!-- find all multilingual elements and move CharacterString to LocalisedCharacterString elements 
+        this captures all elements with CharacterString and below are the exceptions that should not be caught	
+	--> 
+	<xsl:template priority="5" match="
+		gmd:linkage[che:LocalisedURL]
+	">
+	    <xsl:variable name="mainLang">
+	       <xsl:call-template name="langId19139"/>
+	    </xsl:variable>
+
+	    <xsl:variable name="urlGroup">
+	       <che:URLGroup>
+            <che:LocalisedURL locale="#{$mainLang}"><xsl:value-of select="che:LocalisedURL"></xsl:value-of></che:LocalisedURL>
+          </che:URLGroup>
+	    </xsl:variable>
+
+	    <xsl:choose>
+	       <xsl:when test="che:PT_FreeURL">
+		       <xsl:copy>
+                  <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+		           <che:PT_FreeURL>
+		               <xsl:copy-of select="$urlGroup"/>
+		               <xsl:copy-of select="che:PT_FreeURL/*"/>
+		           </che:PT_FreeURL>
+	           </xsl:copy>
+	       </xsl:when>
+	       <xsl:otherwise>
+		       <xsl:copy>
+                  <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+	               <che:PT_FreeURL>
+	                   <xsl:copy-of select="$urlGroup"/>
+	               </che:PT_FreeURL>
+               </xsl:copy>
+	       </xsl:otherwise>
+	    </xsl:choose>
+   </xsl:template>
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
@@ -239,10 +275,7 @@
                 <xsl:otherwise>en</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-    <xsl:variable name="UPPER">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-    <xsl:variable name="LOWER">abcdefghijklmnopqrstuvwxyz</xsl:variable>
-
-        <!-- <xsl:value-of select="translate(java:twoCharLangCode(normalize-space(string($tmp))), $LOWER, $UPPER)"></xsl:value-of>  -->
+        
         <xsl:value-of select="upper-case(java:twoCharLangCode($tmp))"></xsl:value-of>
     </xsl:template>
     

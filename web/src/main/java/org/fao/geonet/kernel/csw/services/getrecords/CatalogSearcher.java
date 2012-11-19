@@ -77,6 +77,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.services.region.Region;
 import org.fao.geonet.services.region.RegionsDAO;
 import org.geotools.xml.Encoder;
 import org.geotools.gml2.GMLConfiguration;
@@ -568,7 +569,7 @@ public class CatalogSearcher {
             String[] regionIds = attribute.getValue().split("\\s*,\\s*");
 
             for (String regionId : regionIds) {
-                Geometry geometry = regionDAO.getGeom(context, regionId, false);
+                Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
                 geoms.add(geometry);
                 if (unionedGeom == null) {
                     unionedGeom = geometry;

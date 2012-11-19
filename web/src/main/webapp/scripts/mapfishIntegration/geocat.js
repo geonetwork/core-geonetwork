@@ -1581,11 +1581,11 @@ var geocat = {
                     filters: []
                 });
                 //TODO: do not use OR, but put all the IDs into a single Spatial, separated by ','
-                var geomId = '';
+                var geomId = 'region:';
                 for (var i = 0; i < ids.length; ++i) {
                     var id = ids[i];
                     if( id ){
-                        if( geomId.length > 0){
+                        if( geomId.length > 7){
                             geomId+=',';
                         }
 
