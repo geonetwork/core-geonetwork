@@ -10,3 +10,7 @@ UPDATE settings SET value='0 0 1 * * ?' where name = 'every';
 
 
 ALTER TABLE users ALTER "password" TYPE character varying(120);
+
+ALTER TABLE usergroups ADD security varchar(128);
+ALTER TABLE usergroups ADD authtype varchar(32);
+
