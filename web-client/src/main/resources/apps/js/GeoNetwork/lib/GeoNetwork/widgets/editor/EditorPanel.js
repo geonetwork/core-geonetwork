@@ -841,7 +841,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             this.setDisabled(false);
         }
         this.container.show();
-        this.ownerCt.show();
+        this.ownerCt && this.ownerCt.show();
     },
     /** api: method[loadUrl]
      * 
@@ -875,7 +875,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     },
     closeCallback: function(){
         this.onEditorClosed();
-        this.ownerCt.hide();
+        this.ownerCt && this.ownerCt.hide();
         this.toolbar && this.toolbar.setDisabled(false);
         //Ext.Msg.alert('Editor', 'Finish editing', function () {this.hide()}, this);
     },
