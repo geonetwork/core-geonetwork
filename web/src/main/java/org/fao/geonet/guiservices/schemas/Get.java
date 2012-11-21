@@ -59,6 +59,7 @@ public class Get implements Service
 			Element elem = new Element("name").setText(schema);
 			elem.setAttribute("plugin","true"); // all schemas are plugins
 			elem.setAttribute("schemaConvertDirectory",schemaMan.getSchemaDir(schema)+"convert"+FS);
+			elem.setAttribute("namespaces",schemaMan.getNamespaceString(schema));
 			// is it editable?
 			if (schemaMan.getSchema(schema).canEdit()) {
 				elem.setAttribute("edit","true");

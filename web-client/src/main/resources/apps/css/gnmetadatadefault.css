@@ -423,7 +423,15 @@ div.button {
 .flagRed {
   background-image : url(../images/default/flag_red.png) !important;
 }
-.cat-children, .cat-parent {
+.valid-1 {
+  background-image : url(../images/default/flag_green.png) !important;
+}
+.valid-0 {
+  background-image : url(../images/default/flag_red.png) !important;
+}
+.valid--1 {
+}
+.cat-children, .cat-parent, .cat-sibling {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
 .book {

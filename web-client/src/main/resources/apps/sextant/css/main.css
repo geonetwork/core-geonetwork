@@ -660,6 +660,15 @@ div.x-tip-body div.help {
 .myocean * .slidingWindow * input {
     float: none !important;
 }
+/* Do not display projection switcher in bounding box editor */
+.myocean .map * label {
+    display: none;
+}
+.myocean .slidingWindow {
+    width: 100%;
+    display: inline-block;
+}
+
 .sextant .titleContainer span {
 font-size: 30px;
 }

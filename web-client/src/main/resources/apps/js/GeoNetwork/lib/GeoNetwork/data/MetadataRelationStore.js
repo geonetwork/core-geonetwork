@@ -49,7 +49,10 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
     }, {
         name: 'type',
         mapping: '@type'
-    }];
+    }, {
+        name: 'subType',
+        mapping: '@subType'
+		}];
     
     if (grouping) {
         var reader = new Ext.data.XmlReader({
@@ -67,10 +70,10 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
             }),
             reader: reader,
             groupField: 'type',
-            sortInfo: {
-                field: 'type',
-                direction: "ASC"
-            }
+						sortInfo: {
+							field: 'type',
+							direction: "ASC"
+						}
         });
     } else {
         return new Ext.data.XmlStore({

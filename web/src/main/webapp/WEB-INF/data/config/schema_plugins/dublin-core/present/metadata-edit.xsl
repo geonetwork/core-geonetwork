@@ -283,9 +283,19 @@
 	
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<!-- dublin-core brief formatting -->
+	<!-- dublin-core brief and superBrief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
+  <xsl:template mode="superBrief" match="simpledc">
+      <id><xsl:value-of select="geonet:info/id"/></id>
+      <uuid><xsl:value-of select="geonet:info/uuid"/></uuid>
+      <xsl:if test="dc:title">
+        <title><xsl:value-of select="dc:title"/></title>
+      </xsl:if>
+      <xsl:if test="dc:description">
+        <abstract><xsl:value-of select="dc:description"/></abstract>
+      </xsl:if>
+    </xsl:template>
+
 	<xsl:template name="dublin-coreBrief">
 		<metadata>
 			<xsl:if test="dc:title">

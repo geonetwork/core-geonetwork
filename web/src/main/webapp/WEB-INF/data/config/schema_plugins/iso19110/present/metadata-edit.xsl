@@ -259,16 +259,12 @@
      * inheritance : does not support linking feature catalogue objects (eg. to indicate subtype or supertype) 
     -->
     <xsl:template mode="iso19110" match="gfc:featureType[ancestor::gfc:featureType]|
-        gfc:definitionReference|
-        gfc:valueMeasurementunit|
         gfc:featureCatalogue|
         gfc:FC_InheritanceRelation/gfc:featureCatalogue|
         @gco:isoType" priority="100"/>
     
     <xsl:template mode="elementEP" match="
-        geonet:child[@name='definitionReference']|
         geonet:child[@name='featureCatalogue']|
-        geonet:child[@name='valueMeasurementunit']|
         gfc:FC_InheritanceRelation/geonet:child[@name='subtype']|
         gfc:FC_InheritanceRelation/geonet:child[@name='supertype']
         " priority="100"/>
@@ -477,7 +473,8 @@
                             <table width="100%">
                                 <xsl:choose>
                                     <xsl:when test="$edit=true() or $currTab!='simple'">
-                                        <xsl:apply-templates mode="elementEP" select="gfc:listedValue|geonet:child[string(@name)='listedValue']">
+                                        <xsl:apply-templates mode="elementEP" select="gfc:listedValue|gfc:definitionReference|gfc:valueMeasurementUnit|
+                                            geonet:child[string(@name)='listedValue']|geonet:child[string(@name)='definitionReference']|geonet:child[string(@name)='valueMeasurementUnit']">
                                             <xsl:with-param name="schema" select="$schema"/>
                                             <xsl:with-param name="edit" select="$edit"/>
                                         </xsl:apply-templates>        

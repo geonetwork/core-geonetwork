@@ -70,17 +70,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Utility panel properties
          */
         utilityPanelConfig: {
-            /** api: config[utilityPanelConfig.thumbnailPanel] 
-             *  Collapsed thumbnail panel on startup. Default is false.
-             */
-            thumbnailPanel: {
-                collapsed: false
-            },
+//            /** api: config[utilityPanelConfig.thumbnailPanel] 
+//             *  Collapsed thumbnail panel on startup. Default is false.
+//             */
+//            thumbnailPanel: {
+//                collapsed: false
+//            },
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
             relationPanel: {
-                collapsed: true
+                collapsed: false
             },
             /** api: config[utilityPanelConfig.validationPanel] 
              *  Collapsed validation panel on startup. Default is true.
@@ -108,7 +108,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     relationPanel: undefined,
     helpPanel: undefined,
     suggestionPanel: undefined,
-    thumbnailPanel: undefined,
+//    thumbnailPanel: undefined,
     editorMainPanel: undefined,
     metadataId: undefined,
     versionId: undefined,
@@ -365,11 +365,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param ref: ``String``  Form element identifier (eg. 235).
      *  :param name: ``String``  Sub template type name (eg. CI_ResponsibleParty).
      *  :param elementName: ``String``  Element tag name (eg. gmd:pointOfContact).
+     *  :param namespaces: ``String``  Element namespaces to append (eg. xmlns:gmd="http://www.isotc211.org/2005/gmd").
      *  
      *  Display contact selection panel
      *  Not available in trunk.
      */
-    showSubTemplateSelectionPanel: function(ref, name, elementName){
+    showSubTemplateSelectionPanel: function(ref, name, elementName, namespaces){
         var editorPanel = this;
         
         // Destroy all previously created windows which may
@@ -403,6 +404,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.subTemplateSelectionWindow.items.get(0).setRef(ref);
         this.subTemplateSelectionWindow.items.get(0).setName(name);
         this.subTemplateSelectionWindow.items.get(0).setElementName(elementName);
+        this.subTemplateSelectionWindow.items.get(0).setNamespaces(namespaces);
         
         this.subTemplateSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.CONTACT);
         this.subTemplateSelectionWindow.show();
@@ -1329,18 +1331,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.relationPanel = new GeoNetwork.editor.LinkedMetadataPanel(Ext.applyIf({
             editor: this,
             metadataId: this.metadataId,
+            metadataUuid: this.metadataUuid,
             metadataSchema: this.metadataSchema,
-            serviceUrl: this.catalogue.services.mdRelation
+            catalogue: this.catalogue
         }, this.utilityPanelConfig.relationPanel));
         
-        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
-            metadataId: this.metadataId,
-            editor: this,
-            getThumbnail: this.catalogue.services.mdGetThumbnail,
-            setThumbnail: this.catalogue.services.mdSetThumbnail,
-            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
-        }, this.utilityPanelConfig.thumbnailPanel));
-        
+//        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
+//            metadataId: this.metadataId,
+//            editor: this,
+//            getThumbnail: this.catalogue.services.mdGetThumbnail,
+//            setThumbnail: this.catalogue.services.mdSetThumbnail,
+//            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
+//        }, this.utilityPanelConfig.thumbnailPanel));
+//        
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
             editor: this,
@@ -1359,7 +1362,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             minWidth: 280,
             width: 280,
             items: [
-                this.thumbnailPanel, 
+                //this.thumbnailPanel, 
                 this.relationPanel, 
                 this.suggestionPanel,
                 this.validationPanel, 

@@ -821,7 +821,16 @@
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-
+        
+         <service name="metadata.formatter.pdf">
+           <class name=".services.metadata.format.Format">
+               <param name="user_xsl_dir" value="user_xsl" />
+           </class>
+           <class name=".services.metadata.format.PDF"/>
+           <output file="true"/>
+           <error id="illegal-params" sheet="metadata-error.xsl"/>
+       </service>
+        
     </services>
 </geonet>
 
