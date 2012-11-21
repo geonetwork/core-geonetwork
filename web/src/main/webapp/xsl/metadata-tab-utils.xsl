@@ -54,7 +54,7 @@
 
 			<!-- unknown thumbnail (usually a url so limit size) -->
 			<xsl:when test="$metadata/image[@type='unknown']">
-				<img src="{$metadata/image[@type='unknown']}" alt="{/root/gui/strings/thumbnail}" height="180" width="180"/>
+				<img src="{$metadata/image[@type='unknown']}" alt="{/root/gui/strings/thumbnail}" style="max-height:180"/>
 			</xsl:when>
 
 			<!-- papermaps thumbnail -->
