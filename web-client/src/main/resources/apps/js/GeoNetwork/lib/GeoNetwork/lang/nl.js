@@ -154,6 +154,7 @@ GeoNetwork.Lang.nl = {
     'inspireClassificationDataServices': "INSPIRE classificatie data services",
     'serviceType': "Service type",
     'serviceType_discovery': "Discovery Service (ontdekken)",
+    'serviceType_download': 'Download Service (download)',
     'serviceType_view': "View Service (bekijken)",
     'serviceType_transformation': "Transformation Service (transformatie)",
     'serviceType_invoke': "Invoke Spatial Data Service (aanroepen)",

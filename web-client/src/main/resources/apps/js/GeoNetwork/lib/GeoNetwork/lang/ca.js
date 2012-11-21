@@ -156,6 +156,7 @@ GeoNetwork.Lang.ca={
     'inspireClassificationDataServices': 'INSPIRE classification data services',
     'serviceType': 'Tipus de servei',
     'serviceType_discovery': 'Discovery Service (discovery)',
+    'serviceType_download': 'Download Service (download)',
     'serviceType_view': 'View Service (view)',
     'serviceType_transformation': 'Transformation Service (transformation)',
     'serviceType_invoke': 'Invoke Spatial Data Service (invoke)',

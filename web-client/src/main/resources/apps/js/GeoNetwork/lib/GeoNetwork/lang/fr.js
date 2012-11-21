@@ -155,6 +155,7 @@ GeoNetwork.Lang.fr = {
     'inspireClassificationDataServices': 'INSPIRE classification data services',
     'serviceType': 'Service type',
     'serviceType_discovery': 'Discovery Service (discovery)',
+    'serviceType_download': 'Download Service (download)',
     'serviceType_view': 'View Service (view)',
     'serviceType_transformation': 'Transformation Service (transformation)',
     'serviceType_invoke': 'Invoke Spatial Data Service (invoke)',
