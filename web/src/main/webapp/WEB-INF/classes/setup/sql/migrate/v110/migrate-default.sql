@@ -8,3 +8,5 @@ INSERT INTO settings VALUES ( 3, 1, 'wmtTimestamp', '20120809');
 
 UPDATE settings SET value='0 0 1 * * ?' where name = 'every';
 
+
+ALTER TABLE users ALTER "password" TYPE character varying(120);
