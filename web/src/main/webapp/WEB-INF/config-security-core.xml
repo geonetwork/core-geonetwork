@@ -89,6 +89,11 @@
 		<property name="passwordParameter" value="password" />
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/j_spring_security_check" />
+		<property name="authenticationFailureHandler">
+			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+				<constructor-arg value="/login.jsp?failure=true"></constructor-arg>
+			</bean>
+		</property>
 		<property name="authenticationSuccessHandler">
 			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 				<property name="defaultTargetUrl" value="/" />
@@ -125,6 +130,7 @@
 				</bean>
 			</list>
 		</constructor-arg>
+		<property name="filterProcessesUrl" value="/j_spring_security_logout"/>
 	</bean>
 
     <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">

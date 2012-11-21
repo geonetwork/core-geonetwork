@@ -22,19 +22,26 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
  *
  */
 public class GeonetworkFilterSecurityInterceptor extends FilterSecurityInterceptor {
-    private static final String GN_FILTER_APPLIED = "__geonetwork_spring_security_filterSecurityInterceptor_filterApplied";
+    private static final String GN_SECURITY_ACCEPTED = "__geonetwork_spring_security_filterSecurityInterceptor_permission_granted";
+	private final String appliedToken; 
+	public GeonetworkFilterSecurityInterceptor(String appliedToken) {
+		this.appliedToken = appliedToken;
+	}
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
-        if ((fi.getRequest() != null) && (fi.getRequest().getAttribute(GN_FILTER_APPLIED) != null)) {
+        if ((fi.getRequest() != null) && (fi.getRequest().getAttribute(appliedToken) != null || fi.getRequest().getAttribute(GN_SECURITY_ACCEPTED) != null)) {
             // filter already applied to this request and user wants us to observe
             // once-per-request handling, so don't re-do security checking
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
         } else {
             // first time this request being called, so perform security checking
             if (fi.getRequest() != null) {
-                fi.getRequest().setAttribute(GN_FILTER_APPLIED, Boolean.TRUE);
+                fi.getRequest().setAttribute(appliedToken, Boolean.TRUE);
             }
 
             InterceptorStatusToken token = super.beforeInvocation(fi);
+            if (fi.getRequest() != null && token != null) {
+            	fi.getRequest().setAttribute(GN_SECURITY_ACCEPTED, Boolean.TRUE);
+            }
 
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 

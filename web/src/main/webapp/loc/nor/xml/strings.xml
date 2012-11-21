@@ -516,6 +516,8 @@
 	<login>Innlogging</login>
 	<loginCardTitle>Innlogging / Registrering</loginCardTitle>
 	<loginwarning>Kun nødvendig for administrasjon</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
+
 	<logout>Logg ut</logout>
 	<logoutDes>Foretar en utlogging</logoutDes>
 	<longitude>Lengdegrad (mellom -180 og 180) i grader</longitude>

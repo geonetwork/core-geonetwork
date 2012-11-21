@@ -43,12 +43,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     frame: false,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
+    
+    /**
+     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
+     */
+    selectionPanelImgPath: undefined,
+
     defaultConfig: {
     	/** api: config[defaultViewMode] 
          *  Default view mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
         defaultViewMode: 'simple',
+        selectionPanelImgPath: '../js/ext-ux/images',
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
          *  instead of keyword selection popup.
@@ -383,6 +390,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             var selectionPanel = new GeoNetwork.editor.SubTemplateSelectionPanel({
                         width : 620,
                         height : 300,
+                        imagePath: this.selectionPanelImgPath,
                         catalogue: this.catalogue,
                         listeners : {
                             subTemplateSelected : function(panel, subtemplates) {
@@ -433,6 +441,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             if (!this.keywordSelectionWindow) {
                 this.keywordSelectionPanel = new GeoNetwork.editor.KeywordSelectionPanel({
                     catalogue: this.catalogue,
+                    imagePath: this.selectionPanelImgPath,
                     listeners: {
                         keywordselected: function(panel, keywords){
                             GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment(panel, keywords, editorPanel);
@@ -471,6 +480,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.crsSelectionWindow) {
             this.crsSelectionPanel = new GeoNetwork.editor.CRSSelectionPanel({
                 catalogue: this.catalogue,
+                imagePath: this.selectionPanelImgPath,
                 listeners: {
                     crsSelected: function(xml){
                         var id = '_X' + ref + '_' + name.replace(":", "COLON");
@@ -968,7 +978,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.catalogue.extentMap.initMapDiv();
         
         // Create concept selection widgets where relevant
-        GeoNetwork.editor.ConceptSelectionPanel.init();
+        GeoNetwork.editor.ConceptSelectionPanel.init({imagePath: this.selectionPanelImgPath});
         
         // TODO : Update toolbar metadata type value according to form content
         //Ext.get('template').dom.value=item.value;

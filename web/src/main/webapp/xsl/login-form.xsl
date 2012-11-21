@@ -25,6 +25,15 @@
 			<xsl:with-param name="title" select="/root/gui/info/heading" />
 			<xsl:with-param name="content">
 				<table align="left" width="100%">
+				<xsl:if test="string(/root/request/failure)='true'">
+						<tr>
+							<td colspan="2">
+								<h1 class="error">
+									<xsl:value-of select="/root/gui/strings/loginfailure" />
+								</h1>
+								</td>
+						</tr>
+					</xsl:if>
 					<xsl:if test="string(/root/gui/env/shib/use)='true'">
 						<tr>
 							<td>

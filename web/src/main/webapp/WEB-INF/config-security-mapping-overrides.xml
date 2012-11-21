@@ -8,6 +8,7 @@
      <!-- This is a filter that is called before the default filterSecurityInterceptor allowing overriding or adding new
      	  url intercept mappings/expressions. -->
     <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="overridefilterSecurityInterceptor">
+    	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_overridesSecurityMapping_filterApplied"/>
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
