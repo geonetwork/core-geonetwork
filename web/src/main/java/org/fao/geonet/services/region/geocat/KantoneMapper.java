@@ -1,15 +1,11 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.services.region.geocat;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.WeakHashMap;
 
-import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.services.region.Region;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.filter.FilterFactory2;
 
 public class KantoneMapper extends DatastoreMapper {
 	private static final String KANTONE_NAME = "NAME";
@@ -21,12 +17,6 @@ public class KantoneMapper extends DatastoreMapper {
 	private static final String PREFIX = CATEGORY_ID + ":";
 	private static final String CH1903_BACKING_DS = "kantoneBB";
 	private static final String WGS84_BACKING_DS = "kantone_search";
-
-	public KantoneMapper(ServiceContext context, DatastoreCache datastoreCache,
-			FilterFactory2 filterFactory,
-			WeakHashMap<String, Map<String, String>> categoryIdMap) {
-		super(context, categoryIdMap, filterFactory, datastoreCache);
-	}
 
 	@Override
 	public boolean accepts(String regionId) {
@@ -53,9 +43,9 @@ public class KantoneMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public Region constructRegion(SimpleFeature next) throws JDOMException,
+	public Region constructRegion(MapperState state, SimpleFeature next) throws JDOMException,
 			IOException {
-		return super.constructRegion(next, PREFIX, KANTONE_NAME, CATEGORY_ID);
+		return super.constructRegion(state, next, PREFIX, KANTONE_NAME, CATEGORY_ID);
 	}
 
 	@Override
@@ -64,9 +54,9 @@ public class KantoneMapper extends DatastoreMapper {
 	}
 
 	@Override
-	protected SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong)
+	protected SimpleFeatureSource getFeatureSource(MapperState state, boolean simplified, boolean inLatLong)
 			throws IOException {
-		return datastoreCache.getCached(context, this, simplified, inLatLong);
+		return state.datastoreCache.getCached(state.context, this, simplified, inLatLong);
 	}
 
 }

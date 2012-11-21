@@ -1,17 +1,13 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.services.region.geocat;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.region.Region;
 import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.filter.FilterFactory2;
 
 public class GemeindenMapper extends DatastoreMapper {
 
@@ -22,12 +18,6 @@ public class GemeindenMapper extends DatastoreMapper {
 	private static final String PREFIX = CATEGORY_ID + ":";
 	private static final String CH1903_BACKING_DS = "gemeindenBB";
 	private static final String WGS84_BACKING_DS = "gemeinden_search";
-
-	public GemeindenMapper(ServiceContext context,
-			DatastoreCache datastoreCache, FilterFactory2 filterFactory,
-			WeakHashMap<String, Map<String, String>> categoryIdMap) {
-		super(context, categoryIdMap, filterFactory, datastoreCache);
-	}
 
 	@Override
 	public boolean accepts(String regionId) {
@@ -60,9 +50,9 @@ public class GemeindenMapper extends DatastoreMapper {
 		}
 	}
 	@Override
-	public Region constructRegion(SimpleFeature next) throws JDOMException,
+	public Region constructRegion(MapperState state, SimpleFeature next) throws JDOMException,
 			IOException {
-		return super.constructRegion(next, PREFIX, GEMEINDEN_NAME, CATEGORY_ID);
+		return super.constructRegion(state, next, PREFIX, GEMEINDEN_NAME, CATEGORY_ID);
 	}
 
 	@Override
@@ -71,9 +61,9 @@ public class GemeindenMapper extends DatastoreMapper {
 	}
 
 	@Override
-	protected SimpleFeatureSource getFeatureSource(boolean simplified, boolean inLatLong) throws IOException {
+	protected SimpleFeatureSource getFeatureSource(MapperState state, boolean simplified, boolean inLatLong) throws IOException {
 		String typeName = getBackingDatastoreName(simplified, inLatLong);
-		DataStore ds = context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE, DataStore.class);
+		DataStore ds = state.context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE, DataStore.class);
 		return ds.getFeatureSource(typeName);
 	}
 

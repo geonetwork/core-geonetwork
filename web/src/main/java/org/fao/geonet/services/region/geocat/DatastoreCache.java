@@ -1,4 +1,4 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.services.region.geocat;
 
 import java.io.IOException;
 
