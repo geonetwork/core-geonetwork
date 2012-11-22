@@ -8,7 +8,8 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Porta</port>
-	<protocol>Protocollo</protocol>
+	<securePort>Secure Port</securePort>
+	<protocol>Preferred Protocollo</protocol>
 	
 	<intranet>Intranet</intranet>
 	<network>Network</network>

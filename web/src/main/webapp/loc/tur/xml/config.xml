@@ -8,6 +8,7 @@
 	<server>Sunucu(Server)</server>
 	<host>Ana sistem(Host)</host>
 	<port>Bağlantı Noktası(Port)</port>
+	<securePort>Secure Port</securePort>
 	
 	<intranet>Intranet</intranet>
 	<network>Ağ (Network)</network>
