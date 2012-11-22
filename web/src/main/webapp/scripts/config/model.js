@@ -34,6 +34,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
             SERVER_PROTOCOL   : xml.evalXPath(node, 'server/protocol'),
 			SERVER_HOST       : xml.evalXPath(node, 'server/host'),
 			SERVER_PORT       : xml.evalXPath(node, 'server/port'),
+			SERVER_SECURE_PORT       : xml.evalXPath(node, 'server/securePort'),
 			INTRANET_NETWORK  : xml.evalXPath(node, 'intranet/network'),
 			INTRANET_NETMASK  : xml.evalXPath(node, 'intranet/netmask'),
 
@@ -154,6 +155,7 @@ ConfigModel.updateTemp =
 '		<protocol>{SERVER_PROTOCOL}</protocol>'+
 '		<host>{SERVER_HOST}</host>'+
 '		<port>{SERVER_PORT}</port>'+
+'		<securePort>{SERVER_SECURE_PORT}</securePort>'+
 '	</server>'+
 '	<intranet>'+
 '		<network>{INTRANET_NETWORK}</network>'+

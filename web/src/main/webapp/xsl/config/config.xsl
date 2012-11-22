@@ -333,6 +333,10 @@
 					<td class="padded"><xsl:value-of select="/root/gui/config/port"/></td>
 					<td class="padded"><input id="server.port" class="content" type="text" value="" size="30"/></td>
 				</tr>
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/securePort"/></td>
+					<td class="padded"><input id="server.secureport" class="content" type="text" value="" size="30"/></td>
+				</tr>
 			</table>
 		</div>
 	</xsl:template>

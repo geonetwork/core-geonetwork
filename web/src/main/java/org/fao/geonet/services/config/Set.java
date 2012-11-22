@@ -99,7 +99,7 @@ public class Set implements Service
         }
         
         SettingInfo info = new SettingInfo(context);
-		ServerBeanPropertyUpdater.updateURL(info.getSiteUrl()+context.getBaseUrl(), context.getServlet().getServletContext());
+		ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true)+context.getBaseUrl(), context.getServlet().getServletContext());
 		
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
@@ -121,6 +121,7 @@ public class Set implements Service
         new ConfigEntry(ConfigEntry.Type.STRING, true,  "server/protocol",          "system/server/protocol"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "server/host",              "system/server/host"),
 		new ConfigEntry(ConfigEntry.Type.INT,    false, "server/port",              "system/server/port"),
+		new ConfigEntry(ConfigEntry.Type.INT,    false, "server/securePort",        "system/server/securePort"),
 
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/network",         "system/intranet/network"),
 		new ConfigEntry(ConfigEntry.Type.STRING, true,  "intranet/netmask",         "system/intranet/netmask"),

@@ -7,7 +7,8 @@
 	<server>Сервер</server>
 	<host>Хост</host>
 	<port>Порт</port>
-    <protocol>Protocol</protocol>
+	<securePort>Secure Порт</securePort>
+  <protocol>Preferred Protocol</protocol>
 
 	<searchStats>Search Statistics</searchStats>
 

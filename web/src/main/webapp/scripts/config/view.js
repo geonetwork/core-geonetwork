@@ -18,7 +18,9 @@ function ConfigView(strLoader)
 		
 		{ id:'server.host',   type:'length',   minSize :1,  maxSize :200 },
 		{ id:'server.host',   type:'hostname' },
-		{ id:'server.port',   type:'integer',  minValue:80, maxValue:65535 },
+		{ id:'server.port',   type:'integer',  minValue:80, maxValue:65535, empty:true },
+		{ id:'server.secureport',   type:'integer',  minValue:80, maxValue:65535, empty:true },
+		{ id:'server.secureport',   type:'oneof',  items: ['server.port']},
 		
 		{ id:'intranet.network', type:'ipaddress' },
 		{ id:'intranet.netmask', type:'ipaddress' },
@@ -94,14 +96,19 @@ function ConfigView(strLoader)
         }
     });
 
-    Event.observe($('server.protocol'), 'change', function() {
-        if ($('server.protocol').value == 'https') {
-            $('server.port').value = '443';
+    var port = $('server.port');
+    var securePort = $('server.secureport');
+    var validatePorts = function() {
+        if(port.value === securePort.value) {
+        	port.addClassName("error");
+        	securePort.addClassName("error");
         } else {
-            $('server.port').value = '8080';
+        	port.removeClassName("error");
+        	securePort.removeClassName("error");        	
         }
-
-    });
+    }
+    Event.observe(port, 'keyup', validatePorts);
+    Event.observe(securePort, 'keyup', validatePorts);
 
     Event.observe($('metadata.enableSimpleView'), 'click', function() {
         if (!$('metadata.enableSimpleView').checked) {
@@ -176,6 +183,7 @@ ConfigView.prototype.setData = function(data)
     $('server.protocol').value = data['SERVER_PROTOCOL'];
 	$('server.host').value = data['SERVER_HOST'];
 	$('server.port').value = data['SERVER_PORT'];
+	$('server.secureport').value = data['SERVER_SECURE_PORT'];
 	
 	$('intranet.network').value = data['INTRANET_NETWORK'];
 	$('intranet.netmask').value = data['INTRANET_NETMASK'];
@@ -293,6 +301,7 @@ ConfigView.prototype.getData = function()
         SERVER_PROTOCOL : $('server.protocol').value,
 		SERVER_HOST : $('server.host').value,
 		SERVER_PORT : $('server.port').value,
+		SERVER_SECURE_PORT : $('server.secureport').value,
 		
 		INTRANET_NETWORK : $('intranet.network').value,
 		INTRANET_NETMASK : $('intranet.netmask').value,
