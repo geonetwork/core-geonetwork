@@ -643,12 +643,22 @@
 			</error>
 		</service>
 
-		<service name="wkt.region.geom">
+		<service name="region.geom.wkt">
 			<class name=".services.region.GetGeom">
 				<param name="format" value="WKT"/>
 			</class>
 			
 			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="region.geom.gml">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="GML"/>
+			</class>
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
 				<xml name="error" file="xml/file-not-found-error.xml" />

@@ -23,22 +23,14 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
+import java.sql.SQLException;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
-import org.jdom.Element;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,

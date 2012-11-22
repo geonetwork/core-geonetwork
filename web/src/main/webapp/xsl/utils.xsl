@@ -159,7 +159,17 @@
 			</a> 
 		</xsl:if>
 	</xsl:template>
+	
+	<!-- Do a search for nilReason='withheld' for other places to update if you want to
+		 add another tag that flags an element as having hidden children -->
+	<xsl:template name="hasHiddenChildren">
+		<xsl:choose>
+			<xsl:when test="./@*:nilReason='withheld' and count(./*[substring-before(name(), ':') != 'geonet']) = 0 and count(./@*) = 1 ">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>			
+		</xsl:choose>
+	</xsl:template>
 
+    <!-- GEOCAT: Hidden elements -->
     <xsl:template name="validIndicator">
         <xsl:param name="indicator"/>
         <xsl:param name="class"/>

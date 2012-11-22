@@ -19,11 +19,11 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 
-    private static final String REGIONS_THESAURUS_NAME = "external.place.regions";
+    
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
     private GeometryFactory factory = new GeometryFactory();
-    
+    private String thesaurusName = "external.place.regions";
     public ThesaurusBasedRegionsDAO(java.util.Set<String> localesToLoad) {
         this.localesToLoad = Collections.unmodifiableSet(localesToLoad);
     }
@@ -34,11 +34,16 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 
         return new ThesaurusRequest(context, this.categoryIdMap , localesToLoad, thesaurus);
     }
+    
+    public synchronized void setThesaurusName(String thesaurusName) {
+        super.clearCaches();
+        this.thesaurusName = thesaurusName;
+    }
 
     private Thesaurus getThesaurus(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager th = gc.getThesaurusManager();
-        Thesaurus regions = th.getThesaurusByName(REGIONS_THESAURUS_NAME);
+        Thesaurus regions = th.getThesaurusByName(thesaurusName);
         if(regions != null) {
             return regions;
         }

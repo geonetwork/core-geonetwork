@@ -57,6 +57,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.DataManagerParameter;
 import org.fao.geonet.kernel.Email;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
@@ -327,7 +328,7 @@ public class Geonetwork implements ApplicationHandler {
 		 
 		 // if the validator exists the proxyCallbackURL needs to have the external host and
 		 // servlet name added so that the cas knows where to send the validation notice
-		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl()+baseURL, servletContext);
+		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl(true)+baseURL, servletContext);
 
 		//------------------------------------------------------------------------
         //--- Initialize Extent Dict
@@ -367,8 +368,22 @@ public class Geonetwork implements ApplicationHandler {
 		} else {
 			xmlSerializer = new XmlSerializerDb(settingMan);
 		}
+		
+		DataManagerParameter dataManagerParameter = new DataManagerParameter();
+		dataManagerParameter.context = context;
+		dataManagerParameter.svnManager = svnManager;
+		dataManagerParameter.searchManager = searchMan;
+		dataManagerParameter.xmlSerializer = xmlSerializer;
+		dataManagerParameter.schemaManager = schemaMan;
+		dataManagerParameter.accessManager = accessMan;
+		dataManagerParameter.dbms = dbms;
+		dataManagerParameter.settingsManager = settingMan;
+		dataManagerParameter.baseURL = baseURL;
+		dataManagerParameter.dataDir = dataDir;
+		dataManagerParameter.thesaurusDir = thesauriDir;
+		dataManagerParameter.appPath = path;
 
-		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, reusableObjMan, extentMan, path);
+		DataManager dataMan = new DataManager(dataManagerParameter);
 
 
         /**

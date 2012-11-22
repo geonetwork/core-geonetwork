@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:geonet="http://www.fao.org/geonetwork"
-    xmlns:saxon="http://saxon.sf.net/"
-    extension-element-prefixes="saxon"
-    exclude-result-prefixes="geonet saxon">
+	xmlns:geonet="http://www.fao.org/geonetwork"
+	xmlns:saxon="http://saxon.sf.net/"
+    xmlns:java="java:org.fao.geonet.util.XslUtil"
+	extension-element-prefixes="saxon"
+	exclude-result-prefixes="geonet saxon java">
 
     <!--
     edit metadata form 
@@ -38,77 +39,77 @@
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
             </xsl:otherwise>
         </xsl:choose>
-		<xsl:call-template name="geocat-js"/>
-    
-        <xsl:call-template name="edit-header"/>
-        
-        <script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{substring(/root/gui/language,1,2)}.js"/>
-        <script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-        <script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
-        <script type="text/javascript">
-            <xsl:if test="/root/gui/position!='-1'">
-                function scrollIt()
-                {
-                    window.scroll(0,<xsl:value-of select="/root/gui/position"/>);
-                    document.mainForm.position.value = -1; // reset
-                }
-                timeId = setTimeout('scrollIt()',1000);    
-            </xsl:if>
-            function removeJustCreated() {
-                var justCreated = $('just-created');
-                if(justCreated != null) {
-                    justCreated.parentNode.removeChild(justCreated);
-                }
-            }
-        </script>
-        
-        
-        <!-- =================================
-                Google translation API demo (Load the API in version 1).
-        ================================= -->
-        <xsl:if test="/root/gui/config/editor-google-translate = 1">            
-            <script type="text/javascript" src="http://www.google.com/jsapi"/>
-            <script type="text/javascript">
-                google.load("language", "1");
-            </script>
-        </xsl:if>
-    
-        <!-- for each editable plugin schema, add the javascript needed to
-             run any editor functions -->
-        <xsl:for-each select="/root/gui/schemalist/name[@plugin='true' and @edit='true']">
-            <xsl:variable name="schemaName" select="string(.)"/>
-            <saxon:call-template name="{concat($schemaName,'-javascript')}"/>
-        </xsl:for-each>
+    	<xsl:call-template name="geocat-js"/>
 
-        <xsl:call-template name="extentViewerJavascriptInit"/>
-    </xsl:template>
-    
-    <!--
-    page content
-    -->
-    <xsl:template name="content">
-        <img id="editorBusy" src="{/root/gui/url}/images/spinner.gif" alt="busy" style="display:none"/>
-        <table id="editFormTable" width="100%">
-            <xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']"> <!-- just one -->
-                <tr>
-                    <td class="blue-content" width="150" valign="top">
-                        <xsl:call-template name="tab">
-                            <xsl:with-param name="tabLink" select="concat(/root/gui/locService,'/metadata.update')"/>
-                        </xsl:call-template>
-                    </td>
-                    <td class="content" valign="top">
-                        <form id="editForm" name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/metadata.update">
-                            <input class="md" type="hidden" name="id" value="{geonet:info/id}"/>
-                            <input class="md" type="hidden" name="version" value="{geonet:info/version}"/>
-                            <input class="md" type="hidden" name="ref"/>
-                            <input class="md" type="hidden" name="name"/>
-                            <input class="md" type="hidden" name="licenseurl"/>
-                            <input class="md" type="hidden" name="type"/>
-                            <input class="md" type="hidden" name="editing" value="{geonet:info/id}"/>
-                          <input class="md" type="hidden" name="minor" id="minor" value="{/root/request/minor}"/>
-                            <input class="md" type="hidden" name="child"/>
-                            <input class="md" type="hidden" name="fname"/>
-                            <input class="md" type="hidden" name="access"/>
+		<!-- GEOCAT --> <xsl:call-template name="edit-header"/>
+
+        <xsl:variable name="twoCharLangCode" select="java:twoCharLangCode(/root/gui/language)" />
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{$twoCharLangCode}.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
+		<script type="text/javascript">
+			<xsl:if test="/root/gui/position!='-1'">
+				function scrollIt()
+				{
+					window.scroll(0,<xsl:value-of select="/root/gui/position"/>);
+					document.mainForm.position.value = -1; // reset
+				}
+				timeId = setTimeout('scrollIt()',1000);	
+			</xsl:if>
+			function removeJustCreated() {
+				var justCreated = $('just-created');
+				if(justCreated != null) {
+					justCreated.parentNode.removeChild(justCreated);
+				}
+			}
+		</script>
+		
+		
+		<!-- =================================
+				Google translation API demo (Load the API in version 1).
+		================================= -->
+		<xsl:if test="/root/gui/config/editor-google-translate = 1">			
+			<script type="text/javascript" src="http://www.google.com/jsapi"/>
+			<script type="text/javascript">
+				google.load("language", "1");
+			</script>
+		</xsl:if>
+	
+		<!-- for each editable plugin schema, add the javascript needed to
+		     run any editor functions -->
+		<xsl:for-each select="/root/gui/schemalist/name[@plugin='true' and @edit='true']">
+			<xsl:variable name="schemaName" select="string(.)"/>
+			<saxon:call-template name="{concat($schemaName,'-javascript')}"/>
+		</xsl:for-each>
+		<!-- GEOCAT --> <xsl:call-template name="extentViewerJavascriptInit"/>
+	</xsl:template>
+	
+	<!--
+	page content
+	-->
+	<xsl:template name="content">
+		<img id="editorBusy" src="{/root/gui/url}/images/spinner.gif" alt="busy" style="display:none"/>
+		<table id="editFormTable" width="100%">
+			<xsl:for-each select="/root/*[name(.)!='gui' and name(.)!='request']"> <!-- just one -->
+				<tr>
+					<td class="blue-content" width="150" valign="top">
+						<xsl:call-template name="tab">
+							<xsl:with-param name="tabLink" select="concat(/root/gui/locService,'/metadata.update')"/>
+						</xsl:call-template>
+					</td>
+					<td class="content" valign="top">
+						<form id="editForm" name="mainForm" accept-charset="UTF-8" method="POST" action="{/root/gui/locService}/metadata.update">
+							<input class="md" type="hidden" name="id" value="{geonet:info/id}"/>
+							<input class="md" type="hidden" name="version" value="{geonet:info/version}"/>
+							<input class="md" type="hidden" name="ref"/>
+							<input class="md" type="hidden" name="name"/>
+							<input class="md" type="hidden" name="licenseurl"/>
+							<input class="md" type="hidden" name="type"/>
+							<input class="md" type="hidden" name="editing" value="{geonet:info/id}"/>
+						  <input class="md" type="hidden" name="minor" id="minor" value="{/root/request/minor}"/>
+							<input class="md" type="hidden" name="child"/>
+							<input class="md" type="hidden" name="fname"/>
+							<input class="md" type="hidden" name="access"/>
                             <xsl:if test="//JUSTCREATED">
                                 <input id="just-created" class="md" type="hidden" name="just-created" value="true"/>
                             </xsl:if>

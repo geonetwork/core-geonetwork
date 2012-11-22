@@ -152,6 +152,7 @@ GeoNetwork.Lang.de = {
 'inspireClassificationDataServices':'INSPIRE Einstufung Datendienste',
 'serviceType':'Service-Typ',
 'serviceType_discovery':'Discovery Service (Discovery)',
+'serviceType_download': 'Download Service (download)',
 'serviceType_view':'View Service (Ansicht)',
 'serviceType_transformation':'Transformation Service (Transformation)',
 'serviceType_invoke':'Invoke Spatial Data Service (aufrufen)',

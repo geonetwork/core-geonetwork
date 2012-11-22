@@ -23,25 +23,16 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
+import java.sql.SQLException;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * This class is responsible for reading and writing metadata extras from the 

@@ -8,7 +8,8 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Port</port>
-	<protocol>Protokoll</protocol>
+	<securePort>Secure Port</securePort>
+	<protocol>Preferred Protokoll </protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Netzwerk</network>
@@ -386,4 +387,7 @@
 	<db.maxactive>Maximale Anzahl Databankverbindungen:</db.maxactive>	
 	<db.statserror>Databankstatistik:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
+

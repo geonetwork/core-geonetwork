@@ -145,6 +145,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  ``Ext.form.TextField`` number of results field.
      */
     nbResultsField: null,
+    
+    /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
 
     keywords: null,
     /** private: property[KeywordRecord] 
@@ -307,7 +312,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
+            imagePath: this.imagePath,
             fromTBar: [this.generateFilterField(), '->', 
                        OpenLayers.i18n('maxResults'), this.getLimitInput()],
             toTBar: [{
@@ -633,7 +638,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
  *       transformations: [], 
  *       transformation: ''}}"/>
  */
-GeoNetwork.editor.ConceptSelectionPanel.init = function () {
+GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
     var thesaurusPickers = Ext.DomQuery.select('.thesaurusPickerCfg');
     
     for (var idx = 0; idx < thesaurusPickers.length; ++idx) {
@@ -647,6 +652,7 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
             if (p.dom.innerHTML === '') {
                 var panel = new GeoNetwork.editor.ConceptSelectionPanel({
                     catalogue: catalogue,
+                    imagePath: cfg.imagePath,
                     thesaurus: jsonConfig.thesaurus,
                     mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,

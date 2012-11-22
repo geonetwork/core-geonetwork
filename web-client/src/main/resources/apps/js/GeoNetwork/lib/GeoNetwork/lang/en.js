@@ -157,6 +157,7 @@ GeoNetwork.Lang.en = {
     'serviceType': 'Service type',
     'serviceType_discovery': 'Discovery Service (discovery)',
     'serviceType_view': 'View Service (view)',
+    'serviceType_download': 'Download Service (download)',
     'serviceType_transformation': 'Transformation Service (transformation)',
     'serviceType_invoke': 'Invoke Spatial Data Service (invoke)',
     'serviceType_other': 'Other Services (other)',

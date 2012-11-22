@@ -40,7 +40,8 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 //=============================================================================
@@ -173,26 +174,26 @@ public class Dbms
 
 	public Element select(String query) throws SQLException
 	{
-		return selectFull(query, new Hashtable<String, String>(), (Object[]) null);
+		return selectFull(query, new HashMap<String, String>(), (Object[]) null);
 	}
 
 	//--------------------------------------------------------------------------
 
 	public Element select(String query, Object... args) throws SQLException
 	{
-		return selectFull(query, new Hashtable<String, String>(), args);
+		return selectFull(query, new HashMap<String, String>(), args);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Element select(String query, Hashtable<String, String> formats) throws SQLException
+	public Element select(String query, Map<String, String> formats) throws SQLException
 	{
 		return selectFull(query, formats, (Object[]) null);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public Element selectFull(String query, Hashtable<String, String> formats, Object... args) throws SQLException
+	public Element selectFull(String query, Map<String, String> formats, Object... args) throws SQLException
 	{
         if(Log.isDebugEnabled(Log.Dbms.SELECT)) {
             Log.debug(Log.Dbms.SELECT, "Query: "+ query);
@@ -284,7 +285,7 @@ public class Dbms
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element buildResponse(ResultSet rs, Hashtable<String, String> formats) throws SQLException
+	private Element buildResponse(ResultSet rs, Map<String, String> formats) throws SQLException
 	{
 		ResultSetMetaData md = rs.getMetaData();
 
@@ -322,7 +323,7 @@ public class Dbms
 
 	//--------------------------------------------------------------------------
 
-	private Element buildElement(ResultSet rs, int col, String name, int type, Hashtable<String, String> formats) throws SQLException
+	private Element buildElement(ResultSet rs, int col, String name, int type, Map<String, String> formats) throws SQLException
 	{
 		String value = null;
 
