@@ -19,7 +19,7 @@
       <tr>
         <td colspan="2">
           <span class="title">
-            <xsl:value-of select="$title"/>
+            <xsl:copy-of select="$title"/>
           </span>
         </td>
       </tr>

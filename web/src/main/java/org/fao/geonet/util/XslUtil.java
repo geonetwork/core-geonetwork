@@ -20,7 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
+import org.fao.geonet.languages.IsoLanguagesMapper;
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
@@ -230,7 +230,27 @@ public final class XslUtil
             return "";
         }
     }
-    
+    /**
+     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     *
+     * @param iso3LangCode   The 2 iso lang code
+     * @return The related 3 iso lang code
+     */
+    public static String twoCharLangCode(String iso3LangCode) {
+        String iso2LangCode = "";
+
+        try {
+            if (iso3LangCode.length() == 2){
+                iso2LangCode = iso3LangCode;
+            } else {
+                iso2LangCode = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(iso3LangCode);
+            }
+        } catch (Exception ex) {
+            Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
+        }
+
+        return iso2LangCode;
+    }
     /**
      * Return '' or error message if error occurs during URL connection.
      * 
@@ -278,13 +298,6 @@ public final class XslUtil
 
 		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
 	}
-    public static String twoCharLangCode(String langCode) throws Exception {
-        if (langCode.length() == 2){
-            return langCode;
-        } else {
-            return IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(langCode);
-        }
-    }
 
 	public static boolean match(Object src, Object pattern) {
 		if (src == null || src.toString().trim().isEmpty()) {

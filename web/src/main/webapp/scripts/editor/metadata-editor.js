@@ -631,11 +631,12 @@ function doFileUploadSubmit(form)
 	}
 
 	AIM.submit(form, 
-		{ 'onStart': function() {
-				Modalbox.deactivate();
-			},
+		{
+			// not needed
+			//'onStart': function() {
+			//	return true;
+			//},
 			'onComplete': function(doc) {
-				Modalbox.activate();
 				if (doc.body == null) { // error - upload failed for some reason
 					alert(translate("uploadFailed") + doc);
 				} else {
@@ -650,9 +651,16 @@ function doFileUploadSubmit(form)
 						name.value = fname.getAttribute('title');
 						$('di_'+$F(ref)).show();
 						$('db_'+$F(ref)).hide();
-						Modalbox.show(doc.body.innerHTML,{width:600});
-						
-						doSaveAction('metadata.update');
+					
+						// show file upload results - save form when dialog closes
+						Modalbox.show(doc.body.innerHTML,
+							{	
+								width:600,
+								afterHide: function() {
+									doSaveAction('metadata.update');
+								}
+							}
+						);
 					} else {
 						alert(translate("uploadSetFileNameFailed"));
 					}

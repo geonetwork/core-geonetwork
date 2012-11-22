@@ -35,6 +35,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -997,7 +998,7 @@ public class SchemaManager {
 			if (content instanceof Element) uri = (Element)content;
 			else continue; // skip this
 
-		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
+		  if (!uri.getName().equals("uri") || !uri.getNamespace().equals(Namespaces.OASIS_CATALOG)) {
               if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                   Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
 				continue;
@@ -1034,7 +1035,7 @@ public class SchemaManager {
 			if (content instanceof Element) uri = (Element)content;
 			else continue; // skip this
 
-		  if (!uri.getName().equals("rewriteURI") || !uri.getNamespace().equals(Geonet.OASIS_CATALOG_NAMESPACE)) {
+		  if (!uri.getName().equals("rewriteURI") || !uri.getNamespace().equals(Namespaces.OASIS_CATALOG)) {
               if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                   Log.debug(Geonet.SCHEMA_MANAGER, "Skipping element "+uri.getQualifiedName()+":"+uri.getNamespace());
 				continue;
@@ -1073,7 +1074,7 @@ public class SchemaManager {
 
 		baseNrInt = baseNrInt + 1;
 		
-	    Element newBlank = new Element("rewriteURI", Geonet.OASIS_CATALOG_NAMESPACE);
+	    Element newBlank = new Element("rewriteURI", Namespaces.OASIS_CATALOG);
         //Element newBlank = new Element("uri", Geonet.OASIS_CATALOG_NAMESPACE);
     		if (baseNrInt <= Geonet.File.METADATA_MAX_BLANKS) {
     			String zero = "";
