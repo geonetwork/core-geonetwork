@@ -73,12 +73,12 @@ import com.vividsolutions.jts.geom.Geometry;
  *      
  */
 public class GetMap implements Service {
-    public static final String SRS_PARAM = "SRS";
-    public static final String WIDTH_PARAM = "WIDTH";
-    public static final String GEOM_PARAM = "GEOM";
-    public static final String GEOM_TYPE_PARAM = "GEOMTYPE";
-    public static final String HEIGHT_PARAM = "HEIGHT";
-    public static final String BACKGROUND_PARAM = "BACKGROUND";
+    public static final String SRS_PARAM = "srs";
+    public static final String WIDTH_PARAM = "width";
+    public static final String GEOM_PARAM = "geom";
+    public static final String GEOM_TYPE_PARAM = "geomtype";
+    public static final String HEIGHT_PARAM = "height";
+    public static final String BACKGROUND_PARAM = "background";
     private String format;
 
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -92,13 +92,14 @@ public class GetMap implements Service {
     // --------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
+        Util.toLowerCase(params);
         String id = params.getChildText(Params.ID);
-        String srs = Util.getParamIgnoreCase(params, SRS_PARAM, "EPSG:4326");
-        String widthString = Util.getParamIgnoreCase(params, WIDTH_PARAM, null);
-        String heightString = Util.getParamIgnoreCase(params, HEIGHT_PARAM, null);
-        String background = Util.getParamIgnoreCase(params, BACKGROUND_PARAM, null);
-        String geomParam = Util.getParamIgnoreCase(params, GEOM_PARAM, null);
-        String geomType = Util.getParamIgnoreCase(params, GEOM_TYPE_PARAM, GeomFormat.WKT.toString());
+        String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
+        String widthString = Util.getParamText(params, WIDTH_PARAM);
+        String heightString = Util.getParamText(params, HEIGHT_PARAM);
+        String background = Util.getParamText(params, BACKGROUND_PARAM);
+        String geomParam = Util.getParamText(params, GEOM_PARAM);
+        String geomType = Util.getParam(params, GEOM_TYPE_PARAM, GeomFormat.WKT.toString());
 
         if (id == null && geomParam == null) {
             throw new BadParameterEx(Params.ID, "Either "+GEOM_PARAM+" or "+Params.ID+" is required");

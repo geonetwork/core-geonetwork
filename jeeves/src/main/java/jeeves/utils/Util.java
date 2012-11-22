@@ -245,38 +245,23 @@ public final class Util
 		return sw.toString();
 	}
 
-	public static String getParamIgnoreCase(Element params, String paramName) {
-        if (params == null) {
-            throw new MissingParameterEx(paramName);
+    public static String getParamText(Element params, String desired)
+    {
+        String value = getParam(params, desired, "");
+        if(value.length() == 0) {
+            return null;
         }
-
-        String value = getParamIgnoreCase(params, paramName, null);
-
-        if (value == null) {
-            throw new MissingParameterEx(paramName, params);
-        }
-
         return value;
-	}
-    @SuppressWarnings("unchecked")
-    public static String getParamIgnoreCase(Element params, String paramName, String defaultValue) {
-        if (params == null) {
-            throw new MissingParameterEx(paramName);
-        }
-        
-        for(Element child: ((List<Element>) params.getChildren())) {
-            if(child.getName().equalsIgnoreCase(paramName)) {
-                String value = child.getTextTrim();
-                if (value.length() == 0) {
-                    throw new BadParameterEx(paramName, params);
-                }
-
-                return value;
-            }
-        }
-        return defaultValue;
     }
 
+    public static void toLowerCase(Element params) {
+        for (Object o : params.getChildren()) {
+            if (o instanceof Element) {
+                Element element = (Element) o;
+                element.setName(element.getName().toLowerCase());
+            }
+        }
+    }
 	
 }
 
