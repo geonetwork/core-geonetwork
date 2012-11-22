@@ -63,19 +63,10 @@ public class ServerBeanPropertyUpdater {
 				if (originalURL instanceof String) {
 					String url = (String) originalURL;
 					String updatedURL = url.replace(urlPlaceHolder, baseURL);
-					if (!updatedURL.equals(getValue(bean.getKey(),
-							bean.getValue()))) {
-						setValue(bean.getKey(), bean.getValue(), updatedURL);
-					} else {
-						throw new IllegalStateException("Property "
-								+ bean.getValue()
-								+ " was expected to be set on bean: "
-								+ bean.getKey());
-					}
+					setValue(bean.getKey(), bean.getValue(), updatedURL);
 				}
 			}
 		}
-
 	}
 
 	private Object getValue(Object bean, String propertyName) throws Exception {

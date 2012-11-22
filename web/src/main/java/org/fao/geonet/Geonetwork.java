@@ -318,7 +318,7 @@ public class Geonetwork implements ApplicationHandler {
 		 
 		 // if the validator exists the proxyCallbackURL needs to have the external host and
 		 // servlet name added so that the cas knows where to send the validation notice
-		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl()+baseURL, servletContext);
+		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl(true)+baseURL, servletContext);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
