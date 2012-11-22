@@ -884,7 +884,7 @@
                     https then it needs the environment variables set as follows:
                     -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
                     -->
-              <port>8443</port>
+              <port>8493</port>
               <keystore>${project.basedir}/keystore.jks</keystore>
               <password>password</password>
               <keyPassword>password</keyPassword>
