@@ -9,6 +9,8 @@
 										xmlns:srv="http://www.isotc211.org/2005/srv"
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:ows="http://www.opengis.net/ows"
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xmlns:gmx="http://www.isotc211.org/2005/gmx"
 										exclude-result-prefixes="gmd srv gco">
 
 	<xsl:param name="displayInfo"/>
@@ -76,15 +78,11 @@
 				
 				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
 					<dc:subject>
-						<xsl:value-of select="'http://purl.org/myocean/ontology/vocabulary/my-ocean-areas#'" />
-						<xsl:apply-templates mode="localised" select=".">
-								<xsl:with-param name="langId" select="$langId"/>
-						</xsl:apply-templates>
+						<xsl:value-of select="gmx:Anchor/@xlink:href"></xsl:value-of>
 					</dc:subject>
 				</xsl:for-each>
 				<xsl:for-each select="../../gmd:topicCategory/gmd:MD_TopicCategoryCode">
 					<dc:subject>
-					<xsl:value-of select="'http://purl.org/myocean/ontology/vocabulary/my-ocean-areas#'" />
 					<xsl:value-of select="."/></dc:subject><!-- TODO : translate ? -->
 				</xsl:for-each>
 				
