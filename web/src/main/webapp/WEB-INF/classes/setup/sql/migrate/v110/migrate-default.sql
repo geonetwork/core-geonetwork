@@ -8,9 +8,8 @@ INSERT INTO settings VALUES ( 3, 1, 'wmtTimestamp', '20120809');
 
 UPDATE settings SET value='0 0 1 * * ?' where name = 'every';
 
-
+DROP TABLE sharedusers;
 ALTER TABLE users ALTER "password" TYPE character varying(120);
-
-ALTER TABLE usergroups ADD security varchar(128);
-ALTER TABLE usergroups ADD authtype varchar(32);
+ALTER TABLE users ADD security varchar(128);
+ALTER TABLE users ADD authtype varchar(32);
 
