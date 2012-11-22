@@ -13,6 +13,7 @@ import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -183,7 +184,23 @@ public final class XslUtil
             return "";
         }
     }
-    
+    /**
+     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     *
+     * @param iso3LangCode   The 2 iso lang code
+     * @return The related 3 iso lang code
+     */
+    public static String twoCharLangCode(String iso3LangCode) {
+        String iso2LangCode = "";
+
+        try {
+            iso2LangCode = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(iso3LangCode);
+        } catch (Exception ex) {
+            Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
+        }
+
+        return iso2LangCode;
+    }
     /**
      * Return '' or error message if error occurs during URL connection.
      * 
