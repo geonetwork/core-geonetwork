@@ -3560,8 +3560,9 @@ public class DataManager {
 
         Set<String> groups = null;
 
-        if (context != null)
+        if (context != null && context.getUserSession()!=null && context.getIpAddress() != null) {
             groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), true);
+        }
 
         List<?> elements = Xml.selectNodes(xPathExpressions, "*//xpathexpr");
         xPathExpressions.detach();

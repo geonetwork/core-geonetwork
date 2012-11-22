@@ -12,7 +12,7 @@
 		<value>ger</value>
 		<value>ita</value>
 	</util:set>
-	<bean id="RegionsDAO" class="org.fao.geonet.services.region.GeocatRegionsDAO">
+	<bean id="RegionsDAO" class="org.fao.geonet.services.region.geocat.GeocatRegionsDAO">
 		<property name="cacheAllRegionsInMemory" value="false"/>
 	</bean>
 </beans>
