@@ -331,5 +331,7 @@
 		</tip>
 	</tips>
 	
+  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

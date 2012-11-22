@@ -392,5 +392,7 @@
 	<db.maxactive>Maximum aantal databank connecties:</db.maxactive>	
 	<db.statserror>Databank statistieken:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

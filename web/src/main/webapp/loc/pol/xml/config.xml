@@ -412,5 +412,7 @@
 	<db.maxactive>Maksymalna liczba połączeń z bazą danych:</db.maxactive>	
 	<db.statserror>Statystyki bazy danych:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

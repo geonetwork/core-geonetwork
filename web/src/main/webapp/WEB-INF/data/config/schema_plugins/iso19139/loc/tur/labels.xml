@@ -2508,4 +2508,10 @@
         <label>Source URL</label>
         <description>URL of the document.</description>
     </element>
+  	<!-- ==================================================== -->
+    <element name="hidden-elements">
+        <label>Hidden Elements</label>
+        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+    </element>
+    
 </labels>

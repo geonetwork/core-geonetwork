@@ -187,7 +187,7 @@ public class EditLib {
 		List listAtts = md.getAttributes();
 		for (int i=0; i<listAtts.size(); i++) {
 			Attribute attr = (Attribute) listAtts.get(i);
-			if (Edit.NS_PREFIX.equals(attr.getNamespacePrefix())) {
+			if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
 				attr.detach();
 				i--;
 			}
@@ -197,7 +197,7 @@ public class EditLib {
 		List list = md.getChildren();
 		for (int i=0; i<list.size(); i++) {
 			Element child = (Element) list.get(i);
-			if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix()))
+			if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
 				removeEditingInfo(child);
 			else {
 				child.detach();
@@ -226,7 +226,7 @@ public class EditLib {
         for (Object aList : list) {
             Element child = (Element) aList;
 
-            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+            if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 child = findElement(child, ref);
 
                 if (child != null) {
@@ -759,7 +759,7 @@ public class EditLib {
 
         for (Object aList : list) {
             Element child = (Element) aList;
-            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+            if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 ref = enumerateTree(child, ref + 1, thisParent);
             }
         }
@@ -808,7 +808,7 @@ public class EditLib {
         for (Object aList : list) {
             Element child = (Element) aList;
 
-            if (!Edit.NS_PREFIX.equals(child.getNamespacePrefix())) {
+            if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 expandTree(schema, child);
             }
         }
@@ -1109,7 +1109,7 @@ public class EditLib {
      * @return
      */
 	private boolean equal(String childName, String childNS, Element el) {
-		if (Edit.NS_URI.equals(el.getNamespaceURI())) {
+		if (Edit.NAMESPACE.getURI().equals(el.getNamespaceURI())) {
             return Edit.RootChild.CHILD.equals(el.getName())
                     && childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME))
                     && childNS.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE));
@@ -1129,8 +1129,8 @@ public class EditLib {
 		String elemNS1 = el1.getNamespaceURI();
 		String elemNS2 = el2.getNamespaceURI();
 
-		if (Edit.NS_URI.equals(elemNS1)) {
-			if (Edit.NS_URI.equals(elemNS2)) {
+		if (Edit.NAMESPACE.getURI().equals(elemNS1)) {
+			if (Edit.NAMESPACE.getURI().equals(elemNS2)) {
 				//--- both are geonet:child elements
 
 				if (!Edit.RootChild.CHILD.equals(el1.getName()))
@@ -1160,7 +1160,7 @@ public class EditLib {
 			}
 		}
 		else {
-			if (Edit.NS_URI.equals(elemNS2)) {
+			if (Edit.NAMESPACE.getURI().equals(elemNS2)) {
 				//--- el2 is a geonet:child, el1 is not
 
 				if (!Edit.RootChild.CHILD.equals(el2.getName()))

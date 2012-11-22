@@ -304,6 +304,8 @@
 	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
 	<data.subversionPath>Subversion directory:</data.subversionPath>
 	<data.codeListDir>Thesaurus directory:</data.codeListDir>
+  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 	
 </strings>
 

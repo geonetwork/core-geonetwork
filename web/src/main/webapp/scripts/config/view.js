@@ -188,6 +188,8 @@ ConfigView.prototype.setData = function(data)
 	$('oai.tokentimeout').value   = data['OAI_TOKENTIMEOUT'];
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
+	$('hidewithheldelements.enable').checked = data['HIDEWITHHELDELEMENTS_ENABLE'] == 'true';
+	$('hidewithheldelements.keepMarkedElement').checked = data['HIDEWITHHELDELEMENTS_keepMarkedElement'] == 'true';
 
     $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
     $('requestedLanguage.only').checked = data['REQUESTED_LANGUAGE_ONLY'] == 'true';
@@ -301,6 +303,8 @@ ConfigView.prototype.getData = function()
 		OAI_CACHESIZE			: $('oai.cachesize')  .value,
 
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
+		HIDEWITHHELDELEMENTS_ENABLE : $('hidewithheldelements.enable').checked,
+		HIDEWITHHELDELEMENTS_keepMarkedElement : $('hidewithheldelements.keepMarkedElement').checked,
 
         AUTODETECT_ENABLE : $('autodetect.enable').checked,
         REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').checked,

@@ -36,10 +36,7 @@ public class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
-	public static final Namespace XSD_NAMESPACE = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
-	public static final Namespace XSI_NAMESPACE = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-	public static final Namespace OASIS_CATALOG_NAMESPACE = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
-
+	
 	public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
 
@@ -495,6 +492,7 @@ public class Geonet {
 		public static final String UPLOAD_DIR = "uploadDir";
 		public static final String RESOURCES_DIR = "resources";
 		public static final String SYSTEM_DATA_DIR = "geonetworkDataDir";
+		public static final String HIDE_WITHHELD_ELEMENTS = "hidewithheldelements";
 	}
 
     /**
@@ -574,4 +572,15 @@ public class Geonet {
 		public static final String MEF_EXPORT        = "mef.export";
 	}
 
+	public static class Namespaces {
+		public static final Namespace GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+		public static final Namespace GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
+		public static final Namespace GMX = Namespace.getNamespace("gmx", "http://www.isotc211.org/2005/gmx");
+		public static final Namespace GMD = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+		public static final Namespace OASIS_CATALOG = Namespace.getNamespace("urn:oasis:names:tc:entity:xmlns:xml:catalog");
+		public static final Namespace SRV = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+		public static final Namespace XLINK = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+	}
 }

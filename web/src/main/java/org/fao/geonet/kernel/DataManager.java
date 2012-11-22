@@ -45,6 +45,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -89,7 +90,9 @@ import java.util.concurrent.Executors;
 public class DataManager {
     
 
-    //--------------------------------------------------------------------------
+    private boolean hideWithheldElements;
+
+	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -106,39 +109,27 @@ public class DataManager {
     /**
      * Initializes the search manager and index not-indexed metadata.
      *
-     * @param context
-     * @param svnManager
-     * @param xmlSerializer
-     * @param scm
-     * @param sm
-     * @param am
-     * @param dbms
-     * @param ss
-     * @param baseURL
-     * @param dataDir
-     * @param thesaurusDir TODO
-     * @param appPath
      * @throws Exception
      */
-	public DataManager(ServiceContext context, SvnManager svnManager, XmlSerializer xmlSerializer, SchemaManager scm, SearchManager sm, AccessManager am, Dbms dbms, SettingManager ss, String baseURL, String dataDir, String thesaurusDir, String appPath) throws Exception {
-		searchMan = sm;
-		accessMan = am;
-		settingMan= ss;
-		schemaMan = scm;
+	public DataManager(DataManagerParameter parameterObject) throws Exception {
+		searchMan = parameterObject.searchManager;
+		accessMan = parameterObject.accessManager;
+		settingMan= parameterObject.settingsManager;
+		schemaMan = parameterObject.schemaManager;
 		editLib = new EditLib(schemaMan);
-        servContext=context;
+        servContext=parameterObject.context;
 
-		this.baseURL = baseURL;
-        this.dataDir = dataDir;
-        this.thesaurusDir = thesaurusDir;
-		this.appPath = appPath;
+		this.baseURL = parameterObject.baseURL;
+        this.dataDir = parameterObject.dataDir;
+        this.thesaurusDir = parameterObject.thesaurusDir;
+		this.appPath = parameterObject.appPath;
 
-		stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
+		stylePath = parameterObject.context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
 
-		this.xmlSerializer = xmlSerializer;
-		this.svnManager    = svnManager;
+		this.xmlSerializer = parameterObject.xmlSerializer;
+		this.svnManager    = parameterObject.svnManager;
 
-		init(context, dbms, false);
+		init(parameterObject.context, parameterObject.dbms, false);
 	}
 
 	/**
@@ -681,7 +672,7 @@ public class DataManager {
      * @throws Exception
      */
 	public void validate(String schema, Element md) throws Exception {
-		String schemaLoc = md.getAttributeValue("schemaLocation", Geonet.XSI_NAMESPACE);
+		String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of "+schemaLoc);
 		if (schemaLoc == null) schemaLoc = "";
@@ -710,7 +701,7 @@ public class DataManager {
      * @throws Exception
      */
 	public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
-		String schemaLoc = md.getAttributeValue("schemaLocation", Geonet.XSI_NAMESPACE);
+		String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of "+schemaLoc);
 		if (schemaLoc == null) schemaLoc = "";

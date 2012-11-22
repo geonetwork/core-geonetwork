@@ -56,6 +56,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.DataManagerParameter;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -342,8 +343,22 @@ public class Geonetwork implements ApplicationHandler {
 		} else {
 			xmlSerializer = new XmlSerializerDb(settingMan);
 		}
+		
+		DataManagerParameter dataManagerParameter = new DataManagerParameter();
+		dataManagerParameter.context = context;
+		dataManagerParameter.svnManager = svnManager;
+		dataManagerParameter.searchManager = searchMan;
+		dataManagerParameter.xmlSerializer = xmlSerializer;
+		dataManagerParameter.schemaManager = schemaMan;
+		dataManagerParameter.accessManager = accessMan;
+		dataManagerParameter.dbms = dbms;
+		dataManagerParameter.settingsManager = settingMan;
+		dataManagerParameter.baseURL = baseURL;
+		dataManagerParameter.dataDir = dataDir;
+		dataManagerParameter.thesaurusDir = thesauriDir;
+		dataManagerParameter.appPath = path;
 
-		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, path);
+		DataManager dataMan = new DataManager(dataManagerParameter);
 
 
         /**

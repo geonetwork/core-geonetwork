@@ -57,6 +57,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			OAI_TOKENTIMEOUT  : xml.evalXPath(node, 'oai/tokentimeout'),
 
 			XLINKRESOLVER_ENABLE      : xml.evalXPath(node, 'xlinkResolver/enable'),
+			HIDEWITHHELDELEMENTS_ENABLE      : xml.evalXPath(node, 'hidewithheldelements/enable'),
+			HIDEWITHHELDELEMENTS_keepMarkedElement      : xml.evalXPath(node, 'hidewithheldelements/keepMarkedElement'),
 
 			SEARCHSTATS_ENABLE        : xml.evalXPath(node, 'searchStats/enable'),
 
@@ -187,6 +189,10 @@ ConfigModel.updateTemp =
 '	<xlinkResolver>'+
 '		<enable>{XLINKRESOLVER_ENABLE}</enable>'+
 '	</xlinkResolver>'+
+'	<hidewithheldelements>'+
+'		<enable>{HIDEWITHHELDELEMENTS_ENABLE}</enable>'+
+'		<keepMarkedElement>{HIDEWITHHELDELEMENTS_keepMarkedElement}</keepMarkedElement>'+
+'	</hidewithheldelements>'+
 '	<searchStats>'+
 '		<enable>{SEARCHSTATS_ENABLE}</enable>'+
 '	</searchStats>'+
