@@ -49,17 +49,28 @@ GeoNetwork.editor.HelpPanel = Ext.extend(Ext.Panel, {
     /**
      * TODO : add depth parameter to display help on up sections until editor body root
      */
-    loadHelp: function(id, sectionId, updateMessage, cb){
+    loadHelp: function(id, sectionId, markupTip, cb){
         if (!this.cache[id]) {
             var panel = this;
             GeoNetwork.util.HelpTools.get(id, this.editor.metadataSchema, this.editor.catalogue.services.schemaInfo, function(r) {
                 panel.cache[id] = panel.tipTpl.apply(r.records[0].data);
-                
-                panel.update(panel.cache[id]);
+                var sectionTip = sectionId?panel.cache[sectionId]:"";
+                var markup = markupTip ? markupTip : "";
+                if(cb) {
+                	cb();
+                } else {
+                	panel.update(panel.cache[id] + sectionTip + markup);
+                }
             });
+        } else {
+            if(cb) {
+            	cb();
+            } else {
+            	panel.update(panel.cache[id] + sectionTip + markup);
+            }        	
         }
     },
-    updateHelp: function(id, section){
+    updateHelp: function(id, section, markupTip){
         // Don't load help when panel is collapsed to avoid too many useless queries
         if (this.collapsed) {
             return;
@@ -75,12 +86,13 @@ GeoNetwork.editor.HelpPanel = Ext.extend(Ext.Panel, {
         }
         
         if (this.cache[id] && this.cache[sectionId]) {
-            this.update(this.cache[id] + this.cache[sectionId]);
+        	var markup = markupTip ? markupTip : "";
+            this.update(this.cache[id] + this.cache[sectionId] + markup);
         } else {
             if (sectionId) {
-                this.loadHelp(sectionId, null, false, panel.loadHelp(id, sectionId, true));
+                this.loadHelp(sectionId, undefined, markupTip, function() {panel.loadHelp(id, sectionId, markupTip)});
             } else {
-                this.loadHelp(id, null, true);
+                this.loadHelp(id, undefined, markupTip);
             }
         }
     },

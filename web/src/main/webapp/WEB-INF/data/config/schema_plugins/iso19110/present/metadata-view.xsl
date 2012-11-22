@@ -5,14 +5,19 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 exclude-result-prefixes="#all">
 
-
+  <xsl:include href="metadata-markup.xsl"/>
 
     <xsl:template name="view-with-header-iso19110">
         <xsl:param name="tabs"/>
 
         <xsl:call-template name="md-content">
             <xsl:with-param name="title">
-                <xsl:value-of select="//gfc:FC_FeatureCatalogue/gfc:name" />
+		        <xsl:call-template name="processText">
+		          <xsl:with-param name="node" select="//gfc:FC_FeatureCatalogue/gfc:name"/>
+		          <xsl:with-param name="text">
+		            <xsl:value-of select="//gfc:FC_FeatureCatalogue/gfc:name"/>
+		          </xsl:with-param>
+		        </xsl:call-template>
             </xsl:with-param>
             <xsl:with-param name="exportButton"/>
             <xsl:with-param name="logo">
@@ -37,7 +42,14 @@
     <xsl:template name="metadata-iso19110view-simple" match="metadata-iso19110view-simple">
 
         <xsl:call-template name="md-content">
-            <xsl:with-param name="title" select="//gfc:FC_FeatureCatalogue/gfc:name"/>
+            <xsl:with-param name="title">
+		        <xsl:call-template name="processText">
+		          <xsl:with-param name="node" select="//gfc:FC_FeatureCatalogue/gfc:name"/>
+		          <xsl:with-param name="text">
+		            <xsl:value-of select="//gfc:FC_FeatureCatalogue/gfc:name"/>
+		          </xsl:with-param>
+		        </xsl:call-template>
+            </xsl:with-param>
             <xsl:with-param name="exportButton"/>
             <xsl:with-param name="abstract"/>
             <xsl:with-param name="logo">

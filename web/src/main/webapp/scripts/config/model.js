@@ -73,6 +73,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
 
 			
             CLICKABLE_HYPERLINKS         : xml.evalXPath(node, 'clickablehyperlinks/enable'),
+            WIKI_MARKUP         		 : xml.evalXPath(node, 'wiki/markup'),
 
             INSPIRE           : xml.evalXPath(node, 'inspire/enable'),
             INSPIRE_SEARCH_PANEL           : xml.evalXPath(node, 'inspire/enableSearchPanel'),
@@ -212,6 +213,9 @@ ConfigModel.updateTemp =
 '	<clickablehyperlinks>' +
 '		<enable>{CLICKABLE_HYPERLINKS}</enable>'+
 '	</clickablehyperlinks>' +
+'	<wiki>' +
+'		<markup>{WIKI_MARKUP}</markup>'+
+'	</wiki>' +
 '	<localrating>' +
 '		<enable>{LOCAL_RATING}</enable>'+
 '	</localrating>' +

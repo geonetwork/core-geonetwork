@@ -112,6 +112,9 @@
     <cswMetadataPublic>Toegevoegde metadata is publiek beschikbaar</cswMetadataPublic>
     
 	<clickablehyperlinks>Aanklikbare hyperlinks</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 	
 	<localrating>Lokale Waardering</localrating>
     <autofixing>Automatische correcties</autofixing>

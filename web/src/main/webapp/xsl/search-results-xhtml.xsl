@@ -447,15 +447,21 @@
 						<div class="hittext_middle">
 							<div class="caption"><xsl:value-of select="/root/gui/strings/abstract"/></div>
 							<div class="abstract1">
-								<xsl:choose>
-									<!-- show a maximum of $maxAbstract characters in the abstract -->
-									<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
-										<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>...
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$metadata/abstract"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:variable name="text">
+									<xsl:choose>
+										<!-- show a maximum of $maxAbstract characters in the abstract -->
+										<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
+											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>...
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$metadata/abstract"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:variable>
+								<xsl:call-template name="processText">
+									<xsl:with-param name="node" select="$metadata/abstract"/>
+									<xsl:with-param name="text" select="$text"/>
+								</xsl:call-template>
 							</div>
 						</div>
 					</xsl:if>

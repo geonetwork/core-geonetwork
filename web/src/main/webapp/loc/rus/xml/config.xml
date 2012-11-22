@@ -111,6 +111,9 @@
     <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
 	
 	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 	
 	<localrating>Местные Рейтинг</localrating>
     <autofixing>Автоматического исправления</autofixing>

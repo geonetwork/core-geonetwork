@@ -111,6 +111,9 @@
     <cswMetadataPublic>Il metadato inserito è pubblico</cswMetadataPublic>
     
 	<clickablehyperlinks>Hyperlink cliccabili</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 
 	<localrating>Valutazione Locale</localrating>
     <autofixing>Correzioni automatiche</autofixing>

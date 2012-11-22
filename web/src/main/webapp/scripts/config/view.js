@@ -214,7 +214,9 @@ ConfigView.prototype.setData = function(data)
 	$('indexoptimizer.interval.hour').value = data['INDEXOPTIMIZER_INTERVAL_HOUR'];
 	$('indexoptimizer.interval.min').value  = data['INDEXOPTIMIZER_INTERVAL_MIN'];
 	
-	$('clickablehyperlinks.enable').checked = data['CLICKABLE_HYPERLINKS'] == 'true';
+	var hyperlinks = $('clickablehyperlinks.enable');
+	hyperlinks.checked = data['CLICKABLE_HYPERLINKS'] == 'true';
+	$('wiki.markup').value = data['WIKI_MARKUP'];
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
 	$('autofixing.enable').checked = data['AUTO_FIXING'] == 'true';
@@ -330,6 +332,7 @@ ConfigView.prototype.getData = function()
 		INDEXOPTIMIZER_INTERVAL_MIN:  $('indexoptimizer.interval.min') .value,
 
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
+		WIKI_MARKUP : $F('wiki.markup'),
 		
 		LOCAL_RATING : $('localrating.enable').checked,
 		AUTO_FIXING : $('autofixing.enable').checked,

@@ -20,23 +20,38 @@ function toolTip(spanId)
 		
 		ker.send('xml.schema.info', request, ker.wrap(this, function(xmlRes) {
 			var htmlTip = '';
-			tip = document.createElement('div');
-			tip.className     = 'toolTipOverlay';
-			
+
 			if (xmlRes.nodeName == 'error') {
 				//ker.showError(translate('cannotGetTooltip'), xmlRes);
 				htmlTip = translate('cannotGetTooltip');
 			} else {
 				htmlTip= getHtmlTip(xmlRes.getElementsByTagName('element')[0]);
 			}
-			tip.innerHTML     = htmlTip;
-			elem.appendChild(tip);
-			
+			showSimpleToolTip(elem, htmlTip);
 		}));	
 	} else { 
 		childs = elem.childElements();
 		childs[0].toggle();
 	}
+}
+
+function showMarkupToolTip(spanId, htmlTip, markupName, syntaxLink) {
+	var elem = $(spanId);
+	if (elem.childElements().length == 0) {
+		var link = '<a href="javascript:openPage(\''+syntaxLink+'\')">'+syntaxLink+'</a>';
+		var tipText = htmlTip.replace("@@markupName@@", markupName).replace("@@syntaxLink@@", link);
+		showSimpleToolTip(elem, tipText);
+	} else { 
+		childs = elem.childElements();
+		childs[0].toggle();
+	}
+}
+
+function showSimpleToolTip(elem, htmlTip) {
+	tip = document.createElement('div');
+	tip.className     = 'toolTipOverlay';
+	tip.innerHTML     = htmlTip;
+	elem.appendChild(tip);
 }
 
 //=========================================================================

@@ -27,7 +27,6 @@ import jeeves.server.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
@@ -40,10 +39,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,9 +109,24 @@ public class LuceneConfig {
 		}
 	};
 
+	public class DumpField {
+	    private String tagName;
+	    private String indexField;
+	    private boolean markup;
+        public DumpField(String tagName, String indexField, String markup) {
+            super();
+            this.tagName = tagName;
+            this.indexField = indexField;
+            this.markup = Boolean.parseBoolean(markup);
+        }
+        public String getTagName() { return tagName; }
+        public String getFieldName() { return indexField; }
+        public boolean isMarkup() { return markup; }
+	}
+
 	private Set<String> tokenizedFields = new HashSet<String>();
 	private Map<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
-	private Map<String, String> dumpFields = new HashMap<String, String>();
+	private Map<String /*IndexFieldName*/, DumpField> dumpFields = new HashMap<String, DumpField>();
 
 	private String defaultAnalyzerClass;
 
@@ -120,15 +134,15 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
     private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> analyzerParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String boostQueryClass;
 	private Map<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> boostQueryParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String documentBoostClass;
     private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-    private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+    private Map<String, Class<?>[]> documentBoostParametersClass = new HashMap<String, Class<?>[]>();
 
 	private Element luceneConfig;
 
@@ -144,7 +158,6 @@ public class LuceneConfig {
 
 	private Version LUCENE_VERSION = Version.LUCENE_30;
 	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_30;
-
 	
     /**
 	 * Creates a new Lucene configuration from an XML configuration file.
@@ -325,12 +338,13 @@ public class LuceneConfig {
 						Element e = (Element) o;
 						String name = e.getAttributeValue("name");
 						String tagName = e.getAttributeValue("tagName");
+						String markupElement = e.getAttributeValue("markup");
 						if (name == null || tagName == null) {
 							Log.warning(
 									Geonet.SEARCH_ENGINE,
 									"Field must have a name and an tagName attribute, check Lucene configuration file.");
 						} else {
-							dumpFields.put(name, tagName);
+							dumpFields.put(name, new DumpField(name, tagName, markupElement));
 						}
 					}
 				}				
@@ -512,7 +526,7 @@ public class LuceneConfig {
 	/**
 	 * @return The list of fields to dump from the index on fast search.
 	 */
-	public Map<String, String> getDumpFields() {
+	public Map<String, DumpField> getDumpFields() {
 		return this.dumpFields;
 	}
 	

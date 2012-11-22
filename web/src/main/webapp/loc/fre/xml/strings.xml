@@ -1358,4 +1358,22 @@
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	<markup>
+	  <title>Markup</title>
+	  <tip>@@markupName@@ markup can be used for formatting the text in this element.&lt;p>For help on the syntax visit: &lt;div> @@syntaxLink@@ &lt;/div>&lt;/p></tip>
+	  <link>
+	    <org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage>https://confluence.atlassian.com/display/CONF43/Confluence+Wiki+Markup</org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage>
+	    <org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage>http://www.mediawiki.org/wiki/Help:Formatting</org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage>
+	    <org.eclipse.mylyn.wikitext.textile.core.TextileLanguage>http://redcloth.org/textile</org.eclipse.mylyn.wikitext.textile.core.TextileLanguage>
+	    <org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage>http://trac.edgewall.org/wiki/WikiFormatting</org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage>
+	    <org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules</org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>
+    </link>
+    <name>
+	    <org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage>Confluence</org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage>
+	    <org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage>Mediawiki</org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage>
+	    <org.eclipse.mylyn.wikitext.textile.core.TextileLanguage>Textile</org.eclipse.mylyn.wikitext.textile.core.TextileLanguage>
+	    <org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage>Trac Wiki</org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage>
+	    <org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>TWiki</org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>
+    </name>
+  </markup>
 </strings>

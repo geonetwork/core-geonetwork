@@ -173,6 +173,7 @@ public class Geonet {
         public static final String SERVER_HOST = "system/server/host";
         public static final String SERVER_PORT = "system/server/port";
         public static final String SERVER_PROTOCOL = "system/server/protocol";
+        public static final String WIKI_SYNTAX = "system/wiki/markup";
     }
 
     /**

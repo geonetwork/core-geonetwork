@@ -18,3 +18,7 @@ ALTER TABLE HarvestHistory ADD elapsedTime int;
 
 UPDATE Settings SET value='2.9.0' WHERE name='version';
 UPDATE Settings SET value='0' WHERE name='subVersion';
+
+
+INSERT INTO Settings VALUES (960,1,'wiki',NULL);
+INSERT INTO Settings VALUES (961,960,'markup','none');

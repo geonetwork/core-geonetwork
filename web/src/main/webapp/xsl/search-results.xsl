@@ -259,26 +259,32 @@
 							<tr>
 								<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/abstract"/></th>
 								<td class="padded" valign="top" colspan="2">
-									<xsl:choose>
-										<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
-											<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>
-											<xsl:choose>
-												<xsl:when test="$remote=true()">
-													<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
-														...<xsl:value-of select="/root/gui/strings/more"/>...
-													</a>
-												</xsl:when>
-												<xsl:otherwise>
-													<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
-														...<xsl:value-of select="/root/gui/strings/more"/>...
-													</a>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="$metadata/abstract"/>
-										</xsl:otherwise>
-									</xsl:choose>
+									<xsl:variable name="text">
+										<xsl:choose>
+											<xsl:when test="string-length ($metadata/abstract) &gt; $maxAbstract">
+												<xsl:value-of select="substring ($metadata/abstract, 0, $maxAbstract)"/>
+												<xsl:choose>
+													<xsl:when test="$remote=true()">
+														<a href="{/root/gui/locService}/remote.show?id={$metadata/geonet:info[server]/id}&amp;currTab=simple">
+															...<xsl:value-of select="/root/gui/strings/more"/>...
+														</a>
+													</xsl:when>
+													<xsl:otherwise>
+														<a href="{/root/gui/locService}/metadata.show?id={$metadata/geonet:info/id}&amp;currTab=simple">
+															...<xsl:value-of select="/root/gui/strings/more"/>...
+														</a>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="$metadata/abstract"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:variable>
+									<xsl:call-template name="processText">
+										<xsl:with-param name="node" select="$metadata/abstract"/>
+										<xsl:with-param name="text" select="$text"/>
+									</xsl:call-template>
 								</td>
 							</tr>
 						</xsl:if>

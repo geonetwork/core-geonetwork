@@ -160,7 +160,7 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
         '<ul>',
             '<tpl for=".">',
                 '<li class="md md-thumbnail" style="{featurecolorCSS}">',
-                '<div class="md-wrap" id="{uuid}" title="{abstract}">',
+                '<div class="md-wrap" id="{uuid}" title="{values.abstract.replace(\'"\', \'\\")\'}">',
                     GeoNetwork.Templates.TITLE,
                     '<div class="thumbnail">',
                         '<tpl if="thumbnail">',

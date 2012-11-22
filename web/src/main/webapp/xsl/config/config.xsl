@@ -56,7 +56,7 @@
 		<xsl:call-template name="searchStats"/>
         <xsl:call-template name="multilingual"/>
 		<xsl:call-template name="downloadservice"/>
-		<xsl:call-template name="hyperlinks"/>
+		<xsl:call-template name="metadataTextContent"/>
 		<xsl:call-template name="localrating"/>
         <xsl:call-template name="autofixing"/>
         <xsl:call-template name="inspire"/>
@@ -553,14 +553,27 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
-	<xsl:template name="hyperlinks">
-		<h1 align="left"><xsl:value-of select="/root/gui/config/clickablehyperlinks"/></h1>
+	<xsl:template name="metadataTextContent">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/metadataTextContent"/></h1>
 
 		<div align="left" style="{$style}">
 			<table>
 				<tr>
-					<td class="padded" width="{$width}"><label for="clickablehyperlinks.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
+					<td class="padded" width="{$width}"><label for="clickablehyperlinks.enable"><xsl:value-of select="/root/gui/config/clickablehyperlinks"/></label></td>
 					<td class="padded"><input id="clickablehyperlinks.enable" class="content" type="checkbox" value=""/></td>
+				</tr>
+				<tr>
+					<td class="padded" width="{$width}"><label for="wiki.markup"><xsl:value-of select="/root/gui/config/markup"/></label></td>
+					<td class="padded">
+						<select id="wiki.markup" name="wiki.markup" class="content">
+							<option value="none"><xsl:value-of select="/root/gui/config/none"/></option>
+							<option value="org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage">Confluence Wiki Markup</option>
+							<option value="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage">Mediawiki Markup</option>
+							<option value="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage">Textile Markup</option>
+							<option value="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage">Trac Wiki Markup</option>
+							<option value="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage">TWiki Markup</option>
+						</select>
+					</td>
 				</tr>
 			</table>
 		</div>

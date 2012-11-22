@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:java="java:org.fao.geonet.util.XslUtil"
+    xmlns:exslt="http://exslt.org/common" 
 	xmlns:fn="http://www.w3.org/2005/02/xpath-functions"
-	exclude-result-prefixes="fn">
+	exclude-result-prefixes="#all">
 <!--							-->
 <!-- Collection of utilities handy in text processing.	-->
 <!--							-->
@@ -30,6 +32,32 @@
 		</xsl:choose>			
 	</xsl:template>
 		
+	<xsl:template name="processText">
+		<xsl:param name="node" select="."/>
+		<xsl:param name="text"/>
+	    <xsl:variable name="allowMarkup">
+			<xsl:apply-templates mode="permitMarkup" select="$node"/>
+		</xsl:variable>
+		
+        <xsl:variable name="textnode" select="exslt:node-set($text)"/>
+        
+		<xsl:choose>
+          <xsl:when test="count($textnode/*) &gt; 0">
+			<!-- In some templates, text already contains HTML (eg. codelist, link for download).
+			     In that case copy text content and does not resolve
+				 hyperlinks. -->
+			<xsl:copy-of select="$text"/>
+		  </xsl:when>
+          <xsl:when test="/root/gui/env/wiki/markup != 'none' and $allowMarkup = 'true'">
+            <xsl:copy-of select="java:parseWikiText($text, string($text), string(/root/gui/env/wiki/markup))"></xsl:copy-of>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="addLineBreaksAndHyperlinks">
+              <xsl:with-param name="txt" select="$text"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+	</xsl:template>
 	<!--										-->
 	<!-- Template to add HTML hyperlinks if your text contains them; also breaks 	-->
 	<!-- long words that might otherwise run outside your containing <div>.		-->
@@ -354,5 +382,4 @@
 		</xsl:choose>
 	</xsl:template>
 	
-
 </xsl:stylesheet> 

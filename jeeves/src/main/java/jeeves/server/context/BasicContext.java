@@ -30,6 +30,7 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.utils.SerialFactory;
 
 import java.util.Hashtable;
+import java.util.Map.Entry;
 
 //=============================================================================
 
@@ -93,6 +94,20 @@ public class BasicContext
 	{
 		return htContexts.get(contextName);
 	}
+    public<T> T getHandlerContext(Class<T> class1) {
+        T match = null; 
+        for (Entry<String, Object> entry : htContexts.entrySet()) {
+            if (class1.isAssignableFrom(entry.getValue().getClass())) {
+                if(match !=null ){
+                    throw new IllegalArgumentException(class1+" has multiple matches");
+                } else {
+                    match = class1.cast(entry.getValue());
+                }
+            }
+        }
+        return match;
+    }
+
 
 	//--------------------------------------------------------------------------
 

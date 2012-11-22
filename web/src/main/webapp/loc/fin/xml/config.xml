@@ -100,6 +100,9 @@
     <cswMetadataPublic>Lisättävä metatieto on julkinen.</cswMetadataPublic>
     
 	<clickablehyperlinks>Linkkejä voi klikata</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 
 	<localrating>Arvostelu on mahdollista.</localrating>
 		

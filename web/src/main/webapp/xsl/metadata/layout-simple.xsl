@@ -58,7 +58,9 @@
         <xsl:value-of select="$title"/>
       </label>
       <div>
-        <xsl:copy-of select="$content"/>
+        <xsl:call-template name="processText">
+          <xsl:with-param name="text" select="$content"/>
+        </xsl:call-template>
       </div>
     </div>
   </xsl:template>

@@ -395,23 +395,49 @@
       <scope>provided</scope>
     </dependency>
     
+    <!-- dependencies for formatters's pdf output -->
     <dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-core</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf-itext5</artifactId>
-		<version>9.0.1</version>
-	</dependency>
+  		<groupId>org.xhtmlrenderer</groupId>
+  		<artifactId>flying-saucer-core</artifactId>
+  		<version>9.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.xhtmlrenderer</groupId>
+  		<artifactId>flying-saucer-pdf</artifactId>
+  		<version>9.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.xhtmlrenderer</groupId>
+  		<artifactId>flying-saucer-pdf-itext5</artifactId>
+  		<version>9.0.1</version>
+  	</dependency>
 	
-	
+    <!-- dependencies for allowing wiki syntax in metadata -->
+    <dependency>
+    	<groupId>org.fusesource.wikitext</groupId>
+    	<artifactId>mediawiki-core</artifactId>
+    	<version>1.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.fusesource.wikitext</groupId>
+    	<artifactId>confluence-core</artifactId>
+    	<version>1.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.fusesource.wikitext</groupId>
+    	<artifactId>textile-core</artifactId>
+    	<version>1.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.fusesource.wikitext</groupId>
+    	<artifactId>tracwiki-core</artifactId>
+    	<version>1.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.fusesource.wikitext</groupId>
+    	<artifactId>twiki-core</artifactId>
+    	<version>1.3</version>
+    </dependency>
 	</dependencies>
 
   

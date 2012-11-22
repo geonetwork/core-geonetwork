@@ -94,6 +94,9 @@
     <cswMetadataPublic>Eklenen üstveri genedir.</cswMetadataPublic>
     
 	<clickablehyperlinks>Tıklanabilir üstbağ</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 
 	<localrating>Yerel Değerlendirme</localrating>
     <autofixing>Otomatik Düzeltmeler</autofixing>

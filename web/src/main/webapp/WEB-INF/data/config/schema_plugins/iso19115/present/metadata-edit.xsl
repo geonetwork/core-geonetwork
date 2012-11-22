@@ -20,7 +20,14 @@
   <xsl:template name="metadata-iso19115view-simple" match="metadata-iso19115view-simple">
     
     <xsl:call-template name="md-content">
-      <xsl:with-param name="title" select="//idCitation/resTitle"/>
+	  <xsl:with-param name="title">
+		<xsl:call-template name="processText">
+			<xsl:with-param name="node" select="//idCitation/resTitle"/>
+			<xsl:with-param name="text">
+				<xsl:value-of select="//idCitation/resTitle" />
+			</xsl:with-param>
+		</xsl:call-template>
+	  </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract"/>
       <xsl:with-param name="logo"/>

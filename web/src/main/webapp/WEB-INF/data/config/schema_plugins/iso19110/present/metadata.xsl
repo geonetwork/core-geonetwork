@@ -21,6 +21,7 @@
     exclude-result-prefixes="gfc gmx gmd gco geonet">
 
   <xsl:include href="metadata-fop.xsl"/>
+  <xsl:include href="metadata-markup.xsl"/>
   
 	<!-- main template - the way into processing iso19110 -->
 	<xsl:template name="metadata-iso19110">

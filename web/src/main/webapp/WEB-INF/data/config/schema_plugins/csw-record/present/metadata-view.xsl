@@ -4,10 +4,19 @@
   xmlns:dc = "http://purl.org/dc/elements/1.1/"
   xmlns:dct = "http://purl.org/dc/terms/">
 
+  <xsl:include href="metadata-markup.xsl"/>
+
   <xsl:template name="metadata-csw-recordview-simple" match="metadata-csw-recordview-simple">
 
     <xsl:call-template name="md-content">
-      <xsl:with-param name="title" select="//dc:title"/>
+      <xsl:with-param name="title">
+        <xsl:call-template name="processText">
+          <xsl:with-param name="node" select="//dc:title"/>
+          <xsl:with-param name="text">
+            <xsl:value-of select="//dc:title"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract"/>
       <xsl:with-param name="logo">

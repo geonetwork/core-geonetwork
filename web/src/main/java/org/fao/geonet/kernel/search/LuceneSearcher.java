@@ -83,11 +83,14 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.search.LuceneConfig.DumpField;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -99,6 +102,8 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.util.JODAISODate;
+import org.fao.geonet.util.MarkupParserCache;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 import com.google.common.collect.Maps;
@@ -279,11 +284,11 @@ public class LuceneSearcher extends MetaSearcher {
 					Element md = null;
 	
 					if (fast) {
-						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null);
+						md = LuceneSearcher.getMetadataFromIndex(srvContext, doc, id, false, null);
 					}
                     else if ("index".equals(sFast)) {
 					    // Retrieve information from the index for the record
-						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _luceneConfig.getDumpFields());
+						md = LuceneSearcher.getMetadataFromIndex(srvContext, doc, id, true, _luceneConfig.getDumpFields());
 					    
 						// Retrieve dynamic properties according to context (eg. editable)
                         gc.getDataManager().buildExtraMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
@@ -1383,15 +1388,12 @@ public class LuceneSearcher extends MetaSearcher {
 	/**
 	 * Retrieves metadata from the index.
 	 * 
-	 * @param doc
-	 * @param id
 	 * @param dumpAllField	If dumpFields is null and dumpAllField set to true, dump all index content.
 	 * @param dumpFields	If not null, dump only the fields define in {@link LuceneConfig#getDumpFields()}.
 	 * @return
 	 */
-	private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, Map<String, String> dumpFields){
+	private static Element getMetadataFromIndex(ServiceContext srvContext, Document doc, String id, boolean dumpAllField, Map<String, DumpField> dumpFields){
         // Retrieve the info element
-        String root       = doc.get("_root");
         String schema     = doc.get("_schema");
         String source     = doc.get("_source");
         String uuid       = doc.get("_uuid");
@@ -1400,6 +1402,12 @@ public class LuceneSearcher extends MetaSearcher {
         if (createDate != null) createDate = createDate.toUpperCase();
         String changeDate = doc.get("_changeDate");
         if (changeDate != null) changeDate = changeDate.toUpperCase();
+        
+        String markupClass = srvContext.getHandlerContext(GeonetContext.class).getSettingManager().getValue(Geonet.Settings.WIKI_SYNTAX);
+        MarkupParser markupParser = null;
+        if (!markupClass.equalsIgnoreCase("none")) {
+            markupParser = MarkupParserCache.lookup(markupClass);
+        }
         
         // Root element is using root element name if not using only the index content (ie. dumpAllField)
         // probably because the XSL need that info later ?
@@ -1415,31 +1423,35 @@ public class LuceneSearcher extends MetaSearcher {
         addElement(info, Edit.Info.Elem.SOURCE,      source);
         
         if (dumpFields != null) {
-            for (String fieldName : dumpFields.keySet()) {
-                Field[] values = doc.getFields(fieldName);
+            for (DumpField dumpField : dumpFields.values()) {
+                Field[] values = doc.getFields(dumpField.getFieldName());
                 for (Field f : values) {
                     if (f != null) {
-                        md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
+                        String stringValue = f.stringValue();
+                        if (markupParser != null && dumpField.isMarkup()) {
+                            stringValue = XslUtil.parseMarkupToText(stringValue, markupParser);
+                        }
+                        md.addContent(new Element(dumpField.getTagName()).setText(stringValue));
                     }
                 }
             }
-        }
-        else {
+        } else {
 	        List<Fieldable> fields = doc.getFields();
             for (Fieldable field : fields) {
                 String name = field.name();
                 String value = field.stringValue();
-
+                if (markupParser != null && dumpFields.get(name).isMarkup()) {
+                    value = XslUtil.parseMarkupToText(value, markupParser);
+                }
                 // Dump the categories to the info element
                 if (name.equals("_cat")) {
                     addElement(info, Edit.Info.Elem.CATEGORY, value);
-                }
-                else if (dumpAllField) {
+                } else if (dumpAllField) {
                     // And all other field to the root element in dump all mode
                     md.addContent(new Element(name).setText(value));
                 }
             }
-        }	
+        }
         md.addContent(info);
         return md;
 	}

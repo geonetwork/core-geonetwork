@@ -112,6 +112,9 @@
     <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
 
 	<clickablehyperlinks>Anklickbare Hyperlinks</clickablehyperlinks>
+	<metadataTextContent>Metadata Text</metadataTextContent>
+	<markup>Markup</markup>
+	<none>None</none>
 
 	<localrating>Lokale Bewertung</localrating>
     <autofixing>Automatische Updates</autofixing>

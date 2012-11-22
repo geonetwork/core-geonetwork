@@ -8,23 +8,29 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
+  <xsl:include href="metadata-markup.xsl"/>
 
   <xsl:template name="view-with-header-iso19139">
     <xsl:param name="tabs"/>
     
     <xsl:call-template name="md-content">
       <xsl:with-param name="title">
-        <xsl:apply-templates mode="localised"
-          select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
-          <xsl:with-param name="langId" select="$langId"/>
-        </xsl:apply-templates>
+        <xsl:call-template name="processText">
+          <xsl:with-param name="node" select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+          <xsl:with-param name="text">
+            <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
+               <xsl:with-param name="langId" select="$langId"/>
+            </xsl:apply-templates>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract">
-        <xsl:call-template name="addLineBreaksAndHyperlinks">
-          <xsl:with-param name="txt">
+        <xsl:call-template name="processText">
+          <xsl:with-param name="node" select="gmd:identificationInfo/*/gmd:abstract"/>
+          <xsl:with-param name="text">
             <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:abstract">
-              <xsl:with-param name="langId" select="$langId"/>
+               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </xsl:with-param>
         </xsl:call-template>

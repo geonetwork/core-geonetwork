@@ -25,11 +25,19 @@
   <xsl:template name="metadata-dublin-coreview-simple" match="metadata-dublin-coreview-simple">
     
     <xsl:call-template name="md-content">
-      <xsl:with-param name="title" select="//dc:title"/>
+      <xsl:with-param name="title">
+        <xsl:call-template name="processText">
+          <xsl:with-param name="node" select="//dc:title"/>
+          <xsl:with-param name="text">
+            <xsl:value-of select="//dc:title"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract">
-        <xsl:call-template name="addHyperlinksAndLineBreaks">
-          <xsl:with-param name="txt">
+        <xsl:call-template name="processText">
+          <xsl:with-param name="node" select="dc:description"/>
+          <xsl:with-param name="text">
             <xsl:value-of select="dc:description/text()"/>
           </xsl:with-param>
         </xsl:call-template>

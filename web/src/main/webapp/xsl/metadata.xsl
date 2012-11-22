@@ -818,20 +818,13 @@
 			</th>
 			<td class="padded" valign="top">
 			
-				<xsl:variable name="textnode" select="exslt:node-set($text)"/>
 				<xsl:choose>
 					<xsl:when test="$edit">
 						<xsl:copy-of select="$text"/>
 					</xsl:when>
-					<xsl:when test="count($textnode/*) &gt; 0">
-					<!-- In some templates, text already contains HTML (eg. codelist, link for download).
-						In that case copy text content and does not resolve
-						hyperlinks. -->
-						<xsl:copy-of select="$text"/>
-					</xsl:when>
 					<xsl:otherwise>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt" select="$text"/>
+						<xsl:call-template name="processText">
+							<xsl:with-param name="text" select="$text"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
