@@ -34,6 +34,7 @@ ConfigModel.prototype.getConfig_OK = function(node)
             SERVER_PROTOCOL   : xml.evalXPath(node, 'server/protocol'),
 			SERVER_HOST       : xml.evalXPath(node, 'server/host'),
 			SERVER_PORT       : xml.evalXPath(node, 'server/port'),
+			SERVER_SECURE_PORT       : xml.evalXPath(node, 'server/securePort'),
 			INTRANET_NETWORK  : xml.evalXPath(node, 'intranet/network'),
 			INTRANET_NETMASK  : xml.evalXPath(node, 'intranet/netmask'),
 
@@ -57,6 +58,8 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			OAI_TOKENTIMEOUT  : xml.evalXPath(node, 'oai/tokentimeout'),
 
 			XLINKRESOLVER_ENABLE      : xml.evalXPath(node, 'xlinkResolver/enable'),
+			HIDEWITHHELDELEMENTS_ENABLE      : xml.evalXPath(node, 'hidewithheldelements/enable'),
+			HIDEWITHHELDELEMENTS_keepMarkedElement      : xml.evalXPath(node, 'hidewithheldelements/keepMarkedElement'),
 
 			SEARCHSTATS_ENABLE        : xml.evalXPath(node, 'searchStats/enable'),
 
@@ -151,6 +154,7 @@ ConfigModel.updateTemp =
 '		<protocol>{SERVER_PROTOCOL}</protocol>'+
 '		<host>{SERVER_HOST}</host>'+
 '		<port>{SERVER_PORT}</port>'+
+'		<securePort>{SERVER_SECURE_PORT}</securePort>'+
 '	</server>'+
 '	<intranet>'+
 '		<network>{INTRANET_NETWORK}</network>'+
@@ -187,6 +191,10 @@ ConfigModel.updateTemp =
 '	<xlinkResolver>'+
 '		<enable>{XLINKRESOLVER_ENABLE}</enable>'+
 '	</xlinkResolver>'+
+'	<hidewithheldelements>'+
+'		<enable>{HIDEWITHHELDELEMENTS_ENABLE}</enable>'+
+'		<keepMarkedElement>{HIDEWITHHELDELEMENTS_keepMarkedElement}</keepMarkedElement>'+
+'	</hidewithheldelements>'+
 '	<searchStats>'+
 '		<enable>{SEARCHSTATS_ENABLE}</enable>'+
 '	</searchStats>'+

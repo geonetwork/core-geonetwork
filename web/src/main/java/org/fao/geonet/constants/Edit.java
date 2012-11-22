@@ -31,17 +31,9 @@ import org.jdom.Namespace;
 public class Edit{
 
     /**
-     * Namespace prefix used for editing namespace.
-     */
-	public static final String NS_PREFIX = "geonet";
-    /**
-     * Namespace uri used for editing.
-     */
-	public static final String NS_URI    = "http://www.fao.org/geonetwork";
-    /**
      * Namespace used for editing.
      */
-	public static final Namespace NAMESPACE = Namespace.getNamespace(NS_PREFIX, NS_URI);
+	public static final Namespace NAMESPACE = Geonet.Namespaces.GEONET;
 
 	//--------------------------------------------------------------------------
 	//---

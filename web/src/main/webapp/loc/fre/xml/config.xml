@@ -42,7 +42,8 @@
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
-    <protocol>Protocol</protocol>
+	<securePort>Secure Port</securePort>
+    <protocol>Preferred Protocol</protocol>
 
 	<searchStats>Statistique sur les recherches</searchStats>
 
@@ -412,5 +413,7 @@
   <db.maxactive>Nombre maximum de connexions :</db.maxactive>	
   <db.statserror>Statistique :</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 
