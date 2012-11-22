@@ -75,6 +75,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public class GetMap implements Service {
     public static final String SRS_PARAM = "SRS";
     public static final String WIDTH_PARAM = "WIDTH";
+    public static final String GEOM_PARAM = "GEOM";
+    public static final String GEOM_TYPE_PARAM = "GEOMTYPE";
     public static final String HEIGHT_PARAM = "HEIGHT";
     public static final String BACKGROUND_PARAM = "BACKGROUND";
     private String format;
@@ -91,25 +93,35 @@ public class GetMap implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         String id = params.getChildText(Params.ID);
-        String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
-        String widthString = params.getChildText(WIDTH_PARAM);
-        String heightString = params.getChildText(HEIGHT_PARAM);
-        String background = params.getChildText(BACKGROUND_PARAM);
+        String srs = Util.getParamIgnoreCase(params, SRS_PARAM, "EPSG:4326");
+        String widthString = Util.getParamIgnoreCase(params, WIDTH_PARAM, null);
+        String heightString = Util.getParamIgnoreCase(params, HEIGHT_PARAM, null);
+        String background = Util.getParamIgnoreCase(params, BACKGROUND_PARAM, null);
+        String geomParam = Util.getParamIgnoreCase(params, GEOM_PARAM, null);
+        String geomType = Util.getParamIgnoreCase(params, GEOM_TYPE_PARAM, GeomFormat.WKT.toString());
 
-        if (id == null) {
-            throw new BadParameterEx(Params.ID, Params.ID+" cannot be null");
+        if (id == null && geomParam == null) {
+            throw new BadParameterEx(Params.ID, "Either "+GEOM_PARAM+" or "+Params.ID+" is required");
+        }
+        if (id != null && geomParam != null) {
+            throw new BadParameterEx(Params.ID, "Only one of "+GEOM_PARAM+" or "+Params.ID+" is permitted");
         }
 
         // see calculateImageSize for more parameter checks
         
         RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-        Geometry region = dao.getGeom(context, id, false, srs);
-        if (region == null) {
-            throw new RegionNotFoundEx(id);
+        Geometry geom;
+        if(id != null) {
+            geom = dao.getGeom(context, id, false, srs);
+            if (geom == null) {
+                throw new RegionNotFoundEx(id);
+            }
+        } else {
+            GeomFormat format = GeomFormat.find(geomType);
+            geom = format.parse(geomParam);
         }
-
         BufferedImage image;
-        Envelope bboxOfImage = new Envelope(region.getEnvelopeInternal());
+        Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
         double expandFactor = 0.2;
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
@@ -152,7 +164,7 @@ public class GetMap implements Service {
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
             MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
-            Geometry screenGeom = JTS.transform(region, mathTransform);
+            Geometry screenGeom = JTS.transform(geom, mathTransform);
             Shape shape = shapeWriter.toShape(screenGeom);
             graphics.setColor(Color.yellow);
             graphics.draw(shape);

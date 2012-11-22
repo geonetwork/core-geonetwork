@@ -30,6 +30,7 @@ import org.jdom.Element;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 //=============================================================================
@@ -243,6 +244,38 @@ public final class Util
 
 		return sw.toString();
 	}
+
+	public static String getParamIgnoreCase(Element params, String paramName) {
+        if (params == null) {
+            throw new MissingParameterEx(paramName);
+        }
+
+        String value = getParamIgnoreCase(params, paramName, null);
+
+        if (value == null) {
+            throw new MissingParameterEx(paramName, params);
+        }
+
+        return value;
+	}
+    @SuppressWarnings("unchecked")
+    public static String getParamIgnoreCase(Element params, String paramName, String defaultValue) {
+        if (params == null) {
+            throw new MissingParameterEx(paramName);
+        }
+        
+        for(Element child: ((List<Element>) params.getChildren())) {
+            if(child.getName().equalsIgnoreCase(paramName)) {
+                String value = child.getTextTrim();
+                if (value.length() == 0) {
+                    throw new BadParameterEx(paramName, params);
+                }
+
+                return value;
+            }
+        }
+        return defaultValue;
+    }
 
 	
 }
