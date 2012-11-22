@@ -12,4 +12,4 @@ DROP VIEW sharedusers;
 ALTER TABLE users ALTER "password" TYPE character varying(120);
 ALTER TABLE users ADD security varchar(128);
 ALTER TABLE users ADD authtype varchar(32);
-
+update users SET security = 'update_hash_required';
