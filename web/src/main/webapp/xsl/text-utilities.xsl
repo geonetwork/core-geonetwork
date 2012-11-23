@@ -219,8 +219,9 @@
 	-->
 	<xsl:template name="addLineBreaksAndHyperlinks">
 		<xsl:param name="txt"/>
-		
-		<xsl:copy-of select="java:toHyperlinks($txt)"/>
+		<xsl:if test="/root/gui/env/clickablehyperlinks/enable = 'true'">
+			<xsl:copy-of select="java:toHyperlinks($txt)"/>
+		</xsl:if>
 	</xsl:template>
 	
 
