@@ -213,53 +213,86 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="*[contains(gmd:topicCategory, '_')= true()]" >
-		<xsl:copy>
-		
-			<xsl:copy-of select="@*"/>
-			<xsl:copy-of select="gmd:citation"/>
-		    <xsl:copy-of select="gmd:abstract"/>
-			<xsl:copy-of select="gmd:purpose" />
-			<xsl:copy-of select="gmd:credit" />
-			<xsl:copy-of select="gmd:status" />
-			<xsl:copy-of select="gmd:pointOfContact" />
-			<xsl:copy-of select="gmd:resourceMaintenance" />
-			<xsl:copy-of select="gmd:graphicOverview" />
-			<xsl:copy-of select="gmd:resourceFormat" />
-			<xsl:copy-of select="gmd:descriptiveKeywords" />
-			<xsl:copy-of select="gmd:resourceSpecificUsage"/>
-	        <xsl:copy-of select="gmd:resourceConstraints"/>
-	        <xsl:copy-of select="gmd:aggregationInfo"/>
-	        <xsl:copy-of select="gmd:spatialRepresentationType"/>
-	        <xsl:copy-of select="gmd:spatialResolution"/>
-	        <xsl:copy-of select="gmd:langage"/>
-	        <xsl:copy-of select="gmd:characterSet"/>
-	         
-	        <xsl:apply-templates  select="gmd:topicCategory" />
-	        <xsl:copy-of select="gmd:environmentDescription"/>
-	         
-	        <xsl:copy-of select="gmd:extent"/>
-		    <xsl:copy-of select="gmd:supplementalInformation"/>
-	     </xsl:copy>      
+	<xsl:template match="gmd:identificationInfo" >
+	<gmd:identificationInfo>
+		<xsl:for-each select="gmd:MD_DataIdentification|
+	                *[@gco:isoType='gmd:MD_DataIdentification']|
+	               srv:SV_ServiceIdentification|
+	               *[@gco:isoType='srv:SV_ServiceIdentification']">
+                
+				<xsl:copy>
+				
+					<xsl:copy-of select="@*"/>
+					<xsl:copy-of select="gmd:citation"/>
+				    <xsl:copy-of select="gmd:abstract"/>
+					<xsl:copy-of select="gmd:purpose" />
+					<xsl:copy-of select="gmd:credit" />
+					<xsl:copy-of select="gmd:status" />
+					<xsl:copy-of select="gmd:pointOfContact" />
+					<xsl:copy-of select="gmd:resourceMaintenance" />
+					<xsl:copy-of select="gmd:graphicOverview" />
+					<xsl:copy-of select="gmd:resourceFormat" />
+					<xsl:copy-of select="gmd:descriptiveKeywords" />
+					<xsl:copy-of select="gmd:resourceSpecificUsage"/>
+			        <xsl:copy-of select="gmd:resourceConstraints"/>
+			        <xsl:copy-of select="gmd:aggregationInfo"/>
+			        <xsl:copy-of select="gmd:spatialRepresentationType"/>
+			        <xsl:copy-of select="gmd:spatialResolution"/>
+			        <xsl:copy-of select="gmd:langage"/>
+			        <xsl:copy-of select="gmd:characterSet"/>
+			         
+			        <xsl:apply-templates  select="gmd:topicCategory" mode="topicCat"/>
+			        
+			        <!-- Add main Categories only once -->
+			        <xsl:if test="count(gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'environment') = true()]) > 0">
+                         <gmd:topicCategory>
+                            <gmd:MD_TopicCategoryCode>
+                                environment
+                            </gmd:MD_TopicCategoryCode>
+                        </gmd:topicCategory>
+                    </xsl:if>
+                    
+                    <xsl:if test="count(gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'geoscientificInformation') = true()]) > 0">
+                         <gmd:topicCategory>
+                            <gmd:MD_TopicCategoryCode>
+                                geoscientificInformation
+                            </gmd:MD_TopicCategoryCode>
+                        </gmd:topicCategory>
+                    </xsl:if>
+                    
+                    <xsl:if test="count(gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'planningCadastre') = true()]) > 0">
+                         <gmd:topicCategory>
+                            <gmd:MD_TopicCategoryCode>
+                                planningCadastre
+                            </gmd:MD_TopicCategoryCode>
+                        </gmd:topicCategory>
+                    </xsl:if>
+                    
+                    <xsl:if test="count(gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'imageryBaseMapsEarthCover') = true()]) > 0">
+                         <gmd:topicCategory>
+                            <gmd:MD_TopicCategoryCode>
+                                imageryBaseMapsEarthCover
+                            </gmd:MD_TopicCategoryCode>
+                        </gmd:topicCategory>
+                    </xsl:if>
+                    
+			        <xsl:copy-of select="gmd:environmentDescription"/>
+			        <xsl:copy-of select="gmd:extent"/>
+				    <xsl:copy-of select="gmd:supplementalInformation"/>
+			     </xsl:copy>
+		</xsl:for-each>
+		</gmd:identificationInfo>
 	</xsl:template>
 	
 	<xsl:template match="gmd:topicCategory[gmd:MD_TopicCategoryCode='environment']|
 				gmd:topicCategory[gmd:MD_TopicCategoryCode='geoscientificInformation']|
 				gmd:topicCategory[gmd:MD_TopicCategoryCode='planningCadastre']|
-				gmd:topicCategory[gmd:MD_TopicCategoryCode='imageryBaseMapsEarthCover']" priority="10">
+				gmd:topicCategory[gmd:MD_TopicCategoryCode='imageryBaseMapsEarthCover']" priority="10" mode="topicCat">
 	</xsl:template>
 	
-	<xsl:template match="gmd:topicCategory">
+	<xsl:template match="gmd:topicCategory" mode="topicCat">
 		<xsl:variable name="value" select="gmd:MD_TopicCategoryCode"/>
-		
-		<xsl:if test="contains($value,'_') and count(../gmd:topicCategory[MD_TopicCategoryCode = substring-before($value,'_')]=0)">
-			<gmd:topicCategory>
-				<gmd:MD_TopicCategoryCode>
-					<xsl:value-of select="substring-before($value,'_')"/>
-				</gmd:MD_TopicCategoryCode>
-			</gmd:topicCategory>
-		</xsl:if>
-		
+				
 		<gmd:topicCategory>
 			<gmd:MD_TopicCategoryCode>
 				<xsl:value-of select="$value"/>
@@ -267,7 +300,7 @@
 		</gmd:topicCategory>
 		
 	</xsl:template>
-
+	
 	<!-- ================================================================= -->
 	<!-- online resources: download -->
 	<!-- ================================================================= -->
