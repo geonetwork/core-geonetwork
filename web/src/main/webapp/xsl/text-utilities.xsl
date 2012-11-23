@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fn="http://www.w3.org/2005/02/xpath-functions"
-	exclude-result-prefixes="fn">
+    xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="#all">
 <!--							-->
 <!-- Collection of utilities handy in text processing.	-->
 <!--							-->
@@ -219,139 +220,7 @@
 	<xsl:template name="addLineBreaksAndHyperlinks">
 		<xsl:param name="txt"/>
 		
-		<xsl:choose>
-			<xsl:when test="/root/gui/env/clickablehyperlinks/enable = 'true'">
-				<xsl:choose>
-					<xsl:when test="contains($txt,'&#13;&#10;')">
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#13;&#10;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;&#10;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;&#10;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#13;&#10;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;&#10;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;&#10;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-					</xsl:when>
-					<xsl:when test="contains($txt,'&#13;')">
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#13;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#13;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#13;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#13;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-					</xsl:when>
-					<xsl:when test="contains($txt,'&#10;')">
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#10;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#10;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-before($txt,'&#10;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-						<p>
-							<xsl:choose>
-								<xsl:when test="contains($txt,'&#10;')">
-									<xsl:call-template name="addLineBreaksAndHyperlinks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#10;')"/>							
-									</xsl:call-template>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="addHyperlinksAndLineBreaks">
-										<xsl:with-param name="txt" select="substring-after($txt,'&#10;')"/>							
-									</xsl:call-template>
-								</xsl:otherwise>
-							</xsl:choose>
-						</p>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="addHyperlinksAndLineBreaks">
-							<xsl:with-param name="txt"  select="$txt"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="contains($txt,'&#13;&#10;')">
-						<p>
-							<xsl:value-of select="substring-before($txt,'&#13;&#10;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#13;&#10;')"/>
-						</xsl:call-template>
-						</p>
-					</xsl:when>
-					<xsl:when test="contains($txt,'&#13;')">
-						<p><xsl:value-of select="substring-before($txt,'&#13;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#13;')"/>
-						</xsl:call-template>
-						</p>
-					</xsl:when>
-					<xsl:when test="contains($txt,'&#10;')">
-						<p><xsl:value-of select="substring-before($txt,'&#10;')"/>
-						</p><p>
-						<xsl:call-template name="addLineBreaksAndHyperlinks">
-							<xsl:with-param name="txt"  select="substring-after($txt,'&#10;')"/>
-						</xsl:call-template>
-						</p>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="$txt"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:copy-of select="java:toHyperlinks($txt)"/>
 	</xsl:template>
 	
 
