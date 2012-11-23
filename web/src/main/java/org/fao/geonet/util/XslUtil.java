@@ -236,6 +236,9 @@ public final class XslUtil
      * @return The related 3 iso lang code
      */
     public static String twoCharLangCode(String iso3LangCode) {
+        if(iso3LangCode==null || iso3LangCode.length() == 0) {
+            return Geonet.DEFAULT_LANGUAGE;
+        }
         String iso2LangCode = "";
 
         try {
@@ -246,9 +249,14 @@ public final class XslUtil
             }
         } catch (Exception ex) {
             Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
+            
         }
 
-        return iso2LangCode;
+        if(iso2LangCode == null) {
+            return iso3LangCode.substring(0,2);
+        } else {
+            return iso2LangCode;
+        }
     }
     /**
      * Return '' or error message if error occurs during URL connection.
