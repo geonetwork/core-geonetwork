@@ -907,7 +907,7 @@ public final class XslUtil {
      * @return The related 3 iso lang code
      */
     public static String twoCharLangCode(String iso3LangCode) {
-    	if(iso3LangCode==null) {
+    	if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return Geonet.DEFAULT_LANGUAGE;
     	}
         String iso2LangCode = "";
