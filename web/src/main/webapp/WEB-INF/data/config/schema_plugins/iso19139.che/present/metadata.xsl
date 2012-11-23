@@ -876,7 +876,7 @@
 				<select class="md" name="_{geonet:element/@ref}" size="1">
 					<option name=""/>
 					
-					<xsl:for-each select="/root/gui/isoLang/record[code='eng' or code='fra' or code='deu' or code='ita' or code='roh']">
+					<xsl:for-each select="/root/gui/isoLang/record[code='eng' or code='fre' or code='ger' or code='ita' or code='roh']">
 						<xsl:sort select="label/child::*[name() = $lang]"/>
 						<option value="{code}">
 							<xsl:if test="code = $value">
@@ -905,7 +905,7 @@
 					size="1">
 					<option name="" />
 					
-					<xsl:for-each select="/root/gui/isoLang/record[code='eng' or code='fra' or code='deu' or code='ita' or code='roh']">
+					<xsl:for-each select="/root/gui/isoLang/record[code='eng' or code='fre' or code='ger' or code='ita' or code='roh']">
 						<option value="{code}">
 							<xsl:if test="code = $value">
 								<xsl:attribute name="selected" />
@@ -1774,7 +1774,6 @@
 	</xsl:template>
 	
     <xsl:template mode="addXMLFragment" match="gmd:referenceSystemInfo|geonet:child[@name='referenceSystemInfo' and @prefix='gmd']" priority="100"/>
-
 
 
 <xsl:template mode="iso19139" match="gmd:EX_BoundingPolygon" priority="40">

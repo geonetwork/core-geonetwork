@@ -825,7 +825,6 @@
                     )
             " />
 			
-			
 			<th class="md" width="20%" valign="top">
 				<xsl:choose>
 					<xsl:when test="$isXLinked = 'true'">
@@ -873,7 +872,6 @@
 				</xsl:if>
 			</th>
 			<td class="padded" valign="top">
-			
 				<xsl:variable name="textnode" select="exslt:node-set($text)"/>
 				<xsl:choose>
 					<xsl:when test="$edit">
