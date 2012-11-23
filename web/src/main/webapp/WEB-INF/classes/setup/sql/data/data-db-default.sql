@@ -404,7 +404,6 @@ INSERT INTO Settings VALUES (21,20,'host','localhost');
 INSERT INTO Settings VALUES (22,20,'port','8090');
 INSERT INTO Settings VALUES (24,20,'securePort','8493');
 INSERT INTO Settings VALUES (23,20,'protocol','http');
-INSERT INTO Settings VALUES (24,20,'securePort','8443');
 INSERT INTO Settings VALUES (30,1,'intranet',NULL);
 INSERT INTO Settings VALUES (31,30,'network','127.0.0.1');
 INSERT INTO Settings VALUES (32,30,'netmask','255.0.0.0');

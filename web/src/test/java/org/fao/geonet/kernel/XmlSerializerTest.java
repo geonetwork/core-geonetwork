@@ -64,21 +64,21 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element select(Dbms dbms, String table, String id)
+		public Element select(Dbms dbms, String table, String id, ServiceContext srvContext)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id)
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id)
+		public Element internalSelect(Dbms dbms, String table, String id, ServiceContext srvContext)
 				throws Exception {
-			return super.internalSelect(dbms, table, id);
+			return super.internalSelect(dbms, table, id, srvContext);
 		}
 
 	}
@@ -97,38 +97,38 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
-		assertHiddenElements(false, false);
+		assertHiddenElements(false, false, null);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
-		assertHiddenElements(true);
+		assertHiddenElements(true, null);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-		mockServiceContext(true, "3333");
+		ServiceContext context = mockServiceContext(true, "3333");
 		
-		assertHiddenElements(false);
+		assertHiddenElements(false, context);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-		mockServiceContext(false, null);
+		ServiceContext context = mockServiceContext(false, null);
 		
-		assertHiddenElements(true);
+		assertHiddenElements(true, context);
 	}
 
 	@Test
 	public void testInternalCompleteHidingHiddenElement() throws Exception {
-		mockServiceContext(false, OWNER_ID+"3");
+		ServiceContext context = mockServiceContext(false, OWNER_ID+"3");
 		
 		SettingManager settingManager = mockSettingManager(true, false);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", context);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
@@ -136,16 +136,16 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-		mockServiceContext(false, OWNER_ID+"3");
+		ServiceContext context = mockServiceContext(false, OWNER_ID+"3");
 		
-		assertHiddenElements(true);
+		assertHiddenElements(true, context);
 	}
 	
 	@Test
 	public void testInternalSelectHidingWithheldOwner() throws Exception {
-		mockServiceContext(false, OWNER_ID);
+		ServiceContext context = mockServiceContext(false, OWNER_ID);
 		
-		assertHiddenElements(false);
+		assertHiddenElements(false, context);
 	}
 
 	/**
@@ -190,11 +190,11 @@ public class XmlSerializerTest {
 		return context;
 	}
 
-	private void assertHiddenElements(boolean checkElementsAreHidden) throws Exception {
-		assertHiddenElements(true, checkElementsAreHidden);
+	private void assertHiddenElements(boolean checkElementsAreHidden, ServiceContext context) throws Exception {
+		assertHiddenElements(true, checkElementsAreHidden, context);
 	}
 
-	private void assertHiddenElements(boolean isEnabled, boolean checkElementsAreHidden) throws Exception {
+	private void assertHiddenElements(boolean isEnabled, boolean checkElementsAreHidden, ServiceContext context) throws Exception {
 		final int numberMdResolution;
 		final int numberAttributes;
 		if(checkElementsAreHidden) {
@@ -210,7 +210,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", context);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

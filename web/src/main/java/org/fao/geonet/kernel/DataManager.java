@@ -131,7 +131,8 @@ public class DataManager {
 		this.appPath = parameterObject.appPath;
 
 		stylePath = parameterObject.context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
-
+		this.reusableObjMan = parameterObject.reusableObjMan;
+        this.extentMan = parameterObject.extentMan;
 		this.xmlSerializer = parameterObject.xmlSerializer;
 		this.svnManager    = parameterObject.svnManager;
 
@@ -3645,8 +3646,6 @@ public class DataManager {
 	private XmlSerializer xmlSerializer;
 	private SvnManager svnManager;
 
-
-	private final Validator validator;
     /**
      * TODO javadoc.
      */

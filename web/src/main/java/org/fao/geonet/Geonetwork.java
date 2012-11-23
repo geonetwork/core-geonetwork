@@ -382,6 +382,8 @@ public class Geonetwork implements ApplicationHandler {
 		dataManagerParameter.dataDir = dataDir;
 		dataManagerParameter.thesaurusDir = thesauriDir;
 		dataManagerParameter.appPath = path;
+		dataManagerParameter.reusableObjMan = reusableObjMan;
+		dataManagerParameter.extentMan = extentMan;
 
 		DataManager dataMan = new DataManager(dataManagerParameter);
 
