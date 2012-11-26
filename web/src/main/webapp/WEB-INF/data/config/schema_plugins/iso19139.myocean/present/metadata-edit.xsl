@@ -1223,7 +1223,8 @@
 				</xsl:for-each>
 				
 				<!-- Product manager -->
-				<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact">
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgCustodian"/>
 						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgCustodian)"/>
@@ -1235,11 +1236,23 @@
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:for-each>
-				
+				<!--<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact">
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgCustodian"/>
+						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgCustodian)"/>
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="iso19139.myocean" select=".">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
+				-->
 				
 				<!-- Local service desk -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']">
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk"/>
 						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk)"/>
@@ -1262,14 +1275,6 @@
 				</xsl:if>
 				
 				
-				<xsl:if test="$edit">
-					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/geonet:element/@ref, 
-						'gmd:distributorContact', 
-						'gmd:CI_ResponsibleParty', 
-						/root/gui/schemas/*[name()=$schema]/strings/orgCustodianAdd,
-						/root/gui/schemas/*[name()=$schema]/strings/orgCustodianAdd, 
-						/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
-				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>
 		

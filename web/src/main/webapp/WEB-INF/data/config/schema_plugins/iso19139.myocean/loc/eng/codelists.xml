@@ -94,4 +94,25 @@
         </entry>
     </codelist>
     
+    
+    <codelist name="gmd:CI_RoleCode">
+        <entry>
+            <code>custodian</code>
+            <label>Production center</label>
+            <description>Party that accepts accountability and responsability for the data and ensures
+                appropriate care and maintenance of the resource</description>
+        </entry>
+        <entry>
+            <code>originator</code>
+            <label>Product manager</label>
+            <description>Party who created the resource</description>
+        </entry>
+        <entry>
+            <code>pointOfContact</code>
+            <label>Local service desk</label>
+            <description>Party who can be contacted for acquiring knowledge about or acquisition of the
+                resource</description>
+        </entry>
+    </codelist>
+    
 </codelists>

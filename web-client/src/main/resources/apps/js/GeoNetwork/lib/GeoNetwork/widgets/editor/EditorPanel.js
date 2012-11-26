@@ -384,6 +384,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         width : 620,
                         height : 300,
                         catalogue: this.catalogue,
+                        metadataSchema: this.metadataSchema,
                         listeners : {
                             subTemplateSelected : function(panel, subtemplates) {
                                 GeoNetwork.editor.EditorTools.addHiddenFormFieldForFragment(panel, subtemplates, editorPanel);
