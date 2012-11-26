@@ -7,6 +7,17 @@
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
+  <skos:ConceptScheme>
+    <dc:title>Validated Keywords</dc:title>
+    <dc:description>Geocat Validated Keywords.</dc:description>
+    <dc:creator>
+      <foaf:Organization>
+        <foaf:name>Swisstopo</foaf:name>
+      </foaf:Organization>
+    </dc:creator>
+    <dc:uri>http://www.geocat.ch</dc:uri>
+  </skos:ConceptScheme>
+
 <rdf:Description rdf:about="http://www.geocat.ch/concept">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
 	<dc:title>Keyword for geocat.ch</dc:title>

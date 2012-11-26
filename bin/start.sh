@@ -36,4 +36,4 @@ if [ ! $? -eq 0 ]; then
 fi
 
 cd $WEB_DIR
-mvn jetty:run -Penv-dev $@
+mvn jetty:run -Penv-dev,widgets $@

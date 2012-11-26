@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
@@ -37,7 +38,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 //=============================================================================
 
@@ -68,17 +71,20 @@ public class GetList implements Service {
 		ThesaurusManager th = gc.getThesaurusManager();
 		Map<String, Thesaurus> thTable = th.getThesauriMap();
 		
-		response.addContent(buildResultfromThTable(thTable, dbms));
+		response.addContent(buildResultfromThTable(thTable, dbms, context));
 		
 		return response;
 	}
 	
 	/**
 	 * @param thTable
+	 * @param context 
 	 * @return {@link Element}
 	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
+	private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms, ServiceContext context) throws SQLException, JDOMException, IOException {
 		
 		Element elRoot = new Element("thesauri");
 		
@@ -99,7 +105,10 @@ public class GetList implements Service {
 			elFname.addContent(fname);
 			
 			Element elTitle = new Element("title");
-			String title = currentTh.getTitle();
+			String title = LangUtils.translate(context, key).get(context.getLanguage());
+			if(title == null) {
+				title = currentTh.getTitle();
+			}
 			elTitle.addContent(title);
 			
 			Element elType = new Element("type");
