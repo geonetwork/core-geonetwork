@@ -58,6 +58,7 @@ USA.
 	<sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
+	<sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
 	<sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
 	<sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
@@ -267,7 +268,8 @@ USA.
 			<sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
 			<sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
 			<sch:let name="keyword" 
-				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString"/>
+				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
+						gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
 			<sch:assert test="$inspire-theme-found > 0">
@@ -303,7 +305,8 @@ USA.
 			
 			
 			<sch:let name="keyword" 
-				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString"/>
+				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
+						gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
 			<sch:assert test="$inspire-theme-found > 0">
