@@ -1257,7 +1257,8 @@
 																	'gmd:pointOfContact', 
 																	'gmd:CI_ResponsibleParty', 
 																	/root/gui/strings/addXMLFragment,
-																	/root/gui/strings/addXMLFragment)"/>
+																	/root/gui/strings/addXMLFragment, 
+																	/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
 				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>
