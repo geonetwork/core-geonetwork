@@ -31,18 +31,29 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
-		<xsl:for-each select="gmd:CI_ResponsibleParty">
-			<xsl:apply-templates mode="elementEP" select="gmd:organisationName">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-			<xsl:apply-templates mode="elementEP" select="gmd:individualName|
-				gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
-				">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-		</xsl:for-each>
+		<xsl:choose>
+			<xsl:when test="contains($currTab, 'myocean')">
+				<xsl:for-each select="gmd:CI_ResponsibleParty">
+					<xsl:apply-templates mode="elementEP" select="gmd:organisationName">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+					<xsl:apply-templates mode="elementEP" select="gmd:individualName|
+						gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+						">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+					</xsl:apply-templates>
+				</xsl:for-each>		
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="gmd:CI_ResponsibleParty" mode="iso19139">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:template>
 	
 	<!--
