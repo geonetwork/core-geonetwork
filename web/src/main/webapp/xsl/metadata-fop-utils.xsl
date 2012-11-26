@@ -11,7 +11,6 @@
 
   <xsl:template mode="elementFop" match="*|@*">
     <xsl:param name="schema"/>
-
     <xsl:choose>
     <!-- Is a localized element -->
       <xsl:when test="contains($schema, 'iso19139') and gmd:PT_FreeText">
@@ -42,6 +41,7 @@
 
       <!-- neither children nor attributes, just text -->
       <xsl:otherwise>
+        
         <xsl:apply-templates mode="simpleElementFop" select=".">
           <xsl:with-param name="schema" select="$schema"/>
         </xsl:apply-templates>
@@ -158,7 +158,7 @@
   <xsl:template mode="elementFop"
     match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
   <xsl:template mode="simpleElementFop"
-    match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]"/>
+    match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@gco:nilReason|*[@gco:nilReason]"/>
   <xsl:template mode="complexElementFop"
     match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
 

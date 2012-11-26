@@ -13,10 +13,9 @@
       <xsl:with-param name="schema" select="$schema"/>
     </xsl:apply-templates>
   </xsl:template>
-
+  
   <xsl:template mode="elementFOPiso19139" match="*|@*">
     <xsl:param name="schema"/>
-    
     <!-- TODO improve block level element using mode -->
     <xsl:for-each select="*[namespace-uri(.)!=$geonetUri]">
       
