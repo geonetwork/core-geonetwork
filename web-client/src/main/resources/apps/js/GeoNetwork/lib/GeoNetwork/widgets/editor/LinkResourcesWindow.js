@@ -134,39 +134,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
     },
     getInitiativeTypeStore: function () {
-        // TODO : retrieve from codelist
-        return new Ext.data.ArrayStore({
-            id: 0,
-            fields: ['id', 'name'],
-            data: [['campaign', OpenLayers.i18n('campaign')], 
-                    ['collection', OpenLayers.i18n('collection')], 
-                    ['exercise', OpenLayers.i18n('exercise')], 
-                    ['experiment', OpenLayers.i18n('experiment')], 
-                    ['investigtation', OpenLayers.i18n('investigtation')], 
-                    ['mission', OpenLayers.i18n('mission')], 
-                    ['operation', OpenLayers.i18n('operation')], 
-                    ['platform', OpenLayers.i18n('platform')], 
-                    ['process', OpenLayers.i18n('process')], 
-                    ['program', OpenLayers.i18n('program')], 
-                    ['project', OpenLayers.i18n('project')], 
-                    ['sensor', OpenLayers.i18n('sensor')],
-                    ['study', OpenLayers.i18n('study')],
-                    ['task', OpenLayers.i18n('task')],
-                    ['trial', OpenLayers.i18n('trial')] 
-            ]
+        return GeoNetwork.data.CodeListStore({
+            url: catalogue.services.schemaInfo,
+            codeListName: 'gmd:DS_InitiativeTypeCode'
         });
     },
     getAssociationTypeStore: function () {
-        // TODO : retrieve from codelist
-        return new Ext.data.ArrayStore({
-            id: 0,
-            fields: ['id', 'name'],
-            data: [['crossReference', OpenLayers.i18n('crossReference')], 
-                    ['largerWorkCitation', OpenLayers.i18n('largerWorkCitation')], 
-                    ['partOfSeamlessDatabase', OpenLayers.i18n('partOfSeamlessDatabase')], 
-                    ['source', OpenLayers.i18n('source')], 
-                    ['stereoMate', OpenLayers.i18n('stereoMate')]
-            ]
+        return GeoNetwork.data.CodeListStore({
+            url: catalogue.services.schemaInfo,
+            codeListName: 'gmd:DS_AssociationTypeCode'
         });
     },
     getFormFieldForSibling: function (items) {
@@ -176,8 +152,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'combo',
                 fieldLabel: OpenLayers.i18n('associationType'),
                 store: this.getAssociationTypeStore(),
-                valueField: 'id',
-                displayField: 'name',
+                valueField: 'code',
+                displayField: 'label',
                 mode: 'local',
                 listeners: {
                     select: function (combo, record, index) {
@@ -191,8 +167,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'combo',
                 fieldLabel: OpenLayers.i18n('initiativeType'),
                 store: this.getInitiativeTypeStore(),
-                valueField: 'id',
-                displayField: 'name',
+                valueField: 'code',
+                displayField: 'label',
                 mode: 'local',
                 listeners: {
                     select: function (combo, record, index) {

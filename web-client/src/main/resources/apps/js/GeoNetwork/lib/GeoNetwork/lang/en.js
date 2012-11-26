@@ -540,7 +540,9 @@ GeoNetwork.Lang.en = {
     'linklabel-text/html': 'Web link',
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+    'associationType': 'Association type',
+    'initiativeType': 'Initiative type'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);
