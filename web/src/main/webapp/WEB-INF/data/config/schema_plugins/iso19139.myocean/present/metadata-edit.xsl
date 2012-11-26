@@ -646,10 +646,23 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 				
-				<xsl:apply-templates mode="elementEP" select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-				</xsl:apply-templates>
+				<xsl:for-each select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/missionType"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="widgetMode" select="'combo'"/>
+								<xsl:with-param name="thesaurusId" select="'local.theme.myocean.feature.type'"/>
+								<xsl:with-param name="listOfKeywords" select="."/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:for-each>
 				
 				<!--<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']">

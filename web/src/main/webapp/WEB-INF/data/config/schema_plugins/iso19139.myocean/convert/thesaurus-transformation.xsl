@@ -9,6 +9,17 @@
 	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments for MyOcean. -->
 	
 	
+	
+	<xsl:template name="to-iso19139.myocean-feature-type">
+		<!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
+		<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
+		
+		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+			<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
+		</xsl:for-each>
+	</xsl:template>
+	
+	
 	<!-- Convert a concept to an ISO19139 keywords.
 	If no keyword is provided, only thesaurus section is adaded.
 	-->
