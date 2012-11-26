@@ -5,6 +5,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -96,12 +97,17 @@ public final class XslUtil
     	ServletContext servletContext = serviceContext.getServlet().getServletContext();
     	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
     	if(springContext == null) return true;
-    	WebInvocationPrivilegeEvaluator eval = springContext.getBean(WebInvocationPrivilegeEvaluator.class);
-    	SecurityContext context = SecurityContextHolder.getContext();
-    	if(eval == null || context == null) return true;
-		Authentication authentication = context.getAuthentication();
-		boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
-		return allowed;
+    	Map<String, WebInvocationPrivilegeEvaluator> evals = springContext.getBeansOfType(WebInvocationPrivilegeEvaluator.class);
+    	for(WebInvocationPrivilegeEvaluator eval: evals.values()) {
+	    	SecurityContext context = SecurityContextHolder.getContext();
+	    	if(eval == null || context == null) return true;
+			Authentication authentication = context.getAuthentication();
+			boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
+			if (allowed) {
+				return true;
+			}
+    	}
+		return false;
     }
     /**
      * Takes the characters until the pattern is matched
