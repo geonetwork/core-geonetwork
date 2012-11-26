@@ -95,7 +95,7 @@
 		<ant target="publish-schematron">
 			<property name="rules" value="inspire" />
 			<property name="schema" value="iso19139" />
-			<property name="disabled" value=".disabled" />
+		<!--	<property name="disabled" value=".disabled" />-->
 		</ant>
 	</target>
 
