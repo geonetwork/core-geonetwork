@@ -56,6 +56,60 @@
 		
 	</xsl:template>
 	
+	
+	<!-- A custom combo for projection list which is based on the helper
+	list comming from the localization files and update an hidden input.
+	-->
+	<xsl:template mode="iso19139.myocean" match="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
+		gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code" priority="2">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:variable name="text">
+					
+					<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
+					<xsl:variable name="value" select="gco:CharacterString"/>
+					<input type="hidden" class="md" name="_{$ref}" id="_{$ref}"  
+						value="{$value}" size="30"/>
+					
+					<xsl:variable name="list">
+						<xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/
+							element[@context='gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code']/
+							helper"/>
+					</xsl:variable>
+					
+					<select id="s_{$ref}" name="s_{$ref}" size="1" 
+						onchange="Ext.getDom('_{$ref}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$ref}').onkeyup) Ext.getDom('_{$ref}').onkeyup();"
+						class="md" >
+						<option/>
+						<xsl:for-each select="$list//option">
+							<option value="{@value}">
+								<xsl:if test="@value = $value">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="."/>
+							</option>
+						</xsl:for-each>
+					</select>
+				</xsl:variable>
+				
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="true()"/>
+					<xsl:with-param name="text"   select="$text"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="iso19139">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit" select="$edit"></xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</xsl:template>
+	
 	<!--
 		A custom myocean control for distance
 		
@@ -708,7 +762,7 @@
 							<xsl:with-param name="edit"   select="$edit"/>
 						</xsl:apply-templates>
 						
-						<xsl:apply-templates mode="iso19139" select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
+						<xsl:apply-templates mode="iso19139.myocean" select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
 							gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
