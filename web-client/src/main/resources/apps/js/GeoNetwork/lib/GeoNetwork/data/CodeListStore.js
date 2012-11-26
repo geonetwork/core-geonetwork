@@ -63,7 +63,8 @@ GeoNetwork.data.CodeListStore = function(config){
                 var record = new DataRecord({
                     code: help[i].getElementsByTagName('code')[0].firstChild.nodeValue,
                     label: help[i].getElementsByTagName('label')[0].firstChild.nodeValue,
-                    description: help[i].getElementsByTagName('description')[0].firstChild.nodeValue
+                    description: help[i].getElementsByTagName('description')[0].firstChild && 
+                        help[i].getElementsByTagName('description')[0].firstChild.nodeValue
                 });
                 store.add(record);
             }

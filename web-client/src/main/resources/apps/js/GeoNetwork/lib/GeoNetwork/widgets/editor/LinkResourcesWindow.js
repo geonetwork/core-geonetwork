@@ -50,6 +50,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         collapsible: true,
         collapsed: false,
         uploadThumbnail: true,
+        metadataSchema: 'iso19139',
         protocolForServices: ['application/vnd.ogc.wms_xml', 'application/vnd.ogc.wfs_xml'],
         hiddenParameters: {
             service: [{
@@ -94,7 +95,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     uploadForm: undefined,
     formPanel: undefined,
     panel: undefined,
-    metadataSchema: undefined,
     /** private: method[initComponent] 
      *  Initializes the metadata view window.
      */
@@ -136,12 +136,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     getInitiativeTypeStore: function () {
         return GeoNetwork.data.CodeListStore({
             url: catalogue.services.schemaInfo,
+            schema: this.metadataSchema,
             codeListName: 'gmd:DS_InitiativeTypeCode'
         });
     },
     getAssociationTypeStore: function () {
         return GeoNetwork.data.CodeListStore({
             url: catalogue.services.schemaInfo,
+            schema: this.metadataSchema,
             codeListName: 'gmd:DS_AssociationTypeCode'
         });
     },

@@ -85,4 +85,26 @@
             <description></description>
         </entry>
     </codelist>
+    
+    <codelist name="gmd:DS_AssociationTypeCode">
+        <entry>
+            <code>crossReference</code>
+            <label>Cross reference</label>
+            <description>Reference from one dataset to another</description>
+        </entry>
+    </codelist>
+    
+    <codelist name="gmd:DS_InitiativeTypeCode">
+        <entry>
+            <code>upstream</code>
+            <label>Upstream product</label>
+            <description>Upstream product</description>
+        </entry>
+        <entry>
+            <code>document</code>
+            <label>Document</label>
+            <description>Document</description>
+        </entry>
+    </codelist>
+    
 </codelists>

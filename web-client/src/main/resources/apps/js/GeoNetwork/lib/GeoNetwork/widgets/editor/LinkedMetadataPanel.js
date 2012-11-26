@@ -71,6 +71,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         collapsed: false,
         resourcesTypes: {
             iso19139: ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
+            'iso19139.myocean': ['thumbnail', 'dataset', 'sibling'],
             'dublin-core': ['children']
         }, // TODO : add missing ones
         tpl: null
@@ -258,7 +259,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             var html = '', schema = this.metadataSchema;
             
             // Hack to move to iso19139 schema for profil
-            if (this.metadataSchema.indexOf('iso19139.') !== -1) {
+            if (this.resourcesTypes[this.metadataSchema] === undefined) {
                 schema = 'iso19139';
             }
             Ext.each(this.resourcesTypes[schema], function (type) {
