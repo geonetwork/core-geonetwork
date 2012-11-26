@@ -42,4 +42,7 @@
     <oceanVariables>Ocean variables</oceanVariables>
     <refArea>MyOcean reference areas</refArea>
     <processingLevel>Processing level</processingLevel>
+    
+    <orgAdd>Add production center or local service desk</orgAdd>
+    <orgCustodianAdd>Add product manager</orgCustodianAdd>
 </strings>

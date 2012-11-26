@@ -1254,11 +1254,21 @@
 				
 				<xsl:if test="$edit">
 					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 
-																	'gmd:pointOfContact', 
-																	'gmd:CI_ResponsibleParty', 
-																	/root/gui/strings/addXMLFragment,
-																	/root/gui/strings/addXMLFragment, 
-																	/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
+						'gmd:pointOfContact', 
+						'gmd:CI_ResponsibleParty', 
+						/root/gui/schemas/*[name()=$schema]/strings/orgAdd,
+						/root/gui/schemas/*[name()=$schema]/strings/orgAdd, 
+						/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
+				</xsl:if>
+				
+				
+				<xsl:if test="$edit">
+					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/geonet:element/@ref, 
+						'gmd:distributorContact', 
+						'gmd:CI_ResponsibleParty', 
+						/root/gui/schemas/*[name()=$schema]/strings/orgCustodianAdd,
+						/root/gui/schemas/*[name()=$schema]/strings/orgCustodianAdd, 
+						/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
 				</xsl:if>
 			</xsl:with-param>
 		</xsl:call-template>
