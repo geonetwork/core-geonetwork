@@ -350,13 +350,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     }
                 }, {
                     xtype: 'checkbox',
-                    checked: true,
+                    checked: false,
                     //hideLabel: true,
                     fieldLabel: '',
                     labelSeparator: '',
                     boxLabel: OpenLayers.i18n('createSmall'),
                     name: 'createSmall',
-                    value: 'true'
+                    value: 'false'
                 }, {
                     xtype: 'radio',
                     fieldLabel: OpenLayers.i18n('setAURL'),

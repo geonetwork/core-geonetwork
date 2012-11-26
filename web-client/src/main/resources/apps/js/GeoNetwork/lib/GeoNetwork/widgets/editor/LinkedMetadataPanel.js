@@ -155,11 +155,10 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         if (type === 'thumbnail') {
             if (id.indexOf('resources.get') !== -1) {
                 // title is thumbnail desc and id is its URL
-                this.removeThumbnail(id);
+                this.removeThumbnail(type);
                 return;
             } else {
                 parameters += "&thumbnail_url=" + id;
-                // TODO ? detach the service in the dataset record ?
             }
         } else if (type === 'children') {
             // Define the children metadata record to detach
