@@ -646,17 +646,17 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 				
-				<xsl:for-each select="gmd:contentInfo[gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName]">
+				<xsl:for-each select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription[gmd:featureTypes/gco:LocalName]">
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/featureType"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="geonet:element/@ref"/>
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 								<xsl:with-param name="thesaurusId" select="'local.theme.myocean.feature.type'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName, '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName, '#,#'), '''', '\\'''), '#', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
 							</xsl:call-template>
