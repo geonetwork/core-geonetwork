@@ -158,7 +158,7 @@
   <xsl:template mode="elementFop"
     match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
   <xsl:template mode="simpleElementFop"
-    match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]"/>
+    match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors|@codeList|*[@codeList]|@gco:nilReason|*[@gco:nilReason]"/>
   <xsl:template mode="complexElementFop"
     match="geonet:element|geonet:info|geonet:attribute|geonet:schematronerrors"/>
 
