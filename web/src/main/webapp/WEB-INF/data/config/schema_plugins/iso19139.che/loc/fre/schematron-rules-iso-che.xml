@@ -1,0 +1,14 @@
+<strings>
+  <M100>[GM03_2] - Géodonnées de base</M100>
+  <alert.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
+  <report.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>
+  <M101>[GM03_2] - Type de modèle</M101>
+  <alert.M101><div><h2>Le type du modèle est obligatoire</h2></div></alert.M101>
+  <report.M101><div><h2>Le type du modèle est obligatoire</h2></div></report.M101>
+  <M102>[GM03_2] - Liste de valeur</M102>
+  <alert.M102><div><h2>Sélectionnez une valeur dans la liste de référence ou supprimez l'attribut.</h2></div></alert.M102>
+  <report.M102><div><h2>Sélectionnez une valeur dans la liste de référence ou supprimez l'attribut.</h2></div></report.M102>
+  <M103>[GM03_2] - Titre de la citation</M103>
+  <alert.M103><div><h2>Il est obligatoire de saisir le titre des citations dans la langue par défaut de la métadonnée.</h2></div></alert.M103>
+  <report.M103><div><h2>Il est obligatoire de saisir le titre des citations dans la langue par défaut de la métadonnée.</h2></div></report.M103>
+</strings>

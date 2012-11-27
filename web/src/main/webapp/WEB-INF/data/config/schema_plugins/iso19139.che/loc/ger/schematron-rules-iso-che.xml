@@ -1,0 +1,14 @@
+<strings>
+  <M100>[GM03_2] - Geobasisdaten</M100>
+  <alert.M100><div><h2>Art des Geobasisdaten-Identifikators ist obligatorisch, wenn ein Identifikator angegeben wurde.</h2></div></alert.M100>
+  <report.M100><div><h2>Art des Geobasisdaten-Identifikators ist obligatorisch, wenn ein Identifikator angegeben wurde.</h2></div></report.M100>
+  <M101>[GM03_2] - Art des Modells</M101>
+  <alert.M101><div><h2>Die Art des Modells ist obligatorisch anzugeben</h2></div></alert.M101>
+  <report.M101><div><h2>Die Art des Modells ist obligatorisch anzugeben</h2></div></report.M101>
+  <M102>[GM03_2] - Auswahlliste</M102>
+  <alert.M102><div><h2>Es soll ein Wert aus der Liste ausgewählt werden, bzw. das Element entfernt werden.</h2></div></alert.M102>
+  <report.M102><div><h2>Es soll ein Wert aus der Liste ausgewählt werden, bzw. das Element entfernt werden.</h2></div></report.M102>
+  <M103>[GM03_2] - Titel</M103>
+  <alert.M103><div><h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2></div></alert.M103>
+  <report.M103><div><h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2></div></report.M103>
+</strings>
