@@ -346,8 +346,10 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         this.codeListValue = '';
         this.subTemplateCount = 0;
         
-        if (this.codeListConfig[this.elementName] && this.codeListConfig[this.elementName].xpath) {
-            processParameter = "&process=" + this.codeListConfig[this.elementName].xpath + processParameterSeparator + Ext.getCmp('codeList').getValue();
+        var codelistValue = Ext.getCmp('codeList').getValue();
+        
+        if (this.codeListConfig[this.elementName] && this.codeListConfig[this.elementName].xpath && codelistValue !== "") {
+            processParameter = "&process=" + this.codeListConfig[this.elementName].xpath + processParameterSeparator + codelistValue;
         }
         
         var self = this;
