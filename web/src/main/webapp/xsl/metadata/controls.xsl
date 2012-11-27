@@ -30,12 +30,14 @@
         <xsl:param name="title" as="xs:string"/>
         <!-- The button label. -->
         <xsl:param name="label" as="xs:string"/>
+        <!-- The metadata schema namespaces. -->
+        <xsl:param name="namespaces" as="xs:string"/>
         
         <a class="buttons small findsub" 
-            onclick="javascript:Ext.getCmp('editorPanel').showSubTemplateSelectionPanel({$elementRef}, '{$elementName}', '{$elementType}');" 
-            style="cursor: pointer; " 
-            alt="{$title}" 
-            title="{$title}"><span><xsl:value-of select="$label"/></span>
+          onclick="javascript:Ext.getCmp('editorPanel').showSubTemplateSelectionPanel({$elementRef}, '{$elementName}', '{$elementType}', '{$namespaces}');" 
+          style="cursor: pointer; " 
+          alt="{$title}" 
+          title="{$title}"><span><xsl:value-of select="$label"/></span>
         </a>
     </xsl:function>
 

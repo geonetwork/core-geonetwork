@@ -39,9 +39,9 @@
     
     <!-- Concatenate email or name or position -->
     <xsl:choose>
-      <xsl:when test="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString)!=''">
+      <xsl:when test="count(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString[normalize-space(.)!='']) > 0">
         <xsl:text> > </xsl:text>
-        <xsl:value-of select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/>
+        <xsl:value-of select="string-join(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString, ',')"/>
       </xsl:when>
       <xsl:when test="normalize-space(gmd:individualName/gco:CharacterString)!=''">
         <xsl:text> > </xsl:text>
