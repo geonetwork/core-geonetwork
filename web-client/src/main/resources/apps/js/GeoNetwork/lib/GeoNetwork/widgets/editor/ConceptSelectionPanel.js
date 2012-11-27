@@ -254,6 +254,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         records.push(dv.getStore().getAt(dv.indexOf(node)));
                     });
                     self.selectedKeywordStore.add(records);
+                    
+                    // Reset XML snippet if empty selection
+                    if (selections.length === 0) {
+                        self.generateXML();
+                    }
                 },
                 afterrender: function () {
                     
