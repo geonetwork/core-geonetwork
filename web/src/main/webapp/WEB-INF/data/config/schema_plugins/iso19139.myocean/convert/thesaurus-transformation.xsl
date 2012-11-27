@@ -18,11 +18,21 @@
 			<gmd:includedWithDataset>
 				<gco:Boolean>false</gco:Boolean>
 			</gmd:includedWithDataset>
-			<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
-				<gmd:featureTypes>
-					<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
-				</gmd:featureTypes>
-			</xsl:for-each>
+			<!-- An empty snippet is always returned in order to keep the element -->
+			<xsl:choose>
+				<xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
+					<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+						<gmd:featureTypes>
+							<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
+						</gmd:featureTypes>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<gmd:featureTypes>
+						<gco:LocalName></gco:LocalName>
+					</gmd:featureTypes>
+				</xsl:otherwise>
+			</xsl:choose>
 		</gmd:MD_FeatureCatalogueDescription>
 		
 	</xsl:template>
