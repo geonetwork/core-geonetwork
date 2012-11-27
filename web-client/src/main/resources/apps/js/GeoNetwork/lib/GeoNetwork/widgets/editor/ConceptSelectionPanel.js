@@ -229,18 +229,18 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  If the mode is multiplelist, the multiple selection is allowed.
      */
     generateSelectionList: function (withFilter) {
-        var search = this.generateFilterField(), self = this;
+        var self = this;
         
         // Custom number of max items
         var dv = new Ext.DataView({
             store: this.keywordStore,
             tpl: this.keywordsTpl,
-            autoHeight: true,
+//            autoHeight: true,
             simpleSelect: true,
             multiSelect: this.mode === 'multiplelist' ? true : false,
             singleSelect: true,
             width: 350,
-//            height: 250,
+            height: 250,
             selectedClass: 'ux-mselect-selected',
             itemSelector: 'div.ux-mselect-item',
             listeners: {
@@ -256,6 +256,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     self.selectedKeywordStore.add(records);
                 },
                 afterrender: function () {
+                    
                     // Load all keyword for the current thesaurus
                     this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
                     this.keywordStore.baseParams.maxResults = this.maxKeywords;
@@ -278,9 +279,15 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
+
         
-        
-        return [search, dv];
+        this.keywordStore.reload();
+        if (withFilter) {
+            var search = this.generateFilterField();
+            return [search, dv];
+        } else {
+            return [dv];
+        }
     },
     /** private: method[getKeywordsItemSelector]
      * 
@@ -461,18 +468,19 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listWidth: 250,
             listeners: {
                 select: function (combo, record, index) {
-                    // Clean current content and init thesaurus store parameter
-                    this.keywordStore.removeAll();
+
+//                    // Clean current content and init thesaurus store parameter
+//                    this.keywordStore.removeAll();
                     this.keywordStore.baseParams.pThesauri = self.thesaurusSelector.getValue();
                     if (this.nbResultsField !== null) {
                         this.keywordStore.baseParams.maxResults = this.nbResultsField.getValue();
                     }
-                    
-                    // Once a thesaurus is selected, search or load
-                    // all keywords
-                    if (this.searchOnThesaurusSelection) {
-                        this.keywordStore.reload();
-                    }
+//                    
+//                    // Once a thesaurus is selected, search or load
+//                    // all keywords
+//                    if (this.searchOnThesaurusSelection) {
+//                        this.keywordStore.reload();
+//                    }
                 },
                 scope: this
             }
@@ -607,8 +615,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // * in combobox mode
         if (this.mode === 'combo') {
             fields.push(this.generateSimpleCombo());
-        } else if (this.mode === 'list' || this.mode === 'multiplelist') {
-            fields.push(this.generateSelectionList());
+        } else if (this.mode === 'list' || this.mode === 'multiplelist' || this.mode === 'multiplelist_with_filter') {
+            fields.push(this.generateSelectionList(this.mode.indexOf('with_filter') !== -1));
         } else {
             // * Default is an item selector with 2 lists
             fields.push(this.getKeywordsItemSelector());
