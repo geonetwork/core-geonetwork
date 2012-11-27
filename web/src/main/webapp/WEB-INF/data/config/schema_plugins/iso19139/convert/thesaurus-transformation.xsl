@@ -83,7 +83,7 @@
 					<gmd:type>
 						<gmd:MD_KeywordTypeCode
 							codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-							codeListValue="{thesaurus/type}"/>
+							codeListValue="{/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/dname}"/>
 					</gmd:type>
 					<xsl:if test="not(/root/request/keywordOnly)">
 						<gmd:thesaurusName>

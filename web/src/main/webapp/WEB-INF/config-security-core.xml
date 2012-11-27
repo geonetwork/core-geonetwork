@@ -25,6 +25,7 @@
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
+				<sec:filter-chain pattern="/xsl/harvesting/**" filters="" />
 				<ref bean="coreFilterChain"/>
  				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
  				logoutFilter,
@@ -204,7 +205,10 @@
 	</bean>
 	
 	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
-	<bean id="webPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
+	</bean>
+	<bean id="overrideWebPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+		<constructor-arg ref="overridefilterSecurityInterceptor"/>
 	</bean>
 </beans>
