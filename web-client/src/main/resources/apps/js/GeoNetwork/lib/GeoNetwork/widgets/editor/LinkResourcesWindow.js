@@ -75,6 +75,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         service: 'update-srv-attachDataset',
         dataset: 'update-srv-attachDataset',
         sibling: 'sibling-add',
+        onlinesrc: 'onlinesrc-add',
         thumbnail: 'thumbnail-from-url-add'
     },
     serviceUrl: undefined,
@@ -251,6 +252,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             items.push([combo, layerName]);
         }
     },
+    generateOnlineSrcForm: function () {
+        
+    },
+    generateThumbnailForm: function () {
+        
+    },
     generateMode: function () {
         var self = this;
         
@@ -396,7 +403,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
             var tplDescription = function (value, p, record) {
                 var links = "";
-                if (self.type === 'service' && record.data.links) {
+                if (self.type === 'service' || record.data.links) {
                     Ext.each(record.data.links, function (link) {
                         // FIXME: restrict
                         if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
@@ -432,7 +439,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     checkboxSM,
                     {header: OpenLayers.i18n('metadatatype'), renderer: tplType, dataIndex: 'type'},
                     {id: 'title', header: OpenLayers.i18n('title'), renderer: tplDescription, dataIndex: 'title'},
-                    {header: 'Schema', dataIndex: 'schema', hidden: true}
+                    {header: 'Schema', dataIndex: 'schema', hidden: true},
+                    {header: 'Link', dataIndex: 'link', hidden: true}
                     // TODO add other columns
                 ]
             });
@@ -451,6 +459,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     this.selectedMd = r.data.uuid;
                     this.serviceUrl = r.data.serviceUrl;
                     this.serviceProtocol = r.data.serviceProtocol;
+                    
+                    // FIXME : only the first metadata link is selected
+                    this.selectedLink = r.data.links && r.data.links[0];
                 } else {
                     this.selectedMd = undefined;
                 }
@@ -469,6 +480,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             this.getHiddenFormInput(cmp);
             this.getFormFieldForService(cmp);
             this.getFormFieldForSibling(cmp);
+            
+
+            if (this.type === 'onlinesrc') {
+                
+            }
             
             this.formPanel = new Ext.form.FormPanel({
                 items: cmp,
@@ -514,6 +530,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             parameters += "&uuidref=" + this.selectedMd + 
                             "&initiativeType=" + this.initiativeType + 
                             "&associationType=" + this.associationType;
+        } else if (this.type === 'onlinesrc') {
+            
+            parameters += "&uuidref=" + this.selectedMd + 
+                "&url=" + this.selectedLink.href + 
+                "&desc=" + this.selectedLink.title + 
+                "&protocol=" + this.selectedLink.protocol + 
+                "&name=" + this.selectedLink.name;
         }
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 

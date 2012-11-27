@@ -56,6 +56,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     processMap: {
         'parent-remove': 'parentIdentifier-remove',
         'children-remove': 'parentIdentifier-remove',
+        'onlinesrc-remove': 'onlinesrc-remove',
         'fcats-remove': 'update-detachFeatureCatalogue',
         'datasets-remove': 'update-srv-detachDataset',
         'sibling-remove': 'sibling-remove',
@@ -70,8 +71,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         collapsible: true,
         collapsed: false,
         resourcesTypes: {
-            iso19139: ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            'iso19139.myocean': ['thumbnail', 'dataset', 'sibling'],
+            iso19139: ['thumbnail', 'onlinesrc', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
+            'iso19139.myocean': ['thumbnail', 'onlinesrc', 'sibling'],
             'dublin-core': ['children']
         }, // TODO : add missing ones
         tpl: null
@@ -172,13 +173,15 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             // TODO ? detach the service in the dataset record ?
         } else if (type === 'sibling') {
             parameters += "&uuidref=" + uuid;
+        } else if (type === 'onlinesrc') {
+            parameters += "&url=" + id;
         }
         
         
-        console.log('remove:' + uuid + " target: " + targetMetadataUuid +
-                " type: " + type + 
-                " process: " + this.processMap[type + '-remove'] +
-                " param:" + parameters);
+//        console.log('remove:' + uuid + " target: " + targetMetadataUuid +
+//                " type: " + type + 
+//                " process: " + this.processMap[type + '-remove'] +
+//                " param:" + parameters);
         
         var action = this.catalogue.services.mdProcessing + 
             "?uuid=" + targetMetadataUuid + 
@@ -218,29 +221,25 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             '<ul>',
             '<tpl for=".">',
               '<tpl for="data">',
-                '<tpl if="this.isThumbnail(type) == true">',
+                '<tpl if="type === \'thumbnail\'">',
                   '<li alt="{title}"><img class="thumb-small" src="{id}"/>',
                     '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
                     '<a rel="lightbox-set" class="md-mn lightBox" href="{id}"></a>',
                   '</li>',
                 '</tpl>',
-                '<tpl if="this.isThumbnail(type) == false">',
+                '<tpl if="type !== \'thumbnail\'">',
                   '<li alt="{abstract}">{title} ' + 
                     '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
-                    '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
+                    '<tpl if="type === \'onlinesrc\'">',
+                      '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
+                    '</tpl>',
+                    '<tpl if="type !== \'onlinesrc\'">',
+                      '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
+                    '</tpl>',
                 '</tpl>',
               '</tpl>',
             '</tpl>',
-            '</ul>',
-            {
-                isThumbnail: function (type) {
-                    if (type === 'thumbnail') {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
+            '</ul>'
         );
         
         GeoNetwork.editor.LinkedMetadataPanel.superclass.initComponent.call(this);
@@ -254,7 +253,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         
         
         this.store.on('load', function (store, records) {
-            console.log(records);
+//            console.log(records);
             // Generate HTML layout
             var html = '', schema = this.metadataSchema;
             
@@ -277,7 +276,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             Ext.each(buttons, function (button) {
                 var bt, id = button.getAttribute('id');
                 var info = id.split(panel.sep);
-                console.log(info);
+//                console.log(info);
                 if (info[0] === 'add') {
                     
                     // Provide update children action when editing the parent

@@ -50,7 +50,7 @@
     <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:onLine']/*">
       <relation type="onlinesrc">
         <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
-        <title><xsl:value-of select="gmd:name/gco:CharacterString"/></title>
+        <title><xsl:value-of select="gmd:name/gco:CharacterString"/>#<xsl:value-of select="gmd:protocol/*"/></title>
         <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
       </relation>
     </xsl:for-each>
