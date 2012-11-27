@@ -8,7 +8,8 @@
       <class name=".services.metadata.Show">
         <param name="addRefs" value="n"/>
         <param name="cache" value="y"/>
-      </class>
+		<param name="isExport" value="y" />
+	  </class>
       <output sheet="metadata/view/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
         <call name="relation" class=".guiservices.metadata.GetRelated"/>
         <call name="isoLang" class=".guiservices.isolanguages.Get"/>

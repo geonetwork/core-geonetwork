@@ -1301,12 +1301,14 @@
           <xsl:if test="geonet:element/@min='1' and $edit">mandatory</xsl:if>
         </xsl:attribute>
 	 	<xsl:if test="$allowMarkup = 'true'">
-		  <xsl:attribute name="markupTip">
-		  	<xsl:variable name="tip" select="concat('&lt;div class=&quot;help&quot;>&lt;span class=&quot;title&quot;>&lt;div>', /root/gui/strings/markup/title,'&lt;/div>&lt;/span>',/root/gui/strings/markup/tip,'&lt;/div>')"></xsl:variable>
-		  	<xsl:variable name="name" select="string(/root/gui/strings/markup/name/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
-		  	<xsl:variable name="link" select="string(/root/gui/strings/markup/link/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
-		  	<xsl:value-of select="java:markupToolTip($tip, $name, $link)"/>
-		  </xsl:attribute>
+		  <xsl:if test="/root/gui/env/wiki/markup != 'none'">
+		    <xsl:attribute name="markupTip">
+			  	<xsl:variable name="tip" select="concat('&lt;div class=&quot;help&quot;>&lt;span class=&quot;title&quot;>&lt;div>', /root/gui/strings/markup/title,'&lt;/div>&lt;/span>',/root/gui/strings/markup/tip,'&lt;/div>')"></xsl:variable>
+			  	<xsl:variable name="name" select="string(/root/gui/strings/markup/name/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
+			  	<xsl:variable name="link" select="string(/root/gui/strings/markup/link/*[name() = /root/gui/env/wiki/markup])"></xsl:variable>
+			  	<xsl:value-of select="java:markupToolTip($tip, $name, $link)"/>
+		    </xsl:attribute>
+		  </xsl:if>
 		</xsl:if>
         <label
           for="_{if (gco:CharacterString) then gco:CharacterString/geonet:element/@ref else if (gmd:file) then '' else ''}">
@@ -1340,6 +1342,11 @@
             <xsl:with-param name="id" select="$id"/>
           </xsl:call-template>
         </xsl:if>
+	 	<xsl:if test="$allowMarkup = 'true' and /root/gui/env/wysiwyg/enable = 'true'">
+		    <span class="buttons">
+		    	<a onclick="wysiwigEditors.panelInstance('_{gco:CharacterString/geonet:element/@ref}')" class="wysiwyg small"> <span>&#160;</span></a>
+	    	</span>
+		</xsl:if>
       </th>
       <td>
 

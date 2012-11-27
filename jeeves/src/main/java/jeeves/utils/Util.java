@@ -145,7 +145,7 @@ public final class Util
 		if (value == null)
 			return defValue;
 
-		if (value.equals("true") || value.equals("on"))
+		if (value.equals("true") || value.equals("on") || value.equals("y") || value.equals("yes"))
 			return true;
 
 		if (value.equals("false"))

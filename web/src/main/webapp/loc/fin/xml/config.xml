@@ -102,10 +102,15 @@
     <cswMetadataPublic>Lisättävä metatieto on julkinen.</cswMetadataPublic>
     
 	<clickablehyperlinks>Linkkejä voi klikata</clickablehyperlinks>
+	<wysiwyg>Rich Text Editor</wysiwyg>
 	<metadataTextContent>Metadata Text</metadataTextContent>
 	<markup>Markup</markup>
 	<none>None</none>
-
+	<wikiOutput>Download</wikiOutput>
+	<wikiMEFOutput>MEF</wikiMEFOutput>
+	<removeStyling>Remove Markup/HTML styling</removeStyling>
+	<keepStyling>Keep Markup/HTML styling</keepStyling>
+       <asHtml>Export As Html Markup</asHtml>
 	<localrating>Arvostelu on mahdollista.</localrating>
 		
 	<proxy>Proxy</proxy>

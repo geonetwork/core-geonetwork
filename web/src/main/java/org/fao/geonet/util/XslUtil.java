@@ -1,10 +1,14 @@
 package org.fao.geonet.util;
 
+import static java.io.File.separator;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,14 +16,19 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+import jeeves.utils.Xml;
 
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.UnfailingIterator;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Settings;
+import org.fao.geonet.constants.Geonet.Settings.Values;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +52,9 @@ import javax.xml.transform.stream.StreamSource;
 
 
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.jdom.Element;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
@@ -57,6 +69,16 @@ public final class XslUtil
     private static final char CS_DEFAULT = ',';
     private static final char TS_WKT = ',';
     private static final char CS_WKT = ' ';
+    private static final Whitelist WHITE_LIST;
+    static {
+        WHITE_LIST = Whitelist.relaxed();
+        // add tags to allow in output html as we find the ones we require
+        WHITE_LIST.addTags("span", "font");
+        // add attributes to allow in output html as we find the ones we require
+        WHITE_LIST.addAttributes(":all", "color", "style");
+        WHITE_LIST.addAttributes("font", "size", "face");
+        WHITE_LIST.addAttributes("a", "target", "href", "title");
+    }
     /**
      * clean the src of ' and <>
      */
@@ -66,18 +88,50 @@ public final class XslUtil
         return result;
     }
 
-    public static UnfailingIterator parseWikiText(NodeInfo node, String src, String markupLanguage) throws InstantiationException, IllegalAccessException, ClassNotFoundException, XPathException, UnsupportedEncodingException {
+    public static Object parseWikiText(NodeInfo node, String src, String markupLanguage) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException, XPathException, UnsupportedEncodingException {
         NodeInfo info = (NodeInfo) node;
-        MarkupParser markupParser = MarkupParserCache.lookup(markupLanguage);
-        String html = parseMarkupToText(src, markupParser);
-        Source xmlSource = new StreamSource(new ByteArrayInputStream(html.getBytes("UTF-8")));
-        DocumentInfo doc = info.getConfiguration().buildDocument(xmlSource);
+        MarkupParser markupParser;
+        if (!markupLanguage.equals("none")) {
+            markupParser = MarkupParserCache.lookup(markupLanguage);
+        } else {
+            markupParser = null;
+        }
+        String html = parseMarkupToText(src, markupParser).replace("&nbsp;", " ");
+        try {
+            Source xmlSource = new StreamSource(new ByteArrayInputStream(html.getBytes("UTF-8")));
+            DocumentInfo doc = info.getConfiguration().buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            try {
+                String newHtml = extractFromFullHtml(Jsoup.parse(html).outerHtml());
+                Source xmlSource = new StreamSource(new ByteArrayInputStream(newHtml.getBytes("UTF-8")));
+                DocumentInfo doc = info.getConfiguration().buildDocument(xmlSource);
+                return SingletonIterator.makeIterator(doc);
+            } catch (Exception e2) {
+                // unable to parse xml
+                return src;
+            }
+        }
 
-        return SingletonIterator.makeIterator(doc);
     }
 
     public static String parseMarkupToText(String src, MarkupParser markupParser) {
-        String html = markupParser.parseToHtml(src.toString());
+        String html;
+        if(markupParser != null) {
+            html = markupParser.parseToHtml(src.toString());
+            html = extractFromFullHtml(html);
+            return html;
+        } else {
+            html = src;
+        }
+        String cleanedHtml = Jsoup.clean(html, WHITE_LIST);
+        // span is needed so that the case where there is text before or after html
+        // the xml is valid and order of text elements is maintained 
+        return "<span>"+cleanedHtml+"</span>";
+    }
+
+    private static String extractFromFullHtml(String html) {
         int startIndex = html.indexOf("<body>");
         int endIndex = html.indexOf("</html");
         html = html.substring(startIndex, endIndex).replace("<body", "<span").replace("</body", "</span");
@@ -312,6 +366,23 @@ public final class XslUtil
         }
         
         return "";
+    }
+
+    public static Element controlForMarkup(ServiceContext context, Element metadata, String outputParamPath) throws Exception {
+        SettingManager settingManager = context.getHandlerContext(GeonetContext.class).getSettingManager();
+        String mefOutput = settingManager.getValue(outputParamPath);
+        String wysiwygEnabled = settingManager.getValue(Geonet.Settings.WYSIWYG_EDITOR);
+        String markupType = settingManager.getValue(Geonet.Settings.WIKI_SYNTAX);
+        if(Geonet.Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
+            String styleSheetPath = context.getAppPath() + separator + "/" + separator + "xsl" + separator + "strip-wiki-markup.xsl";
+            
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("markupType", markupType);
+            params.put("outputType", mefOutput);
+            params.put("wysiwygEnabled", wysiwygEnabled);
+            metadata = Xml.transform(metadata, styleSheetPath, params);
+        }
+        return metadata;
     }
 
 }

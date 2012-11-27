@@ -1179,6 +1179,7 @@
 			<class name=".services.metadata.Show">
 				<param name="skipPopularity" value="y" />
 				<param name="skipInfo" value="y" />
+				<param name="isExport" value="y" />
 			</class>
 		</service>
 
