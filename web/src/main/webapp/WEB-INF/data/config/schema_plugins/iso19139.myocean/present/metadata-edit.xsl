@@ -650,7 +650,7 @@
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/missionType"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/featureType"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="geonet:element/@ref"/>
