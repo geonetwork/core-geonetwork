@@ -63,7 +63,10 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	if(type == 'wms') {
 	    	var c = link.split('|');
 	    	
-	    	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;
+	    	if(this.getStore().getAt(this.curId).get("category")) {
+	    		Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;
+	    	}
+	    	
 	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
 	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
 	        
@@ -190,7 +193,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	var adminMenu = Ext.DomQuery.jsSelect('div.md-action-menu', lis[i]);
         	
         	// Hide admin button (and sep)if not connected
-        	if(!isAdmin) {
+        	if(!isAdmin || records[i].get('isharvested') == 'y') {
         		Ext.get(adminMenu).addClass('mdHiddenBtn');
         		Ext.get(adminMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}
