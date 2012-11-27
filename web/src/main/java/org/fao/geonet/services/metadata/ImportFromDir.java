@@ -168,7 +168,7 @@ public class ImportFromDir implements Service
                         ex.addContent(new Element("exception").addContent((Element) ((XSDValidationErrorEx) e).getObject()));
 
                 } else {
-                    ex.addContent(new Element("exception").setText(e.getMessage()));
+                    ex.addContent(new Element("exception").setText(e.getMessage() + " " + e.getClass().getName()));
 
                 }
 

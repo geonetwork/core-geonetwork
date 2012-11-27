@@ -2345,7 +2345,7 @@ public class DataManager {
         // Session may not be defined when a harvester is running
         if (context.getUserSession() != null) {
             String userProfile = context.getUserSession().getProfile();
-            if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            if (userProfile != null && !userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
                 int userId = Integer.parseInt(context.getUserSession()
                         .getUserId());
                 // Reserved groups
