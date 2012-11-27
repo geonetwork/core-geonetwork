@@ -14,9 +14,17 @@
 		<!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
 		<xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
 		
-		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
-			<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
-		</xsl:for-each>
+		<gmd:MD_FeatureCatalogueDescription>
+			<gmd:includedWithDataset>
+				<gco:Boolean>false</gco:Boolean>
+			</gmd:includedWithDataset>
+			<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
+				<gmd:featureTypes>
+					<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
+				</gmd:featureTypes>
+			</xsl:for-each>
+		</gmd:MD_FeatureCatalogueDescription>
+		
 	</xsl:template>
 	
 	
