@@ -44,21 +44,6 @@ GeoNetwork.map.BACKGROUND_LAYERS = [
     //new OpenLayers.Layer.WMS("Background layer", "http://www2.demis.nl/mapserver/wms.asp?", {layers: 'Countries', format: 'image/jpeg'}, {isBaseLayer: true})
     ];
 
-// Config for OSM based maps
-//GeoNetwork.map.PROJECTION = "EPSG:900913";
-////GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-550000, 5000000, 1200000, 7000000);
-//GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-//GeoNetwork.map.BACKGROUND_LAYERS = [
-//    new OpenLayers.Layer.OSM()
-//    //new OpenLayers.Layer.Google("Google Streets");
-//    ];
-
-GeoNetwork.map.MAP_OPTIONS = {
-    projection: GeoNetwork.map.PROJECTION,
-    maxExtent: GeoNetwork.map.EXTENT,
-    restrictedExtent: GeoNetwork.map.EXTENT,
-    controls: []
-};
 GeoNetwork.map.MAIN_MAP_OPTIONS = {
     projection: GeoNetwork.map.PROJECTION,
     maxExtent: GeoNetwork.map.EXTENT,

@@ -4,6 +4,23 @@ cat.where = function() {
 
 	return {
 		createCmp : function() {
+			
+			var epsg4326   = new OpenLayers.Projection("EPSG:4326");
+			var epsg900913 = new OpenLayers.Projection("EPSG:900913");
+
+			var maxExtent = Ext.query('input[id*=configmaxextent]');
+			if(maxExtent && maxExtent[0] && maxExtent[0].value) {
+				var initialExtent = OpenLayers.Bounds.fromString(maxExtent[0].value);
+				initialExtent.transform(epsg4326, epsg900913);
+				
+				GeoNetwork.map.EXTENT = initialExtent;
+			}
+			GeoNetwork.map.MAP_OPTIONS = {
+				projection : GeoNetwork.map.PROJECTION,
+				maxExtent : GeoNetwork.map.EXTENT,
+				restrictedExtent : GeoNetwork.map.EXTENT,
+				controls : []
+			};
 
 			return new Ext.Panel({
 				title : OpenLayers.i18n('Where'),

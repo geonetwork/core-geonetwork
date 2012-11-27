@@ -5,14 +5,31 @@ cat.who = function() {
 	return {
 		createCmp : function(services) {
 			
-			//var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
-			var groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-	            url: services.opensearchSuggest,
-	            rootId: 1,
-	            baseParams: {
-	                field: 'credit'
-	            }
-	        });
+			// if configwho is set, the groupFieldStore is loaded from data in configwho
+			var mode, groupFieldStore;
+			var configwhoInput = Ext.query('input[id*=configwho]');
+			if(configwhoInput[0] && configwhoInput[0].value) {
+				groupFieldStore =  new Ext.data.ArrayStore({
+					fields: ['value']
+				});
+				var data = configwhoInput[0].value.split(',');
+				for(i=0;i<data.length;i++) {
+					data[i] = [data[i]];
+				}
+				groupFieldStore.loadData(data);
+				mode='local';
+			}
+			else {
+				groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+		            url: services.opensearchSuggest,
+		            rootId: 1,
+		            baseParams: {
+		                field: 'credit'
+		            }
+		        });
+				mode='remote';
+			}
+			
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,
@@ -24,6 +41,7 @@ cat.who = function() {
 	            store: groupFieldStore,
 	            valueField: 'value',
 	            displayField: 'value',
+	            mode:mode,
 	            valueDelimiter: ' or ',
 	            fieldLabel: OpenLayers.i18n('orgs')
 	        });
