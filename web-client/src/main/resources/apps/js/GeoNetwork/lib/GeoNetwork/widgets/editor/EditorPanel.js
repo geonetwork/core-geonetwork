@@ -454,9 +454,23 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 });
             }
             
+<<<<<<< HEAD
             this.keywordSelectionWindow.items.get(0).setRef(ref);
             this.keywordSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.KEYWORD);
             this.keywordSelectionWindow.show();
+=======
+            this.keywordSelectionWindow = new Ext.Window({
+                title: OpenLayers.i18n('keywordSelectionWindowTitle'),
+                width: 720,
+                height: 350,
+                layout: 'fit',
+                modal: true,
+                items: this.keywordSelectionPanel,
+                closeAction: 'hide',
+                constrain: true,
+                iconCls: 'searchIcon'
+            });
+>>>>>>> e95d2b7... see #14157 - retours interface 26-11
         }
     },
     /** api: method[showCRSSelectionPanel]
@@ -487,7 +501,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 title: OpenLayers.i18n('crsSelectionWindowTitle'),
                 layout: 'fit',
                 width: 620,
-                height: 300,
+                height: 350,
                 modal: true,
                 items: this.crsSelectionPanel,
                 closeAction: 'hide',
@@ -590,7 +604,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.linkedMetadataSelectionWindow = new Ext.Window({
             title: OpenLayers.i18n('linkedMetadataSelectionWindowTitle'),
             width: 620,
-            height: 300,
+            height: 350,
             layout: 'fit',
             items: this.linkedMetadataSelectionPanel,
             closeAction: 'hide',
