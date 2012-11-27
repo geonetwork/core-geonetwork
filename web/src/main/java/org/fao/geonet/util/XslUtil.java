@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -912,9 +913,9 @@ public final class XslUtil {
      * @return The related 3 iso lang code
      */
     public static String twoCharLangCode(String iso3LangCode) {
-        if(iso3LangCode==null || iso3LangCode.length() == 0) {
-            return Geonet.DEFAULT_LANGUAGE;
-        }
+    	if(iso3LangCode==null || iso3LangCode.length() == 0) {
+    		return Geonet.DEFAULT_LANGUAGE;
+    	}
         String iso2LangCode = "";
 
         try {
@@ -929,9 +930,9 @@ public final class XslUtil {
         }
 
         if(iso2LangCode == null) {
-            return iso3LangCode.substring(0,2);
+        	return iso3LangCode.substring(0,2);
         } else {
-            return iso2LangCode;
+        	return iso2LangCode;
         }
     }
     /**

@@ -711,7 +711,7 @@ public class LuceneSearcher extends MetaSearcher {
                 }
                 _geomWKT = wkt.toString();
             }
-            spatialfilter = _sm.getSpatial().filter(_query, endHits, geometry, request);
+            spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
