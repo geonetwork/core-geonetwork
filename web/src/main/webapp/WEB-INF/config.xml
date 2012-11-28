@@ -384,7 +384,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="status" class=".services.status.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
@@ -493,7 +492,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="config" class=".services.config.Get" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
@@ -509,7 +507,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -527,7 +524,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -545,7 +541,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -574,7 +569,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
 				</call>
@@ -589,7 +583,6 @@
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
@@ -891,7 +884,6 @@
 			<class name=".services.category.List" />
 
 			<output sheet="category-list.xsl" >
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -962,7 +954,6 @@
 
 		<service name="admin">
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1254,7 +1245,6 @@
 			<class name=".guiservices.csw.Set" />
 
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1267,7 +1257,6 @@
 		<service name="csw.customelementset.set">
 			<class name=".guiservices.csw.customelementset.Set" />
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1321,7 +1310,6 @@
 		<service name="google.kml">
 			<class name=".services.metadata.Show" />
 			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />

@@ -34,6 +34,7 @@ import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -48,7 +49,6 @@ import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -158,7 +158,7 @@ public class Info implements Service
 
 	private Element getAuth(ServiceContext context) {
 		Element auth = new Element("auth");
-		Element cas = new Element("casEnabled").setText(Boolean.toString(XslUtil.isCasEnabled()));
+		Element cas = new Element("casEnabled").setText(Boolean.toString(ProfileManager.isCasEnabled()));
 		auth.addContent(cas);
 
 		return auth;

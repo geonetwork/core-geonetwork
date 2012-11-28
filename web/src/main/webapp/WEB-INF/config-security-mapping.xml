@@ -268,6 +268,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/xml.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.search.keywords!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadata.get!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/rdf.metadata.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadocument.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadocument.snippet!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.info!?.*" access="permitAll"></sec:intercept-url>

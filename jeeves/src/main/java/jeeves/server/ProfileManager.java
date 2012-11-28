@@ -215,37 +215,7 @@ public class ProfileManager
 	}
 
 	//--------------------------------------------------------------------------
-	/** Returns all services accessible by the given profile
-	  */
 
-	public Element getAccessibleServices()
-	{
-		Collection<FilterSecurityInterceptor> chains = applicationContext.getBeansOfType(FilterSecurityInterceptor.class).values();
-		
-		for (FilterSecurityInterceptor chain : chains) {
-			System.out.println(chain);
-			Collection<ConfigAttribute> allConfigAttributes = chain.getSecurityMetadataSource().getAllConfigAttributes();
-			for (ConfigAttribute configAttribute : allConfigAttributes) {
-				System.out.println(configAttribute);
-			}
-//			List<Filter> filters = chain.getFilters();
-//			for (Filter filter : filters) {
-//				System.out.println(filter);
-//			}
-		}
-		//--- build proper result
-
-		Element elRes = new Element(Jeeves.Elem.SERVICES);
-//
-//		for (String service : hs) {
-//			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
-//					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
-//		}
-
-		return elRes;
-	}
-
-	//--------------------------------------------------------------------------
 	/** Returns true if the service is accessible from the given profile, resolving
 	  * any inheritance
 	  */
