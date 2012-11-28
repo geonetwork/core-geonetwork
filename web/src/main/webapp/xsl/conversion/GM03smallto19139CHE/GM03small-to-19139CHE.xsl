@@ -16,9 +16,10 @@
             <gmd:language>
                 <gco:CharacterString>
                     <xsl:choose>
-                        <xsl:when test="ch:identificationInfo/ch:language='de'">deu</xsl:when>
-                        <xsl:when test="ch:identificationInfo/ch:language='fr'">fra</xsl:when>
+                        <xsl:when test="ch:identificationInfo/ch:language='de'">ger</xsl:when>
+                        <xsl:when test="ch:identificationInfo/ch:language='fr'">fre</xsl:when>
                         <xsl:when test="ch:identificationInfo/ch:language='it'">ita</xsl:when>
+                        <xsl:when test="ch:identificationInfo/ch:language='rm'">roh</xsl:when>
                         <xsl:otherwise>eng</xsl:otherwise>
                     </xsl:choose>
                 </gco:CharacterString>
@@ -41,7 +42,7 @@
             <gmd:locale>
                 <gmd:PT_Locale id="DE">
                     <gmd:languageCode>
-                        <gmd:LanguageCode codeListValue="deu" codeList="#LanguageCode">German</gmd:LanguageCode>
+                        <gmd:LanguageCode codeListValue="ger" codeList="#LanguageCode">German</gmd:LanguageCode>
                     </gmd:languageCode>
                     <gmd:characterEncoding>
                         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
@@ -51,7 +52,7 @@
             <gmd:locale>
                 <gmd:PT_Locale id="FR">
                     <gmd:languageCode>
-                        <gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French</gmd:LanguageCode>
+                        <gmd:LanguageCode codeListValue="fre" codeList="#LanguageCode">French</gmd:LanguageCode>
                     </gmd:languageCode>
                     <gmd:characterEncoding>
                         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
@@ -72,6 +73,16 @@
                 <gmd:PT_Locale id="EN">
                     <gmd:languageCode>
                         <gmd:LanguageCode codeListValue="eng" codeList="#LanguageCode">English</gmd:LanguageCode>
+                    </gmd:languageCode>
+                    <gmd:characterEncoding>
+                        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+                    </gmd:characterEncoding>
+                </gmd:PT_Locale>
+            </gmd:locale>
+            <gmd:locale>
+                <gmd:PT_Locale id="RM">
+                    <gmd:languageCode>
+                        <gmd:LanguageCode codeListValue="roh" codeList="#LanguageCode">Rumantsch</gmd:LanguageCode>
                     </gmd:languageCode>
                     <gmd:characterEncoding>
                         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
@@ -198,9 +209,10 @@
                 <gmd:language>
                     <gco:CharacterString>
                         <xsl:choose>
-                            <xsl:when test="ch:identificationInfo/ch:language='de'">deu</xsl:when>
-                            <xsl:when test="ch:identificationInfo/ch:language='fr'">fra</xsl:when>
+                            <xsl:when test="ch:identificationInfo/ch:language='de'">ger</xsl:when>
+                            <xsl:when test="ch:identificationInfo/ch:language='fr'">fre</xsl:when>
                             <xsl:when test="ch:identificationInfo/ch:language='it'">ita</xsl:when>
+                            <xsl:when test="ch:identificationInfo/ch:language='rm'">roh</xsl:when>
                             <xsl:otherwise>eng</xsl:otherwise>
                         </xsl:choose>
                     </gco:CharacterString>

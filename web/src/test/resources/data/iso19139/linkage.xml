@@ -4,7 +4,7 @@
         <gco:CharacterString>c863a275-5967-4e6d-a1a8-070d58b68bc3</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:language xmlns:xlink="http://www.w3.org/1999/xlink">
-        <gco:CharacterString>fra</gco:CharacterString>
+        <gco:CharacterString>fre</gco:CharacterString>
     </gmd:language>
     <gmd:characterSet xmlns:xlink="http://www.w3.org/1999/xlink">
         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
@@ -131,26 +131,67 @@
     <gmd:metadataStandardVersion xmlns:xlink="http://www.w3.org/1999/xlink">
         <gco:CharacterString>1.0</gco:CharacterString>
     </gmd:metadataStandardVersion>
-    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
-        <gmd:PT_Locale id="FR">
-            <gmd:languageCode>
-                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
-            </gmd:languageCode>
-            <gmd:characterEncoding>
-                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
-            </gmd:characterEncoding>
-        </gmd:PT_Locale>
-    </gmd:locale>
-    <gmd:locale xmlns:xlink="http://www.w3.org/1999/xlink">
-        <gmd:PT_Locale id="IT">
-            <gmd:languageCode>
-                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita">Italian</gmd:LanguageCode>
-            </gmd:languageCode>
-            <gmd:characterEncoding>
-                <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
-            </gmd:characterEncoding>
-        </gmd:PT_Locale>
-    </gmd:locale>
+<gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+	<gmd:PT_Locale id="FR">
+		<gmd:languageCode>
+			<gmd:LanguageCode codeList="#LanguageCode"
+				codeListValue="fre" />
+		</gmd:languageCode>
+		<gmd:characterEncoding>
+			<gmd:MD_CharacterSetCode codeListValue="utf8"
+				codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+		</gmd:characterEncoding>
+	</gmd:PT_Locale>
+</gmd:locale>
+	<gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:PT_Locale id="DE">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode"
+					codeListValue="ger" />
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:PT_Locale id="IT">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode"
+					codeListValue="ita" />
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+		<gmd:PT_Locale id="EN">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeList="#LanguageCode"
+					codeListValue="eng" />
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale>
+		<gmd:PT_Locale id="RM">
+			<gmd:languageCode>
+				<gmd:LanguageCode
+					codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode"
+					codeListValue="roh" />
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8"
+					codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
     <gmd:identificationInfo xmlns:xlink="http://www.w3.org/1999/xlink">
         <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
             <gmd:citation>
@@ -187,7 +228,7 @@
                 </gmd:MD_Resolution>
             </gmd:spatialResolution>
             <gmd:language>
-                <gco:CharacterString>deu</gco:CharacterString>
+                <gco:CharacterString>ger</gco:CharacterString>
             </gmd:language>
             <gmd:topicCategory>
                 <gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode>

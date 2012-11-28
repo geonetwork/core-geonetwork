@@ -159,7 +159,9 @@
     <xsl:template mode="language" match="text()">
         <xsl:choose>
             <xsl:when test=".='deu'">de</xsl:when>
+            <xsl:when test=".='ger'">de</xsl:when>
             <xsl:when test=".='fra'">fr</xsl:when>
+            <xsl:when test=".='fre'">fr</xsl:when>
             <xsl:when test=".='ita'">it</xsl:when>
             <xsl:when test=".='eng'">en</xsl:when>
         </xsl:choose>
