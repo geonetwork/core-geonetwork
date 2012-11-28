@@ -44,7 +44,7 @@
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
 					</xsl:apply-templates>
-				</xsl:for-each>		
+				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="." mode="iso19139">
@@ -1210,10 +1210,18 @@
 				<!-- Production center -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
 					<xsl:call-template name="complexElementGuiWrapper">
 					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgOriginator"/>
-					<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgOriginator)"/>
+					<xsl:with-param name="id" select="$id"/>
 						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
 							<xsl:apply-templates mode="iso19139.myocean" select=".">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
@@ -1225,10 +1233,18 @@
 				<!-- Product manager -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgCustodian"/>
-						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgCustodian)"/>
+						<xsl:with-param name="id" select="$id"/>
 						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
 							<xsl:apply-templates mode="iso19139.myocean" select=".">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
@@ -1253,10 +1269,18 @@
 				<!-- Local service desk -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk"/>
-						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/orgServiceDesk)"/>
+						<xsl:with-param name="id" select="$id"/>
 						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
 							<xsl:apply-templates mode="iso19139.myocean" select=".">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>

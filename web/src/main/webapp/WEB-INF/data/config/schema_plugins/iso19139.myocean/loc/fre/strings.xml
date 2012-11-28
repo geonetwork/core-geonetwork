@@ -43,6 +43,6 @@
     <refArea>MyOcean reference areas</refArea>
     <processingLevel>Processing level</processingLevel>
     
-    <orgAdd>Add production center or local service desk</orgAdd>
+    <orgAdd>Add organization</orgAdd>
     <orgCustodianAdd>Add product manager</orgCustodianAdd>
 </strings>
