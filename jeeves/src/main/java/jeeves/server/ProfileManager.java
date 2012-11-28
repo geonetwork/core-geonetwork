@@ -24,7 +24,6 @@
 package jeeves.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -32,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
 import jeeves.config.springutil.JeevesApplicationContext;
@@ -41,16 +39,11 @@ import jeeves.constants.Profiles;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
-import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
