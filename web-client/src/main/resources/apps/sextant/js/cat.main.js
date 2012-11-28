@@ -129,7 +129,7 @@ cat.app = function() {
 				defaultViewMode : GeoNetwork.Settings.editor.defaultViewMode,
 				catalogue : catalogue,
 				xlinkOptions : {
-					CONTACT : false
+					CONTACT : true
 				}
 			});
 
