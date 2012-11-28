@@ -733,7 +733,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
 //        this.loadingMask.show();
         
         GeoNetwork.editor.nbResultPerPage = 20;
-        
+        this.mdStore.removeAll();
         GeoNetwork.util.SearchTools.doQueryFromForm(this.formPanel.getId(), this.catalogue, 1, Ext.emptyFn, null, Ext.emptyFn, this.mdStore);
     },
     initComponent: function () {
