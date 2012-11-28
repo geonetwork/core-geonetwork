@@ -6,16 +6,12 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
 
 import jeeves.server.ProfileManager;
-import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -65,18 +61,13 @@ public final class XslUtil
 		return ProfileManager.isCasEnabled();
 	}
     /** 
-     * Check if bean is defined in the context
-     * 
-     * @param beanId id of the bean to look up
-     */
-    public static boolean existsBean(String beanId) {
-    	ServiceContext serviceContext = ServiceContext.get();
-		if(serviceContext == null) return true;
-    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
-    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-    	if(springContext == null) return true;
-    	return springContext.containsBean(beanId);
-    }
+	 * Check if bean is defined in the context
+	 * 
+	 * @param beanId id of the bean to look up
+	 */
+	public static boolean existsBean(String beanId) {
+		return ProfileManager.existsBean(beanId);
+	}
     /**
 	 * Optimistically check if user can access a given url.  If not possible to determine then
 	 * the methods will return true.  So only use to show url links, not check if a user has access
