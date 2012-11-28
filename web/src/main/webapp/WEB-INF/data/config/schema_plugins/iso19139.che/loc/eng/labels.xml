@@ -103,7 +103,7 @@
  </element>
  <element name="che:legislationInformation" id="505">
   <label>Legislation Information</label>
-  <description>provides information about legal regulations related to a resource(n)</description>
+  <description>provides information about legal regulations related to a resource</description>
  </element>
  <element name="che:CHE_MD_Metadata" id="1.0">
   <label>Metadata</label>
