@@ -120,7 +120,7 @@
   <!-- some gco: elements and gmx:MimeFileType are swallowed -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]|
+  <xsl:template mode="iso19139" match="gmd:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL]|
                   srv:*[gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType|gmx:MimeFileType]">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
@@ -404,6 +404,16 @@
       <xsl:param name="edit" select="false()"/>
       <xsl:param name="validator" />
           <xsl:choose>
+              <xsl:when test="gmd:URL">
+                <xsl:for-each select="gmd:URL">
+                  <xsl:call-template name="getElementText">
+                    <xsl:with-param name="edit" select="$edit" />
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="langId" select="$langId" />
+                    <xsl:with-param name="validator" select="$validator" />
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:when>
               <xsl:when test="not(gco:*)">
                   <xsl:for-each select="gmd:PT_FreeText">
                       <xsl:call-template name="getElementText">
