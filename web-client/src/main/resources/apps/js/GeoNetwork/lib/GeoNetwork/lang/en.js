@@ -219,6 +219,8 @@ GeoNetwork.Lang.en = {
     'sibling': 'Other resources',
     'onlinesrc': 'Online resources',
     'remove': 'Remove',
+    'linkADocument': 'a document',
+    'linkAMetadata': ' or an existing online resource from a record',
     'linkAResource-': 'Link a resource',
     'linkAResource-thumbnail': 'Add an overview to the current metadata',
     'linkAResource-fcats': 'Link a feature catalog to the current metadata',
