@@ -525,40 +525,52 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             defaults: {
                 width: 350
             },
-            items: [this.idField, this.versionField, {
-                xtype: 'radio',
-                checked: this.uploadDocument,
-                fieldLabel: OpenLayers.i18n('uploadADocument'),
-                name: 'type',
-                listeners: {
-                    check: function (radio, checked) {
-                        this.uploadDocument = checked;
-                        // TODO : protocol is not needed
-                    },
-                    scope: this
-                }
-            }, {
-                xtype: 'fileuploadfield',
-                emptyText: OpenLayers.i18n('selectADocument'),
-                //fieldLabel: OpenLayers.i18n('image'),
-                name: 'fname',
-                //allowBlank: false,
-                buttonText: '',
-                buttonCfg: {
-                    iconCls: 'thumbnailAddIcon'
-                }
-            }, {
-                xtype: 'radio',
-                fieldLabel: OpenLayers.i18n('documentURL'),
-                name: 'type',
-                checked: !this.uploadDocument,
-                listeners: {
-                    check: function (radio, checked) {
-                        this.uploadDocument = !checked;
-                    },
-                    scope: this
-                }
-            }, {
+            items: [this.idField, this.versionField, 
+//                    {
+//                xtype: 'radio',
+//                checked: this.uploadDocument,
+//                fieldLabel: OpenLayers.i18n('uploadADocument'),
+//                name: 'type',
+//                listeners: {
+//                    check: function (radio, checked) {
+//                        this.uploadDocument = checked;
+//                        // TODO : protocol is not needed
+//                    },
+//                    scope: this
+//                }
+//            }, {
+//                name: 'access',
+//                allowBlank: false,
+//                hidden: true,
+//                value: 'private' // FIXME
+//            }, {
+//                name: 'overwrite',
+//                fieldLabel: 'Overwrite',
+//                checked: true,
+//                xtype: 'checkbox'
+//            }, {
+//                xtype: 'fileuploadfield',
+//                emptyText: OpenLayers.i18n('selectFile'),
+//                fieldLabel: 'File',
+//                allowBlank: false,
+//                name: 'f_' + ref,
+//                buttonText: '',
+//                buttonCfg: {
+//                    iconCls: 'uploadIconAdd'
+//                }
+//            }, {
+//                xtype: 'radio',
+//                fieldLabel: OpenLayers.i18n('documentURL'),
+//                name: 'type',
+//                checked: !this.uploadDocument,
+//                listeners: {
+//                    check: function (radio, checked) {
+//                        this.uploadDocument = !checked;
+//                    },
+//                    scope: this
+//                }
+//            }, 
+              {
                 xtype: 'textfield',
                 fieldLabel: OpenLayers.i18n('url'),
                 name: 'href',
@@ -589,14 +601,30 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     if (this.uploadForm.getForm().isValid()) {
                         var panel = this;
                         if (this.uploadDocument) {
-                            this.uploadForm.getForm().submit({
-                                url: this.setThumbnail,
-                                waitMsg: OpenLayers.i18n('uploading'),
-                                success: function (fp, o) {
-                                    self.editor.init(self.metadataId);
-                                    self.hide();
-                                }
-                            });
+//                            TODO This mode require more work
+//                            The service should upload the document
+//                            and update the metadata record
+//                            instead of only returning the URL of the doc 
+//                            to be added to the metadata 
+//                            
+//                            if (this.uploadForm.getForm().isValid()) {
+//                                this.uploadForm.getForm().submit({
+//                                    url: catalogue.services.upload,
+//                                    waitMsg: OpenLayers.i18n('uploading'),
+//                                    success: function(fileUploadPanel, o){
+////                                        var fname = o.result.fname;
+////                                        var name = Ext.getDom('_' + ref);
+////                                        if (name) {
+////                                            name.value = fname;
+////                                        }
+//                                        // Trigger update
+//                                        self.save();
+//                                        self.hide();
+//                                    }
+//                                    // TODO : improve error message
+//                                    // Currently return  Unexpected token < from ext doDecode
+//                                });
+//                            }
                         } else {
                             var form = this.uploadForm.getForm();
                             this.selectedLink = this.uploadForm.getForm().getValues();
