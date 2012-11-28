@@ -24,7 +24,6 @@
 package jeeves.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -32,19 +31,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.constants.Profiles;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
 import org.jdom.Element;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
 
@@ -215,37 +216,7 @@ public class ProfileManager
 	}
 
 	//--------------------------------------------------------------------------
-	/** Returns all services accessible by the given profile
-	  */
 
-	public Element getAccessibleServices()
-	{
-		Collection<FilterSecurityInterceptor> chains = applicationContext.getBeansOfType(FilterSecurityInterceptor.class).values();
-		
-		for (FilterSecurityInterceptor chain : chains) {
-			System.out.println(chain);
-			Collection<ConfigAttribute> allConfigAttributes = chain.getSecurityMetadataSource().getAllConfigAttributes();
-			for (ConfigAttribute configAttribute : allConfigAttributes) {
-				System.out.println(configAttribute);
-			}
-//			List<Filter> filters = chain.getFilters();
-//			for (Filter filter : filters) {
-//				System.out.println(filter);
-//			}
-		}
-		//--- build proper result
-
-		Element elRes = new Element(Jeeves.Elem.SERVICES);
-//
-//		for (String service : hs) {
-//			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
-//					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
-//		}
-
-		return elRes;
-	}
-
-	//--------------------------------------------------------------------------
 	/** Returns true if the service is accessible from the given profile, resolving
 	  * any inheritance
 	  */
@@ -292,6 +263,53 @@ public class ProfileManager
 
 	public void setApplicationContext(JeevesApplicationContext jeevesAppContext) {
 		this.applicationContext = jeevesAppContext;
+	}
+
+	/** 
+	 * Check if bean is defined in the context
+	 * 
+	 * @param beanId id of the bean to look up
+	 */
+	public static boolean existsBean(String beanId) {
+		ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+		ServletContext servletContext = serviceContext.getServlet().getServletContext();
+		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		if(springContext == null) return true;
+		return springContext.containsBean(beanId);
+	}
+
+	/**
+	 * Optimistically check if user can access a given url.  If not possible to determine then
+	 * the methods will return true.  So only use to show url links, not check if a user has access
+	 * for certain.  Spring security should ensure that users cannot access restricted urls though.
+	 *  
+	 * @param serviceName the raw services name (main.home) or (admin) 
+	 * 
+	 * @return true if accessible or system is unable to determine because the current
+	 * 				thread does not have a ServiceContext in its thread local store
+	 */
+	public static boolean isAccessibleService(Object serviceName) {
+		ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+		ServletContext servletContext = serviceContext.getServlet().getServletContext();
+		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		if(springContext == null) return true;
+		Map<String, WebInvocationPrivilegeEvaluator> evals = springContext.getBeansOfType(WebInvocationPrivilegeEvaluator.class);
+		for(WebInvocationPrivilegeEvaluator eval: evals.values()) {
+	    	SecurityContext context = SecurityContextHolder.getContext();
+	    	if(eval == null || context == null) return true;
+			Authentication authentication = context.getAuthentication();
+			boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
+			if (allowed) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCasEnabled() {
+		return existsBean("casEntryPoint");
 	}
 }
 
