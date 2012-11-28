@@ -42,6 +42,8 @@ val specifics = Map(
      "codeListValue=\"{value}\"" -> "codeListValue=\"{int:value}\""
    ),
   "metadata.xsl" -> Map(
+     "not(language)" -> "not(int:language)",
+     "normalize-space(language)" -> "normalize-space(int:language)",
      "codeListValue=\"{value}" -> "codeListValue=\"{int:value}",
      "ortrayalCatalogueInfoMD_Metadata/portrayalCatalogueInfo\"/>" -> "ortrayalCatalogueInfoMD_Metadata/int:portrayalCatalogueInfo\"/>"
    ),

@@ -10,13 +10,13 @@
     <xsl:template mode="MetaData" match="int:GM03_2Core.Core.MD_Metadata">
         <xsl:apply-templates mode="MetaData" select="int:fileIdentifier"/>
         <xsl:choose>
-            <xsl:when test="not(language) or normalize-space(language)=''">
+            <xsl:when test="not(int:language) or normalize-space(int:language)=''">
                 <gmd:language>
                     <gco:CharacterString>ger</gco:CharacterString>
                 </gmd:language>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates mode="MetaData" select="int:language"/>
+               <xsl:apply-templates mode="MetaData" select="int:language"/>
             </xsl:otherwise>
         </xsl:choose>
         <xsl:apply-templates mode="MetaData" select="int:characterSet"/>

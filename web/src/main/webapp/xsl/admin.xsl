@@ -120,21 +120,15 @@
 							<xsl:with-param name="icon">page_add.png</xsl:with-param>
 						</xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.searchunused.form'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/searchUnusedTitle"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/searchUnused"/>
-						</xsl:call-template>
-
 						<xsl:choose>
-						  <xsl:when test="/root/gui/config/client/@widget='true' and /root/gui/config/client/@stateId!=''">
+						  <xsl:when test="true() or /root/gui/config/client/@widget='true' and /root/gui/config/client/@stateId!=''">
 								
 								<xsl:call-template name="addrow">
 									<xsl:with-param name="service" select="'metadata.create.form'"/>
 									<xsl:with-param name="displayLink" select="false()"/>
 									<xsl:with-param name="title" select="/root/gui/strings/quickSearch"/>
 									<xsl:with-param name="content">
+										<h1>Non-functional until we have new UI</h1>
 										<ul>
 											<li>
 											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__owner=', /root/gui/session/userId)}">
@@ -155,6 +149,35 @@
 											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E_template=y')}">
 													<xsl:value-of select="/root/gui/strings/catalogueTemplates"/>
 												</a>
+											</li>
+											<li>
+												<xsl:value-of select="/root/gui/strings/metadata.expired/limit"/>
+											  	<input id="expired" size="2" value="15"/>
+											  	<select id="expired.unit">
+											  		<option value="1"><xsl:value-of select="/root/gui/strings/durationHours"/></option>
+											  		<option value="24" selected="true"><xsl:value-of select="/root/gui/strings/durationDays"/></option>
+											  		<option value="720"><xsl:value-of select="/root/gui/strings/durationMonths"/></option>
+											  		<option value="256320"><xsl:value-of select="/root/gui/strings/durationYears"/></option>
+											  	</select>
+											  	<div>
+											  	<script language="JavaScript" type="text/javascript">
+											  	function expiredSearch() {
+											  		var url = '<xsl:value-of select="/root/gui/config/client/@url"/>';
+											  		var stateId = '<xsl:value-of select="/root/gui/config/client/@stateId"/>';
+											  		var fromMillis = parseInt($('expired').value) * parseInt($F('expired.unit')) * 60 * 60 * 1000;
+											  		var now = new Date();
+											  		var from = new Date(now - fromMillis);
+											  		var fromParam = '&amp;dateFrom='+from.getFullYear()+'-'+from.getMonth()+'-'+from.getDay();
+											  		var toParam = '&amp;dateTo='+now.getFullYear()+'-'+now.getMonth()+'-'+now.getDay();
+											  		var href = url+'?hl='+Env.lang+'&amp;s_search&amp;'+stateId+fromParam+toParam;
+											  		window.location = href;
+											  	}
+											  	</script>
+												  	<a onclick="javascript:expiredSearch()">
+														<xsl:value-of select="/root/gui/strings/search"/>
+												    </a>
+											  	</div>
+											  	
 											</li>
 										</ul>
 										
