@@ -245,7 +245,7 @@ GeoNetwork.util.SearchFormTools = {
      *
      *  TODO : Add more options ? See GeometryMapField
      */
-    getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig, withRelation){
+    getSimpleMap: function(layers, mapOptions, activeMapControlExtent, panelConfig, withRelation, maxSearchExtent){
         var fields = [], mapLayers = [], i;
         
         for (i = 0; i < layers.length; i++) {
@@ -256,8 +256,9 @@ GeoNetwork.util.SearchFormTools = {
             id: 'geometryMap',
             layers: mapLayers,
             mapOptions: mapOptions,
-            activated: activeMapControlExtent
-            // restrictToMapExtent: true
+            activated: activeMapControlExtent,
+            maxSearchExtent: maxSearchExtent
+//            restrictToMapExtent: true
         };
         
         if (panelConfig) {
