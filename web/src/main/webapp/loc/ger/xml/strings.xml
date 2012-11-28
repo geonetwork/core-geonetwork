@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-	<downloadBackup>Download Backup file</downloadBackup>
+	<downloadBackup>Backup-Datei downloaden</downloadBackup>
 	<ContactSelectionTitle js="true">Kontaktauswahl</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
