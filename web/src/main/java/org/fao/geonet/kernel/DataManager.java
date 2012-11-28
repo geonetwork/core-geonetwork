@@ -2019,9 +2019,14 @@ public class DataManager {
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
 		
-		Element md = (Element) metadata.clone();
-		// always hideElements for validation
-		hideElements(context, dbms, md, id, false, true);
+        Element md;
+		if (!forEditing) {
+			md = (Element) metadata.clone();
+			// always hideElements for validation
+			hideElements(context, dbms, md, id, false, true);
+        } else {
+        	md = metadata;
+        }
 		UserSession session = null;
 		if(context != null && context.getUserSession() != null) {
 			session = context.getUserSession();

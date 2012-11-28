@@ -1641,8 +1641,10 @@ function show(nodes, ref, focus) {
 		var input = nodes[index];
 		if (input.name == ref) {
 			input.style.display = "block";
-			if (focus)
+			if (focus) {
 				input.focus();
+			}
+			return;
 		}
 	}
 }

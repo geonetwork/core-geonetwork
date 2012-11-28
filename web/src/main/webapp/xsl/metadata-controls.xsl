@@ -16,6 +16,9 @@
 
 		
 		<span id="buttons_{$id}">
+			<xsl:if test="geonet:*/@ref">
+				<a name="{concat('_', geonet:*/@ref)}"/>
+			</xsl:if>
 			<!-- 
 				add as remote XML fragment button when relevant -->
 			<xsl:if test="normalize-space($addXMLFragment)">
