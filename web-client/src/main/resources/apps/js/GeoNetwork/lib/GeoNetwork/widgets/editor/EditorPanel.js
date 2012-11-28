@@ -454,23 +454,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 });
             }
             
-<<<<<<< HEAD
             this.keywordSelectionWindow.items.get(0).setRef(ref);
             this.keywordSelectionWindow.items.get(0).setAddAsXLink(this.xlinkOptions.KEYWORD);
             this.keywordSelectionWindow.show();
-=======
-            this.keywordSelectionWindow = new Ext.Window({
-                title: OpenLayers.i18n('keywordSelectionWindowTitle'),
-                width: 720,
-                height: 350,
-                layout: 'fit',
-                modal: true,
-                items: this.keywordSelectionPanel,
-                closeAction: 'hide',
-                constrain: true,
-                iconCls: 'searchIcon'
-            });
->>>>>>> e95d2b7... see #14157 - retours interface 26-11
         }
     },
     /** api: method[showCRSSelectionPanel]
