@@ -2119,6 +2119,12 @@
           <xsl:if test="$isXLinked">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>
+          <!-- Sextant : https://forge.ifremer.fr/mantis/view.php?id=14461 -->
+          <xsl:if test="ancestor-or-self::node()[name(.) = 'gmd:CI_OnlineResource']/gmd:protocol/gco:CharacterString='COPYFILE' or
+            ancestor-or-self::node()[name(.) = 'gmd:CI_OnlineResource']/gmd:protocol/gco:CharacterString='FILE' or
+            ancestor-or-self::node()[name(.) = 'gmd:CI_OnlineResource']/gmd:protocol/gco:CharacterString='DB'">
+            <xsl:attribute name="disabled">disabled</xsl:attribute>
+          </xsl:if>
           <option name=""/>
           <xsl:for-each select="../geonet:attribute/geonet:text">
             <option>
