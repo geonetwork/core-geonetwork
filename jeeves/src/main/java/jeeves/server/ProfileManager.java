@@ -316,7 +316,7 @@ public class ProfileManager
 	}
 
 	public static boolean isCasEnabled() {
-		return XslUtil.existsBean("casEntryPoint");
+		return existsBean("casEntryPoint");
 	}
 }
 
