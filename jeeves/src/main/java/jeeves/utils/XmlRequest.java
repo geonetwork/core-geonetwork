@@ -314,7 +314,7 @@ public class XmlRequest
 		AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
 
 		client.getState().setCredentials(scope, cred);
-
+		client.getParams().setAuthenticationPreemptive(true);
 		serverAuthent = true;
 	}
 
