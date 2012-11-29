@@ -450,10 +450,10 @@ Validator.prototype.isLetterOrDigit = function(c)
 
 Validator.prototype.oneofVal = function(rule)
 {
-	var found = rule.ctrl.value.trim().length !== 0;
+	var found = rule.ctrl.value.replace(/^\s+|\s+$/g,'').length !== 0;
 	var i;
 	for (i = 0; !found && i < rule.items.length; i++) {
-		found = rule.items[i].value.trim().length !== 0;
+		found = rule.items[i].value.replace(/^\s+|\s+$/g,'').length !== 0;
 	}
 	
 	var result= null;
