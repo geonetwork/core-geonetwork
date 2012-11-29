@@ -29,10 +29,43 @@ cat.app = function() {
 	 */
 	var iMap, searchForm, resultsPanel, metadataResultsView, tBar, bBar, mainTagCloudViewPanel, tagCloudViewPanel, infoPanel, visualizationModeInitialized = false;
 
+//	// Option 1 for https://forge.ifremer.fr/mantis/view.php?id=14387 - fields are blinking
+//	var fieldWithFilterApplied = [];
+//	var appFilteredField = ['E_credit', 'E__groupPublished'];
+//	/**
+//	 * The application may provide custom restriction for 
+//	 * search field using hidden input like configwhat.
+//	 * 
+//	 * For those field with restriction, if no selection is made
+//	 * apply the list of filters defined by default to not allow 
+//	 * search accross all catalog content
+//	 */
+//	function applyAppSearchFilter() {
+//        Ext.each (appFilteredField, function(fieldId) {
+//            var catalogueField = Ext.getCmp(fieldId);
+//            if (catalogueField.mode === 'local' && catalogueField.getValue() === '') {
+//                catalogueField.getStore().each(function (record) {
+//                    catalogueField.addValue(record.get('value'));
+//                });
+//                fieldWithFilterApplied.push(catalogueField);
+//            }
+//	    });
+//	}
+//	function clearAppSearchFilter() {
+//        // Restore state of each filters
+//        Ext.each (fieldWithFilterApplied, function(field) {
+//            field.setValue('');
+//        });
+//        fieldWithFilterApplied = [];
+//	}
+	
 	function search() {
 		searching = true;
 		Ext.get('load-spinner').show();
 		cookie.set('cat.search.page', catalogue.startRecord);
+		
+		//applyAppSearchFilter();
+		
 		catalogue.search('searchForm', app.loadResults, null,
 				catalogue.startRecord, true);
 	}
@@ -777,7 +810,8 @@ cat.app = function() {
 		},
 
 		loadResults : function(response) {
-
+//		    clearAppSearchFilter();
+		    
 			initPanels();
 
 			// FIXME : result panel need to update layout in case of slider
