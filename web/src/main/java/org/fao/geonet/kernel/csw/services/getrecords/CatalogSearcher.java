@@ -372,7 +372,7 @@ public class CatalogSearcher {
 
 		// TODO Handle NPE creating spatial filter (due to constraint
 		// language version).
-		Filter spatialfilter = sm.getSpatial().filter(query, numHits, filterExpr, filterVersion);
+		Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
 		CachingWrapperFilter cFilter = null;
 		if (spatialfilter != null) cFilter = new CachingWrapperFilter(spatialfilter);
 		boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
