@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.exceptions.BadServerResponseEx;
+import jeeves.exceptions.BadSoapResponseEx;
+import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
@@ -104,7 +106,7 @@ class Harvester
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_INFO);
+		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -137,10 +139,10 @@ class Harvester
 		return result;
 	}
 
-	private void pre29Login(XmlRequest req) throws IOException {
+	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
 		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.name);
 		// try old authentication
-		req.setAddress(params.getServletPath() + "/srv/eng/"+ Geonet.Service.XML_LOGIN);
+		req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
 		req.addParam("username", params.username);
 		req.addParam("password", params.password);
 		
