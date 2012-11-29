@@ -358,7 +358,25 @@ GeoNetwork.util.SearchTools = {
                 // enabled
                 // and rendered (ie. visible, eg. field in a collapsed fieldset)
                 if (cur.isXType('boxselect') || cur.isXType('combo')) {
-                    if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
+                    
+                    // Option 2 for https://forge.ifremer.fr/mantis/view.php?id=14387
+                    /** Sextant https://forge.ifremer.fr/mantis/view.php?id=14387
+                     * The application may provide custom restriction for 
+                     * search field using hidden input like configwhat.
+                     * 
+                     * For those field with restriction, if no selection is made
+                     * apply the list of filters defined by default to not allow 
+                     * search accross all catalog content
+                     */
+                    if (cur.mode === 'local' 
+                        && cur.getValue() === ""
+                        && (cur.name === 'E_credit' || cur.name === 'E__groupPublished')) {
+                        var values = [];
+                        cur.getStore().each(function (record) {
+                            values.push(record.get('value'));
+                        });
+                        result[cur.getName()] = values.join(' or ');
+                    } else if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
                         result[cur.getName()] = cur.getValue();
                     }
                 } else if (cur.isXType('fieldset')) {
