@@ -435,7 +435,7 @@ public class LuceneSearcher extends MetaSearcher
 		
 		Geometry geometry = getGeometry(request);
         if (geometry != null) {
-            _filter = new CachingWrapperFilter(_sm.getSpatial().filter(_query, getTo() - 1, geometry, request));
+            _filter = new CachingWrapperFilter(_sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request));
         }
         
         String sortBy = Util.getParam(request, Geonet.SearchResult.SORT_BY,
