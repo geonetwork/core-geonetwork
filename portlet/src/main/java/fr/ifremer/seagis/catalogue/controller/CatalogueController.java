@@ -26,7 +26,6 @@ public class CatalogueController implements Serializable {
     private String getrecordbyidurl;
     private String maxextent; 
     private String geonetworkurl;
-    private String cswurl;
     private String what;
     private String who;
     private String mdviewerurl;
@@ -57,7 +56,6 @@ public class CatalogueController implements Serializable {
     	if (sextantConfig != null) {
     		maxextent = CATALOGUESERVICE.getMaxExtentFromString(sextantConfig.getCatalogueWest(), sextantConfig.getCatalogueSouth(), sextantConfig.getCatalogueEast(), sextantConfig.getCatalogueNorth());
             geonetworkurl = sextantConfig.getCatalogueGeonetwork();
-            cswurl = sextantConfig.getCatalogueCsw();
             what = sextantConfig.getCatalogueWhat();
             who = sextantConfig.getCatalogueWho();
             mdviewerurl = sextantConfig.getMdViewerUrl();
@@ -67,7 +65,6 @@ public class CatalogueController implements Serializable {
         } else {
             maxextent = null;
             geonetworkurl = null;
-            cswurl = null;
             what = null;
             who = null;
             mdviewerurl = null;
@@ -144,14 +141,6 @@ public class CatalogueController implements Serializable {
 
     public void setGeonetworkurl(String geonetworkurl) {
         this.geonetworkurl = geonetworkurl;
-    }
-
-    public String getCswurl() {
-        return cswurl;
-    }
-
-    public void setCswurl(String cswurl) {
-        this.cswurl = cswurl;
     }
 
     public String getWhat() {

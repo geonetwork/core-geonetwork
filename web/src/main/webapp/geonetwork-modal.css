@@ -3,11 +3,11 @@
 	font-size: 9pt;
 	margin: 0px;
 	color: #064377;
-	background-color: #fff;
+	background-color: transparent;
 	font-size: 100%;
 }
 #gn-modalWindow div {
-	margin: 0px;
+	/*margin: 0px;*/
 }
 
 #gn-modalWindow table, #gn-modalWindow tr, #gn-modalWindow td {

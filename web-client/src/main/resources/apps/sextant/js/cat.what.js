@@ -21,14 +21,32 @@ cat.what = function() {
 			// TODO : here we have to restrict the list according to index content
 			// using autocompletion
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
-
-			var groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-	            url: services.opensearchSuggest,
-	            rootId: 1,
-	            baseParams: {
-	                field: '_groupPublished'
-	            }
-	        });
+			
+			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
+			var mode, groupFieldStore;
+			var configwhatInput = Ext.query('input[id*=configwhat]');
+			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
+				groupFieldStore =  new Ext.data.ArrayStore({
+					fields: ['value']
+				});
+				var data = configwhatInput[0].value.split(',');
+				for(i=0;i<data.length;i++) {
+					data[i] = [data[i]];
+				}
+				groupFieldStore.loadData(data);
+				mode='local';
+			}
+			else {
+				 groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore(
+					{
+						url : services.opensearchSuggest,
+						rootId : 1,
+						baseParams : {
+							field : '_groupPublished'
+						}
+					});
+				 mode='remote';
+			}
 	        var catalogueField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,
@@ -37,6 +55,7 @@ cat.what = function() {
 	            hideTrigger: false,
 	            id: 'E__groupPublished',
 	            name: 'E__groupPublished',
+	            mode: mode,
 	            store: groupFieldStore,
 	            valueField: 'value',
 	            displayField: 'value',

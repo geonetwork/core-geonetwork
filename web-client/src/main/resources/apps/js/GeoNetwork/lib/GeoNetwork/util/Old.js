@@ -74,7 +74,7 @@ function checkBoxModalUpdate(div, service, modalbox, title){
     catalogue.doAction(service + pars, null, null, title, function(response){
         Ext.getDom(div).innerHTML = response.responseText;
         if (service === 'metadata.admin' || service === 'metadata.category') {
-            Ext.getCmp('modalWindow').close();
+            Ext.getCmp('gn-modalWindow').close();
         }
     }, null);
 }
@@ -95,7 +95,7 @@ function radioModalUpdate(div, service, modalbox, title) {
     catalogue.doAction(service + pars, null, null, title, function(response){
         Ext.getDom(div).innerHTML = response.responseText;
         if (service === 'metadata.status') {
-            Ext.getCmp('modalWindow').close();
+            Ext.getCmp('gn-modalWindow').close();
         }
     }, null);
 }

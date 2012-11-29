@@ -487,7 +487,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 title: OpenLayers.i18n('crsSelectionWindowTitle'),
                 layout: 'fit',
                 width: 620,
-                height: 300,
+                height: 350,
                 modal: true,
                 items: this.crsSelectionPanel,
                 closeAction: 'hide',
@@ -590,7 +590,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.linkedMetadataSelectionWindow = new Ext.Window({
             title: OpenLayers.i18n('linkedMetadataSelectionWindowTitle'),
             width: 620,
-            height: 300,
+            height: 350,
             layout: 'fit',
             items: this.linkedMetadataSelectionPanel,
             closeAction: 'hide',

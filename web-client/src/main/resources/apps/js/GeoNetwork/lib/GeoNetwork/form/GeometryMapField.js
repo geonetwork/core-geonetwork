@@ -97,6 +97,11 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
     nearYou : undefined,
     
     /**
+     * To restrict search to an extent
+     * If user draw a bigger extend, the searchExtent will be the intersection of extentBox and maxSearchExtent
+     */
+    maxSearchExtent : undefined,
+    /**
      * boolean to display or not mouse position under the map
      */
     mousePosition: true,
@@ -163,7 +168,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
                 },
                 handler: function(){
                     this.vectorLayer.destroyFeatures();
-                    this.geometryField.setValue('');
+                    this.resetField();
                 },
                 scope: this
             };
@@ -315,15 +320,57 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             this.geometryField = Ext.getCmp(this.geometryFieldId);
         } else {
             var gmf = this;
+            var geomValue='';
+            
+            // initialize field with maxSearchExtent
+            if(this.maxSearchExtent && this.activated) {
+                var bounds = this.maxSearchExtent.toArray();
+                geomValue = 'POLYGON((' + bounds[0] + ' ' + bounds[1] + ','
+	                + bounds[0] + ' ' + bounds[3] + ',' + bounds[2] + ' '
+	                + bounds[3] + ',' + bounds[2] + ' ' + bounds[1] + ','
+	                + bounds[0] + ' ' + bounds[1] + '))';
+            }
             this.geometryField = new Ext.form.TextField({
                 name: 'E_geometry',
                 inputType: 'hidden',
+                value: geomValue,
                 listeners: {
                     valid: function(cpt){
-                        // Init extent box in map only if vector layer not
-                        // yet initialized (eg. on startup when state is restored).
-                        if (cpt.getValue() !== '' && this.extentBox.getOrCreateLayer().features.length === 0) {
-                            this.extentBox.updateFieldsWKT(cpt.getValue());
+                    	if (cpt.getValue() !== '' && cpt.getValue() !== 'no_bounds') {
+                    		
+                        	// restrict search extent to this.maxSearchExtent
+                        	if(this.maxSearchExtent && this.activated) {
+                            	var searchExtent = OpenLayers.Geometry.fromWKT(cpt.getValue()).getBounds();
+                            		
+                            		if(this.maxSearchExtent.intersectsBounds(searchExtent)) {
+                            		
+	                            		var left = Math.max(searchExtent.left, this.maxSearchExtent.left);
+	                            		var right = Math.min(searchExtent.right, this.maxSearchExtent.right);
+	                            		var bottom = Math.max(searchExtent.bottom, this.maxSearchExtent.bottom);
+	                            		var top = Math.min(searchExtent.top, this.maxSearchExtent.top);
+	                            		
+	                            		var intersectBounds = new OpenLayers.Bounds(left,bottom,right,top);
+	                            		
+	                            		//update form field avoiding infinite loop
+	                            		if(!intersectBounds.equals(searchExtent)) {
+	                            			this.setField(intersectBounds);
+	                            		}
+                            		} else {
+                            			// if the drawn box is outside the searchMaxExtent, we delete it and set back the
+                            			// initial extent
+                            			this.vectorLayer.destroyFeatures();
+                                        this.resetField();
+                            		}
+                    		}
+                        	// Init extent box in map only if vector layer not
+                        	// yet initialized (eg. on startup when state is restored).
+                        	else if (this.extentBox.getOrCreateLayer().features.length === 0) {
+                        		var searchExtent = OpenLayers.Geometry.fromWKT(cpt.getValue()).getBounds();
+                        		var mapProj = this.map.getProjectionObject();
+                                var wgs84 = new OpenLayers.Projection("WGS84");
+                                searchExtent.transform(wgs84, mapProj);
+                                this.extentBox.updateFields(searchExtent);
+                            }
                         }
                     },
                     scope: gmf
@@ -354,9 +401,9 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
     /** private: method[setField] 
      *  Update the geometry field with the current map extent
      */
-    setField : function() {
+    setField : function(inBounds) {
         if (this.geometryField !== undefined) {
-            var bounds = this.map.getExtent().toArray();
+            var bounds = inBounds ? inBounds.toArray() : this.map.getExtent().toArray();
             // TODO : map projection to WGS84
             var wkt = 'POLYGON((' + bounds[0] + ' ' + bounds[1] + ','
                     + bounds[0] + ' ' + bounds[3] + ',' + bounds[2] + ' '
@@ -366,6 +413,18 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             this.geometryField.setValue(wkt);
             this.geometryField.fireEvent('change');
         }
+    },
+    
+    /**
+     * Reset geometry field to '' or maxSearchExtent if specified
+     */
+    resetField: function() {
+    	if(this.maxSearchExtent) {
+    		this.setField(this.maxSearchExtent);
+    	}
+    	else {
+    		this.geometryField.setValue('');
+    	}
     }
 });
 
