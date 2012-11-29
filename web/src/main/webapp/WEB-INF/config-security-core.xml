@@ -56,8 +56,8 @@
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
 				<ref bean="logoutFilter" />
-				<ref bean="formLoginFilter" />
 				<ref bean="basicAuthenticationFilter" />
+				<ref bean="formLoginFilter" />
 				<ref bean="requestCacheFilter" />
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
