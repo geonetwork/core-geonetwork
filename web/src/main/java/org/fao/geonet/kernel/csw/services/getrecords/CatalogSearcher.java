@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
@@ -68,6 +69,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneIndexField;
@@ -81,7 +83,6 @@ import org.jdom.Element;
 //=============================================================================
 
 public class CatalogSearcher {
-	private final Element _summaryConfig;
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
 	private final FieldSelector _selector;
@@ -92,13 +93,11 @@ public class CatalogSearcher {
 	private String        _lang;
 	private long          _searchToken;
 	
-	public CatalogSearcher(Element summaryConfig,
-			LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
+	public CatalogSearcher(LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_selector = selector;
 		_uuidselector = uuidselector;
-		_summaryConfig = summaryConfig;
 		_searchToken = -1L;  // means we will get a new IndexSearcher when we
 		                     // ask for it first time
 	}
@@ -146,22 +145,22 @@ public class CatalogSearcher {
         
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getSearchmanager();
-        GeonetworkMultiReader reader = null;
+        IndexAndTaxonomy indexAndTaxonomy = null;
         try {
             if (luceneExpr != null) {
                 convertPhrases(luceneExpr);
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            Pair<Long, GeonetworkMultiReader> searcherPair = sm.getIndexReader(_searchToken);
-            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + searcherPair.one() + " comparing with " + _searchToken);
-            if (_searchToken != -1L && searcherPair.one() != _searchToken) {
+            indexAndTaxonomy = sm.getIndexReader(_searchToken);
+            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
+            if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
-            _searchToken = searcherPair.one();
-            reader = searcherPair.two();
+            _searchToken = indexAndTaxonomy.version;
+            GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
             return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
-                    maxHitsInSummary, cswServiceSpecificContraint, reader);
+                    maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
         }
         catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
@@ -169,8 +168,8 @@ public class CatalogSearcher {
 			throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
         } finally {
             try {
-                if (reader != null) {
-                    sm.releaseIndexReader(reader);
+                if (indexAndTaxonomy != null) {
+                    sm.releaseIndexReader(indexAndTaxonomy);
                 }
             } catch (Exception ex) {
                 // eat it as it probably doesn't matter,
@@ -197,16 +196,16 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
-        Pair<Long, GeonetworkMultiReader> searcherPair = sm.getIndexReader(_searchToken);
+        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(_searchToken);
 
         try {
-            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + searcherPair.one() + " comparing with " + _searchToken);
-            if (searcherPair.one() != _searchToken) {
+            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
+            if (indexAndTaxonomy.version != _searchToken) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
-            GeonetworkMultiReader _reader = searcherPair.two();
-            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, Integer.MAX_VALUE, _lang,
-                    ResultType.RESULTS.toString(), _summaryConfig, _reader, _query, _filter, _sort, false,
+            GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
+            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang,
+                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, _filter, _sort, null, false,
                     _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
@@ -227,7 +226,7 @@ public class CatalogSearcher {
             }
             return response;
         } finally {
-			sm.releaseIndexReader(searcherPair.two());
+			sm.releaseIndexReader(indexAndTaxonomy);
 		}
 	}
 
@@ -376,6 +375,7 @@ public class CatalogSearcher {
      * @param maxRecords
      * @param maxHitsInSummary
      * @param cswServiceSpecificContraint   Service specific constraint
+     * @param taxonomyReader 
      * @return
      * @throws Exception
      */
@@ -383,7 +383,7 @@ public class CatalogSearcher {
                                                           Element filterExpr, String filterVersion, Sort sort,
                                                           ResultType resultType, int startPosition, int maxRecords,
                                                           int maxHitsInSummary, String cswServiceSpecificContraint,
-                                                          GeonetworkMultiReader reader)
+                                                          GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
             throws Exception {
 
         if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
@@ -483,8 +483,8 @@ public class CatalogSearcher {
 		_sort = sort;
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, reader, query, cFilter,
-                sort, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
+                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, query, cFilter,
+                sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
 		TopDocs hits = searchResults.one();
@@ -502,10 +502,6 @@ public class CatalogSearcher {
 		// LuceneSearcher already contains all docs)
 		int i = 0;
 		int iMax = hits.scoreDocs.length;
-		if (buildSummary) {
-			i = startPosition -1;
-			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
-		}
 		for (;i < iMax; i++) {
 			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");

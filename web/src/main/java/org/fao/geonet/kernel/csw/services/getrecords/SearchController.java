@@ -66,24 +66,11 @@ import java.util.Set;
  */
 public class SearchController {
     
-    private final Element _summaryConfig;
 	private LuceneConfig _luceneConfig;
 	private final FieldSelector _selector;
 	private final FieldSelector _uuidselector;
 
-	public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
-		try {
-			if (summaryConfig != null) {
-				_summaryConfig = Xml.loadStream(new FileInputStream(
-						summaryConfig));
-			} else {
-				_summaryConfig = null;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading summary configuration file", e);
-		}
-
+	public SearchController(LuceneConfig luceneConfig) {
 		_luceneConfig = luceneConfig;
 		
 		_selector = new FieldSelector() {
@@ -146,7 +133,7 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_luceneConfig, _selector, _uuidselector);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         

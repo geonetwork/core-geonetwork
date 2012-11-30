@@ -535,6 +535,7 @@ public class Geonet {
 	public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
     public static final String THESAURUS    = GEONETWORK + ".thesaurus";
 	public static final String SEARCH_ENGINE = GEONETWORK + ".search";
+    public static final String FACET_ENGINE = GEONETWORK + ".facet";
     public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
 	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
 	public static final String Z3950        = GEONETWORK + ".z3950";
