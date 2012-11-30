@@ -152,8 +152,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     getFormFieldForSibling: function (items) {
         if (this.type === 'sibling') {
 
-            var associationType = {
-                xtype: 'combo',
+            var associationType = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('associationType'),
                 store: this.getAssociationTypeStore(),
                 valueField: 'code',
@@ -166,10 +165,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     },
                     scope: this
                 }
-            };
-            
-            var initiativeType = {
-                xtype: 'combo',
+            });
+            associationType.getStore().on('add', function () {
+                var code = associationType.getStore().getAt(0).get('code');
+                this.associationType = code;
+                associationType.setValue(code);
+            }, this);
+            var initiativeType = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('initiativeType'),
                 store: this.getInitiativeTypeStore(),
                 valueField: 'code',
@@ -182,7 +184,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     },
                     scope: this
                 }
-            };
+            });
+            initiativeType.getStore().on('add', function () {
+                var code = initiativeType.getStore().getAt(0).get('code');
+                this.initiativeType = code;
+                initiativeType.setValue(code);
+            }, this);
             
             items.push([associationType, initiativeType]);
         }
