@@ -158,6 +158,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 store: this.getAssociationTypeStore(),
                 valueField: 'code',
                 displayField: 'label',
+                triggerAction: 'all',
                 mode: 'local',
                 listeners: {
                     select: function (combo, record, index) {
@@ -174,6 +175,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 valueField: 'code',
                 displayField: 'label',
                 mode: 'local',
+                triggerAction: 'all',
                 listeners: {
                     select: function (combo, record, index) {
                         this.initiativeType = combo.getValue();
@@ -483,13 +485,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         }, grid);
         
         var cmp = [];
+        this.getHiddenFormInput(cmp);
+        this.getFormFieldForSibling(cmp);
         cmp.push(this.getSearchInput());
         cmp.push(grid);
-        this.getHiddenFormInput(cmp);
         this.getFormFieldForService(cmp);
-        this.getFormFieldForSibling(cmp);
-        
-
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
