@@ -370,7 +370,7 @@ GeoNetwork.util.SearchTools = {
                      */
                     if (cur.mode === 'local' 
                         && cur.getValue() === ""
-                        && (cur.name === 'E_credit' || cur.name === 'E__groupPublished')) {
+                        && (cur.name === 'E__groupPublished')) {
                         var values = [];
                         cur.getStore().each(function (record) {
                             values.push(record.get('value'));
