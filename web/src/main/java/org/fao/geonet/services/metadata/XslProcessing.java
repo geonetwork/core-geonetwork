@@ -200,6 +200,7 @@ public class XslProcessing implements Service {
 	            	if (extraMetadataId != null) {
 		            	Element extraMetadata = dataMan.getMetadata(context, extraMetadataId, forEditing, withValidationErrors, keepXlinkAttributes);
 		            	md.addContent(new Element("extra").addContent(extraMetadata));
+		            	xslParameter.put(param.getName(), param.getTextTrim());
 	            	}
 	            } else {
 	            	// Or add parameter

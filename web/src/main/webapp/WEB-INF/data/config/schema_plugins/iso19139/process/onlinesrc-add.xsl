@@ -13,6 +13,7 @@ attached it to the metadata for data.
 	<!-- ============================================================================= -->
 
 	<xsl:param name="uuidref"/>
+	<xsl:param name="extra_metadata_uuid"/>
 	<xsl:param name="protocol" select="'OGC:WMS-1.1.1-http-get-map'"/>
 	<xsl:param name="url"/>
 	<xsl:param name="name"/>
@@ -69,7 +70,14 @@ attached it to the metadata for data.
 									<!-- Add all online source from the target metadata to the
 									current one -->
 									<xsl:if test="//extra">
-										<xsl:copy-of select="//extra//gmd:onLine"/>
+										<xsl:for-each select="//extra//gmd:onLine">
+											<gmd:onLine>
+												<xsl:if test="$extra_metadata_uuid">
+													<xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
+												</xsl:if>
+												<xsl:copy-of select="*"/>
+											</gmd:onLine>
+										</xsl:for-each>
 									</xsl:if>
 									
 									<xsl:if test="$url">
