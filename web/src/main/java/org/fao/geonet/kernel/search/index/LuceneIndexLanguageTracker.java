@@ -114,6 +114,7 @@ public class LuceneIndexLanguageTracker {
         boolean tokenExpired = false;
         for (GeonetworkNRTManager manager: searchManagers.values()) {
             if (!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
+//                commit();
                 manager.maybeRefresh();
             }
             Pair<Long, IndexSearcher> indexSearcher = manager.acquire(versionToken);
@@ -136,6 +137,8 @@ public class LuceneIndexLanguageTracker {
     }
 
     synchronized void commit() throws CorruptIndexException, IOException {
+        // before a writer commits the IndexWriter, it must commit the TaxonomyWriter.
+        taxonomyIndexTracker.commit();
         for (TrackingIndexWriter writer : trackingWriters.values()) {
             writer.getIndexWriter().commit();
         }
@@ -225,8 +228,6 @@ public class LuceneIndexLanguageTracker {
 
         @Override
         public void run() {
-            // before a writer commits the IndexWriter, it must commit the TaxonomyWriter.
-            taxonomyIndexTracker.commit();
             for (TrackingIndexWriter writer: trackingWriters.values()) {
                 try {
                     try {
