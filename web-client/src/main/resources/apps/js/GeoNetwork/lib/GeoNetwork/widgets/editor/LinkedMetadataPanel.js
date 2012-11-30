@@ -228,7 +228,13 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                   '</li>',
                 '</tpl>',
                 '<tpl if="type !== \'thumbnail\'">',
-                  '<li alt="{abstract}">{title} ' + 
+                  '<li alt="{abstract}">' + 
+                    '<tpl if="type === \'onlinesrc\'">',
+                      '<a href="{id}" target="_blank">{title}</a> ',
+                    '</tpl>',
+                    '<tpl if="type !== \'onlinesrc\'">',
+                      '{title} ',
+                    '</tpl>',
                     '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
                     '<tpl if="type === \'onlinesrc\'">',
                       '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',

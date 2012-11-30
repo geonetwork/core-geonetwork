@@ -420,7 +420,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var tplDescription = function (value, p, record) {
             var links = "";
-            if (self.type === 'service' || record.data.links) {
+            if (self.type === 'service') {
                 Ext.each(record.data.links, function (link) {
                     // FIXME: restrict
                     if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
@@ -430,7 +430,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         record.data.serviceProtocol = link.protocol;
                     }
                 });
-                
+            } else if (record.data.links) {
+                Ext.each(record.data.links, function (link) {
+                    // FIXME: restrict
+                    links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
+                });
             }
             return String.format(
                     '<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div><ul>{2}</ul>',
@@ -478,7 +482,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 this.serviceProtocol = r.data.serviceProtocol;
                 
                 // FIXME : only the first metadata link is selected
-                this.selectedLink = r.data.links && r.data.links[0];
+                this.selectedLink = r.data.links;
             } else {
                 this.selectedMd = undefined;
             }
@@ -712,12 +716,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                             "&initiativeType=" + this.initiativeType + 
                             "&associationType=" + this.associationType;
         } else if (this.type === 'onlinesrc') {
-            
-            parameters += "&uuidref=" + (this.selectedMd ? this.selectedMd : "") + 
-                "&url=" + this.selectedLink.href + 
-                "&desc=" + this.selectedLink.title + 
-                "&protocol=" + this.selectedLink.protocol + 
-                "&name=" + this.selectedLink.name;
+            // Combine all links
+            parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
+            if (this.selectedLink.href) {
+                parameters += "&url=" + this.selectedLink.href + 
+                    "&desc=" + this.selectedLink.title + 
+                    "&protocol=" + this.selectedLink.protocol + 
+                    "&name=" + this.selectedLink.name;
+            }
         }
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
