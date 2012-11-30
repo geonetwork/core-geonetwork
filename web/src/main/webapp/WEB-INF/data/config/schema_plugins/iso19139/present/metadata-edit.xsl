@@ -1301,7 +1301,7 @@
       associations/registerTransformation[@element = $parentName]"/>
     <xsl:variable name="listOfTransformations" select="if ($elementTransformations) 
       then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
-      else 'to-iso19139-keyword'"/>
+      else '''to-iso19139-keyword'''"/>
     
     <!-- Create custom widget: 
       * '' for item selector, 

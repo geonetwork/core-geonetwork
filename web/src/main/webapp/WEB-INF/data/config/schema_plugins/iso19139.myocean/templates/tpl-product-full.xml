@@ -457,7 +457,7 @@
                 <gco:Boolean>false</gco:Boolean>
             </gmd:includedWithDataset>
             <gmd:featureTypes>
-                <gco:LocalName>grid-feature</gco:LocalName>
+                <gco:LocalName></gco:LocalName>
             </gmd:featureTypes>
             <gmd:featureCatalogueCitation>
                 <gmd:CI_Citation>

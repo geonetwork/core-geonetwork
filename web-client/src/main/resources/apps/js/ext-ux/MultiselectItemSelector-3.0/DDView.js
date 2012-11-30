@@ -74,7 +74,8 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
 	    } 
 	    this.isDirtyFlag = false; 
 	    this.addEvents( 
-	        "drop" 
+	        "drop",
+	        "dropend"
 	    );
 	},
      
@@ -407,6 +408,7 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
             this.isDirtyFlag = true; 
         } 
         this.dragZone.cachedTarget = null; 
+        this.fireEvent("dropend", this, n, dd, e, data);
         return true; 
     }, 
 

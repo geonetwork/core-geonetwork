@@ -316,7 +316,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  Create a multiple item selector.
      */
     getKeywordsItemSelector: function (withFilter) {
-        
+        var self = this;
         this.itemSelector = new Ext.ux.ItemSelector({
             name: "itemselector",
             fieldLabel: "ItemSelector",
@@ -351,9 +351,20 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     this.generateXML();
                 },
                 scope: this
-            }]
+            }],
+            listeners: {
+                render: function () {
+                    this.toMultiselect.view.on('selectionchange', function () {
+                        self.generateXML();
+                    });
+                    this.toMultiselect.view.on('dropend', function () {
+                        self.generateXML();
+                    });
+                    
+                }
+            }
         });
-        
+       
         
         // Custom callback which load response to the loading area
         // When the initial keyword set will be loaded in the loading area
@@ -367,12 +378,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             this.keywordSearch(this.thesaurusIdentifier, initKeyword, cb);
         }, this);
         
-        // enable the validate button only if there are selected keywords
-        this.itemSelector.on({
-            'change': function (component) {
-                //Ext.getCmp('keywordSearchValidateButton').setDisabled(component.toStore.getCount() < 1);
-            }
-        });
         
         return this.itemSelector;
     },
@@ -576,12 +581,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         
         
         
-        // Callback function when a keyword is added to 
-        // the current selection.
-        var cb = function () {
-            this.generateXML();
-        };
-        
         // One store for current selected keyword
         // When a keyword is added or removed, a XML
         // snippet corresponding to the selection is asked to 
@@ -591,14 +590,21 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 record: 'keyword',
                 id: 'uri'
             }, this.KeywordRecord),
-            fields: ["value", "thesaurus", "uri"],
-            listeners: {
-//                load: cb,
-                add: cb,
-                remove: cb,
-                scope: this
-            }
+            fields: ["value", "thesaurus", "uri"]
         });
+        
+        if (this.mode !== '') {
+            // Callback function when a keyword is added to 
+            // the current selection. For Multi item selector mode
+            // the XML snippet is generated when the content change
+            var cb = function () {
+                this.generateXML();
+            };
+            
+            this.selectedKeywordStore.on('add', cb, this);
+            this.selectedKeywordStore.on('remove', cb, this);
+        }
+        
         
         this.loadingKeywordStore = new Ext.data.Store({
             reader: new Ext.data.XmlReader({
@@ -607,7 +613,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }, this.KeywordRecord),
             fields: ["value", "thesaurus", "uri"],
             listeners: {
-//                load: cb,
                 load: function () {
 //                    console.log(' :: loading store contains: ' + this.loadingKeywordStore.getCount() + "/" + this.initialKeyword.length);
                     if (this.loadingKeywordStore.getCount() ===  this.initialKeyword.length) {
