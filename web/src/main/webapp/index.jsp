@@ -25,8 +25,8 @@
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
 			
 			if(userLang.match("^en") == "en") userLang = "eng"
-			else if(userLang.match("^fr") == "fr") userLang = "fra"
-			else userLang = "deu"
+			else if(userLang.match("^fr") == "fr") userLang = "fre"
+			else userLang = "ger"
 	
 			var search = window.location.search;
 			
