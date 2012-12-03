@@ -210,11 +210,11 @@
     <!-- xpath: gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code --> 
     
     
-    <dc:title><xsl:value-of select="gmd:citation/*/gmd:title/gco:CharacterString"/></dc:title>
+    <dct:title><xsl:value-of select="gmd:citation/*/gmd:title/gco:CharacterString"/></dct:title>
     <!-- xpath: gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString -->
     
     
-    <dc:abstract><xsl:value-of select="gmd:abstract/gco:CharacterString"/></dc:abstract>
+    <dct:abstract><xsl:value-of select="gmd:abstract/gco:CharacterString"/></dct:abstract>
     <!-- xpath: gmd:identificationInfo/*/gmd:abstract/gco:CharacterString -->
     
     
@@ -331,7 +331,7 @@
     
     
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
-      <dcat:Distribution rdf:resource="{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}"/>
+      <dcat:distribution rdf:resource="{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}"/>
     </xsl:for-each>
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->
     
@@ -347,28 +347,28 @@
     <!-- Dataset relation
     -->
     <xsl:for-each select="srv:operatesOn/@uuidref ">
-      <dc:relation rdf:resource="{$url}/metadata/{.}"/>
+      <dct:relation rdf:resource="{$url}/metadata/{.}"/>
     </xsl:for-each>
     
     
     
     <!-- Source relation -->
     <xsl:for-each select="/root/gui/relation/sources/response/metadata">
-      <dc:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
     </xsl:for-each>
     
     
     <!-- Parent/child relation -->
     <xsl:for-each select="../../gmd:parentIdentifier/gco:CharacterString[.!='']">
-      <dc:relation rdf:resource="{$url}/metadata/{.}"/>
+      <dct:relation rdf:resource="{$url}/metadata/{.}"/>
     </xsl:for-each>
     <xsl:for-each select="/root/gui/relation/children/response/metadata">
-      <dc:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
     </xsl:for-each>
     
     <!-- Service relation -->
     <xsl:for-each select="/root/gui/relations/services/response/metadata">
-      <dc:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+      <dct:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
     </xsl:for-each>
     
     
