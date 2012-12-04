@@ -1,5 +1,6 @@
 package org.fao.geonet.resources;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -11,6 +12,7 @@ import java.nio.channels.Channels;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
@@ -291,7 +293,7 @@ public class Resources {
 					appDir, icon);
 
 			int extIdx = src.getName().lastIndexOf('.');
-			String extension = src.getName().substring(extIdx);
+			String extension = src.getName().substring(extIdx).toLowerCase();
 			des = new File(Resources.locateLogosDir(context), destName
 					+ extension);
 
@@ -299,12 +301,32 @@ public class Resources {
 			FileOutputStream os = new FileOutputStream(des);
 
 			BinaryFile.copy(is, os, true, true);
+			copyOtherFormats(context, src, destName);
 		} catch (IOException e) {
 			// --- we ignore exceptions here, just log them
 
 			context.warning("Cannot copy icon -> " + e.getMessage());
 			context.warning(" (C) Source : " + icon);
 			context.warning(" (C) Destin : " + des);
+		}
+	}
+
+	private static void copyOtherFormats(ServiceContext context, File src, String destName) throws IOException {
+		BufferedImage srcImage = ImageIO.read(src);
+		String srcSuffix = src.getName().substring(src.getName().lastIndexOf('.')).toLowerCase();
+		String[] suffixes = ImageIO.getWriterFileSuffixes();
+		for (int i = 0; i < suffixes.length; i++) {
+			String suffix = suffixes[i];
+			
+			if(!srcSuffix.equalsIgnoreCase(suffix) && suffix.length()>0) {
+				File dest = new File(Resources.locateLogosDir(context), destName + "." + suffix.toLowerCase());
+				try {
+					ImageIO.write(srcImage, suffix, dest);
+				} catch (IOException e) {
+					// --- we ignore exceptions here, just log them
+					context.warning("Cannot copy icon to format: "+suffix+" -> " + e.getMessage());
+				}
+			}
 		}
 	}
 
