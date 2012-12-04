@@ -1,0 +1,176 @@
+
+/* to keep footer down -- from http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page */
+html,body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font: 16px arial,helvetica,sans-serif;
+    min-width: 900px;
+ }
+
+form {
+    display: inline;
+}
+
+#container {
+    min-height: 100%;
+    position: relative;
+}
+
+#main {
+    padding: 3px;
+    padding-bottom: 40px; /* height of the footer */
+}
+
+#header header {
+    background: #E26F02;
+    width: 100%;
+}
+
+
+#header {
+    background-image: url('../images/header-background.jpg');
+    background-color: white;
+    box-shadow: none;
+}
+
+/* ==============
+ MOBILE: Menu
+ ============== */
+#nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+#nav a {
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    color: #FFFFFF;
+    float: left;
+    padding: 4px 2%;
+    margin-bottom: 0;
+    margin: 0 1px;
+    background: #01669E;
+}
+
+#nav a.selected {
+    background: #FFFFFF;
+    color: #01669E;
+}
+
+#nav a:hover {
+    text-decoration: bolder;
+}
+
+#navTop ul {
+    margin: 0;
+    padding: 0;
+}
+
+#navTop a {
+    text-align: center;
+    text-decoration: none;
+    font-weight: normal;
+    color: #000000;
+    float: left;
+    padding: 4px;
+    margin-bottom: 0;
+    margin: 0 1px;
+    background: #CCCCCC;
+    border-right: 1px solid #FFFFFF;
+}
+
+#navTop a:hover {
+    text-decoration: bolder;
+}
+
+
+#lang-form div {
+    display: inline;
+    padding-right: 7px;
+}
+
+#lang-form div div form {
+    background: transparent;
+    border: none;
+}
+
+#lang-form div div form div input {
+    background: transparent;
+    border: none;
+    text-align: right;
+}
+
+#lang-form {
+    padding-right: 5px;
+    padding-left: 5px;
+    text-decoration: none;
+    color: #767B7E;
+    float: right;
+    background-color: #CCCCCC;
+}
+
+/* ==============
+ MOBILE: Main
+ ============== */
+.main {
+    padding: 0;
+}
+
+#nav {
+    margin: 0px;
+    xclear: both;
+    float: left;
+    width: 50%;
+    background-color: #CCCCCC;
+    font-size: 0.9em;
+
+}
+
+#navTop {
+    margin: 0px;
+    xclear: both;
+    float: left;
+    width: 80%;
+    background-color: #CCCCCC;
+    width: 80%;
+    font-size: 0.6em;
+}
+
+/* Login form
+ */
+#login-form {
+    float:right;
+    font-size: 0.8em;
+    background-color: #CCCCCC;
+}
+#login_div {
+    padding-top: 5px;
+}
+
+#login_div label, #login_div input {
+    font-size: 0.8em;
+    margin: 2px;
+}
+
+#login_div #username, #login_div #password {
+    width: 80px;
+}
+
+#login_div #login_button {
+    border: black 1px solid;
+    font-size: 0.8em;
+    padding: 2px;
+    background: white;
+}
+
+/* Search form
+*/
+#search-form {
+    width: 300px;
+
+}

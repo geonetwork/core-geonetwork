@@ -5,7 +5,7 @@
 
 
         <service name="geocat">
-            <output sheet="geocat.xsl">
+            <output sheet="geocat_widgetui.xsl">
             	<call name="groups" class=".guiservices.groups.GetAll" />
 				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
                     <param name="maxItems" value="10" />
