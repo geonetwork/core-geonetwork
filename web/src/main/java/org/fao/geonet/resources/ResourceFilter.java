@@ -30,7 +30,7 @@ import org.fao.geonet.constants.Geonet;
  */
 public class ResourceFilter implements Filter {
     private static final int CONTEXT_PATH_PREFIX = "/".length();
-    private static final int SIX_HOURS = 60*60*6;
+    private static final int FIVE_DAYS = 60*60*24*5;
     private String resourcesDir;
     private byte[] defaultImage;
     private FilterConfig config;
@@ -64,7 +64,7 @@ public class ResourceFilter implements Filter {
             HttpServletResponse httpServletResponse = (HttpServletResponse)response;
             // TODO : other type of resources html
             httpServletResponse.setContentType("image/"+ext);
-            httpServletResponse.addHeader("Cache-Control", "max-age="+SIX_HOURS+", public");
+            httpServletResponse.addHeader("Cache-Control", "max-age="+FIVE_DAYS+", public");
             if(filename.equals("logos/favicon.gif")) {
                 httpServletResponse.setContentLength(favicon.length);
                 
