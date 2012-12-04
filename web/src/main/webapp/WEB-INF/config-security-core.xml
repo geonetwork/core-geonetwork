@@ -25,6 +25,8 @@
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
+				<sec:filter-chain pattern="/xml/csw/test/*" filters="" />
+				<sec:filter-chain pattern="/xsl/harvesting/**" filters="" />
 				<ref bean="coreFilterChain"/>
  				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
  				logoutFilter,
@@ -54,8 +56,8 @@
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
 				<ref bean="logoutFilter" />
-				<ref bean="formLoginFilter" />
 				<ref bean="basicAuthenticationFilter" />
+				<ref bean="formLoginFilter" />
 				<ref bean="requestCacheFilter" />
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />

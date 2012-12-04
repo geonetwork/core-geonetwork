@@ -12,18 +12,7 @@ import java.util.Map.Entry;
 
 import jeeves.utils.Xml;
 
-import org.fao.xsl.support.And;
-import org.fao.xsl.support.Attribute;
-import org.fao.xsl.support.Count;
-import org.fao.xsl.support.EqualText;
-import org.fao.xsl.support.EqualTrimText;
-import org.fao.xsl.support.Exists;
-import org.fao.xsl.support.Finder;
-import org.fao.xsl.support.Not;
-import org.fao.xsl.support.PolygonValidator;
-import org.fao.xsl.support.Prefix;
-import org.fao.xsl.support.Requirement;
-import org.fao.xsl.support.StartsWithText;
+import org.fao.xsl.support.*;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.junit.AfterClass;
@@ -59,6 +48,25 @@ public class ValidateTransformationTest
     public void deleteOutputDir()
     {
         TransformationTestSupport.delete(outputDir);
+    }
+    
+    @Test
+    public void iso19139NewLangCodeTransform() throws Throwable
+    {
+    	File file = new File(data, "iso19139/linkage.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("GM03_2Comprehensive.Comprehensive.MD_DataIdentification", new Exists(new Finder("language", new EqualTrimText("fr"))));
+    	rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
+    	file = testFile(file, Control.ISO_GM03, rules, true);
+
+    	rules.clear();
+    	rules.put("CHE_MD_Metadata/language", new Exists(new Finder("CharacterString", new EqualTrimText("fre"))));
+    	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "fre")));
+    	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "ger")));
+    	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "ita")));
+    	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "eng")));
+    	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
+    	file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
 
     @Test

@@ -21,7 +21,7 @@
         <xsl:choose>
             <xsl:when test="not(language) or normalize-space(language)=''">
                 <gmd:language>
-                    <gco:CharacterString>deu</gco:CharacterString>
+                    <gco:CharacterString>ger</gco:CharacterString>
                 </gmd:language>
             </xsl:when>
             <xsl:otherwise>
@@ -39,7 +39,7 @@
         <xsl:apply-templates mode="MetaData" select="dataSetURI"/>
         <gmd:locale>
             <gmd:PT_Locale id="DE">
-                <gmd:languageCode><gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode></gmd:languageCode>
+                <gmd:languageCode><gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger">German</gmd:LanguageCode></gmd:languageCode>
                 <gmd:characterEncoding>
                     <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
                 </gmd:characterEncoding>
@@ -47,7 +47,7 @@
         </gmd:locale>
         <gmd:locale>
             <gmd:PT_Locale id="FR">
-                <gmd:languageCode><gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode></gmd:languageCode>
+                <gmd:languageCode><gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre">French</gmd:LanguageCode></gmd:languageCode>
                 <gmd:characterEncoding>
                     <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
                 </gmd:characterEncoding>
@@ -69,6 +69,16 @@
                 </gmd:characterEncoding>
             </gmd:PT_Locale>
         </gmd:locale>
+            <gmd:locale>
+                <gmd:PT_Locale id="RM">
+                    <gmd:languageCode>
+                        <gmd:LanguageCode codeListValue="roh" codeList="#LanguageCode">Rumantsch</gmd:LanguageCode>
+                    </gmd:languageCode>
+                    <gmd:characterEncoding>
+                        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+                    </gmd:characterEncoding>
+                </gmd:PT_Locale>
+            </gmd:locale>
         <xsl:apply-templates mode="MetaData" select="GM03Comprehensive.Comprehensive.MD_GridSpatialRepresentation|
                                                      GM03Comprehensive.Comprehensive.MD_VectorSpatialRepresentation|
                                                      GM03Comprehensive.Comprehensive.MD_Georeferenceable|

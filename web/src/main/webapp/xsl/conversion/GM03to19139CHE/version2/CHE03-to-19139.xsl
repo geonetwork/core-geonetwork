@@ -190,11 +190,11 @@
     <xsl:template mode="languageToIso3" match="text()">
         <xsl:variable name="lang" select="translate(., $LOWER, $UPPER)"/>
         <xsl:choose>
-            <xsl:when test="$lang='DE'">deu</xsl:when>
-            <xsl:when test="$lang='FR'">fra</xsl:when>
+            <xsl:when test="$lang='DE'">ger</xsl:when>
+            <xsl:when test="$lang='FR'">fre</xsl:when>
             <xsl:when test="$lang='IT'">ita</xsl:when>
             <xsl:when test="$lang='EN'">eng</xsl:when>
-            <xsl:when test="$lang='RM'">rhe</xsl:when>
+            <xsl:when test="$lang='RM'">roh</xsl:when>
             <xsl:otherwise>ERROR_<xsl:value-of select="$lang"/></xsl:otherwise>
         </xsl:choose>
     </xsl:template>

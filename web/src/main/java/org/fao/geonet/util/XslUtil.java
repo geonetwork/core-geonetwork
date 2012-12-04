@@ -15,8 +15,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
-
+import jeeves.exceptions.JeevesException;
+import jeeves.server.ProfileManager;
 import jeeves.server.context.ServiceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,7 +28,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import jeeves.exceptions.JeevesException;
 import jeeves.utils.Log;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Axis;
@@ -58,12 +57,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -164,49 +157,29 @@ public final class XslUtil {
     }
     
     public static boolean isCasEnabled() {
-    	return existsBean("casEntryPoint");
-    }
+		return ProfileManager.isCasEnabled();
+	}
     /** 
-     * Check if bean is defined in the context
-     * 
-     * @param beanId id of the bean to look up
-     */
-    public static boolean existsBean(String beanId) {
-    	ServiceContext serviceContext = ServiceContext.get();
-		if(serviceContext == null) return true;
-    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
-    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-    	if(springContext == null) return true;
-    	return springContext.containsBean(beanId);
-    }
+	 * Check if bean is defined in the context
+	 * 
+	 * @param beanId id of the bean to look up
+	 */
+	public static boolean existsBean(String beanId) {
+		return ProfileManager.existsBean(beanId);
+	}
     /**
-     * Optimistically check if user can access a given url.  If not possible to determine then
-     * the methods will return true.  So only use to show url links, not check if a user has access
-     * for certain.  Spring security should ensure that users cannot access restricted urls though.
-     *  
-     * @param serviceName the raw services name (main.home) or (admin) 
-     * 
-     * @return true if accessible or system is unable to determine because the current
-     * 				thread does not have a ServiceContext in its thread local store
-     */
-    public static boolean isAccessibleService(Object serviceName) {
-    	ServiceContext serviceContext = ServiceContext.get();
-		if(serviceContext == null) return true;
-    	ServletContext servletContext = serviceContext.getServlet().getServletContext();
-    	WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-    	if(springContext == null) return true;
-    	Map<String, WebInvocationPrivilegeEvaluator> evals = springContext.getBeansOfType(WebInvocationPrivilegeEvaluator.class);
-    	for(WebInvocationPrivilegeEvaluator eval: evals.values()) {
-	    	SecurityContext context = SecurityContextHolder.getContext();
-	    	if(eval == null || context == null) return true;
-			Authentication authentication = context.getAuthentication();
-			boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
-			if (allowed) {
-				return true;
-			}
-    	}
-		return false;
-    }
+	 * Optimistically check if user can access a given url.  If not possible to determine then
+	 * the methods will return true.  So only use to show url links, not check if a user has access
+	 * for certain.  Spring security should ensure that users cannot access restricted urls though.
+	 *  
+	 * @param serviceName the raw services name (main.home) or (admin) 
+	 * 
+	 * @return true if accessible or system is unable to determine because the current
+	 * 				thread does not have a ServiceContext in its thread local store
+	 */
+	public static boolean isAccessibleService(Object serviceName) {
+		return ProfileManager.isAccessibleService(serviceName);
+	}
     /**
      * Takes the characters until the pattern is matched
      */
@@ -912,9 +885,9 @@ public final class XslUtil {
      * @return The related 3 iso lang code
      */
     public static String twoCharLangCode(String iso3LangCode) {
-        if(iso3LangCode==null || iso3LangCode.length() == 0) {
-            return Geonet.DEFAULT_LANGUAGE;
-        }
+    	if(iso3LangCode==null || iso3LangCode.length() == 0) {
+    		return Geonet.DEFAULT_LANGUAGE;
+    	}
         String iso2LangCode = "";
 
         try {
@@ -929,9 +902,9 @@ public final class XslUtil {
         }
 
         if(iso2LangCode == null) {
-            return iso3LangCode.substring(0,2);
+        	return iso3LangCode.substring(0,2);
         } else {
-            return iso2LangCode;
+        	return iso2LangCode;
         }
     }
     /**

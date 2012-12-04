@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <M500>[Langue] - La langue principale des métadonnées n'est pas définie alors que d'autres
+        langues le sont.</M500>
+    <alert.M500><div>Définir la langue principale et vérifier dans la section autres langues (ie.
+        gmd:locale) que les autres langues sont définies (voir vue avancée / section métadonnée).
+        <span class="validationReportSuggestion">Suggestions: Définir la langue par défaut ou supprimer les autres langues.</span></div></alert.M500>
+    <report.M500>La langue principale est :</report.M500>
+    <M501>[Langue] - La langue principale ne doit pas être définie dans la section autres
+        langues.</M501>
+    <alert.M501><div>Définir la langue principale une seule fois (voir vue avancée / section métadonnée).<br/>
+        <span class="validationReportSuggestion">Suggestions: supprimer la langue par défaut de la section autres langues.</span></div></alert.M501>
+    <report.M501>Aucun doublon identifier sur les langues de la métadonnée.</report.M501>
+</strings>

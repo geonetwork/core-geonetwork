@@ -22,14 +22,37 @@ public class UpdateFixedInfoTest {
 				"     <che:CHE_MD_DataIdentification gco:isoType=\"gmd:MD_DataIdentification\">" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> elevation</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>  environment </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>planningCadastre_Cadastre</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>planningCadastre_Planning</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>planningCadastre_Planning</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_Imagery</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_EarthCover</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_BaseMaps</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation_Geology </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation_Soils </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"     </che:CHE_MD_DataIdentification>" +
 				"   </gmd:identificationInfo>" +
 				"</che:CHE_MD_Metadata>", false);
 		Element transformed = Xml.transform(testData, pathToXsl);
+		assertCorrectElements(transformed);
+		
+		transformed = Xml.transform(transformed, pathToXsl);
+		System.out.println(Xml.getString(transformed));
+		assertCorrectElements(transformed);
+	}
+	private void assertCorrectElements(Element transformed) {
 		findAndAssert(transformed, new Count(0, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("environment"))));
-		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("geoscientificInformation_Geology"))));
+		findAndAssert(transformed, new Count(12, new Finder("topicCategory")));
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("geoscientificInformation"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("planningCadastre"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("planningCadastre_Cadastre"))));
+		findAndAssert(transformed, new Count(2, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("planningCadastre_Planning"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("imageryBaseMapsEarthCover"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("imageryBaseMapsEarthCover_Imagery"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("imageryBaseMapsEarthCover_EarthCover"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("imageryBaseMapsEarthCover_BaseMaps"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("geoscientificInformation_Geology"))));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("geoscientificInformation_Soils"))));
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("elevation"))));
 	}
     private void findAndAssert(Element transformed, Requirement finder) {

@@ -60,10 +60,13 @@
         <xsl:choose>
             <xsl:when test="string-length($lang3)=2"><xsl:value-of select="$lang3"/></xsl:when>
             <xsl:when test="$lang3='deu'">de</xsl:when>
+            <xsl:when test="$lang3='ger'">de</xsl:when>
             <xsl:when test="$lang3='fra'">fr</xsl:when>
+            <xsl:when test="$lang3='fre'">fr</xsl:when>
             <xsl:when test="$lang3='ita'">it</xsl:when>
             <xsl:when test="$lang3='eng'">en</xsl:when>
             <xsl:when test="$lang3='rhe'">rm</xsl:when>
+            <xsl:when test="$lang3='roh'">rm</xsl:when>
             <xsl:when test="$lang3='aar'">aa</xsl:when>
             <xsl:when test="$lang3=''"></xsl:when>
             <xsl:otherwise>ERROR_<xsl:value-of select="$lang3"/></xsl:otherwise>
