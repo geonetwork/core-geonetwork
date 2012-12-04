@@ -113,6 +113,7 @@
 			    <sec:intercept-url pattern="/srv/.*/download.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/trigger.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			    
+			    <sec:intercept-url pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>
