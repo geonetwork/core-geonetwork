@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -36,11 +37,11 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -107,6 +108,11 @@ public class Update implements Service
 			String query = "INSERT INTO Groups(id, name, description, email, website, logoUuid) VALUES (?, ?, ?, ?, ?, ?)";
 
             dbms.execute(query, newId, name, descr, email, website, logoUUID);
+            
+            addLocalizationEntry(newId, descr, dbms, "eng");
+            addLocalizationEntry(newId, descr, dbms, "ger");
+            addLocalizationEntry(newId, descr, dbms, "fre");
+            addLocalizationEntry(newId, descr, dbms, "ita");
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}
@@ -120,6 +126,16 @@ public class Update implements Service
 		}
 
 		return elRes;
+	}
+
+	private void addLocalizationEntry(int id, String descr, Dbms dbms,
+			String lang) throws SQLException {
+		String query = "INSERT INTO groupsdes (iddes, langid, label) VALUES (?,?,?)";
+		try{
+			dbms.execute(query, id, lang, descr);
+		} catch (Exception e) {
+			Log.error(Geonet.GEONETWORK, "Failed to add localization to database: "+query+" ("+id+", "+lang+", "+descr+")", e);
+		}
 	}
 	
     private String stripPath(String file) {

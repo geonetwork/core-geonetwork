@@ -51,6 +51,23 @@ INSERT INTO Groups VALUES (-1,'GUEST','self-registered users',NULL,NULL);
 INSERT INTO Groups VALUES (0,'intranet',NULL,NULL,NULL);
 INSERT INTO Groups VALUES (1,'all',NULL,NULL,NULL);
 INSERT INTO Groups VALUES (2,'sample',NULL,NULL,NULL);
+
+
+INSERT INTO GroupsDes VALUES (-1,'eng','Guest');
+INSERT INTO GroupsDes VALUES (0,'eng','Intranet');
+INSERT INTO GroupsDes VALUES (1,'eng','All');
+INSERT INTO GroupsDes VALUES (2,'eng','Sample Group');
+
+INSERT INTO GroupsDes VALUES (-1,'fre','Invité');
+INSERT INTO GroupsDes VALUES (0,'fre','Intranet');
+INSERT INTO GroupsDes VALUES (1,'fre','Tous');
+INSERT INTO GroupsDes VALUES (2,'fre','Groupe exemple');
+
+INSERT INTO GroupsDes VALUES (-1,'ger','Gast');
+INSERT INTO GroupsDes VALUES (0,'ger','Intranet');
+INSERT INTO GroupsDes VALUES (1,'ger','Alle');
+INSERT INTO GroupsDes VALUES (2,'ger','Beispielgruppe');
+
 -- ======================================================================
 -- === Table: IsoLanguages
 -- ======================================================================

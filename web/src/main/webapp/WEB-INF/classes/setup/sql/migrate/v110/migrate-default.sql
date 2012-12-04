@@ -14,3 +14,11 @@ ALTER TABLE users ALTER "password" TYPE character varying(120);
 ALTER TABLE users ADD security varchar(128);
 ALTER TABLE users ADD authtype varchar(32);
 update users SET security = 'update_hash_required';
+
+DELETE FROM StatusValuesDes where langid='fra' or langid='deu';
+DELETE FROM categoriesdes where langid='fra' or langid='deu';
+DELETE FROM CswServerCapabilitiesInfo where langid='fra' or langid='deu';
+
+DELETE FROM isolanguagesdes where langid='fra' or langid='deu' or id='500' or id='501';
+DELETE FROM isolanguages where code="fra" or code="deu";
+DELETE FROM Languages where id="fra" or id="deu";
