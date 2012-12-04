@@ -11,7 +11,7 @@ import org.opengis.feature.simple.SimpleFeature;
 
 public class XLinkMapper extends DatastoreMapper {
 	private static final String DESC_COLUMN = "DESC";
-	private static final String NAME_COLUMN = "LAND";
+	private static final String NAME_COLUMN = "GEO_ID";
 	private static final String ID_COLUMN = "ID";
 
 	private final String typeName;

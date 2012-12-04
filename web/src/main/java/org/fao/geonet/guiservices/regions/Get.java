@@ -47,16 +47,17 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-	    if(regions == null){
-	        regions = new List().exec(params, context);
-	        @SuppressWarnings("unchecked")
-            java.util.List<Element> children = regions.getChildren(Region.REGION_EL);
-	        for (Element element : children) {
-                element.setName("record");
-                element.addContent(new Element("id").setText(element.getAttributeValue("id")));
-            }
-	    }
-		return (Element) regions.clone();
+		return new Element(Region.REGION_EL);
+//	    if(regions == null){
+//	        regions = new List().exec(params, context);
+//	        @SuppressWarnings("unchecked")
+//            java.util.List<Element> children = regions.getChildren(Region.REGION_EL);
+//	        for (Element element : children) {
+//                element.setName("record");
+//                element.addContent(new Element("id").setText(element.getAttributeValue("id")));
+//            }
+//	    }
+//		return (Element) regions.clone();
 	}
 
 }

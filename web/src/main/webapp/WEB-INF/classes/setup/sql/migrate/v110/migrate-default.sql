@@ -19,6 +19,6 @@ DELETE FROM StatusValuesDes where langid='fra' or langid='deu';
 DELETE FROM categoriesdes where langid='fra' or langid='deu';
 DELETE FROM CswServerCapabilitiesInfo where langid='fra' or langid='deu';
 
-DELETE FROM isolanguagesdes where langid='fra' or langid='deu' or id='500' or id='501';
+DELETE FROM isolanguagesdes where langid='fra' or langid='deu' or langid='500' or langid='501';
 DELETE FROM isolanguages where code="fra" or code="deu";
 DELETE FROM Languages where id="fra" or id="deu";
