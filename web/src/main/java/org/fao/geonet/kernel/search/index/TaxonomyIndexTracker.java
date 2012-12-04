@@ -68,6 +68,7 @@ class TaxonomyIndexTracker {
             CategoryDocumentBuilder categoryDocBuilder = new CategoryDocumentBuilder(taxonomyWriter);
             categoryDocBuilder.setCategoryPaths(categories);
             categoryDocBuilder.build(doc);
+//            taxonomyWriter.commit();
             
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
@@ -82,7 +83,8 @@ class TaxonomyIndexTracker {
 
     void close(List<Throwable> errors) throws IOException {
         try {
-            taxonomyReader.close();
+            if(taxonomyReader != null)
+                taxonomyReader.close();
         } catch (Throwable e) {
             errors.add(e);
         }
@@ -103,15 +105,15 @@ class TaxonomyIndexTracker {
     void reset() throws IOException {
         List<Throwable> errors = new ArrayList<Throwable>(5);
         close(errors);
+
+        FileUtils.deleteDirectory(taxonomyDir);
+        init();
+
         if(!errors.isEmpty()) {
             for (Throwable throwable : errors) {
                 Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
             }
-            throw new RuntimeException("There were errors while closing lucene indices");
         }
-
-        FileUtils.deleteDirectory(taxonomyDir);
-        init();
     }
 
     void commit() {
@@ -136,7 +138,11 @@ class TaxonomyIndexTracker {
     }
     public boolean refreshReader() throws IOException {
         try {
-            return taxonomyReader.refresh();
+            if(taxonomyReader == null) {
+                return false;
+            } else {
+                return taxonomyReader.refresh();
+            }
         } catch (InconsistentTaxonomyException e) {
             throw new RuntimeException("Error refreshing taxonomy", e);
         }

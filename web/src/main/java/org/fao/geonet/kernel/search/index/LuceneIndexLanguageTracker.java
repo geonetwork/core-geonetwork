@@ -17,7 +17,6 @@ import jeeves.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
-import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -114,7 +113,6 @@ public class LuceneIndexLanguageTracker {
         boolean tokenExpired = false;
         for (GeonetworkNRTManager manager: searchManagers.values()) {
             if (!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
-//                commit();
                 manager.maybeRefresh();
             }
             Pair<Long, IndexSearcher> indexSearcher = manager.acquire(versionToken);
@@ -209,7 +207,6 @@ public class LuceneIndexLanguageTracker {
             for (Throwable throwable : errors) {
                 Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
             }
-            throw new RuntimeException("There were errors while closing lucene indices");
         }
     }
     public synchronized void optimize() throws CorruptIndexException, IOException {
