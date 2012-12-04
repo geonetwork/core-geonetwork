@@ -476,7 +476,7 @@ INSERT INTO groupsdes (
 INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
 INSERT INTO Settings VALUES (957,956,'enable','true');
 INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
-INSERT INTO Settings VALUES (24,20,'securePort','8443');
+INSERT INTO Settings VALUES (24,20,'securePort','');
 
 
 -- Fix operation names 
