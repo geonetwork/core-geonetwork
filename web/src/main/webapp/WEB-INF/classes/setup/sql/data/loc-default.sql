@@ -20,14 +20,6 @@ INSERT INTO isolanguages (id, code, shortcode) VALUES (358,	'roh',	'rm');
 -- Data for Name: isolanguagesdes; Type: TABLE DATA; Schema: public; Owner: www-data
 --
 
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (500,   	'ita',	'Tedesco');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (500,   	'eng',	'German');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (500,   	'fre',	'Allemand');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (500,   	'ger',	'Deutsch');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (501,   	'fre',	'Français');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (501,   	'eng',	'French');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (501,   	'ita',	'Francese');
-INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (501,   	'ger',	'Französisch');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (123,   	'fre',	'Anglais');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (123,   	'ger',	'Englisch');
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (123,   	'ita',	'Inglese');
@@ -50,7 +42,17 @@ INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (124,   	'eng',	'Itali
 INSERT INTO isolanguagesdes (iddes, langid, label) VALUES (124,	    'ger',	'Italienisch');
 
 
---
--- PostgreSQL database dump complete
---
+INSERT INTO GroupsDes VALUES (-1,'eng','Guest');
+INSERT INTO GroupsDes VALUES (0,'eng','Intranet');
+INSERT INTO GroupsDes VALUES (1,'eng','All');
+INSERT INTO GroupsDes VALUES (2,'eng','Sample Group');
 
+INSERT INTO GroupsDes VALUES (-1,'fre','Invité');
+INSERT INTO GroupsDes VALUES (0,'fre','Intranet');
+INSERT INTO GroupsDes VALUES (1,'fre','Tous');
+INSERT INTO GroupsDes VALUES (2,'fre','Groupe exemple');
+
+INSERT INTO GroupsDes VALUES (-1,'ger','Gast');
+INSERT INTO GroupsDes VALUES (0,'ger','Intranet');
+INSERT INTO GroupsDes VALUES (1,'ger','Alle');
+INSERT INTO GroupsDes VALUES (2,'ger','Beispielgruppe');
