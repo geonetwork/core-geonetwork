@@ -71,20 +71,26 @@ public class AddElement implements Service {
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
 		if (thesaurus.isFreeCode(namespace, newid)) {
-            KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
-                .setCode(newid)
-                .setValue(prefLab, lang)
-                .setDefinition(definition, lang);
+
+		    KeywordBean keyword = new KeywordBean()
+	            .setNamespaceCode(namespace)
+	            .setRelativeCode(newid)
+	            .setValue(prefLab, lang)
+            	.setDefinition(definition, lang);
 
 			if (thesaType.equals("place")) {
-				bean.setCoordEast(Util.getParam(params, "east"))
-				    .setCoordNorth(Util.getParam(params, "north"))
-				    .setCoordSouth(Util.getParam(params, "south"))
-				    .setCoordWest(Util.getParam(params, "west"));
-			} 
-			
-			thesaurus.addElement(bean);
-			
+				String east = Util.getParam(params, "east");
+				String west = Util.getParam(params, "west");
+				String south = Util.getParam(params, "south");
+				String north = Util.getParam(params, "north");
+				keyword.setCoordEast(east)
+                    .setCoordNorth(north)
+                    .setCoordSouth(south)
+                    .setCoordWest(west);
+			}
+
+			thesaurus.addElement(keyword);
+
 			elResp.addContent(new Element("selected").setText(ref));
 			elResp.addContent(new Element("mode").setText("edit"));
 		} else {

@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -27,10 +27,10 @@ OpenLayers.Layer.MapGuide = OpenLayers.Class(OpenLayers.Layer.Grid, {
     /**
      * APIProperty: useHttpTile
      * {Boolean} use a tile cache exposed directly via a webserver rather than the 
-	   *    via mapguide server. This does require extra configuration on the Mapguide Server,
-	   *    and will only work when singleTile is false. The url for the layer must be set to the
-	   *    webserver path rather than the Mapguide mapagent.	  
-	   *    See http://trac.osgeo.org/mapguide/wiki/CodeSamples/Tiles/ServingTilesViaHttp 
+     *    via mapguide server. This does require extra configuration on the Mapguide Server,
+     *    and will only work when singleTile is false. The url for the layer must be set to the
+     *    webserver path rather than the Mapguide mapagent.
+     *    See http://trac.osgeo.org/mapguide/wiki/CodeSamples/Tiles/ServingTilesViaHttp
      **/
     useHttpTile: false,
     
@@ -116,6 +116,12 @@ OpenLayers.Layer.MapGuide = OpenLayers.Class(OpenLayers.Layer.Grid, {
      **/
     defaultSize: new OpenLayers.Size(300,300),
 
+    /** 
+     * Property: tileOriginCorner
+     * {String} MapGuide tile server uses top-left as tile origin
+     **/
+    tileOriginCorner: "tl",
+
     /**
      * Constructor: OpenLayers.Layer.MapGuide
      * Create a new Mapguide layer, either tiled or untiled.  
@@ -162,7 +168,7 @@ OpenLayers.Layer.MapGuide = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *       groups to hide eg: 'cvc-xcv34,453-345-345sdf'
      *   - selectionXml - {String} A selection xml string Some server plumbing
      *       is required to read such a value.
-     * options - {Ojbect} Hashtable of extra options to tag onto the layer; 
+     * options - {Object} Hashtable of extra options to tag onto the layer; 
      *          will vary depending if tiled or untiled maps are being requested
      */
     initialize: function(name, url, params, options) {
@@ -231,22 +237,6 @@ OpenLayers.Layer.MapGuide = OpenLayers.Class(OpenLayers.Layer.Grid, {
       obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);
 
       return obj;
-    },
-
-    /**
-     * Method: addTile
-     * Creates a tile, initializes it, and adds it to the layer div. 
-     *
-     * Parameters:
-     * bounds - {<OpenLayers.Bounds>}
-     * position - {<OpenLayers.Pixel>}
-     * 
-     * Returns:
-     * {<OpenLayers.Tile.Image>} The added OpenLayers.Tile.Image
-     */
-    addTile:function(bounds,position) {
-        return new OpenLayers.Tile.Image(this, position, bounds, 
-                                         null, this.tileSize);
     },
 
     /**
@@ -455,28 +445,28 @@ OpenLayers.Layer.MapGuide = OpenLayers.Class(OpenLayers.Layer.Grid, {
      *
      * Parameters:
      * bounds - {<OpenLayers.Bound>}
-     * extent - {<OpenLayers.Bounds>}
+     * origin - {<OpenLayers.LonLat>}
      * resolution - {Number}
      *
      * Returns:
-     * Object containing properties tilelon, tilelat, tileoffsetlat,
+     * {Object} Object containing properties tilelon, tilelat, tileoffsetlat,
      * tileoffsetlat, tileoffsetx, tileoffsety
      */
-    calculateGridLayout: function(bounds, extent, resolution) {
+    calculateGridLayout: function(bounds, origin, resolution) {
         var tilelon = resolution * this.tileSize.w;
         var tilelat = resolution * this.tileSize.h;
         
-        var offsetlon = bounds.left - extent.left;
+        var offsetlon = bounds.left - origin.lon;
         var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;
         var tilecolremain = offsetlon/tilelon - tilecol;
         var tileoffsetx = -tilecolremain * this.tileSize.w;
-        var tileoffsetlon = extent.left + tilecol * tilelon;
+        var tileoffsetlon = origin.lon + tilecol * tilelon;
         
-        var offsetlat = extent.top - bounds.top + tilelat; 
+        var offsetlat = origin.lat - bounds.top + tilelat; 
         var tilerow = Math.floor(offsetlat/tilelat) - this.buffer;
         var tilerowremain = tilerow - offsetlat/tilelat;
         var tileoffsety = tilerowremain * this.tileSize.h;
-        var tileoffsetlat = extent.top - tilelat*tilerow;
+        var tileoffsetlat = origin.lat - tilelat*tilerow;
         
         return { 
           tilelon: tilelon, tilelat: tilelat,

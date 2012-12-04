@@ -14,7 +14,7 @@
 	<xsl:param name="displayInfo"/>
 	<xsl:param name="lang"/>
 	
-	<xsl:include href="../metadata-iso19139-utils.xsl"/>
+	<xsl:include href="../metadata-utils.xsl"/>
 	
 	<!-- ============================================================================= -->
 
@@ -294,7 +294,7 @@
 				<xsl:variable name="fileName" select="gmd:fileName/gco:CharacterString"/>
 				<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
 				
-				<xsl:if test="$fileName!='' and $fileDescr='thumbnail'">
+				<xsl:if test="$fileName!=''">
 					<dc:URI>
 						<xsl:choose>
 							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.gif')">

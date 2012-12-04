@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<links>
+	<title>Bağlantılar</title>
+	<content>
+		<h3>GeoNetwork Web Sitesi</h3>
+		<a target="_blank" href="http://geonetwork-opensource.org">GeoNetwork hakkında detaylı bilgi, dokumantasyon ve her türlü kaynak yer almaktadır</a><br/>
+		<h3>GeoNetwork  FAO-UN ve WFP-UN </h3>
+		<a target="_blank" href="http://www.fao.org/geonetwork">GeoNetwork BM Gıda ve Tarım hizmetlerinde</a><br/>
+		<a target="_blank" href="http://vam.wfp.org/vamsie">GeoNetwork Dünya Sağlık Programı Zaafiyet ve Haritalama Birimi'nde (WFP)</a><br/>
+		<h3>Standart ve  Spatial Veri Altyapıları</h3>
+		<a target="_blank" href="http://www.gsdi.org/">Global Spatial Veri Altyapısı (GSDI)</a><br/>
+		<a target="_blank" href="http://www.opengeospatial.org/">Açık Jeospatial Konsorsiyumu (OGC)</a><br/>
+		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Coğrafi Bilgi/Geomatics<br/>
+		<h3>Coğrafi Metaveri Standardı ISO-19115 </h3>
+		<p>
+			UNGIWG ISO 19115 metadata şablonu versiyon 1.0 <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(XML şablonu ve örnek veriler)</a>
+			&#160;&#160;
+			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.doc">(Açıklayıcı Word dokümanı)</a>
+		</p>
+		<p>
+			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/ReferenceServices.htm','Online Resource References">Önerilen ISO19115 servis referansları ve çevrimiçi kaynaklar</a>
+		</p>
+		<h3>Mapping Initiatives</h3>
+		<a target="_blank" href="http://www.digitalearth.gov/">Dijital Dünya</a><br/>
+		<a target="_blank" href="http://www.iscgm.org/">Global Haritalama</a><br/>
+		<p/>
+		<h3>Diğer ilgili siteler</h3>
+		<a target="_blank" href="http://www.ungiwg.org/">UNGIWG</a> Birleşmiş Milletler Coğrafi Bilgi Çalışma Grubu<br/>
+		<a target="_blank" href="http://www.fgdc.gov/">ABD Federal Coğrafi Veri Komitesi (FDGC)</a>
+		<p/>
+		<h3>Harici spatial veri kaynakları</h3>
+		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">Afrika veri yaygınlaştırma servisi</a><br/>
+		<a target="_blank" href="http://www.ngdc.noaa.gov/">NOAA Milli Veri Merkezi, NGDC</a><br/>
+		<a target="_blank" href="http://www.nima.mil/">US Ulusal Görüntüleme ve Harita Ajansı (NIMA)</a><br/>
+		<a target="_blank" href="http://www.esri.com/data/">ESRI ArcData </a>
+	</content>
+</links>
+

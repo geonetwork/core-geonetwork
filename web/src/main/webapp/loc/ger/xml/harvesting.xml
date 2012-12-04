@@ -317,6 +317,7 @@
   <noHistory>No History</noHistory>
   <dateDesc>Date (most recent first)</dateDesc>
   <date>Date</date>
+  <elapsedTime>Time</elapsedTime>
   <detail>Detail</detail>
   <grandTotal>Grand Total</grandTotal>
   <counter>of</counter>

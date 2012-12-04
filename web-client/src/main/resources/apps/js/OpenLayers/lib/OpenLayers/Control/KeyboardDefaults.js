@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -35,31 +35,28 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
     slideFactor: 75,
 
     /**
+     * APIProperty: observeElement
+     * {DOMelement|String} The DOM element to handle keys for. You
+     *     can use the map div here, to have the navigation keys
+     *     work when the map div has the focus. If undefined the
+     *     document is used.
+     */
+    observeElement: null,
+
+    /**
      * Constructor: OpenLayers.Control.KeyboardDefaults
      */
-    initialize: function() {
-        OpenLayers.Control.prototype.initialize.apply(this, arguments);
-    },
-    
-    /**
-     * APIMethod: destroy
-     */
-    destroy: function() {
-        if (this.handler) {
-            this.handler.destroy();
-        }        
-        this.handler = null;
         
-        OpenLayers.Control.prototype.destroy.apply(this, arguments);
-    },
-    
     /**
      * Method: draw
      * Create handler.
      */
     draw: function() {
-        this.handler = new OpenLayers.Handler.Keyboard( this, { 
-                                "keydown": this.defaultKeyPress });
+        var observeElement = this.observeElement || document;
+        this.handler = new OpenLayers.Handler.Keyboard( this,
+                {"keydown": this.defaultKeyPress},
+                {observeElement: observeElement}
+        );
     },
     
     /**
@@ -74,9 +71,10 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
      *    http://unixpapa.com/js/key.html
      *
      * Parameters:
-     * code - {Integer} 
+     * evt - {Event} 
      */
     defaultKeyPress: function (evt) {
+        var size, handled = true;
         switch(evt.keyCode) {
             case OpenLayers.Event.KEY_LEFT:
                 this.map.pan(-this.slideFactor, 0);
@@ -92,19 +90,19 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
                 break;
             
             case 33: // Page Up. Same in all browsers.
-                var size = this.map.getSize();
+                size = this.map.getSize();
                 this.map.pan(0, -0.75*size.h);
                 break;
             case 34: // Page Down. Same in all browsers.
-                var size = this.map.getSize();
+                size = this.map.getSize();
                 this.map.pan(0, 0.75*size.h);
                 break; 
             case 35: // End. Same in all browsers.
-                var size = this.map.getSize();
+                size = this.map.getSize();
                 this.map.pan(0.75*size.w, 0);
                 break; 
             case 36: // Home. Same in all browsers.
-                var size = this.map.getSize();
+                size = this.map.getSize();
                 this.map.pan(-0.75*size.w, 0);
                 break; 
 
@@ -120,7 +118,14 @@ OpenLayers.Control.KeyboardDefaults = OpenLayers.Class(OpenLayers.Control, {
             case 95:  // -/_ (some ASCII)
                 this.map.zoomOut();
                 break; 
-        } 
+            default:
+                handled = false;
+        }
+        if (handled) {
+            // prevent browser default not to move the page
+            // when moving the page with the keyboard
+            OpenLayers.Event.stop(evt);
+        }
     },
 
     CLASS_NAME: "OpenLayers.Control.KeyboardDefaults"

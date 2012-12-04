@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:include href="../main.xsl"/>
 
@@ -15,7 +15,12 @@
 		</xsl:choose>
 	</xsl:variable>
 
-
+	<xsl:template mode="script" match="/" priority="2">
+		<script type="text/javascript" src="../../apps/js/ext/adapter/ext/ext-base.js"/>
+		<script type="text/javascript" src="../../apps/js/ext/ext-all-debug.js"/>
+		<script type="text/javascript" src="../../apps/js/ext-ux/timeago.js"></script>
+	</xsl:template>
+	
 	<xsl:variable name="fullHistory" select="contains(/root/gui/reqService,'full')"/>
 	<xsl:variable name="pageHistorySize" select="10"/>
 
@@ -26,7 +31,6 @@
 			<xsl:with-param name="content">
 
 			<xsl:variable name="totalCount" select="count(/root/response/response/record)" />
-
 			<script>
 				function viewAllHarvestingHistory() {
 					$('harvesterHistoryCounter').toggle();
@@ -89,6 +93,11 @@
 						if (sort) {
 							sort.value = '<xsl:value-of select="/root/response/sort" />';
 						}
+						
+						Ext.each(Ext.DomQuery.select('abbr'), function (item) {
+							var time = new Date(item.innerHTML);
+							item.innerHTML = time.toRelativeTime(0);
+						});
 					});
 
 			</script>
@@ -124,7 +133,8 @@
 							<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/type"/></b></th>
 							<th class="padded" style="width:128px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/name"/></b></th>
 						</xsl:if>
-						<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/date"/></b></th>
+						<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/lastRun"/></b></th>
+						<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/elapsedTime"/></b></th>
 						<th class="padded" style="width:32px"><b><xsl:value-of select="/root/gui/harvesting/ok"/></b></th>
 						<th class="padded" style="width:384px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/detail"/></b></th>
 						<xsl:if test="$fullHistory">
@@ -154,8 +164,16 @@
 								</xsl:if>
 
 								<!-- column: harvestdate -->
-								<td class="padded" style="text-align:center"><xsl:value-of select="harvestdate" /></td>
-
+								<td class="padded" style="text-align:center">
+									<abbr title="{harvestdate}"><xsl:value-of select="harvestdate" /></abbr>
+								</td>
+								<td class="padded" style="text-align:center">
+									<xsl:variable name="minutes" select="floor(elapsedtime div 60)" />
+									<xsl:variable name="seconds" select="elapsedtime mod 60" />
+									<xsl:value-of select="if ($minutes &lt; 1) then 
+										concat($seconds, 's') else concat($minutes, 'min ', $seconds, 's')" />
+								</td>
+							
 								<!-- column: ok? -->
 								<td class="padded" align="center">
 									<xsl:choose>
@@ -224,10 +242,10 @@
 								</xsl:if>
 								<xsl:choose>
 									<xsl:when test="$fullHistory">
-										<td colspan="8"><hr/></td>
+										<td colspan="9"><hr/></td>
 									</xsl:when>
 									<xsl:otherwise>
-										<td colspan="4"><hr/></td>
+										<td colspan="5"><hr/></td>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:element>

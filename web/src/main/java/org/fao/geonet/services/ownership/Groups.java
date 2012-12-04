@@ -63,7 +63,7 @@ public class Groups implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Set<String> userGroups = am.getVisibleGroups(dbms, id);
-		Set<String> myGroups   = am.getUserGroups(dbms, us, null);
+		Set<String> myGroups   = am.getUserGroups(dbms, us, null, false);
 
 		//--- remove 'Intranet' and 'All' groups
 		myGroups.remove("0");

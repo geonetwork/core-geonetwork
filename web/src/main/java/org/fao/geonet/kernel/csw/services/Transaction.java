@@ -239,13 +239,17 @@ public class Transaction extends AbstractOperation implements CatalogService
 
         // Set default group: user first group
         Set<String> userGroups = am.getVisibleGroups(dbms, userId);
-        String group = (String) userGroups.toArray()[0];
-
+        String group;
+		if (userGroups.isEmpty()) {
+			group = null;
+		} else {
+			group = (String) userGroups.iterator().next();
+		}
         //
         // insert metadata
         //
         String docType = null, title = null, isTemplate = null;
-        boolean ufo = false, indexImmediate = false;
+        boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 

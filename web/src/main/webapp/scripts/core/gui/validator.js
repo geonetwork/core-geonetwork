@@ -11,6 +11,7 @@
 	{ id:'...', type:'length', minSize: ..., maxSize: ...} 
 	{ id:'...', type:'alphanum'} 
 	{ id:'...', type:'integer', minValue: ..., maxValue: ..., empty:true} 
+	{ id:'...', type:'oneof', items: ['item2', 'item3']} 
 
 	Supports the following validators:
 	 - length  : the field must be a string which length must be [minSize..maxSize].
@@ -24,6 +25,7 @@
 	             *** Notice that this validator is incomplete. ***
 	 -	ipaddress:the string must be in the xxx.xxx.xxx.xxx form where each xxx must be an
 	             integer in the range 0-255. 'empty' means that the field can be empty.
+	 - oneof : either the control element or one of the other items must be filled
 	             
 	This method expects to find some strings into the xmlLoader object.
 	This is a suggested layout for the string properties. Notice that this is not required:
@@ -111,6 +113,9 @@ Validator.prototype.add = function(rules, parentId)
 		
 		else if (rule.type == 'ipaddress')
 			rule.validator = ker.wrap(this, this.ipaddressVal);
+		
+		else if (rule.type == 'oneof')
+			rule.validator = ker.wrap(this, this.oneofVal);
 		
 		else
 			throw 'Unknown validator type : '+ rule.type;
@@ -441,3 +446,22 @@ Validator.prototype.isLetterOrDigit = function(c)
 
 //=====================================================================================
 
+//=====================================================================================
+
+Validator.prototype.oneofVal = function(rule)
+{
+	var found = rule.ctrl.value && rule.ctrl.value.replace(/^\s+|\s+$/g,'').length !== 0;
+	var i, item;
+	for (i = 0; !found && i < rule.items.length; i++) {
+		item = $(rule.items[i]);
+		found = found || item.value && item.value.replace(/^\s+|\s+$/g,'').length !== 0;
+	}
+	
+	var result= null;
+	
+	if (!found) {
+		result = ['oneof'];
+	}
+
+	return result;
+}

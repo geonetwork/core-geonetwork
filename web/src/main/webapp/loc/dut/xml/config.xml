@@ -8,7 +8,8 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Poort</port>
-	<protocol>Protocol</protocol>
+	<securePort>Secure Poort</securePort>
+	<protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Netwerk</network>
@@ -132,24 +133,7 @@
 		
 	<authentication>Authentication</authentication>
 	
-	<loginuses>Login gebruikt</loginuses>
 	<otherlogins>Sta andere gebruikers toe om in te loggen via</otherlogins>
-
-	<geonetworkdb>GeoNetwork Authenticatie</geonetworkdb>
-		
-	<ldap>LDAP Authenticatie</ldap>
-	<defProfile>Standaard profiel</defProfile>
-    <uidAttr>Uid attribuut</uidAttr>
-	<login>Login</login>
-	<userDN>Gebruiker DN</userDN>
-	<distNames>Gedist. Namen</distNames>
-	<baseDN>Basis</baseDN>
-	<usersDN>Gebruikers</usersDN>
-	<userAttribs>Gebruikers eigenschappen</userAttribs>
-	<password>Wachtwoord</password>
-	<profile>Profiel</profile>
-    <group>Groep</group>
-    <defGroup>Standaard groep</defGroup>
 
 	<shib>Shibboleth Authenticatie</shib>
 	<path>Locatie</path>
@@ -409,5 +393,7 @@
 	<db.maxactive>Maximum aantal databank connecties:</db.maxactive>	
 	<db.statserror>Databank statistieken:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

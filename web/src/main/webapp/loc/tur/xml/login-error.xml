@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<heading>Giriş Hatası</heading>
+	<message>Kullanıcı Adı ve/veya Şifresi Hatalıdır.<br/>Geri butonuna basarak yeniden deneyin</message>
+	<button>Geri</button>
+</strings>

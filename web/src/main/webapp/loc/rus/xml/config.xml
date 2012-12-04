@@ -7,7 +7,8 @@
 	<server>Сервер</server>
 	<host>Хост</host>
 	<port>Порт</port>
-    <protocol>Protocol</protocol>
+	<securePort>Secure Порт</securePort>
+  <protocol>Preferred Protocol</protocol>
 
 	<searchStats>Search Statistics</searchStats>
 
@@ -131,24 +132,7 @@
 
 	<authentication>Аутентификация</authentication>
 	
-	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
-
-	<geonetworkdb>Аутентификация GeoNetwork</geonetworkdb>
-		
-	<ldap>Аутентификация LDAP</ldap>
-	<defProfile>Профиль по умолчанию</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Логин</login>
-	<userDN>Пользовательский DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>Атрибуты пользователя</userAttribs>
-	<password>Пароль</password>
-	<profile>Profile</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
 
 	<shib>Аутентификация Shibboleth</shib>
 	<path>Path</path>
@@ -409,4 +393,6 @@
 	<db.maxactive>Maximum number of database connections:</db.maxactive>	
 	<db.statserror>Database statistics:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>

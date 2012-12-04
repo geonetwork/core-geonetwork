@@ -36,17 +36,15 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
-import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
@@ -58,6 +56,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.DataManagerParameter;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -249,11 +248,7 @@ public class Geonetwork implements ApplicationHandler {
 				{
 					logger.info("     Server is Enabled.");
 		
-					UserSession session = new UserSession();
-					session.authenticate(null, "z39.50", "", "", "Guest", "");
-					context.setUserSession(session);
-					context.setIpAddress("127.0.0.1");
-					Server.init(host, z3950port, path, context, app_context);
+					Server.init(z3950port, app_context);
 				}	
 			} catch (Exception e) {
 				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" + e.getMessage());
@@ -273,7 +268,7 @@ public class Geonetwork implements ApplicationHandler {
 		String schemaCatalogueFile = systemDataDir + "config" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
 		logger.info("			- Schema plugins directory: "+schemaPluginsDir);
 		logger.info("			- Schema Catalog File     : "+schemaCatalogueFile);
-		SchemaManager schemaMan = SchemaManager.getInstance(path, schemaCatalogueFile, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
+		SchemaManager schemaMan = SchemaManager.getInstance(path, Resources.locateResourcesDir(context), schemaCatalogueFile, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing
@@ -314,10 +309,16 @@ public class Geonetwork implements ApplicationHandler {
 		String htmlCacheDir = handlerConfig
 				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 		
+		SettingInfo settingInfo = new SettingInfo(settingMan);
 		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
 				logAsynch, logSpatialObject, luceneTermsToExclude, 
 				dataStore, maxWritesInTransaction, 
-				new SettingInfo(settingMan), schemaMan, servletContext);
+				settingInfo, schemaMan, servletContext);
+		
+		 
+		 // if the validator exists the proxyCallbackURL needs to have the external host and
+		 // servlet name added so that the cas knows where to send the validation notice
+		 ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl(true)+baseURL, servletContext);
 
 		//------------------------------------------------------------------------
 		//--- extract intranet ip/mask and initialize AccessManager
@@ -342,8 +343,22 @@ public class Geonetwork implements ApplicationHandler {
 		} else {
 			xmlSerializer = new XmlSerializerDb(settingMan);
 		}
+		
+		DataManagerParameter dataManagerParameter = new DataManagerParameter();
+		dataManagerParameter.context = context;
+		dataManagerParameter.svnManager = svnManager;
+		dataManagerParameter.searchManager = searchMan;
+		dataManagerParameter.xmlSerializer = xmlSerializer;
+		dataManagerParameter.schemaManager = schemaMan;
+		dataManagerParameter.accessManager = accessMan;
+		dataManagerParameter.dbms = dbms;
+		dataManagerParameter.settingsManager = settingMan;
+		dataManagerParameter.baseURL = baseURL;
+		dataManagerParameter.dataDir = dataDir;
+		dataManagerParameter.thesaurusDir = thesauriDir;
+		dataManagerParameter.appPath = path;
 
-		DataManager dataMan = new DataManager(context, svnManager, xmlSerializer, schemaMan, searchMan, accessMan, dbms, settingMan, baseURL, dataDir, thesauriDir, path);
+		DataManager dataMan = new DataManager(dataManagerParameter);
 
 
         /**
@@ -361,7 +376,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Thesaurus...");
 
-		thesaurusMan = ThesaurusManager.getInstance(path, dataMan, context.getResourceManager(), thesauriDir);
+		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize harvesting subsystem
@@ -744,7 +759,11 @@ public class Geonetwork implements ApplicationHandler {
 		catalogProp = webapp + "oasis-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator + "schemaplugin-uri-catalog.xml";
 		System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
 		logger.info(Jeeves.XML_CATALOG_FILES+" property set to "+catalogProp);
-
+		
+		String blankXSLFile = path + "xsl" + FS + "blanks.xsl";
+		System.setProperty(Jeeves.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
+		logger.info(Jeeves.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+		
 		//--- Set mime-mappings
 		String mimeProp = System.getProperty("mime-mappings");
 		if (mimeProp == null) mimeProp = "";

@@ -110,15 +110,15 @@ public class Set implements Service
 			String inFile    = context.getUploadDir() + file;
 			String outFile   = dataDir + smallFile;
 
-			removeOldThumbnail(context, id, "small");
+			removeOldThumbnail(context, dbms, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile);
+			dataMan.setThumbnail(context, dbms, id, true, smallFile);
 		}
 
 		//-----------------------------------------------------------------------
 		//--- create the requested thumbnail, removing the old one
 
-		removeOldThumbnail(context, id, type);
+		removeOldThumbnail(context, dbms, id, type);
 
 		if (scaling)
 		{
@@ -131,7 +131,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
 		}
 		else
 		{
@@ -148,7 +148,7 @@ public class Set implements Service
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 
-			dataMan.setThumbnail(context, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
 		}
 
 		//-----------------------------------------------------------------------
@@ -192,9 +192,9 @@ public class Set implements Service
 			String smallFile = getFileName(file, true);
 			String inFile    = context.getUploadDir() + file;
 			String outFile   = dataDir + smallFile;
-			// FIXME should be done before removeOldThumbnail(context, id, "small");
+			// FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile);
+			dataMan.setThumbnail(context, dbms, id, true, smallFile);
 		}
 
 		//-----------------------------------------------------------------------
@@ -212,7 +212,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
 		}
 		else
 		{
@@ -228,7 +228,7 @@ public class Set implements Service
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 			
-			dataMan.setThumbnail(context, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
 		}
 
 		//-----------------------------------------------------------------------
@@ -240,19 +240,81 @@ public class Set implements Service
 		return response;
 	}
 
+	public void addHarvested(Element params, ServiceContext context, Dbms dbms, DataManager dataMan) throws Exception
+        {
+            String  id            = Util.getParam     (params, Params.ID);
+            String  type          = Util.getParam     (params, Params.TYPE);
+            String  version       = Util.getParam     (params, Params.VERSION);
+            String  file          = Util.getParam     (params, Params.FNAME);
+            String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
+            boolean scaling       = Util.getParam     (params, Params.SCALING, false);
+            int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
+
+            boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
+            String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
+            int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
+		
+            String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+            if (!new File(dataDir).mkdirs()) context.error("Failed to make dir: " + dataDir);
+		
+            //-----------------------------------------------------------------------
+            //--- create the small thumbnail, removing the old one
+
+            if (createSmall) {
+                String smallFile = getFileName(file, true);
+                String inFile    = context.getUploadDir() + file;
+                String outFile   = dataDir + smallFile;
+                removeOldThumbnail(context,dbms,id,"small");
+                createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
+                dataMan.setThumbnail(context, dbms, id, true, smallFile);
+            }
+
+            //-----------------------------------------------------------------------
+            //--- create the requested thumbnail
+            
+            removeOldThumbnail(context,dbms,id,type);
+
+            if (scaling) {
+                String newFile = getFileName(file, type.equals("small"));
+                String inFile  = context.getUploadDir() + file;
+                String outFile = dataDir + newFile;
+                
+                createThumbnail(inFile, outFile, scalingFactor, scalingDir);
+                if (!new File(inFile).delete()) context.error("Error while deleting thumbnail : "+inFile);
+                dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
+            } else {
+                //--- move uploaded file to destination directory
+                File inFile  = new File(context.getUploadDir(), file);
+                File outFile = new File(dataDir,                file);
+
+                try {
+                    FileUtils.moveFile(inFile, outFile);
+                } catch (Exception e) {
+                    inFile.delete();
+                    throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
+                }
+			
+                dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
+            }
+        }
+        
+        public void removeHarvested(Element params, ServiceContext context, Dbms dbms) throws Exception {
+            String  id   = Util.getParam(params, Params.ID);
+            String  type = Util.getParam(params, Params.TYPE);
+            removeOldThumbnail(context,dbms,id,type);
+        }
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
 	//--------------------------------------------------------------------------
 
-	private void removeOldThumbnail(ServiceContext context, String id, String type) throws Exception
+	private void removeOldThumbnail(ServiceContext context, Dbms dbms, String id, String type) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Element result = dataMan.getThumbnails(dbms, id);
 
@@ -269,12 +331,11 @@ public class Set implements Service
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, id, type.equals("small"));
+		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"));
 
 		//--- remove file
 
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + result.getText();
-
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
 		if (!new File(file).delete())
 			context.error("Error while deleting thumbnail : "+file);
 	}
@@ -366,6 +427,22 @@ public class Set implements Service
 		return t.getImage(0);
 	}
 
+	/**
+	 * Return file name from full url thumbnail formated as
+	 * http://wwwmyCatalogue.com:8080/srv/eng/resources.get?uuid=34baff6e-3880-4589-a5e9-4aa376ecd2a5&fname=snapshot3.png
+	 * @param file
+	 * @return
+	 */
+	private String getFileName(String file)
+	{
+		if(file.indexOf(FNAME_PARAM) < 0) {
+			return file;
+		}
+		else {
+			return file.substring(file.lastIndexOf(FNAME_PARAM)+FNAME_PARAM.length());
+		}
+	}
+	
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -374,6 +451,7 @@ public class Set implements Service
 
 	private static final String IMAGE_TYPE   = "png";
 	private static final String SMALL_SUFFIX = "_s";
+	private static final String FNAME_PARAM   = "fname=";
 
 }
 

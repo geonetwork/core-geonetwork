@@ -4,28 +4,29 @@
 	xmlns:saxon="http://saxon.sf.net/"
 	extension-element-prefixes="saxon"
 	xmlns:exslt="http://exslt.org/common" 
-	exclude-result-prefixes="exslt saxon geonet">
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	exclude-result-prefixes="exslt saxon geonet java">
 
-	<xsl:include href="blanks/metadata-schema01.xsl"/>
-	<xsl:include href="blanks/metadata-schema02.xsl"/>
-	<xsl:include href="blanks/metadata-schema03.xsl"/>
-	<xsl:include href="blanks/metadata-schema04.xsl"/>
-	<xsl:include href="blanks/metadata-schema05.xsl"/>
-	<xsl:include href="blanks/metadata-schema06.xsl"/>
-	<xsl:include href="blanks/metadata-schema07.xsl"/>
-	<xsl:include href="blanks/metadata-schema08.xsl"/>
-	<xsl:include href="blanks/metadata-schema09.xsl"/>
-	<xsl:include href="blanks/metadata-schema10.xsl"/>
-	<xsl:include href="blanks/metadata-schema11.xsl"/>
-	<xsl:include href="blanks/metadata-schema12.xsl"/>
-	<xsl:include href="blanks/metadata-schema13.xsl"/>
-	<xsl:include href="blanks/metadata-schema14.xsl"/>
-	<xsl:include href="blanks/metadata-schema15.xsl"/>
-	<xsl:include href="blanks/metadata-schema16.xsl"/>
-	<xsl:include href="blanks/metadata-schema17.xsl"/>
-	<xsl:include href="blanks/metadata-schema18.xsl"/>
-	<xsl:include href="blanks/metadata-schema19.xsl"/>
-	<xsl:include href="blanks/metadata-schema20.xsl"/>
+	<xsl:include href="blanks/metadata-schema01/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema02/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema03/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema04/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema05/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema06/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema07/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema08/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema09/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema10/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema11/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema12/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema13/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema14/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema15/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema16/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema17/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema18/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema19/present/metadata.xsl"/>
+	<xsl:include href="blanks/metadata-schema20/present/metadata.xsl"/>
 
 	<xsl:template mode="schema" match="*">
 		<xsl:choose>
@@ -78,7 +79,7 @@
 			&#160;
 			<!-- create button -->
 			<xsl:variable name="duplicate" select="concat(/root/gui/strings/duplicate,': ',$ltitle)"/>
-			<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and /root/gui/services/service/@name='metadata.duplicate.form'">
+			<xsl:if test="string(geonet:info/isTemplate)!='s' and (geonet:info/isTemplate='y' or geonet:info/source=/root/gui/env/site/siteId) and java:isAccessibleService('metadata.duplicate.form')">
 				<button class="content" onclick="load('{/root/gui/locService}/metadata.duplicate.form?id={$metadata/geonet:info/id}')"><xsl:value-of select="/root/gui/strings/create"/></button>
 			</xsl:if>
 
@@ -108,25 +109,25 @@
 			<div id="oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('oAc',{$metadata/geonet:info/id});">
 				
 				<!-- privileges button -->
-				<xsl:if test="/root/gui/services/service/@name='metadata.admin.form'">
+				<xsl:if test="java:isAccessibleService('metadata.admin.form')">
 					<xsl:variable name="privileges" select="concat(/root/gui/strings/privileges,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',600)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
 				</xsl:if>
 				
 				<!-- categories button -->
-				<xsl:if test="/root/gui/services/service/@name='metadata.category.form' and /root/gui/config/category/admin">
+				<xsl:if test="java:isAccessibleService('metadata.category.form') and /root/gui/config/category/admin">
 					<xsl:variable name="categories" select="concat(/root/gui/strings/categories,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.category.form?id={$metadata/geonet:info/id}','{$categories}',300)"><xsl:value-of select="/root/gui/strings/categories"/></button>
 				</xsl:if>
 			
 				<!-- status button -->
-				<xsl:if test="/root/gui/services/service/@name='metadata.status.form'">
+				<xsl:if test="java:isAccessibleService('metadata.status.form')">
 					<xsl:variable name="statusTitle" select="concat(/root/gui/strings/status,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.status.form?id={$metadata/geonet:info/id}','{$statusTitle}',300)"><xsl:value-of select="/root/gui/strings/status"/></button>
 				</xsl:if>
 
 				<!-- versioning button -->
-				<xsl:if test="/root/gui/services/service/@name='metadata.version' and /root/gui/svnmanager/enabled='true'">
+				<xsl:if test="java:isAccessibleService('metadata.version') and /root/gui/svnmanager/enabled='true'">
 					<xsl:variable name="versionTitle" select="concat(/root/gui/strings/versionTitle,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.version?id={$metadata/geonet:info/id}','{$versionTitle}',300)"><xsl:value-of select="/root/gui/strings/startVersion"/></button>
 				</xsl:if>
@@ -144,7 +145,7 @@
 				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.create.thesaurus.form?uuid={$metadata/geonet:info/uuid}','{$createThesaurus}',600,150)"><xsl:value-of select="/root/gui/strings/createThesaurus"/></button>
 
 					<xsl:variable name="extractRegisterItems" select="concat(/root/gui/strings/extractRegisterItems,': ',$ltitle)"/>
-				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.batch.extract.subtemplates?uuid={$metadata/geonet:info/uuid}&amp;xpath=/grg:RE_Register/grg:containedItem/gnreg:RE_RegisterItem&amp;extractTitle={/root/gui/schemalist/name[text()='iso19135']/@schemaConvertDirectory}extract-title.xsl&amp;category=_none_&amp;doChanges=on','{$extractRegisterItems}',600,150)"><xsl:value-of select="/root/gui/strings/extractRegisterItems"/></button>
+				  <button onclick="doOtherButton('{/root/gui/locService}/metadata.batch.extract.subtemplates?uuid={$metadata/geonet:info/uuid}&amp;xpath=/grg:RE_Register/grg:containedItem/*[gco:isoType%3D&quot;grg:RE_RegisterItem&quot;]|/grg:RE_Register/grg:containedItem/grg:RE_RegisterItem&amp;extractTitle={/root/gui/schemalist/name[text()='iso19135']/@schemaConvertDirectory}extract-title.xsl&amp;category=_none_&amp;doChanges=on','{$extractRegisterItems}',600,150)"><xsl:value-of select="/root/gui/strings/extractRegisterItems"/></button>
 				</xsl:if>	
 			</div>
 		</xsl:if>
@@ -182,7 +183,7 @@
 													
     <xsl:for-each select="/root/gui/schemalist/name[text()=$schema]/conversions/converter">
 			<xsl:variable name="serviceName" select="@name"/>
-      <xsl:if test="/root/gui/services/service[@name=$serviceName]">
+      <xsl:if test="java:isAccessibleService($serviceName)">
 				<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid,'&amp;styleSheet=',@xslt)"/>
 				<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>
 				<xsl:choose>

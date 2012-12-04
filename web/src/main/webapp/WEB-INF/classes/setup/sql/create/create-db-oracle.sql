@@ -47,7 +47,6 @@ CREATE TABLE Languages
     name  varchar2(32)   not null,
     isInspire char(1)     default 'n',
     isDefault char(1)     default 'n',
-
     primary key(id)
   );
 
@@ -110,7 +109,7 @@ CREATE TABLE Users
   (
     id            int,
     username      varchar2(256)    not null,
-    password      varchar2(40)    not null,
+    password      varchar2(120)    not null,
     surname       varchar2(32),
     name          varchar2(32),
     profile       varchar2(32)    not null,
@@ -122,6 +121,8 @@ CREATE TABLE Users
     email         varchar2(128),
     organisation  varchar2(128),
     kind          varchar2(16),
+    security      varchar(128) default '',
+    authtype      varchar(32),
     primary key(id),
     unique(username)
   );
@@ -198,15 +199,14 @@ CREATE TABLE HarvestHistory
   (
     id             int not null,
     harvestDate    varchar2(30),
-		harvesterUuid  varchar2(250),
-		harvesterName  varchar2(128),
-		harvesterType  varchar2(128),
+    elapsedTime    int,
+    harvesterUuid  varchar2(250),
+    harvesterName  varchar2(128),
+    harvesterType  varchar2(128),
     deleted        char(1) default 'n' not null,
     info           varchar2(2000),
     params         clob,
-
     primary key(id)
-
   );
 
 CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
@@ -240,7 +240,8 @@ CREATE TABLE UserGroups
   (
     userId   int,
     groupId  int,
-    primary key(userId,groupId)
+    profile varchar(32),
+    primary key(userId,groupId,profile)
   );
 
 REM ======================================================================
@@ -275,7 +276,7 @@ CREATE TABLE Metadata
     harvestUri   varchar2(255)   default null,
     rating       int            default 0 not null,
     popularity   int            default 0 not null,
-	displayorder int,
+    displayorder int,
     primary key(id),
     unique(uuid)
   );
@@ -288,7 +289,6 @@ CREATE TABLE Validation
     tested       int,
     failed       int,
     valDate      varchar2(30),
-    
     primary key(metadataId, valType)
 );
 
@@ -369,7 +369,6 @@ CREATE TABLE MetadataNotifiers
     enabled    char(1)        default 'n' not null,
     username       varchar2(32),
     password       varchar2(32),
-
     primary key(id)
   );
 
@@ -383,7 +382,6 @@ CREATE TABLE MetadataNotifications
     metadataUuid       varchar2(250)   not null,
     action             char(1)        not null,
     errormsg           clob,
-
     primary key(metadataId,notifierId)
   );
 
@@ -396,7 +394,6 @@ CREATE TABLE CswServerCapabilitiesInfo
     langId    varchar2(5)    not null,
     field     varchar2(32)   not null,
     label     clob,
-
     primary key(idField)
   );
 
@@ -404,7 +401,7 @@ REM ======================================================================
 
 CREATE TABLE Thesaurus
   (
-    id   varchar2(250),
+    id   varchar2(250) not null,
     activated    varchar2(1),
     primary key(id)
   );
@@ -415,11 +412,9 @@ CREATE TABLE spatialIndex
   (
 		fid int,
     id  varchar2(250),
-		the_geom SDO_GEOMETRY,
-
-		primary key(fid)
-
-	);
+    the_geom SDO_GEOMETRY,
+    primary key(fid)
+  );
 
 CREATE INDEX spatialIndexNDX1 ON spatialIndex(id);
 DELETE FROM user_sdo_geom_metadata WHERE TABLE_NAME = 'SPATIALINDEX';

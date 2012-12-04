@@ -1,0 +1,1685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<labels>
+	<!-- ==================================================== -->
+	<element name="any">
+		<label>Herhangibiryer</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="absres">
+		<label>Abscissa*** Çözünürlüğü</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="abstract">
+		<label>Özet</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="accconst">
+		<label>Kısıtlamalara Erişim</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="accsinst">
+		<label>Talimatlara Erişim</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="address">
+		<label>Adres</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="addrtype">
+		<label>Adres Tipi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="albers">
+		<label>Albers Konik Eşdeğer Alanı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altdatum">
+		<label>Yükseklik Datum Adı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altenc">
+		<label>Yükseklik Belirleme Metodu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altres">
+		<label>Yükseklik Doğruluğu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altsys">
+		<label>Yükseklik Sistemi Tanımı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="altunits">
+		<label>Yükseklik Uzunluk Birimi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="arcsys">
+		<label>ARC Koordinat Sistemi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="arczone">
+		<label>ARC Sistem Bölge(Zone) Tanımlayıcı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attr">
+		<label>Öznitelik</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attracc">
+		<label>Öznitelik Doğruluğu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attracce">
+		<label>Öznitelik Doğruluğu Tanımı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attraccr">
+		<label>Öznitelik Doğruluğu Raporu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attraccv">
+		<label>Öznitelik Doğruluğu Değeri</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdef">
+		<label>Öznitelik Tanımı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdefs">
+		<label>Öznitelik Tanım Kodu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrdomv">
+		<label>Öznitelik Alan Değerleri</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrlabl">
+		<label>Öznitelik Etiketi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrmfrq">
+		<label>Öznitelik Ölçüm Frekansı</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrmres">
+		<label>Öznitelik Ölçüm Çözünürlüğü</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrunit">
+		<label>Öznitelik Ölçü Birimi</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrva">
+		<label>Öznitelik Değeri Doğruluğu</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrvae">
+		<label>Attribute Value Accuracy Explanation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="attrvai">
+		<label>Attribute Value Accuracy Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="availabl">
+		<label>Available Time Period</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimangl">
+		<label>Azimuthal Angle</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimequi">
+		<label>Azimuthal Equidistant</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="azimptl">
+		<label>Azimuth Measure Point Longitude</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearrefd">
+		<label>Bearing Reference Direction</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearrefm">
+		<label>Bearing Reference Meridian</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearres">
+		<label>Bearing Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bearunit">
+		<label>Bearing Units</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begdate">
+		<label>Beginning Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begdatea">
+		<label>Beginning Date of Attribute Values</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="begtime">
+		<label>Beginning Time</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="bounding">
+		<label>Bounding Coordinates</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browse">
+		<label>Browse Graphic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browsed">
+		<label>Browse Graphic File Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browsen">
+		<label>Browse Graphic File Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="browset">
+		<label>Browse Graphic File Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="caldate">
+		<label>Calendar Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="citation">
+		<label>Citation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="citeinfo">
+		<label>Citation Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="city">
+		<label>City</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cloud">
+		<label>Cloud Cover</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntaddr">
+		<label>Contact Address</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntemail">
+		<label>Contact Electronic Mail Address</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntfax">
+		<label>Contact Facsimile Telephone</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntinfo">
+		<label>Contact Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntinst">
+		<label>Contact Instructions</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntorg">
+		<label>Contact Organization</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntorgp">
+		<label>Contact Organization Primary</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntper">
+		<label>Contact Person</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntperp">
+		<label>Contact Person Primary</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntpos">
+		<label>Contact Position</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cnttdd">
+		<label>Contact TDD/TTY Telephone</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="cntvoice">
+		<label>Contact Voice Telephone</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesetd">
+		<label>Codeset Domain</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesetn">
+		<label>Codeset Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="codesets">
+		<label>Codeset Source</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="colcount">
+		<label>Column Count</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="compat">
+		<label>Compatibility Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="complete">
+		<label>Completeness Report</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="compress">
+		<label>Compression Support</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="computer">
+		<label>Computer Contact Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="coordrep">
+		<label>Coordinate Representation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="country">
+		<label>Country</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="crossref">
+		<label>Cross Reference</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="current">
+		<label>Currentness Reference</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="custom">
+		<label>Custom Order Process</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="datacred">
+		<label>Data Set Credit</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dataqual">
+		<label>Data Quality Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="denflat">
+		<label>Denominator of Flattening Ratio</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthdn">
+		<label>Depth Datum Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthdu">
+		<label>Depth Distance Units</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthem">
+		<label>Depth Encoding Method</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthres">
+		<label>Depth Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="depthsys">
+		<label>Depth System Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="descript">
+		<label>Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="detailed">
+		<label>Detailed Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialfile">
+		<label>Dialup File Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialinst">
+		<label>Dialup Instructions</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dialtel">
+		<label>Dialup Telephone</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digform">
+		<label>Digital Form</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digtinfo">
+		<label>Digital Transfer Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="digtopt">
+		<label>Digital Transfer Option</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="direct">
+		<label>Direct Spatial Reference Method</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distbrep">
+		<label>Distance and Bearing Representation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distinfo">
+		<label>Distribution Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distliab">
+		<label>Distribution Liability</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distres">
+		<label>Distance Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="distrib">
+		<label>Distributor</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpoly">
+		<label>Data Set G-Polygon</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpolyo">
+		<label>Data Set G-Polygon Outer G-Ring</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="dsgpolyx">
+		<label>Data Set G-Polygon Exclusion G-Ring</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eadetcit">
+		<label>Entity and Attribute Detail Citation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eainfo">
+		<label>Entity and Attribute Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eaover">
+		<label>Entity and Attribute Overview</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="eastbc">
+		<label>East Bounding Coordinate</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edition">
+		<label>Edition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edom">
+		<label>Enumerated Domain</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomv">
+		<label>Enumerated Domain Value</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomvd">
+		<label>Enumerated Domain Value Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="edomvds">
+		<label>Enumerated Domain Value Definition Source</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ellips">
+		<label>Ellipsoid Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enddate">
+		<label>Ending Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enddatea">
+		<label>Ending Date of Attribute Values</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="endtime">
+		<label>Ending Time</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttyp">
+		<label>Entity Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypd">
+		<label>Entity Type Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypds">
+		<label>Entity Type Definition Source</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="enttypl">
+		<label>Entity Type Label</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="equicon">
+		<label>Equidistant Conic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="equirect">
+		<label>Equirectangular</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="extent">
+		<label>Extent</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="feast">
+		<label>False Easting</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="fees">
+		<label>Fees</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="filedec">
+		<label>File Decompression Technique</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="fnorth">
+		<label>False Northing</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formcont">
+		<label>Format Information Content</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formname">
+		<label>Format Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formspec">
+		<label>Format Specification</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formverd">
+		<label>Format Version Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="formvern">
+		<label>Format Version Number</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geodetic">
+		<label>Geodetic Model</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geoform">
+		<label>Geospatial Data Presentation Form</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geograph">
+		<label>Geographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="geogunit">
+		<label>Geographic Coordinate Units</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gnomonic">
+		<label>Gnomonic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gridsys">
+		<label>Grid Coordinate System</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gridsysn">
+		<label>Grid Coordinate System Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gringlat">
+		<label>G-Ring Latitude</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gringlon">
+		<label>G-Ring Longitude</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="gvnsp">
+		<label>General Vertical Near-sided Projection</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="heightpt">
+		<label>Height of Perspective Point Above Surface</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="highbps">
+		<label>Highest BPS</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizdn">
+		<label>Horizontal Datum Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpa">
+		<label>Horizontal Positional Accuracy</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpae">
+		<label>Horizontal Positional Accuracy Explanation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpar">
+		<label>Horizontal Positional Accuracy Report</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizpav">
+		<label>Horizontal Positional Accuracy Value</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="horizsys">
+		<label>Horizontal Coordinate System Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="hours">
+		<label>Hours of Service</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="idinfo">
+		<label>Identification Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="indspref">
+		<label>Indirect Spatial Reference</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="issue">
+		<label>Issue Identification</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="keywords">
+		<label>Keywords</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lamberta">
+		<label>Lambert Azimuthal Equal Area</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lambertc">
+		<label>Lambert Conformal Conic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="landsat">
+		<label>Landsat Number</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latprjc">
+		<label>Latitude of Projection Center</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latprjo">
+		<label>Latitude of Projection Origin</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="latres">
+		<label>Latitude Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lineage">
+		<label>Lineage</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="local">
+		<label>Local</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localdes">
+		<label>Local Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localgeo">
+		<label>Local Georeference Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localp">
+		<label>Local Planar</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localpd">
+		<label>Local Planar Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="localpgi">
+		<label>Local Planar Georeference Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="logic">
+		<label>Logical Consistency Report</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longcm">
+		<label>Longitude of Central Meridian</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longpc">
+		<label>Longitude of Projection Center</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="longres">
+		<label>Longitude Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lowbps">
+		<label>Lowest BPS</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="lworkcit">
+		<label>Larger Work Citation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mapproj">
+		<label>Map Projection</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mapprojn">
+		<label>Map Projection Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mdattim">
+		<label>Multiple Dates/Times</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mercator">
+		<label>Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metac">
+		<label>Metadata Access Constraints</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metadata">
+		<label>Metadata</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metainfo">
+		<label>Metadata Reference Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metc">
+		<label>Metadata Contact</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metd">
+		<label>Metadata Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metfrd">
+		<label>Metadata Future Review Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metrd">
+		<label>Metadata Review Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metsc">
+		<label>Metadata Security Classification</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metscs">
+		<label>Metadata Security Classification System</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metshd">
+		<label>Metadata Security Handling Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metsi">
+		<label>Metadata Security Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metstdn">
+		<label>Metadata Standard Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metstdv">
+		<label>Metadata Standard Version</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="mettc">
+		<label>Metadata Time Convention</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="metuc">
+		<label>Metadata Use Constraints</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="miller">
+		<label>Miller Cylindrical</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="modsak">
+		<label>Modified Stereographic for Alaska</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="native">
+		<label>Native Data Set Environment</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="networka">
+		<label>Network Address</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="networkr">
+		<label>Network Resource Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="nondig">
+		<label>Non-digital Form</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="northbc">
+		<label>North Bounding Coordinate</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="numdata">
+		<label>Number DataBits</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="numstop">
+		<label>Number StopBits</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqlazim">
+		<label>Oblique Line Azimuth</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqllat">
+		<label>Oblique Line Latitude</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqllong">
+		<label>Oblique Line Longitude</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqlpt">
+		<label>Oblique Line Point</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="obqmerc">
+		<label>Oblique Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="offmedia">
+		<label>Offline Media</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="offoptn">
+		<label>Offline Option</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="oncomp">
+		<label>Online Computer and Operating System</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="onlink">
+		<label>Online Linkage</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="onlinopt">
+		<label>Online Option</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ordering">
+		<label>Ordering Instructions</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ordres">
+		<label>Ordinate Resolution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="origin">
+		<label>Originator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="orthogr">
+		<label>Orthographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="othercit">
+		<label>Other Citation Details</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="othergrd">
+		<label>Other Grid System's Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="otherprj">
+		<label>Other Projection's Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="overview">
+		<label>Overview Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="parity">
+		<label>Parity</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pathnum">
+		<label>Path Number</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="place">
+		<label>Place</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="placekey">
+		<label>Place Keyword</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="placekt">
+		<label>Place Keyword Thesaurus</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="planar">
+		<label>Planar</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="plance">
+		<label>Planar Coordinate Encoding Method</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="planci">
+		<label>Planar Coordinate Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="plandu">
+		<label>Planar Distance Units</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="polarst">
+		<label>Polar Stereographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="polycon">
+		<label>Polyconic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="posacc">
+		<label>Positional Accuracy</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="postal">
+		<label>Postal Code</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="proccont">
+		<label>Process Contact</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procdate">
+		<label>Process Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procdesc">
+		<label>Process Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="procstep">
+		<label>Process Step</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="proctime">
+		<label>Process Time</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="progress">
+		<label>Progress</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptcontac">
+		<label>Point of Contact</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptvctcnt">
+		<label>Point and Vector Object Count</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ptvctinf">
+		<label>Point and Vector Object Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubdate">
+		<label>Publication Date</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubinfo">
+		<label>Publication Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="publish">
+		<label>Publisher</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubplace">
+		<label>Publication Place</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="pubtime">
+		<label>Publication Time</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="purpose">
+		<label>Purpose</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qattracc">
+		<label>Quantitative Attribute Accuracy Assessment</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qhorizpa">
+		<label>Quantitative Horizontal Positional Accuracy Assessment</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="qvertpa">
+		<label>Quantitative Vertical Positional Accuracy Assessment</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rastinfo">
+		<label>Raster Object Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rasttype">
+		<label>Raster Object Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdom">
+		<label>Range Domain</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdommax">
+		<label>Range Domain Maximum</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rdommin">
+		<label>Range Domain Minimum</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="reccap">
+		<label>Recording Capacity</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recden">
+		<label>Recording Density</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recdenu">
+		<label>Recording Density Units</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="recfmt">
+		<label>Recording Format</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="resdesc">
+		<label>Resource Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rngdates">
+		<label>Range of Dates/Times</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="robinson">
+		<label>Robinson</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="rowcount">
+		<label>Row Count</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sdtsterm">
+		<label>SDTS Terms Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sdtstype">
+		<label>SDTS Point and Vector Object Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secclass">
+		<label>Security Classification</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sechandl">
+		<label>Security Handling Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secinfo">
+		<label>Security Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="secsys">
+		<label>Security Classification System</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="semiaxis">
+		<label>Semi-major Axis</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="serinfo">
+		<label>Series Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sername">
+		<label>Series Name</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfctrlin">
+		<label>Scale Factor at Center Line</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfctrmer">
+		<label>Scale Factor at Central Meridian</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfequat">
+		<label>Scale Factor at Equator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sfprjorg">
+		<label>Scale Factor at Projection Origin</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sinusoid">
+		<label>Sinusoidal</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="sngdate">
+		<label>Single Date/Time</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="southbc">
+		<label>South Bounding Coordinate</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spaceobq">
+		<label>Space Oblique Mercator (Landsat)</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spcs">
+		<label>State Plane Coordinate System</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spcszone">
+		<label>SPCS Zone Identifier</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spdoinfo">
+		<label>Spatial Data Organization Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spdom">
+		<label>Spatial Domain</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="spref">
+		<label>Spatial Reference Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccite">
+		<label>Source Citation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccitea">
+		<label>Source Citation Abbreviation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccontr">
+		<label>Source Contribution</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srccurr">
+		<label>Source Currentness Reference</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcinfo">
+		<label>Source Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcprod">
+		<label>Source Produced Citation Abbreviation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcscale">
+		<label>Source Scale Denominator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srctime">
+		<label>Source Time Period of Content</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="srcused">
+		<label>Source Used Citation Abbreviation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="state">
+		<label>State or Province</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="status">
+		<label>Status</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stdorder">
+		<label>Standard Order Process</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stdparll">
+		<label>Standard Parallel</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stereo">
+		<label>Stereographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratkey">
+		<label>Stratum Keyword</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratkt">
+		<label>Stratum Keyword Thesaurus</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="stratum">
+		<label>Stratum</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="supplinf">
+		<label>Supplemental Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="svlong">
+		<label>Straight Vertical Longitude from Pole</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="techpreq">
+		<label>Technical Prerequisites</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="tempkey">
+		<label>Temporal Keyword</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="tempkeyt">
+		<label>Temporal Keyword Thesaurus</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="temporal">
+		<label>Temporal</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="theme">
+		<label>Theme</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="themekey">
+		<label>Theme Keyword</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="themekt">
+		<label>Theme Keyword Thesaurus</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="time">
+		<label>Time of Day</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="timeinfo">
+		<label>Time Period Information</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="timeperd">
+		<label>Time Period of Content</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="title">
+		<label>Title</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="transize">
+		<label>Transfer Size</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="transmer">
+		<label>Transverse Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="turnarnd">
+		<label>Turnaround</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="typesrc">
+		<label>Type of Source Media</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="udom">
+		<label>Unrepresentable Domain</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="update">
+		<label>Maintenance and Update Frequency</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="ups">
+		<label>Universal Polar Stereographic</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="upszone">
+		<label>UPS Zone Identifier</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="useconst">
+		<label>Use Constraints</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="utm">
+		<label>Universal Transverse Mercator</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="utmzone">
+		<label>UTM Zone Number</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vdgrin">
+		<label>van der Grinten</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertacc">
+		<label>Vertical Positional Accuracy</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertacce">
+		<label>Vertical Positional Accuracy Explanation</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertaccr">
+		<label>Vertical Positional Accuracy Report</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertaccv">
+		<label>Vertical Positional Accuracy Value</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vertdef">
+		<label>Vertical Coordinate System Definition</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpflevel">
+		<label>VPF Topology Level</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpfterm">
+		<label>VPF Terms Description</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vpftype">
+		<label>VPF Point and Vector Object Type</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="vrtcount">
+		<label>Vertical Count</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+	<element name="westbc">
+		<label>West Bounding Coordinate</label>
+		<description/>
+	</element>
+	<!-- ==================================================== -->
+</labels>

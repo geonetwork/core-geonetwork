@@ -11,17 +11,8 @@
 		<a target="_blank" href="http://www.gsdi.org/">Infraestructura de Datos Espaciales Global (GSDI)</a><br/>
 		<a target="_blank" href="http://www.opengeospatial.org/">Open Geospatial Consortium (OGC)</a><br/>
 		<a target="_blank" href="http://www.isotc211.org/">ISO - TC211</a> Información Geográfica/Geomática<br/>
-		<h3>Estándar de metadatos ISO-19115</h3>
-		<p>
-			Borrador 1.0 de la plantilla de metadatos ISO19115 de UNGIWG <a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.xml','XML">(Template XML con datos de ejemplo)</a>
-			&#160;&#160;
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/UN_ISO_19115_metadata_template_draft_version_1.0.doc">(Documento descriptivo MS-Word)</a>
-		</p>
-		<p>
-			<a target="_blank" href="http://www.fao.org/geonetwork/html/en/ReferenceServices.htm','Referencias a recursos en línea">Recursos en línea para referencias a servicios propuestos por ISO19115</a>
-		</p>
 		<h3>Iniciativas Mapa</h3>
-		<a target="_blank" href="http://www.digitalearth.gov/">Tierra Digital (Digital Earth)</a><br/>
+		<a target="_blank" href="http://www.digitalearth-isde.org/">Tierra Digital (Digital Earth)</a><br/>
 		<a target="_blank" href="http://www.iscgm.org/">Mapa Global (Global Mapping)</a><br/>
 		<p/>
 		<h3>Otros recursos de información relacionados</h3>
@@ -31,7 +22,7 @@
 		<h3>Fuentes de datos espaciales externas</h3>
 		<a target="_blank" href="http://earlywarning.usgs.gov/adds/">Servicio de diseminación de datos Africanos (ADDS)</a><br/>
 		<a target="_blank" href="http://www.ngdc.noaa.gov/">Centro de datos Nacionales de la NOAA (NGDC)</a><br/>
-		<a target="_blank" href="http://www.nima.mil/">Agencia Norte Americana de Imágenes y Mapas (NIMA)</a><br/>
-		<a target="_blank" href="http://www.esri.com/data/">Datos en línea de ESRI (ArcData)</a>
+		<a target="_blank" href="http://www.nga.mil/">National Geospatial-Intelligence Agency (NGA)</a><br/>
+		<a target="_blank" href="http://www.esri.com/data/find-data/">Datos en línea de ESRI (ArcData)</a>
 	</content>
 </links>

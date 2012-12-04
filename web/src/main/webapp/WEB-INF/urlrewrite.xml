@@ -66,6 +66,14 @@
         <from>^(.*)/en/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/eng/$2</to>
     </rule>
+    <rule>
+        <from>^(.*)/tr/(.*)$</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/tur/$2</to>
+    </rule>
+    <rule>
+        <from>^(.*)/it/(.*)$</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/ita/$2</to>
+    </rule>
 
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
@@ -85,7 +93,16 @@
         <from>^/metadata/(.*)/(.*).xml$</from>
         <to type="forward">/srv/$1/xml.metadata.get?uuid=$2</to>
     </rule>
-
+    
+    <rule>
+        <note>
+            Retrieves RDF format for a metadata.
+            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.rdf
+        </note>
+        <from>^/metadata/(.*)/(.*).rdf$</from>
+        <to type="forward">/srv/$1/rdf.metadata.get?uuid=$2</to>
+    </rule>
+    
     <rule>
         <note>
             Retrieves pdf format for a metadata.
@@ -115,7 +132,23 @@
         <from>^/metadata/(.*)/(.*)$</from>
         <to type="permanent-redirect">%{context-path}/srv/$1/home?uuid=$2</to>
     </rule>
-
+    
+    <rule>
+        <note>
+            Retrieves robots.txt filemap pointing to sitemaps for better indexing.
+        </note>
+        <from>^/robots.txt$</from>
+        <to type="forward">/srv/eng/robots.txt</to>
+    </rule>
+        
+    <rule>
+        <note>
+            map the old xml.user.login to the new login url
+        </note>
+        <from>^.*/.*/xml.user.login(\?.*)</from>
+        <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
+    </rule>
+    
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>

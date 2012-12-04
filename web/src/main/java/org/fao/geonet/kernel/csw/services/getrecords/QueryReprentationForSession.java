@@ -1,9 +1,9 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 public class QueryReprentationForSession {
@@ -14,7 +14,7 @@ public class QueryReprentationForSession {
 
     public QueryReprentationForSession( ServiceContext context, Element filterExpr ) {
         this.language = context.getLanguage();
-        this.query = Util.scramble(Xml.getString(filterExpr));
+        this.query = Sha1Encoder.encodeString (Xml.getString(filterExpr));
         this.userid = context.getUserSession().getUserId();
     }
 

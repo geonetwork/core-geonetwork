@@ -693,8 +693,7 @@ public class ConfigurationOverrides {
             for (Content c : contentToAdd)
             {
                 if(c instanceof Element) {
-                	System.out.println("====");
-                	Element e = (Element) c.detach();
+                    Element e = (Element) c.detach();
                     if(mergeTarget.getChild(e.getName()) == null) {
                         toAdd.add(e);
                     }
@@ -754,7 +753,12 @@ public class ConfigurationOverrides {
                         if (file.exists()) {
                             in = new FileInputStream(file);
                         } else {
-                            throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource: " + url + ".  Perhaps a leading / was forgotten?");
+                        	file = new File(resource.replace('/', '\\'));
+                        	if(file.exists()) {
+                        		in = new FileInputStream(file);
+                        	} else {
+                        		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource: " + url + ".  Perhaps a leading / was forgotten?");
+                        	}
                         }
                     } else {
                         in = url.openStream();

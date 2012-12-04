@@ -22,12 +22,15 @@
 package org.fao.geonet.languages;
 
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import java.sql.SQLException;
+import java.util.List;
+
 import jeeves.resources.dbms.Dbms;
+
 import org.jdom.Element;
 
-import java.util.List;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 /**
  * TODO javadoc.
@@ -74,14 +77,20 @@ public class IsoLanguagesMapper {
      * Creates mapping to of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      *
      * @param dbms
-     * @throws Exception hmm
      */
-    public void init(Dbms dbms) throws Exception {
+    public void init(Dbms dbms) {
         String query = "SELECT code, shortcode FROM IsoLanguages";
         @SuppressWarnings("unchecked")
-		List<Element> records = dbms.select(query).getChildren();
-        for(Element record : records) {
-            isoLanguagesMap639.put(record.getChildText("shortcode").toLowerCase(), record.getChildText("code").toLowerCase());
+        List<Element> records;
+        try {
+            records = dbms.select(query).getChildren();
+            for (Element record : records) {
+                isoLanguagesMap639.forcePut(record.getChildText("shortcode")
+                        .toLowerCase(), record.getChildText("code")
+                        .toLowerCase());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

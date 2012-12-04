@@ -23,8 +23,23 @@
 
 package org.fao.geonet.kernel.search;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -33,6 +48,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -81,23 +97,14 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ranges;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * search metadata locally using lucene.
@@ -177,11 +184,11 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		_reader = _sm.getIndexReader(srvContext.getLanguage());
         if(Log.isDebugEnabled(Geonet.LUCENE))
-            Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
-        computeQuery(srvContext, request, config);
-        if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
 		initSearchRange(srvContext);
+        if(Log.isDebugEnabled(Geonet.LUCENE))
+            Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
+        computeQuery(srvContext, getTo() - 1, request, config);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
 		performQuery(getFrom()-1, getTo(), buildSummary);
@@ -307,6 +314,111 @@ public class LuceneSearcher extends MetaSearcher {
 		return response;
 	}
 
+	/**
+	 * Perform a query, loop over results in order to find values containing the search value for a specific field.
+	 * 
+	 * If the field is not stored in the index, an empty collection is returned.
+	 * 
+	 * @param srvContext
+	 * @param searchField	The field to search in
+	 * @param searchValue	The value contained in field's value (case is ignored)
+	 * @param maxNumberOfTerms	The maximum number of terms to search for
+	 * @param threshold	The minimum frequency for terms to be returned
+	 * @return
+	 * @throws Exception
+	 */
+	public Collection<String> getSuggestionForFields(ServiceContext srvContext, 
+								final String searchField, final String searchValue, 
+								ServiceConfig config,
+								int maxNumberOfTerms, int threshold) throws Exception {
+		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			Log.debug(Geonet.SEARCH_ENGINE, "Get suggestion on field: '"
+					+ searchField + "'" + "\tsearching: '" + searchValue + "'"
+					+ "\tthreshold: '" + threshold + "'"
+					+ "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'");
+		}
+		
+		// To count the number of values added and stop if maxNumberOfTerms reach
+		int counter = 0;
+		
+		// A collection or a map if threshold is set
+		Collection <String> finalValues = new HashSet<String>();
+		Map <String, Integer> finalValuesMap = new HashMap<String, Integer>();
+		
+		GeonetContext gc = null;
+		if (srvContext != null) {
+			gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		}
+		
+		// Search for all current session could search for
+		// Do a like query to limit the size of the results
+		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
+		elData.addContent(new Element("fast").addContent("index"));
+		// FIXME : need more work on LQB
+//		if (!searchValue.equals("")) {
+//			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
+//		// TODO : filter template ?
+//		}
+		search(srvContext, elData, config);
+
+		elData.addContent(new Element("from").setText("1"));
+		elData.addContent(new Element("to").setText(getSize() + ""));
+
+		if (getTo() > 0) {
+			TopDocs tdocs = performQuery(1, getSize(), false);
+
+			for (int i = 0; i < tdocs.scoreDocs.length; i++) {
+				if (counter >= maxNumberOfTerms) {
+					break;
+				}
+				Document doc;
+
+				doc = _reader.document(tdocs.scoreDocs[i].doc,
+						new FieldSelector() {
+							public final FieldSelectorResult accept(String name) {
+								if (name.equals(searchField))
+									return FieldSelectorResult.LOAD;
+								else
+									return FieldSelectorResult.NO_LOAD;
+							}
+						});
+
+				String[] values = doc.getValues(searchField);
+				
+				for (int j = 0; j < values.length; ++j) {
+					if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValue)) {
+						if (threshold > 1) {
+							// Use a map to save values frequency
+							Integer valueFrequency = finalValuesMap.get(values[j]);
+							//Log.debug(Geonet.SEARCH_ENGINE, "  " + values[j] + ":" + valueFrequency);
+							finalValuesMap.put(values[j], (valueFrequency != null ? ++ valueFrequency : 1));
+						} else {
+							finalValues.add(values[j]);
+						}
+						counter ++;
+					}
+				}
+			}
+		}
+		
+		// Filter values which does not reach the threshold
+		if (threshold > 1) {
+			Map<String, Integer> filteredMap = Maps.filterValues(finalValuesMap, Ranges.atLeast(threshold));
+			// Push map content to collection
+			finalValues.addAll(filteredMap.keySet());
+			
+			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+				Log.debug(Geonet.SEARCH_ENGINE, "  "
+						+ filteredMap.size() + "/" + finalValuesMap.size() + " above threshold: " + threshold);
+			}
+		}
+
+		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			Log.debug(Geonet.SEARCH_ENGINE, "  "
+					+ finalValues.size() + " returned.");
+		}
+		return finalValues;
+	}
 	public int getSize() {
 		return _numHits;
 	}
@@ -432,7 +544,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @param config
      * @throws Exception
      */
-	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
         determineLanguage(srvContext, request);
 
@@ -451,7 +563,7 @@ public class LuceneSearcher extends MetaSearcher {
 
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
-            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
+            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress(), false);
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
@@ -595,7 +707,7 @@ public class LuceneSearcher extends MetaSearcher {
             if (_sm.getLogSpatialObject()) {
                 _geomWKT = geometry.toText();
             }
-            spatialfilter = _sm.getSpatial().filter(_query, geometry, request);
+            spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
@@ -1118,10 +1230,8 @@ public class LuceneSearcher extends MetaSearcher {
             Document doc = null;
             try {
                 doc = reader.document(sdoc.doc, keySelector);
-            }
-            catch (Exception e) {
-                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc);
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc, e);
             }
 
             for (String key : summaryMaps.keySet()) {

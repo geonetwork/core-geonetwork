@@ -1,0 +1,13 @@
+The healthcheck.sh script can be used by nagios to perform a healthcheck.  The usage is:
+
+./healthcheck.sh http://localhost:8080/geonetwork/criticalhealthcheck monitor monitor
+
+or
+
+./healthcheck.sh http://localhost:8080/geonetwork/warninghealthcheck monitor monitor
+
+or
+
+./healthcheck.sh http://localhost:8080/geonetwork/expensivehealthcheck monitor monitor
+
+Where monitor has to have the Monitor profile (or Admin)

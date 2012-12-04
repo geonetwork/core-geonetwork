@@ -205,20 +205,28 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
         this.clearInfoPanel();
         var root = this.treePanel.getRootNode();
         while(root.firstChild){
-          root.removeChild(root.firstChild);
+            root.removeChild(root.firstChild);
         }
         // group based on feature.type
         var i, len, featureList = [];
         for (i=0, len=features.length; i<len; i++) {
             var found = false;
+
+            var featureType = "";
+            if (features[i].type) {
+                featureType = features[i].type;
+            } else if (features[i].gml && features[i].gml.featureType) {
+                featureType = features[i].gml.featureType;
+            }
+
             for (var j=0; j<featureList.length; j++) {
-                if (featureList[j].title === features[i].type) {
+                if (featureList[j].title === featureType) {
                     featureList[j].features.push(features[i]);
                     found = true;
                 }
             }
             if (found === false) {
-                featureList.push({title: this.getLayerTitle(features[i].type), features: [features[i]]});
+                featureList.push({title: this.getLayerTitle(featureType), features: [features[i]]});
             }
         }
         for (i=0, len = featureList.length; i<len; i++) {
@@ -235,7 +243,6 @@ Ext.extend(GeoNetwork.FeatureInfoPanel, Ext.Panel, {
         }
         root.expand();
     }
-
 });
 
 Ext.reg('gn_featureinfo', GeoNetwork.FeatureInfoPanel);

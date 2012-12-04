@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin>  <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
 	<ger>Deutsch</ger> <!-- Do not translate! -->
 	<ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
+	<nor>Norsk</nor>  <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
 	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
 
+	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>	
     <anyLanguage>أي لغة</anyLanguage>
-
+	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -583,6 +587,7 @@
 	<login>دخول أعضاء</login>
 	<loginCardTitle>دخول / تسجيل</loginCardTitle>
 	<loginwarning>فقط مطلوبة على موقع إدارة الموقع</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>خروج</logout>
 	<logoutDes>جاري الخروج</logoutDes>
 	<longitude>خط عرض بين 180 و 180- درجة</longitude>
@@ -734,7 +739,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
@@ -1389,4 +1394,6 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

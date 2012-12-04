@@ -54,6 +54,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -93,6 +94,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
+import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Configuration;
@@ -778,8 +780,8 @@ public class SearchManager {
 
            StringBuilder sb = new StringBuilder();
 			allText(metadata, sb);
-			SearchManager.addField(xmlDoc, LuceneIndexField.TITLE, title, true, true);
-			SearchManager.addField(xmlDoc, LuceneIndexField.ANY, sb.toString(), true, true);
+			SearchManager.addField(defaultDoc, LuceneIndexField.TITLE, title, true, true);
+			SearchManager.addField(defaultDoc, LuceneIndexField.ANY, sb.toString(), true, true);
 		}
         else {
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
@@ -1045,7 +1047,7 @@ public class SearchManager {
 					if (!term.term().field().equals(fieldName) || (++i > maxNumberOfTerms)) {
 						break;
                     }
-					if (term.docFreq() >= threshold && term.term().text().contains(searchValue)) {
+					if (term.docFreq() >= threshold && StringUtils.containsIgnoreCase(term.term().text(), searchValue)) {
 						TermFrequency freq = new TermFrequency(term.term().text(), term.docFreq());
 						termList.add(freq);
 					} 
@@ -1516,7 +1518,7 @@ public class SearchManager {
         private final Parser                          _gmlParser;
         private final Lock                            _lock;
         private SpatialIndexWriter                    _writer;
-        private Committer                             _committerTask;
+        private volatile Committer                             _committerTask;
 
         /**
          * TODO javadoc.
@@ -1566,9 +1568,13 @@ public class SearchManager {
             boolean rebuildIndex;
             try {
                 _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
-                rebuildIndex = _writer.getFeatureSource().getSchema() == null;
+				rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             }
-            catch (Exception e) {
+            catch (Throwable e) {
+
+				if (_writer == null) {
+					throw new RuntimeException(e);
+				}
                 String exceptionString = Xml.getString(JeevesException.toElement(e));
                 Log.warning(Geonet.SPATIAL, "Failure to make _writer, maybe a problem but might also not be an issue:" +
                         exceptionString);
@@ -1610,14 +1616,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public Filter filter(org.apache.lucene.search.Query query, Element filterExpr, String filterVersion)
+        public Filter filter(org.apache.lucene.search.Query query, int numHits, Element filterExpr, String filterVersion)
                 throws Exception {
             _lock.lock();
             try {
             	Parser filterParser = getFilterParser(filterVersion);
-            	FeatureSource<SimpleFeatureType,SimpleFeature> featureSource = _writer.getFeatureSource();
-                SpatialIndex index = _writer.getIndex();
-                return OgcGenericFilters.create(query, filterExpr, featureSource, index, filterParser);
+                Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
+                return OgcGenericFilters.create(query, numHits, filterExpr, accessor , filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
@@ -1638,16 +1643,13 @@ public class SearchManager {
          * @return
          * @throws Exception
          */
-        public SpatialFilter filter(org.apache.lucene.search.Query query,
+        public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
                 Geometry geom, Element request) throws Exception {
             _lock.lock();
             try {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                SpatialIndexWriter writer = writerNoLocking();
-                SpatialIndex index = writer.getIndex();
-                FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = writer.getFeatureSource();
-                return _types.get(relation).newInstance(query, geom, featureSource, index);
+                return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
             }
             finally {
                 _lock.unlock();
@@ -1699,7 +1701,25 @@ public class SearchManager {
 			return new Parser(config);
 		}
 
-        /**
+        private final class SpatialIndexAccessor
+				extends
+				Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> {
+			@Override
+			public FeatureSource<SimpleFeatureType, SimpleFeature> one() {
+			    return _writer.getFeatureSource();
+			}
+
+			@Override
+			public SpatialIndex two() {
+			    try {
+			        return _writer.getIndex();
+			    } catch (IOException e) {
+			        throw new RuntimeException(e);
+			    }
+			}
+		}
+
+		/**
          * TODO javadoc.
          *
          */
@@ -1733,8 +1753,7 @@ public class SearchManager {
      */
     private static Constructor<? extends SpatialFilter> constructor(Class<? extends SpatialFilter> clazz)
             throws SecurityException, NoSuchMethodException {
-        return clazz.getConstructor(org.apache.lucene.search.Query.class, Geometry.class, FeatureSource.class,
-                SpatialIndex.class);
+        return clazz.getConstructor(org.apache.lucene.search.Query.class, int.class, Geometry.class, Pair.class);
     }
 
 	LuceneIndexWriterFactory getIndexWriter() {

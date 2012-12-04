@@ -45,7 +45,7 @@ public class CatalogConfiguration {
 	private static int _maxNumberOfRecordsForKeywords = Integer.MAX_VALUE; 
 	
 	// GetDomain variables
-	private static int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE; 
+	private static int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE;
 	
 	// GetRecords variables
 	private static final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
@@ -62,6 +62,9 @@ public class CatalogConfiguration {
 	private static final HashMap<String, String> _describeRecordTypenames = new HashMap<String, String>();
 	private static final Set<Namespace> _describeRecordNamespaces = new HashSet<Namespace>();
 	private static final Set<String> _describeRecordOutputFormat = new HashSet<String>();
+	
+	// GetRecordById variables
+	private static boolean _increasePopularity = false;
 
 	public static void loadCatalogConfig(String path, String configFile)
 			throws Exception {
@@ -109,11 +112,21 @@ public class CatalogConfiguration {
             if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
                 initDescribeRecordConfig(operation);
             }
-
+            
+            if (operationName.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORD_BY_ID)) {
+                initGetRecordByIdConfig(operation);
+            }
         }
 	}
 
-	/**
+	private static void initGetRecordByIdConfig(Element operation) {
+	    Element increasePopularityConfig = operation.getChild(Csw.ConfigFile.Operation.Child.INCREASE_POPULARITY);
+        if (increasePopularityConfig != null && "yes".equals(increasePopularityConfig.getText())) {
+            _increasePopularity = true;
+        }
+    }
+
+    /**
 	 * @param operation
 	 */
 	private static void initCapabilities(Element operation) {
@@ -357,5 +370,9 @@ public class CatalogConfiguration {
 	public static Set<String> getGetRecordsRangeFields() {
 		return _getRecordsRangeFields;
 	}
+
+    public static boolean is_increasePopularity() {
+        return _increasePopularity;
+    }
 
 }

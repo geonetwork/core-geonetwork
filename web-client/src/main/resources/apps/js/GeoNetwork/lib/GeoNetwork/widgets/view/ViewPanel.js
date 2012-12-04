@@ -64,6 +64,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          */
         printDefaultForTabs: false,
         printMode: undefined,
+        printUrl: 'print.html',
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is false.
          */
@@ -73,7 +74,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          *  Do not display feature catalogues (gmd:contentInfo) and sources (gmd:lineage) by default. 
          *  Set to '' to display all.
          */
-        relationTypes: 'service|children|related|parent|dataset'
+        relationTypes: 'service|children|related|parent|dataset|fcat|siblings'
     },
     serviceUrl: undefined,
     catalogue: undefined,
@@ -103,7 +104,9 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      */
     displayLinkedData: function(record){
         var table = Ext.query('table.related', this.body.dom),
-            type = record.get('type');
+            type = record.get('type'),
+						subType = record.get('subType');
+				if (subType.length>0) subType += ': ';
         var el = Ext.get(table[0]);
         var exist = el.child('tr td[class*=' + type + ']');
         var link = this.relatedTpl.apply(record.data)
@@ -257,7 +260,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
                 click: function(c, pressed){
-                	window.open('print.html?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
+                	window.open(this.printUrl + '?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
                 },
                 scope: this
             }
@@ -296,12 +299,24 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      * a tooltip
      */
     registerTooltip: function(){
+    	// select the title element of simple metadata elements
         var formElements = Ext.query('th[id]', this.body.dom);
+        // select the title element of complex metadata elements
         formElements = formElements.concat(Ext.query('legend[id]', this.body.dom));
+        // select additional elements requiring a help link  
+        formElements = formElements.concat(Ext.query('.helplink', this.body.dom));
         Ext.each(formElements, function(item, index, allItems){
             var e = Ext.get(item);
             var id = e.getAttribute('id');
-            if (e.is('TH')) {
+            var classAtt = e.getAttribute('class');
+            var classes = [];
+            if (classAtt) {
+            	classes = classAtt.split(/\s+/);
+            }
+            if (classes.contains("helplink")) {
+                var section = e.up('FIELDSET');
+            	this.loadHelp(id, section | e, -10, 500, 0);
+            } else if (e.is('TH')) {
                 var section = e.up('FIELDSET');
                 var f = function(){
                     if (this.displayTooltip) {
@@ -325,7 +340,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
      * Add a tooltip to an element. If sectionId is defined,
      * then anchor is on top (usually is a fieldset legend element)
      */
-    loadHelp: function(id, sectionId){
+    loadHelp: function(id, sectionId, anchorOffset, showDelay, hideDelay){
         if (!this.cache[id]) {
             var panel = this;
             GeoNetwork.util.HelpTools.get(id, this.metadataSchema, this.catalogue.services.schemaInfo, function(r) {
@@ -335,7 +350,9 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
                     target: id,
                     title: r.records[0].get('label'),
                     anchor: sectionId ? 'top' : 'bottom',
-                    anchorOffset: 35,
+                    anchorOffset: anchorOffset == undefined ? 35 : anchorOffset,
+                    showDelay: showDelay == undefined ? 300 : showDelay,
+                    hideDelay: hideDelay == undefined ? 200 : hideDelay,
                     html: panel.cache[id]
                 });
                 // t.show();// This force the tooltip to be displayed once created

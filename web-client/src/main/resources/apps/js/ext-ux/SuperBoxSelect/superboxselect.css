@@ -5,11 +5,11 @@
 .x-superboxselect-display-btns {padding-right: 33px !important;}
 .x-superboxselect-btns {position: absolute; right: 1px; top: 0; overflow:hidden; padding:2px;}
 .x-superboxselect-btns div {float: left; width: 16px; height: 16px; margin-top: 4px;}
-.x-superboxselect-btn-clear {background: url(clear.png) no-repeat scroll left 0px;}
-.x-superboxselect-btn-expand {background: url(expand.png) no-repeat scroll left 0px;}
+.x-superboxselect-btn-clear {background: url(../images/clear.png) no-repeat scroll left 0px;}
+.x-superboxselect-btn-expand {background: url(../images/expand.png) no-repeat scroll left 0px;}
 .x-superboxselect-btn-over {background-position: left -16px}
 .x-superboxselect-btn-hide {display:none;}
-.x-superboxselect li {float: left; margin: 1px 1px 2px 1px; padding: 0;line-height: 18px;}
+.x-superboxselect li {float: left; margin: 1px 1px 2px 1px; padding: 0;line-height: 18px; white-space: normal;}
 .x-superboxselect-stacked li {float: none !important;}
 .x-superboxselect-input input { border: none; outline: none; margin-top: 4px; margin-bottom: 4px;}
 body.ext-ie .x-superboxselect-input input {background: none; border: none; margin-top: 3px;}
@@ -18,7 +18,7 @@ body.ext-ie7 .x-superboxselect-item {margin: 2px 1px 2px 1px; line-height: 1.2em
 body.ext-ie6 .x-superboxselect-item {margin: 2px 1px 2px 1px; line-height: 1.2em; padding: 2px 19px 4px 5px !important;}
 .x-superboxselect-item-hover {background: #BBCEF1; border: 1px solid #6D95E0;}
 .x-superboxselect-item-focus {border-color: #598BEC; background: #598BEC; color: #fff;}
-.x-superboxselect-item-close {background: url(close.png) no-repeat scroll left 0px; border: none; cursor: default; font-size: 1px; height: 16px;padding:0; position: absolute; right: 0px; top: 2px; width: 13px;display:block;cursor:pointer;}
+.x-superboxselect-item-close {background: url(../images/close.png) no-repeat scroll left 0px; border: none; cursor: default; font-size: 1px; height: 16px;padding:0; position: absolute; right: 0px; top: 2px; width: 13px;display:block;cursor:pointer;}
 
 .x-superboxselect-item-close:hover, .x-superboxselect-item-close:active  { background-position: left -12px;}
 .x-superboxselect-item-focus .x-superboxselect-item-close{ background-position: left -24px}

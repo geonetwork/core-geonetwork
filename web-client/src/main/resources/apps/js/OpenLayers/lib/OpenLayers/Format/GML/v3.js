@@ -1,6 +1,6 @@
-/* Copyright (c) 2006-2010 by OpenLayers Contributors (see authors.txt for 
- * full list of contributors). Published under the Clear BSD license.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for 
+ * full list of contributors). Published under the 2-clause BSD license.
+ * See license.txt in the OpenLayers distribution or repository for the
  * full text of the license. */
 
 /**
@@ -250,7 +250,7 @@ OpenLayers.Format.GML.v3 = OpenLayers.Class(OpenLayers.Format.GML.Base, {
      */
     write: function(features) {
         var name;
-        if(features instanceof Array) {
+        if(OpenLayers.Util.isArray(features)) {
             name = "featureMembers";
         } else {
             name = "featureMember";
@@ -378,8 +378,9 @@ OpenLayers.Format.GML.v3 = OpenLayers.Class(OpenLayers.Format.GML.Base, {
             },
             "MultiCurve": function(geometry) {
                 var node = this.createElementNSPlus("gml:MultiCurve");
-                for(var i=0, len=geometry.components.length; i<len; ++i) {
-                    this.writeNode("curveMember", geometry.components[i], node);
+                var components = geometry.components || [geometry];
+                for(var i=0, len=components.length; i<len; ++i) {
+                    this.writeNode("curveMember", components[i], node);
                 }
                 return node;
             },
@@ -394,8 +395,9 @@ OpenLayers.Format.GML.v3 = OpenLayers.Class(OpenLayers.Format.GML.Base, {
             },
             "MultiSurface": function(geometry) {
                 var node = this.createElementNSPlus("gml:MultiSurface");
-                for(var i=0, len=geometry.components.length; i<len; ++i) {
-                    this.writeNode("surfaceMember", geometry.components[i], node);
+                var components = geometry.components || [geometry];
+                for(var i=0, len=components.length; i<len; ++i) {
+                    this.writeNode("surfaceMember", components[i], node);
                 }
                 return node;
             },
@@ -442,7 +444,7 @@ OpenLayers.Format.GML.v3 = OpenLayers.Class(OpenLayers.Format.GML.Base, {
     },
 
     /**
-     * Function: setGeometryTypes
+     * Method: setGeometryTypes
      * Sets the <geometryTypes> mapping.
      */
     setGeometryTypes: function() {

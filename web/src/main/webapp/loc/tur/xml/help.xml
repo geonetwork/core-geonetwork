@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<help>
+	<title>Yardım Sayfası</title>
+	<content>
+		<h3>Yardım</h3>
+		<p>GeoNetwork için sıkça Sorulan Sorular (SSS), Anlatımlar, Referans Kılavuz and diğer bilgiler  için 
+		<strong>Dokümantasyon</strong> Merkezi <strong><a href="http://geonetwork-opensource.org" target="_blank">GeoNetwork Platformu</a></strong></p>
+		<h3>İçndekilere</h3>
+		<p>
+			<a href="#1">Spatial Data Bulma</a><br/>
+			<a href="#2">Spatial Data ve İlgili Uygulamalar</a><br/>
+			<a href="#3">Spatial Data İndirme</a>
+			<p/>
+			<a name="1"/><h3>Spatial Data Bulma</h3>
+			GeoNetwork arama motoru aşağıdaki alanlarda arama yapmanıza imkan tanır
+			<ul>
+				<li>Başlık</li>
+				<li>Özet</li>
+				<li>Anahtar Kelime</li>
+				<li>Lokasyon</li>
+				<li>Serbest Metin (herhangi bir metaveri alanı)</li>
+			</ul>
+			Arama işlemlerinde aşağıdaki gramere uygun kriter yazılabilir.
+			<ul>
+				<li>string:  "string"' içeren metaveri </li>
+				<li>string1 string2: string1 ve string2 ye eşit metaveri</li>
+				<li>"string1 string2": "string1 string2" içeren metaveri</li>
+				<li>string1 and string2: "string1" ve "string2" birlikte içeren metaveri</li>
+				<li>string1 or string2: 'string1' veya "string2" içeren metaveri</li>
+				<li>string1 not string2: "string1" içeren ancak "string2" içermeyen metaveri</li>
+			</ul>
+			anahtar kelime ve operatorler (and, or not) küçük büyük harf duyarlı değildir.
+			<p/>
+			Örnek olarak başlık alanına :
+			<p/>
+			anchorage map: Başlık alanında "anchorage" and "map" kelimesini içeren bütün metaveriyi aratır;<br/>
+			"anchorage map": Başlık alanında "anchorage map" metnini içeren bütün metaverileri aratır;<br/>
+			"anchorage map" not roads: Başlık alanında "anchorage map" içeren ancak "roads" içermeyen metaverileri aratır.
+			<p/>
+			Uzaktan aramalarda birden fazla sunucu seçimi yapılabilir;alternatif olarak,kullanıcı profil seçimi yapabilir;Bu o profilde tanımlı butun sunucuların seçilmesini sağlar.Örnek olarak GeoNetwork profilinin seçimi uzaktan arama yapabilen bütün GeoNetwork sunucularının seçilmesini sağlar.<br/>
+			Uzaktan yapılan  Z39.50 işlemleri yavaş olabildiğinden, kullanıcı 10, 20 and 30 saniyelik zaman aşımı limitleri tanımlayabilir.
+			<p/>
+			<a name="2"/><h3>Spatial data ve ilgili uygulamalar</h3>
+			<p/>
+			Spatial data that can be found in the GeoNetwork is often used as basic data in advanced web-based applications. These applications target specific problems related to agriculture, livestock, forests, fisheries and food security issues.<br/>
+			The user will be provided with links to these related applications.<br/>
+			Related applications will also allow the user to see what other spatial data makes part of the application.<br/>
+			Related applications can in some cases directly be viewed through the GeoNetwork Dynamic Map interface.
+			<p/>
+			<a name="3"/><h3>Downloading spatial data</h3>
+			Spatial veri genellikle bilgisayara indirmek üzere bulundurulur.Veriler En çok kullanılan GIS veri formatlarında ve en yaygın GIS araçlarında çalışacak şekilde bulunmaktadır<br/>
+			İndirilebilir veri indirme işlemine başlamak için bir link bulundurmaktadır.İndirme öncesinde kullanım koşulları ve sözleşmesi kabul edilmelidir.Kişisel bilgileriniz , geri bildiriminiz ve kullanım amacınız indirme esnasında sorulacaktır.<br/>
+			Veri kümeleri yalnızca ilgilendiğiniz alanlara ait verilerin indirilmesini sağlayacaktır.
+		</p>
+	</content>
+</help>
+

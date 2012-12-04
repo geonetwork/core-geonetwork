@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <ara>عربي</ara> <!-- Do not translate! -->
     <cat>Català</cat> <!-- Do not translate! -->
@@ -13,9 +13,13 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
+    
+	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Ongeacht welke taal</anyLanguage>
-
+	<nodata>Null</nodata>
 	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -588,6 +592,7 @@
 	<login>Inloggen</login>
 	<loginCardTitle>Login / Aanmelden</loginCardTitle>
 	<loginwarning>Enkel nodig voor beheer van de site</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Uitloggen</logout>
 	<logoutDes>Uitloggen</logoutDes>
 	<longitude>Lengte (tussen -180 and 180) in graden</longitude>
@@ -747,7 +752,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
@@ -1400,4 +1405,6 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

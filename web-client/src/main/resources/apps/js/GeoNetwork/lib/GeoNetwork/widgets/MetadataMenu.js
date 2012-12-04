@@ -207,6 +207,19 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.add(this.viewXMLAction);
         
+        this.viewRDFAction = new Ext.Action({
+            text: OpenLayers.i18n('saveRdf'),
+            //W3C Semantic Web Logo
+            iconCls: 'rdfIcon',
+            handler: function(){
+                var id = this.record.get('uuid');
+                var schema = this.record.get('schema');
+                window.open(this.catalogue.services.mdRDFGet + "?uuid=" + id);
+            },
+            scope: this
+        });
+        this.add(this.viewRDFAction);
+        
         this.printAction = new Ext.Action({
                 text: OpenLayers.i18n('printSel'),
                 iconCls: 'md-mn-pdf',
@@ -272,7 +285,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					false, 
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
-            identified = this.catalogue.isIdentified();
+            identified = this.catalogue.isIdentified() && 
+                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser');
 
         /* Actions and menu visibility for logged in user */
         if (!identified) {

@@ -57,13 +57,13 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     catalogue: undefined,
     defaultConfig: {
         border: false,
-    	layout: 'form',
+        layout: 'form',
         id: 'loginForm',
-    	/** api: config[displayLabels] 
+        /** api: config[displayLabels] 
          * In hbox layout, labels are not displayed, set to true to display field labels.
          */
-    	hideLoginLabels: true,
-    	width: 340
+        hideLoginLabels: true,
+        width: 340
     },
     defaultType: 'textfield',
     /** private: property[userInfo]
@@ -85,53 +85,55 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
      */
 
     keys: [{
-        key: [Ext.EventObject.ENTER], handler: function() {
+        key: [Ext.EventObject.ENTER], 
+        handler: function () {
             Ext.getCmp('btnLoginForm').fireEvent('click');
         }
     }],
 
-    initComponent: function(){
-    	Ext.applyIf(this, this.defaultConfig);
+    initComponent: function () {
+        Ext.applyIf(this, this.defaultConfig);
 
-    	var form = this;
-    	var loginBt = new Ext.Button({
-	            width: 50,
-	            text: OpenLayers.i18n('login'),
-	            iconCls: 'md-mn mn-login',
+        var form = this;
+        var loginBt = new Ext.Button({
+                width: 50,
+                text: OpenLayers.i18n('login'),
+                iconCls: 'md-mn mn-login',
                 id: 'btnLoginForm',
-	            listeners: {
-	                click: function(){
-	                    this.catalogue.login(this.username.getValue(), this.password.getValue());
-	                },
-	                scope: form
-	            }
-	        }),
-	        adminBt = new Ext.Button({
-	            width: 80,
-	            text: OpenLayers.i18n('administration'),
-	            //iconCls : 'md-mn md-mn-advanced',
-	            listeners: {
-	                click: function(){
-	                    catalogue.admin();
-	                },
-	                scope: this
-	            }
-	        }),
-	        logoutBt = new Ext.Button({
-	            width: 80,
-	            text: OpenLayers.i18n('logout'),
-	            iconCls: 'md-mn mn-logout',
-	            listeners: {
-	                click: function(){
-	                    catalogue.logout();
-	                },
-	                scope: this
-	            }
-	        });
-    	this.username = new Ext.form.TextField({
-    		id: 'username',
-    		name: 'username',
+                listeners: {
+                    click: function () {
+                        this.catalogue.login(this.username.getValue(), this.password.getValue());
+                    },
+                    scope: form
+                }
+            }),
+            adminBt = new Ext.Button({
+                width: 80,
+                text: OpenLayers.i18n('administration'),
+                //iconCls : 'md-mn md-mn-advanced',
+                listeners: {
+                    click: function () {
+                        this.catalogue.admin();
+                    },
+                    scope: this
+                }
+            }),
+            logoutBt = new Ext.Button({
+                width: 80,
+                text: OpenLayers.i18n('logout'),
+                iconCls: 'md-mn mn-logout',
+                listeners: {
+                    click: function () {
+                        this.catalogue.logout();
+                    },
+                    scope: this
+                }
+            });
+        this.username = new Ext.form.TextField({
+            id: 'username',
+            name: 'username',
             width: 70,
+            autoCreate: {tag: 'input'},
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('username'),
@@ -146,34 +148,34 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             emptyText: OpenLayers.i18n('password'),
             inputType: 'password'
         });
-    	this.userInfo = new Ext.form.Label({
+        this.userInfo = new Ext.form.Label({
             width: 170,
             text: '',
             cls: 'loginInfo'
         });
-    	
-    	
-    	
-    	if (this.hideLoginLabels) {
-    		this.toggledFields.push( 
-            		this.username,
+        
+        
+        
+        if (this.hideLoginLabels) {
+            this.toggledFields.push( 
+                    this.username,
                     this.password,
                     loginBt);
-    	} else {
-    		// hbox layout does not display TextField labels, create a label then
-        	var usernameLb = new Ext.form.Label({html: OpenLayers.i18n('username')}),
-    			passwordLb = new Ext.form.Label({html: OpenLayers.i18n('password')});
+        } else {
+            // hbox layout does not display TextField labels, create a label then
+            var usernameLb = new Ext.form.Label({html: OpenLayers.i18n('username')}),
+                passwordLb = new Ext.form.Label({html: OpenLayers.i18n('password')});
         
-        	this.toggledFields.push(usernameLb, 
-            		this.username,
+            this.toggledFields.push(usernameLb, 
+                    this.username,
                     passwordLb,
                     this.password,
                     loginBt);
-    	}
-    	this.toggledFieldsOff.push(this.userInfo, 
+        }
+        this.toggledFieldsOff.push(this.userInfo, 
                 logoutBt);
         if (this.catalogue.adminAppUrl !== '') {
-        	this.toggledFieldsOff.push(adminBt);
+            this.toggledFieldsOff.push(adminBt);
         }
         this.items = [this.toggledFields, this.toggledFieldsOff];
         GeoNetwork.LoginForm.superclass.initComponent.call(this);
@@ -188,14 +190,18 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     /** private: method[login]
      *  Update layout according to login/out operation
      */
-    login: function(cat, user){
+    login: function (cat, user) {
         var status = user ? true : false;
-        
+        var loginForm = this; 
         Ext.each(this.toggledFields, function(item) {
-        	item.setVisible(!status);
+        	var visible = !status;
+        	if (item == loginForm.password || item == loginForm.username) {
+        		visible = visible && !cat.casEnabled
+        	}
+        	item.setVisible(visible);
         });
-        Ext.each(this.toggledFieldsOff, function(item) {
-        	item.setVisible(status);
+        Ext.each(this.toggledFieldsOff, function (item) {
+            item.setVisible(status);
         });
         if (cat.identifiedUser && cat.identifiedUser.username) {
             this.userInfo.setText(cat.identifiedUser.name +

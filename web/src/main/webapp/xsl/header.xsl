@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<xsl:include href="geo/utils.xsl"/>
-	
+
 	<!--
 	main html header
 	-->
 	<xsl:template name="header">
-        <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
-		<link href="../../images/logos/favicon.gif" rel="shortcut icon" type="image/x-icon" />
-	  <link href="../../images/logos/favicon.gif" rel="icon" type="image/x-icon" />
+		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
+		<link rel="icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
 
 		<!-- Recent updates newsfeed -->
 		<link href="{/root/gui/locService}/rss.latest?georss=gml" rel="alternate" type="application/rss+xml" title="GeoNetwork opensource GeoRSS | {/root/gui/strings/recentAdditions}" />
@@ -33,43 +33,43 @@
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
-            Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
-			
+			Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
+
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
-			
+
 			<xsl:if test="//service/@name = 'main.home'">
-            document.onkeyup = alertkey;
-            
-            function alertkey(e) {
-             if (!e) {
-                 if (window.event) {
-                     e = window.event;
-                 } else {
-                     return;
-                 }
-             }
-             
-             if (e.keyCode == 13) {
-                  <xsl:if test="string(/root/gui/session/userId)=''">
-                  if ($('username').value != '') { // login action
-                    goSubmit('login')
-                    return;
-                  }
-                  </xsl:if>
-                  if (document.cookie.indexOf("search=advanced")!=-1)
-                    runAdvancedSearch();
-                  else
-                    runSimpleSearch();
-             }
-            };
+			document.onkeyup = alertkey;
+
+			function alertkey(e) {
+				if (!e) {
+					if (window.event) {
+						e = window.event;
+					} else {
+						return;
+					}
+				}
+
+				if (e.keyCode == 13) {
+					<xsl:if test="string(/root/gui/session/userId)=''">
+					if ($('username').value != '') { // login action
+						goSubmit('login');
+						return;
+						}
+					</xsl:if>
+					if (document.cookie.indexOf("search=advanced")!=-1)
+						runAdvancedSearch();
+					else
+						runSimpleSearch();
+					}
+				};
 			</xsl:if>
-		</script>		
-		
+		</script><xsl:text>&#10;</xsl:text>
+
 		<!-- stylesheet -->
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		<xsl:apply-templates mode="css" select="/"/>
-		
+
 		<!-- JS -->
 		<xsl:call-template name="jsHeader"/>
 		
@@ -82,7 +82,6 @@
 		function (ie. translate('key');).
 	-->
 	<xsl:template match="*" mode="js-translations">
-		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"
-		<xsl:if test="position()!=last()">,</xsl:if>
+		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

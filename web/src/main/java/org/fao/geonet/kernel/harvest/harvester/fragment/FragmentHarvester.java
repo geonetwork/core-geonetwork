@@ -150,7 +150,7 @@ public class FragmentHarvester {
 	private void loadTemplate() {
 		try {
 			//--- Load template to be used to create metadata from fragments
-			metadataTemplate = dataMan.getMetadataNoInfo(context, params.templateId);
+			metadataTemplate = dataMan.getMetadata(dbms, params.templateId);
 			
 			//--- Build a list of all Namespaces in the metadata document
 			Namespace ns = metadataTemplate.getNamespace();
@@ -269,8 +269,9 @@ public class FragmentHarvester {
 		
 		if (uuid == null || uuid.equals("")) {
 			uuid = UUID.randomUUID().toString(); 
+			if(log.isDebugEnabled())
+				log.debug("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
 			fragment.setAttribute("uuid", uuid);
-			log.warning("  - Metadata fragment did not have uuid! Fragment XML is "+ Xml.getString(fragment));
 		}
 
 		// Add schema as an attribute (if not already present)
@@ -326,7 +327,7 @@ public class FragmentHarvester {
 		if (id == null) {
 			createSubtemplate(schema, md, uuid, title);
 		} else {
-			updateSubtemplate(id, uuid, md);
+			updateSubtemplate(id, uuid, md, title);
 		}
 
 	}
@@ -338,9 +339,10 @@ public class FragmentHarvester {
      * @param id        id of subtemplate to update
      * @param uuid      uuid of subtemplate being updated
      * @param md				Subtemplate
+     * @param title			Subtemplate title
      * 
      */
-	private void updateSubtemplate(String id, String uuid, Element md) throws Exception {
+	private void updateSubtemplate(String id, String uuid, Element md, String title) throws Exception {
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
 
@@ -361,7 +363,7 @@ public class FragmentHarvester {
         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
         addCategories(id);
 
-				dataMan.setTemplateExt(dbms, iId, "s", null);
+				dataMan.setTemplateExt(dbms, iId, "s", title);
 				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
         dataMan.indexMetadataGroup(dbms, id);
 

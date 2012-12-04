@@ -16,11 +16,11 @@
 }
 .ux-rating-reset,
 .ux-rating-reset a {
-    background:url(images/delete.gif) no-repeat 0 -16px !important
+    background:url(../images/delete.gif) no-repeat 0 -16px !important
 }
 .ux-rating-star,
 .ux-rating-star a {
-    background:url(images/star.gif) no-repeat 0 0px !important
+    background:url(../images/star.gif) no-repeat 0 0px !important
 }
 .ux-rating-reset a,
 .ux-rating-star a {

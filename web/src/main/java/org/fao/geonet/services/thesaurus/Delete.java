@@ -25,6 +25,7 @@ package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -69,9 +70,16 @@ public class Delete implements Service
 		manager.remove(name);
 		
 		// Remove file
-		if (item.exists())
+		if (item.exists()) {
 			item.delete();
-		else throw new IllegalArgumentException("Thesaurus not found --> " + name);
+
+            // Delete thesaurus record in the database
+            String query = "DELETE FROM Thesaurus WHERE id =?";
+            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+            dbms.execute(query, thesaurus.getFname());
+        } else {
+            throw new IllegalArgumentException("Thesaurus not found --> " + name);
+        }
 		
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

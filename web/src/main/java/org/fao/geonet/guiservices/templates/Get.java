@@ -31,6 +31,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
@@ -51,8 +52,6 @@ import java.util.List;
 
 public class Get implements Service
 {
-	private String styleSheet;
-
 	private String arParams[] =
 	{
 		"extended", "off",
@@ -67,10 +66,7 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		styleSheet = appPath + Geonet.Path.STYLESHEETS +"/portal-present.xsl";
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -80,12 +76,14 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		SchemaManager schemaMan = gc.getSchemamanager();
+
 		Element result = search(params, context).setName(Jeeves.Elem.RESPONSE);
-		Element root   = new Element("root");
 
-		root.addContent(result);
-
-		List list = Xml.transform(root, styleSheet).getChildren();
+		List list = result.getChildren();
 
 		Element response = new Element("dummy");
 
@@ -100,13 +98,14 @@ public class Get implements Service
                 continue;
             }
 
-            String id = info.getChildText(Edit.Info.Elem.ID);
-            String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
-            String displayOrder = info.getChildText(Edit.Info.Elem.DISPLAY_ORDER);
+            String template     = elem.getChildText("isTemplate");
+            String displayOrder = elem.getChildText("displayOrder");
+						String schema = info.getChildText("schema");
+            String id     = info.getChildText(Edit.Info.Elem.ID);
 
-            if (template.equals("y")) {
+            if (template.equals("y") && schemaMan.existsSchema(schema)) {
                 // heikki, GeoNovum: added displayOrder
-                responseRecords.add(buildRecord(id, elem.getChildText("title"), info.getChildText("schema"), displayOrder));
+                responseRecords.add(buildRecord(id, elem.getChildText("title"), schema, displayOrder));
             }
         }
         // heikki, Geonovum: then process them to ensure displayOrder is not empty and is unique
@@ -159,6 +158,7 @@ public class Get implements Service
 
 		params.addContent(new Element("from").setText("1"));
 		params.addContent(new Element("to").setText(searcher.getSize() +""));
+		params.addContent(new Element("fast").setText("index"));
 
 		Element result = searcher.present(context, params, config);
 

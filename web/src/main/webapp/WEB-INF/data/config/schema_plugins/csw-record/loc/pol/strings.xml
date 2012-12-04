@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <xml_csw-record>Save this metadata as a CSW Discovery XML file</xml_csw-record>
+  <xml_csw-recordTooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_csw-recordTooai_dc>
+</strings>

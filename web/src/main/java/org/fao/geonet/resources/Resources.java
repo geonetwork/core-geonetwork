@@ -1,16 +1,20 @@
 package org.fao.geonet.resources;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
@@ -31,6 +35,23 @@ import org.fao.geonet.constants.Geonet;
  */
 public class Resources {
 
+	private final static Set<String> IMAGE_READ_SUFFIXES;
+	private final static Set<String> IMAGE_WRITE_SUFFIXES;
+	static {
+		HashSet<String> suffixes = new HashSet<String>();
+		for (String string : ImageIO.getReaderFileSuffixes()) {
+			suffixes.add(string.toLowerCase());
+		}
+
+		IMAGE_READ_SUFFIXES = Collections.unmodifiableSet(suffixes);
+
+		suffixes = new HashSet<String>();
+		for (String string : ImageIO.getReaderFileSuffixes()) {
+			suffixes.add(string.toLowerCase());
+		}
+
+		IMAGE_WRITE_SUFFIXES = Collections.unmodifiableSet(suffixes);
+	}
 	/**
 	 * Find the configured directory containing logos. The directory the logos
 	 * are located in depends on the configuration of dataImagesDir in the
@@ -244,7 +265,33 @@ public class Resources {
 				file.getParentFile().mkdirs();
 				transferTo(webappCopy, new FileOutputStream(file), true);
 			}
+
+			final int indexOfDot = file.getName().lastIndexOf(".");
+			final String suffixless = file.getName().substring(0, indexOfDot);
+			String suffix = file.getName().substring(indexOfDot+1);
+			if (!file.exists() && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+				// find a different format and convert it to our desired format
+				File[] found = file.getParentFile().listFiles(new FilenameFilter() {
+
+					@Override
+					public boolean accept(File arg0, String name) {
+						boolean startsWith = name.startsWith(suffixless);
+						boolean canReadImage = name.length()>indexOfDot && IMAGE_READ_SUFFIXES.contains(name.substring(indexOfDot+1).toLowerCase());
+						return startsWith && canReadImage;
+					}
+				});
+
+				if(found.length > 0) {
+					BufferedImage image = ImageIO.read(found[0]);
+					try {
+						ImageIO.write(image, suffix, file);
+					} catch (IOException e) {
+						context.log("Unable to convert image from "+found[0]+" to "+file, e);
+					}
+				}
+			}
 		}
+
 		return file;
 	}
 

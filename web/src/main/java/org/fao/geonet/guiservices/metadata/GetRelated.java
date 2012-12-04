@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -47,7 +48,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Perform a search and return all children metadata record for current record.
@@ -77,6 +80,7 @@ public class GetRelated implements Service {
             "http://www.isotc211.org/2005/srv");
     private static Namespace gco = Namespace.getNamespace("gco",
             "http://www.isotc211.org/2005/gco");
+    private static List<Namespace> nsList = Arrays.asList(gmd, gco, srv);
 
     public void init(String appPath, ServiceConfig config) throws Exception {
         _config = config;
@@ -136,25 +140,50 @@ public class GetRelated implements Service {
                 if (parent != null) {
                     String parentUuid = parent.getChildText("CharacterString", gco);
 
-                    if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                    String parentId = dm.getMetadataId(dbms, parentUuid);
-
-                    try {
-                        Lib.resource.checkPrivilege(context, parentId,
-                                AccessManager.OPER_VIEW);
-                        Element content = dm.getMetadata(context, parentId,
-                                forEditing, withValidationErrors,
-                                keepXlinkAttributes);
-                        relatedRecords.addContent(new Element("parent")
-                                .addContent(new Element("response")
-                                        .addContent(content)));
-                    } catch (Exception e) {
-                        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
-                                + parentId + " record is not visible for user.");
-                    }
-                }
+									if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+									Element parentContent = getRecord(parentUuid, context, dbms, dm);
+									if (parentContent != null) {
+										relatedRecords.addContent(new Element("parent")
+											.addContent(new Element("response")
+											.addContent(parentContent)));
+									}
+								}
             }
+        }
+        if (type.equals("") || type.contains("siblings")) {
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            if(md == null) {
+                md = gc.getDataManager().getMetadata(context,
+                        String.valueOf(id), forEditing, withValidationErrors,
+                        keepXlinkAttributes);
+            }
+						Element response = new Element("response");
+            if (md != null) {
+                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode and string(gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue)='crossReference']", nsList);
+								for (Object o : sibs) {
+									if (o instanceof Element) {
+										Element sib = (Element)o;
+										Element agId = (Element)sib
+														.getChild("aggregateDataSetIdentifier", gmd)
+										        .getChildren().get(0);
+                  	String sibUuid = agId
+														.getChild("code", gmd)
+														.getChildText("CharacterString", gco);
+										String initType = sib.getChild("initiativeType", gmd) 
+																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
+
+										if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+										Element sibContent = getRecord(sibUuid, context, dbms, dm);
+										if (sibContent != null) {
+											Element sibling = new Element("sibling");
+											sibling.setAttribute("initiative",initType);
+											response.addContent(sibling.addContent(sibContent));
+										}
+									}
+								}
+            }
+						relatedRecords.addContent(new Element("siblings")
+																				.addContent(response));
         }
         if (type.equals("") || type.contains("service")) {
             relatedRecords.addContent(search(uuid, "services", context, from,
@@ -250,7 +279,7 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecat".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
-            else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type))
+            else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
@@ -269,4 +298,21 @@ public class GetRelated implements Service {
             searcher.close();
         }
     }
+
+		private Element getRecord(String uuid, ServiceContext context, Dbms dbms, DataManager dm) {
+			Element content = null;
+			try {
+				String id = dm.getMetadataId(dbms, uuid);
+				boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+
+				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+				content = dm.getMetadata(context, id,
+																	forEditing, withValidationErrors,
+                                	keepXlinkAttributes);
+			} catch (Exception e) {
+				if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+					Log.debug(Geonet.SEARCH_ENGINE, "Metadata "+uuid+" record is not visible for user.");
+			}
+			return content;
+		}
 }

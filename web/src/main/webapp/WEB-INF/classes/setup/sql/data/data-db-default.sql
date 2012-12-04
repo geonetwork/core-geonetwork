@@ -40,6 +40,7 @@ INSERT INTO Categories VALUES (9,'directories');
 INSERT INTO Categories VALUES (10,'otherResources');
 INSERT INTO Categories VALUES (11,'z3950Servers');
 INSERT INTO Categories VALUES (12,'registers');
+INSERT INTO Categories VALUES (13,'physicalSamples');
 
 -- ======================================================================
 -- === Table: Groups
@@ -891,6 +892,7 @@ INSERT INTO Settings VALUES (20,1,'server',NULL);
 INSERT INTO Settings VALUES (21,20,'host','localhost');
 INSERT INTO Settings VALUES (22,20,'port','8080');
 INSERT INTO Settings VALUES (23,20,'protocol','http');
+INSERT INTO Settings VALUES (24,20,'securePort','8443');
 INSERT INTO Settings VALUES (30,1,'intranet',NULL);
 INSERT INTO Settings VALUES (31,30,'network','127.0.0.1');
 INSERT INTO Settings VALUES (32,30,'netmask','255.0.0.0');
@@ -919,10 +921,13 @@ INSERT INTO Settings VALUES (85,80,'uidAttr','uid');
 INSERT INTO Settings VALUES (86,80,'distinguishedNames',NULL);
 INSERT INTO Settings VALUES (87,80,'userAttribs',NULL);
 INSERT INTO Settings VALUES (88,80,'defaultGroup', NULL);
+INSERT INTO Settings VALUES (89,80,'bind',NULL);
+-- Children of LDAP continued at ID 150
 INSERT INTO Settings VALUES (90,1,'selectionmanager',NULL);
 INSERT INTO Settings VALUES (91,90,'maxrecords','1000');
 INSERT INTO Settings VALUES (100,86,'base','dc=fao,dc=org');
 INSERT INTO Settings VALUES (101,86,'users','ou=people');
+INSERT INTO Settings VALUES (102,86,'subtree','false');
 INSERT INTO Settings VALUES (110,87,'name','cn');
 INSERT INTO Settings VALUES (112,87,'profile','profile');
 INSERT INTO Settings VALUES (113,87,'group',NULL);
@@ -930,6 +935,9 @@ INSERT INTO Settings VALUES (120,1,'csw',NULL);
 INSERT INTO Settings VALUES (121,120,'enable','true');
 INSERT INTO Settings VALUES (122,120,'contactId',NULL);
 INSERT INTO Settings VALUES (131,120,'metadataPublic','false');
+INSERT INTO Settings VALUES (140,89,'bindDn','cn=fake.name,ou=people,dc=fao,dc=org');
+INSERT INTO Settings VALUES (141,89,'bindPw','fake_password');
+INSERT INTO Settings VALUES (150,80,'anonBind','true');
 INSERT INTO Settings VALUES (170,1,'shib',NULL);
 INSERT INTO Settings VALUES (171,170,'use','false');
 INSERT INTO Settings VALUES (172,170,'path','/geonetwork/srv/en/shib.user.login');
@@ -1002,9 +1010,13 @@ INSERT INTO Settings VALUES (953,952,'only','false');
 INSERT INTO Settings VALUES (954,952,'sorted','false');
 INSERT INTO Settings VALUES (955,952,'ignored','true');
 
+INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
+INSERT INTO Settings VALUES (957,956,'enable','false');
+INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
 
 -- ======================================================================
 -- === Table: Users
 -- ======================================================================
 
-INSERT INTO Users VALUES  (1,'admin','d033e22ae348aeb566fc214aec3585c4da997','admin','admin','Administrator','','','','','','','','');
+INSERT INTO Users VALUES  (1,'admin','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','admin','admin','Administrator','','','','','','','','','', null);
+INSERT INTO Users VALUES  (2,'developer','b3e106a0375f9a74718df3916696e91952ad381807ffbae7a7ef1c77a0cf8892652714d859c7be27','developer','developer','Developer','','','','','','','','','', null);

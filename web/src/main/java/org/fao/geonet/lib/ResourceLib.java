@@ -30,6 +30,7 @@ import org.fao.geonet.Geonetwork;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.io.File;
 import java.util.Set;
@@ -126,9 +127,18 @@ public class ResourceLib {
 
 		Set hsOper = accessMan.getOperations(context, id, context
 				.getIpAddress());
+		
+		if (!hsOper.contains(operation)) {
+			denyAccess(context);
+		}
+	}
 
-		if (!hsOper.contains(operation))
+	private void denyAccess(ServiceContext context) throws Exception {
+		if (context.getUserSession().isAuthenticated()) {
+			throw new AccessDeniedException("User is not permitted to access this resource");
+		} else {
 			throw new OperationNotAllowedEx();
+		}
 	}
 
 	public void checkEditPrivilege(ServiceContext context, String id)
@@ -138,7 +148,7 @@ public class ResourceLib {
 		AccessManager am = gc.getAccessManager();
 
 		if (!am.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+			denyAccess(context);
 	}
 
 	/**

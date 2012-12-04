@@ -27,7 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -264,7 +265,7 @@ class Harvester
 		localGroups = new GroupMapper (dbms);
 
 		// md5 the full capabilities URL
-		String uuid = Util.scramble (this.capabilitiesUrl); // is the service identifier
+		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
 		
 		//--- Loading stylesheet
 		String styleSheet = schemaMan.getSchemaDir(params.outputSchema) + 
@@ -500,13 +501,19 @@ class Harvester
 		boolean loaded 		= false;
 		
 		if (params.ogctype.substring(0,3).equals("WMS")) {
-
+			Element name;
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
 				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");
-				reg.name 	= layer.getChild ("Name", wms).getValue ();
+				name = layer.getChild ("Name", wms);
 			} else {
-				reg.name 	= layer.getChild ("Name").getValue ();
+				name = layer.getChild ("Name");
 			}
+			//--- For the moment, skip non-requestable category layers
+			if (name == null || name.getValue().trim().equals("")) {
+				log.info("  - skipping layer with no name element");
+				return null;
+			}
+			reg.name = name.getValue();
 		} else if (params.ogctype.substring(0,3).equals("WFS")) {
 			Namespace wfs = Namespace.getNamespace("http://www.opengis.net/wfs");
 			reg.name 	= layer.getChild ("Name", wfs).getValue ();
@@ -521,7 +528,7 @@ class Harvester
 		log.info ("  - Loading layer: " + reg.name);
 		
 		//--- md5 the full capabilities URL + the layer, coverage or feature name
-		reg.uuid = Util.scramble (this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
+		reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl+"#"+reg.name); // the dataset identifier
 	
 		//--- Trying loading metadataUrl element
 		if (params.useLayerMd && !params.ogctype.substring(0,3).equals("WMS")) {
@@ -576,8 +583,9 @@ class Harvester
 						if (exist) {
 							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
 							result.layerUuidExist ++;
-							// FIXME : return null, service and metadata will not be linked by default.
-							return null;
+							// Return the layer info even if it exists in order
+							// to link to the service record.
+							return reg;
 						}
 						
 						if (schema == null) {
@@ -640,7 +648,7 @@ class Harvester
             reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
-			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms);
+			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms, context);
 			
 			int iId = Integer.parseInt(reg.id);
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
@@ -853,8 +861,9 @@ class Harvester
 		{
 			String name = localCateg.getName (catId);
 
-			if (name == null)
+			if (name == null) {
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
+			}
 			else {
 				dataMan.setCategory (context, dbms, id, catId);
 			}
@@ -874,7 +883,9 @@ class Harvester
 			String name = localGroups.getName( priv.getGroupId ());
 
 			if (name == null)
+			{
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
+			}
 			else
 			{
 				for (int opId: priv.getOperations ())

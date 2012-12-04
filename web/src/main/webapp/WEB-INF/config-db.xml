@@ -31,9 +31,9 @@
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fin-"/>
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ara-"/><!-- Draft to be improved-->
     <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ita-"/><!-- Draft to be improved-->
-    <!--<file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/> Draft to be improved-->
-    <!-- ca missing from 2.6.x -->
-    <!-- tr missing from 2.6.x -->
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-tur-"/><!-- Draft to be improved-->
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-vie-"/><!-- Draft to be improved-->
+    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-pol-"/><!-- Draft to be improved-->
   </data>
   <migrate>
     <version id="243">
@@ -59,13 +59,30 @@
     <version id="265">
       <file path="WEB-INF/classes/setup/sql/migrate/v265" filePrefix="migrate-"/>
     </version>
-    <version id="270">
-      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-db-"/>
-      <file path="WEB-INF/classes/setup/sql/migrate/v270" filePrefix="migrate-"/>
-    </version>
     <version id="280">
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-db-"/>
       <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="migrate-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-eng-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-fre-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-ger-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-spa-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-cat-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-rus-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-por-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-chi-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-dut-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-nor-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-fin-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-ara-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-ita-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-tur-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-vie-"/><!-- Draft to be improved-->
+      <file path="WEB-INF/classes/setup/sql/migrate/v280" filePrefix="loc-pol-"/><!-- Draft to be improved-->
       <java class="v280.MigrationTask"/>
+    </version>
+    <version id="290">
+      <file path="WEB-INF/classes/setup/sql/migrate/v290" filePrefix="migrate-db-"/>
+      <file path="WEB-INF/classes/setup/sql/migrate/v290" filePrefix="migrate-"/>
     </version>
   </migrate>
 </db>

@@ -18,6 +18,10 @@
 	<!-- These are to map schemaLocation hints to local schemas to make sure that
        GeoNetwork edits and validates against a schema it knows about. -->
 
+	<system systemId="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd" 
+					uri="schema/gmd/gmd.xsd"/>
+	<system systemId="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd" 
+					uri="schema/gco/gco.xsd"/>
 	<system systemId="http://www.isotc211.org/2005/gmd/gmd.xsd" 
 	        uri="schema/gmd/gmd.xsd"/>
 	<system systemId="http://www.isotc211.org/2005/gco/gco.xsd" 

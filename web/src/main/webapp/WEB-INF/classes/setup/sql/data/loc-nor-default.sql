@@ -18,6 +18,7 @@ INSERT INTO CategoriesDes VALUES (9,'nor','Kataloger');
 INSERT INTO CategoriesDes VALUES (10,'nor','Andre ressurser');
 INSERT INTO CategoriesDes VALUES (11,'nor','Z3950 Servers');
 INSERT INTO CategoriesDes VALUES (12,'nor','Registers');
+INSERT INTO CategoriesDes VALUES (13,'nor','Physical Samples');
 
 INSERT INTO GroupsDes VALUES (-1,'nor','Gjest');
 INSERT INTO GroupsDes VALUES (0,'nor','Intranett');

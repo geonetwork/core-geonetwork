@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<groups>Valitse ryhmä, johon käyttäjä kuuluu.</groups>
+	<notfound>Metatietoja ei löydy.</notfound>
+	<notowner>Et voi muuttaa metatietojen omistajaa, koska et ole niiden alkuperäinen omistaja.</notowner>
+	<updated>Omistaja vaihdettu.</updated>
+	<resultstitle>Omistajanvaihdon tulokset</resultstitle>
+	<users>Valitse uusi omistaja.</users>
+</strings>

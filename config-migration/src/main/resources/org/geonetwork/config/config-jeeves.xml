@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd"> 
+ 
+ 	<context:annotation-config/>
+	
+	<!-- services -->
+	<bean id="jeevesEngine"
+		class="jeeves.server.JeevesEngine">
+	</bean>
+	<bean id="serialFactory"
+		class="jeeves.utils.SerialFactory">
+	</bean>
+	<bean id="providerManager"
+		class="jeeves.server.resources.ProviderManager">
+	</bean>
+	<bean id="resourceManager"
+		class="jeeves.server.resources.ResourceManager">
+	</bean>
+	<bean id="monitorManager"
+		class="jeeves.monitor.MonitorManager">
+	</bean>
+	
+	<bean id="serviceManager"
+		class="jeeves.server.dispatchers.ServiceManager">
+	</bean>
+	
+	<bean id="profileManager"
+		class="jeeves.server.ProfileManager">
+	</bean>
+	
+	
+	<!-- more bean definitions for services go here -->
+</beans>

@@ -67,12 +67,31 @@ public class OgcGenericFilters
         return builder.buildFeatureType();
     }
 
+    /**
+     * 
+     * @param query
+     * @param filterExpr
+     * @param sourceAccessor
+     *            A lazy pair object that will obtain the required objects as
+     *            needed. It is critical they do not directly reference the
+     *            objects, especially the SpatialIndex because it changes
+     *            frequently and can be a source of memory leakage. So it should
+     *            Reference a singleton object capable of accessing the most
+     *            current instance. The case is a LuceneSearcher being put on
+     *            the UserSession with a spatial filter. The spatial filter
+     *            references the current instance of SpatialIndex. This means if
+     *            a new index is generated the filter will have an outdated
+     *            version as well as keep reference to this potentially very
+     *            large object.
+     * @param parser
+     * @return
+     * @throws Exception
+     */
     @SuppressWarnings("serial")
-    public static SpatialFilter create(Query query,
-            Element filterExpr, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
-            SpatialIndex index, Parser parser) throws Exception
+    public static SpatialFilter create(Query query, int numHits,
+            Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
-        Name geometryColumn = featureSource.getSchema().getGeometryDescriptor().getName();
+        Name geometryColumn = sourceAccessor.one().getSchema().getGeometryDescriptor().getName();
 				// -- parse Filter and report any validation issues
         String string = Xml.getString(filterExpr);
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -83,7 +102,7 @@ public class OgcGenericFilters
 
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE,"Parsing filter");
-        Filter fullFilter = (org.opengis.filter.Filter) parser
+        Object parseResult = parser
                 .parse(new StringReader(string));
         if( parser.getValidationErrors().size() > 0){
         	Log.error(Geonet.SEARCH_ENGINE,"Errors occurred when trying to parse a filter:");
@@ -93,6 +112,10 @@ public class OgcGenericFilters
 	        }
         	Log.error(Geonet.SEARCH_ENGINE,"----------------------------------------------");
         }
+        if(!(parseResult instanceof Filter)) {
+        	return null;
+        }
+        Filter fullFilter = (org.opengis.filter.Filter) parseResult;
         final FilterFactory2 filterFactory2 = CommonFactoryFinder
                 .getFilterFactory2(GeoTools.getDefaultHints());
 
@@ -127,8 +150,7 @@ public class OgcGenericFilters
 
         Boolean disjointFilter = (Boolean) finalFilter.accept(new DisjointDetector(), false);
         if( disjointFilter ){
-            return new FullScanFilter(query, bounds,
-                    featureSource, index){
+            return new FullScanFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
@@ -136,8 +158,7 @@ public class OgcGenericFilters
                 }
             };
         }else{
-            return new SpatialFilter(query, bounds,
-                    featureSource, index){
+            return new SpatialFilter(query, numHits, bounds, sourceAccessor){
                 @Override
                 protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source)
                 {
@@ -158,12 +179,9 @@ public class OgcGenericFilters
             {
 
                 @Override
-                public boolean evaluate(Object feature)
-                {
-                    Geometry leftGeom = getLeftGeometry(feature);
-                    Geometry rightGeom = getRightGeometry(feature);
+                public boolean evaluateInternal(Geometry leftGeom, Geometry rightGeom) {
                     boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
-                    return equals2 || super.evaluate(feature);
+                    return equals2 || super.evaluateInternal(leftGeom, rightGeom);
                 }
             };
         };

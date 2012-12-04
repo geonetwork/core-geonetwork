@@ -8,7 +8,8 @@
 	<server>Servidor</server>
 	<host>Servidor</host>
 	<port>Puerto</port>
-    <protocol>Protocolo</protocol>
+	<securePort>Secure Puerto</securePort>
+	    <protocol>Preferred Protocolo</protocol>
 
     <intranet>Intranet</intranet>
 	<network>Red</network>
@@ -132,22 +133,7 @@
 
 	<authentication>Autenticación</authentication>
 	
-	<loginuses>Usar Login</loginuses>
 	<otherlogins>Permitir a otros usuarios hacer login usando</otherlogins>
-
-	<geonetworkdb>GeoNetwork Autenticación</geonetworkdb>
-		
-	<ldap>LDAP Autenticación</ldap>
-	<defProfile>Default profile</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
 
 	<shib>Shibboleth Autenticación</shib>
 	<path>Path</path>
@@ -448,5 +434,7 @@
 	<db.maxactive>Maximum number of database connections:</db.maxactive>	
 	<db.statserror>Database statistics:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

@@ -87,7 +87,8 @@ public class CswDiscoveryDispatcher implements Service {
         }
         // SOAP encoding
         else if(params.getName().equals("Envelope")) {
-            Element soapBody = params.getChild("Body");
+            Element soapBody = params.getChild("Body",
+                    org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
             List payloadList = soapBody.getChildren();
             Element payload = (Element)payloadList.get(0);
             operation = payload.getName();

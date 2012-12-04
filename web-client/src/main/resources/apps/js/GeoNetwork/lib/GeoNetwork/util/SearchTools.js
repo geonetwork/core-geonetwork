@@ -353,7 +353,7 @@ GeoNetwork.util.SearchTools = {
     getFormValues: function(form){
         var result = {};
         form.cascade(function(cur){
-            if (cur.disabled !== true && !(cur.getName && cur.getName().startsWith('ext-comp'))) { // Check element is
+            if (cur.disabled !== true && !(cur.getName && OpenLayers.String.startsWith(cur.getName(),'ext-comp'))) { // Check element is
                 // enabled
                 // and rendered (ie. visible, eg. field in a collapsed fieldset)
                 if (cur.isXType('boxselect') || cur.isXType('combo')) {

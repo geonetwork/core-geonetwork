@@ -34,6 +34,7 @@ public class UpdateHarvesterIdsTask implements DatabaseMigrationTask {
 					"SELECT * from Harvester").getChildren();
 
 			Map<Integer, Integer> updates = new HashMap<Integer, Integer>();
+			updates.put(2,2);  //Add harvesting node parentid to id map
 			for (Element element : harvesterValues) {
 				int id = Integer.parseInt(element.getChildText("id"));
 				newHarvesterBaseIndex++;

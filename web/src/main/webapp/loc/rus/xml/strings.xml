@@ -13,8 +13,12 @@
     <por>Рortuguês</por> <!-- Do not translate! -->
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
-
+    <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
+    
 	<!-- new strings - 2.7 -->
+	<nodata>Null</nodata>
+	<isAdmin>Is administrator ?</isAdmin>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -30,7 +34,8 @@
 		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
-    <anyLanguage>на любом языке</anyLanguage>
+	<warning>Warning</warning>
+	<anyLanguage>на любом языке</anyLanguage>
 	<status>Status</status>
 	<changeLogMessage>Change Log Message</changeLogMessage>
 	<updateStatus>Update status</updateStatus>
@@ -583,6 +588,7 @@ ISO 19115 не позволяет иметь более одного.
 	<login>Вход</login>
 	<loginCardTitle>Пользователь/Запись</loginCardTitle>
 	<loginwarning>Необходимо только для администрирования сайта</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Выход</logout>
 	<logoutDes>Выйти из системы</logoutDes>
 	<longitude>Долгота (от -180 до 180) в градусах</longitude>
@@ -739,7 +745,7 @@ ISO 19115 не позволяет иметь более одного.
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">Сервис OGC-WFS Web Feature Service(версия 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">Cервис OGC Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.1.1)</protocolChoice>
@@ -1384,4 +1390,6 @@ ISO 19115 не позволяет иметь более одного.
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

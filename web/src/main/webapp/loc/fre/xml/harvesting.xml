@@ -339,24 +339,25 @@
 	</oper>
 	
 	<!-- history messages -->
-  <harvesterHistory>Harvester History</harvesterHistory>
-  <noHistory>No History</noHistory>
-  <dateDesc>Date (most recent first)</dateDesc>
+  <harvesterHistory>Historique du moissonnage</harvesterHistory>
+  <noHistory>Aucun historique</noHistory>
+  <dateDesc>Date (le plus récent d'abord)</dateDesc>
   <date>Date</date>
-  <detail>Detail</detail>
-  <grandTotal>Grand Total</grandTotal>
-  <counter>of</counter>
+  <elapsedTime>Temps</elapsedTime>
+  <detail>Détails</detail>
+  <grandTotal>Total</grandTotal>
+  <counter>sur</counter>
   <totalHistory>Total history records:</totalHistory>
-  <viewAll>View All</viewAll>
-  <deleteHistory>Delete History</deleteHistory>
-  <harvestedNothing>Harvested Nothing</harvestedNothing>
-  <sortBy>Sort by:</sortBy>
-  <ok>Success</ok>
-  <deleted>Deleted</deleted>
-  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
+  <viewAll>Voir tout</viewAll>
+  <deleteHistory>Vider l'historique</deleteHistory>
+  <harvestedNothing>Aucun moissonnage</harvestedNothing>
+  <sortBy>Trier par :</sortBy>
+  <ok>Réussi</ok>
+  <deleted>Supprimé</deleted>
+  <historyDeleted>Historique supprimé :</historyDeleted>
   <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
 	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
-  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+  <backToHarvestManager>Retour à la gestion du moissonnage</backToHarvestManager>
 	
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	

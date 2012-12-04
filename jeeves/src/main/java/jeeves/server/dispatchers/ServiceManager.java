@@ -23,11 +23,21 @@
 
 package jeeves.server.dispatchers;
 
-import com.yammer.metrics.core.TimerContext;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.ServiceNotAllowedEx;
+import jeeves.exceptions.NotAllowedEx;
 import jeeves.exceptions.ServiceNotFoundEx;
 import jeeves.exceptions.ServiceNotMatchedEx;
 import jeeves.interfaces.Service;
@@ -55,17 +65,10 @@ import jeeves.utils.SOAPUtil;
 import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
 
@@ -126,9 +129,10 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public void loadProfiles(ServletContext servletContext, String file) throws Exception
+	public ProfileManager loadProfiles(ServletContext servletContext, String file) throws Exception
 	{
 		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
+		return profilMan;
 	}
 
 	//---------------------------------------------------------------------------
@@ -340,17 +344,19 @@ public class ServiceManager
 		return context;
 	}
 
+	public void dispatch(ServiceRequest req, UserSession session) {
+		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		dispatch(req, session, context);
+	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
 
-	public void dispatch(ServiceRequest req, UserSession session)
+	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
-
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
-
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());
 		context.setUserSession(session);
@@ -406,15 +412,6 @@ public class ServiceManager
 
 				String profile = ProfileManager.GUEST;
 
-				if (session.isAuthenticated())
-					profile = session.getProfile();
-
-				if (!profilMan.hasAccessTo(profile, srvName))
-				{
-					error("Service not allowed : "+ srvName);
-					throw new ServiceNotAllowedEx(srvName);
-				}
-
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
 				    response = srvInfo.execServices(req.getParams(), context);
@@ -464,7 +461,11 @@ public class ServiceManager
 		}
 		catch(Throwable e)
 		{
-			handleError(req, response, context, srvInfo, e);
+			if(e instanceof NotAllowedEx) {
+				throw (NotAllowedEx)e;
+			} else {
+				handleError(req, response, context, srvInfo, e);
+			}
 		}
 	}
 
@@ -920,6 +921,7 @@ public class ServiceManager
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
+	public ProfileManager getProfileManager() { return profilMan; }
 }
 
 //=============================================================================

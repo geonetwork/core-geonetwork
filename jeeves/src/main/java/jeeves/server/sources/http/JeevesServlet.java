@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
@@ -48,6 +49,7 @@ import jeeves.utils.Util;
 @SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
+	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
 	private JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
 
@@ -153,7 +155,7 @@ public class JeevesServlet extends HttpServlet
 //		}
 		HttpSession httpSession = req.getSession();
         if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session id is "+httpSession.getId());
-		UserSession session     = (UserSession) httpSession.getAttribute("session");
+		UserSession session     = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
 
 		//------------------------------------------------------------------------
 		//--- create a new session if doesn't exist
@@ -164,7 +166,9 @@ public class JeevesServlet extends HttpServlet
 
 			session = new UserSession();
 
-			httpSession.setAttribute("session", session);
+			httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
+			session.setsHttpSession(httpSession);
+
             if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session created for client : " + ip);
 		}
 
@@ -209,6 +213,11 @@ public class JeevesServlet extends HttpServlet
 	}
 
 	public boolean isInitialized() { return initialized; }
+
+	public JeevesEngine getEngine() {
+		return jeeves;
+		
+	}
 }
 
 //=============================================================================

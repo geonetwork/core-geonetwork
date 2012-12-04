@@ -172,10 +172,12 @@ label + span {
 
 .metadata * input[type='radio'] {
   border-width: 0px;
+  width: auto;
 }
 
 .metadata * select {
-  max-width : 200px
+  max-width : 200px;
+  background-color: #FFF;
 }
 
 .metadata * input.error,
@@ -429,7 +431,7 @@ div.button {
 }
 .valid--1 {
 }
-.cat-children, .cat-parent {
+.cat-children, .cat-parent, .cat-sibling {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
 .book {
@@ -531,4 +533,12 @@ be use for custom styling in view mode */
 .color {
     border-left-width: 5px;
     border-left-style: solid;
+}
+
+/* duration field: inline input elements 
+  class name is on the label, so select the next sibling which is the container.
+* */
+.gtsTMPeriodDuration + * input,
+.gmlduration + * input {
+    float: none !important;
 }

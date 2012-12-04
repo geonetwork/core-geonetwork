@@ -287,7 +287,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                             });
                     
                     this.newMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('newMetadata'),
+                        title: OpenLayers.i18n('newMetadataTitle'),
                         width: 600,
                         height: 420,
                         layout: 'fit',
@@ -504,18 +504,28 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             }
         });
         
-        this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
+        this.mdSelectionInfoCmp && this.mdSelectionInfoCmp.setText(nb + ' ' + OpenLayers.i18n('selected'));
     },
     /** api: method[updatePrivileges] 
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        // TODO : this.ownerAction visible to userAdmin only #781
-        var actions = [this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
-                        this.updatePrivilegesAction, this.createMetadataAction, this.mdImportAction,
-                        this.mdImportAction, this.adminAction, this.otherItem];
+        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
+                        this.updatePrivilegesAction, this.createMetadataAction,
+                        this.mdImportAction],
+            adminActions = [this.ownerAction],
+            actions = [this.adminAction, this.otherItem];
+        
         Ext.each(actions, function(){
             this.setVisible(user);
+        });
+        // Do not display editing action for registered users
+        Ext.each(editingActions, function(){
+            this.setVisible(user && user.role !== 'RegisteredUser');
+        });
+        // Change owners are only available for admins (#781)
+        Ext.each(adminActions, function(){
+            this.setVisible(user && (user.role === 'Administrator' || user.role === 'UserAdmin'));
         });
     },
     /** private: method[onDestroy] 
