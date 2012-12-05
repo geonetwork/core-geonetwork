@@ -531,7 +531,7 @@
 			</td>
 			<td>
 				<button class="content"
-					onclick="idxOperation('metadata.admin.index.rebuild','waitIdx', this.name, true)"
+					onclick="idxOperation('metadata.admin.index.rebuild?reset=yes','waitIdx', this.name, true)"
 					id="btIdx" name="btIdx">
 					<xsl:value-of select="/root/gui/strings/rebuild"/>
 				</button>

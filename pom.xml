@@ -412,6 +412,11 @@
           <version>${lucene.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-facet</artifactId>
+        <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
           <groupId>pcj</groupId>
           <artifactId>pcj</artifactId>
           <version>1.2</version>
@@ -941,8 +946,8 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
+    <lucene.version>3.6.1</lucene.version>
     <geotools.version>8.1</geotools.version>
-    <lucene.version>3.0.2</lucene.version>
     <spring.version>3.1.1.RELEASE</spring.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>

@@ -28,16 +28,21 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
+import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import jeeves.constants.Jeeves;
@@ -60,10 +65,20 @@ import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.facet.search.FacetsCollector;
+import org.apache.lucene.facet.search.params.CountFacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
+import org.apache.lucene.facet.search.params.FacetSearchParams;
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
+import org.apache.lucene.facet.search.results.FacetResult;
+import org.apache.lucene.facet.search.results.FacetResultNode;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.misc.ChainedFilter;
+import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -71,6 +86,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.MultiCollector;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -88,9 +104,9 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.search.LuceneConfig.Facet;
+import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
-import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -101,8 +117,28 @@ import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Ranges;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 
@@ -112,16 +148,16 @@ import com.vividsolutions.jts.io.WKTReader;
 public class LuceneSearcher extends MetaSearcher {
 	private static SearchManager _sm;
 	private String        _styleSheetName;
-	private Element       _summaryConfig;
 
 	private Query         _query;
 	private Filter        _filter;
 	private Sort          _sort;
 	private Element       _elSummary;
 	private FieldSelector _selector;
-	private IndexReader		_reader;
+	
+	private IndexReader _reader;
+	private TaxonomyReader _taxonomyReader;
 
-	private int           _maxSummaryKeys;
 	private int           _maxHitsInSummary;
 	private int           _numHits;
 	private String        _resultType;
@@ -130,6 +166,7 @@ public class LuceneSearcher extends MetaSearcher {
 	private Set<String>	_tokenizedFieldSet;
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
+
 	
 	/**
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
@@ -145,10 +182,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @param summaryConfig
      * @param luceneConfig
      */
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig) {
+	public LuceneSearcher (SearchManager sm, String styleSheetName, LuceneConfig luceneConfig) {
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
-		_summaryConfig  = summaryConfig;
 		_selector = new FieldSelector() {
 			public final FieldSelectorResult accept(String name) {
 				if (name.equals("_id")) return FieldSelectorResult.LOAD;
@@ -175,6 +211,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+		// Open the IndexReader first, and then the TaxonomyReader.
+		_reader = _sm.getIndexReader(srvContext.getLanguage());
+		_taxonomyReader = _sm.getIndexTaxonomyReader();
 
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
@@ -182,10 +221,11 @@ public class LuceneSearcher extends MetaSearcher {
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		
-		_reader = _sm.getIndexReader(srvContext.getLanguage());
+		
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
-		initSearchRange(srvContext);
+
+        initSearchRange(srvContext);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
         computeQuery(srvContext, getTo() - 1, request, config);
@@ -518,6 +558,7 @@ public class LuceneSearcher extends MetaSearcher {
                 if(Log.isDebugEnabled(Geonet.LUCENE))
                     Log.debug(Geonet.LUCENE, "autodetection is disabled or detection failed");
 
+
                 // servicecontext available
                 if (srvContext != null) {
                     if(Log.isDebugEnabled(Geonet.LUCENE))
@@ -547,15 +588,7 @@ public class LuceneSearcher extends MetaSearcher {
 	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
         determineLanguage(srvContext, request);
-
-		String sMaxRecordsInKeywordSummary = request.getChildText("maxHitsInSummary");
-		if (sMaxRecordsInKeywordSummary == null) sMaxRecordsInKeywordSummary = config.getValue("maxHitsInSummary", "1000");
-		_maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
-
-		String sMaxSummaryKeys = request.getChildText("maxSummaryKeys");
-		if (sMaxSummaryKeys == null) sMaxSummaryKeys = config.getValue("maxSummaryKeys", "10");
-		_maxSummaryKeys = Integer.parseInt(sMaxSummaryKeys);
-
+        
 		if (srvContext != null) {
 			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 	
@@ -801,12 +834,12 @@ public class LuceneSearcher extends MetaSearcher {
 			numHits = endHit;
 		}
 		
-
-		Pair<TopDocs,Element> results = LuceneSearcher.doSearchAndMakeSummary(numHits, startHit, endHit,
-                _maxSummaryKeys, _language, _resultType, _summaryConfig,
-                _reader, _query, _filter, _sort, computeSummary,
-                _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
-        );
+		Pair<TopDocs,Element> results = doSearchAndMakeSummary( endHit, startHit, endHit, 
+				_language, _luceneConfig.getTaxonomy().get(_resultType), _reader, 
+				_query, _filter, _sort, _taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(),
+				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+		);
+		
 		TopDocs hits = results.one();
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
@@ -1125,184 +1158,7 @@ public class LuceneSearcher extends MetaSearcher {
             return query;
         }
 
-    /**
-     * TODO javadoc.
-     *
-     * @param summaryConfig
-     * @param resultType
-     * @param maxSummaryKeys
-     * @return
-     * @throws Exception
-     */
-	private static Map<String,Map<String,Object>> getSummaryConfig(Element summaryConfig, String resultType, int maxSummaryKeys) throws Exception {
 
-		Map<String, Map<String,Object>> results = new HashMap<String, Map<String, Object>>();
-
-		Element resultTypeConfig = summaryConfig.getChild("def").getChild(resultType);
-        @SuppressWarnings(value = "unchecked")
-		List<Element> elements = resultTypeConfig.getChildren();
-
-		for (Element summaryElement : elements) {
-			String name = summaryElement.getAttributeValue("name");
-			String plural = summaryElement.getAttributeValue("plural");
-			String key = summaryElement.getAttributeValue("indexKey");
-			String order = summaryElement.getAttributeValue("order");
-			String maxString = summaryElement.getAttributeValue("max");
-			String type = summaryElement.getAttributeValue("type");
-			if (order == null) {
-				order = "frequency";
-			}
-			int max;
-			if (maxString == null) {
-				max = 10;
-			} else {
-				max = Integer.parseInt(maxString);
-			}
-			max = Math.min(maxSummaryKeys, max);
-			if( type==null ){
-				type = "string";
-			}
-
-			Map<String,Object> values = new HashMap<String,Object>();
-			values.put("name", name);
-			values.put("plural", plural);
-			values.put("max", max);
-			values.put("order", order);
-			values.put("type", type);
-			values.put("typeConfig", summaryConfig.getChild("typeConfig"));
-			results.put(key,values);
-		}
-
-		return results;
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param langCode
-     * @param summaryConfigValuesForKey
-     * @return
-     * @throws Exception
-     */
-	private static SummaryComparator getSummaryComparator(String langCode, Map<String, Object> summaryConfigValuesForKey) throws Exception {
-			SortOption sortOption = SortOption.parse((String)summaryConfigValuesForKey.get("order"));
-			return new SummaryComparator(sortOption, Type.parse((String)summaryConfigValuesForKey.get("type")), langCode,
-                    (Element)summaryConfigValuesForKey.get("typeConfig"));
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param indexKeys
-     * @return
-     * @throws Exception
-     */
-	private static Map<String,Map<String,Integer>> prepareSummaryMaps(Set<String> indexKeys) throws Exception {
-		Map<String,Map<String,Integer>> summaryMaps = new HashMap<String, Map<String, Integer>>();
-		for (String key : indexKeys) {
-			summaryMaps.put(key, new HashMap<String, Integer>());
-		}
-		return summaryMaps;
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param elSummary
-     * @param reader
-     * @param sdocs
-     * @param summaryMaps
-     * @return
-     */
-	private static Map<String,Map<String,Integer>> buildSummaryMaps(Element elSummary, IndexReader reader,
-                                                                    ScoreDoc[] sdocs,
-                                                                    final Map<String,Map<String,Integer>> summaryMaps) {
-		elSummary.setAttribute("hitsusedforsummary", sdocs.length+"");
-
-		FieldSelector keySelector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (summaryMaps.get(name) != null) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-
-        for (ScoreDoc sdoc : sdocs) {
-            Document doc = null;
-            try {
-                doc = reader.document(sdoc.doc, keySelector);
-            } catch (Exception e) {
-                Log.error(Geonet.SEARCH_ENGINE, e.getMessage() + " Caused Failure to get document " + sdoc.doc, e);
-            }
-
-            for (String key : summaryMaps.keySet()) {
-                Map<String, Integer> summary = summaryMaps.get(key);
-                String hits[] = doc.getValues(key);
-                if (hits != null) {
-                    for (String info : hits) {
-                        Integer catCount = summary.get(info);
-                        if (catCount == null) {
-                            catCount = 1;
-                        }
-                        else {
-                            catCount = catCount + 1;
-                        }
-                        summary.put(info, catCount);
-                    }
-                }
-            }
-        }
-
-		return summaryMaps;
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param elSummary
-     * @param langCode
-     * @param summaryMaps
-     * @param summaryConfigValues
-     * @return
-     * @throws Exception
-     */
-	private static Element addSortedSummaryKeys(Element elSummary, String langCode, Map<String,Map<String,Integer>> summaryMaps, Map<String,Map<String,Object>> summaryConfigValues) throws Exception {
-	
-		for ( String indexKey : summaryMaps.keySet() ) {
-			Map <String,Object> summaryConfigValuesForKey = summaryConfigValues.get(indexKey);
-            Element rootElem = new Element((String)summaryConfigValuesForKey.get("plural"));
-            // sort according to frequency
-			SummaryComparator summaryComparator = LuceneSearcher.getSummaryComparator(langCode, summaryConfigValuesForKey);
-			Map<String,Integer> summary = summaryMaps.get(indexKey);
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "Sorting "+summary.size()+" according to frequency of " + indexKey);
-
-			TreeSet<Map.Entry<String, Integer>> sortedSummary = new TreeSet<Map.Entry<String, Integer>>(summaryComparator);
-			sortedSummary.addAll(summary.entrySet());
-
-			Integer max = (Integer)summaryConfigValuesForKey.get("max");
-
-			int nKeys = 0;
-            for (Object aSortedSummary : sortedSummary) {
-                if (++nKeys > max) {
-                    break;
-                }
-
-                Map.Entry me = (Map.Entry) aSortedSummary;
-                String keyword = (String) me.getKey();
-                Integer keyCount = (Integer) me.getValue();
-
-                Element childElem = new Element((String) summaryConfigValuesForKey.get("name"));
-                childElem.setAttribute("count", keyCount.toString());
-                childElem.setAttribute("name", keyword);
-                childElem.setAttribute("indexKey", indexKey);
-
-                rootElem.addContent(childElem);
-            }
-			elSummary.addContent(rootElem);
-		}
-
-		return elSummary;
-	}
 	
 	/**
 	 * Do Lucene search and optionally build a summary for the search.
@@ -1310,31 +1166,28 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param numHits	the maximum number of hits to collect
 	 * @param startHit	the start hit to return in the TopDocs if not building summary
 	 * @param endHit	the end hit to return in the TopDocs if not building summary
-	 * @param maxSummaryKeys	the max number of keys to process in a summary
 	 * @param langCode	the language code used by SummaryComparator
-	 * @param resultType	the resultType is used to define the type of summary to build according to summary configuration in config-summary.xml.
 	 * @param summaryConfig	the summary configuration
 	 * @param reader  reader
 	 * @param query   query
 	 * @param cFilter filter
 	 * @param sort	the sort criteria
+	 * @param taxonomyReader	A {@link TaxonomyReader} use to compute facets (ie. summary)
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
 	 * @param trackDocScores	specifies whether document scores should be tracked and set on the results. 
 	 * @param trackMaxScore	specifies whether the query's maxScore should be tracked and set on the resulting TopDocs.
 	 * @param docsScoredInOrder	specifies whether documents are scored in doc Id order or not by the given Scorer
-	 *
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
 	 * 
 	 * @throws Exception hmm
 	 */
-	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit,
-                                                                int maxSummaryKeys, String langCode, String resultType,
-                                                                Element summaryConfig,  IndexReader reader, Query query,
-                                                                Filter cFilter, Sort sort, boolean buildSummary,
-                                                                boolean trackDocScores, boolean trackMaxScore,
-                                                                boolean docsScoredInOrder) throws Exception {
-
+	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
+			Map<String, FacetConfig> summaryConfig, IndexReader reader, 
+			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
+			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
+	{
+		Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
@@ -1347,37 +1200,180 @@ public class LuceneSearcher extends MetaSearcher {
             if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                 Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
         }
-		new IndexSearcher(reader).search(query, cFilter, tfc); 
+        IndexSearcher searcher = new IndexSearcher(reader);
 
-		Element elSummary= new Element("summary");
+        Element elSummary= new Element("summary");
+
+        if (taxonomyReader != null && buildSummary) {
+        	// configure facets from configuration file
+        	FacetSearchParams fsp = buildFacetSearchParams(summaryConfig);
+        	FacetsCollector facetCollector = new FacetsCollector(fsp,
+        			reader, taxonomyReader);
+        	
+        	searcher.search(query, cFilter, MultiCollector.wrap(tfc, facetCollector));
+        	try {
+
+            	buildFacetSummary(elSummary, summaryConfig, facetCollector);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
+			}
+			
+        } else {
+            searcher.search(query, cFilter, tfc);
+        }
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
 		elSummary.setAttribute("type", "local");
-
-		// topDocs could only be called once.
-		// A second call will return null docs.
-		TopDocs tdocs;
-			
-		if (buildSummary) {
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "Building summary");
-
-			// -- prepare
-			Map<String, Map<String,Object>> summaryConfigValues = LuceneSearcher.getSummaryConfig(summaryConfig, resultType, maxSummaryKeys);
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "ResultType is "+resultType+", SummaryKeys are "+summaryConfigValues);
-			Map<String, Map<String,Integer>> summaryMaps = LuceneSearcher.prepareSummaryMaps(summaryConfigValues.keySet());
-
-			// -- get all hits from search to build the summary
-			tdocs = tfc.topDocs(0, numHits);
-
-			// -- add summary keys to summary element
-			summaryMaps = LuceneSearcher.buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
-			elSummary = LuceneSearcher.addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
-		} else {
-			tdocs = tfc.topDocs(startHit, endHit);
+		if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+            Log.debug(Geonet.SEARCH_ENGINE, " Get top docs from " + startHit + " ... " + endHit + " (total: " + tfc.getTotalHits() + ")");
 		}
+		TopDocs tdocs = tfc.topDocs(startHit, endHit);
 
 		return Pair.read(tdocs,elSummary);
+	}
+
+	/**
+	 * Create an XML summary from the search facets collector.
+	 * 
+	 * @param elSummary	The element in which to add the facet report
+	 * @param summaryConfigValues	The summary configuration
+	 * @param facetCollector
+	 * @throws IOException
+	 */
+    private static void buildFacetSummary(Element elSummary,
+            Map<String, FacetConfig> summaryConfigValues,
+            FacetsCollector facetCollector) throws IOException {
+        DecimalFormat doubleFormat = new DecimalFormat("0");
+
+        try {
+            for (Iterator<FacetResult> iterator = facetCollector
+                    .getFacetResults().iterator(); iterator.hasNext();) {
+                FacetResult result = (FacetResult) iterator.next();
+
+                String label = result.getFacetResultNode().getLabel()
+                        .toString();
+                FacetConfig config = summaryConfigValues.get(label);
+                String facetName = config.getPlural();
+
+                Element facets = new Element(facetName);
+                FacetResultNode frn = result.getFacetResultNode();
+                if (frn.getNumSubResults() != 0) {
+
+                    Map<String, Double> facetValues = new LinkedHashMap<String, Double>();
+
+                    // facetValues = new TreeMap<String, Double>(comparator)
+                    for (Iterator subresults = frn.getSubResults().iterator(); subresults
+                            .hasNext();) {
+                        FacetResultNode node = (FacetResultNode) subresults
+                                .next();
+                        facetValues.put(node.getLabel().lastComponent(),
+                                node.getValue());
+                    }
+                    List<Entry<String, Double>> entries = new ArrayList<Entry<String, Double>>(
+                            facetValues.entrySet());
+
+                    if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                        Log.debug(Geonet.FACET_ENGINE, facetName
+                                + ":\tSorting facet by " + config.getSortBy().toString()
+                                + " (" + config.getSortOrder().toString() + ")");
+                    }
+
+                    // No need for a custom comparator Lucene facet request is
+                    // made by count descending order
+                    if (Facet.SortBy.COUNT != config.getSortBy()) {
+                        Comparator c = null;
+                        if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
+                            // Create a numeric comparator
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    try {
+                                        Double d1 = Double.valueOf(e1.getKey());
+                                        Double d2 = Double.valueOf(e2.getKey());
+
+                                        return d1.compareTo(d2);
+                                    } catch (NumberFormatException e) {
+                                        // String comparison
+                                        Log.warning(
+                                                Geonet.FACET_ENGINE,
+                                                "Failed to compare numeric values ("
+                                                        + e1.getKey()
+                                                        + " / "
+                                                        + e2.getKey()
+                                                        + ") for facet. Check sortBy option in summary configuration.");
+                                        return e1.getKey().compareTo(
+                                                e2.getKey());
+                                    }
+                                }
+                            };
+                        } else {
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    return e1.getKey().compareTo(e2.getKey());
+                                }
+                            };
+                        }
+                        Collections.sort(entries, c);
+
+                        if (Facet.SortOrder.DESCENDING == config.getSortOrder()) {
+                            Collections.reverse(entries);
+                        }
+                    }
+                    for (Entry<String, Double> entry : entries) {
+                        String facetValue = entry.getKey();
+                        String facetCount = doubleFormat.format(entry
+                                .getValue());
+
+                        if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                            Log.debug(Geonet.FACET_ENGINE, " - " + facetValue
+                                    + " (" + facetCount + ")");
+                        }
+                        Element facet = new Element(config.getName());
+                        facet.setAttribute("count", facetCount);
+                        facet.setAttribute("name", facetValue);
+                        facets.addContent(facet);
+                    }
+                }
+                elSummary.addContent(facets);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.error(
+                    Geonet.FACET_ENGINE,
+                    "Check facet configuration. This may happen when a facet is configured"
+                            + " but does not exist in the taxonomy index. Error is: "
+                            + e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
+
+	/**
+	 * Build facet search params according to the summary configuration file.
+	 * 
+	 * FacetRequest sort order and sort by option is the default (ie. by count descending).
+	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(Element, Map, FacetsCollector)}.
+	 * 
+	 * @param summaryConfigValues
+	 * @return
+	 */
+	private static FacetSearchParams buildFacetSearchParams(
+			Map<String, FacetConfig> summaryConfigValues) {
+		FacetSearchParams fsp = new FacetSearchParams();
+		
+		for (String key : summaryConfigValues.keySet()) {
+			FacetConfig config = summaryConfigValues.get(key);
+			
+			int max = config.getMax();
+			
+			FacetRequest facetRequest = new CountFacetRequest(
+					new CategoryPath(key), max);
+			facetRequest.setSortBy(SortBy.VALUE);
+			facetRequest.setSortOrder(SortOrder.DESCENDING);
+			fsp.addFacetRequest(facetRequest);
+		}
+		return fsp;
 	}
 
 	/**
@@ -1611,7 +1607,7 @@ public class LuceneSearcher extends MetaSearcher {
             searchmanager = gc.getSearchmanager();
             reader = searchmanager.getIndexReader(priorityLang);
         } else {
-            File luceneDir = new File(System.getProperty(webappName + ".lucene.dir", webappName), "nonspatial");
+            File luceneDir = new File(System.getProperty(webappName + ".lucene.dir", webappName), SearchManager.NON_SPATIAL_DIR);
             factory = new LuceneIndexReaderFactory(luceneDir);
             reader = factory.getReader(priorityLang);
         }
