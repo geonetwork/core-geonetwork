@@ -102,7 +102,7 @@
     <!-- ===================================================================== -->
 
     <xsl:template mode="iso19110"
-        match="gfc:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]|gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]">
+        match="gfc:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]|gmd:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gco:Scale|gco:RecordType]|gmx:*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|gco:Boolean|gco:Real|gco:Measure]">
         <xsl:param name="schema"/>
         <xsl:param name="edit"/>
         
@@ -168,7 +168,7 @@
 
 
 	<!-- Element set on save by update-fixed-info. -->
-	<xsl:template mode="iso19110" match="gfc:versionDate" priority="2">
+	<xsl:template mode="iso19110" match="gmx:versionDate" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
@@ -324,15 +324,15 @@
             <xsl:variable name="id" select="geonet:info/id"/>
             <xsl:variable name="uuid" select="geonet:info/uuid"/>
 
-            <xsl:if test="gfc:name">
+            <xsl:if test="gmx:name">
                 <title>
-                    <xsl:value-of select="gfc:name/gco:CharacterString"/>
+                    <xsl:value-of select="gmx:name/gco:CharacterString"/>
                 </title>
             </xsl:if>
 
-            <xsl:if test="gfc:scope">
+            <xsl:if test="gmx:scope">
                 <abstract>
-                    <xsl:value-of select="gfc:scope/gco:CharacterString"/>
+                    <xsl:value-of select="gmx:scope/gco:CharacterString"/>
                 </abstract>
             </xsl:if>
 
@@ -359,27 +359,27 @@
                 </xsl:apply-templates>
 
                 <xsl:apply-templates mode="elementEP"
-                    select="gfc:name|geonet:child[@name='name']">
+                    select="gmx:name|geonet:child[@name='name']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:scope|geonet:child[@name='scope']">
+                <xsl:apply-templates mode="elementEP" select="gmx:scope|geonet:child[@name='scope']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:fieldOfApplication|geonet:child[@name='fieldOfApplication']">
+                <xsl:apply-templates mode="elementEP" select="gmx:fieldOfApplication|geonet:child[@name='fieldOfApplication']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:versionNumber|geonet:child[@name='versionNumber']">
+                <xsl:apply-templates mode="elementEP" select="gmx:versionNumber|geonet:child[@name='versionNumber']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
 
-                <xsl:apply-templates mode="elementEP" select="gfc:versionDate|geonet:child[@name='versionDate']">
+                <xsl:apply-templates mode="elementEP" select="gmx:versionDate|geonet:child[@name='versionDate']">
                     <xsl:with-param name="schema" select="$schema"/>
                     <xsl:with-param name="edit" select="$edit"/>
                 </xsl:apply-templates>
