@@ -1061,6 +1061,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="localization">
+			<class name=".services.UpdateAllLocalizationTables" />
 			<output sheet="localization/localization.xsl">
 				<call name="languages" class=".guiservices.languages.Get" />
 				<xml name="localiz" file="xml/localization.xml" />
