@@ -158,6 +158,11 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_0_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WKT.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OGCExceptionReport.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Geometry.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control.js</include>
@@ -316,6 +321,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/pl.js</include>
                 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Util.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Message.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Catalogue.js</include>
 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/util/HelpTools.js</include>
@@ -362,6 +368,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/Templates.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</include>
                 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewPanel.js</include>
@@ -417,6 +424,7 @@
                 <!--//"GeoNetwork/map/widgets/PrintAction.js</include>-->
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/ProjectionSelector.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/TimeSelector.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/widgets/WxSExtractor.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/BaseWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/SingletonWindowManager.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMS.js</include>

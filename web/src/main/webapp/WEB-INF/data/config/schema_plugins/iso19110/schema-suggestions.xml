@@ -3,7 +3,7 @@
     <field name="gmx:scope">
         <suggest name="gco:CharacterString"/>
         <suggest name="gmx:FileName"/>
-    </field> 
+    </field>
     <field name="gmx:FileName">
         <suggest name="src"/>
     </field> 

@@ -23,18 +23,31 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.index.FieldInfos;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.ReaderUtil;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -53,16 +66,6 @@ import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 //=============================================================================
 
@@ -212,10 +215,10 @@ public class GetDomain extends AbstractOperation implements CatalogService
 				CachingWrapperFilter filter = null;
 
 				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( 
-						maxRecords, 0, maxRecords, Integer.MAX_VALUE, 
-						context.getLanguage(), "results", new Element("summary"), 
-						reader, query, filter, sort, false,
-						false, false, false	// Scoring is useless for GetDomain operation
+						maxRecords, 0, maxRecords, context.getLanguage(), 
+						null, reader, 
+						query, filter, sort, null, false, false,
+						false, false	// Scoring is useless for GetDomain operation
 				);
 				TopDocs hits = searchResults.one();
 			
@@ -227,8 +230,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					if (!reader.getFieldNames(IndexReader.FieldOption.ALL)
-							.contains(property))
+					FieldInfos fi = ReaderUtil.getMergedFieldInfos(reader);
+					if (fi.fieldInfo(property) == null)
 						continue;
 					
 					boolean isRange = false;

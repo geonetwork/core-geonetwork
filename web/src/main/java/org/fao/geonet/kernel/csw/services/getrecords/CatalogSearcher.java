@@ -36,7 +36,7 @@ import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.misc.ChainedFilter;
+import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
@@ -184,10 +184,10 @@ public class CatalogSearcher {
 		try {
         Pair<TopDocs, Element> searchResults =
 			LuceneSearcher.doSearchAndMakeSummary( 
-					maxHits, 0, maxHits, Integer.MAX_VALUE, 
-					_lang, ResultType.RESULTS.toString(), _summaryConfig, 
-					_reader, _query, _filter, _sort, false,
-					_luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+					maxHits, 0, maxHits, _lang, 
+					_luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, 
+					_query, _filter, _sort, null, false, _luceneConfig.isTrackDocScores(),
+					_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
 			);
 		TopDocs tdocs = searchResults.one();
 		Element summary = searchResults.two();
@@ -456,10 +456,11 @@ public class CatalogSearcher {
 		_sort = sort;
 		_lang = context.getLanguage();
 	
-		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, Integer.MAX_VALUE, _lang, resultType.toString(), _summaryConfig, indexReader, query, cFilter,
-                sort, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
-                _luceneConfig.isDocsScoredInOrder()
+		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(
+				numHits, startPosition - 1, maxRecords, _lang, 
+				_luceneConfig.getTaxonomy().get(resultType.toString()), indexReader, 
+				query, cFilter, sort, null, buildSummary, _luceneConfig.isTrackDocScores(),
+				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()		
 		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();
@@ -476,10 +477,6 @@ public class CatalogSearcher {
 		// LuceneSearcher already contains all docs)
 		int i = 0;
 		int iMax = hits.scoreDocs.length;
-		if (buildSummary) {
-			i = startPosition -1;
-			iMax = Math.min(hits.scoreDocs.length, i + maxRecords); 
-		}
 		for (;i < iMax; i++) {
 			Document doc = indexReader.document(hits.scoreDocs[i].doc, _selector);
 			String id = doc.get("_id");

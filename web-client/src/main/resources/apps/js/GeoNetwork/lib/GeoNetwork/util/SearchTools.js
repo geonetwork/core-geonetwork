@@ -96,7 +96,7 @@ GeoNetwork.util.SearchTools = {
                     if (isCatalogueSStore) {
 	                    var summary = currentRecords.summary;
                         // added check for summary.keywords.keyword otherwise if result has no keywords the loadData on store fails
-                        if (summary && summary.count > 0 && summary.keywords.keyword && summaryStore) {
+                        if (summary && summary.count > 0 && summary.keywords && summary.keywords.keyword && summaryStore) {
 	                        summaryStore.loadData(summary);
 	                    }
                     }
@@ -183,12 +183,14 @@ GeoNetwork.util.SearchTools = {
      *  Search field may not be visible if in a collapsed fieldset (TODO)
      *  Test with radio, dates and geometry (TODO)
      */
-    populateFormFromParams: function(form, map){
+    populateFormFromParams: function(form, map, createNewField){
         form.cascade(function(cur){
             if (cur.getName) {
                 var name = cur.getName();
                 if (map[name]) {
                     var value = map[name];
+                    delete map[name];
+                    
                     if (cur.getXType() === 'superboxselect') {
                         if(value.indexOf(' or ') !== -1) {
                             value = value.split(' or ');
@@ -233,6 +235,21 @@ GeoNetwork.util.SearchTools = {
                 }
             }
         });
+        
+        // Populate the search form with simple text input ...
+        if (createNewField) {
+            for (var searchCriteria in map) {
+                if (map.hasOwnProperty(searchCriteria) && map[searchCriteria] !== '') {
+                    form.insert(form.items.length ++, new Ext.form.TextField({
+                        name: searchCriteria,
+                        fieldLabel: OpenLayers.i18n(searchCriteria.substring(searchCriteria.indexOf('_') + 1)),
+                        value: map[searchCriteria],
+                        // Switch to text for debugging
+                        inputType: 'text'
+                    }));
+                }
+            }
+        }
     },
     
     /** private: method[addFiltersFromPropertyMap]
@@ -292,7 +309,13 @@ GeoNetwork.util.SearchTools = {
      */
     addFilterImpl: function(filters, type, name, value){
         if (type.charAt(0) === 'E') { // equals
-            filters.push(name + "=" + encodeURIComponent(value) + "");
+            if (typeof(value) == 'object') {
+                 for (var i=0; i< value.length; i++) {
+                     filters.push(name + "=" + encodeURIComponent(value[i]) + "");
+                 }
+            } else {
+                filters.push(name + "=" + encodeURIComponent(value) + "");
+            }
         } else if (type === 'B') { //boolean
             filters.push(name + "=" + (value ? 'on' : 'off') + "");
         } else if (type === 'O') { //optional boolean
@@ -382,7 +405,7 @@ GeoNetwork.util.SearchTools = {
                 } else if (cur.isXType('multislider')) {
                 } else {
                     if (cur.getValue && cur.getValue() && cur.getValue() !== "") {
-                        result[cur.getName()] = cur.getValue();
+                        GeoNetwork.util.SearchTools.addFieldValue(result, cur.getName(), cur.getValue());
                     } else { 
                         
                     }
@@ -391,5 +414,45 @@ GeoNetwork.util.SearchTools = {
             return true;
         });
         return result;
+    },
+    addFieldValue: function (result, name, value) {
+        if (result[name] === undefined) {
+            result[name] = new Array(value);
+        } else {
+            result[name].push(value);
+        }
+    },
+    parseFacets: function(response) {
+        var facets = response.responseXML.childNodes[0].childNodes[1];
+        var store = new Ext.data.ArrayStore({
+            // store configs
+            autoDestroy: true,
+            storeId: 'myStore',
+            // reader configs
+            idIndex: 0,  
+            fields: [
+               'facet',
+               'name',
+               'count'
+            ]
+        });
+        if (facets.nodeName === 'summary') {
+             Ext.each(facets.childNodes, function(facet) {
+                 if (facet.nodeName != '#text' && facet.childNodes.length > 0) {
+                     Ext.each(facet.childNodes, function(node) {
+                        if (node.getAttribute) {
+                            var data = {
+                                facet : node.nodeName,
+                                name : node.getAttribute('name'),
+                                count : node.getAttribute('count')
+                            };
+                            var r = new store.recordType(data); 
+                            store.add(r);
+                        }
+                     });
+                 }
+            });
+        }
+        return store;
     }
 };

@@ -20,7 +20,7 @@
 			</dc:date>
 
 
-			<xsl:for-each select="gmx:name/gco:CharacterString">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString">
 				<dc:title>
 					<xsl:value-of select="."/>
 				</dc:title>
@@ -36,7 +36,7 @@
 
 			<!-- description -->
 
-			<xsl:for-each select="gmx:scope/gco:CharacterString">
+			<xsl:for-each select="gmx:scope/gco:CharacterString|gfc:scope/gco:CharacterString">
 				<dc:description>
 					<xsl:value-of select="."/>
 				</dc:description>

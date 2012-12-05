@@ -24,7 +24,7 @@
 			<dc:identifier><xsl:value-of select="@uuid"/></dc:identifier>
 			
 			<!-- DataIdentification -->
-			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:typeName/gco:LocalName">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title><xsl:value-of select="."/></dc:title>
 			</xsl:for-each>
 			
@@ -42,14 +42,14 @@
 				<dc:relation><xsl:value-of select="."/></dc:relation>
 				</xsl:for-each>-->
 		
-			<xsl:for-each select="gmx:versionDate/gco:DateTime">
+			<xsl:for-each select="gmx:versionDate/gco:DateTime|gfc:versionDate/gco:DateTime">
 				<dct:modified><xsl:value-of select="."/></dct:modified>
 			</xsl:for-each>			
 			
-			<xsl:for-each select="gmx:scope">
+			<xsl:for-each select="gmx:scope|gfc:scope">
 				<dct:abstract><xsl:value-of select="gco:CharacterString"/></dct:abstract>
 			</xsl:for-each>
-			<xsl:for-each select="gmx:fieldOfApplication">
+			<xsl:for-each select="gmx:fieldOfApplication|gfc:fieldOfApplication">
 				<dct:abstract><xsl:value-of select="gco:CharacterString"/></dct:abstract>
 			</xsl:for-each>
 			
