@@ -113,6 +113,7 @@ public class Update implements Service
             addLocalizationEntry(newId, descr, dbms, "ger");
             addLocalizationEntry(newId, descr, dbms, "fre");
             addLocalizationEntry(newId, descr, dbms, "ita");
+            addLocalizationEntry(newId, descr, dbms, "roh");
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
 		}

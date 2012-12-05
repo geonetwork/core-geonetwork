@@ -2,6 +2,7 @@ INSERT INTO Languages VALUES  ('eng', 'English', 'eng', 'y', 'n');
 INSERT INTO Languages VALUES  ('fre', 'French', 'fre', 'y', 'n');
 INSERT INTO Languages VALUES  ('ger', 'German', 'ger', 'y', 'n');
 INSERT INTO Languages VALUES  ('ita', 'Italian', 'ita', 'y', 'n');
+INSERT INTO Languages VALUES  ('roh', 'Rumantsch', 'roh', 'y', 'n');
 
 DELETE FROM isolanguagesdes;
 DELETE FROM IsoLanguages;
@@ -56,3 +57,15 @@ INSERT INTO GroupsDes VALUES (-1,'ger','Gast');
 INSERT INTO GroupsDes VALUES (0,'ger','Intranet');
 INSERT INTO GroupsDes VALUES (1,'ger','Alle');
 INSERT INTO GroupsDes VALUES (2,'ger','Beispielgruppe');
+
+
+INSERT INTO GroupsDes VALUES (-1,'ita','Visitatore');
+INSERT INTO GroupsDes VALUES (0,'ita','Intranet');
+INSERT INTO GroupsDes VALUES (1,'ita','Tutti');
+INSERT INTO GroupsDes VALUES (2,'ita','Gruppo di esempio');
+
+INSERT INTO GroupsDes VALUES (-1,'roh','Guest');
+INSERT INTO GroupsDes VALUES (0,'roh','Intranet');
+INSERT INTO GroupsDes VALUES (1,'roh','All');
+INSERT INTO GroupsDes VALUES (2,'roh','Sample Group');
+

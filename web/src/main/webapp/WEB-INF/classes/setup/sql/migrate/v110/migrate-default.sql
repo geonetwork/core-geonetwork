@@ -26,8 +26,15 @@ DELETE FROM groupsdes where langid='fra' or langid='deu';
 UPDATE operationsdes SET langid='ger' where langid='deu';
 UPDATE operationsdes SET langid='fre' where langid='fra';
 
+UPDATE statusvaluesdes SET langid='ger' where langid='deu';
+UPDATE statusvaluesdes SET langid='fre' where langid='fra';
+
 UPDATE regionsdes SET langid='ger' where langid='deu';
 UPDATE regionsdes SET langid='fre' where langid='fra';
 
+UPDATE categoriesdes SET langid='ger' where langid='deu';
+UPDATE categoriesdes SET langid='fre' where langid='fra';
+
 
 DELETE FROM Languages where id='fra' or id='deu';
+
