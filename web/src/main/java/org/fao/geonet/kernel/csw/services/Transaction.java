@@ -239,8 +239,12 @@ public class Transaction extends AbstractOperation implements CatalogService
 
         // Set default group: user first group
         Set<String> userGroups = am.getVisibleGroups(dbms, userId);
-        String group = (String) userGroups.toArray()[0];
-
+        String group;
+		if (userGroups.isEmpty()) {
+			group = null;
+		} else {
+			group = (String) userGroups.iterator().next();
+		}
         //
         // insert metadata
         //

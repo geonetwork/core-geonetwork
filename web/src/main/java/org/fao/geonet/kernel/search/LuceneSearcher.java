@@ -223,12 +223,12 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		
         if(Log.isDebugEnabled(Geonet.LUCENE))
-            Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
-        computeQuery(srvContext, request, config);
-        if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
 
         initSearchRange(srvContext);
+        if(Log.isDebugEnabled(Geonet.LUCENE))
+            Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
+        computeQuery(srvContext, getTo() - 1, request, config);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
 		performQuery(getFrom()-1, getTo(), buildSummary);
@@ -585,7 +585,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @param config
      * @throws Exception
      */
-	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
         determineLanguage(srvContext, request);
         
@@ -596,7 +596,7 @@ public class LuceneSearcher extends MetaSearcher {
 
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
-            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress());
+            Set<String> userGroups = gc.getAccessManager().getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress(), false);
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
@@ -740,7 +740,7 @@ public class LuceneSearcher extends MetaSearcher {
             if (_sm.getLogSpatialObject()) {
                 _geomWKT = geometry.toText();
             }
-            spatialfilter = _sm.getSpatial().filter(_query, geometry, request);
+            spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);

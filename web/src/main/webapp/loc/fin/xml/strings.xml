@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>mikä tahansa kieli</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -542,6 +543,7 @@
 	<login>Kirjaudu sisään</login>
 	<loginCardTitle>Kirjaudu sisään / Rekisteröidy</loginCardTitle>
 	<loginwarning>Ainoastaan sivuston ylläpitäjät ja aineistojen tuottajat</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Kirjaudu ulos</logout>
 	<logoutDes>Kirjautuu ulos.</logoutDes>
 	<longitude>Pituuspiiri</longitude>
@@ -691,7 +693,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
@@ -1362,4 +1364,6 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

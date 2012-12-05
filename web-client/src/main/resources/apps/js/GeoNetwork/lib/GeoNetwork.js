@@ -79,11 +79,13 @@
     if(!singleFile) {
         var jsfiles = new Array(
             "GeoNetwork/Util.js",
+            "GeoNetwork/lang/ca.js",
             "GeoNetwork/lang/en.js",
             "GeoNetwork/lang/fr.js",
 			"GeoNetwork/lang/nl.js",
 			"GeoNetwork/lang/de.js",
 			"GeoNetwork/lang/es.js",
+			"GeoNetwork/lang/pl.js",
             "GeoNetwork/Catalogue.js",
             "GeoNetwork/util/Old.js",
             "GeoNetwork/util/SearchTools.js",
@@ -132,6 +134,7 @@
             "GeoNetwork/widgets/view/ViewWindow.js",
             "GeoNetwork/widgets/view/ViewPanel.js",
             "GeoNetwork/widgets/editor/KeywordSelectionPanel.js",
+            "GeoNetwork/widgets/editor/ConceptSelectionPanel.js",
             "GeoNetwork/widgets/editor/CRSSelectionPanel.js",
             "GeoNetwork/widgets/editor/SubTemplateSelectionPanel.js",
             "GeoNetwork/widgets/editor/NewMetadataPanel.js",

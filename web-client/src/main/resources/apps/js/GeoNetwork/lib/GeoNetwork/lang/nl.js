@@ -154,6 +154,7 @@ GeoNetwork.Lang.nl = {
     'inspireClassificationDataServices': "INSPIRE classificatie data services",
     'serviceType': "Service type",
     'serviceType_discovery': "Discovery Service (ontdekken)",
+    'serviceType_download': 'Download Service (download)',
     'serviceType_view': "View Service (bekijken)",
     'serviceType_transformation': "Transformation Service (transformatie)",
     'serviceType_invoke': "Invoke Spatial Data Service (aanroepen)",
@@ -278,6 +279,7 @@ GeoNetwork.Lang.nl = {
     'updateChildren': "Wijzigen kinderen",
     'records': "records",
     'record': "record",
+    'recordsFound': ' record(s) found',
     'help': "Help",
     'publishError': "Publicatie gefaald.",
     'outOfMemoryError': "Out of memory fout.",
@@ -406,6 +408,7 @@ GeoNetwork.Lang.nl = {
     'printLayer': "Print pagina",
     'relatedservices': "Gerelateerde services",
     'relatedparent': "Ouder",
+		'relatedsibling': 'Related records',
     'relateddatasets': "Gerelateerde datasets",
     'relatedchildren': "Kinderen",
     'relatedrelated': "objectencatalogus/dataset link",
@@ -515,7 +518,20 @@ GeoNetwork.Lang.nl = {
     'rule': 'rule',
     'schematron-rules-geonetwork': 'GeoNetwork validation',
     'schematron-rules-iso': 'ISO validation',
-    'schematron-rules-inspire': 'INSPIRE validation'
+    'schematron-rules-inspire': 'INSPIRE validation',
+    'to-iso19139-keyword': 'Text mode',
+    'to-iso19139-keyword-as-xlink': 'Linked mode',
+    'to-iso19139-keyword-with-anchor': 'Anchor mode',
+    'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-OGC:WMS': 'Add to map',
+    'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+    'linklabel-application/zip': 'Download',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+    'linklabel-application/x-compressed': 'Download',
+    'linklabel-text/html': 'Web link',
+    'linklabel-text/plain': 'Web link',
+    'linklabel-image/png': 'Image link',
+    'linklabel-': 'Link'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

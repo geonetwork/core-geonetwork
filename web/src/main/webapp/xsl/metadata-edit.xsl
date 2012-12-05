@@ -2,8 +2,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:saxon="http://saxon.sf.net/"
+    xmlns:java="java:org.fao.geonet.util.XslUtil"
 	extension-element-prefixes="saxon"
-	exclude-result-prefixes="geonet saxon">
+	exclude-result-prefixes="geonet saxon java">
 
 	<!--
 	edit metadata form 
@@ -36,8 +37,9 @@
         </xsl:choose>
 	
 		<xsl:call-template name="edit-header"/>
-		
-		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{/root/gui/language}.js"/>
+
+        <xsl:variable name="twoCharLangCode" select="java:twoCharLangCode(/root/gui/language)" />
+		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{$twoCharLangCode}.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">

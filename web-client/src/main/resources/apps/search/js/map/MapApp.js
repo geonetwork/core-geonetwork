@@ -192,6 +192,8 @@ GeoNetwork.mapApp = function() {
      *
      */
     var refreshTocToolbar = function(node) {
+    	
+    	activeNode = node;
         
        if ((node) && (node.attributes.layer)) {
             if (node.parentNode.attributes.nodeType == "gx_baselayercontainer") {
@@ -200,19 +202,19 @@ GeoNetwork.mapApp = function() {
                 Ext.getCmp("tbRemoveButton").enable();
             }
 
-//            var layer = node.attributes.layer;
-//
-//            if (layer && layer.dimensions && layer.dimensions.time) {
-//                 Ext.getCmp("tbWmsTimeButton").enable();
-//            } else {
-//                Ext.getCmp("tbWmsTimeButton").disable();
-//            }
-//
-//            if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
-//                Ext.getCmp("tbStylesButton").disable();
-//            } else {
-//                Ext.getCmp("tbStylesButton").enable();
-//            }
+            var layer = node.attributes.layer;
+
+            if (layer && layer.dimensions && layer.dimensions.time) {
+                 Ext.getCmp("tbWmsTimeButton").enable();
+            } else {
+                Ext.getCmp("tbWmsTimeButton").disable();
+            }
+
+            if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
+                Ext.getCmp("tbStylesButton").disable();
+            } else {
+                Ext.getCmp("tbStylesButton").enable();
+            }
 
             Ext.getCmp("tbMetadataButton").enable();
             Ext.getCmp("btnZoomToExtent").enable();
@@ -221,8 +223,8 @@ GeoNetwork.mapApp = function() {
 
         } else {
             Ext.getCmp("tbRemoveButton").disable();
-//            Ext.getCmp("tbWmsTimeButton").disable();
-//            Ext.getCmp("tbStylesButton").disable();
+            Ext.getCmp("tbWmsTimeButton").disable();
+            Ext.getCmp("tbStylesButton").disable();
             Ext.getCmp("tbMetadataButton").disable(); 
             Ext.getCmp("btnZoomToExtent").disable();
         }
@@ -355,18 +357,18 @@ GeoNetwork.mapApp = function() {
 
         toctoolbar.push("-");	
         
-//        action = new GeoExt.Action({
-//            id: "tbStylesButton",
-//            handler: function() {
-//                stylesLayerHandler(activeNode);
-//                    },
-//            iconCls: 'layerStyles',
-//            tooltip: "Layer styles"
-//        });
-//        
-//        toctoolbar.push(action);
-//
-//        toctoolbar.push("-");
+        action = new GeoExt.Action({
+            id: "tbStylesButton",
+            handler: function() {
+                stylesLayerHandler(activeNode);
+                    },
+            iconCls: 'layerStyles',
+            tooltip: "Layer styles"
+        });
+        
+        toctoolbar.push(action);
+
+        toctoolbar.push("-");
         
         action = new GeoExt.Action({
             id: "tbMetadataButton",
@@ -379,18 +381,18 @@ GeoNetwork.mapApp = function() {
         
         toctoolbar.push(action);
 
-//        toctoolbar.push("-");
-//        
-//        action = new GeoExt.Action({
-//            id: "tbWmsTimeButton",
-//            handler: function() {
-//                wmsTimeHandler(activeNode);
-//                    },
-//            iconCls: 'wmsTime',
-//            tooltip: "WMS Time"
-//        });
-//        
-//        toctoolbar.push(action);
+        toctoolbar.push("-");
+        
+        action = new GeoExt.Action({
+            id: "tbWmsTimeButton",
+            handler: function() {
+                wmsTimeHandler(activeNode);
+                    },
+            iconCls: 'wmsTime',
+            tooltip: "WMS Time"
+        });
+        
+        toctoolbar.push(action);
 
 
         // Main toolbar
@@ -937,13 +939,13 @@ GeoNetwork.mapApp = function() {
                 }
             }),
             plugins: [
-              new GeoExt.plugins.TreeNodeRadioButton({
-	              listeners: {
-	                  "radiochange": function(node) {
-	                	  activeNode = node;
-	                  }
-	              }
-              }),
+//              new GeoExt.plugins.TreeNodeRadioButton({
+//	              listeners: {
+//	                  "radiochange": function(node) {
+//	                	  activeNode = node;
+//	                  }
+//	              }
+//              }),
               new GeoExt.tree.LayerOpacitySliderPlugin({
                   listeners: { 
                       "opacityslide": function(node, value) {
@@ -973,19 +975,19 @@ GeoNetwork.mapApp = function() {
 
                         c.items.get("addMenu").hide();
                         
-//                        var layer = node.attributes.layer;
-//
-//                        if (layer && layer.dimensions && layer.dimensions.time) {
-//                            c.items.get("wmsTimeMenu").enable();
-//                        } else {
-//                            c.items.get("wmsTimeMenu").disable();
-//                        }
-//
-//                        if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
-//                            c.items.get("stylesMenu").disable();
-//                        } else {
-//                            c.items.get("stylesMenu").enable();
-//                        }
+                        var layer = node.attributes.layer;
+
+                        if (layer && layer.dimensions && layer.dimensions.time) {
+                            c.items.get("wmsTimeMenu").enable();
+                        } else {
+                            c.items.get("wmsTimeMenu").disable();
+                        }
+
+                        if ((layer) && ((!layer.styles) || (layer.styles.length < 2))) {
+                            c.items.get("stylesMenu").disable();
+                        } else {
+                            c.items.get("stylesMenu").enable();
+                        }
 
                         c.contextNode=node;
                         c.showAt(e.getXY());
@@ -998,8 +1000,8 @@ GeoNetwork.mapApp = function() {
                             
                             c.items.get("addMenu").show();
                             c.items.get("removeMenu").hide();
-//                            c.items.get("wmsTimeMenu").hide();
-//                            c.items.get("stylesMenu").hide();			
+                            c.items.get("wmsTimeMenu").hide();
+                            c.items.get("stylesMenu").hide();			
                             c.items.get("metadataMenu").hide();
             
                             c.contextNode=node;
@@ -1024,18 +1026,18 @@ GeoNetwork.mapApp = function() {
                     text: OpenLayers.i18n("metadataButtonText"),
                     id: "metadataMenu",
                     handler: metadataLayerHandlerContextMenu
+                },
+                {
+                    text: "Styles",
+                    id: "stylesMenu",
+                    handler: stylesLayerHandlerContextMenu
+                },
+                {
+                    text: OpenLayers.i18n('WMSTimeWindowTitle'),
+                    id: "wmsTimeMenu",
+                    disabled: true,
+                    handler: wmsTimeHandlerContextMenu
                 }
-//                {
-//                    text: "Styles",
-//                    id: "stylesMenu",
-//                    handler: stylesLayerHandlerContextMenu
-//                },
-//                {
-//                    text: OpenLayers.i18n('WMSTimeWindowTitle'),
-//                    id: "wmsTimeMenu",
-//                    disabled: true,
-//                    handler: wmsTimeHandlerContextMenu
-//                }
 
             ]}),
             tbar:  toctoolbar,
@@ -1302,8 +1304,8 @@ var processLayersSuccess = function(response) {
             GeoNetwork.WindowManager.registerWindow("wmsinfo", GeoNetwork.WmsLayerMetadataWindow, {map: map, id:"wmsinfo"});
             GeoNetwork.WindowManager.registerWindow("loadwmc", GeoNetwork.LoadWmcWindow, {map: map, id:"loadwmc"});
             GeoNetwork.WindowManager.registerWindow("featureinfo", GeoNetwork.FeatureInfoWindow, {map: map, id:"featureinfo", control: featureinfo});
-//            GeoNetwork.WindowManager.registerWindow("layerstyles", GeoNetwork.LayerStylesWindow, {map: map, id:"layerstyles"});
-//            GeoNetwork.WindowManager.registerWindow("wmstime", GeoNetwork.WMSTimeWindow, {map: map, id:"wmstime"});
+            GeoNetwork.WindowManager.registerWindow("layerstyles", GeoNetwork.LayerStylesWindow, {map: map, id:"layerstyles"});
+            GeoNetwork.WindowManager.registerWindow("wmstime", GeoNetwork.WMSTimeWindow, {map: map, id:"wmstime"});
             
             map.addLayer(featureinfolayer);
         },

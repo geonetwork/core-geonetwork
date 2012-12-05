@@ -431,8 +431,10 @@ public class CatalogSearcher {
         if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
+        int numHits = startPosition + maxRecords;
+
 		// TODO Handle NPE creating spatial filter (due to constraint
-        Filter spatialfilter = sm.getSpatial().filter(query, filterExpr, filterVersion);
+        Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
         Filter duplicateRemovingFilter = new DuplicateDocFilter(query, 1000000);
         Filter cFilter = null;
         if (spatialfilter == null) {
@@ -444,7 +446,6 @@ public class CatalogSearcher {
         }
 
         boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
-        int numHits = startPosition + maxRecords;
         // get as many results as instructed or enough for search summary
         if (buildSummary) {
             numHits = Math.max(maxHitsInSummary, numHits);
@@ -510,7 +511,7 @@ public class CatalogSearcher {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getAccessManager();
 		Set<String> hs = am.getUserGroups(dbms, context.getUserSession(),
-				context.getIpAddress());
+				context.getIpAddress(), false);
 
 		BooleanQuery query = new BooleanQuery();
 

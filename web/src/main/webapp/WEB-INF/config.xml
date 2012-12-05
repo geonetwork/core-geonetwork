@@ -41,12 +41,6 @@
 			<xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
 		</gui>
 
-		<!-- service not found -->
-
-		<error id="service-not-found" sheet="error.xsl" statusCode="404">
-			<xml name="error" file="xml/service-not-found-error.xml" />
-		</error>
-
 		<!-- no privileges to access the service -->
 
 		<error id="service-not-allowed" sheet="error.xsl" statusCode="403">
@@ -143,41 +137,41 @@
 	-->
 
 	<resources>
-		<resource enabled="true">
-			<name>main-db</name>
-			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-			<config>
-				<user>admin</user>
-				<password>gnos</password>
-				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-				<poolSize>33</poolSize>
-				<validationQuery>SELECT 1</validationQuery>
-			</config>
-		</resource>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		H2 database  http://www.h2database.com/
-		When GeoNetwork don't use H2 database, the listener DBStarter
-		section could be turned off (see web.xml).
-
-		Database is created according to jdbc url.
-
-		It may be relevant to turn on MVCC mode
-		http://www.h2database.com/html/advanced.html#mvcc
-		- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<resource enabled="false">
-			<name>main-db</name>
-			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-			<config>
-				<user>admin</user>
-				<password>gnos</password>
-				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
-				<poolSize>33</poolSize>
-				<validationQuery>SELECT 1</validationQuery>
-			</config>
-		</resource>
-
+	  <resource enabled="true">
+	    <name>main-db</name>
+	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+	    <config>
+	      <user>admin</user>
+	      <password>gnos</password>
+	      <driver>org.h2.Driver</driver>
+	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</url>
+	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery>
+	    </config>
+	  </resource>
+	  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	    H2 database  http://www.h2database.com/
+	    When GeoNetwork don't use H2 database, the listener DBStarter
+	    section could be turned off (see web.xml).
+	    
+	    Database is created according to jdbc url.
+	    
+	    It may be relevant to turn on MVCC mode
+	    http://www.h2database.com/html/advanced.html#mvcc
+	    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	  <resource enabled="false">
+	    <name>main-db</name>
+	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
+	    <config>
+	      <user>admin</user>
+	      <password>gnos</password>
+	      <driver>org.h2.Driver</driver>
+	      <url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE</url>
+	      <poolSize>33</poolSize>
+	      <validationQuery>SELECT 1</validationQuery>
+	    </config>
+	  </resource>
+	  
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- JNDI through container -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -277,7 +271,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+		
 		<resource enabled="false">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
@@ -360,26 +354,13 @@
 
 			Set to 1 forces the spatialIndexWriter to commit after each spatial
 			feature is written. Set to a large number and commits are delayed until
-			that number of spatial features is written. Be aware that setting this 
-			number to anything other than 1 can cause problems if the connection
-			to the database is closed (eg. if the db admin shuts the database
-			for maintenance reasons). There are also performance implications that  
-			are especially relevant to bulk loading records:
-
-			For the Apache Commons DBCP provider:
-			Set this number to 1 for best performance. This is kind of counter 
-			intuitive so if you have a different experience please pass it on as
-			a documentation fix.
-
-			For the JNDI database provider:
-			Set this number to something large eg. 1000 - the JNDI provider
-			is actually faster to load and index records with this setting than 
-			if it is set to 1. This is what you would expect but you
-			may have problems that will require you to restart GeoNetwork and 
-			reindex some or all of your metadata if the database connection is 
-			interrupted.
+			that number of spatial features is written (this should be faster than
+			committing after each write). Be aware that setting this 
+			number to anything other than 1 can cause problems with indexing 
+			if the connection to the database is closed whilst GeoNetwork is running
+			(eg. if the db admin shuts the database for maintenance reasons). 
 		-->
-		<param name="maxWritesInTransaction" value="1000" />
+		<param name="maxWritesInTransaction" value="1" />
 
 		<param name="useSubversion" value="true"/>
 
@@ -403,7 +384,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="status" class=".services.status.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
@@ -429,6 +409,11 @@
 				</call>
 
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
+			</output>
+		</service>
+		<service name="service-not-allowed">
+			<output sheet="service-not-allowed.xsl">
+				
 			</output>
 		</service>
 
@@ -507,7 +492,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="config" class=".services.config.Get" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
@@ -523,7 +507,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -541,7 +524,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -559,7 +541,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="categories" class=".services.category.List" />
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
@@ -588,7 +569,6 @@
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
 				</call>
@@ -603,7 +583,6 @@
 			</class>
 
 			<output sheet="remote-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
 				<call name="repositories" class=".services.main.Info">
 					<param name="type" value="z3950repositories" />
@@ -770,6 +749,7 @@
 
 			<output sheet="user-update.xsl">
 				<call name="groups" class=".guiservices.groups.GetMine" />
+				<call name="groupsAndProfiles" class=".guiservices.groups.GetMineWithProfiles" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
 		</service>
@@ -904,7 +884,6 @@
 			<class name=".services.category.List" />
 
 			<output sheet="category-list.xsl" >
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -953,14 +932,8 @@
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.login">
-			<class name=".services.login.Login" />
-
-			<output forward="home" />
-
-			<error id="user-login" sheet="error.xsl" statusCode="401">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
+		<service name="login.form">
+			<output sheet="login-form.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -976,19 +949,11 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.logout">
-			<class name=".services.login.Logout" />
-			<output forward="home" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Administration services                                       -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="admin">
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1187,19 +1152,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- XML services -->
-
-		<service name="xml.user.login">
-			<class name=".services.login.Login" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.user.logout">
-			<class name=".services.login.Logout" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.search">
 			<class name=".services.main.XmlSearch" />
@@ -1293,7 +1245,6 @@
 			<class name=".guiservices.csw.Set" />
 
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1306,7 +1257,6 @@
 		<service name="csw.customelementset.set">
 			<class name=".guiservices.csw.customelementset.Set" />
 			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 		</service>
 
@@ -1360,7 +1310,6 @@
 		<service name="google.kml">
 			<class name=".services.metadata.Show" />
 			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
-				<call name="services" class="jeeves.guiservices.services.Get" />
 			</output>
 			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />

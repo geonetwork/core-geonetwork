@@ -64,8 +64,10 @@ import org.opengis.filter.identity.FeatureId;
 import org.opengis.filter.spatial.SpatialOperator;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,6 +88,7 @@ public abstract class SpatialFilter extends Filter
     }
 
 	private static final Geometry WORLD_BOUNDS;
+	private static final int MAX_FIDS_PER_QUERY = 5000;
 	static {
 		GeometryFactory fac = new GeometryFactory();
 		WORLD_BOUNDS = fac.toGeometry(new Envelope(-180,180,-90,90));
@@ -99,12 +102,14 @@ public abstract class SpatialFilter extends Filter
     protected final FieldSelector _selector;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
+	private int _numHits;
+	private int _hits = 0;
 
-
-    protected SpatialFilter(Query query, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
+    protected SpatialFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         _query = query;
         _geom = geom;
+        _numHits = numHits;
         this.sourceAccessor = sourceAccessor;
         _filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools
                 .getDefaultHints());
@@ -119,9 +124,9 @@ public abstract class SpatialFilter extends Filter
 				};
     }
 
-    protected SpatialFilter(Query query, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
+    protected SpatialFilter(Query query, int numHits, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
-        this(query,JTS.toGeometry(bounds),sourceAccessor);
+        this(query,numHits,JTS.toGeometry(bounds),sourceAccessor);
     }
 
     public DocIdSet getDocIdSet(final IndexReader reader) throws IOException
@@ -132,7 +137,7 @@ public abstract class SpatialFilter extends Filter
         final Set<FeatureId> matches = new HashSet<FeatureId>();
         final Multimap<FeatureId,Integer> docIndexLookup = HashMultimap.create();
         
-        if(unrefinedSpatialMatches.isEmpty()) return bits;
+        if(unrefinedSpatialMatches.isEmpty() || _hits >= _numHits) return bits;
 
         new IndexSearcher(reader).search(_query, new Collector() {
 						private int docBase;
@@ -152,7 +157,8 @@ public abstract class SpatialFilter extends Filter
                  document = reader.document(doc, _selector);
                  String key = document.get("_id");
                  FeatureId featureId = unrefinedSpatialMatches.get(key); 
-                 if (featureId!=null) {
+                 if (featureId!=null && _hits < _numHits) {
+                	 _hits ++ ;
                    matches.add(featureId);
                    docIndexLookup.put(featureId, doc + docBase);
                  }
@@ -179,30 +185,46 @@ public abstract class SpatialFilter extends Filter
         JeevesJCS jcs = getJCSCache();
         processCachedFeatures(jcs, matches, docIndexLookup, bits);
 
-        Id fidFilter = _filterFactory.id(matches);
-        FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
-        String ftn = _featureSource.getSchema().getName().getLocalPart();
-        String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
-        FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
-                .getFeatures(new org.geotools.data.Query(ftn, fidFilter,geomAtt));
-        FeatureIterator<SimpleFeature> iterator = features.features();
-
-        
-        try {
-            while (iterator.hasNext()) {
-                SimpleFeature feature = iterator.next();
-                FeatureId featureId = feature.getIdentifier();
-                jcs.put(featureId.getID(), feature.getDefaultGeometry());
-                if( evaluateFeature(feature) ){
-                  for(int doc:docIndexLookup.get(featureId)) {
-                      bits.set(doc);
-                  }
-                }
-            }
-        } catch (CacheException e) {
-            throw new Error(e);
-        } finally {
-            iterator.close();
+        while (!matches.isEmpty()) {
+        	Id fidFilter;
+        	if(matches.size() > MAX_FIDS_PER_QUERY) {
+        		FeatureId[] subset = new FeatureId[MAX_FIDS_PER_QUERY];
+        		int i = 0;
+        		Iterator<FeatureId> iter = matches.iterator();
+        		while(iter.hasNext() && i < MAX_FIDS_PER_QUERY) {
+        			subset[i] = iter.next();
+        			iter.remove();
+        		}
+        		fidFilter = _filterFactory.id(subset);
+	        } else {
+	        	fidFilter = _filterFactory.id(matches);
+	        	matches = Collections.emptySet();
+	        }
+	         
+	        FeatureSource<SimpleFeatureType, SimpleFeature> _featureSource = sourceAccessor.one();
+	        String ftn = _featureSource.getSchema().getName().getLocalPart();
+	        String[] geomAtt = {_featureSource.getSchema().getGeometryDescriptor().getLocalName()};
+	        FeatureCollection<SimpleFeatureType, SimpleFeature> features = _featureSource
+	                .getFeatures(new org.geotools.data.Query(ftn, fidFilter,geomAtt));
+	        FeatureIterator<SimpleFeature> iterator = features.features();
+	
+	        
+	        try {
+	            while (iterator.hasNext()) {
+	                SimpleFeature feature = iterator.next();
+	                FeatureId featureId = feature.getIdentifier();
+	                jcs.put(featureId.getID(), feature.getDefaultGeometry());
+	                if( evaluateFeature(feature) ){
+	                  for(int doc:docIndexLookup.get(featureId)) {
+	                      bits.set(doc);
+	                  }
+	                }
+	            }
+	        } catch (CacheException e) {
+	            throw new Error(e);
+	        } finally {
+	            iterator.close();
+	        }
         }
         return bits;
     }

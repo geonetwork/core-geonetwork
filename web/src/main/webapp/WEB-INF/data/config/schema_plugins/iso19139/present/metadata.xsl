@@ -89,7 +89,7 @@
 	<xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and geonet:element and count(*)=1]"/>
 
 	<xsl:template mode="iso19139" priority="199" match="*[geonet:element and count(*)=1 and text()='']"/>
-
+	
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
@@ -216,6 +216,7 @@
 			<xsl:with-param name="schema" select="$schema"/>
 			<xsl:with-param name="edit"   select="$edit"/>
 			<xsl:with-param name="text"   select="$text"/>
+			<xsl:with-param name="editAttributes" select="false()"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
@@ -613,7 +614,7 @@
 			<xsl:with-param name="delButton" select="normalize-space(gmx:FileName)!=''"/>
 			<xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
 			<xsl:with-param name="visible" select="false()"/>
-			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -2685,7 +2686,7 @@
 				</xsl:apply-templates>
 
 				<xsl:choose>
-					<xsl:when test="string(gmd:protocol/gco:CharacterString)='WWW:DOWNLOAD-1.0-http--download' and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
+					<xsl:when test="matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and string(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)!=''">
 						<xsl:apply-templates mode="iso19139FileRemove" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType">
 							<xsl:with-param name="access" select="'private'"/>
 							<xsl:with-param name="id" select="$id"/>
@@ -2924,7 +2925,7 @@
 	<!-- online resources: download -->
 	<!-- ============================================================================= -->
 
-	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:DOWNLOAD-') and contains(gmd:protocol/gco:CharacterString,'http--download') and gmd:name]" priority="2">
+	<xsl:template mode="iso19139" match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
@@ -3029,14 +3030,14 @@
 				<xsl:variable name="pref" select="../gmd:protocol/gco:CharacterString/geonet:element/@ref"/>
 				<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref|gmx:MimeFileType/geonet:element/@ref"/>
 				<xsl:variable name="value" select="gco:CharacterString|gmx:MimeFileType"/>
-				<xsl:variable name="button" select="starts-with($protocol,'WWW:DOWNLOAD') and contains($protocol,'http') and normalize-space($value)=''"/>
+				<xsl:variable name="button" select="matches($protocol,'^WWW:DOWNLOAD-.*-http--download.*') and normalize-space($value)=''"/>
 
 				<xsl:call-template name="simpleElementGui">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit" select="$edit"/>
 					<xsl:with-param name="title" select="/root/gui/strings/file"/>
 					<xsl:with-param name="text">
-						<button class="content" onclick="startFileUpload({/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id}, '{$ref}');" type="button">
+						<button class="content" onclick="startFileUpload({/root/*/geonet:info/id}, '{$ref}');" type="button">
 							<xsl:value-of select="/root/gui/strings/insertFileMode"/>
 						</button>
 					</xsl:with-param>
@@ -3080,8 +3081,10 @@
 			<xsl:with-param name="text">
 				<table width="100%"><tr>
 					<xsl:variable name="ref" select="geonet:element/@ref"/>
-					<td width="70%"><xsl:value-of select="string(.)"/></td>
+					<xsl:variable name="value" select="string(.)"/>
+					<td width="70%"><xsl:value-of select="$value"/></td>
 					<td align="right">
+						<input type="hidden" id="_{$ref}" value="{$value}"/>
 						<button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button>
 						<xsl:call-template name="iso19139GeoPublisherButton">
 							<xsl:with-param name="access" select="$access"></xsl:with-param>
@@ -3194,11 +3197,18 @@
 			<xsl:variable name="protocol" select="gmd:protocol[1]/gco:CharacterString"/>
 			<xsl:variable name="linkage"  select="normalize-space(gmd:linkage/gmd:URL)"/>
 			<xsl:variable name="name">
-				<xsl:for-each select="gmd:name">
-					<xsl:call-template name="localised">
-						<xsl:with-param name="langId" select="$langId"/>
-					</xsl:call-template>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="gmd:name/gmx:MimeFileType">
+						<xsl:value-of select="gmd:name/gmx:MimeFileType/text()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="gmd:name">
+							<xsl:call-template name="localised">
+								<xsl:with-param name="langId" select="$langId"/>
+							</xsl:call-template>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:variable>
 
 			<xsl:variable name="mimeType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
@@ -3250,7 +3260,7 @@
 						<xsl:value-of select="concat('javascript:addWMSLayer([[&#34;' , $name , '&#34;,&#34;' ,  $linkage  ,  '&#34;, &#34;', $name  ,'&#34;,&#34;',$id,'&#34;]])')"/>
 					</link>
 				</xsl:when>
-				<xsl:when test="starts-with($protocol,'WWW:DOWNLOAD-') and contains($protocol,'http--download') and not(contains($linkage,$download_check))">
+				<xsl:when test="matches($protocol,'^WWW:DOWNLOAD-.*-http--download.*') and not(contains($linkage,$download_check))">
 					<link type="download"><xsl:value-of select="$linkage"/></link>
 				</xsl:when>
 				<xsl:when test="starts-with($protocol,'ESRI:AIMS-') and contains($protocol,'-get-image') and string($linkage)!='' and string($name)!=''">
@@ -3740,53 +3750,68 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+ 	<!--
+        Open a popup to select a parent and set the parent identifier field or
+				select a related metadata record as a sibling.
+        In view mode display an hyperlink to the parent or sibling metadata record.
+    -->
+    <xsl:template mode="iso19139" match="gmd:parentIdentifier|gmd:code[name(../..)='gmd:aggregateDataSetIdentifier']"
+        priority="2">
+        <xsl:param name="schema" />
+        <xsl:param name="edit" />
 
-	<!--
-		Open a popup to select a parent and set the parent identifier field.
-		In view mode display an hyperlink to the parent metadata record.
-	-->
-	<xsl:template mode="iso19139" match="gmd:parentIdentifier" priority="2">
-		<xsl:param name="schema" />
-		<xsl:param name="edit" />
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                  <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref" />
+                  <input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
+	                    	class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
+	                <img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');">
+										<xsl:choose>
+											<xsl:when test="name()='gmd:parentIdentifier'">
+												<xsl:attribute name="title">
+													<xsl:value-of select="/root/gui/strings/parentSearch"/>
+												</xsl:attribute>
+												<xsl:attribute name="alt">
+													<xsl:value-of select="/root/gui/strings/parentSearch"/>
+												</xsl:attribute>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="title">
+													<xsl:value-of select="/root/gui/strings/siblingSearch"/>
+												</xsl:attribute>
+												<xsl:attribute name="alt">
+													<xsl:value-of select="/root/gui/strings/siblingSearch"/>
+												</xsl:attribute>
+											</xsl:otherwise>
+										</xsl:choose>
+									</img>
+                </xsl:variable>
 
-		<xsl:choose>
-			<xsl:when test="$edit=true()">
-				<xsl:variable name="text">
-					<xsl:variable name="ref"
-						select="gco:CharacterString/geonet:element/@ref" />
-						<input onfocus="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"
-							class="md" type="text" name="_{$ref}" id="_{$ref}" value="{gco:CharacterString/text()}" size="20" />
-						<img src="../../images/find.png" alt="{/root/gui/strings/parentSearch}" title="{/root/gui/strings/parentSearch}"
-							onclick="javascript:showLinkedMetadataSelectionPanel('{$ref}', '');"/>
-				</xsl:variable>
-
-				<xsl:apply-templates mode="simpleElement"
-					select=".">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="edit" select="true()" />
-					<xsl:with-param name="text" select="$text" />
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates mode="simpleElement"
-					select=".">
-					<xsl:with-param name="schema" select="$schema" />
-					<xsl:with-param name="text">
-
-						<xsl:variable name="metadataTitle">
-							<xsl:call-template name="getMetadataTitle">
-								<xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
-							</xsl:call-template>
-						</xsl:variable>
-						<a href="metadata.show?uuid={gco:CharacterString}">
-							<xsl:value-of select="$metadataTitle"/>
-						</a>
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="edit" select="true()" />
+                    <xsl:with-param name="text" select="$text" />
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema" />
+                    <xsl:with-param name="text">
+                    
+                        <xsl:variable name="metadataTitle">
+                            <xsl:call-template name="getMetadataTitle">
+                                <xsl:with-param name="uuid" select="gco:CharacterString"></xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <a href="metadata.show?uuid={gco:CharacterString}">
+                            <xsl:value-of select="$metadataTitle"/>
+                        </a>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
 	<!-- Display extra thumbnails (not managed by GeoNetwork).
 		 Thumbnails managed by GeoNetwork are displayed on header.

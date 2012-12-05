@@ -74,7 +74,13 @@ GeoNetwork.Settings.results = {
         colormap: undefined,
         // Use a custom CSS rules
         //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
-        featurecolorCSS: undefined
+        featurecolorCSS: undefined,
+        // Look for relation for all records (true) or only series (default).
+        // Only for series is recommended to not trigger to much queries when
+        // displaying search results. It may be relevant to search for all
+        // if record related to a dataset using largerWorkCitation is used.
+        //loadRelationForAll: true
+        loadRelationForAll: undefined
 };
 GeoNetwork.MapModule = true;
 GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];

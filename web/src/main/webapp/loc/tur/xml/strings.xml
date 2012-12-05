@@ -21,7 +21,8 @@
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
 	<!-- end new strings -->
-
+	
+	<isAdmin>Is administrator ?</isAdmin>
 	<createChild>Çocuk (child)oluştur</createChild>
 	<updateChildren>Çocuk (child) güncelle</updateChildren>
 	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>
@@ -409,6 +410,7 @@
 	<login>Giriş</login>
 	<loginCardTitle>Giriş/ Üyelik</loginCardTitle>
 	<loginwarning>Sadece site yönetimi için gereklidir</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Çıkış</logout>
 	<logoutDes>Çıkış eylemini gerçekleştirir</logoutDes>
 	<longitude>Boylam derecesi (-180 ve 180 arasında) </longitude>
@@ -552,7 +554,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Servisi</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Servisi</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Servisi (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Servisi</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Servisi (ver 1.1.1)</protocolChoice>
@@ -1077,6 +1079,9 @@
 	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
     <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
     <custom-elementset-add>Eleman Ekle</custom-elementset-add>
+  	<concealed>Concealed</concealed>
 
 
+	<monitor>Monitor</monitor>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

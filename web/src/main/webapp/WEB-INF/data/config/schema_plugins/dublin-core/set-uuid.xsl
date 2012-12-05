@@ -33,16 +33,7 @@
 			<xsl:apply-templates select="dc:coverage"/>
 			<xsl:apply-templates select="dc:rights"/>
 
-			<xsl:apply-templates select="dct:abstract"/>
-			<xsl:apply-templates select="dct:modified"/>
-			<xsl:apply-templates select="dct:spatial"/>
-			<xsl:apply-templates select="dct:audience"/>
-			<xsl:apply-templates select="dct:accrualMethod"/>
-			<xsl:apply-templates select="dct:accrualPeriodicity"/>
-			<xsl:apply-templates select="dct:accrualPolicy"/>
-			<xsl:apply-templates select="dct:instructionalMethod"/>
-			<xsl:apply-templates select="dct:provenance"/>
-			<xsl:apply-templates select="dct:rightsHolder"/>
+			<xsl:apply-templates select="dct:*"/>
 		</xsl:copy>
 	</xsl:template>
 

@@ -284,6 +284,10 @@ input.error, textarea.error, select.error {
     border: 3px solid #FF2211 !important;
 }
 
+h1.error {
+	color: red !important;
+}
+
 select.lang_selector {
 	max-width: 70px;
 }

@@ -23,20 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
-import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
-import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
-import org.apache.lucene.search.TopFieldCollector;
-import org.apache.lucene.util.NumericUtils;
-import org.apache.lucene.util.Version;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +32,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
+
+import jeeves.server.ConfigurationOverrides;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.util.NumericUtils;
+import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.

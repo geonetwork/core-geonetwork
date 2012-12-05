@@ -44,8 +44,13 @@
          when looking for localised strings -->
     <xsl:template mode="localised" match="*[not(gco:CharacterString or gmd:PT_FreeText)]">
         <xsl:param name="langId"/>
-				<xsl:value-of select="*[1]"/>
-		</xsl:template>
+			<xsl:value-of select="*[1]"/>
+	</xsl:template>
+
+	<!-- Check if the element has hidden subelements -->
+    <xsl:template mode="localised" match="*[@gco:nilReason='withheld' and count(./*) = 0 and count(./@*) = 1]" priority="100">
+        <xsl:value-of select="/root/gui/strings/concealed"/>
+	</xsl:template>
 
     <!-- Map GUI language to iso3code -->
     <xsl:template name="getLangId">
@@ -148,6 +153,7 @@
 			<xsl:variable name="parent" select="$metadata/gmd:parentIdentifier/gco:CharacterString"/>
 			<xsl:variable name="services" select="/root/gui/relation/services/response/*[geonet:info]"/>
 			<xsl:variable name="children" select="/root/gui/relation/children/response/*[geonet:info]"/>
+			<xsl:variable name="siblings" select="/root/gui/relation/siblings/response/sibling"/>
 			<xsl:variable name="relatedRecords" select="/root/gui/relation/related/response/*[geonet:info]"/> <!-- Usually feature catalogues -->
             <!-- <xsl:variable name="relatedRecords" select="/root/gui/relation/fcats/response/*[geonet:info]"/> -->
 
@@ -157,10 +163,30 @@
 					<xsl:with-param name="metadata" select="$metadata"/>
 				</xsl:call-template>
 			</xsl:variable>
-			<xsl:if test="normalize-space($parent)!='' or $children or $services or $relatedRecords or
+			<xsl:if test="normalize-space($parent)!='' or $children or $services or $relatedRecords or count($siblings)>0 or
 				$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn or $edit">
 
 		        <div class="relatedElements">
+		        	<xsl:if test="count($siblings)>0 and not($edit)">
+								<xsl:for-each-group select="$siblings" group-by="@initiative">
+									<div>
+										<h3 style="text-transform:capitalize;"><xsl:value-of select="concat('related ',current-grouping-key(),'(s)')"/></h3>
+										<xsl:for-each select="current-group()/*/geonet:info">
+		        					<ul>
+		        						<li>
+			        						<a class="arrow" href="metadata.show?uuid={uuid}">
+				        						<xsl:call-template name="getMetadataTitle">
+				        							<xsl:with-param name="uuid" select="uuid"/>
+				        						</xsl:call-template>
+			        						</a>
+		        						</li>
+		        					</ul>
+										</xsl:for-each>
+										<br/>
+		        			</div>
+								</xsl:for-each-group>
+		        	</xsl:if>
+		        		
 					<!-- Parent/child relation
 						displayed for both service and datasets metadata.
 						

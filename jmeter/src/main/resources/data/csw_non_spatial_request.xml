@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="results_with_summary" startPosition="1" maxRecords="1">
+  <csw:Query typeNames="csw:Record">
+    <csw:ElementSetName>full</csw:ElementSetName>
+    <ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
+      <ogc:SortProperty>
+        <ogc:PropertyName>relevance</ogc:PropertyName>
+        <ogc:SortOrder>DESC</ogc:SortOrder>
+      </ogc:SortProperty>
+    </ogc:SortBy>
+  </csw:Query>
+</csw:GetRecords>

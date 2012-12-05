@@ -41,7 +41,11 @@ import java.util.Set;
 
 public class GetMine implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	String profile;
+	
+	public void init(String appPath, ServiceConfig params) throws Exception {
+		profile = params.getValue("profile");
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -63,10 +67,15 @@ public class GetMine implements Service
 		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
 			return Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
 		} else {
-			String query = "SELECT groupId as id FROM UserGroups WHERE groupId > 1 "+
-								"AND userId=?";
-
-			Set<String> ids = Lib.element.getIds(dbms.select(query, session.getUserIdAsInt()));
+			Element list = null;
+			if (profile == null) {
+				String query = "SELECT groupId AS id FROM UserGroups WHERE groupId > 1 AND userId=?";
+				list = dbms.select(query, session.getUserIdAsInt());
+			} else {
+				String query = "SELECT groupId AS id FROM UserGroups WHERE groupId > 1 AND userId=? and profile=?";
+				list = dbms.select(query, session.getUserIdAsInt(), profile);
+			}
+			Set<String> ids = Lib.element.getIds(list);
 			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
 
 			return Lib.element.pruneChildren(groups, ids);

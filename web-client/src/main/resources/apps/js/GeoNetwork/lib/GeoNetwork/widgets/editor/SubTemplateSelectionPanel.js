@@ -41,15 +41,6 @@ Ext.namespace('GeoNetwork.editor');
 GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     border: false,
     catalogue: undefined,
-    // TODO : probably move namespaces to a more global place
-    namespaces: {
-        xlink: 'http://www.w3.org/1999/xlink',
-        gmd: 'http://www.isotc211.org/2005/gmd',
-        gmx: 'http://www.isotc211.org/2005/gmx',
-        gco: 'http://www.isotc211.org/2005/gco',
-        gts: 'http://www.isotc211.org/2005/gts',
-        gml: 'http://www.opengis.net/gml'
-    },
     id: 'subTemplateSearchForm',
     contact: Ext.data.Record.create([{
         name: 'xlink'
@@ -59,6 +50,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     subTemplateStore: undefined,
     codeListStore: undefined,
     subTplTypeField: undefined,
+    /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
     /**
      * Property: itemSelector
      */
@@ -93,6 +89,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
      * Property: name   The node name with prefix
      */
     elementName: null,
+    
+    /**
+     * Property: namespaceString   The namespace string to append to the element
+     */
+    namespaceString: '',
     
     /**
      * Property: name   The node name with prefix
@@ -235,6 +236,9 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         }
         
     },
+    setNamespaces: function(namespaceString){
+        this.namespaceString = namespaceString;
+    },
     /**
      * APIMethod: setAddAsXLink
      * Set the add as XLink option
@@ -304,7 +308,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/images', // FIXME
+            imagePath: this.imagePath,
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){
@@ -344,9 +348,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         this.SubTemplateSelected = [];
         this.codeListValue = '';
         this.subTemplateCount = 0;
+
+        var codelistValue = Ext.getCmp('codeList').getValue();
         
-        if (this.codeListConfig[this.elementName] && this.codeListConfig[this.elementName].xpath) {
-            processParameter = "&process=" + this.codeListConfig[this.elementName].xpath + processParameterSeparator + Ext.getCmp('codeList').getValue();
+        if (this.codeListConfig[this.elementName] && this.codeListConfig[this.elementName].xpath && codelistValue !== "") {
+            processParameter = "&process=" + this.codeListConfig[this.elementName].xpath + processParameterSeparator + codelistValue;
         }
         
         var self = this;
@@ -406,19 +412,8 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             }
         });
     },
-    /**
-     * Create namespace declaration
-     * 
-     * @param {Object} onlyThoseNamespaces  Restrict namespaces list
-     */
-    generateNamespaceDeclaration: function(onlyThoseNamespaces) {
-        var ns = '';
-        for (var n in this.namespaces) {
-            if ((onlyThoseNamespaces && onlyThoseNamespaces[n]) || !onlyThoseNamespaces) {
-                ns += ' xmlns:' + n + '="' + this.namespaces[n] + '"';
-            }
-        }
-        return ns;
+    generateNamespaceDeclaration: function() {
+        return ' '+this.namespaceString;
     },
     
     doSearch: function(){

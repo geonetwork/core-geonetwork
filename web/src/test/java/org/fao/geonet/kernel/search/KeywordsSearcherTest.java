@@ -308,7 +308,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     private void assertSearchUriSearch(KeywordsSearcher searcher) {
         assertEquals(1, searcher.getNbResults());
         KeywordBean word = searcher.getResults().get(0);
-        assertEquals(THESAURUS_KEYWORD_NS+30, word.getCode());
+        assertEquals(THESAURUS_KEYWORD_NS+30, word.getUriCode());
         assertEquals(thesaurus.getKey(), word.getThesaurusKey());
         assertEquals("fre", word.getDefaultLang());
         assertTrue(word.getValues().keySet().containsAll(Arrays.asList("fre","eng","chi")));
@@ -461,7 +461,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         for(int i = 0; i < 5; i++ ) {
             KeywordBean bean = searcher.getResults().get(i);
             if(i%2 == 0) {
-                ids.add(bean.getCode());
+                ids.add(bean.getUriCode());
             } else {
                 ids.add(""+bean.getId());
             }
@@ -500,9 +500,9 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             .maxResults(10);
         searcher.search(params.build());
         
-        assertEquals(2, searcher.getKeywordFromResults(2).getId());
-        assertNotNull(searcher.getKeywordFromResults(searcher.getResults().get(4).getCode()).getId());
-        assertNull(searcher.getKeywordFromResults(100));
+        assertEquals(2, searcher.getKeywordFromResultsById(2).getId());
+        assertNotNull(searcher.getKeywordFromResultsByUriCode(searcher.getResults().get(4).getUriCode()).getId());
+        assertNull(searcher.getKeywordFromResultsById(100));
     }
 
 }

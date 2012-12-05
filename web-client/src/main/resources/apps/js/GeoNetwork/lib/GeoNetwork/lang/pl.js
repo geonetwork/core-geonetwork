@@ -156,6 +156,7 @@ GeoNetwork.Lang.pl = {
     'inspireClassificationDataServices': 'Klasyfikacja ułsug danych INSPIRE',
     'serviceType': 'Typ usługi',
     'serviceType_discovery': 'Usługa wyszukiwania (discovery)',
+    'serviceType_download': 'Download Service (download)',
     'serviceType_view': 'Usługa wyświetlania (view)',
     'serviceType_transformation': ' Usługa transformacji (transformation)',
     'serviceType_invoke': 'Usługa uruchamiania usług (invoke)',
@@ -527,7 +528,20 @@ GeoNetwork.Lang.pl = {
 	'Advanced': "Zaawansowane",
 	'newWindow': "Nowe okno",
 	'mdEditor': "Edytor metadanych",
-	'List': "Lista"
+	'List': "Lista",
+    'to-iso19139-keyword': 'Text mode',
+    'to-iso19139-keyword-as-xlink': 'Linked mode',
+    'to-iso19139-keyword-with-anchor': 'Anchor mode',
+    'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-OGC:WMS': 'Add to map',
+    'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
+    'linklabel-application/zip': 'Download',
+    'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
+    'linklabel-application/x-compressed': 'Download',
+    'linklabel-text/html': 'Web link',
+    'linklabel-text/plain': 'Web link',
+    'linklabel-image/png': 'Image link',
+    'linklabel-': 'Link'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.pl, GeoNetwork.Lang.pl);

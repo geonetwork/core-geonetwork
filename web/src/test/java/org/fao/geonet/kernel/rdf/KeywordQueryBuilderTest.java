@@ -30,7 +30,7 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
     private void assertCorrectKeywords(List<KeywordBean> results) {
         assertEquals(keywords, results.size());
         KeywordBean keywordBean = results.get(0);
-        assertTrue(keywordBean.getCode().endsWith("#0"));
+        assertTrue(keywordBean.getUriCode().endsWith("#0"));
         assertEquals(createExampleLabel(0,"eng"), keywordBean.getValues().get("eng"));
         assertEquals(createExampleNote(0,"ger"), keywordBean.getDefinitions().get("ger"));
         assertEquals(4, keywordBean.getValues().size());
@@ -41,7 +41,7 @@ public class KeywordQueryBuilderTest extends AbstractThesaurusBasedTest {
 
         KeywordBean keywordBean2 = results.get(1);
         
-        assertTrue(keywordBean2.getCode().endsWith("#1"));
+        assertTrue(keywordBean2.getUriCode().endsWith("#1"));
         assertEquals(createExampleLabel(1,"eng"), keywordBean2.getValues().get("eng"));
         assertEquals(createExampleNote(1,"ger"), keywordBean2.getDefinitions().get("ger"));
         assertEquals(4, keywordBean2.getValues().size());

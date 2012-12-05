@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
-<csw:GetDomain xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW">
+<csw:GetDomain xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2">
     <csw:PropertyName>Subject,Title,Identifier</csw:PropertyName>
 </csw:GetDomain>

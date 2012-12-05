@@ -35,7 +35,6 @@
 			</class>
 
 			<output sheet="metadata-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>
@@ -58,7 +57,6 @@
 			</class>
 
 			<output sheet="metadata-show-embedded.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>
@@ -552,7 +550,9 @@
 
 		<service name="metadata.xmlinsert.form">
 			<output sheet="metadata-insert-form.xsl">
-				<call name="groups"  class=".guiservices.groups.GetMine"/>
+				<call name="groups"  class=".guiservices.groups.GetMine">
+					<param name="profile" value="Editor"/>
+				</call>
 				<call name="categories"        class=".services.category.List"/>
 				<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs"/>
 			</output>
@@ -819,7 +819,16 @@
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-
+        
+         <service name="metadata.formatter.pdf">
+           <class name=".services.metadata.format.Format">
+               <param name="user_xsl_dir" value="user_xsl" />
+           </class>
+           <class name=".services.metadata.format.PDF"/>
+           <output file="true"/>
+           <error id="illegal-params" sheet="metadata-error.xsl"/>
+       </service>
+        
     </services>
 </geonet>
 

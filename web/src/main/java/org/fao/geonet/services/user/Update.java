@@ -29,12 +29,16 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import javax.servlet.ServletContext;
 
 //=============================================================================
 
@@ -78,7 +82,7 @@ public class Update implements Service
 		UserSession usrSess = context.getUserSession();
 		String      myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
-
+		
 		java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
 		if (!operation.equals(Params.Operation.RESETPW)) {
@@ -90,9 +94,8 @@ public class Update implements Service
 		}
 
 		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
-				myProfile.equals("UserAdmin") ||
+				myProfile.equals(Geonet.Profile.USER_ADMIN) ||
 				myUserId.equals(id)) {
-
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
@@ -114,7 +117,7 @@ public class Update implements Service
 							}
 						}
 						if (!found) {
-							throw new IllegalArgumentException("tried to add group id "+group+" to user "+username+" - not allowed because you are not a member of that group!");	
+							throw new IllegalArgumentException("Tried to add group id "+group+" to user "+username+" - not allowed because you are not a member of that group!");	
 						}
 					}
 				}
@@ -134,14 +137,9 @@ public class Update implements Service
 							"address, city, state, zip, country, email, organisation, kind) "+
 							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, new Integer(id), username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
+				dbms.execute(query, new Integer(id), username, PasswordUtil.encode(context, password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
 
-			//--- add groups
-
-				for(Element userGroup : userGroups) {
-					String group = userGroup.getText();
-					addGroup(dbms, id, group);
-				}
+				setUserGroups(id, profile, params, dbms);
 			}
 
 			else {
@@ -150,16 +148,13 @@ public class Update implements Service
 				if (operation.equals(Params.Operation.FULLUPDATE)) {
 					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 
-					dbms.execute (query, username, Util.scramble(password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, PasswordUtil.encode(context,password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
 
 					//--- add groups
 
 					dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
 
-					for(Element userGroup : userGroups) {
-						String group = userGroup.getText();
-						addGroup(dbms, id, group);
-					}
+					setUserGroups(id, profile, params, dbms);
 
 			// -- edit user info
 				} else if (operation.equals(Params.Operation.EDITINFO)) {
@@ -168,40 +163,60 @@ public class Update implements Service
 					//--- add groups
 				
 					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
-					for(Element userGroup : userGroups) {
-						String group = userGroup.getText();
-						addGroup(dbms, id, group);
-					}
+					setUserGroups(id, profile, params, dbms);
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
-					String query = "UPDATE Users SET password=? WHERE id=?";
-					dbms.execute (query, Util.scramble(password),new Integer(id));
+					ServletContext servletContext = context.getServlet().getServletContext();
+					PasswordUtil.updatePasswordWithNew(false, null, password, new Integer(id), servletContext, dbms);
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}
 			} 
 		} else {
-			throw new IllegalArgumentException("you don't have rights to do this");
+			throw new IllegalArgumentException("You don't have rights to do this");
 		}
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
-
-	/** Adds a user to a group
-	  */
-
-	private void addGroup(Dbms dbms, String user, String group) throws Exception
-	{
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
-						 new Integer(user), new Integer(group));
+	private void setUserGroups(String id, String userProfile, Element params,
+			Dbms dbms) throws Exception {
+		String[] profiles = {Geonet.Profile.USER_ADMIN, Geonet.Profile.REVIEWER, Geonet.Profile.EDITOR, Geonet.Profile.REGISTERED_USER};
+		java.util.Set<Integer> editingGroups = new java.util.HashSet<Integer>();
+		int userId = new Integer(id);
+		for (String profile : profiles) {
+			java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
+			for(Element userGroup : userGroups) {
+				String group = userGroup.getText();
+				if (!group.equals("")) {
+					int groupId = new Integer(group);
+					
+					// Combine all groups editor and reviewer groups
+					if (profile.equals(Geonet.Profile.REVIEWER) || profile.equals(Geonet.Profile.EDITOR)) {
+						editingGroups.add(groupId);
+					}
+					
+					if (!profile.equals(Geonet.Profile.EDITOR)) {
+						dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
+							 userId, groupId, profile);
+					}
+				}
+			}
+		}
+		
+		
+		// Save all editor groups
+		for (Integer groupId : editingGroups) {
+			dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
+					 userId, groupId, Geonet.Profile.EDITOR);
+		}
 	}
+	
+	public static void addGroup(Dbms dbms, int userId, int groupId, String profile) throws Exception {
+        dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
+                 userId, groupId, profile);
+    }
 }
 
 //=============================================================================

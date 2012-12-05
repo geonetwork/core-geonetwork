@@ -24,6 +24,8 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.exceptions.BadServerResponseEx;
+import jeeves.exceptions.BadSoapResponseEx;
+import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
@@ -40,6 +42,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -82,16 +85,21 @@ class Harvester
 
 		if (params.useAccount)
 		{
-			log.info("Login into : "+ params.name);
+			
+			try {
+				log.info("Login into : "+ params.name);
+				req.setCredentials(params.username, params.password);
+				req.setAddress(params.getServletPath()+"/srv/eng/xml.info?type=me");
 
-			req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
-			req.addParam("username", params.username);
-			req.addParam("password", params.password);
-
-			Element response = req.execute();
-
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(params.username);
+				Element response = req.execute();
+				if(!response.getName().equals("info") || response.getChild("me") == null) {
+					pre29Login(req);
+				} else if(!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
+					throw new UserNotFoundEx(params.username);
+				}
+			} catch (Exception e) {
+				pre29Login(req);
+			}
 		}
 
 		//--- retrieve info on categories and groups
@@ -129,6 +137,20 @@ class Harvester
 		updateSources(dbms, records, sources);
 
 		return result;
+	}
+
+	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
+		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.name);
+		// try old authentication
+		req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
+		req.addParam("username", params.username);
+		req.addParam("password", params.password);
+		
+		Element response = req.execute();
+		
+		if (!response.getName().equals("ok")) {
+			throw new UserNotFoundEx(params.username);
+		}
 	}
 
 	//---------------------------------------------------------------------------

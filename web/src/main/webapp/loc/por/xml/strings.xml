@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Qualquer língua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -582,6 +583,7 @@
 	<login>Iniciar sessão</login>
 	<loginCardTitle>Iniciar sessão / Registar-se</loginCardTitle>
 	<loginwarning>Só necessário para a administração da página</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Sair</logout>
 	<logoutDes>Efectuar saída</logoutDes>
 	<longitude>Longitude (entre -180 e 180) em graus</longitude>
@@ -739,7 +741,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
 	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
 	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Service (ver 1.1.1)</protocolChoice>
@@ -1388,4 +1390,6 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

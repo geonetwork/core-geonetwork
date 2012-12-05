@@ -8,6 +8,7 @@
 	<server>Sunucu(Server)</server>
 	<host>Ana sistem(Host)</host>
 	<port>Bağlantı Noktası(Port)</port>
+	<securePort>Secure Port</securePort>
 	
 	<intranet>Intranet</intranet>
 	<network>Ağ (Network)</network>
@@ -331,5 +332,7 @@
 		</tip>
 	</tips>
 	
+  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

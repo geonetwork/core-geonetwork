@@ -29,10 +29,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import org.fao.geonet.GeonetContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -58,10 +58,6 @@ public class DeleteElement implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-
 		UserSession session = context.getUserSession();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -73,7 +69,13 @@ public class DeleteElement implements Service
 		for (int i = 0; i < ref.length; i++) {
 			child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref[i], parentRef);
 		}
-		return child;
+
+		// -- The metadata-edit-embedded.xsl searches for a taged element to
+		// -- transform so tag the element for display
+		Element cloned = (Element) child.clone();
+		EditLib.tagForDisplay(cloned);
+
+		return cloned;
 	}
 }
 

@@ -65,18 +65,44 @@ public class SettingInfo
 
 	//---------------------------------------------------------------------------
 	/** Return a string like 'http://HOST[:PORT]' */
-
-	public String getSiteUrl()
-	{
+	public String getSiteUrl() {
         String protocol = sm.getValue(Geonet.Settings.SERVER_PROTOCOL);
-		String host = sm.getValue(Geonet.Settings.SERVER_HOST);
-		String port = sm.getValue(Geonet.Settings.SERVER_PORT);
+        return getSiteUrl(protocol.equalsIgnoreCase("https"));
+	}
+	/** Return a string like 'http://HOST[:PORT]' */
+	public String getSiteUrl(boolean secureUrl) {
+		String protocol;
+		Integer port;
+        String host = sm.getValue(Geonet.Settings.SERVER_HOST);
+		Integer secureport = toIntOrNull(Geonet.Settings.SERVER_SECURE_PORT);
+		Integer insecureport = toIntOrNull(Geonet.Settings.SERVER_PORT);
+		if (secureUrl) {
+            protocol = "https";
+		    if (secureport == null && insecureport == null) {
+		        port = 443;
+		    } else if (secureport != null) {
+		        port = secureport;
+		    } else {
+	            protocol = "http";
+		        port = insecureport;
+		    }
+		} else {
+            protocol = "http";
+            if (secureport == null && insecureport == null) {
+                port = 80;
+            } else if (insecureport != null) {
+                port = insecureport;
+            } else {
+                protocol = "https";
+                port = secureport;
+            }		    
+		}
 
 		StringBuffer sb = new StringBuffer(protocol + "://");
 
 		sb.append(host);
 
-		if (port.length() != 0) {
+		if (port != null) {
 			sb.append(":");
 			sb.append(port);
 		}
@@ -86,7 +112,15 @@ public class SettingInfo
 
 	//---------------------------------------------------------------------------
 
-	public String getSelectionMaxRecords()
+	private Integer toIntOrNull(String key) {
+        try {
+             return Integer.parseInt(sm.getValue(key));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public String getSelectionMaxRecords()
 	{
 		String value = sm.getValue("system/selectionmanager/maxrecords");
 		if (value == null) value = "10000";

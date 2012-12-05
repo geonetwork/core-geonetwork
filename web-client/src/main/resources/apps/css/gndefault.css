@@ -519,7 +519,11 @@ div.facets * .facet-less-bt {
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
-
+.alert-danger, .alert-error {
+    color: #B94A48;
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+}
 .alert * h2 {
     color: #C09853;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -547,17 +551,51 @@ div.facets * .facet-less-bt {
     -moz-border-radius: 9px;
     border-radius: 9px;
 }
-.label-warning, .badge-warning, .badge-error {
-    background-color: #F89406;
+
+.ux-mselect-selected {
+    background-color: #767676 !important;
+    color: #FFF;
 }
 .label-success, .badge-success {
     background-color: #468847;
 }
+.label-warning, .badge-warning {
+    background-color: #F89406;
+}
+.label-important, .badge-important, .label-error, .badge-error {
+    background-color: #B94A48;
+}
+.label-info, .badge-info {
+    background-color: #3A87AD;
+}
 .validation * h2, .validation * div {
     white-space: normal !important;
 }
-
+.thesaurusPicker * div.badge {
+    margin: 3px;
+    white-space: normal;
+}
+.thesaurusPicker * fieldset {
+    border: 1px solid #B3D4E6 !important;
+}
+.thesaurusPicker * legend {
+    color: #777 !important;
+}
+.thesaurusPicker * .thesaurusInfo span {
+    padding-right: 5px;
+}
 .x-superboxselect-item img {
     max-height: 16px;
     vertical-align: middle;
+}
+.validatePanel * .x-grid3-cell-inner {
+    white-space: normal !important;
+}
+.relation-type {
+    text-transform: uppercase;
+    margin-left: 3px;
+}
+
+.debug {
+    display: none;
 }
