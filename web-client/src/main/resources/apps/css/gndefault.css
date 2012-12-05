@@ -37,9 +37,7 @@ pre.code {
 }
 #msg-div {
   position : absolute;
-  left : 35%;
-  top : 10px;
-  width : 250px;
+  width : 350px;
   z-index : 20000;
 }
 .x-grid3-row-body p {
@@ -326,6 +324,11 @@ table.related * a:hover,
   background-image : url(../images/default/table_gear.png) !important;
 }
 .repository {
+  background-image : url(../images/default/database_yellow.png) !important;
+  background-repeat : no-repeat;
+  padding-left : 15px;
+}
+.WFSDownloadIcon {
   background-image : url(../images/default/database_yellow.png) !important;
   background-repeat : no-repeat;
   padding-left : 15px;

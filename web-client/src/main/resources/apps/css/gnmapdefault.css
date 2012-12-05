@@ -223,3 +223,28 @@ div.map-overlay {
   float : left;
   margin-right : 2px;
 }
+.info-wms {
+  padding: 2px;
+  color: #069;
+}
+
+.info-wms p {
+  padding: 5px;
+}
+
+.info-wms ul {
+  width: 100%;
+}
+
+.info-wms li {
+  font-weight: bold;
+}
+.info-wms li span {
+  width: 33%;
+  padding-right: 5px;
+  font-weight: normal;
+}
+.info-wms ul li ul li {
+    list-style-type: circle;
+    margin-left: 16px;
+}
