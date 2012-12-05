@@ -87,10 +87,15 @@
     <file name=".*/WEB-INF/config-db.xml">
         <removeXML xpath="data/file" />
         <removeXML xpath="migrate" />
+        
         <addXml xpath="data">
         	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-"/>
             <file path="WEB-INF/classes/setup/sql/data" filePrefix="geocat-data-db-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-eng-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fre-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ger-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ita-"/>
+		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-roh-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-countries-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-gemeindenBB-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
