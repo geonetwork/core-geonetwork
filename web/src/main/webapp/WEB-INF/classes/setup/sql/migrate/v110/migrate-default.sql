@@ -26,6 +26,7 @@ ALTER TABLE users ALTER "password" TYPE character varying(120);
 ALTER TABLE users ADD security varchar(128);
 ALTER TABLE users ADD authtype varchar(32);
 ALTER TABLE harvesthistory ADD elapsedtime integer;
+UPDATE harvesthistory SET elapsedtime=0;
 
 ALTER TABLE UserGroups ADD profile varchar(32);
 

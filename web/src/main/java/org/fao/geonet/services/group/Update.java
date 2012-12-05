@@ -105,9 +105,16 @@ public class Update implements Service
 		{
 			int newId = context.getSerialFactory().getSerial(dbms, "Groups");
 
-			String query = "INSERT INTO Groups(id, name, description, email, website, logoUuid) VALUES (?, ?, ?, ?, ?, ?)";
-
-            dbms.execute(query, newId, name, descr, email, website, logoUUID);
+			if(logoUUID != null) {
+				String query = "INSERT INTO Groups(id, name, description, email, website, logoUuid) VALUES (?, ?, ?, ?, ?, ?)";
+				
+				dbms.execute(query, newId, name, descr, email, website, logoUUID);
+			} else {
+				String query = "INSERT INTO Groups(id, name, description, email, website) VALUES (?, ?, ?, ?, ?)";
+				
+				dbms.execute(query, newId, name, descr, email, website);
+				
+			}
             
             addLocalizationEntry(newId, descr, dbms, "eng");
             addLocalizationEntry(newId, descr, dbms, "ger");
@@ -119,9 +126,16 @@ public class Update implements Service
 		}
 		else 	//--- For Update
 		{
-			String query = "UPDATE Groups SET name=?, description=?, email=?, website=?, logoUuid=? WHERE id=?";
-
-			dbms.execute(query, name, descr, email, website, logoUUID, new Integer(id));
+			
+			if(logoUUID != null) {
+				String query = "UPDATE Groups SET name=?, description=?, email=?, website=?, logoUuid=? WHERE id=?";
+				
+				dbms.execute(query, name, descr, email, website, logoUUID, new Integer(id));
+			} else {
+				String query = "UPDATE Groups SET name=?, description=?, email=?, website=? WHERE id=?";
+				
+				dbms.execute(query, name, descr, email, website, new Integer(id));
+			}
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}
