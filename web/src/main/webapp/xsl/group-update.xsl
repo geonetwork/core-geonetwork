@@ -16,6 +16,12 @@
 					alert('A group name must be filled in.');
 					return;
 				}
+				
+				if($('upload').value == '') {
+					$('upload').remove();
+					$('logofile').remove();
+				}
+				
 				document.groupUpdateForm.submit()
 			}
 		</script>
