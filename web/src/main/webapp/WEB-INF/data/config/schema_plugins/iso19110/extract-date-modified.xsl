@@ -6,7 +6,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco">
 
 	<xsl:template match="gfc:FC_FeatureCatalogue">
-         <dateStamp><xsl:value-of select="gmx:versionDate"/></dateStamp>
+	    <dateStamp><xsl:value-of select="gmx:versionDate|gfc:versionDate"/></dateStamp>
 	</xsl:template>
 
 </xsl:stylesheet>

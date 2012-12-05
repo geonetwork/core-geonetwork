@@ -24,7 +24,7 @@
 			<dc:identifier><xsl:value-of select="@uuid"/></dc:identifier>
 			
 			<!-- DataIdentification -->
-			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:typeName/gco:LocalName">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title><xsl:value-of select="."/></dc:title>
 			</xsl:for-each>
 
