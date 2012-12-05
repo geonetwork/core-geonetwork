@@ -9,11 +9,11 @@
     </field> 
     
 	<field name="gfc:FC_FeatureCatalogue">
-		<suggest name="gfc:name"/>
-		<suggest name="gfc:scope"/>
-        <suggest name="gfc:fieldOfApplication"/>
-        <suggest name="gfc:versionNumber"/>
-        <suggest name="gfc:versionDate"/>
+		<suggest name="gmx:name"/>
+		<suggest name="gmx:scope"/>
+        <suggest name="gmx:fieldOfApplication"/>
+        <suggest name="gmx:versionNumber"/>
+        <suggest name="gmx:versionDate"/>
         <suggest name="gfc:functionalLanguage"/>
         <suggest name="gfc:producer"/>
 	</field>
