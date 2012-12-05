@@ -8,7 +8,7 @@
   <invalidElement>Ungültiges Element. Ungültiger Inhalt gefunden, der mit folgendem Element beginnt: </invalidElement>
   <onElementOf>Eines der folgenden Elemente </onElementOf>
   <isExpected> wird erwartet.</isExpected>
-  <isNotComplete> ist nicht vollständig.</isNottComplete>
+  <isNotComplete> ist nicht vollständig.</isNotComplete>
   <elementLocated>Das übergeordnete Element is </elementLocated>
   <missingElement>Fehlendes Element. Der Inhalt des Elements: </missingElement>
   <invalidValue>Ungültiger oder fehlender Wert.</invalidValue>
