@@ -49,6 +49,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         maximized: false,
         collapsible: true,
         collapsed: false,
+        singleSelect: true,
         uploadThumbnail: true,
         uploadDocument: false,
         metadataSchema: 'iso19139',
@@ -170,6 +171,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 var code = associationType.getStore().getAt(0).get('code');
                 this.associationType = code;
                 associationType.setValue(code);
+                
+                // Hide the combo if only one value available
+                if (associationType.getStore().getCount() === 1) {
+                    associationType.setVisible(false);
+                }
             }, this);
             var initiativeType = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('initiativeType'),
@@ -430,7 +436,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         record.data.serviceProtocol = link.protocol;
                     }
                 });
-            } else if (record.data.links) {
+            } else if (record.data.links && self.type === 'onlinesrc') {
                 Ext.each(record.data.links, function (link) {
                     // FIXME: restrict
                     links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
