@@ -117,6 +117,15 @@
                 <xsl:attribute name="src"><xsl:value-of
                         select="$appBaseUrl" />/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js</xsl:attribute>
             </script>
+
+            
+            <script>
+                Ext.onReady(function() {
+                    GeoNetwork.Settings.GeoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
+                });
+            </script>
+
+
         </head>
         <body>
             

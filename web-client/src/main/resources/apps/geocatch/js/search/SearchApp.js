@@ -76,8 +76,9 @@ GeoNetwork.searchApp = function() {
                 anchor: '100%'
             });
 
+            var fieldKantone = this.getKantoneCombo().combo;
             
-            formItems.push([fieldAny, fieldType]);
+            formItems.push([fieldAny, fieldType, fieldKantone]);
 
            return new GeoNetwork.SearchFormPanel({
                 id : 'simple-search-options-content-form',
@@ -175,12 +176,35 @@ GeoNetwork.searchApp = function() {
                 id: 0,
                 fields: ['id', 'name'],
                 data: [
-                        [OpenLayers.Filter.Spatial.WITHIN, translate('withinGeo')],
-                        [OpenLayers.Filter.Spatial.INTERSECTS, translate('intersectGeo')],
-                        [OpenLayers.Filter.Spatial.CONTAINS, translate('containsGeo')]]
+                        [OpenLayers.Filter.Spatial.WITHIN, OpenLayers.i18n('withinGeo')],
+                        [OpenLayers.Filter.Spatial.INTERSECTS, OpenLayers.i18n('intersectGeo')],
+                        [OpenLayers.Filter.Spatial.CONTAINS, OpenLayers.i18n('containsGeo')]]
             });
         },
-        
+
+        /**
+         * Method: createKantoneCombo
+         *
+         * Parameters:
+         * - {Boolean} If true, destroys and recreates singleton
+         *
+         * Returns:
+         * An Class Ext.form.ComboBox
+         *
+         */
+        getKantoneCombo: function(createNew) {
+            return  this.createSearchWFS(false, 'chtopo', 'kantoneBB', ['KUERZEL', 'KANTONSNR', 'BOUNDING'], {
+            id: 'kantoneComboBox',
+            fieldLabel: translate('kantone'),
+            displayField: 'KUERZEL',
+            valueField: 'KANTONSNR',
+            name: 'kantone',
+            triggerAction: 'all',
+            minChars: 1,
+            anchor: '100%'
+        });
+        },
+
         createSearchWFS: function(local, ns, type, fields, opts, conversions) {
             var recordFields = [];
             var properties = "";
@@ -207,7 +231,8 @@ GeoNetwork.searchApp = function() {
                     reader: reader,
                     sortInfo: {field: opts.displayField,  direction:"ASC"}
                 });
-                searchTools.readWFS(geocat.geoserverUrl + "/wfs", ns, type, fields, null, {
+                
+                app.searchApp.readWFS( GeoNetwork.Settings.GeoserverUrl + "/wfs", ns, type, fields, null, {
                     success: function(response) {
                         ds.loadData(response.responseXML);
                         ds.add(new Record({}));
@@ -230,7 +255,8 @@ GeoNetwork.searchApp = function() {
                             if (opts.updateFilter) {
                                 filter = opts.updateFilter.call(search, filter);
                             }
-                            searchTools.readWFS(geocat.geoserverUrl + "/wfs", ns, type, fields, filter, {
+
+                            app.searchApp.readWFS( GeoNetwork.Settings.GeoserverUrl + "/wfs", ns, type, fields, filter, {
                                 success: function(response) {
                                     ds.loadData(response.responseXML);
                                     ds.add(new Record({}));
@@ -252,7 +278,7 @@ GeoNetwork.searchApp = function() {
                 anchor: '100%',
                 selectOnFocus: true
             });
-            var search = new Ext.ux.BoxSelect(opts);
+            var search = new Ext.ux.form.SuperBoxSelect(opts);
 
             var refreshTheContour = function(combo) {
                 var records = combo.getRecords();
@@ -283,6 +309,36 @@ GeoNetwork.searchApp = function() {
                     refreshTheContour(search);
                 }
             };
+        },
+
+        readWFS: function(url, ns, type, properties, filter, queryOpts) {
+        var queryPrefix = '<?xml version="1.0" ?>\n' +
+                          '<wfs:GetFeature service="WFS" version="1.0.0"\n' +
+                          '                xmlns:wfs="http://www.opengis.net/wfs"\n' +
+                          '                xmlns:ogc="http://www.opengis.net/ogc"\n' +
+                          '                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' +
+                          '                xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.0.0/WFS-basic.xsd">\n' +
+                          '  <wfs:Query typeName="' + ns + ':' + type + '">\n';
+        var queryPostfix = '  </wfs:Query>\n' +
+                           '</wfs:GetFeature>';
+        var property = '';
+        for (var i = 0; i < properties.length; ++i) {
+            property += '    <ogc:PropertyName>' + ns + ':' + properties[i] + '</ogc:PropertyName>\n';
         }
+
+        var filters = "";
+        if (filter) {
+            filters = new OpenLayers.Format.XML().write(
+                    new OpenLayers.Format.Filter().write(filter));
+        }
+
+        var opts = {
+            url: url,
+            data: queryPrefix + property + filters + queryPostfix
+        };
+        OpenLayers.Util.applyDefaults(opts, queryOpts);
+        return OpenLayers.Request.POST(opts);
+    },
     };
+
 };
