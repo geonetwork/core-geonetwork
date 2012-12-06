@@ -8,6 +8,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:geonet="http://www.fao.org/geonetwork" 
+  xmlns:util="xalan://org.fao.geonet.util.XslUtil"
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="geonet exslt">
 
@@ -49,8 +50,19 @@
     
     <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:onLine']/*">
       <relation type="onlinesrc">
+        
+        <!-- Compute title based on online source info-->
+        <xsl:variable name="title">
+          <!-- MyOcean set a uuidref when linking to another dataset's online source -->
+          <xsl:value-of select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') then gmd:name/gco:CharacterString else gmd:description/gco:CharacterString"/>
+          <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
+        </xsl:variable>
+        
         <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
-        <title><xsl:value-of select="gmd:name/gco:CharacterString"/>#<xsl:value-of select="gmd:protocol/*"/></title>
+        <title>
+          <xsl:value-of select="if ($title != '') then $title else gmd:linkage/gmd:URL"/>
+        </title>
         <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
       </relation>
     </xsl:for-each>
