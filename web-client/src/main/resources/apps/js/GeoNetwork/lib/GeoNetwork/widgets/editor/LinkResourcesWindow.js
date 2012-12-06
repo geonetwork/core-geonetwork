@@ -68,7 +68,27 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             fcats: [{
                 name: 'E__schema',
                 value: 'iso19110'
+            }],
+            sibling: [{
+                name: 'E__groupPublished',
+                value: ''
             }]
+        },
+        /*
+         * Configuration for sibling per profil and per initiative type
+         * Required for MyOCeann
+         */
+        hiddenParametersValues: {
+            'iso19139.myocean': {
+                document: [{
+                    id: 'E__groupPublished',
+                    value: 'MYOCEAN-DOCUMENTS'
+                }],
+                upstream: [{
+                    id: 'E__groupPublished',
+                    value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                }]
+            }
         }
     },
     processMap: {
@@ -117,7 +137,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             store: this.mdStore,
             triggerAction: function (scope) {
                 scope.doSearch();
-                //scope.search('linkedMetadataGrid', null, null, 1, true, this.mdStore, null);
             },
             scope: this
         });
@@ -127,6 +146,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
      */
     getHiddenFormInput: function (items) {
         var i;
+        
         Ext.each(this.hiddenParameters[this.type], function (item) {
             items.push({
                 xtype: 'textfield',
@@ -167,16 +187,17 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     scope: this
                 }
             });
-            associationType.getStore().on('add', function () {
+            
+            associationType.getStore().on('load', function () {
                 var code = associationType.getStore().getAt(0).get('code');
                 this.associationType = code;
                 associationType.setValue(code);
-                
                 // Hide the combo if only one value available
                 if (associationType.getStore().getCount() === 1) {
                     associationType.setVisible(false);
                 }
             }, this);
+            
             var initiativeType = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('initiativeType'),
                 store: this.getInitiativeTypeStore(),
@@ -187,6 +208,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     select: function (combo, record, index) {
                         this.initiativeType = combo.getValue();
+                        var allValues = this.hiddenParametersValues[this.metadataSchema];
+                        var paramsValue = allValues && allValues[this.initiativeType];
+//                        this.formPanel.getForm().reset();
+                        if (paramsValue) {
+                            this.formPanel.getForm().setValues(paramsValue);
+                            // Refresh search after form filter update
+                            this.doSearch();
+                        }
+                        
                     },
                     scope: this
                 }
@@ -195,6 +225,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 var code = initiativeType.getStore().getAt(0).get('code');
                 this.initiativeType = code;
                 initiativeType.setValue(code);
+                initiativeType.fireEvent('select', initiativeType);
             }, this);
             
             items.push([associationType, initiativeType]);
