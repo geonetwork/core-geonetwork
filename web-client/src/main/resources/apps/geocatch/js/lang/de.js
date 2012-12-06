@@ -20,21 +20,21 @@
  */
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
-GeoNetwork.GeoCatCh.Lang.en = {
-	'any': '- Any -',
-	'dataset': 'Data',
-	'basicgeodata': 'Basic Geodata',
-	'basicgeodata-federal': ' + Basic Geodata - federal',
-	'basicgeodata-cantonal': ' + Basic Geodata - cantonal',
-	'basicgeodata-communal': ' + Basic Geodata - communal',
-	'basicgeodata-other': ' + Basic Geodata - other',
-	'service': 'Services',
-	'service-OGC:WMS': ' + WMS Services',
-	'service-OGC:WFS': ' + WFS Services',
+GeoNetwork.GeoCatCh.Lang.de = {
+	'any': '- Alle -',
+	'dataset': 'Daten',
+	'basicgeodata': 'Geobasisdaten',
+	'basicgeodata-federal': ' + Geobasisdaten - Bund',
+	'basicgeodata-cantonal': ' + Geobasisdaten - Kanton',
+	'basicgeodata-communal': ' + Geobasisdaten - Gemeinde',
+	'basicgeodata-other': ' + Geobasisdaten - Andere',
+	'service': 'Dieste',
+	'service-OGC:WMS': ' + WMS',
+	'service-OGC:WFS': ' + WFS',
 
-	'withinGeo': 'Completely within or equal',
-	'intersectGeo': 'Intersects',
-	'containsGeo': 'Contains at least'
+	'withinGeo': 'vollständig innerhalb oder gleich',
+	'intersectGeo': 'schneidet',
+	'containsGeo': 'umfasst mindestens'
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);

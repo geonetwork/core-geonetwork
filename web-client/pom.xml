@@ -458,6 +458,11 @@
               <output>src/main/resources/apps/geocatch/js/App-mini.js</output>
               <includes>
                   <include>../../js/GeoNetwork-mini.js</include>
+
+                  <include>${project.build.directory}/classes/apps/geocatch/js/lang/en.js</include>
+                  <include>${project.build.directory}/classes/apps/geocatch/js/lang/de.js</include>
+                  <include>${project.build.directory}/classes/apps/geocatch/js/lang/fr.js</include>
+
                   <include>${project.build.directory}/classes/apps/geocatch/js/Settings.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/map/Settings.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/map/MapApp.js</include>

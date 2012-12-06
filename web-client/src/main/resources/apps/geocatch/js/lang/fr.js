@@ -20,21 +20,21 @@
  */
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
-GeoNetwork.GeoCatCh.Lang.en = {
-	'any': '- Any -',
-	'dataset': 'Data',
-	'basicgeodata': 'Basic Geodata',
-	'basicgeodata-federal': ' + Basic Geodata - federal',
-	'basicgeodata-cantonal': ' + Basic Geodata - cantonal',
-	'basicgeodata-communal': ' + Basic Geodata - communal',
-	'basicgeodata-other': ' + Basic Geodata - other',
+GeoNetwork.GeoCatCh.Lang.fr = {
+	'any': '- Tous -',
+	'dataset': 'Données',
+	'basicgeodata': 'Geodonnées de base',
+	'basicgeodata-federal': ' + Geodonnées de base - fédérales',
+	'basicgeodata-cantonal': ' + Geodonnées de base - cantonales',
+	'basicgeodata-communal': ' + Geodonnées de base - communales',
+	'basicgeodata-other': ' + Geodonnées de base - autres',
 	'service': 'Services',
-	'service-OGC:WMS': ' + WMS Services',
-	'service-OGC:WFS': ' + WFS Services',
+	'service-OGC:WMS': ' + Services WMS',
+	'service-OGC:WFS': ' + Services WFS',
 
-	'withinGeo': 'Completely within or equal',
-	'intersectGeo': 'Intersects',
-	'containsGeo': 'Contains at least'
+	'withinGeo': 'complètement à l\'intérieur ou égal',
+	'intersectGeo': 'au moins partiellement à l\'intérieur',
+	'containsGeo': 'comprend au moins'
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.GeoCatCh.Lang.fr);

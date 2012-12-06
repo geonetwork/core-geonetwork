@@ -164,6 +164,23 @@ GeoNetwork.searchApp = function() {
             });
         },
 
+
+
+        /** api:method[getSpatialRelationStore]
+         *  
+         *  Return an ArrayStore of spatial relations options
+         */
+        getSpatialRelationStore: function() {
+            return new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id', 'name'],
+                data: [
+                        [OpenLayers.Filter.Spatial.WITHIN, translate('withinGeo')],
+                        [OpenLayers.Filter.Spatial.INTERSECTS, translate('intersectGeo')],
+                        [OpenLayers.Filter.Spatial.CONTAINS, translate('containsGeo')]]
+            });
+        },
+        
         createSearchWFS: function(local, ns, type, fields, opts, conversions) {
             var recordFields = [];
             var properties = "";
