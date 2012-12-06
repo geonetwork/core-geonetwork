@@ -68,6 +68,7 @@ GeoNetwork.data.CodeListStore = function(config){
                 });
                 store.add(record);
             }
+            store.fireEvent('load');
         }
     });
     
