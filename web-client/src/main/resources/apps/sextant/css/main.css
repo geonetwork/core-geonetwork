@@ -573,6 +573,10 @@ hr {
 .x-btn-over .md-mn-pdf {
   background-position:-18px 0 !important;
 }
+.x-item-disabled .md-mn-pdf {
+  background-position:-54px 0 !important;
+}
+
 .ext-el-mask {
     background: none repeat-x scroll 50% 50% #000000;
     opacity: 0.5;
