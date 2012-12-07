@@ -11,7 +11,7 @@
 	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
 	<refine.titles js="true">Title</refine.titles>
-	<refine.keyword js="true">Struktur der räumlichen Daten</refine.keyword>
+	<refine.keyword js="true">Schlüsselworter</refine.keyword>
 	<refine.resolution js="true">Räumliche Auflösung</refine.resolution>
 	<refine.category js="true">Thematik</refine.category>
 	<refine.spatialRepresentation js="true">Struktur der räumlichen Daten</refine.spatialRepresentation>
