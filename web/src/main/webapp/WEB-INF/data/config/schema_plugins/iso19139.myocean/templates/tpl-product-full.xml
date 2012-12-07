@@ -1,22 +1,25 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gts="http://www.isotc211.org/2005/gts"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:gml="http://www.opengis.net/gml"
-    xmlns:gco="http://www.isotc211.org/2005/gco" 
-    xmlns:gmx="http://www.isotc211.org/2005/gmx"
+    xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:xlink="http://www.w3.org/1999/xlink">
     <gmd:fileIdentifier>
         <gco:CharacterString>myocean.eu/ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:language>
-        <gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
+        <gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode"
+            codeListValue="eng">eng</gmd:LanguageCode>
     </gmd:language>
     <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
-    </gmd:characterSet>   
+        <gmd:MD_CharacterSetCode codeListValue="utf8"
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+        />
+    </gmd:characterSet>
     <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="series"/>
+        <gmd:MD_ScopeCode
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+            codeListValue="series"/>
     </gmd:hierarchyLevel>
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
@@ -42,7 +45,9 @@
                 </gmd:CI_Contact>
             </gmd:contactInfo>
             <gmd:role>
-                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                <gmd:CI_RoleCode
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                    codeListValue="pointOfContact"/>
             </gmd:role>
         </gmd:CI_ResponsibleParty>
     </gmd:contact>
@@ -60,7 +65,8 @@
             <gmd:referenceSystemIdentifier>
                 <gmd:RS_Identifier>
                     <gmd:code>
-                        <gco:CharacterString>WGS84 / Simple Mercator (EPSG:41001)</gco:CharacterString>
+                        <gco:CharacterString>WGS84 / Simple Mercator
+                            (EPSG:41001)</gco:CharacterString>
                     </gmd:code>
                     <gmd:codeSpace>
                         <gco:CharacterString>EPSG</gco:CharacterString>
@@ -74,7 +80,8 @@
             <gmd:citation>
                 <gmd:CI_Citation>
                     <gmd:title>
-                        <gco:CharacterString>Template for myOcean product full description</gco:CharacterString>
+                        <gco:CharacterString>Template for myOcean product full
+                            description</gco:CharacterString>
                     </gmd:title>
                     <gmd:alternateTitle>
                         <gco:CharacterString>MYOCEAN_PRODUCT_NAME</gco:CharacterString>
@@ -85,7 +92,9 @@
                                 <gco:Date>2012-08-26</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
-                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                <gmd:CI_DateTypeCode
+                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                    codeListValue="creation"/>
                             </gmd:dateType>
                         </gmd:CI_Date>
                     </gmd:date>
@@ -105,15 +114,18 @@
                 </gmd:CI_Citation>
             </gmd:citation>
             <gmd:abstract>
-                <gco:CharacterString>Short text describing the product</gco:CharacterString>
+                <gco:CharacterString>Template elaborated based on myocean product full description
+                    requirements</gco:CharacterString>
             </gmd:abstract>
             <gmd:credit>
                 <gco:CharacterString>0</gco:CharacterString>
-            </gmd:credit>
+            </gmd:credit>           
             <gmd:resourceMaintenance>
                 <gmd:MD_MaintenanceInformation>
                     <gmd:maintenanceAndUpdateFrequency>
-                        <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="daily"/>
+                        <gmd:MD_MaintenanceFrequencyCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+                            codeListValue="daily"/>
                     </gmd:maintenanceAndUpdateFrequency>
                     <gmd:updateScopeDescription>
                         <gmd:MD_ScopeDescription>
@@ -127,28 +139,24 @@
                     </gmd:maintenanceNote>
                 </gmd:MD_MaintenanceInformation>
             </gmd:resourceMaintenance>
-            <gmd:graphicOverview>
-                <gmd:MD_BrowseGraphic>
-                    <gmd:fileName gco:nilReason="missing">
-                        <gco:CharacterString/>
-                    </gmd:fileName>
-                    <gmd:fileDescription>
-                        <gco:CharacterString>thumbnail</gco:CharacterString>
-                    </gmd:fileDescription>
-                </gmd:MD_BrowseGraphic>
-            </gmd:graphicOverview>
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords>
                     <gmd:keyword>
-                        <gmx:Anchor xlink:role="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures" xlink:href="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures">Oceanographic geographical features</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:role="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures"
+                            >Oceanographic geographical features</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="theme"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>GEMET - INSPIRE annex 3 spatial themes, version 1.0</gco:CharacterString>
+                                <gco:CharacterString>GEMET - INSPIRE annex 3 spatial themes, version
+                                    1.0</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -156,7 +164,9 @@
                                         <gco:DateTime>2008-06-01T00:00:00+02:00</gco:DateTime>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="publication"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -167,10 +177,14 @@
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords>
                     <gmd:keyword>
-                        <gmx:Anchor xlink:href="http://purl.org/myocean/ontology/product/database#numerical-model">numerical-model</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:href="http://purl.org/myocean/ontology/product/database#numerical-model"
+                            >numerical-model</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="discipline"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="discipline"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
@@ -183,7 +197,9 @@
                                         <gco:DateTime>2006-06-28T00:00:00+02:00</gco:DateTime>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="creation"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -194,15 +210,20 @@
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
                     <gmd:keyword>
-                        <gmx:Anchor xlink:href="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#angle_of_emergence">angle_of_emergence</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#angle_of_emergence"
+                            >angle_of_emergence</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="parametersGroup"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="parametersGroup"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>Seadatanet (P021) SeaDataNet Agreed Parameter Groups</gco:CharacterString>
+                                <gco:CharacterString>Seadatanet (P021) SeaDataNet Agreed Parameter
+                                    Groups</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -210,21 +231,28 @@
                                         <gco:Date>2008-06-28</gco:Date>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="publication"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
                         </gmd:CI_Citation>
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
-            </gmd:descriptiveKeywords>            
+            </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords>
                     <gmd:keyword>
-                        <gmx:Anchor xlink:role="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast" xlink:href="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast">forecast</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:role="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast"
+                            >forecast</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="temporal"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="temporal"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
@@ -237,7 +265,9 @@
                                         <gco:DateTime>2009-06-12T00:00:00+02:00</gco:DateTime>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="creation"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -248,10 +278,14 @@
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
                     <gmd:keyword>
-                        <gmx:Anchor xlink:href="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#coastal-marine-environment">coastal-marine-environment</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#coastal-marine-environment"
+                            >coastal-marine-environment</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="areaOfBenefit"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="areaOfBenefit"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
@@ -264,7 +298,9 @@
                                         <gco:Date>2009-09-09</gco:Date>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="publication"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -275,15 +311,20 @@
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
                     <gmd:keyword>
-                        <gmx:Anchor xlink:href="http://purl.org/myocean/ontology/vocabulary/#in-situ-observation">global-ocean</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/#in-situ-observation"
+                            >global-ocean</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="my-ocean-areas"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="my-ocean-areas"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>Reference Geographical Areas</gco:CharacterString>
+                                <gco:CharacterString>Reference Geographical
+                                    Areas</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -291,7 +332,9 @@
                                         <gco:Date>2009-09-09</gco:Date>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="publication"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -302,10 +345,14 @@
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords>
                     <gmd:keyword>
-                        <gmx:Anchor xlink:href="http://purl.org/myocean/ontology/vocabulary/processing-levels#0">Level 0</gmx:Anchor>
+                        <gmx:Anchor
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/processing-levels#0"
+                            >Level 0</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="processing-levels"/>
+                        <gmd:MD_KeywordTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                            codeListValue="processing-levels"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
@@ -318,7 +365,9 @@
                                         <gco:DateTime>2012-09-12T00:00:00+02:00</gco:DateTime>
                                     </gmd:date>
                                     <gmd:dateType>
-                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                        <gmd:CI_DateTypeCode
+                                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                            codeListValue="creation"/>
                                     </gmd:dateType>
                                 </gmd:CI_Date>
                             </gmd:date>
@@ -332,21 +381,7 @@
                         <gco:CharacterString>no conditions apply</gco:CharacterString>
                     </gmd:useLimitation>
                 </gmd:MD_Constraints>
-            </gmd:resourceConstraints>
-            <gmd:aggregationInfo>
-                <gmd:MD_AggregateInformation>
-                    <gmd:aggregateDataSetIdentifier>
-                        <gmd:MD_Identifier>
-                            <gmd:code gco:nilReason="missing">
-                                <gco:CharacterString/>
-                            </gmd:code>
-                        </gmd:MD_Identifier>
-                    </gmd:aggregateDataSetIdentifier>
-                    <gmd:associationType>
-                        <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode" codeListValue="largerWorkCitation"/>
-                    </gmd:associationType>
-                </gmd:MD_AggregateInformation>
-            </gmd:aggregationInfo>
+            </gmd:resourceConstraints>            
             <gmd:spatialResolution>
                 <gmd:MD_Resolution>
                     <gmd:distance>
@@ -366,7 +401,7 @@
                         <gco:CharacterString>bounding box</gco:CharacterString>
                     </gmd:description>
                     <gmd:geographicElement>
-                        <gmd:EX_GeographicBoundingBox>                            
+                        <gmd:EX_GeographicBoundingBox>
                             <gmd:westBoundLongitude>
                                 <gco:Decimal>-180.0</gco:Decimal>
                             </gmd:westBoundLongitude>
@@ -403,25 +438,7 @@
                         </gmd:EX_VerticalExtent>
                     </gmd:verticalElement>
                 </gmd:EX_Extent>
-            </gmd:extent>
-            <gmd:extent>
-                <gmd:EX_Extent>
-                    <gmd:description>
-                        <gco:CharacterString>relevant application area</gco:CharacterString>
-                    </gmd:description>
-                    <gmd:geographicElement>
-                        <gmd:EX_GeographicDescription>
-                            <gmd:geographicIdentifier>
-                                <gmd:MD_Identifier>
-                                    <gmd:code>
-                                        <gmx:Anchor xlink:role="http://purl.org/myocean/ontology/vocabulary/my-ocean-areas#global" xlink:href="http://purl.org/myocean/ontology/vocabulary/my-ocean-areas#global">global</gmx:Anchor>
-                                    </gmd:code>
-                                </gmd:MD_Identifier>
-                            </gmd:geographicIdentifier>
-                        </gmd:EX_GeographicDescription>
-                    </gmd:geographicElement>
-                </gmd:EX_Extent>
-            </gmd:extent>
+            </gmd:extent>            
             <gmd:supplementalInformation>
                 <gco:CharacterString>temporal resolution: daily mean</gco:CharacterString>
             </gmd:supplementalInformation>
@@ -433,7 +450,9 @@
                 <gco:RecordType>observation</gco:RecordType>
             </gmd:attributeDescription>
             <gmd:contentType>
-                <gmd:MD_CoverageContentTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CoverageContentTypeCode" codeListValue="physicalMeasurement"/>
+                <gmd:MD_CoverageContentTypeCode
+                    codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CoverageContentTypeCode"
+                    codeListValue="physicalMeasurement"/>
             </gmd:contentType>
             <gmd:dimension>
                 <gmd:MD_RangeDimension>
@@ -457,120 +476,12 @@
                 <gco:Boolean>false</gco:Boolean>
             </gmd:includedWithDataset>
             <gmd:featureTypes>
-                <gco:LocalName></gco:LocalName>
+                <gco:LocalName/>
             </gmd:featureTypes>
-            <gmd:featureCatalogueCitation>
-                <gmd:CI_Citation>
-                    <gmd:title>
-                        <gmx:Anchor xlink:href="http://wwww.ifremer.fr/sextant/tititoto">Climate Science Modeling Language Feature Types</gmx:Anchor>
-                    </gmd:title>
-                    <gmd:date>
-                        <gmd:CI_Date>
-                            <gmd:date>
-                                <gco:DateTime>2008-03-03T00:00:00+01:00</gco:DateTime>
-                            </gmd:date>
-                            <gmd:dateType>
-                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
-                            </gmd:dateType>
-                        </gmd:CI_Date>
-                    </gmd:date>
-                </gmd:CI_Citation>
-            </gmd:featureCatalogueCitation>
-        </gmd:MD_FeatureCatalogueDescription>
+            <gmd:featureCatalogueCitation/>
+        </gmd:MD_FeatureCatalogueDescription>        
     </gmd:contentInfo>
     <gmd:distributionInfo>
-        <gmd:MD_Distribution>
-            <gmd:distributor uuidref="distribution service ID">
-                <gmd:MD_Distributor>
-                    <gmd:distributorContact>
-                        <gmd:CI_ResponsibleParty>
-                            <gmd:organisationName>
-                                <gmx:Anchor xlink:href="http://purl.org/cls/atoll/ontology/vocabulary/production-unit#glo-mercator">DISTRIBUTOR_ORGANISATION_NAME</gmx:Anchor>
-                            </gmd:organisationName>
-                            <gmd:contactInfo>
-                                <gmd:CI_Contact>
-                                    <gmd:phone>
-                                        <gmd:CI_Telephone>
-                                            <gmd:voice>
-                                                <gco:CharacterString>02 98 22 44 92</gco:CharacterString>
-                                            </gmd:voice>
-                                            <gmd:facsimile>
-                                                <gco:CharacterString>02 98 22 44 92</gco:CharacterString>
-                                            </gmd:facsimile>
-                                        </gmd:CI_Telephone>
-                                    </gmd:phone>
-                                    <gmd:address>
-                                        <gmd:CI_Address>
-                                            <gmd:electronicMailAddress>
-                                                <gco:CharacterString>distributor@myocean.eu</gco:CharacterString>
-                                            </gmd:electronicMailAddress>
-                                        </gmd:CI_Address>
-                                    </gmd:address>
-                                    <gmd:hoursOfService>
-                                        <gco:CharacterString>9:30 – 16:30 UTC, working days</gco:CharacterString>
-                                    </gmd:hoursOfService>
-                                    <gmd:contactInstructions>
-                                        <gco:CharacterString>local service desk ; automatic notice accepted : yes</gco:CharacterString>
-                                    </gmd:contactInstructions>
-                                </gmd:CI_Contact>
-                            </gmd:contactInfo>
-                            <gmd:role>
-                                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="distributor"/>
-                            </gmd:role>
-                        </gmd:CI_ResponsibleParty>
-                    </gmd:distributorContact>
-                    <gmd:distributionOrderProcess>
-                        <gmd:MD_StandardOrderProcess>
-                            <gmd:fees>
-                                <gco:CharacterString>free</gco:CharacterString>
-                            </gmd:fees>
-                        </gmd:MD_StandardOrderProcess>
-                    </gmd:distributionOrderProcess>
-                    <gmd:distributorFormat>
-                        <gmd:MD_Format>
-                            <gmd:name gco:nilReason="missing">
-                                <gco:CharacterString/>
-                            </gmd:name>
-                            <gmd:version gco:nilReason="missing">
-                                <gco:CharacterString/>
-                            </gmd:version>
-                        </gmd:MD_Format>
-                    </gmd:distributorFormat>
-                    <gmd:distributorTransferOptions>
-                        <gmd:MD_DigitalTransferOptions>
-                            <gmd:unitsOfDistribution>
-                                <gco:CharacterString>Overview of the service as in gmd:abstract of the harvested iso19119 metadata</gco:CharacterString>
-                            </gmd:unitsOfDistribution>
-                            <gmd:onLine uuidref="dataset ID">
-                                <gmd:CI_OnlineResource>
-                                    <gmd:linkage>
-                                        <gmd:URL>Dataset access URL</gmd:URL>
-                                    </gmd:linkage>
-                                    <gmd:protocol>
-                                        <gmx:Anchor>Service type</gmx:Anchor>
-                                    </gmd:protocol>
-                                    <gmd:name>
-                                        <gco:CharacterString>Layers</gco:CharacterString>
-                                    </gmd:name>
-                                    <gmd:description>
-                                        <gco:CharacterString>Dataset description</gco:CharacterString>
-                                    </gmd:description>
-                                    <gmd:function>
-                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
-                                    </gmd:function>
-                                </gmd:CI_OnlineResource>
-                            </gmd:onLine>
-                        </gmd:MD_DigitalTransferOptions>
-                    </gmd:distributorTransferOptions>
-                </gmd:MD_Distributor>
-            </gmd:distributor>
-        </gmd:MD_Distribution>
+        <gmd:MD_Distribution/>                   
     </gmd:distributionInfo>
-    <gmd:metadataConstraints>
-        <gmd:MD_Constraints>
-            <gmd:useLimitation>
-                <gco:CharacterString>external</gco:CharacterString>
-            </gmd:useLimitation>
-        </gmd:MD_Constraints>
-    </gmd:metadataConstraints>
 </gmd:MD_Metadata>
