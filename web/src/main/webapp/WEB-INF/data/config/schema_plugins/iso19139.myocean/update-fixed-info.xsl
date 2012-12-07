@@ -372,10 +372,10 @@
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<gco:CharacterString>
-				<!--<xsl:value-of select="myocean:buildIdentifier(substring-after(ancestor::node()[name()='gmd:identificationInfo']/*/
-					gmd:pointOfContact[1]/gmd:CI_ResponsibleParty/gmd:contactInfo/
-					gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString[1]
-					, '@'), /root/env/id)"/> FIXME-->
+					<xsl:value-of select="myocean:buildIdentifier(substring-after(ancestor::node()[name(.) = 'gmd:identificationInfo']/*/
+						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:contactInfo/
+						gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+						, '@'), /root/env/id)"/>
 			</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
