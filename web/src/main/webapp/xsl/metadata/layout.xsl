@@ -2199,9 +2199,7 @@
       style="width:{/root/gui/config/map/metadata/width}; height:{/root/gui/config/map/metadata/height};"
       edit="{$edit}" target_polygon="{$targetPolygon}" watched_bbox="{$watchedBbox}"
       elt_ref="{$eltRef}" desc_ref="{$descRef}" mode="{$mode}">
-      <div style="display:none;" id="coords_{$eltRef}">
-        <xsl:value-of select="$coords"/>
-      </div>
+      <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="normalize-space($coords)"/></div>
     </div>
   </xsl:template>
   
