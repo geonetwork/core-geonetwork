@@ -354,7 +354,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }],
             listeners: {
                 render: function () {
-                    this.toMultiselect.view.on('selectionchange', function () {
+                    this.on('rowdblclick', function () {
+                        self.generateXML();
+                    });
+                    this.on('changeend', function () {
                         self.generateXML();
                     });
                     this.toMultiselect.view.on('dropend', function () {

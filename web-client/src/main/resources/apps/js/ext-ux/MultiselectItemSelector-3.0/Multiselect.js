@@ -260,6 +260,7 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 		Ext.ux.ItemSelector.superclass.initComponent.call(this);
 		this.addEvents({
 			'rowdblclick' : true,
+			'changeend' : true,
 			'change' : true
 		});			
 	},
@@ -384,6 +385,8 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 		var hiddenTag={tag: "input", type: "hidden", value: "", name:this.name};
 		this.hiddenField = this.el.createChild(hiddenTag);
 		this.valueChanged(this.toStore);
+		
+		this.fireEvent('changeend', this);
 	},
 	
 	initValue:Ext.emptyFn,
@@ -499,6 +502,8 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 		if(this.toSortField)this.toMultiselect.store.sort(this.toSortField, this.toSortDir);
 		if(this.toAllowDup)this.fromMultiselect.view.select(selectionsArray);
 		else this.toMultiselect.view.select(selectionsArray);
+		
+		this.fireEvent('changeend', this);
 	},
 	
 	toFrom : function() {
@@ -523,6 +528,8 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 		this.toMultiselect.view.refresh();
 		if(this.fromSortField)this.fromMultiselect.store.sort(this.fromSortField, this.fromSortDir);
 		this.fromMultiselect.view.select(selectionsArray);
+		
+        this.fireEvent('changeend', this);
 	},
 	
 	valueChanged: function(store) {
@@ -552,6 +559,8 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 			this.fromMultiselect.store.sort(this.displayField,'ASC');
 		}
 		this.valueChanged(this.toMultiselect.store);
+		
+		this.fireEvent('changeend', this);
 	}
 });
 
