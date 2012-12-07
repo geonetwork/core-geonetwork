@@ -53,8 +53,11 @@
         
         <!-- Compute title based on online source info-->
         <xsl:variable name="title">
-          <!-- MyOcean set a uuidref when linking to another dataset's online source -->
-          <xsl:value-of select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+          <!-- MyOcean set a uuidref when linking to another dataset's online source 
+          
+          identifiant / layer / protocol-->
+          <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+          <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
           <xsl:value-of select="if (gmd:name/gco:CharacterString != '') then gmd:name/gco:CharacterString else gmd:description/gco:CharacterString"/>
           <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
         </xsl:variable>
