@@ -57,6 +57,9 @@ attached it to the metadata for data.
 								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
 							<xsl:copy-of
 								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
+							
+							<xsl:apply-templates mode="onlinecopy" select="//extra/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+								gmd:citedResponsibleParty"/>
 							<gmd:transferOptions>
 								<gmd:MD_DigitalTransferOptions>
 									<xsl:copy-of
@@ -132,6 +135,26 @@ attached it to the metadata for data.
 	</xsl:template>
     
     
+    <!-- Copy dataset distributor -->
+	<xsl:template match="gmd:citedResponsibleParty" mode="onlinecopy">
+		<xsl:variable name="email" select="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
+			gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"></xsl:variable>
+		
+		<xsl:if test="count(/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+			gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty
+			[gmd:contactInfo/gmd:CI_Contact/
+			gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email]) = 0">
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact>
+						<xsl:copy-of select="*"/>
+					</gmd:distributorContact>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+		</xsl:if>
+	</xsl:template>
+	
+	
     <!-- MOTU specific (https://forge.ifremer.fr/mantis/view.php?id=14241) -->
     <xsl:template match="gmd:onLine[gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString='MYO:MOTU-SUB']" mode="onlinecopy" priority="2">
         <xsl:copy>
