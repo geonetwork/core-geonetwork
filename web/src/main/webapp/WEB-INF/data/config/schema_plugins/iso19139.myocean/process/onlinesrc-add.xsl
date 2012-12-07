@@ -143,7 +143,7 @@ attached it to the metadata for data.
                     <gmd:URL>
                         <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                             '&amp;action=productdownloadhome&amp;service=http%3A%2F%2Fpurl.org%2Fmyocean%2Fontology%2Fservice%2Fdatabase%23', 
-                            ancestor::node()[name(.) = 'gmd:MD_Metadata']/gmd:identifier/*,
+                             /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString,
                             '-TDS')"/>
                     </gmd:URL>
                 </gmd:linkage>
@@ -162,7 +162,7 @@ attached it to the metadata for data.
                     <gmd:URL>
                         <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                             '&amp;action=productdownloadhome&amp;service=http%3A%2F%2Fpurl.org%2Fmyocean%2Fontology%2Fservice%2Fdatabase%23', 
-                            ancestor::node()[name(.) = 'gmd:MD_Metadata']/gmd:identifier/*,
+                            /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString,
                             '-FILE')"/>
                     </gmd:URL>
                 </gmd:linkage>
