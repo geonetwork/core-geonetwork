@@ -987,6 +987,8 @@ span.thumbnail {
     font-size: small;
     font-style: italic;
     color: #2a628f;
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 
 div.relatedElements {
