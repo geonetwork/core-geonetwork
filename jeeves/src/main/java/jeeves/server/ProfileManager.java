@@ -300,15 +300,16 @@ public class ProfileManager
 		if(serviceContext == null) return true;
 		ServletContext servletContext = serviceContext.getServlet().getServletContext();
 		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		if(springContext == null) return true;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(springContext == null || context == null) return true;
+		
 		Map<String, AbstractSecurityInterceptor> evals = springContext.getBeansOfType(AbstractSecurityInterceptor.class);
+		Authentication authentication = context.getAuthentication();
+		
+		FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
 		for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
-	    	SecurityContext context = SecurityContextHolder.getContext();
 	    	if(securityInterceptor == null || context == null) return true;
 	    	
-			Authentication authentication = context.getAuthentication();
-
-	        FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
 
 	        Collection<ConfigAttribute> attrs = securityInterceptor.obtainSecurityMetadataSource().getAttributes(fi);
 
@@ -324,11 +325,13 @@ public class ProfileManager
 	            securityInterceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
 	            return true;
 	        } catch (AccessDeniedException unauthorized) {
-	            if (Log.isDebugEnabled(Log.REQUEST)) {
-	                Log.debug(Log.REQUEST, fi.toString() + " denied for " + authentication.toString(), unauthorized);
-	            }
+	        	// ignore
 	        }
 		}
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.info(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
+        }
+
 		return false;
 	}
 
