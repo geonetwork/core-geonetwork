@@ -195,8 +195,9 @@
 
       <xsl:if test="$metadata/geonet:info/id != ''">
         <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
-          border-top-color="{$background-color}" border-right-color="{$background-color}"
-          border-left-color="{$background-color}">
+          border-top-color="#2e456b" border-right-color="{$background-color}"
+          border-left-color="{$background-color}" border-top-width="1pt"
+          page-break-inside="avoid">
           <fo:table-cell padding-left="4pt" padding-right="4pt" padding-top="4pt" margin-top="4pt">
             <fo:block>
               <!--<fo:external-graphic content-width="35pt">
@@ -215,7 +216,9 @@
         </fo:table-row>
         <fo:table-row border-bottom-style="solid" border-right-style="solid"
           border-left-style="solid" border-bottom-color="{$background-color}"
-          border-right-color="{$background-color}" border-left-color="{$background-color}">
+          border-right-color="{$background-color}" border-left-color="{$background-color}" 
+          keep-with-previous.within-page="always"
+          page-break-inside="avoid">
           <fo:table-cell number-columns-spanned="2">
             <fo:block margin-left="2pt" margin-right="4pt" margin-top="4pt" margin-bottom="4pt">
               <fo:table>
