@@ -193,7 +193,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	var adminMenu = Ext.DomQuery.jsSelect('div.md-action-menu', lis[i]);
         	
         	// Hide admin button (and sep)if not connected
-        	if(!isAdmin || records[i].get('isharvested') == 'y') {
+        	if(!isAdmin || records[i].get('isharvested') == 'y' || records[i].get('edit') === 'false') {
         		Ext.get(adminMenu).addClass('mdHiddenBtn');
         		Ext.get(adminMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}

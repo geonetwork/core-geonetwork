@@ -201,7 +201,7 @@ table, tbody, tr, td, th {
 }
 .search_tree_noicon {
 	display : none;
-	background-image:url('ext/resources/images/default/s.gif') !important;
+	background-image:url('../../js/ext/resources/images/default/s.gif') !important;
 }
 .search_label .cat-root-node{
 	float: none !important;
