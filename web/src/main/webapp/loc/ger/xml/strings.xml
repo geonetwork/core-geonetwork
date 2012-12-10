@@ -1636,4 +1636,9 @@ Ihr geocat.ch-Team</msg>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	
+	
+    <advancedOptions.show>Erweiterte Suche</advancedOptions.show>
+    <advancedOptions.hide>Einfache Suche</advancedOptions.hide>
 </strings>

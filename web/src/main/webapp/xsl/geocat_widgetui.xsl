@@ -199,7 +199,7 @@
                             </ul>
                         </nav>
 
-                        <div id="login-form">
+                        <form id="login-form" onsubmit="return false_();">
                             <div id="login_div">
                                 <label>
                                     <xsl:value-of select="/root/gui/strings/username" />:
@@ -216,7 +216,7 @@
                                     </xsl:attribute>
                                 </input>
                             </div>
-                        </div>
+                        </form>
                         <div style="clear: both; display: hidden"></div>
 
                     </div>
@@ -231,21 +231,22 @@
                     
                      <div id="simple-search-options-content"></div>
 
+                    <div id="advanced-search-options" style="display:none;">
+                        <div id="advanced-search-options-content"></div>
+                    </div>
+                    
                     <input type="button"
                         onclick="Ext.getCmp('advanced-search-options-content-form').fireEvent('search');"
                         id="search-submit" class="form-submit">
                         <xsl:attribute name="value"><xsl:value-of
                             select="/root/gui/strings/search" /></xsl:attribute>
                     </input>
-                    <div id="show-advanced" onclick="showAdvancedSearch()">
+                    <a id="show-advanced" href="javascript:showAdvancedSearch()">
                         <xsl:value-of select="/root/gui/strings/advancedOptions.show" />
-                    </div>
-                    <div id="advanced-search-options" style="display:none;">
-                        <div id="hide-advanced" onclick="hideAdvancedSearch()">
-                            <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
-                        </div>
-                        <div id="advanced-search-options-content"></div>
-                    </div>
+                    </a>
+                    <a id="hide-advanced" href="javascript:hideAdvancedSearch()" style="display:none">
+                        <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
+                    </a>
                 </fieldset>
 
             </div>
@@ -253,7 +254,6 @@
                 <div id="result-panel"></div>
             </div>
              <div id="search-filter">
-                Search filter
             </div>
 
             <xsl:choose>
@@ -321,6 +321,11 @@
                     <script type="text/javascript">
                         <xsl:attribute name="src"><xsl:value-of
                                 select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork.js</xsl:attribute>
+                    </script>
+                    
+                    <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</xsl:attribute>
                     </script>
 
                     <script type="text/javascript">

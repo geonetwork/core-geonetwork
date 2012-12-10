@@ -55,8 +55,8 @@ function showBrowse() {
     show("latest-metadata");
     show("popular-metadata");
 
-    app.breadcrumb.setPrevious([]);
-    app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[0]);
+    // app.breadcrumb.setPrevious([]);
+    // app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[0]);
 }
 
 function hideBrowse() {
@@ -88,10 +88,10 @@ function showBigMap() {
 
     Ext.getCmp('big-map').doLayout();
 
-
     // Printpanel can be only initiazed once the map is rendered
     // Trigger the print panel init only when the big map is displayed
-    // the first time. It will check if the print panel is already initiliazed or not
+    // the first time. It will check if the print panel is already initiliazed
+    // or not
     app.mapApp.initPrint();
 }
 
@@ -109,12 +109,14 @@ function showSearch() {
     hideBigMap();
 
     show("secondary-aside");
-    Ext.getCmp('resultsPanel').show();
-    Ext.get('resultsPanel').show();
+    if (Ext.getCmp('resultsPanel')) {
+        Ext.getCmp('resultsPanel').show();
+    }
+    show('resultsPanel');
     show("main-aside");
 
-    app.breadcrumb.setDefaultPrevious(1);
-    app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[1]);
+    // app.breadcrumb.setDefaultPrevious(1);
+    // app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[1]);
 }
 
 function hideSearch() {
@@ -131,7 +133,7 @@ function showMetadata() {
 
     show("metadata-info");
 
-    app.breadcrumb.setDefaultPrevious(2);
+    // app.breadcrumb.setDefaultPrevious(2);
 }
 
 function hideMetadata() {
@@ -150,21 +152,21 @@ function resizeMap() {
             child = Ext.get(child);
             var classN = child.dom.className;
             if (classN
-                && classN.indexOf
-                && (classN.indexOf("tbar") < 0 && classN
-                .indexOf("x-panel-header") < 0)) {
+                    && classN.indexOf
+                    && (classN.indexOf("tbar") < 0 && classN
+                            .indexOf("x-panel-header") < 0)) {
                 child.setHeight("100%");
                 if (child.id
-                    && (child.id.indexOf("ViewPort") < 0 && child.id
-                    .indexOf("layerManager") < 0)) {
+                        && (child.id.indexOf("ViewPort") < 0 && child.id
+                                .indexOf("layerManager") < 0)) {
                     setChildrens(child.dom.children);
                 }
             }
         });
     };
     var height = Ext.getBody().getHeight() - Ext.get("footer").getHeight()
-        - Ext.get("header").getHeight()
-        - Ext.get("search-form").getHeight();
+            - Ext.get("header").getHeight()
+            - Ext.get("search-form").getHeight();
 
     setChildrens(div);
     div.setHeight(height);
@@ -173,10 +175,9 @@ function resizeMap() {
 }
 
 function showAdvancedSearch() {
-    app.hideBigMap();
     hide('show-advanced');
-    show('legend-search');
-    Ext.get("search-form-fieldset").dom.style.border = "1px solid #fff";
+    show('hide-advanced');
+    hide("simple-search-options-content");
     show('advanced-search-options');
     if (Ext.getCmp('advanced-search-options-content-form')) {
         Ext.getCmp('advanced-search-options-content-form').doLayout();
@@ -186,25 +187,26 @@ function showAdvancedSearch() {
 function hideAdvancedSearch() {
     hide('advanced-search-options');
     hide('legend-search');
-    Ext.get("search-form-fieldset").dom.style.border = "none";
     show('show-advanced');
+    hide('hide-advanced');
+    show("simple-search-options-content");
 }
 function toggleMoreAdvancedOptions() {
 
     if (Ext.get("where_adv_search").isDisplayed()
-        && Ext.get("what_adv_search").isDisplayed()
-        && Ext.get("when_adv_search").isDisplayed()
-        && Ext.get("inspire_adv_search").isDisplayed()) {
+            && Ext.get("what_adv_search").isDisplayed()
+            && Ext.get("when_adv_search").isDisplayed()
+            && Ext.get("inspire_adv_search").isDisplayed()) {
         hide('where_adv_search');
         hide('what_adv_search');
         hide('when_adv_search');
         hide('inspire_adv_search');
         if (Ext.isIE) {
             Ext.get("show_more_search_options").dom.innerText = OpenLayers
-                .i18n('Show More');
+                    .i18n('Show More');
         } else {
             Ext.get("show_more_search_options").dom.textContent = OpenLayers
-                .i18n('Show More');
+                    .i18n('Show More');
         }
     } else {
         show('where_adv_search');
@@ -213,24 +215,22 @@ function toggleMoreAdvancedOptions() {
         show('inspire_adv_search');
         if (Ext.isIE) {
             Ext.get("show_more_search_options").dom.innerText = OpenLayers
-                .i18n('Show Less');
+                    .i18n('Show Less');
         } else {
             Ext.get("show_more_search_options").dom.textContent = OpenLayers
-                .i18n('Show Less');
+                    .i18n('Show Less');
         }
     }
 }
 
-
 /**
  * Return a URL to metadata view page. TODO what is the URL for the NGR2 GUI for
  * this ?
- *
+ * 
  * @param uuid
  * @return {String}
  */
 function metadataViewURL(uuid) {
     return window.location.protocol + '//' + window.location.host
-        + Env.locService + '/main.home?searchuuid=' + uuid;
+            + Env.locService + '/main.home?searchuuid=' + uuid;
 }
-
