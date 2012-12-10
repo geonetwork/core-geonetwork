@@ -20,7 +20,7 @@ Ext.onReady(function() {
 			window.location.href.indexOf('/metadata.formatter')) 
 		|| GeoNetwork.Util.defaultLocale;
 	
-	GeoNetwork.Util.setLang(lang, '../../apps');
+	GeoNetwork.Util.setLang(lang, '../../apps/js');
 	
 	catalogue = new GeoNetwork.Catalogue({
 		lang : lang,
