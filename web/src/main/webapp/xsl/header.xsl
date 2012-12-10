@@ -3,12 +3,14 @@
 
 	<xsl:include href="geo/utils.xsl"/>
 
+	<xsl:template mode="http-equiv" match="*">
+			<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+	</xsl:template>
 	<!--
 	main html header
 	-->
 	<xsl:template name="header">
-		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-
+		<xsl:apply-templates mode="http-equiv"/>
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
 		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
