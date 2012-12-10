@@ -56,7 +56,7 @@ public class CovertLocalisedCharstringTest
 
         langMap = findLocalizedString(isoData);
 
-        assertEquals(1, langMap.size());
+        assertEquals(5, langMap.size());
         assertEquals(1, isoData.getChildren().size());
         assertEquals("http://camptocamp.com/main", langMap.get("#EN"));
         
