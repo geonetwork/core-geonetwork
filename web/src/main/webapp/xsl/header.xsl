@@ -84,6 +84,6 @@
 		function (ie. translate('key');).
 	-->
 	<xsl:template match="*" mode="js-translations">
-		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"<xsl:if test="position()!=last()">,</xsl:if>
+		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(replace(translate(.,'&quot;', '`'), '[\n\r]+', ' '))"/>"<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

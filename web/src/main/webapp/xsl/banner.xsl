@@ -64,18 +64,18 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <a class="banner" href="../ger/geocat"><xsl:value-of select="/root/gui/strings/ger"/></a>
-                            <!--<xsl:choose><xsl:when test="not(/root/gui/language='ita')">
+                            <xsl:choose><xsl:when test="not(/root/gui/language='ita')">
                                 |
-                            </xsl:when></xsl:choose>-->
+                            </xsl:when></xsl:choose>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <!--<xsl:choose>
+                    <xsl:choose>
                         <xsl:when test="/root/gui/language='ita'">
                         </xsl:when>
                         <xsl:otherwise>
-                            <a class="banner" href="../ita/geocat"><xsl:value-of select="/root/gui/strings/it"/></a>
+                            <a class="banner" href="../ita/geocat"><xsl:value-of select="/root/gui/strings/ita"/></a>
                         </xsl:otherwise>
-                    </xsl:choose>-->
+                    </xsl:choose>
                 </td>
             </tr>
 

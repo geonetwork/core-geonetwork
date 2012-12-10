@@ -244,7 +244,7 @@
 		</entry>
 		<entry>
 			<code>editor</code>
-			<label>Redattore/label>
+			<label>Redattore</label>
 			<description></description>
 		</entry>
 		<entry>
@@ -1671,9 +1671,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>Pianificazione del
-				territorio e catasto
-			</label>
+			<label>Pianificazione del territorio e catasto</label>
 			<description>Pianificazione del territorio
 				Esempi: carte dell’uso del
 				suolo, carte di zonizzazione,
@@ -1730,9 +1728,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Reti, infrastrutture e
-				servizi di comunicazione
-			</label>
+			<label>Reti, infrastrutture e servizi di comunicazione</label>
 			<description>Energia, acqua e sistemi dei
 				rifiuti, infrastrutture e servizi
 				di comunicazione

@@ -26,6 +26,7 @@
 			
 			if(userLang.match("^en") == "en") userLang = "eng"
 			else if(userLang.match("^fr") == "fr") userLang = "fre"
+			else if(userLang.match("^it") == "it") userLang = "ita"
 			else userLang = "ger"
 	
 			var search = window.location.search;
