@@ -888,6 +888,14 @@ public final class XslUtil {
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return Geonet.DEFAULT_LANGUAGE;
     	}
+    	
+    	if(iso3LangCode.equalsIgnoreCase("FRA")) {
+    		return "FR";
+    	}
+    	
+    	if(iso3LangCode.equalsIgnoreCase("DEU")) {
+    		return "DE";
+    	}
         String iso2LangCode = "";
 
         try {
