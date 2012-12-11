@@ -4,8 +4,36 @@
 	<services package="org.fao.geonet">
 
 
-        <service name="geocat">
+        <service name="geocatui">
             <output sheet="geocat_widgetui.xsl">
+                <call name="groups" class=".guiservices.groups.GetAll" />
+                                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+                    <param name="maxItems" value="10" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+                <call name="featured" class=".guiservices.metadata.GetRandom">
+                    <param name="maxItems" value="1" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+                <call name="mostPopular" class=".guiservices.metadata.GetMostPopular">
+                    <param name="maxItems" value="5" />
+                    <param name="timeBetweenUpdates" value="10" />
+                </call>
+                <call name="formats" class="jeeves.services.db.Select">
+                        <param name="db" value="main-db" />
+                        <param name="query" value="select name,version from formats" />
+                </call>
+                <call name="usergroups" class="jeeves.services.db.Select">
+                        <param name="db" value="main-db" />
+                        <param name="query" value="select groupId,userId from usergroups" />
+                </call>
+                <call name="sources"       class =".guiservices.util.Sources"/>
+                <!--<xml name="countries" file="xml/countries.xml" />                -->
+            </output>
+        </service>
+
+        <service name="geocat">
+            <output sheet="geocat.xsl">
             	<call name="groups" class=".guiservices.groups.GetAll" />
 				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
                     <param name="maxItems" value="10" />
