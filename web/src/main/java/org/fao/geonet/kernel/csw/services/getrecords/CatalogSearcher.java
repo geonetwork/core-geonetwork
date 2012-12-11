@@ -41,18 +41,17 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queries.ChainedFilter;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -71,7 +70,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
@@ -85,15 +83,15 @@ import org.jdom.Element;
 public class CatalogSearcher {
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
-	private final FieldSelector _selector;
-	private final FieldSelector _uuidselector;
+	private final Set<String> _selector;
+	private final Set<String> _uuidselector;
 	private Query         _query;
 	private CachingWrapperFilter _filter;
 	private Sort          _sort;
 	private String        _lang;
 	private long          _searchToken;
 	
-	public CatalogSearcher(LuceneConfig luceneConfig, FieldSelector selector, FieldSelector uuidselector) {
+	public CatalogSearcher(LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_selector = selector;
@@ -567,8 +565,9 @@ public class CatalogSearcher {
      * @throws ParseException
      */
     public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint) throws ParseException {
-
-        Query q = new QueryParser(Geonet.LUCENE_VERSION, "title", SearchManager.getAnalyzer()).parse(cswServiceSpecificConstraint);
+        String[] fields = {"title"};
+        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+        Query q = parser.parse(cswServiceSpecificConstraint);
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(

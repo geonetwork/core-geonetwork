@@ -17,10 +17,12 @@ import jeeves.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MergeScheduler;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
@@ -77,7 +79,8 @@ public class LuceneIndexLanguageTracker {
         double maxCachedMB = luceneConfig.getRAMBufferSize();
         NRTCachingDirectory cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD, maxCachedMB);
         IndexWriterConfig conf = new IndexWriterConfig(Geonet.LUCENE_VERSION, SearchManager.getAnalyzer(language, false));
-        conf.setMergeScheduler(cachedFSDir.getMergeScheduler());
+        ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
+        conf.setMergeScheduler(mergeScheduler);
         IndexWriter writer = new IndexWriter(cachedFSDir, conf);
         TrackingIndexWriter trackingIndexWriter = new TrackingIndexWriter(writer);
         GeonetworkNRTManager nrtManager = new GeonetworkNRTManager(luceneConfig, language, trackingIndexWriter, null, true, taxonomyIndexTracker);
@@ -125,7 +128,7 @@ public class LuceneIndexLanguageTracker {
         
         if(tokenExpired) {
             finalVersion = version.getAndIncrement();
-            taxonomyIndexTracker.refreshReader();
+            taxonomyIndexTracker.maybeRefresh();
             for (Map.Entry<Pair<Long, IndexSearcher>, GeonetworkNRTManager> entry: searchers.entrySet()) {
                 entry.getValue().updateVersion(versionToken, finalVersion, entry.getKey().one());
             }

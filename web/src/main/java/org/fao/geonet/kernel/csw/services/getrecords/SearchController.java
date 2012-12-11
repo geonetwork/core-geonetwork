@@ -23,14 +23,11 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -44,7 +41,6 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -53,8 +49,8 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -67,30 +63,14 @@ import java.util.Set;
 public class SearchController {
     
 	private LuceneConfig _luceneConfig;
-	private final FieldSelector _selector;
-	private final FieldSelector _uuidselector;
+	private final Set<String> _selector;
+	private final Set<String> _uuidselector;
 
 	public SearchController(LuceneConfig luceneConfig) {
 		_luceneConfig = luceneConfig;
 		
-		_selector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
-
-		_uuidselector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
+		_selector = Collections.singleton("_id");
+		_uuidselector = Collections.singleton("_uuid");
 		
     }
 	

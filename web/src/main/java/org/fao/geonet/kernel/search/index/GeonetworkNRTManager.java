@@ -100,9 +100,7 @@ class GeonetworkNRTManager {
     }
 
     public boolean maybeRefresh() throws IOException {
-        // Taxonomy doesn't support NRT yet (not until lucene 4.1) so we need to commmit to get latest
-//        taxonomyTracker.commit();
-        taxonomyTracker.refreshReader();
+        taxonomyTracker.maybeRefresh();
         return actualManager.maybeRefresh();
     }
 

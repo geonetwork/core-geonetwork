@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.index.CategoryDocumentBuilder;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
-import org.apache.lucene.facet.taxonomy.InconsistentTaxonomyException;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
@@ -31,7 +30,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
  * @author jeichar
  */
 class TaxonomyIndexTracker {
-    private TaxonomyWriter taxonomyWriter;
+    private DirectoryTaxonomyWriter taxonomyWriter;
     private TaxonomyReader taxonomyReader;
     private final File taxonomyDir;
     private final LuceneConfig luceneConfig;
@@ -57,7 +56,7 @@ class TaxonomyIndexTracker {
     }
     TaxonomyReader acquire() throws IOException {
         if(taxonomyReader == null) {
-            this.taxonomyReader = new DirectoryTaxonomyReader(cachedFSDir);
+            this.taxonomyReader = new DirectoryTaxonomyReader(taxonomyWriter);
         }
         return taxonomyReader;
     }
@@ -136,17 +135,7 @@ class TaxonomyIndexTracker {
     TaxonomyWriter writer() {
         return taxonomyWriter;
     }
-    public boolean refreshReader() throws IOException {
-        try {
-            if(taxonomyReader == null) {
-                return false;
-            } else {
-                return taxonomyReader.refresh();
-            }
-        } catch (InconsistentTaxonomyException e) {
-            throw new RuntimeException("Error refreshing taxonomy", e);
-        }
+    public void maybeRefresh() {
+        // do nothing for now
     }
-
-
 }

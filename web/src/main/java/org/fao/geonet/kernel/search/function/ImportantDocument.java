@@ -24,11 +24,10 @@
 package org.fao.geonet.kernel.search.function;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.index.IndexableField;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -82,8 +81,7 @@ public class ImportantDocument implements DocumentBoosting {
     public Float getBoost(Document doc) {
         Float documentBoost = null;
 
-        for (Iterator<Fieldable> i = doc.getFields().iterator(); i.hasNext();) {
-            Fieldable field = i.next();
+        for (IndexableField field : doc.getFields()) {
             String name = field.name();
 
             HashMap<String, Float> fieldBoosts = config.get(name);

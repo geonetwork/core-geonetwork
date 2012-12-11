@@ -56,15 +56,12 @@ import jeeves.utils.Xml;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
-import org.apache.lucene.document.Fieldable;
-import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.facet.search.FacetsCollector;
 import org.apache.lucene.facet.search.params.CountFacetRequest;
 import org.apache.lucene.facet.search.params.FacetRequest;
@@ -77,11 +74,12 @@ import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queries.ChainedFilter;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -120,21 +118,7 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSortedSet;
@@ -156,7 +140,6 @@ public class LuceneSearcher extends MetaSearcher {
 	private Filter        _filter;
 	private Sort          _sort;
 	private Element       _elSummary;
-	private FieldSelector _selector;
 	
 	private IndexAndTaxonomy _indexAndTaxonomy;
 
@@ -186,12 +169,6 @@ public class LuceneSearcher extends MetaSearcher {
 	public LuceneSearcher (SearchManager sm, String styleSheetName, LuceneConfig luceneConfig) {
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
-		_selector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
 
 		// build _tokenizedFieldSet
 		_luceneConfig = luceneConfig;
@@ -313,7 +290,9 @@ public class LuceneSearcher extends MetaSearcher {
 						doc = _indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc); // no selector
 					}
                     else {
-						doc = _indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, _selector);
+                        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id");
+						_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+						doc = docVisitor.getDocument();
 					}
 					String id = doc.get("_id");
 					Element md = null;
@@ -413,15 +392,9 @@ public class LuceneSearcher extends MetaSearcher {
 				}
 				Document doc;
 
-				doc = _indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc,
-						new FieldSelector() {
-							public final FieldSelectorResult accept(String name) {
-								if (name.equals(searchField))
-									return FieldSelectorResult.LOAD;
-								else
-									return FieldSelectorResult.NO_LOAD;
-							}
-						});
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(searchField);
+				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+				doc = docVisitor.getDocument();
 
 				String[] values = doc.getValues(searchField);
 				
@@ -904,7 +877,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @return sortfield
      */
     private static SortField makeSortField(String sortBy, boolean sortOrder, String searchLang) {
-        int sortType = SortField.STRING;
+        SortField.Type sortType = SortField.Type.STRING;
 
         if( sortBy.equals(Geonet.SearchResult.SortBy.RELEVANCE) ){
             return null;
@@ -916,17 +889,17 @@ public class LuceneSearcher extends MetaSearcher {
         // internal Lucene fields (ie. not defined in index-fields.xsl).
         if (sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY)
         		|| sortBy.equals(Geonet.SearchResult.SortBy.RATING)) {
-            sortType = SortField.INT;
+            sortType = SortField.Type.INT;
             sortBy = "_" + sortBy;
         } else if (sortBy.equals(Geonet.SearchResult.SortBy.SCALE_DENOMINATOR)) {
-            sortType = SortField.INT;
+            sortType = SortField.Type.INT;
         } else if (sortBy.equals(Geonet.SearchResult.SortBy.DATE) 
         		|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE)) {
             sortBy = "_" + sortBy;
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sort by: " + sortBy + " order: " + sortOrder + " type: " + sortType);
-        if (sortType == SortField.STRING) {
+        if (sortType == org.apache.lucene.search.SortField.Type.STRING) {
             if(searchLang != null) {
                 return new SortField(sortBy, new CaseInsensitiveFieldComparatorSource(searchLang), sortOrder);
             } else {
@@ -1036,7 +1009,7 @@ public class LuceneSearcher extends MetaSearcher {
 				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
 				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
 
-				returnValue = new TermRangeQuery(fld, lowerTxt, upperTxt, inclusive, inclusive);
+				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
 			}
 		}
 		else if (name.equals("DateRangeQuery"))
@@ -1401,8 +1374,8 @@ public class LuceneSearcher extends MetaSearcher {
         if ((dumpAllField || dumpFields != null) && searchLang != null && multiLangSearchTerm != null) {
             // get the translated fields and dump those instead of the non-translated
             for (String fieldName : multiLangSearchTerm) {
-                Field[] values = doc.getFields(LuceneConfig.multilingualSortFieldName(fieldName, searchLang));
-                for (Field f : values) {
+                IndexableField[] values = doc.getFields(LuceneConfig.multilingualSortFieldName(fieldName, searchLang));
+                for (IndexableField f : values) {
                     if(f != null) {
                         addedTranslation.add(fieldName);
                         md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
@@ -1415,8 +1388,8 @@ public class LuceneSearcher extends MetaSearcher {
         }
         if (dumpFields != null) {
             for (String fieldName : dumpFields.keySet()) {
-                Field[] values = doc.getFields(fieldName);
-                for (Field f : values) {
+                IndexableField[] values = doc.getFields(fieldName);
+                for (IndexableField f : values) {
                     if (f != null) {
                         if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
                             md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
@@ -1426,8 +1399,8 @@ public class LuceneSearcher extends MetaSearcher {
             }
         }
         else {
-	        List<Fieldable> fields = doc.getFields();
-            for (Fieldable field : fields) {
+	        List<IndexableField> fields = doc.getFields();
+            for (IndexableField field : fields) {
                 String fieldName = field.name();
                 String fieldValue = field.stringValue();
 
@@ -1455,19 +1428,13 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @throws Exception hmm
 	 */
     public List<String> getAllUuids(int maxHits) throws Exception {
-
-        FieldSelector uuidselector = new FieldSelector() {
-            public final FieldSelectorResult accept(String name) {
-                if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-                else return FieldSelectorResult.NO_LOAD;
-            }
-        };
-
         List<String> response = new ArrayList<String>();
 		TopDocs tdocs = performQuery(0, maxHits, false);
 
+		DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
         for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-            Document doc = _indexAndTaxonomy.indexReader.document(sdoc.doc, uuidselector);
+            _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+            Document doc = docVisitor.getDocument();
             String uuid = doc.get("_uuid");
             if (uuid != null) response.add(uuid);
         }
@@ -1485,29 +1452,14 @@ public class LuceneSearcher extends MetaSearcher {
      */
     public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
 
-			FieldSelector mdInfoSelector = new FieldSelector() {
-				public final FieldSelectorResult accept(String name) {
-					if (name.equals("_id"))          return FieldSelectorResult.LOAD;
-					if (name.equals("_root"))        return FieldSelectorResult.LOAD;
-					if (name.equals("_schema"))      return FieldSelectorResult.LOAD;
-					if (name.equals("_createDate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_changeDate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_source"))      return FieldSelectorResult.LOAD;
-					if (name.equals("_isTemplate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_title"))       return FieldSelectorResult.LOAD;
-					if (name.equals("_uuid"))        return FieldSelectorResult.LOAD;
-					if (name.equals("_isHarvested")) return FieldSelectorResult.LOAD;
-					if (name.equals("_owner"))       return FieldSelectorResult.LOAD;
-					if (name.equals("_groupOwner"))  return FieldSelectorResult.LOAD;
-					else return FieldSelectorResult.NO_LOAD;
-				}
-			};
-
+        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
+                "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
       Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
 			TopDocs tdocs = performQuery(0, maxHits, false);
 
       for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-          Document doc = _indexAndTaxonomy.indexReader.document(sdoc.doc, mdInfoSelector);
+          _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+          Document doc = docVisitor.getDocument();
 
           MdInfo mdInfo = new MdInfo();
           mdInfo.id           = doc.get("_id");
@@ -1554,9 +1506,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
     public static String getMetadataFromIndex(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            List<String> fieldnames = new ArrayList<String>();
-            fieldnames.add(fieldname);
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, id, fieldnames).get(fieldname);
+            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
@@ -1570,9 +1520,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
     public static String getMetadataFromIndexById(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            List<String> fieldnames = new ArrayList<String>();
-            fieldnames.add(fieldname);
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, fieldnames).get(fieldname);
+            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
@@ -1585,7 +1533,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String uuid, List<String> fieldnames) throws Exception {
+    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String uuid, Set<String> fieldnames) throws Exception {
         return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_uuid", uuid, fieldnames);
     }
 
@@ -1600,8 +1548,8 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
-        MapFieldSelector selector = new MapFieldSelector(fieldnames);
+    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
+        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(fieldnames);
         final IndexAndTaxonomy indexAndTaxonomy;
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
@@ -1630,8 +1578,9 @@ public class LuceneSearcher extends MetaSearcher {
             TopDocs tdocs = searcher.search(query, filter, 1, sort);
 
             for( ScoreDoc sdoc : tdocs.scoreDocs ) {
-                Document doc = reader.document(sdoc.doc, selector);
-
+                reader.document(sdoc.doc, docVisitor);
+                Document doc = docVisitor.getDocument();
+                
                 for( String fieldname : fieldnames ) {
                     values.put(fieldname, doc.get(fieldname));
                 }
@@ -1644,14 +1593,8 @@ public class LuceneSearcher extends MetaSearcher {
         catch (IOException e) {
             // TODO: handle exception
             Log.error(Geonet.LUCENE, e.getMessage());
-        }
-        finally {
-            try {
-                searcher.close();
-            }
-            finally {
-                searchmanager.releaseIndexReader(indexAndTaxonomy);
-            }
+        } finally {
+            searchmanager.releaseIndexReader(indexAndTaxonomy);
         }
         return values;
     }
@@ -1691,13 +1634,15 @@ public class LuceneSearcher extends MetaSearcher {
             phrase = true;
         }
 		
-		TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
-		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
 		List<String> tokenList = new ArrayList<String>();
 		try {
+		    TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
+		    ts.reset();
+		    CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
 			while (ts.incrementToken()) {
-				tokenList.add(termAtt.term());
+				String string = termAtt.toString();
+                tokenList.add(string);
 			}
 		}
         catch (Exception e) {

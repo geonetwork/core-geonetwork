@@ -177,11 +177,13 @@ public class SearcherLogger {
         else if (query instanceof FuzzyQuery) {
 			qInfo = new QueryInfo(((FuzzyQuery)query).getTerm().field(), ((FuzzyQuery)query).getTerm().text(),
                     QueryInfo.FUZZY_QUERY);
-			qInfo.setSimilarity(((FuzzyQuery)query).getMinSimilarity());
+			qInfo.setSimilarity((float)(((FuzzyQuery)query).getMaxEdits() - 1) / 10);
 		}
         else if (query instanceof PrefixQuery) {
-			qInfo = new QueryInfo(((PrefixQuery)query).getPrefix().field(), ((PrefixQuery)query).getPrefix().text(),
-                    QueryInfo.PREFIX_QUERY);
+			PrefixQuery prefixQuery = (PrefixQuery)query;
+            String field = prefixQuery.getPrefix().field();
+            String text = prefixQuery.getPrefix().text();
+            qInfo = new QueryInfo(field, text, QueryInfo.PREFIX_QUERY);
 		}
         else if (query instanceof MatchAllDocsQuery) {
 			// extract all terms for this query (text and field)
@@ -205,16 +207,18 @@ public class SearcherLogger {
 		}
         else if (query instanceof TermRangeQuery) {
 			qInfo = new QueryInfo(QueryInfo.RANGE_QUERY);
-			qInfo.setLowerText(((TermRangeQuery)query).getLowerTerm());
-			qInfo.setUpperText(((TermRangeQuery)query).getUpperTerm());
+			TermRangeQuery termRangeQuery = (TermRangeQuery)query;
+            qInfo.setLowerText(termRangeQuery.getLowerTerm().utf8ToString());
+			qInfo.setUpperText(termRangeQuery.getUpperTerm().utf8ToString());
 			// we consider that all terms are comming from the same field for this query
-			qInfo.setField(((TermRangeQuery)query).getField());
+			qInfo.setField(termRangeQuery.getField());
 		}
         else if (query instanceof NumericRangeQuery) {
 			qInfo = new QueryInfo(QueryInfo.NUMERIC_RANGE_QUERY);
-			qInfo.setLowerText(((NumericRangeQuery<?>)query).getMin().toString());
-			qInfo.setUpperText(((NumericRangeQuery<?>)query).getMax().toString());
-			qInfo.setField(((NumericRangeQuery<?>)query).getField());
+			NumericRangeQuery<?> numericRangeQuery = (NumericRangeQuery<?>)query;
+            qInfo.setLowerText(numericRangeQuery.getMin().toString());
+			qInfo.setUpperText(numericRangeQuery.getMax().toString());
+			qInfo.setField(numericRangeQuery.getField());
 		}
         else {
 			Log.warning(Geonet.SEARCH_LOGGER, "unknown queryInfo type: " + query.getClass().getName());
