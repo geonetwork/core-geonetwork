@@ -202,52 +202,58 @@
                             </ul>
                         </nav>
                         
-                       <xsl:choose>
-                            <xsl:when test='not($user) or $user = ""'>
-		                        <form id="login-form" action="/geonetwork/j_spring_security_check" onsubmit="return false_();">
-		                            <div id="login_div">
-		                                <label>
-		                                    <xsl:value-of select="/root/gui/strings/username" />:
-		                                </label>
-		                                <input type="text" id="username" name="username" />
-		                                <label>
-		                                    <xsl:value-of select="/root/gui/strings/password" />:
-		                                </label>
-		                                <input type="password" id="password" name="password" />
-		                                <input type="button" id="login_button">
-		                                    <xsl:attribute name="value">
-		                                        <xsl:value-of
-		                                                select="/root/gui/strings/login" />
-		                                    </xsl:attribute>
-		                                </input>
-		                            </div>
-		                        </form>
-                              
-                            </xsl:when>
-                           <xsl:otherwise>
-		                        <span class="user-button">
-		                            <a id="user-button">  
-		                                <xsl:attribute name="href">javascript:catalogue.logout();</xsl:attribute>
-		                                <xsl:value-of select="/root/gui/strings/logout" />
-		                            </a>
-		                            <label id="username_label">
-		                                <xsl:value-of select="/root/request/user/username" />
-		                            </label>
-		                            <label id="name_label">
-	                                        <xsl:value-of select="/root/request/user/name" />
-		                            </label>
-		                            <label id="profile_label">
-                                        (           
-                                        <xsl:value-of select="/root/request/user/profile" />
-                                        )
-		                            </label>
-		                                
-		                            <a href="javascript:catalogue.admin();" id="administration_button">
-		                                <xsl:value-of select="/root/gui/strings/admin" />
-		                            </a>
-                                </span>
-                           </xsl:otherwise>
-                       </xsl:choose> 
+                        
+                        <form id="login-form" action="{/root/gui/locService}/j_spring_security_check" onsubmit="return false_();">
+                        
+	                       <xsl:choose>
+	                           <xsl:when test="string(/root/gui/session/userId)!=''">
+	                               <xsl:attribute name="style">display:none;</xsl:attribute>
+	                           </xsl:when>
+	                       </xsl:choose> 
+                       
+                            <div id="login_div">
+                                <label>
+                                    <xsl:value-of select="/root/gui/strings/username" />:
+                                </label>
+                                <input type="text" id="username" name="username" />
+                                <label>
+                                    <xsl:value-of select="/root/gui/strings/password" />:
+                                </label>
+                                <input type="password" id="password" class="banner" name="password" />
+                                <input type="button" class="banner"  id="login_button">
+                                
+                                    <xsl:attribute name="value">
+                                        <xsl:value-of
+                                                select="/root/gui/strings/login" />
+                                    </xsl:attribute>
+                                </input>
+                            </div>
+                       </form>
+                        
+                       <form id="logout-div">
+                           <xsl:choose>
+                               <xsl:when test='not(string(/root/gui/session/userId)!="")'>
+                                <xsl:attribute name="style">display:none;</xsl:attribute>
+                               </xsl:when>
+                           </xsl:choose>
+                           <form name="logout" action="{/root/gui/locService}/j_spring_security_logout" onsubmit="return false_();">
+                                <label id="username_label">
+                                    <xsl:value-of select="/root/gui/strings/user"/>
+                                </label>
+                                <label id="name_label">
+                                    <xsl:text>: </xsl:text>
+                                    <xsl:value-of select="/root/gui/session/name"/>
+                                </label>
+                                <label id="profile_label">
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="/root/gui/session/surname"/>
+                                    <xsl:text> </xsl:text>
+                                </label>
+                                <button class="banner" onclick="javascript:catalogue.logout();"><xsl:value-of select="/root/gui/strings/logout"/></button>
+                                <button class="banner" onclick="javascript:catalogue.admin();"><xsl:value-of select="/root/gui/strings/admin"/></button>
+                            </form>
+                        </form>
+                        
                         <div style="clear: both; display: hidden"></div>
                     </div>
                 </header>

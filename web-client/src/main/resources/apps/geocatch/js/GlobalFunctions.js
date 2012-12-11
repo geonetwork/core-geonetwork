@@ -201,25 +201,11 @@ function toggleMoreAdvancedOptions() {
         hide('what_adv_search');
         hide('when_adv_search');
         hide('inspire_adv_search');
-        if (Ext.isIE) {
-            Ext.get("show_more_search_options").dom.innerText = OpenLayers
-                    .i18n('Show More');
-        } else {
-            Ext.get("show_more_search_options").dom.textContent = OpenLayers
-                    .i18n('Show More');
-        }
     } else {
         show('where_adv_search');
         show('what_adv_search');
         show('when_adv_search');
         show('inspire_adv_search');
-        if (Ext.isIE) {
-            Ext.get("show_more_search_options").dom.innerText = OpenLayers
-                    .i18n('Show Less');
-        } else {
-            Ext.get("show_more_search_options").dom.textContent = OpenLayers
-                    .i18n('Show Less');
-        }
     }
 }
 
