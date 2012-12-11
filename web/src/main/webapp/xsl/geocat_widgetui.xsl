@@ -160,7 +160,7 @@
                     </div>
 
                     <xsl:variable name="user">
-                        <xsl:value-of select="/root/request/user" />
+                        <xsl:value-of select="/root/response/user" />
                     </xsl:variable>
                     <div style="width: 100%; margin: 0 auto; background-color: #CCCCCC; border-bottom: 1px solid #FFFFFF;">
                         <nav id="nav">
@@ -201,9 +201,9 @@
                                 </li>
                             </ul>
                         </nav>
-
+                        
                        <xsl:choose>
-                            <xsl:when test='not($user)'>
+                            <xsl:when test='not($user) or $user = ""'>
 		                        <form id="login-form" action="/geonetwork/j_spring_security_check" onsubmit="return false_();">
 		                            <div id="login_div">
 		                                <label>
