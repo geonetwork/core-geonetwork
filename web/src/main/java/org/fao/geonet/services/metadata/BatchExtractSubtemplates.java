@@ -148,7 +148,7 @@ public class BatchExtractSubtemplates implements Service
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display

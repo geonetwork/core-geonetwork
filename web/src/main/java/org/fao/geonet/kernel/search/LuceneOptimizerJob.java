@@ -6,6 +6,8 @@ package org.fao.geonet.kernel.search;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
+import org.fao.geonet.kernel.search.index.LuceneIndexWriterFactory;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -19,13 +21,13 @@ import org.quartz.JobExecutionException;
 @DisallowConcurrentExecution
 public class LuceneOptimizerJob implements Job {
 
-	LuceneIndexWriterFactory indexWriter;
+    LuceneIndexLanguageTracker indexTracker;
 	
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		try {
-			indexWriter.optimize();
+		    indexTracker.optimize();
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE,
 					"Optimize task failed: " + e.getMessage());
@@ -33,8 +35,8 @@ public class LuceneOptimizerJob implements Job {
 		}
 	}
 
-	public void setIndexWriter(LuceneIndexWriterFactory indexWriter) {
-		this.indexWriter = indexWriter;
+	public void setIndexTracker(LuceneIndexLanguageTracker indexTracker) {
+		this.indexTracker = indexTracker;
 	}
 	
 }

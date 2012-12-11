@@ -294,7 +294,7 @@ public class ImportFromDir implements Service
 			throw new Exception("Directory not found: " + dir);
 
 		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
-		r.processWithFastIndexing();
+		r.process();
 		exceptions = r.getExceptions();
 		
 		return files.length;

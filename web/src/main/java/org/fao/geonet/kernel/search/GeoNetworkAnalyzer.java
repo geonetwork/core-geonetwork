@@ -30,6 +30,7 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
 
 import java.io.Reader;
 import java.util.HashSet;
@@ -47,8 +48,6 @@ import java.util.Set;
 public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
  
     private Set<String> stopwords = new HashSet<String>();
-    private boolean enablePositionIncrements = true;
-    private boolean ignoreCase = true;
 
     /**
      * Creates this analyzer using no stopwords.
@@ -75,12 +74,13 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
      */
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-        final Tokenizer source = new StandardTokenizer(Version.LUCENE_30, reader);
+        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
+        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION, new StandardFilter(Geonet.LUCENE_VERSION, source)));
         if(CollectionUtils.isNotEmpty(this.stopwords)) {
-            return new TokenStreamComponents(source, new StopFilter(enablePositionIncrements, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))), this.stopwords, ignoreCase));
+            return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords));
         }
         else {
-            return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))));
+            return new TokenStreamComponents(source, asciiFoldingFilter);
         }
     }
 

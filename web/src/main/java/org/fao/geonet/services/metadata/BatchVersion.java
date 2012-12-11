@@ -76,8 +76,6 @@ public class BatchVersion implements Service
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-            if(context.isDebug())
-                context.debug("Deleting metadata with uuid:"+ uuid);
 
 			String id   = dataMan.getMetadataId(dbms, uuid);
 			//--- Metadata may have been deleted since selection

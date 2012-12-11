@@ -103,7 +103,7 @@ public class BatchXslProcessing implements Service {
 		
 		synchronized(sm.getSelection("metadata")) {
 			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
-			m.processWithFastIndexing();
+			m.process();
 		}
 
 
