@@ -279,16 +279,11 @@ GeoNetwork.searchApp = function() {
 
             formItems.push({
                 id : 'advSearchTabs',
-                layout : {
-                    type : 'column'
-                },
+                layout : 'hbox',
                 plain : true,
                 forceLayout : false,
                 border : false,
                 deferredRender : false,
-                defaults : {
-                    columnWidth : 0.25
-                },
                 items : [ what, where, when, inspire ]
             });
 
@@ -298,10 +293,7 @@ GeoNetwork.searchApp = function() {
                 id : 'advanced-search-options-content-form',
                 renderTo : 'advanced-search-options-content',
                 stateId : 's',
-                layout : 'form',
-                defaults : {
-                    anchor : '32%'
-                },
+                layout : 'hbox',
                 autoHeight : true,
                 border : false,
                 searchCb : function() {
@@ -736,11 +728,11 @@ GeoNetwork.searchApp = function() {
             catalogue.resultsView = metadataResultsView;
 
             // Add results to map
-//            Ext.each(app.mapApp.maps, function(map) {
-//                catalogue.resultsView.addMap(map, true);
-//            });
-//TODO add map
-            
+            // Ext.each(app.mapApp.maps, function(map) {
+            // catalogue.resultsView.addMap(map, true);
+            // });
+            // TODO add map
+
             var tBar = new GeoNetwork.MetadataResultsToolbar({
                 catalogue : catalogue,
                 searchFormCmp : Ext
