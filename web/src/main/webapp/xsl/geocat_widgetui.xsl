@@ -202,6 +202,12 @@
                             </ul>
                         </nav>
                         
+                        <script>
+                            function false_(){
+                                return false;
+                            }
+                        
+                        </script>
                         
                         <form id="login-form" action="{/root/gui/locService}/j_spring_security_check" onsubmit="return false_();">
                         
