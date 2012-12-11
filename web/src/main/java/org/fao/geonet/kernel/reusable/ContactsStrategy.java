@@ -380,7 +380,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         for (Element result : results) {
             Element e = new Element(REPORT_ELEMENT);
             String id = result.getChildTextTrim("id");
-            String url = XLink.LOCAL_PROTOCOL+"shared.user.edit?id=" + id;
+            String url = XLink.LOCAL_PROTOCOL+"shared.user.edit?id=" + id + "&validated=n&operation=fullupdate";
 
             addChild(e, REPORT_URL, url);
             addChild(e, REPORT_ID, id);

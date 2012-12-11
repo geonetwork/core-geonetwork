@@ -4311,7 +4311,12 @@
 										</xsl:for-each>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString">
+										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale=$mainLangId]">
+											<option value="_{geonet:element/@ref}" code="{substring-after(@locale, '#')}">
+												<xsl:value-of select="@language" />
+											</option>
+										</xsl:for-each>
+										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale!=$mainLangId]">
 											<option value="_{geonet:element/@ref}" code="{substring-after(@locale, '#')}">
 												<xsl:value-of select="@language" />
 											</option>

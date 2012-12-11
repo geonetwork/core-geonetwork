@@ -3,12 +3,14 @@
 
 	<xsl:include href="geo/utils.xsl"/>
 
+	<xsl:template mode="http-equiv" match="*">
+			<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+	</xsl:template>
 	<!--
 	main html header
 	-->
 	<xsl:template name="header">
-		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-
+		<xsl:apply-templates mode="http-equiv"/>
 		<!-- title -->
 		<title><xsl:value-of select="/root/gui/strings/title"/></title>
 		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
@@ -82,6 +84,6 @@
 		function (ie. translate('key');).
 	-->
 	<xsl:template match="*" mode="js-translations">
-		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(translate(.,'&quot;', '`'))"/>"<xsl:if test="position()!=last()">,</xsl:if>
+		"<xsl:value-of select="name(.)"/>":"<xsl:value-of select="normalize-space(replace(translate(.,'&quot;', '`'), '[\n\r]+', ' '))"/>"<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

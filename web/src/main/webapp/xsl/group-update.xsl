@@ -16,7 +16,18 @@
 					alert('A group name must be filled in.');
 					return;
 				}
-				document.groupUpdateForm.submit()
+				
+				if(!groupLogoChanged || $('upload').value == '') {
+					$('upload').remove();
+					$('logofile').remove();
+				}
+				
+				document.groupUpdateForm.submit();
+			}
+			groupLogoChanged=false;
+			function changedUpload() {
+				$('logofile').value=$('upload').value;
+				groupLogoChanged=true;
 			}
 		</script>
 	</xsl:template>
@@ -92,7 +103,7 @@
 								<span>None</span>
 							</xsl:otherwise>
 						</xsl:choose>
-						<input id="upload" type="file" value="" name="upload" onchange="$('logofile').value=$('upload').value;" style="float:right;"/>
+						<input id="upload" type="file" value="" name="upload" onchange="changedUpload()" style="float:right;"/>
 						<input type="hidden" id="logofile" name="logofile" value="" />
 					</td>
 				</tr>

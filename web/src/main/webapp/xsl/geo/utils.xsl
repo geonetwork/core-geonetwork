@@ -47,6 +47,20 @@
 	JS files are compressed using jsbuild tool (see jsbuild directory).
 	-->
 	<xsl:template name="geoHeader">
+		<script language="JavaScript" type="text/javascript">
+if (typeof Range.prototype.createContextualFragment == "undefined") {
+    Range.prototype.createContextualFragment = function(html) {
+        var startNode = this.startContainer;
+        var doc = startNode.nodeType == 9 ? startNode : startNode.ownerDocument;
+        var container = doc.createElement("div");
+        container.innerHTML = html;
+        var frag = doc.createDocumentFragment(), n;
+        while ( (n = container.firstChild) ) {
+            frag.appendChild(n);
+        }
+        return frag;
+    };
+}</script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/><xsl:text>&#10;</xsl:text>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
         <script src="../../scripts/geo/EPSG21781.js" type="text/javascript"/>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exslt= "http://exslt.org/common" 
+	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:str="http://exslt.org/strings" 
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	exclude-result-prefixes="exslt geonet str">
@@ -60,13 +61,18 @@
 			
 				
 			<!-- remove button -->
+			<!-- GEOCAT has hacked the 'gmd:name' stuff in to fix linkage name -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($removeLink)">
+				<xsl:when test="normalize-space($removeLink) or name(.) = 'gmd:name'">
 					<xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
 						<xsl:when test="normalize-space($linkTokens[2])">
 							<a id="remove_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
+						</xsl:when>
+						<xsl:when test="name(.) = 'gmd:name'">
+							<xsl:variable name="nameRemLink" select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',0',');')"></xsl:variable>
+							<a id="remove_{$id}"  style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$nameRemLink}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
 						</xsl:when>
 						<xsl:otherwise>
 							<a id="remove_{$id}"  style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$removeLink}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>

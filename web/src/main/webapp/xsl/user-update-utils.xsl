@@ -135,7 +135,7 @@
 						<div id="group.list">
 							<xsl:variable name="lang" select="/root/gui/language"/>
 							
-							<xsl:for-each select="/root/gui/profiles/*[not(name(.)=('Monitor', 'Administrator'))]">
+							<xsl:for-each select="/root/gui/profiles/*[not(name(.)=('Monitor', 'Administrator', 'Shared'))]">
 								<div style="width:100%; margin: 5px">
 									<xsl:variable name="profileName" select="name(.)"/>
 									<xsl:value-of select="/root/gui/strings/*[name()=$profileName]"/><br/>
@@ -144,7 +144,7 @@
 										multiple="" onChange="profileChanged()">
 										
 										<xsl:choose>
-											<xsl:when test="not(/root/gui/session/profile=('UserAdmin', 'Administrator'))">
+											<xsl:when test="not(/root/gui/session/profile=('UserAdmin', 'Administrator', 'Shared'))">
 												<xsl:attribute name="disabled">disabled</xsl:attribute>
 											</xsl:when>
 										</xsl:choose>

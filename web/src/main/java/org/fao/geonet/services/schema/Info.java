@@ -141,6 +141,14 @@ public class Info implements Service {
         String isoType = Util.getAttrib(elem, "isoType", "");
         String xpath = Util.getAttrib(elem, "fullContext", "");
 
+        // GEOCAT HACK
+        // We share schema localization with iso19139 so sometimes a
+        // che element will requested with the iso19139 schema.
+        if(name.startsWith("che:")) {
+        	schema = "iso19139.che";
+        }
+        // END GEOCAT HACK
+
         name = findNamespace(name, scm, schema);
         parent = findNamespace(parent, scm, schema);
         isoType = findNamespace(isoType, scm, schema);

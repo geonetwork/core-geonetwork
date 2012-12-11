@@ -9,7 +9,9 @@ function View(strLoader)
 	//--- setup validators
 	
 	this.strLoader = strLoader;
-	this.validator = new Validator(strLoader);	
+	this.validator = new Validator(strLoader);
+	this.dirty     = false;
+	this.lang     = 'eng';
 	this.validator.add(
 	[
 		{ id:'editor.destin', type:'length', minSize :1, maxSize :255 }
@@ -114,9 +116,22 @@ View.prototype.isDataValid = function()
 }
 
 //=====================================================================================
+View.prototype.getPrevLang = function()
+{
+	return this.lang;
+}
+
+//=====================================================================================
+View.prototype.updateTargetText = function()
+{
+	this.currEntity.label[this.lang] = $('editor.destin').value;
+	this.dirty=false;
+}
+//=====================================================================================
 
 View.prototype.setEntity = function(entity)
 {
+	this.dirty=false;
 	this.currEntity = entity;
 	
 	var editSrc = $('editor.source');
@@ -178,6 +193,9 @@ View.prototype.langDesChange = function()
 
 View.prototype.textChange = function()
 {
+	this.dirty=true;
+	this.lang=this.getTargetLanguage();
+
 	if (this.currEntity != null)
 		setTimeout(ker.wrap(this, this.colorUpdate), 10);
 }

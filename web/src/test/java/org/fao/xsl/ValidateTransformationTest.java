@@ -76,6 +76,13 @@ public class ValidateTransformationTest
 		Multimap<String, Requirement> rules = ArrayListMultimap.create();
 	    file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
+    @Test @Ignore("Need clarification on what to do with the thesaurus information")
+    public void exportThesaurusTitle() throws Throwable
+    {
+    	File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	file = testFile(file, Control.GM03_2_ISO, rules, true);
+    }
 
     @Test
     public void GM03TitleError() throws Throwable

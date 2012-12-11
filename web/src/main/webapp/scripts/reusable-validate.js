@@ -64,7 +64,7 @@ function reject(button, submitLabel, cancelLabel) {
             }
         });
     } else {
-        if (msgWin === null) {
+        if (!msgWin) {
             msgWin = new Ext.Window({
                 applyTo: 'msg_win',
                 layout: 'fit',
