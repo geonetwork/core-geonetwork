@@ -151,6 +151,9 @@ GeoNetwork.app = function() {
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
 
+            this.loginApp = new GeoNetwork.loginApp();
+            this.loginApp.init();
+
         },
 
         initializeAppLayout: function() {

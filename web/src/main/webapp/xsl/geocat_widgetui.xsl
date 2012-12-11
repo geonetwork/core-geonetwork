@@ -199,7 +199,7 @@
                             </ul>
                         </nav>
 
-                        <form id="login-form" onsubmit="return false_();">
+                        <form id="login-form" action="/geonetwork/j_spring_security_check" onsubmit="return false_();">
                             <div id="login_div">
                                 <label>
                                     <xsl:value-of select="/root/gui/strings/username" />:
@@ -209,7 +209,7 @@
                                     <xsl:value-of select="/root/gui/strings/password" />:
                                 </label>
                                 <input type="password" id="password" name="password" />
-                                <input type="submit" id="login_button">
+                                <input type="button" id="login_button">
                                     <xsl:attribute name="value">
                                         <xsl:value-of
                                                 select="/root/gui/strings/login" />
