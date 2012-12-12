@@ -459,7 +459,7 @@ public class CatalogSearcher {
         int numHits = startPosition + maxRecords;
 
 		// TODO Handle NPE creating spatial filter (due to constraint
-        Filter spatialfilter = sm.getSpatial().filter(query, numHits, filterExpr, filterVersion);
+        Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
         Filter duplicateRemovingFilter = new DuplicateDocFilter(query, 1000000);
         Filter cFilter = null;
         if (spatialfilter == null) {
