@@ -987,6 +987,8 @@ span.thumbnail {
     font-size: small;
     font-style: italic;
     color: #2a628f;
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 
 div.relatedElements {
@@ -996,6 +998,8 @@ div.relatedElements {
     padding:2px;
     margin:2px;
     text-align:left;
+    max-height:500px;
+    overflow:auto;
 }
 
 div.relatedElements ul {

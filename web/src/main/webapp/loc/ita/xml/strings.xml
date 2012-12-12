@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-	<local._none_.non_validated>Geocat Non Validated</local._none_.non_validated>
-	<local._none_.geocat.ch>Geocat Validated</local._none_.geocat.ch>
+	<local._none_.non_validated>geocat.ch Thesaurus (non confermato)</local._none_.non_validated>
+	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
-	<external.theme.inspire-theme>GEMET - INSPIRE themes, version 1.0</external.theme.inspire-theme>
-	<external._none_.gemet>GEMET</external._none_.gemet>
+	<external.theme.inspire-theme>INSPIRE Spatial Data Themes, version 1.0</external.theme.inspire-theme>
+	<external._none_.gemet>GEMET concepts</external._none_.gemet>
 	<downloadBackup>Download Backup file</downloadBackup>
-	<ContactSelectionTitle js="true">Contact Selection</ContactSelectionTitle>
-	<FormatSelectionTitle js="true">Format Selection</FormatSelectionTitle>
-	<ExtentSelectionTitle js="true">Extent Selection</ExtentSelectionTitle>
-	<refine.titles js="true">Title</refine.titles>
-	<refine.keyword js="true">Keyword(s)</refine.keyword>
-	<refine.resolution js="true">Spatial Resolution</refine.resolution>
-	<refine.category js="true">Category</refine.category>
-	<refine.spatialRepresentation js="true">Spatial Representation</refine.spatialRepresentation>
-	<refine.organisationName js="true">Organisation</refine.organisationName>
-	<refine.serviceType js="true">Service Type</refine.serviceType>
-	<refine.type js="true">Type</refine.type>
-	<skipPrivilegesImport>Skip Privileges Import</skipPrivilegesImport>
-	<unpublishReport>Unpublish CSV Report</unpublishReport>
-	<unpublishReportDes>Download the CSV Report of the metadata publish/unpublishing for the last weeks</unpublishReportDes>
-	<unpublish_invalid_metadata_desc>Perform validation of all local metadata and unpublish those that are found to be invalid</unpublish_invalid_metadata_desc>
-	<duplicate>Duplicate</duplicate>
-    <geocatNext js="true">Next</geocatNext>
-    <geocatPrevious js="true">Previous</geocatPrevious>
+	<ContactSelectionTitle js="true">Selezione Contatti</ContactSelectionTitle>
+	<FormatSelectionTitle js="true">Selezione Formati</FormatSelectionTitle>
+	<ExtentSelectionTitle js="true">Selezione Estensioni</ExtentSelectionTitle>
+	<refine.titles js="true">Titolo</refine.titles>
+	<refine.keyword js="true">Parola chiave</refine.keyword>
+	<refine.resolution js="true">Resoluzione spaziale</refine.resolution>
+	<refine.category js="true">Categoria</refine.category>
+	<refine.spatialRepresentation js="true">Rappresentazione spaziale</refine.spatialRepresentation>
+	<refine.organisationName js="true">Organizzazione</refine.organisationName>
+	<refine.serviceType js="true">Tipo servizio</refine.serviceType>
+	<refine.type js="true">Tipo</refine.type>
+	<skipPrivilegesImport>Saltare privilegi nel import</skipPrivilegesImport>
+	<unpublishReport>Rapporto CSV dati non pubblicati</unpublishReport>
+	<unpublishReportDes>Download il rapporto CSV dei dati (non) pubblicati delle settimane passate</unpublishReportDes>
+	<unpublish_invalid_metadata_desc>Convalidare tutti i metadati e non pubblicare i dati non validi</unpublish_invalid_metadata_desc>
+	<duplicate>Duplicare</duplicate>
+    <geocatNext js="true">Avanti</geocatNext>
+    <geocatPrevious js="true">Indietro</geocatPrevious>
     <nav>
-        <home>Homepage</home>
-        <overview>Overview</overview>
-        <news>News</news>
-        <metasearch>Discovery service</metasearch>
-        <metainput>Metadata management</metainput>
-        <doc>Documentation</doc>
-        <about>About geocat.ch</about>
+        <home>Pagina iniziale</home>
+        <overview>Mapa del sito</overview>
+        <news>Attualità</news>
+        <metasearch>Catalogo</metasearch>
+        <metainput>Gestione di metadati</metainput>
+        <doc>Documentazione</doc>
+        <about>A proposito di geocat.ch</about>
     </nav>
-    <replaceSharedObjects js="true">Validate shared objects</replaceSharedObjects>
-    <spatialRepresentation js="true">Spatial Representation</spatialRepresentation>
-    <selectedElementsAction js="true">Selected elements action</selectedElementsAction>
-    <resolution js="true">Spatial Resolution</resolution>
-    <mainpageTitle js="true">Search for geodata and geoservices</mainpageTitle>
-    <refinements js="true">Refinements</refinements>
-    <refineSearch.title js="true">Refine Search</refineSearch.title>
-	<keyword js="true">Keyword(s)</keyword>
-	<theme js="true">ISO topic category</theme>
-	<contact js="true">Contact</contact>
-	<rtitle js="true">Title</rtitle>
-	<organisationName js="true">Organisation</organisationName>
-	<kantone js="true">Canton(s)</kantone>
-	<theme js="true">Topic(s)</theme>
-	<formatTxt js="true">Format</formatTxt>
-	<toEdit js="true">To edit</toEdit>
-	<toPublish js="true">To publish</toPublish>
+    <replaceSharedObjects js="true">Convalidare oggetti riutilizzabili</replaceSharedObjects>
+    <spatialRepresentation js="true">Rappresentazione spaziale</spatialRepresentation>
+    <selectedElementsAction js="true">Azioni su elementi selezionati</selectedElementsAction>
+    <resolution js="true">Resoluzione spaziale</resolution>
+    <mainpageTitle js="true">Ricerca geodati e geoservizi</mainpageTitle>
+    <refinements js="true">Affinazioni</refinements>
+    <refineSearch.title js="true">Affinare la ricerca</refineSearch.title>
+	<keyword js="true">Parola chiave</keyword>
+	<theme js="true">Temi</theme>
+	<contact js="true">Contatto</contact>
+	<rtitle js="true">Titolo</rtitle>
+	<organisationName js="true">Organizzazione</organisationName>
+	<kantone js="true">Cantone</kantone>
+	<theme js="true">Temi</theme>
+	<formatTxt js="true">Formato</formatTxt>
+	<toEdit js="true">Da adattare</toEdit>
+	<toPublish js="true">Da pubblicare</toPublish>
 	<bbox js="true">BBOX</bbox>
-	<wherenone js="true">Everywhere</wherenone>
-	<adminUnit js="true">Administrative unit</adminUnit>
-	<drawOnMap js="true">Draw on map</drawOnMap>
+	<wherenone js="true">Dappertutto</wherenone>
+	<adminUnit js="true">Unità amministrativa</adminUnit>
+	<drawOnMap js="true">Tracciare sulla carta</drawOnMap>
 	<startNewPolygon js="true">Delete or Start new polygon</startNewPolygon>
 	<startNewPolygonHelp js="true">Start new polygon (Doubleclick to finish)</startNewPolygonHelp>
 	<valid js="true">Valid</valid>

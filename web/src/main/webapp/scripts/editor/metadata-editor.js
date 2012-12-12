@@ -946,7 +946,7 @@ function initCalendar() {
     	var id = cal.id;	// Give render div id to calendar input and change its id.
     	cal.id = id + 'Id';	// In order to get the input if a get by id is made later (eg. gn_search.js).
 
-    	if (cal.firstChild==null || cal.childNodes.length==1) {	// Check if already initialized or not
+    	if (cal.id.indexOf("Id", cal.id.length - 2) == -1 || cal.firstChild==null) {	// Check if already initialized or not
 	    	var format = 'Y-m-d';
 	    	var formatEl = Ext.getDom(id + '_format');
 	    	if (formatEl) {

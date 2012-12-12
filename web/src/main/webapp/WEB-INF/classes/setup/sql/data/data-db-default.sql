@@ -51,6 +51,8 @@ INSERT INTO Groups VALUES (-1,'GUEST','self-registered users',NULL,NULL);
 INSERT INTO Groups VALUES (0,'intranet',NULL,NULL,NULL);
 INSERT INTO Groups VALUES (1,'all',NULL,NULL,NULL);
 INSERT INTO Groups VALUES (2,'sample',NULL,NULL,NULL);
+
+
 -- ======================================================================
 -- === Table: IsoLanguages
 -- ======================================================================

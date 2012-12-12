@@ -181,7 +181,7 @@
             watched_bbox="{$watchedBbox}" 
             elt_ref="{$eltRef}"
             mode="{$mode}">
-            <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="$coords"/></div>
+            <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="normalize-space($coords)"/></div>
         </div>
     </xsl:template>
 

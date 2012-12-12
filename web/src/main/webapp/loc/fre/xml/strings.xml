@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-	<local._none_.non_validated>Geocat Non Validated</local._none_.non_validated>
-	<local._none_.geocat.ch>Geocat Validated</local._none_.geocat.ch>
+	<local._none_.non_validated>geocat.ch Thesaurus (non validié)</local._none_.non_validated>
+	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
-	<external.theme.inspire-theme>GEMET - INSPIRE themes, version 1.0</external.theme.inspire-theme>
-	<external._none_.gemet>GEMET</external._none_.gemet>
+	<external.theme.inspire-theme>INSPIRE Spatial Data Themes, version 1.0</external.theme.inspire-theme>
+	<external._none_.gemet>GEMET concepts</external._none_.gemet>
 	<downloadBackup>Télécharger le fichier de back-up</downloadBackup>
 	<ContactSelectionTitle js="true">Sélection du contacte</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Sélection du format</FormatSelectionTitle>

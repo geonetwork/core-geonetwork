@@ -59,6 +59,7 @@ USA.
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
+    <sch:ns prefix="che" uri="http://www.geocat.ch/2008/che"/>
 	<sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
 	<sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
 	<sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
@@ -90,9 +91,9 @@ USA.
 			service is available
 		-->
 		<sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
-			<sch:let name="resourceLocator" value="gmd:linkage/*/text()"/>
-			<sch:let name="noResourceLocator" value="normalize-space(gmd:linkage/gmd:URL)='' 
-					or not(gmd:linkage)"/>
+			<sch:let name="linkageText" value="((gmd:linkage//che:LocalisedURL | gmd:linkage/gmd:URL)[normalize-space(.) != ''][1])"/>
+			<sch:let name="resourceLocator" value="$linkageText"/>
+			<sch:let name="noResourceLocator" value="normalize-space($linkageText)='' or not(gmd:linkage)"/>
 			
 			<sch:assert test="not($noResourceLocator)">
 				<sch:value-of select="$loc/strings/alert.M52/div"/>

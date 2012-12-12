@@ -24,6 +24,7 @@
 package jeeves.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -37,12 +38,17 @@ import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.constants.Profiles;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.jdom.Element;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -294,17 +300,38 @@ public class ProfileManager
 		if(serviceContext == null) return true;
 		ServletContext servletContext = serviceContext.getServlet().getServletContext();
 		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		if(springContext == null) return true;
-		Map<String, WebInvocationPrivilegeEvaluator> evals = springContext.getBeansOfType(WebInvocationPrivilegeEvaluator.class);
-		for(WebInvocationPrivilegeEvaluator eval: evals.values()) {
-	    	SecurityContext context = SecurityContextHolder.getContext();
-	    	if(eval == null || context == null) return true;
-			Authentication authentication = context.getAuthentication();
-			boolean allowed = eval.isAllowed("/srv/"+serviceContext.getLanguage()+"/"+serviceName, authentication);
-			if (allowed) {
-				return true;
-			}
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(springContext == null || context == null) return true;
+		
+		Map<String, AbstractSecurityInterceptor> evals = springContext.getBeansOfType(AbstractSecurityInterceptor.class);
+		Authentication authentication = context.getAuthentication();
+		
+		FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
+		for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
+	    	if(securityInterceptor == null || context == null) return true;
+	    	
+
+	        Collection<ConfigAttribute> attrs = securityInterceptor.obtainSecurityMetadataSource().getAttributes(fi);
+
+	        if (attrs == null) {
+	            continue;
+	        }
+
+	        if (authentication == null) {
+	           continue;
+	        }
+
+	        try {
+	            securityInterceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
+	            return true;
+	        } catch (AccessDeniedException unauthorized) {
+	        	// ignore
+	        }
 		}
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.info(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
+        }
+
 		return false;
 	}
 

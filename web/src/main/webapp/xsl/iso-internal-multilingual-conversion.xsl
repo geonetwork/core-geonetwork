@@ -18,9 +18,43 @@
 	<!-- Converting the simple format to iso -->
 	<xsl:template match="/description">
 		<gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
-			<xsl:call-template name="composeTranslations">
-				<xsl:with-param name="elem" select="." />
-			</xsl:call-template>
+			<xsl:choose>
+			<xsl:when test="count(./*) &gt; 0">
+				<xsl:call-template name="composeTranslations">
+					<xsl:with-param name="elem" select="." />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="elem" select="."/>
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#EN">
+							<xsl:value-of select="normalize-space($elem/text())" />
+						</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#DE">
+							<xsl:value-of select="normalize-space($elem/text())" />
+						</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#FR">
+							<xsl:value-of select="normalize-space($elem/text())" />
+						</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#IT">
+							<xsl:value-of select="normalize-space($elem/text())" />
+						</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#RM">
+							<xsl:value-of select="normalize-space($elem/text())" />
+						</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</xsl:otherwise>
+			</xsl:choose>
 		</gmd:description>
 	</xsl:template>
 

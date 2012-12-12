@@ -6,7 +6,11 @@
     <xsl:include href="main.xsl"/>
     <xsl:include href="metadata.xsl"/>
     <xsl:include href="mapfish_includes.xsl"/>
-    
+
+	<xsl:template mode="http-equiv" match="*">
+			<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	</xsl:template>
+
     <xsl:template mode="css" match="/">
         <script type="text/javascript">
             window.gMfLocation = '<xsl:value-of select="/root/gui/url"/>/scripts/mapfish/';

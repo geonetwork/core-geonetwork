@@ -225,7 +225,6 @@ public final class LangUtils
     public static Element toIsoMultiLingualElem(String appPath, String basicValue) throws Exception
     {
 
-
         final Element desc = loadInternalMultiLingualElem(basicValue);
         return Xml.transform(desc, appPath+"xsl/iso-internal-multilingual-conversion.xsl");
     }

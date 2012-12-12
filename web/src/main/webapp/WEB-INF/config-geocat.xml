@@ -478,7 +478,6 @@
 			</class>
 
 			<output sheet="metadata-print.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get"/>
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>

@@ -173,7 +173,7 @@
 											  		window.location = href;
 											  	}
 											  	</script>
-												  	<a onclick="javascript:expiredSearch()">
+												  	<a href="javascript:expiredSearch()">
 														<xsl:value-of select="/root/gui/strings/search"/>
 												    </a>
 											  	</div>

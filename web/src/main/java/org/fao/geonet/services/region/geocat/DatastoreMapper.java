@@ -11,6 +11,7 @@ import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
@@ -74,10 +75,18 @@ public abstract class DatastoreMapper {
 		String id = prefix+feature.getID();
 		Map<String, String> labels = new HashMap<String, String>();
 		String label = feature.getAttribute(labelAttName).toString();
-		labels.put("eng", label);
-		labels.put("ger", label);
-		labels.put("fre", label);
-		labels.put("ita", label);
+		Element translations = LangUtils.loadInternalMultiLingualElem(label);
+		if(translations.getText()!=null) {
+			labels.put("eng", translations.getText());
+			labels.put("ger", translations.getText());
+			labels.put("fre", translations.getText());
+			labels.put("ita", translations.getText());			
+		} else {
+			labels.put("eng", translations.getChildText("EN"));
+			labels.put("ger", translations.getChildText("DE"));
+			labels.put("fre", translations.getChildText("FR"));
+			labels.put("ita", translations.getChildText("IT"));
+		}
 		boolean hasGeom = true;
 		ReferencedEnvelope bbox = new ReferencedEnvelope(feature.getBounds());
 		Map<String, String> kantonLabels = state.categoryIdMap.get(categoryId);
