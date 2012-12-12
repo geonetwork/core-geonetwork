@@ -142,20 +142,19 @@
                 <gmd:MD_Keywords>
                     <gmd:keyword>
                         <gmx:Anchor
-                            xlink:role="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures"
-                            xlink:href="http://purl.org/myocean/ontology/vocabulary/inspire-annex3-spatial-data-themes#oceanographicGeographicalFeatures"
+                            xlink:role="http://purl.org/myocean/ontology/vocabulary/feature-type#GridSeries"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/feature-type#GridSeries"
                             >Oceanographic geographical features</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="theme"/>
+                            codeListValue="feature-type"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>GEMET - INSPIRE annex 3 spatial themes, version
-                                    1.0</gco:CharacterString>
+                                <gco:CharacterString>Feature type</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -177,7 +176,7 @@
                 <gmd:MD_Keywords>
                     <gmd:keyword>
                         <gmx:Anchor
-                            xlink:href="http://purl.org/myocean/ontology/product/database#numerical-model"
+                            xlink:href="http://purl.org/myocean/ontology/product/discipline#numerical-model"
                             >numerical-model</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
@@ -188,7 +187,7 @@
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>MyOcean product type</gco:CharacterString>
+                                <gco:CharacterString>Discipline</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -216,13 +215,12 @@
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="parametersGroup"/>
+                            codeListValue="parameter"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>Seadatanet (P021) SeaDataNet Agreed Parameter
-                                    Groups</gco:CharacterString>
+                                <gco:CharacterString>Ocean variable</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -244,14 +242,14 @@
                 <gmd:MD_Keywords>
                     <gmd:keyword>
                         <gmx:Anchor
-                            xlink:role="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast"
-                            xlink:href="http://purl.org/myocean/ontology/vocabulary/delay-mode#forecast"
+                            xlink:role="http://purl.org/myocean/ontology/vocabulary/temporal-scale#forecast"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/temporal-scale#forecast"
                             >forecast</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="temporal"/>
+                            codeListValue="temporal-scale"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
@@ -284,12 +282,12 @@
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="areaOfBenefit"/>
+                            codeListValue="area-of-benefit"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>MyOcean area of benefit</gco:CharacterString>
+                                <gco:CharacterString>Area of benefit</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -311,19 +309,18 @@
                 <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
                     <gmd:keyword>
                         <gmx:Anchor
-                            xlink:href="http://purl.org/myocean/ontology/vocabulary/#in-situ-observation"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/reference-geographical-area#in-situ-observation"
                             >global-ocean</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="my-ocean-areas"/>
+                            codeListValue="reference-geographical-area"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>Reference Geographical
-                                    Areas</gco:CharacterString>
+                                <gco:CharacterString>Reference geographical area</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
@@ -345,18 +342,18 @@
                 <gmd:MD_Keywords>
                     <gmd:keyword>
                         <gmx:Anchor
-                            xlink:href="http://purl.org/myocean/ontology/vocabulary/processing-levels#0"
+                            xlink:href="http://purl.org/myocean/ontology/vocabulary/processing-levels#L0"
                             >Level 0</gmx:Anchor>
                     </gmd:keyword>
                     <gmd:type>
                         <gmd:MD_KeywordTypeCode
                             codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                            codeListValue="processing-levels"/>
+                            codeListValue="processing-level"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>
                             <gmd:title>
-                                <gco:CharacterString>MyOcean processing levels</gco:CharacterString>
+                                <gco:CharacterString>Processing level</gco:CharacterString>
                             </gmd:title>
                             <gmd:date>
                                 <gmd:CI_Date>
