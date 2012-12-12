@@ -158,7 +158,8 @@ GeoNetwork.app = function () {
     }
     function getResultsMap() {
         // Create map panel
-        var map = new OpenLayers.Map('results_map', GeoNetwork.map.MAP_OPTIONS);
+        var map = new OpenLayers.Map({ div: 'results_map' });
+				map.setOptions(GeoNetwork.map.MAP_OPTIONS);
         map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
         map.zoomToMaxExtent();
         
