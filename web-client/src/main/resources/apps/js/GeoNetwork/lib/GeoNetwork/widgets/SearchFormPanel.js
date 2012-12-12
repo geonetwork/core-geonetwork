@@ -43,22 +43,9 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
          *  The search function
          */
         searchCb: undefined,
-        searchBt: new Ext.Button({
-            text: OpenLayers.i18n('search'),
-            iconCls : 'md-mn-find',
-            iconAlign: 'right'
-        }),
         resetCb: function () {
             this.getForm().reset();
-        },
-        resetBt: new Ext.Button({
-            tooltip: OpenLayers.i18n('resetSearchForm'),
-            iconCls: 'md-mn-reset'
-        })
-        /** api: config[lang] 
-         *  The language to use to call GeoNetwork services in the print mode (which is opened in a new window).
-         */
-
+        }
     },
     getSearchBt: function () {
         return this.searchBt;
@@ -124,6 +111,18 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
      */
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
+        Ext.applyIf(this, {
+            searchBt: new Ext.Button({
+                text: OpenLayers.i18n('search'),
+                iconCls : 'md-mn-find',
+                iconAlign: 'right'
+            }),
+            resetBt: new Ext.Button({
+                tooltip: OpenLayers.i18n('resetSearchForm'),
+                iconCls: 'md-mn-reset'
+            })
+        });
+        
         GeoNetwork.SearchFormPanel.superclass.initComponent.call(this);
         
         if (this.resetBt) {
