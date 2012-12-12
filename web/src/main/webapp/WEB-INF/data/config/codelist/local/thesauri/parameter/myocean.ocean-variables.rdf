@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
+    xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
+    <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#">
+        <dc:title>Seadatanet (P021) SeaDataNet Agreed Parameter Groups</dc:title>
+        <dc:description>Ocean variables provided by the product: among CF + myOcean extension for
+            non official CF to-be parameters. Only applicable for phenomenons values, not applicable
+            for coordinates (e.g. lat, lon), for values metadata (e.g. errors, quality flags) or
+            technical parameters (e.g. analysis residual, battery charge, …). Extended external
+            reference is use for ocean variable.</dc:description>
+        <dcterms:issued>2008-06-28</dcterms:issued>
+        <dcterms:modified>2008-06-28</dcterms:modified>
+    </skos:ConceptScheme>
+    <!-- TODO : FR translation -->
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#number_content_of_icebergs">
+        <skos:prefLabel xml:lang="en">number_content_of_icebergs</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr">number_content_of_icebergs</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#chlorophyll_a_fluorescence_in_sea_water">
+        <skos:prefLabel xml:lang="en">chlorophyll_a_fluorescence_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr">chlorophyll_a_fluorescence_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#concentration_of_chlorophyll_in_sea_water">
+        <skos:prefLabel xml:lang="en">concentration_of_chlorophyll_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr">concentration_of_chlorophyll_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mole_concentration_of_dissolved_molecular_oxygen_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mole_concentration_of_dissolved_molecular_oxygen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >mole_concentration_of_dissolved_molecular_oxygen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#volume_backwards_scattering_coefficient_of_radiative_flux_in_sea_water_due_to_particles">
+        <skos:prefLabel xml:lang="en"
+            >volume_backwards_scattering_coefficient_of_radiative_flux_in_sea_water_due_to_particles</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >volume_backwards_scattering_coefficient_of_radiative_flux_in_sea_water_due_to_particles</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_phytoplankton">
+        <skos:prefLabel xml:lang="en"
+            >volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_phytoplankton</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_phytoplankton</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#chlorophyll_concentration_in_sea_water">
+        <skos:prefLabel xml:lang="en">chlorophyll_concentration_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr">chlorophyll_concentration_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_dissolved_organic_matter_and_non_algal_particles">
+        <skos:prefLabel xml:lang="en"
+            >volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_dissolved_organic_matter_and_non_algal_particles</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >volume_absorption_coefficient_of_radiative_flux_in_sea_water_due_to_dissolved_organic_matter_and_non_algal_particles</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mass_concentration_of_inorganic_particles_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mass_concentration_of_inorganic_particles_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >mass_concentration_of_inorganic_particles_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#tendency_of_mole_concentration_of_particulate_organic_matter_expressed_as_carbon_in_sea_water_due_to_net_primary_production">
+        <skos:prefLabel xml:lang="en"
+            >tendency_of_mole_concentration_of_particulate_organic_matter_expressed_as_carbon_in_sea_water_due_to_net_primary_production</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >tendency_of_mole_concentration_of_particulate_organic_matter_expressed_as_carbon_in_sea_water_due_to_net_primary_production</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#sea_ice_type">
+        <skos:prefLabel xml:lang="en">sea_ice_type</skos:prefLabel>
+        <skos:definition xml:lang="en">to be defined</skos:definition>
+        <skos:prefLabel xml:lang="fr">sea_ice_type</skos:prefLabel>
+        <skos:definition xml:lang="fr">to be defined</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#eastward_sea_water_velocity_produced_by_sea_surface_waves">
+        <skos:prefLabel xml:lang="en"
+            >eastward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="en">A quantity also known as “Stokes drift velocity”. A velocity
+            is a vector quantity. "Eastward" indicates a vector component which is positive when
+            directed eastward (negative westward). "Water" means water in all
+            phases.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >eastward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="fr">A quantity also known as “Stokes drift velocity”. A velocity
+            is a vector quantity. "Eastward" indicates a vector component which is positive when
+            directed eastward (negative westward). "Water" means water in all
+            phases.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#northward_sea_water_velocity_produced_by_sea_surface_waves">
+        <skos:prefLabel xml:lang="en"
+            >northward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="en">A quantity also known as “Stokes drift velocity”. A velocity
+            is a vector quantity. "Northward" indicates a vector component which is positive when
+            directed northward (negative southward). "Water" means water in all
+            phases.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >northward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="fr">A quantity also known as “Stokes drift velocity”. A velocity
+            is a vector quantity. "Northward" indicates a vector component which is positive when
+            directed northward (negative southward). "Water" means water in all
+            phases.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#sea_water_wavenumber">
+        <skos:prefLabel xml:lang="en">sea_water_wavenumber</skos:prefLabel>
+        <skos:definition xml:lang="en">A quantity proportional to the reciprocal of distance between
+            two successive wave crests or troughs at a fixed time.</skos:definition>
+        <skos:prefLabel xml:lang="fr">sea_water_wavenumber</skos:prefLabel>
+        <skos:definition xml:lang="fr">A quantity proportional to the reciprocal of distance between
+            two successive wave crests or troughs at a fixed time.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#surface_eastward_sea_water_velocity_produced_by_sea_surface_waves">
+        <skos:prefLabel xml:lang="en"
+            >surface_eastward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="en">A quantity also known as “Stokes drift velocity”. The surface
+            called "surface" means the lower boundary of the atmosphere. A velocity is a vector
+            quantity. "Eastward" indicates a vector component which is positive when directed
+            eastward (negative westward). "Water" means water in all phases.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >surface_eastward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="fr">A quantity also known as “Stokes drift velocity”. The surface
+            called "surface" means the lower boundary of the atmosphere. A velocity is a vector
+            quantity. "Eastward" indicates a vector component which is positive when directed
+            eastward (negative westward). "Water" means water in all phases.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#surface_northward_sea_water_velocity_produced_by_sea_surface_waves">
+        <skos:prefLabel xml:lang="en"
+            >surface_northward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="en">A quantity also known as “Stokes drift velocity”. The surface
+            called "surface" means the lower boundary of the atmosphere. A velocity is a vector
+            quantity. "Northward" indicates a vector component which is positive when directed
+            northward (negative southward). "Water" means water in all phases.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >surface_northward_sea_water_velocity_produced_by_sea_surface_waves</skos:prefLabel>
+        <skos:definition xml:lang="fr">A quantity also known as “Stokes drift velocity”. The surface
+            called "surface" means the lower boundary of the atmosphere. A velocity is a vector
+            quantity. "Northward" indicates a vector component which is positive when directed
+            northward (negative southward). "Water" means water in all phases.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#surface_snow_thickness_where_sea_ice">
+        <skos:prefLabel xml:lang="en">surface_snow_thickness_where_sea_ice</skos:prefLabel>
+        <skos:definition xml:lang="en">The surface called "surface" means the lower boundary of the
+            atmosphere. Unless indicated, a quantity is assumed to apply to the whole area of each
+            horizontal grid box. The qualifier where_type specifies instead that the quantity
+            applies only to the part of the grid box of the named type.</skos:definition>
+        <skos:prefLabel xml:lang="fr">surface_snow_thickness_where_sea_ice</skos:prefLabel>
+        <skos:definition xml:lang="fr">The surface called "surface" means the lower boundary of the
+            atmosphere. Unless indicated, a quantity is assumed to apply to the whole area of each
+            horizontal grid box. The qualifier where_type specifies instead that the quantity
+            applies only to the part of the grid box of the named type.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mass_concentration_of_flagellates_expressed_as_carbon_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mass_concentration_of_flagellates_expressed_as_carbon_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >mass_concentration_of_flagellates_expressed_as_carbon_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mass_concentration_of_chlorophyll_a_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mass_concentration_of_chlorophyll_a_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en">'Mass concentration' means mass per unit volume and is used
+            in the construction mass_concentration_of_X_in_Y, where X is a material constituent of
+            Y. A chemical or biological species denoted by X may be described by a single term such
+            as 'nitrogen' or a phrase such as 'nox_expressed_as_nitrogen'. Chlorophyll is the green
+            pigment found inmost plants, algae and cyanobacteria. The presence of chlorophyll is
+            essential for photosynthesis to take place. There are five different forms of
+            chlorophyll that occur naturally. All contain a chlorin ring (chemical formula C20H16N4)
+            which gives the green pigment and a side chain whose structure varies. The naturally
+            occurring forms of chlorophyll contain between 35 and 55 carbon atoms. Chlorophyll-a is
+            the most commonly occurring form of natural chlorophyll. The chemical formula of
+            chlorophyll-a is C55H72O5N4Mg.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >mass_concentration_of_chlorophyll_a_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr">'Mass concentration' means mass per unit volume and is used
+            in the construction mass_concentration_of_X_in_Y, where X is a material constituent of
+            Y. A chemical or biological species denoted by X may be described by a single term such
+            as 'nitrogen' or a phrase such as 'nox_expressed_as_nitrogen'. Chlorophyll is the green
+            pigment found inmost plants, algae and cyanobacteria. The presence of chlorophyll is
+            essential for photosynthesis to take place. There are five different forms of
+            chlorophyll that occur naturally. All contain a chlorin ring (chemical formula C20H16N4)
+            which gives the green pigment and a side chain whose structure varies. The naturally
+            occurring forms of chlorophyll contain between 35 and 55 carbon atoms. Chlorophyll-a is
+            the most commonly occurring form of natural chlorophyll. The chemical formula of
+            chlorophyll-a is C55H72O5N4Mg.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#sea_ice_x_displacement">
+        <skos:prefLabel xml:lang="en">sea_ice_x_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"x" indicates a vector component along the grid x-axis, when
+            this is not true longitude, positive with increasing x. "Displacement" means the change
+            in geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. An x displacement is calculated from
+            the difference in the moving object's grid x coordinate between the start and end of the
+            time interval associated with the displacement variable.</skos:definition>
+        <skos:prefLabel xml:lang="fr">sea_ice_x_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"x" indicates a vector component along the grid x-axis, when
+            this is not true longitude, positive with increasing x. "Displacement" means the change
+            in geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. An x displacement is calculated from
+            the difference in the moving object's grid x coordinate between the start and end of the
+            time interval associated with the displacement variable.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mass_concentration_of_inorganic_nitrogen_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mass_concentration_of_inorganic_nitrogen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >mass_concentration_of_inorganic_nitrogen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#mass_concentration_of_flagellates_expressed_as_nitrogen_in_sea_water">
+        <skos:prefLabel xml:lang="en"
+            >mass_concentration_of_flagellates_expressed_as_nitrogen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en"/>
+        <skos:prefLabel xml:lang="fr"
+            >mass_concentration_of_flagellates_expressed_as_nitrogen_in_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr"/>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#eastward_sea_ice_displacement">
+        <skos:prefLabel xml:lang="en">eastward_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"Eastward" indicates a vector component which is positive
+            when directed eastward (negative westward). "Displacement" means the change in
+            geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. An eastward displacement is the
+            distance calculated from the change in a moving object's longitude between the start and
+            end of the time interval associated with the displacement variable.</skos:definition>
+        <skos:prefLabel xml:lang="fr">eastward_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"Eastward" indicates a vector component which is positive
+            when directed eastward (negative westward). "Displacement" means the change in
+            geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. An eastward displacement is the
+            distance calculated from the change in a moving object's longitude between the start and
+            end of the time interval associated with the displacement variable.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#northward_sea_ice_displacement">
+        <skos:prefLabel xml:lang="en">northward_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"Northward" indicates a vector component which is positive
+            when directed northward (negative southward). "Displacement" means the change in
+            geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. A northward displacement is the
+            distance calculated from the change in a moving object's latitude between the start and
+            end of the time interval associated with the displacement variable.</skos:definition>
+        <skos:prefLabel xml:lang="fr">northward_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"Northward" indicates a vector component which is positive
+            when directed northward (negative southward). "Displacement" means the change in
+            geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. A northward displacement is the
+            distance calculated from the change in a moving object's latitude between the start and
+            end of the time interval associated with the displacement variable.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#sea_ice_y_displacement">
+        <skos:prefLabel xml:lang="en">sea_ice_y_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"y" indicates a vector component along the grid y-axis, when
+            this is not true latitude, positive with increasing y. "Displacement" means the change
+            in geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. A y displacement is calculated from
+            the difference in the moving object's grid y coordinate between the start and end of the
+            time interval associated with the displacement variable.</skos:definition>
+        <skos:prefLabel xml:lang="fr">sea_ice_y_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"y" indicates a vector component along the grid y-axis, when
+            this is not true latitude, positive with increasing y. "Displacement" means the change
+            in geospatial position of an object that has moved over time. If possible, the time
+            interval over which the motion took place should be specified using a bounds variable
+            for the time coordinate variable. A displacement can be represented as a vector. Such a
+            vector should however not be interpreted as describing a rectilinear, constant speed
+            motion but merely as an indication that the start point of the vector is found at the
+            tip of the vector after the time interval associated with the displacement variable. A
+            displacement does not prescribe a trajectory. Sea ice displacement can be defined as a
+            two-dimensional vector, with no vertical component. A y displacement is calculated from
+            the difference in the moving object's grid y coordinate between the start and end of the
+            time interval associated with the displacement variable.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#direction_of_sea_ice_displacement">
+        <skos:prefLabel xml:lang="en">direction_of_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"direction_of_X" means direction of a vector, a bearing.
+            "Displacement" means the change in geospatial position of an object that has moved over
+            time. If possible, the time interval over which the motion took place should be
+            specified using a bounds variable for the time coordinate variable. A displacement can
+            be represented as a vector. Such a vector should however not be interpreted as
+            describing a rectilinear, constant speed motion but merely as an indication that the
+            start point of the vector is found at the tip of the vector after the time interval
+            associated with the displacement variable. A displacement does not prescribe a
+            trajectory. Sea ice displacement can be defined as a two-dimensional vector, with no
+            vertical component. In that case, "displacement" is also the distance across the earth's
+            surface calculated from the change in a moving object's geospatial position between the
+            start and end of the time interval associated with the displacement variable. The
+            "direction of displacement" is the angle between due north and the displacement
+            vector.</skos:definition>
+        <skos:prefLabel xml:lang="fr">direction_of_sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"direction_of_X" means direction of a vector, a bearing.
+            "Displacement" means the change in geospatial position of an object that has moved over
+            time. If possible, the time interval over which the motion took place should be
+            specified using a bounds variable for the time coordinate variable. A displacement can
+            be represented as a vector. Such a vector should however not be interpreted as
+            describing a rectilinear, constant speed motion but merely as an indication that the
+            start point of the vector is found at the tip of the vector after the time interval
+            associated with the displacement variable. A displacement does not prescribe a
+            trajectory. Sea ice displacement can be defined as a two-dimensional vector, with no
+            vertical component. In that case, "displacement" is also the distance across the earth's
+            surface calculated from the change in a moving object's geospatial position between the
+            start and end of the time interval associated with the displacement variable. The
+            "direction of displacement" is the angle between due north and the displacement
+            vector.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#sea_ice_displacement">
+        <skos:prefLabel xml:lang="en">sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="en">"Displacement" means the change in geospatial position of an
+            object that has moved over time. If possible, the time interval over which the motion
+            took place should be specified using a bounds variable for the time coordinate variable.
+            A displacement can be represented as a vector. Such a vector should however not be
+            interpreted as describing a rectilinear, constant speed motion but merely as an
+            indication that the start point of the vector is found at the tip of the vector after
+            the time interval associated with the displacement variable. A displacement does not
+            prescribe a trajectory. Sea ice displacement can be defined as a two-dimensional vector,
+            with no vertical component. In that case, "displacement" is also the distance across the
+            earth's surface calculated from the change in a moving object's geospatial position
+            between the start and end of the time interval associated with the displacement
+            variable.</skos:definition>
+        <skos:prefLabel xml:lang="fr">sea_ice_displacement</skos:prefLabel>
+        <skos:definition xml:lang="fr">"Displacement" means the change in geospatial position of an
+            object that has moved over time. If possible, the time interval over which the motion
+            took place should be specified using a bounds variable for the time coordinate variable.
+            A displacement can be represented as a vector. Such a vector should however not be
+            interpreted as describing a rectilinear, constant speed motion but merely as an
+            indication that the start point of the vector is found at the tip of the vector after
+            the time interval associated with the displacement variable. A displacement does not
+            prescribe a trajectory. Sea ice displacement can be defined as a two-dimensional vector,
+            with no vertical component. In that case, "displacement" is also the distance across the
+            earth's surface calculated from the change in a moving object's geospatial position
+            between the start and end of the time interval associated with the displacement
+            variable.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#surface_ratio_of_upwelling_radiance_emerging_from_sea_water_to_downwelling_radiative_flux_in_air">
+        <skos:prefLabel xml:lang="en"
+            >surface_ratio_of_upwelling_radiance_emerging_from_sea_water_to_downwelling_radiative_flux_in_air</skos:prefLabel>
+        <skos:definition xml:lang="en">The surface called "surface" means the lower boundary of the
+            atmosphere. "ratio_of_X_to_Y" means X/Y. Upwelling radiation is radiation from below. It
+            does not mean "net upward". Downwelling radiation is radiation from above. It does not
+            mean "net downward". Radiance is the radiative flux in a particular direction, per unit
+            of solid angle. The direction towards which it is going must be specified, for instance
+            with a coordinate of angle_of_emergence. Radiative flux is the sum of shortwave and
+            longwave radiative fluxes. When thought of as being incident on a surface, a radiative
+            flux is sometimes called "irradiance". In relation to satellite ocean color products the
+            quantity named
+            surface_ratio_of_upwelling_radiance_emerging_from_sea_water_to_downwelling_radiative_flux_in_air
+            is sometimes called "remote sensing reflectance" and has a bidirectional dependence. The
+            direction of the downwelling flux can be specified using a coordinate with the standard
+            name angle_of_incidence.</skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >surface_ratio_of_upwelling_radiance_emerging_from_sea_water_to_downwelling_radiative_flux_in_air</skos:prefLabel>
+        <skos:definition xml:lang="fr">The surface called "surface" means the lower boundary of the
+            atmosphere. "ratio_of_X_to_Y" means X/Y. Upwelling radiation is radiation from below. It
+            does not mean "net upward". Downwelling radiation is radiation from above. It does not
+            mean "net downward". Radiance is the radiative flux in a particular direction, per unit
+            of solid angle. The direction towards which it is going must be specified, for instance
+            with a coordinate of angle_of_emergence. Radiative flux is the sum of shortwave and
+            longwave radiative fluxes. When thought of as being incident on a surface, a radiative
+            flux is sometimes called "irradiance". In relation to satellite ocean color products the
+            quantity named
+            surface_ratio_of_upwelling_radiance_emerging_from_sea_water_to_downwelling_radiative_flux_in_air
+            is sometimes called "remote sensing reflectance" and has a bidirectional dependence. The
+            direction of the downwelling flux can be specified using a coordinate with the standard
+            name angle_of_incidence.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#secchi_depth_of_sea_water">
+        <skos:prefLabel xml:lang="en">secchi_depth_of_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="en">Depth is the vertical distance below the surface. A Secchi
+            disk is a patterned disk that is used to measure water transparency in oceans and lakes.
+            The disk is lowered into the water and the depth at which the pattern is no longer
+            visible is the called the secchi depth.</skos:definition>
+        <skos:prefLabel xml:lang="fr">secchi_depth_of_sea_water</skos:prefLabel>
+        <skos:definition xml:lang="fr">Depth is the vertical distance below the surface. A Secchi
+            disk is a patterned disk that is used to measure water transparency in oceans and lakes.
+            The disk is lowered into the water and the depth at which the pattern is no longer
+            visible is the called the secchi depth.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#surface_upwelling_spectral_radiance_in_air_emerging_from_sea_water_due_to_fluorescence_from_chlorophyll">
+        <skos:prefLabel xml:lang="en"
+            >surface_upwelling_spectral_radiance_in_air_emerging_from_sea_water_due_to_fluorescence_from_chlorophyll</skos:prefLabel>
+        <skos:definition xml:lang="en">Fluorescence Line Height (FLH) is a relative measure of the
+            amount of radiance leaving the sea surface in the chlorophyll fluorescence emmission
+            band, which is presumably a result of chlorophyll fluorescence. A baseline is defined as
+            the linear fit between the two bands (667nm and 748nm) bracketing the fluorescent band
+            (678nm). The 678nm signal over and above this baseline is the FLH. </skos:definition>
+        <skos:prefLabel xml:lang="fr"
+            >surface_upwelling_spectral_radiance_in_air_emerging_from_sea_water_due_to_fluorescence_from_chlorophyll</skos:prefLabel>
+        <skos:definition xml:lang="fr">Fluorescence Line Height (FLH) is a relative measure of the
+            amount of radiance leaving the sea surface in the chlorophyll fluorescence emmission
+            band, which is presumably a result of chlorophyll fluorescence. A baseline is defined as
+            the linear fit between the two bands (667nm and 748nm) bracketing the fluorescent band
+            (678nm). The 678nm signal over and above this baseline is the FLH. </skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#angle_of_emergence">
+        <skos:prefLabel xml:lang="en">angle_of_emergence</skos:prefLabel>
+        <skos:definition xml:lang="en">The angle of emergence is that between the direction of a
+            beam of radiation emerging from the surface of a medium and the normal to that
+            surface.</skos:definition>
+        <skos:prefLabel xml:lang="fr">angle_of_emergence</skos:prefLabel>
+        <skos:definition xml:lang="fr">The angle of emergence is that between the direction of a
+            beam of radiation emerging from the surface of a medium and the normal to that
+            surface.</skos:definition>
+    </skos:Concept>
+    <skos:Concept
+        rdf:about="http://purl.org/myocean/ontology/vocabulary/cf-standard-name#angle_of_incidence">
+        <skos:prefLabel xml:lang="en">angle_of_incidence</skos:prefLabel>
+        <skos:definition xml:lang="en">The angle of incidence is that between the direction of
+            approach of a beam of radiation toward a surface and the normal to that
+            surface.</skos:definition>
+        <skos:prefLabel xml:lang="fr">angle_of_incidence</skos:prefLabel>
+        <skos:definition xml:lang="fr">The angle of incidence is that between the direction of
+            approach of a beam of radiation toward a surface and the normal to that
+            surface.</skos:definition>
+    </skos:Concept>
+</rdf:RDF>
