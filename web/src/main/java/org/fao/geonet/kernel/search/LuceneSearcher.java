@@ -1378,8 +1378,11 @@ public class LuceneSearcher extends MetaSearcher {
                 IndexableField[] values = doc.getFields(LuceneConfig.multilingualSortFieldName(fieldName, searchLang));
                 for (IndexableField f : values) {
                     if(f != null) {
-                        addedTranslation.add(fieldName);
-                        md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
+                        String stringValue = f.stringValue();
+                        if(!stringValue.trim().isEmpty()) {
+                            addedTranslation.add(fieldName);
+                            md.addContent(new Element(dumpFields.get(fieldName)).setText(stringValue));
+                        }
                     }
                 }
             }

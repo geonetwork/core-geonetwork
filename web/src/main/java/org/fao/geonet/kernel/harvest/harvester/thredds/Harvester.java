@@ -456,7 +456,7 @@ class Harvester
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
 
         boolean indexGroup = false;
-        dataMan.indexMetadata(dbms, id, indexGroup);
+        dataMan.indexMetadata(dbms, id);
 		
 		dbms.commit();
 	}

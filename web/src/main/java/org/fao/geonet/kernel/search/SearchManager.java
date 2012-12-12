@@ -717,32 +717,6 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
-     * @param schemaDir
-     * @param metadata
-     * @param id
-     * @param moreFields
-     * @param isTemplate
-     * @param title
-     * @throws Exception
-     */
-    public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
-                           String title) throws Exception {
-        
-        deleteIndexDocument(id, true);
-        
-        indexGeometry(schemaDir, metadata, id, moreFields);
-        
-        // Update Lucene index
-        List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title,
-                true);
-        for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
-            _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
-        }
-    }
-
-    /**
-     * TODO javadoc.
-     *
      * @param fld
      * @param txt
      * @throws Exception
