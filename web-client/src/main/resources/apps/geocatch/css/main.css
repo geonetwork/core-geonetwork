@@ -177,12 +177,11 @@ form {
 }
 
 #search-form-fieldset {
-    text-align: center;
+	text-align: center;
 }
 
-
-#search-form-fieldset legend{
-    text-align: left;
+#search-form-fieldset legend {
+	text-align: left;
 }
 
 input[type="button"] {
@@ -196,4 +195,18 @@ input[type="button"] {
 	overflow: visible;
 	width: auto;
 	outline: 0 none;
+	padding-right: 13px;
+}
+
+/* GeoNetwork Message */
+.alert {
+	position: absolute;
+	right: 35%;
+	width: 350px;
+	z-index: 20000;
+	padding: 12px;
+	background-color: rgba(255, 240, 240, 0.2);
+	box-shadow: 10px 10px 5px #888888;
+	color:black;
+	border-radius: 5px;
 }

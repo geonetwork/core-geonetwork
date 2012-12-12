@@ -238,11 +238,11 @@
                         
                        <form id="logout-div">
                            <xsl:choose>
-                               <xsl:when test='not(string(/root/gui/session/userId)!="")'>
+                               <xsl:when test="not(string(/root/gui/session/userId)!='')">
                                 <xsl:attribute name="style">display:none;</xsl:attribute>
                                </xsl:when>
                            </xsl:choose>
-                           <form name="logout" action="{/root/gui/locService}/j_spring_security_logout" onsubmit="return false_();">
+                           <form name="logout" onsubmit="return false_();">
                                 <label id="username_label">
                                     <xsl:value-of select="/root/gui/strings/user"/>
                                 </label>
@@ -369,6 +369,10 @@
                     <script type="text/javascript">
                         <xsl:attribute name="src"><xsl:value-of
                                 select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</xsl:attribute>
+                    </script>
+                    <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork/Message.js</xsl:attribute>
                     </script>
 
                     <script type="text/javascript">

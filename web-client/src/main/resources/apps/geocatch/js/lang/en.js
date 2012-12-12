@@ -34,7 +34,8 @@ GeoNetwork.GeoCatCh.Lang.en = {
 
 	'withinGeo': 'Completely within or equal',
 	'intersectGeo': 'Intersects',
-	'containsGeo': 'Contains at least'
+	'containsGeo': 'Contains at least',
+    'Login.error.message': 'Login failed. Check your username and password.',
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);
