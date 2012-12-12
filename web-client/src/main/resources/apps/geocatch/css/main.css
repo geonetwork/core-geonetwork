@@ -6,7 +6,7 @@ html,body {
 }
 
 body {
-	font: 16px arial, helvetica, sans-serif;
+	font-family: Verdana, Arial, Helvetica, sans-se;
 	min-width: 900px;
 }
 
@@ -33,6 +33,12 @@ form {
 	background-image: url('../images/header-background.jpg');
 	background-color: white;
 	box-shadow: none;
+}
+
+/** General */
+a {
+	color: #064377;
+	font-size: 12pt;
 }
 
 /* ==============
@@ -184,6 +190,11 @@ form {
 	text-align: left;
 }
 
+#search ul {
+	margin: 0;
+	padding: 0;
+}
+
 input[type="button"] {
 	font: normal 11px tahoma, verdana, helvetica;
 	padding-left: 13px;
@@ -207,6 +218,11 @@ input[type="button"] {
 	padding: 12px;
 	background-color: rgba(255, 240, 240, 0.2);
 	box-shadow: 10px 10px 5px #888888;
-	color:black;
+	width: 350px;
+	z-index: 20000;
+	padding: 12px;
+	background-color: rgba(255, 240, 240, 0.2);
+	box-shadow: 10px 10px 5px #888888;
+	color: black;
 	border-radius: 5px;
 }

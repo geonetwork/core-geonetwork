@@ -293,6 +293,7 @@
                 </fieldset>
 
             </div>
+            
             <div id="search-results">
                 <div id="result-panel"></div>
             </div>

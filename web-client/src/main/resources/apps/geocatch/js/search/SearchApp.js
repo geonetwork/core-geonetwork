@@ -45,7 +45,6 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : 'Text search',
                 hideLabel : false,
                 id : 'E_any',
-                anchor : '100%',
                 minChars : 2,
                 loadingText : '...',
                 hideTrigger : true,

@@ -42,52 +42,6 @@ GeoNetwork.mapApp = function() {
 
     var generateMaps = function() {
 
-        var map = new OpenLayers.Map({
-            maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
-            projection : GeoNetwork.map.MAP_OPTIONS.projection,
-            resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
-            restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
-                    .clone()
-        });
-
-        Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
-            map.addLayer(layer.clone());
-        });
-
-        map.events.register("click", map, function(e) {
-            app.showBigMap();
-        });
-
-        var showBigMapButton = new OpenLayers.Control.Button({
-            trigger : app.showBigMap,
-            title : 'Show Big Map and Hide Results'
-        });
-
-        OpenLayers.Util.extend(showBigMapButton, {
-            displayClass : 'showBigMap'
-        });
-
-        var panel = new OpenLayers.Control.Panel();
-
-        OpenLayers.Util.extend(panel, {
-            displayClass : 'showBigMapPanel'
-        });
-
-        panel.addControls([ showBigMapButton ]);
-        map.addControl(panel);
-
-        new GeoExt.MapPanel({
-            id : 'minimap',
-            renderTo : 'mini-map',
-            height : 200,
-            width : 200,
-            map : map,
-//            title : OpenLayers.i18n('Preview'),
-            stateId : 'minimap',
-            prettyStateKeys : true
-        });
-        Ext.get("mini-map").setVisibilityMode(Ext.Element.DISPLAY);
-
         var map2 = new OpenLayers.Map({
             maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
             projection : GeoNetwork.map.MAP_OPTIONS.projection,
@@ -97,21 +51,13 @@ GeoNetwork.mapApp = function() {
         });
 
         Ext.each(GeoNetwork.map.MAP_OPTIONS.controls, function(control) {
-            map2.addControl(control.clone());
+            map2.addControl(control);
         });
 
         Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
-            map2.addLayer(layer.clone());
+            map2.addLayer(layer);
         });
 
-        var closeBigMapButton = new OpenLayers.Control.Button({
-            trigger : app.hideBigMap,
-            title : 'Hide Big Map and Show Results'
-        });
-
-        OpenLayers.Util.extend(closeBigMapButton, {
-            displayClass : 'hideBigMap'
-        });
         var scaleLinePanel = new Ext.Panel({
             cls : 'olControlScaleLine overlay-element overlay-scaleline',
             border : false
@@ -126,81 +72,10 @@ GeoNetwork.mapApp = function() {
             scaleLine.activate();
         }, this);
 
-        var zoomStore;
-
-        var fixedScales = GeoNetwork.map.MAP_OPTIONS.resolutions;
-
-        if (fixedScales && fixedScales.length > 0) {
-            var zooms = [];
-            var scales = fixedScales;
-            var units = map2.baseLayer.units;
-
-            for ( var i = scales.length - 1; i >= 0; i--) {
-                var scale = scales[i];
-                zooms.push({
-                    level : i,
-                    resolution : OpenLayers.Util.getResolutionFromScale(scale,
-                            units),
-                    scale : scale
-                });
-            }
-
-            zoomStore = new GeoExt.data.ScaleStore({});
-            zoomStore.loadData(zooms);
-
-        } else {
-            zoomStore = new GeoExt.data.ScaleStore({
-                map : map2
-            });
-        }
-        var zoomSelector = new Ext.form.ComboBox(
-                {
-                    emptyText : 'Zoom level',
-                    tpl : '<tpl for="."><div class="x-combo-list-item">1 : {[parseInt(values.scale)]}</div></tpl>',
-                    editable : false,
-                    triggerAction : 'all',
-                    mode : 'local',
-                    store : zoomStore,
-                    width : 110
-                });
-
-        zoomSelector.on('click', function(evt) {
-            evt.stopEvent();
-        });
-        zoomSelector.on('mousedown', function(evt) {
-            evt.stopEvent();
-        });
-
-        zoomSelector.on('select', function(combo, record, index) {
-            map.zoomTo(record.data.level);
-        }, this);
-
-        var zoomSelectorWrapper = new Ext.Panel({
-            items : [ zoomSelector ],
-            cls : 'overlay-element overlay-scalechooser',
-            border : false
-        });
-
-        map2.events.register('zoomend', this, function() {
-            var scale = zoomStore.queryBy(function(record) {
-                return map.getZoom() === record.data.level;
-            });
-
-            if (scale.length > 0) {
-                scale = scale.items[0];
-                zoomSelector.setValue("1 : " + parseInt(scale.data.scale, 10));
-            } else {
-                if (!zoomSelector.rendered) {
-                    return;
-                }
-                zoomSelector.clearValue();
-            }
-        });
-
         var mapOverlay = new Ext.Panel({
             // title: "Overlay",
             cls : 'map-overlay',
-            items : [ scaleLinePanel, zoomSelectorWrapper ]
+            items : [ scaleLinePanel ]
         });
 
         mapOverlay.on("afterlayout", function() {
@@ -215,47 +90,22 @@ GeoNetwork.mapApp = function() {
             });
         }, this);
 
-        var panel = new OpenLayers.Control.Panel({
-            CLASS_NAME : 'hideBigMapPanel'
-        });
-        panel.addControls([ closeBigMapButton ]);
-        map2.addControl(panel);
-
         var panel2 = new GeoExt.MapPanel({
             height : 500,
+            width: '100%',
             map : map2,
-            id: 'really-big-map',
-//            title : 'Map',
+            id: 'map',
             stateId : 'bigmap',
             prettyStateKeys : true
-//            ,
-//            renderTo: 'big-map'
         });
 
         panel2.map = map2;
 
         app.mapApp.maps.push(map2);
-        app.mapApp.maps.push(map);
 
         addMapControls();
-
-        map.events.register("changebaselayer", map, function(e) {
-            var name = e.object.baseLayer.name;
-            var url = e.object.baseLayer.url;
-
-            Ext.each(app.mapApp.maps, function(m) {
-                if (m.id !== e.object.id) {
-                    Ext.each(m.layers, function(l) {
-                        if (l.name === name && l.url === url) {
-                            m.setBaseLayer(l);
-                        }
-                    });
-                }
-            });
-        });
-
-        createViewport(panel2);
-        registerWindows();
+        
+        return panel2;
     };
 
     /**
@@ -1283,17 +1133,6 @@ GeoNetwork.mapApp = function() {
         createTree();
         createLegendPanel();
 
-        // Accordion panel with layer tree and advanced print config
-        var accordion = new Ext.Panel({
-            region : 'center',
-            id: 'layerManager-accordion',
-            border : false,
-            layout : 'accordion',
-            deferredRender : false,
-            items : [ tree ]
-        // , printPanel ]
-        });
-
         viewport = new Ext.Panel({
             layout : 'border',
             id : 'big-map',
@@ -1619,7 +1458,7 @@ GeoNetwork.mapApp = function() {
         },
         maps : [],
         init : function() {
-            generateMaps();
+            return generateMaps();
         },
         initPrint: function () {
             createPrintPanel(app.mapApp.getMap());
