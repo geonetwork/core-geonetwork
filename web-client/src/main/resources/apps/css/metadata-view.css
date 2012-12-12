@@ -59,6 +59,7 @@ table.related * li {
 .md-view * a {
   text-decoration : none;
   color : #0076A1;
+  cursor: pointer;
 }
 .md-view * a:hover {
   text-decoration : underline;
@@ -81,7 +82,6 @@ table.related * li {
 .md-view ul li {
   border-top : 1px solid transparent;
   color : #222222;
-  cursor : pointer;
   float : left;
   margin : 2px;
   overflow : hidden;

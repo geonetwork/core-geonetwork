@@ -156,14 +156,47 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 // Display only client requested facet
                 Ext.each(this.facetListConfig, function (facetToDisplay) {
                     Ext.each(facets.getElementsByTagName(facetToDisplay.name), function (facet) {
+                        if (facet.nodeName !== '#text') {
+                            // Property to see if more action link should be displayed
+                            facet.setAttribute('moreAction', 'false');
+                            if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
+                                var nodeCount = 0;
+                                var facetList = "";
+                                Ext.each(facet.childNodes, function (node) {
+                                    if (node.nodeName !== '#text') {
+                                        var visible = (nodeCount < this.count) || (nodeCount < panel.maxDisplayedItems);
+                                        if (facet.getAttribute('moreAction') === 'false' && !visible) {
+                                            facet.setAttribute('moreAction', 'true');
+                                            facetList += moreBt;
+                                        }
+                                        facetList += panel.displayFacetValue(node, visible);
+                                        nodeCount ++;
+                                    }
+                                }, this);
+                                if (facetList !== "") {
+                                    zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
+                                    zappette += facetList;
+                                    if (facet.getAttribute('moreAction') === 'true') {
+                                        zappette += lessBt;
+                                    }
+                                    zappette += "</ul>";
+                                }
+                            }
+                        }
+                    }, facetToDisplay);
+                });
+            } else {
+                // Display all
+                Ext.each(facets.childNodes, function (facet) {
+                    if (facet.nodeName !== '#text') {
                         // Property to see if more action link should be displayed
                         facet.setAttribute('moreAction', 'false');
                         if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
-                            var nodeCount = 0;
                             var facetList = "";
+                            var nodeCount = 0;
                             Ext.each(facet.childNodes, function (node) {
                                 if (node.nodeName !== '#text') {
-                                    var visible = (nodeCount < this.count) || (nodeCount < panel.maxDisplayedItems);
+                                    var visible = (nodeCount < panel.maxDisplayedItems);
                                     if (facet.getAttribute('moreAction') === 'false' && !visible) {
                                         facet.setAttribute('moreAction', 'true');
                                         facetList += moreBt;
@@ -171,7 +204,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                                     facetList += panel.displayFacetValue(node, visible);
                                     nodeCount ++;
                                 }
-                            }, this);
+                            });
                             if (facetList !== "") {
                                 zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
                                 zappette += facetList;
@@ -180,35 +213,6 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                                 }
                                 zappette += "</ul>";
                             }
-                        }
-                    }, facetToDisplay);
-                });
-            } else {
-                // Display all
-                Ext.each(facets.childNodes, function (facet) {
-                    // Property to see if more action link should be displayed
-                    facet.setAttribute('moreAction', 'false');
-                    if (facet.nodeName !== '#text' && facet.childNodes.length > 0) {
-                        var facetList = "";
-                        var nodeCount = 0;
-                        Ext.each(facet.childNodes, function (node) {
-                            if (node.nodeName !== '#text') {
-                                var visible = (nodeCount < panel.maxDisplayedItems);
-                                if (facet.getAttribute('moreAction') === 'false' && !visible) {
-                                    facet.setAttribute('moreAction', 'true');
-                                    facetList += moreBt;
-                                }
-                                facetList += panel.displayFacetValue(node, visible);
-                                nodeCount ++;
-                            }
-                        });
-                        if (facetList !== "") {
-                            zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
-                            zappette += facetList;
-                            if (facet.getAttribute('moreAction') === 'true') {
-                                zappette += lessBt;
-                            }
-                            zappette += "</ul>";
                         }
                     }
                 });

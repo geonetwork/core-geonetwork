@@ -434,6 +434,23 @@ GeoNetwork.Lang.ca={
     'xmlData': 'XML',
     'minorEdit': 'Modificació menor',
     'minorEditTT': '',
+    
+    'facetMore': '+ Show more',
+    'facetLess': '- Show less',
+    
+    'extractorTitle': 'Download data from ',
+    'defineExtractionArea': 'Define extraction area',
+    'chooseALayer': 'Choose a layer',
+    'outputFormat': 'Output format',
+    'dataDownload': "Download data",
+    'wfsVersion': 'Service version',
+    'wxs-extract-service-not-found': 'Error connecting to the service ${url}. ${misc}.',
+    'wxs-extract-layer-not-found': 'Layer ${layer} not found in WFS (${url}).',
+    'GML2': 'GML 2',
+    'GML3': 'GML 3',
+    'CSV': 'Text CSV',
+    'SHAPE-ZIP': 'ESRI Shapefile',
+    
     // Shortcuts
     'runASearch': 'Executar una cerca.',
     'focusOnAny': 'Moure el cursor al camp de cerca de text.',

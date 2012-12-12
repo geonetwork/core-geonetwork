@@ -151,6 +151,7 @@ public class LuceneSearcher extends MetaSearcher {
 	private Set<String>	_tokenizedFieldSet;
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
+
 	
 	/**
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
@@ -189,7 +190,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-
+		// Open the IndexReader first, and then the TaxonomyReader.
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
         

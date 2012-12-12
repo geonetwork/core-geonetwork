@@ -515,11 +515,9 @@ public class SearchManager {
 
 
 		_luceneDir = new File(luceneDir + NON_SPATIAL_DIR);
-
 		if (!_luceneDir.isAbsolute()) {
             _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
         }
-
         _luceneDir.getParentFile().mkdirs();
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
@@ -727,7 +725,7 @@ public class SearchManager {
      * @param title
      * @throws Exception
      */
-	public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
+    public void indexGroup(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate,
                            String title) throws Exception {
         
         deleteIndexDocument(id, true);
