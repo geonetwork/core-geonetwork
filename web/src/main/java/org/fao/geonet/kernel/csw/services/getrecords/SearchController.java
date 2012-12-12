@@ -118,7 +118,7 @@ public class SearchController {
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
 		// search for results, filtered and sorted
-        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
+        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
         // retrieve actual metadata for results

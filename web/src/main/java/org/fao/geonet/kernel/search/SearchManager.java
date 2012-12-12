@@ -64,6 +64,7 @@ import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
@@ -1518,18 +1519,22 @@ public class SearchManager {
 			String paramType = fieldConfig.getType();
 			if ("double".equals(paramType)) {
 				double d = Double.valueOf(string);
+				fieldType.setNumericType(NumericType.DOUBLE);
 				field = new DoubleField(name, d, fieldType);
 			}
             else if ("float".equals(paramType)) {
 				float f = Float.valueOf(string);
+				fieldType.setNumericType(NumericType.FLOAT);
 				field = new FloatField(name, f, fieldType);
 			}
             else if ("long".equals(paramType)) {
 				long l = Long.valueOf(string);
+				fieldType.setNumericType(NumericType.LONG);
 				field = new LongField(name, l, fieldType);
 			}
             else {
 				int i = Integer.valueOf(string);
+				fieldType.setNumericType(NumericType.INT);
 				field = new IntField(name, i, fieldType);
 			}
 			return field;

@@ -7,6 +7,7 @@ import bak.pcj.map.ObjectKeyByteMapIterator;
 
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.search.FieldCache;
+import org.apache.lucene.search.FieldCache.DocTermsIndex;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
@@ -52,7 +53,7 @@ public class LangSortField extends SortField {
         }
 
         private byte[] values;
-        private DocTerms currentReaderValues;
+        private DocTermsIndex currentReaderValues;
         // -2 indicates not set
         private int bottom = -2;
 
@@ -81,8 +82,9 @@ public class LangSortField extends SortField {
             values[slot] = intValue(locale);
         }
 
-        private String readerValue(int doc) {
-            return currentReaderValues.getTerm(doc, new BytesRef()).utf8ToString();
+        private String readerValue(int docID) {
+            int ord = currentReaderValues.getOrd(docID);
+            return currentReaderValues.lookup(ord, new BytesRef(3)).utf8ToString();
         }
 
         private byte intValue( String locale ) {
@@ -97,7 +99,7 @@ public class LangSortField extends SortField {
 
         @Override
         public FieldComparator<String> setNextReader(AtomicReaderContext context) throws IOException {
-            currentReaderValues = FieldCache.DEFAULT.getTerms(context.reader(), MD_DOC_LANG_FIELD);
+            currentReaderValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), MD_DOC_LANG_FIELD);
             return this;
         }
 

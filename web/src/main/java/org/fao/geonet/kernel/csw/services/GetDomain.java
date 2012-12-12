@@ -253,13 +253,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					fields.add(property);
 					fields.add("_isTemplate");
 					
-					DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
 	
 					// parse each document in the index
 					String[] fieldValues;
 					SortedSet<String> sortedValues = new TreeSet<String>();
 					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
+					    DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
 						reader.document(hits.scoreDocs[j].doc, selector);
 						Document doc = selector.getDocument();
 

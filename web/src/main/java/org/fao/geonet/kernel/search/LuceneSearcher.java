@@ -1431,8 +1431,8 @@ public class LuceneSearcher extends MetaSearcher {
         List<String> response = new ArrayList<String>();
 		TopDocs tdocs = performQuery(0, maxHits, false);
 
-		DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
         for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+            DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
             _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
             Document doc = docVisitor.getDocument();
             String uuid = doc.get("_uuid");
@@ -1452,12 +1452,12 @@ public class LuceneSearcher extends MetaSearcher {
      */
     public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
 
-        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
-                "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
       Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
 			TopDocs tdocs = performQuery(0, maxHits, false);
 
       for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+          DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
+                  "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
           _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
           Document doc = docVisitor.getDocument();
 
@@ -1549,7 +1549,6 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
     private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
-        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(fieldnames);
         final IndexAndTaxonomy indexAndTaxonomy;
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
@@ -1578,6 +1577,7 @@ public class LuceneSearcher extends MetaSearcher {
             TopDocs tdocs = searcher.search(query, filter, 1, sort);
 
             for( ScoreDoc sdoc : tdocs.scoreDocs ) {
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(fieldnames);
                 reader.document(sdoc.doc, docVisitor);
                 Document doc = docVisitor.getDocument();
                 

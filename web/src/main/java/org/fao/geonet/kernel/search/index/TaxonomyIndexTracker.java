@@ -3,11 +3,14 @@ package org.fao.geonet.kernel.search.index;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import jeeves.utils.Log;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.index.CategoryDocumentBuilder;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
@@ -32,6 +35,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 class TaxonomyIndexTracker {
     private DirectoryTaxonomyWriter taxonomyWriter;
     private TaxonomyReader taxonomyReader;
+    private LinkedList<TaxonomyReader> expiredReaders = new LinkedList<TaxonomyReader>();
     private final File taxonomyDir;
     private final LuceneConfig luceneConfig;
     private NRTCachingDirectory cachedFSDir;
@@ -51,13 +55,22 @@ class TaxonomyIndexTracker {
         this.cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD, maxCachedMB);
 
         this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
-        taxonomyWriter.commit(); // create index if not existing yet
+//        taxonomyWriter.commit(); // create index if not existing yet
         this.taxonomyReader = null;
     }
     TaxonomyReader acquire() throws IOException {
         if(taxonomyReader == null) {
             this.taxonomyReader = new DirectoryTaxonomyReader(taxonomyWriter);
         }
+
+        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext();) {
+            TaxonomyReader reader = iterator.next();
+            if(reader.getRefCount() < 1) {
+                IOUtils.closeQuietly(reader);
+                iterator.remove();
+            }
+        }
+
         return taxonomyReader;
     }
 
@@ -67,7 +80,7 @@ class TaxonomyIndexTracker {
             CategoryDocumentBuilder categoryDocBuilder = new CategoryDocumentBuilder(taxonomyWriter);
             categoryDocBuilder.setCategoryPaths(categories);
             categoryDocBuilder.build(doc);
-//            taxonomyWriter.commit();
+            taxonomyWriter.commit();
             
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
@@ -87,6 +100,12 @@ class TaxonomyIndexTracker {
         } catch (Throwable e) {
             errors.add(e);
         }
+
+        for (Iterator<TaxonomyReader> iterator = expiredReaders.iterator(); iterator.hasNext();) {
+            TaxonomyReader reader = iterator.next();
+            IOUtils.closeQuietly(reader);
+        }
+        expiredReaders.clear();
 
         try {
             taxonomyWriter.close();
@@ -135,7 +154,19 @@ class TaxonomyIndexTracker {
     TaxonomyWriter writer() {
         return taxonomyWriter;
     }
-    public void maybeRefresh() {
+
+    public void maybeRefresh() throws IOException {
         // do nothing for now
+        if (taxonomyReader != null) {
+            TaxonomyReader newReader = TaxonomyReader.openIfChanged(taxonomyReader);
+            if (newReader != null) {
+                if (taxonomyReader.getRefCount() == 0) {
+                    IOUtils.closeQuietly(taxonomyReader);
+                } else {
+                    expiredReaders.add(taxonomyReader);
+                }
+                taxonomyReader = newReader;
+            }
+        }
     }
 }

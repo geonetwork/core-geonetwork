@@ -198,7 +198,7 @@ public class CatalogSearcher {
 
         try {
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
-            if (indexAndTaxonomy.version != _searchToken) {
+            if (indexAndTaxonomy.version != _searchToken && !(!_luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)))) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
@@ -481,8 +481,8 @@ public class CatalogSearcher {
 		_sort = sort;
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, query, cFilter,
-                sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
+                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, _filter,
+                _sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
 		TopDocs hits = searchResults.one();
