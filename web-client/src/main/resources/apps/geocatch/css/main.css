@@ -1,176 +1,199 @@
-
 /* to keep footer down -- from http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page */
 html,body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+	margin: 0;
+	padding: 0;
+	height: 100%;
 }
 
 body {
-    font: 16px arial,helvetica,sans-serif;
-    min-width: 900px;
- }
+	font: 16px arial, helvetica, sans-serif;
+	min-width: 900px;
+}
 
 form {
-    display: inline;
+	display: inline;
 }
 
 #container {
-    min-height: 100%;
-    position: relative;
+	min-height: 100%;
+	position: relative;
 }
 
 #main {
-    padding: 3px;
-    padding-bottom: 40px; /* height of the footer */
+	padding: 3px;
+	padding-bottom: 40px; /* height of the footer */
 }
 
 #header header {
-    background: #E26F02;
-    width: 100%;
+	background: #E26F02;
+	width: 100%;
 }
 
-
 #header {
-    background-image: url('../images/header-background.jpg');
-    background-color: white;
-    box-shadow: none;
+	background-image: url('../images/header-background.jpg');
+	background-color: white;
+	box-shadow: none;
 }
 
 /* ==============
  MOBILE: Menu
  ============== */
 #nav ul {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 #nav a {
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    color: #FFFFFF;
-    float: left;
-    padding: 4px 2%;
-    margin-bottom: 0;
-    margin: 0 1px;
-    background: #01669E;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	color: #FFFFFF;
+	float: left;
+	padding: 4px 2%;
+	margin-bottom: 0;
+	margin: 0 1px;
+	background: #01669E;
 }
 
 #nav a.selected {
-    background: #FFFFFF;
-    color: #01669E;
+	background: #FFFFFF;
+	color: #01669E;
 }
 
 #nav a:hover {
-    text-decoration: bolder;
+	text-decoration: bolder;
 }
 
 #navTop ul {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 #navTop a {
-    text-align: center;
-    text-decoration: none;
-    font-weight: normal;
-    color: #000000;
-    float: left;
-    padding: 4px;
-    margin-bottom: 0;
-    margin: 0 1px;
-    background: #CCCCCC;
-    border-right: 1px solid #FFFFFF;
+	text-align: center;
+	text-decoration: none;
+	font-weight: normal;
+	color: #000000;
+	float: left;
+	padding: 4px;
+	margin-bottom: 0;
+	margin: 0 1px;
+	background: #CCCCCC;
+	border-right: 1px solid #FFFFFF;
 }
 
 #navTop a:hover {
-    text-decoration: bolder;
+	text-decoration: bolder;
 }
 
-
 #lang-form div {
-    display: inline;
-    padding-right: 7px;
+	display: inline;
+	padding-right: 7px;
 }
 
 #lang-form div div form {
-    background: transparent;
-    border: none;
+	background: transparent;
+	border: none;
 }
 
 #lang-form div div form div input {
-    background: transparent;
-    border: none;
-    text-align: right;
+	background: transparent;
+	border: none;
+	text-align: right;
 }
 
 #lang-form {
-    padding-right: 5px;
-    padding-left: 5px;
-    text-decoration: none;
-    color: #767B7E;
-    float: right;
-    background-color: #CCCCCC;
+	padding-right: 5px;
+	padding-left: 5px;
+	text-decoration: none;
+	color: #767B7E;
+	float: right;
+	background-color: #CCCCCC;
 }
 
 /* ==============
  MOBILE: Main
  ============== */
 .main {
-    padding: 0;
+	padding: 0;
 }
 
 #nav {
-    margin: 0px;
-    xclear: both;
-    float: left;
-    width: 50%;
-    background-color: #CCCCCC;
-    font-size: 0.9em;
-
+	margin: 0px;
+	xclear: both;
+	float: left;
+	width: 50%;
+	background-color: #CCCCCC;
+	font-size: 0.9em;
 }
 
 #navTop {
-    margin: 0px;
-    xclear: both;
-    float: left;
-    width: 80%;
-    background-color: #CCCCCC;
-    width: 80%;
-    font-size: 0.6em;
+	margin: 0px;
+	xclear: both;
+	float: left;
+	width: 80%;
+	background-color: #CCCCCC;
+	width: 80%;
+	font-size: 0.6em;
 }
 
 /* Login form
  */
-#login-form {
-    float:right;
-    font-size: 0.8em;
-    background-color: #CCCCCC;
-}
-#login_div {
-    padding-top: 5px;
+#login-form,#logout-div {
+	float: right;
+	font-size: 0.8em;
+	background-color: #CCCCCC;
 }
 
-#login_div label, #login_div input {
-    font-size: 0.8em;
-    margin: 2px;
+#login_div,#logout-div {
+	padding-top: 5px;
 }
 
-#login_div #username, #login_div #password {
-    width: 80px;
+#login_div label,#logout-div label,#login_div input {
+	font-size: 0.8em;
+	margin: 2px;
+	color: white;
 }
 
-#login_div #login_button {
-    border: black 1px solid;
-    font-size: 0.8em;
-    padding: 2px;
-    background: white;
+#login_div input.banner,#logout-div button.banner {
+	font-family: Verdana;
+	font-size: 7pt;
+	color: #064377;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #266397;
+	padding: 1px 6px;
+	margin-right: 1px;
+}
+
+#login_div #username,#login_div #password {
+	width: 80px;
 }
 
 /* Search form
 */
 #search-form {
-    width: 300px;
+	width: auto;
+}
 
+#search-form-fieldset {
+    text-align: center;
+}
+
+
+#search-form-fieldset legend{
+    text-align: left;
+}
+
+input[type="button"] {
+	font: normal 11px tahoma, verdana, helvetica;
+	padding-left: 13px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 13px;
+	cursor: pointer;
+	margin: 0;
+	overflow: visible;
+	width: auto;
+	outline: 0 none;
 }

@@ -133,7 +133,7 @@
                              <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install
                              Google Chrome Frame</a> to better experience this site.</p> <![endif] -->
 
-            <div id="header" style="border: 1px solid red">
+            <div id="header">
                 <div>
                     <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float: right;"/>
                     <img src="/geonetwork/images/geocat_logo_li.gif" alt="geocat.ch logo"  />
@@ -283,6 +283,7 @@
                         <xsl:attribute name="value"><xsl:value-of
                             select="/root/gui/strings/search" /></xsl:attribute>
                     </input>
+                    <div style="clear: both; display: hidden"></div>
                     <a id="show-advanced" href="javascript:showAdvancedSearch()">
                         <xsl:value-of select="/root/gui/strings/advancedOptions.show" />
                     </a>
