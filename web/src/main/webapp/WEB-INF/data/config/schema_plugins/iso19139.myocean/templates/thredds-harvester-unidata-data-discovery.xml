@@ -48,7 +48,7 @@
          <gmd:citation>
             <gmd:CI_Citation>
                <gmd:title id="thredds.title">
-                  <gco:CharacterString>HARVESTING TEMPLATE - THREDDS - UNIDATA DISCOVERY</gco:CharacterString>
+                  <gco:CharacterString>MYOCEAN HARVESTING TEMPLATE - THREDDS - UNIDATA DISCOVERY</gco:CharacterString>
                </gmd:title>
                <gmd:date id="thredds.resource.dates"/>
                <gmd:citedResponsibleParty id="thredds.responsible.parties">

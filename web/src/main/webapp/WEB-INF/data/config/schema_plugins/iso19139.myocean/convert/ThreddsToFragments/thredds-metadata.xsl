@@ -9,12 +9,15 @@
 		xmlns:util="java:java.util.UUID"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"		
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"		
+		xmlns:gmx="http://www.isotc211.org/2005/gmx"
+		xmlns:fdd="local:functions"
+		xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd"
 		exclude-result-prefixes="util xs xsi tds nc">
 	
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 	
-	<xsl:include href="thredds/utils.xsl"/>
+	<xsl:include href="thredds/utils.xsl"/>	
 
 	<!-- 
 		This xslt transforms thredds/ncml metadata to ISO19139 metadata that can be used by the thredds harvester to generate iso metadata from thredds catalogs.
@@ -45,8 +48,13 @@
 			<xsl:for-each select="tds:catalog/tds:dataset[1 and $datasetName!='latest.xml']">
 				<xsl:variable name="authority" select="tds:authority|tds:metadata//tds:authority|@authority"/>
 				<xsl:variable name="id" select="@ID"/>
-				<xsl:variable name="uuid"><xsl:if test="$authority[1] and $id"><xsl:value-of select="concat($authority[1],':')"/></xsl:if><xsl:value-of select="$id"/></xsl:variable>
-				
+				<xsl:variable name="dns" select="fdd:getDomain(/root/catalogUri)"/>
+				<xsl:variable name="uuid">
+					<xsl:if test="$authority[1] and $id">
+						<xsl:value-of select="concat($authority[1],':')"/>
+					</xsl:if>
+					<xsl:value-of select="concat($dns,'/',$id)"/>
+				</xsl:variable>				
 				<record uuid="{$uuid}">
 					
 					<!-- Metadata creation date [Mandatory] -->
@@ -75,11 +83,12 @@
 					<!-- Metadata title [Mandatory] -->
 					
 					<fragment id="thredds.title" uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_title')}">
+						
 						<gmd:title>
 							<gco:CharacterString>
-								<xsl:choose>
+								<xsl:choose>									
+									<xsl:when test="normalize-space(@ID)!=''"><xsl:value-of select="$uuid"/></xsl:when>
 									<xsl:when test="normalize-space(@urlPath)!=''"><xsl:value-of select="@urlPath"/></xsl:when>
-									<xsl:when test="normalize-space(@ID)!=''"><xsl:value-of select="@ID"/></xsl:when>
 									<xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
 								</xsl:choose>
 							</gco:CharacterString>
@@ -174,10 +183,10 @@
 												<xsl:value-of select="tds:name"/>
 											</gco:CharacterString>
 										</gmd:individualName>
-										<xsl:if test="tds:contact/@name!='' or tds:contact/@url!=''">
+										<xsl:if test="tds:contact/@email!='' or tds:contact/@url!=''">
 											<gmd:contactInfo>
 												<gmd:CI_Contact>
-													<xsl:if test="tds:contact/@name!=''">
+													<xsl:if test="tds:contact/@email!=''">
 														<gmd:address>
 															<gmd:CI_Address>
 																<gmd:electronicMailAddress>
@@ -597,7 +606,45 @@
 							</fragment>
 						</xsl:for-each>
 					</replacementGroup>
-							
+					
+					
+					<!-- Data type [0..1] -->
+						
+					<replacementGroup id="thredds.datatype">
+						<xsl:if test="tds:dataType|tds:metadata//tds:dataType">
+							<fragment uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_datatype')}">
+								<gmd:featureTypes>
+									<gco:LocalName>
+										<xsl:for-each select="tds:dataType|tds:metadata//tds:dataType">
+											<xsl:value-of select="."/>
+										</xsl:for-each>
+									</gco:LocalName>
+								</gmd:featureTypes>
+							</fragment>
+						</xsl:if>						
+					</replacementGroup>
+					
+					
+					<!-- Maintenance [0..1] -->
+						
+					<replacementGroup id="thredds.maintenance">
+						<xsl:if test="tds:property[@name='update-schedule']|tds:metadata//tds:property[@name='update-schedule']">
+							<fragment uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_maintenance')}">
+								<gmd:resourceMaintenance>
+									<gmd:MD_MaintenanceInformation>                                             
+										<gmd:maintenanceNote>
+											<gco:CharacterString>
+												<xsl:for-each select="tds:property[@name='update-schedule']|tds:metadata//tds:property[@name='update-schedule']">
+													<xsl:value-of select="@value"/>
+												</xsl:for-each>
+											</gco:CharacterString>
+										</gmd:maintenanceNote>                                                               
+									</gmd:MD_MaintenanceInformation>
+								</gmd:resourceMaintenance>
+							</fragment>
+						</xsl:if>						
+					</replacementGroup>
+					
 				</record>
 			</xsl:for-each>
 		</records>
@@ -612,7 +659,14 @@
 		<fragment uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_keywords')}">
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
-					<xsl:apply-templates mode="keywords" select="$keywords" />
+					<xsl:choose>
+						<xsl:when test="upper-case($vocabulary)='CF-1.0'">
+							<xsl:apply-templates mode="keywords-cf" select="$keywords" />
+						</xsl:when>						
+						<xsl:otherwise>
+							<xsl:apply-templates mode="keywords" select="$keywords" />
+						</xsl:otherwise>
+					</xsl:choose>					
 					<xsl:if test="$vocabulary">
 						<xsl:call-template name="thesaurus">
 							<xsl:with-param name="name" select="$vocabulary"/>
@@ -625,9 +679,19 @@
 	
 	<!-- === Keyword === -->
 	
-	<xsl:template match="tds:keyword" mode="keywords">
+	<xsl:template match="tds:keyword" mode="keywords">								
 		<gmd:keyword>							
 			<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>						
+		</gmd:keyword>
+	</xsl:template>
+	
+	<!-- === Keyword CF === -->
+	
+	<xsl:template match="tds:keyword" mode="keywords-cf">		
+		<gmd:keyword>
+			<gmx:Anchor xlink:href="{concat('http://mmisw.org/ont/cf/parameter/',.)}">
+				<xsl:value-of select="."/>
+			</gmx:Anchor>			
 		</gmd:keyword>
 	</xsl:template>
 		
@@ -674,6 +738,9 @@
 					<xsl:choose>
 						<xsl:when test="@serviceType='WMS'">OGC:WMS</xsl:when>
 						<xsl:when test="@serviceType='WCS'">OGC:WCS</xsl:when>
+						<xsl:when test="@serviceType='OPENDAP'">WWW:OPENDAP</xsl:when>
+						<xsl:when test="upper-case(@serviceType)='MOTU-SUB'">MYO:MOTU-SUB</xsl:when>
+						<xsl:when test="upper-case(@serviceType)='MOTU-DGF'">MYO:MOTU-DGF</xsl:when>						
 						<xsl:otherwise>WWW:LINK-1.0-http--downloaddata</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
@@ -682,7 +749,16 @@
 					<gmd:onLine>
 						<gmd:CI_OnlineResource>
 							<gmd:linkage>
-								<gmd:URL><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,$service-suffix)"/></gmd:URL>
+								<gmd:URL>
+									<xsl:choose>
+										<xsl:when test="@serviceType='WMS'"><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,'?service=WMS&amp;amp;version=1.3.0&amp;amp;request=GetCapabilities')"/></xsl:when>
+										<xsl:when test="@serviceType='WCS'"><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,'?service=WCS&amp;amp;version=1.0.0&amp;amp;request=GetCapabilities')"/></xsl:when>
+										<xsl:when test="@serviceType='OPENDAP'"><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,'.html')"/></xsl:when>
+										<xsl:when test="upper-case(@serviceType)='MOTU-SUB'"><xsl:value-of select="concat($baseUrl,$urlPath)"/></xsl:when>
+										<xsl:when test="upper-case(@serviceType)='MOTU-DGF'"><xsl:value-of select="concat($baseUrl,'http%3A%2F%2Fpurl.org%2Fmyocean%2Fontology%2Fproduct%2Fdatabase%23',$urlPath)"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath,$service-suffix)"/></xsl:otherwise>									
+									</xsl:choose>
+								</gmd:URL>
 							</gmd:linkage>
 							<gmd:protocol>
 								<gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
@@ -699,5 +775,30 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- === Function to return DNS in URL === -->
+	<xsl:variable name="vRegEx">
+		^(.*) <!-- The scheme -->
+		://
+		([a-zA-Z0-9\-]?[a-zA-Z0-9\-]+\.)?  <!-- between http:// and domain name (if defined) -->
+		([a-zA-Z0-9\-\.]?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}) <!-- The domain -->
+		([:]?[0-9]{0,6}) <!-- The port -->
+		(/\S*)?(/.*)$ <!-- the path and query string -->
+	</xsl:variable>
+
+	<xsl:function name="fdd:getDomain">
+        <xsl:param name="url"/>
+
+        <xsl:analyze-string select="$url" regex="{$vRegEx}" flags="mx" >
+            <xsl:matching-substring>
+                <xsl:value-of select="regex-group(3)"/>
+            </xsl:matching-substring>
+
+            <xsl:non-matching-substring>
+                <xsl:value-of select="false()"/>
+            </xsl:non-matching-substring>
+
+        </xsl:analyze-string> 
+	</xsl:function>
 	
 </xsl:stylesheet>
