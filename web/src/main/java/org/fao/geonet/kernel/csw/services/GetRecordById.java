@@ -73,8 +73,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     private SearchController _searchController;
 
-    public GetRecordById(File summaryConfig, LuceneConfig luceneConfig) {
-        _searchController = new SearchController(summaryConfig, luceneConfig);
+    public GetRecordById(LuceneConfig luceneConfig) {
+        _searchController = new SearchController(luceneConfig);
     }
 
 
@@ -126,7 +126,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
                     if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                         Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint): " + cswServiceSpecificContraint);
 
-                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_uuid: " + uuid;
+                    cswServiceSpecificContraint = cswServiceSpecificContraint + " +_id: " + id;
                     if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                         Log.debug(Geonet.CSW_SEARCH, "GetRecordById (cswServiceSpecificContraint with uuid): " + cswServiceSpecificContraint);
 

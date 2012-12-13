@@ -79,6 +79,7 @@
     if(!singleFile) {
         var jsfiles = new Array(
             "GeoNetwork/Util.js",
+            "GeoNetwork/Message.js",
             "GeoNetwork/lang/ca.js",
             "GeoNetwork/lang/en.js",
             "GeoNetwork/lang/fr.js",
@@ -124,6 +125,7 @@
             "GeoNetwork/widgets/SearchFormPanel.js",
             "GeoNetwork/widgets/MetadataResultsView.js",
             "GeoNetwork/widgets/MetadataResultsToolbar.js",
+            "GeoNetwork/widgets/FacetsPanel.js",
             "GeoNetwork/widgets/TagCloudView.js",
             "GeoNetwork/widgets/admin/AdminTools.js",
             "GeoNetwork/widgets/admin/MetadataInsertPanel.js",
@@ -167,6 +169,7 @@
             "GeoNetwork/map/widgets/OpacitySlider.js",
             "GeoNetwork/map/widgets/ProjectionSelector.js",
             "GeoNetwork/map/widgets/TimeSelector.js",
+            "GeoNetwork/map/widgets/WxSExtractor.js",
             "GeoNetwork/map/windows/BaseWindow.js",
             "GeoNetwork/map/windows/SingletonWindowManager.js",
             "GeoNetwork/map/windows/AddWMS.js",

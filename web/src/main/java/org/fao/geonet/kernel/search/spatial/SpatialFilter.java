@@ -34,15 +34,15 @@ import jeeves.utils.Log;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.AtomicReader;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.OpenBitSet;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.FeatureSource;
@@ -77,7 +77,6 @@ import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter._SPATIAL_I
 
 public abstract class SpatialFilter extends Filter
 {
-    private static final long     serialVersionUID = -6221744013750827050L;
     private static final SimpleFeatureType FEATURE_TYPE;
     static {
         SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
@@ -99,7 +98,7 @@ public abstract class SpatialFilter extends Filter
     protected final FilterFactory2  _filterFactory;
     protected       Query                 _query;
     private org.opengis.filter.Filter _spatialFilter;
-    protected final FieldSelector _selector;
+    protected final Set<String> _fieldsToLoad;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
 	private int _numHits;
@@ -111,17 +110,9 @@ public abstract class SpatialFilter extends Filter
         _geom = geom;
         _numHits = numHits;
         this.sourceAccessor = sourceAccessor;
-        _filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools
-                .getDefaultHints());
+        _filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
 
-				_selector = new FieldSelector() {
-                    private static final long serialVersionUID = 1L;
-
-						public final FieldSelectorResult accept(String name) {
-							if (name.equals("_id")) return FieldSelectorResult.LOAD_AND_BREAK;
-							else return FieldSelectorResult.NO_LOAD;
-						}
-				};
+        _fieldsToLoad = Collections.singleton("_id");
     }
 
     protected SpatialFilter(Query query, int numHits, Envelope bounds, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
@@ -129,9 +120,8 @@ public abstract class SpatialFilter extends Filter
         this(query,numHits,JTS.toGeometry(bounds),sourceAccessor);
     }
 
-    public DocIdSet getDocIdSet(final IndexReader reader) throws IOException
-    {
-        final OpenBitSet bits = new OpenBitSet(reader.maxDoc());
+    public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+        final OpenBitSet bits = new OpenBitSet(context.reader().maxDoc());
 
         final Map<String, FeatureId> unrefinedSpatialMatches = unrefinedSpatialMatches();
         final Set<FeatureId> matches = new HashSet<FeatureId>();
@@ -139,37 +129,41 @@ public abstract class SpatialFilter extends Filter
         
         if(unrefinedSpatialMatches.isEmpty() || _hits >= _numHits) return bits;
 
-        new IndexSearcher(reader).search(_query, new Collector() {
-						private int docBase;
+        new IndexSearcher(context.reader()).search(_query, new Collector() {
+            private int docBase;
             private Document document;
+            private AtomicReader reader;
 
-						// ignore scorer
-						public void setScorer(Scorer scorer) {}
-
-						// accept docs out of order (for a BitSet it doesn't matter)
-						public boolean acceptsDocsOutOfOrder() {
-							return true;
-						}
-
-						public void collect(int doc) {
-							doc = doc + docBase;	
-              try {
-                 document = reader.document(doc, _selector);
-                 String key = document.get("_id");
-                 FeatureId featureId = unrefinedSpatialMatches.get(key); 
-                 if (featureId!=null && _hits < _numHits) {
-                	 _hits ++ ;
-                   matches.add(featureId);
-                   docIndexLookup.put(featureId, doc + docBase);
-                 }
-              } catch (Exception e) {
-                 throw new RuntimeException(e);
-              }
+            // ignore scorer
+            public void setScorer(Scorer scorer) {
             }
 
-						public void setNextReader(IndexReader reader, int docBase) {
-							this.docBase = docBase;
-						}
+            // accept docs out of order (for a BitSet it doesn't matter)
+            public boolean acceptsDocsOutOfOrder() {
+                return true;
+            }
+
+            public void collect(int doc) {
+                doc = doc + docBase;
+                try {
+                    document = reader.document(doc, _fieldsToLoad);
+                    String key = document.get("_id");
+                    FeatureId featureId = unrefinedSpatialMatches.get(key);
+                    if (featureId != null && _hits < _numHits) {
+                        _hits++;
+                        matches.add(featureId);
+                        docIndexLookup.put(featureId, doc + docBase);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void setNextReader(AtomicReaderContext context) throws IOException {
+                this.docBase = context.docBase;
+                this.reader = context.reader();
+            }
         });
         
         if( matches.isEmpty() ){

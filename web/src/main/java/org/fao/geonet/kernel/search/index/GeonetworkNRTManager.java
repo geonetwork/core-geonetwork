@@ -25,9 +25,13 @@ class GeonetworkNRTManager {
     private String language;
     private SearcherLifetimeManager lifetimeManager = new SearcherLifetimeManager();
     private Map<Long, Long> versionMapping = new HashMap<Long, Long>();
+    // taxonomyTracker is here so that we can commit it and refresh reader when 
+    // we refresh
+    private TaxonomyIndexTracker taxonomyTracker;
 
     public GeonetworkNRTManager(LuceneConfig luceneConfig, String language, TrackingIndexWriter writer, SearcherFactory searcherFactory,
-            boolean applyAllDeletes) throws IOException {
+            boolean applyAllDeletes, TaxonomyIndexTracker taxonomyTracker) throws IOException {
+        this.taxonomyTracker = taxonomyTracker;
         actualManager = new NRTManager(writer, searcherFactory, applyAllDeletes);
         this.language = language;
         if (luceneConfig.useNRTManagerReopenThread()) {
@@ -96,6 +100,7 @@ class GeonetworkNRTManager {
     }
 
     public boolean maybeRefresh() throws IOException {
+        taxonomyTracker.maybeRefresh();
         return actualManager.maybeRefresh();
     }
 

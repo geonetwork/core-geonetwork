@@ -3,7 +3,7 @@ package org.fao.geonet.kernel.search.index;
 import java.io.IOException;
 
 import org.apache.lucene.index.MultiReader;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 
 /**
  * Utility class to get/refresh readers for SearchManager class Works by opening an IndexReader at
@@ -30,14 +30,13 @@ public class LuceneIndexReaderFactory {
     /**
      * Get {@linkplain MultiReader}. If
      *
-     * @param priorityLocale if non-null and there the locale exists this locale will be the first
-     *        sub-index reader. (normally resulting in its results being the first to be processed)
+     * @param versionToken A token indicating which state of search should be obtained
      * @return an index reader for reading from all indices
      */
-    public Pair<Long, GeonetworkMultiReader> aquire(long versionToken) throws IOException {
+    public IndexAndTaxonomy aquire(long versionToken) throws IOException {
         return tracker.aquire(versionToken);
     }
-
+    
     public void release (GeonetworkMultiReader reader) throws InterruptedException, IOException {
         reader.releaseToNRTManager();
     }

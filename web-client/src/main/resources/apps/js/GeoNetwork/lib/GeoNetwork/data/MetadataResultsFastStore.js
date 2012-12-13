@@ -57,6 +57,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '-1';
         }
     }
+    function getIdxMsg(v, record){
+        if (record.idxMsg) {
+            var info = record.idxMsg[0].value.split('|');
+            return info;
+        } else {
+            return '';
+        }
+    }
     function getValidationDetails(v, record){
         var i, validity = [], validInfo;
         for (var key in record) {
@@ -372,6 +380,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'valid_details',
             convert: getValidationDetails
+        }, {
+            name: 'idxMsg',
+            convert: getIdxMsg
         }
         ]
     });

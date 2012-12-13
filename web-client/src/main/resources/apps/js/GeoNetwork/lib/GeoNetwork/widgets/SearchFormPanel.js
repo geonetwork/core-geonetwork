@@ -80,7 +80,9 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
             // If not, superboxselect field are not initialized
             this.doLayout(false, true);
             
-            GeoNetwork.util.SearchTools.populateFormFromParams(this, state);
+            // Populate search form and create new field if they do not exist
+            // If not available, those field probably come to a facet value filter
+            GeoNetwork.util.SearchTools.populateFormFromParams(this, state, true);
            
             // We can't really trigger fire event yet
             // Add this to your app to trigger the search when ready - FIXME

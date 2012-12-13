@@ -32,6 +32,8 @@ GeoNetwork.app = function () {
 
     var searchForm;
 
+    var facetsPanel;
+    
     var optionsForm;
 
     var resultsPanel;
@@ -158,7 +160,8 @@ GeoNetwork.app = function () {
     }
     function getResultsMap() {
         // Create map panel
-        var map = new OpenLayers.Map('results_map', GeoNetwork.map.MAP_OPTIONS);
+        var map = new OpenLayers.Map({ div: 'results_map' });
+				map.setOptions(GeoNetwork.map.MAP_OPTIONS);
         map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
         map.zoomToMaxExtent();
         
@@ -302,6 +305,7 @@ GeoNetwork.app = function () {
             bodyStyle : 'text-align: center;',
             border : false,
             searchBt: null,
+            searchCb: searchCb,
             resetBt: null,
             items : [
                     // Simple search form and search buttons
@@ -353,6 +357,7 @@ GeoNetwork.app = function () {
                                     iconAlign : 'right',
                                     listeners : {
                                         click : function () {
+                                            facetsPanel.reset();
                                             Ext.getCmp('searchForm').getForm().reset();
                                         }
                                     }
@@ -824,7 +829,23 @@ GeoNetwork.app = function () {
 
             // Register events on the catalogue
             var margins = '0 0 0 0';
-
+            var breadcrumb = new Ext.Panel({
+                layout:'column',
+                cls: 'breadcrumb',
+                defaultType: 'button',
+                border: false,
+                split: false
+//                layoutConfig: {
+//                    columns:3
+//                }
+            });
+            facetsPanel = new GeoNetwork.FacetsPanel({
+                searchForm: searchForm,
+                breadcrumb: breadcrumb,
+                maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
+                facetListConfig: GeoNetwork.Settings.facetListConfig || []
+            });
+            
             var viewport = new Ext.Viewport({
                 layout : 'border',
                 id : 'vp',
@@ -880,12 +901,17 @@ GeoNetwork.app = function () {
                                 title : OpenLayers.i18n('List'),
                                 autoScroll : false,
                                 layout : 'border',
-                                items : [ {// sidebar searchform
+                                items : [{
+                                    region : 'north',
+                                    border : false,
+                                    height: 30,
+                                    items : [ breadcrumb ]
+                                }, {// sidebar searchform
                                     region : 'west',
                                     id : 'west',
                                     border : true,
                                     width : 250,
-                                    items : [ resultsMap ]
+                                    items : [ resultsMap, facetsPanel  ]
                                 }, {
                                     layout : 'fit',
                                     region : 'center',
@@ -1060,6 +1086,7 @@ GeoNetwork.app = function () {
             tabPanel.unhideTabStripItem(tabPanel.items.itemAt(1));
 
             initPanels();
+            facetsPanel.refresh(response);
 
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();

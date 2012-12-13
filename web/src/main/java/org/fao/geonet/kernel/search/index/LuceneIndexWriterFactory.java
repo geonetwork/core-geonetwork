@@ -1,10 +1,13 @@
 package org.fao.geonet.kernel.search.index;
 
 import java.io.IOException;
+import java.util.List;
 
 import jeeves.utils.Log;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
@@ -22,11 +25,11 @@ public class LuceneIndexWriterFactory {
         tracker.commit();
     }
 
-    public void addDocument( String locale, Document doc ) throws Exception {
+    public void addDocument( String locale, Document doc, List<CategoryPath> categories ) throws Exception {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Adding document to "+locale+" index");
         }
-        tracker.addDocument(locale, doc);
+        tracker.addDocument(locale, doc, categories);
     }
 
     public void deleteDocuments( final Term term ) throws Exception {
@@ -35,7 +38,7 @@ public class LuceneIndexWriterFactory {
         }
         tracker.withWriter(new Function() {
             @Override
-            public void apply(TrackingIndexWriter input) throws CorruptIndexException, IOException {
+            public void apply(TaxonomyWriter taxonomyWriter, TrackingIndexWriter input) throws CorruptIndexException, IOException {
                     input.deleteDocuments(term);
             }
         });

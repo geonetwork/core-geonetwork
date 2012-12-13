@@ -4,7 +4,7 @@
     xmlns:ows="http://www.opengis.net/ows" xmlns:ogc="http://www.opengis.net/ogc"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
-    xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+    xmlns:inspire_com="http://inspire.ec.europa.eu/schemas/common/1.0"
 	xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd http://inspire.ec.europa.eu/schemas/inspire_ds/1.0 http://inspire.ec.europa.eu/schemas/inspire_ds/1.0/inspire_ds.xsd">
 
     <ows:ServiceIdentification>
@@ -188,71 +188,71 @@
         </ows:Constraint>
 
         <inspire_ds:ExtendedCapabilities>
-			<inspire_common:ResourceLocator>
-				<inspire_common:URL>$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_common:URL>
-				<inspire_common:MediaType>application/xml</inspire_common:MediaType>
-			</inspire_common:ResourceLocator>
+			<inspire_com:ResourceLocator>
+				<inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities</inspire_com:URL>
+				<inspire_com:MediaType>application/xml</inspire_com:MediaType>
+			</inspire_com:ResourceLocator>
 
-			<inspire_common:ResourceLocator>
-				<inspire_common:URL>$PROTOCOL://$HOST$PORT$SERVLET</inspire_common:URL>
-				<inspire_common:MediaType>text/html</inspire_common:MediaType>
-			</inspire_common:ResourceLocator>
+			<inspire_com:ResourceLocator>
+				<inspire_com:URL>$PROTOCOL://$HOST$PORT$SERVLET</inspire_com:URL>
+				<inspire_com:MediaType>text/html</inspire_com:MediaType>
+			</inspire_com:ResourceLocator>
 
-			<inspire_common:ResourceType>service</inspire_common:ResourceType>
+			<inspire_com:ResourceType>service</inspire_com:ResourceType>
 
-            <inspire_common:TemporalReference>
-                <inspire_common:TemporalExtent>
-                    <inspire_common:IntervalOfDates>
-                        <inspire_common:StartingDate>2010-07-01T00:00:00</inspire_common:StartingDate>
-                        <inspire_common:EndDate>2011-07-01T00:00:00</inspire_common:EndDate>
-                    </inspire_common:IntervalOfDates>
-                </inspire_common:TemporalExtent>
-            </inspire_common:TemporalReference>
+            <inspire_com:TemporalReference>
+                <inspire_com:TemporalExtent>
+                    <inspire_com:IntervalOfDates>
+                        <inspire_com:StartingDate>2010-07-01T00:00:00</inspire_com:StartingDate>
+                        <inspire_com:EndDate>2011-07-01T00:00:00</inspire_com:EndDate>
+                    </inspire_com:IntervalOfDates>
+                </inspire_com:TemporalExtent>
+            </inspire_com:TemporalReference>
 
-            <inspire_common:Conformity>
-				<inspire_common:Specification xsi:type="inspire_common:citationInspireInteroperabilityRegulation_eng">
-                    <inspire_common:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_common:Title>
-					<inspire_common:DateOfPublication>2010-12-08</inspire_common:DateOfPublication>
-					<inspire_common:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URI>
-					<inspire_common:ResourceLocator>
-						<inspire_common:URL>http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF</inspire_common:URL>
-						<inspire_common:MediaType>application/pdf</inspire_common:MediaType>
-					</inspire_common:ResourceLocator>
-				</inspire_common:Specification>
+            <inspire_com:Conformity>
+				<inspire_com:Specification xsi:type="inspire_com:citationInspireInteroperabilityRegulation_eng">
+                    <inspire_com:Title>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</inspire_com:Title>
+					<inspire_com:DateOfPublication>2010-12-08</inspire_com:DateOfPublication>
+					<inspire_com:URI>OJ:L:2010:323:0011:0102:EN:PDF</inspire_com:URI>
+					<inspire_com:ResourceLocator>
+						<inspire_com:URL>http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2010:323:0011:0102:EN:PDF</inspire_com:URL>
+						<inspire_com:MediaType>application/pdf</inspire_com:MediaType>
+					</inspire_com:ResourceLocator>
+				</inspire_com:Specification>
 
-				<inspire_common:Degree>notEvaluated</inspire_common:Degree>
-			</inspire_common:Conformity>
+				<inspire_com:Degree>notEvaluated</inspire_com:Degree>
+			</inspire_com:Conformity>
 
 
-            <inspire_common:MetadataPointOfContact>
-                <inspire_common:OrganisationName>$ORG_NAME</inspire_common:OrganisationName>
-                <inspire_common:EmailAddress>$EMAIL</inspire_common:EmailAddress>
-            </inspire_common:MetadataPointOfContact>
+            <inspire_com:MetadataPointOfContact>
+                <inspire_com:OrganisationName>$ORG_NAME</inspire_com:OrganisationName>
+                <inspire_com:EmailAddress>$EMAIL</inspire_com:EmailAddress>
+            </inspire_com:MetadataPointOfContact>
 
-            <inspire_common:MetadataDate>2010-07-15</inspire_common:MetadataDate>
-            <inspire_common:SpatialDataServiceType>discovery</inspire_common:SpatialDataServiceType>
+            <inspire_com:MetadataDate>2010-07-15</inspire_com:MetadataDate>
+            <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 
-            <inspire_common:MandatoryKeyword xsi:type="inspire_common:classificationOfSpatialDataService">
-                <inspire_common:KeywordValue>humanCatalogueViewer</inspire_common:KeywordValue>
-            </inspire_common:MandatoryKeyword>
+            <inspire_com:MandatoryKeyword xsi:type="inspire_com:classificationOfSpatialDataService">
+                <inspire_com:KeywordValue>humanCatalogueViewer</inspire_com:KeywordValue>
+            </inspire_com:MandatoryKeyword>
 
-            <inspire_common:Keyword xsi:type="inspire_common:inspireTheme_eng">
-                <inspire_common:OriginatingControlledVocabulary>
-                    <inspire_common:Title>GEMET - INSPIRE themes</inspire_common:Title>
-                    <inspire_common:DateOfPublication>2008-06-01</inspire_common:DateOfPublication>
-                </inspire_common:OriginatingControlledVocabulary>
+            <inspire_com:Keyword xsi:type="inspire_com:inspireTheme_eng">
+                <inspire_com:OriginatingControlledVocabulary>
+                    <inspire_com:Title>GEMET - INSPIRE themes</inspire_com:Title>
+                    <inspire_com:DateOfPublication>2008-06-01</inspire_com:DateOfPublication>
+                </inspire_com:OriginatingControlledVocabulary>
 
-                <inspire_common:KeywordValue>Orthoimagery</inspire_common:KeywordValue>
-            </inspire_common:Keyword>
+                <inspire_com:KeywordValue>Orthoimagery</inspire_com:KeywordValue>
+            </inspire_com:Keyword>
 
-			<inspire_common:SupportedLanguages>
+			<inspire_com:SupportedLanguages>
             <!--
             List of supported languages
             -->
-			</inspire_common:SupportedLanguages>
-			<inspire_common:ResponseLanguage>
-                <inspire_common:Language>$INSPIRE_LOCALE</inspire_common:Language>
-            </inspire_common:ResponseLanguage>
+			</inspire_com:SupportedLanguages>
+			<inspire_com:ResponseLanguage>
+                <inspire_com:Language>$INSPIRE_LOCALE</inspire_com:Language>
+            </inspire_com:ResponseLanguage>
 		</inspire_ds:ExtendedCapabilities>
     </ows:OperationsMetadata>
     
@@ -289,10 +289,10 @@
                 <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
 								<!-- LessThanOrEqualTo is in OGC Filter Spec, LessThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>
+                <!--<ogc:ComparisonOperator>LessThanOrEqualTo</ogc:ComparisonOperator>-->
 								<!-- GreaterThanOrEqualTo is in OGC Filter Spec, GreaterThanEqualTo is in OGC CSW schema -->
                 <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
-                <ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>
+                <!--<ogc:ComparisonOperator>GreaterThanOrEqualTo</ogc:ComparisonOperator>-->
                 <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
                 <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>

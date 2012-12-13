@@ -1,6 +1,5 @@
 package org.fao.geonet.resources;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.spatial.Pair;
 
 /**
  * Servlet for serving up resources located in GeoNetwork data directory.  
@@ -31,10 +31,11 @@ import org.fao.geonet.constants.Geonet;
 public class ResourceFilter implements Filter {
     private static final int CONTEXT_PATH_PREFIX = "/".length();
     private static final int FIVE_DAYS = 60*60*24*5;
+    private static final int SIX_HOURS = 60*60*6;
     private String resourcesDir;
-    private byte[] defaultImage;
+    private Pair<byte[], Long> defaultImage;
+    private Pair<byte[], Long> favicon;
     private FilterConfig config;
-    private byte[] favicon;
     private ServletContext servletContext;
     private String appPath;
 
@@ -64,33 +65,42 @@ public class ResourceFilter implements Filter {
             HttpServletResponse httpServletResponse = (HttpServletResponse)response;
             // TODO : other type of resources html
             httpServletResponse.setContentType("image/"+ext);
-            httpServletResponse.addHeader("Cache-Control", "max-age="+FIVE_DAYS+", public");
-            if(filename.equals("logos/favicon.gif")) {
-                httpServletResponse.setContentLength(favicon.length);
-                
-                response.getOutputStream().write(favicon);
+            httpServletResponse.addHeader("Cache-Control", "max-age="+SIX_HOURS+", public");
+            if(filename.equals("images/logos/favicon.gif")) {
+            	synchronized (this) {
+            		favicon = Resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/favicon.gif", favicon.one(), favicon.two());
+            	}
+            	
+                httpServletResponse.setContentLength(favicon.one().length);
+                httpServletResponse.addHeader("Cache-Control", "max-age="+FIVE_DAYS+", public");
+                response.getOutputStream().write(favicon.one());
             } else {
-                byte[] loadResource = Resources.loadResource(resourcesDir, servletContext, appPath, filename, defaultImage);
-                if(loadResource == defaultImage) {
+                Pair<byte[], Long> loadResource = Resources.loadResource(resourcesDir, servletContext, appPath, filename, defaultImage.one(), -1);
+                if(loadResource.two() == -1) {
+
+                	synchronized (this) {
+                        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", defaultImage.one(), defaultImage.two());
+    				}
+
                 	// Return HTTP 404 ? TODO
                     Log.warning(Geonet.RESOURCES, "Resource not found, default resource returned: "+servletPath);
                     httpServletResponse.setContentType("image/gif");
                     httpServletResponse.setHeader("Cache-Control", "no-cache");
                 }
-                httpServletResponse.setContentLength(loadResource.length);
-                response.getOutputStream().write(loadResource);
+                httpServletResponse.setContentLength(loadResource.one().length);
+                response.getOutputStream().write(loadResource.one());
             }
 
         }
     }
 
-    private void initFields() throws IOException {
+	private void initFields() throws IOException {
         servletContext = config.getServletContext();
         appPath = servletContext.getContextPath();
         resourcesDir = System.getProperty(servletContext.getServletContextName() + ".resources.dir");
 
-        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0]);
-        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage);
+        defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);
+        favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage.one(), -1);
     }
 
     private boolean isGet(ServletRequest request) {

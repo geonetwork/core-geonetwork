@@ -28,7 +28,7 @@ import jeeves.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
@@ -41,6 +41,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.util.automaton.LevenshteinAutomata;
 import org.fao.geonet.constants.Geonet;
 
 import java.util.HashMap;
@@ -569,13 +570,13 @@ public class LuceneQueryBuilder {
             TermRangeQuery temporalRangeQuery;
 
             // temporal extent start is within search extent
-            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
             BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
 
             // or temporal extent end is within search extent
-            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
             temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
@@ -584,12 +585,12 @@ public class LuceneQueryBuilder {
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 
@@ -705,7 +706,8 @@ public class LuceneQueryBuilder {
             Float minimumSimilarity = Float.parseFloat(similarity);
             
             if (minimumSimilarity < 1) {
-                query  = new FuzzyQuery(new Term(luceneIndexField, analyzedString), minimumSimilarity);
+                int maxEdits = Math.min((int) ((1D-minimumSimilarity) * 10),  LevenshteinAutomata.MAXIMUM_SUPPORTED_DISTANCE);
+                query  = new FuzzyQuery(new Term(luceneIndexField, analyzedString), maxEdits);
             } else if (minimumSimilarity > 1){
                 throw new IllegalArgumentException("similarity cannot be > 1.  The provided value was "+similarity);
             }
@@ -1114,7 +1116,7 @@ public class LuceneQueryBuilder {
                     dateTo = dateTo + "T23:59:59";
                 }
             }
-            rangeQuery = new TermRangeQuery(luceneIndexField, dateFrom, dateTo, true, true);
+            rangeQuery = TermRangeQuery.newStringRange(luceneIndexField, dateFrom, dateTo, true, true);
             BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
             query.add(dateRangeClause);

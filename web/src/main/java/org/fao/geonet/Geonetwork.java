@@ -268,7 +268,7 @@ public class Geonetwork implements ApplicationHandler {
 		String schemaCatalogueFile = systemDataDir + "config" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
 		logger.info("			- Schema plugins directory: "+schemaPluginsDir);
 		logger.info("			- Schema Catalog File     : "+schemaCatalogueFile);
-		SchemaManager schemaMan = SchemaManager.getInstance(path, schemaCatalogueFile, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
+		SchemaManager schemaMan = SchemaManager.getInstance(path, Resources.locateResourcesDir(context), schemaCatalogueFile, schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA));
 
 		//------------------------------------------------------------------------
 		//--- initialize search and editing
@@ -735,7 +735,7 @@ public class Geonetwork implements ApplicationHandler {
             if (!logo.exists()) {
                 FileOutputStream os = new FileOutputStream(logo);
                 try {
-                    os.write(Resources.loadImage(servletContext, appPath, "logos/dummy.gif", new byte[0]));
+                    os.write(Resources.loadImage(servletContext, appPath, "logos/dummy.gif", new byte[0]).one());
                     logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
                 } finally {
                     os.close();
