@@ -1395,10 +1395,10 @@
 
 		<xsl:variable name="dataset" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' or normalize-space(gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=''"/>
 
-		<!-- thumbnail -->
 		<tr>
 			<td valign="middle" colspan="2">
-				<xsl:if test="$currTab='metadata' or $currTab='identification' or /root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat">
+<!-- GEOCAT Adds a thumbnail elsewhere so don't need this unless perhaps for the new UI
+ 				<xsl:if test="$currTab='metadata' or $currTab='identification' or /root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat">
 					<div style="float:left;width:70%;text-align:center;">
 						<xsl:variable name="md">
 							<xsl:apply-templates mode="brief" select="."/>
@@ -1409,7 +1409,7 @@
 						</xsl:call-template>
 					</div>
 				</xsl:if>
-				<xsl:if test="/root/gui/config/editor-metadata-relation">
+ -->				<xsl:if test="/root/gui/config/editor-metadata-relation">
 					<div style="float:right;">
 						<xsl:call-template name="relatedResources">
 							<xsl:with-param name="edit" select="$edit"/>
