@@ -48,8 +48,6 @@
   			<xsl:param name="isoLangId"/>
   			<xsl:param name="langId"/>
 		
-			<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
-			<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
 			<Document locale="{$isoLangId}">
 		
 				<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
@@ -107,8 +105,6 @@
 
 				<!-- not tokenized title for sorting -->
 				<Field name="_defaultTitle" string="{string(gmd:title/gco:CharacterString)}" store="true" index="true"/>
-				<!-- not tokenized title for sorting -->
-				<Field name="_title" string="{string(gmd:title//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
 
 				<xsl:for-each select="gmd:title//gmd:LocalisedCharacterString[@locale=$langId]">
 					<Field name="title" string="{string(.)}" store="true" index="true"/>
