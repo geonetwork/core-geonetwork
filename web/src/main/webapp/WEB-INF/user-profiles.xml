@@ -461,6 +461,7 @@
 
 		<!-- Catalogue Services for the Web - Discovery -->
 		<allow service="csw"/>
+		<allow service="csw-integration-test"/>
 
 		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
 		<allow service="oaipmh"/>
