@@ -175,7 +175,7 @@ public class JeevesEngine
 
             info("Initializing profiles...");
             ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
-
+            scheduleMan.setProfileManager(profileManager);
             // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
             jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
             profileManager.setApplicationContext(jeevesAppContext);
