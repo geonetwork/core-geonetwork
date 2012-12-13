@@ -170,18 +170,25 @@ public class Info implements Service {
 
         Element entries = xf.exec(new Element("junk"), context);
 
-        Element result = checkEntries(scm, schema, entries, xpath, name, isoType);
+        Element result = checkEntries(scm, schema, entries, xpath, name, isoType, true);
         if (result == null) {
-            result = checkEntries(scm, schema, entries, parent, name, isoType);
-            if (result == null) {
-                if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
-                    result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType,
-                            context);
-                } else {
-                    return buildError(elem, NOT_FOUND);
-                }
+            result = checkEntries(scm, schema, entries, parent, name, isoType, true);
+        }
+        if (result == null) {
+        	result = checkEntries(scm, schema, entries, xpath, name, isoType, false);
+        }
+        if (result == null) {
+        	result = checkEntries(scm, schema, entries, parent, name, isoType, false);
+        }
+        if (result == null) {
+            if (schema.contains("iso19139") && !(schema.equals("iso19139"))) {
+                result = getHelp(scm, elem, fileName, "iso19139", name, parent, xpath, isoType,
+                        context);
+            } else {
+                return buildError(elem, NOT_FOUND);
             }
         }
+
         
         return result;
     }
@@ -189,7 +196,7 @@ public class Info implements Service {
     // --------------------------------------------------------------------------
 
     private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
-            String name, String isoType) throws OperationAbortedEx {
+            String name, String isoType, boolean requireContextMatch) throws OperationAbortedEx {
 
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
@@ -202,19 +209,22 @@ public class Info implements Service {
                 throw new OperationAbortedEx("No namespace found for : " + currName);
             }
 
-            if (currContext != null && context != null && isoType != null) {
-                // XPath context are supposed to use same namespace prefix
-                if (!currContext.contains("/")) {
-                    currContext = findNamespace(currContext, scm, schema);
-                }
-                
-                if (name.equals(currName)
-                        && (context.equals(currContext) || isoType.equals(currContext))) {
-                    return (Element) currElem.clone();
-                }
-            } else if (name.equals(currName)) {
-                return (Element) currElem.clone();
+            if(!currName.equals(name)) {
+            	continue;
             }
+            
+        	if (currContext != null && (context != null || isoType != null)) {
+        		// XPath context are supposed to use same namespace prefix
+        		if (!currContext.contains("/")) {
+        			currContext = findNamespace(currContext, scm, schema);
+        		}
+        		
+        		if (context.equals(currContext) || isoType.equals(currContext)) {
+        			return (Element) currElem.clone();
+        		}
+        	} else if (!requireContextMatch){
+        		return (Element) currElem.clone();
+        	}
         }
 
         return null; // no match found
