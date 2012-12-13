@@ -23,6 +23,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.spatial.Pair;
 
 /**
  * Utility methods for managing resources that are site dependent. In other words
@@ -195,26 +196,40 @@ public class Resources {
 	 *            logos/ or harvesting/
 	 * @param defaultValue
 	 *            the image to return if unable to find the actual image
-	 * @return the bytes of the actual image or defaultValue
+	 * @param loadSince
+	 * 			  If > -1 then it will be compared to the lastModified of the file.  If it is
+	 * 			  < lastModified then the file will be loaded otherwise <defaultValue,loadSince> will be returned
+	 * @return the bytes of the actual image or defaultValue and the lastModified timestamp.  
+	 * 			Timestamp will be -1 if defaultValue is returned.
+	 * 			If <ul>
+	 * 				 <li>an error occurs</li>
+	 * 			     <li>file does not exist</li>
+	 * 				 <li>loadSince is >= file.lastModified<li>
+	 * 			  </ul>
+	 *  		The defaultValue will be returned
 	 * 
 	 */
-	static byte[] loadResource(String resourcesDir, ServletContext context,
-			String appPath, String filename, byte[] defaultValue)
+	static Pair<byte[],Long> loadResource(String resourcesDir, ServletContext context,
+			String appPath, String filename, byte[] defaultValue, long loadSince)
 			throws IOException {
 		File file = locateResource(resourcesDir, context, appPath, filename);
 
 		if (file.exists()) {
+			
 			try {
-				ByteArrayOutputStream data = new ByteArrayOutputStream();
-				transferTo(file, data, true);
-				return data.toByteArray();
+				if(loadSince < 0 || file.lastModified() > loadSince) {
+					ByteArrayOutputStream data = new ByteArrayOutputStream();
+					transferTo(file, data, true);
+					return Pair.read(data.toByteArray(), file.lastModified());
+				} else {
+					Pair.read(defaultValue, loadSince);
+				}
 			} catch (IOException e) {
 				Log.warning(Geonet.RESOURCES, "Unable to find resource: "
 						+ filename);
-				return defaultValue;
 			}
 		}
-		return defaultValue;
+		return Pair.read(defaultValue, -1L);
 	}
 
 	/**
@@ -244,9 +259,9 @@ public class Resources {
 	 *            the image to return if unable to find the actual image
 	 * @return the bytes of the actual image or defaultValue
 	 */
-	public static byte[] loadImage(ServletContext context, String appPath,
+	public static Pair<byte[],Long> loadImage(ServletContext context, String appPath,
 			String filename, byte[] defaultValue) throws IOException {
-		return loadResource(null, context, appPath, filename, defaultValue);
+		return loadResource(null, context, appPath, filename, defaultValue, -1 );
 	}
 
 	private static File locateResource(String resourcesDir,
