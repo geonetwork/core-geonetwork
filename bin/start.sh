@@ -26,7 +26,7 @@ else
   JREBEL_OPTS="-noverify -javaagent:$JREBEL_HOME/jrebel.jar"
 fi
 
-export MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR -Dfile.encoding=UTF8 "
+export MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR $LOGGING -Dfile.encoding=UTF8 "
 
 cd $JEEVES_DIR
 mvn install $@
