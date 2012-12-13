@@ -16,3 +16,6 @@
 [submodule "geoserver"]
 	path = geoserver
 	url = https://github.com/geonetwork/core-geoserver.git
+[submodule "web-itest/webspecs"]
+        path = web-itest/webspecs
+        url = https://github.com/camptocamp/webspecs.git
