@@ -10,18 +10,16 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.SetBasedFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.jdom.Element;
@@ -88,7 +86,8 @@ public class Utils {
 
         SearchManager searchManager = gc.getSearchmanager();
 
-        GeonetworkMultiReader reader = searchManager.getIndexReader(-1).two();
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(-1);
+		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
@@ -96,16 +95,14 @@ public class Utils {
 
             if (tdocs.totalHits > 0) {
 
-                Set<String> id = new HashSet<String>();
-                id.add("_id");
-                FieldSelector idFieldSelector = new SetBasedFieldSelector(id, Collections.<String> emptySet());
-                Document element = reader.document(tdocs.scoreDocs[0].doc, idFieldSelector);
+                Set<String> id = Collections.singleton("_id");
+                Document element = reader.document(tdocs.scoreDocs[0].doc, id);
                 return element.get("_id");
             }
 
             return null;
         } finally {
-            try{searcher.close();}finally{searchManager.releaseIndexReader(reader);}
+            searchManager.releaseIndexReader(indexAndTaxonomy);
         }
     }
 

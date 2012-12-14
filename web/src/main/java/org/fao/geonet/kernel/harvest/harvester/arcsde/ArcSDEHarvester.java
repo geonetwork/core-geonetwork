@@ -258,7 +258,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id, false, false, context);
+		dataMan.indexMetadata(dbms, id, false, context);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -294,7 +294,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id, false, false, context);
+		dataMan.indexMetadata(dbms, id, false, context);
 		return id;
 	}
 	

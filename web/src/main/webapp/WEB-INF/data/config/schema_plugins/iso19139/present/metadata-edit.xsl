@@ -1253,13 +1253,13 @@
     
     <!-- Get current transformation mode based on XML fragement analysis -->
     <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
-                                                else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
-                                                else 'to-iso19139-keyword'"/>
-
+      else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+      else 'to-iso19139-keyword'"/>
+    
     <!-- Define the list of transformation mode available.
-      TODO : retrieve from schema configuration 
-        <xsl:variable name="listOfTransformations">'to-iso19139-keyword'</xsl:variable>
     -->
+    <xsl:variable name="parentName" select="name(..)"/>
+    
     <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
     
     <!-- Create custom widget: 
@@ -1267,32 +1267,64 @@
       * 'combo' for simple combo, 
       * 'list' for selection list, 
       * 'multiplelist' for multiple selection list
-      
-      TODO : retrieve from schema configuration per thesaurus
-     <xsl:variable name="widgetMode" select="if (contains(gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1], 'inspire')) then 'multiplelist' else ''"/>
       -->
     <xsl:variable name="widgetMode" select="''"/>
     
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    identifier should be defined in the citation identifier. By default, GeoNetwork
+    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
+    gco:CharacterString. 
+    -->
+    <xsl:variable name="thesaurusName" select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
+    <xsl:variable name="thesaurusId" select="if (gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+    
+    
+    <!-- The element identifier in the metadocument-->
+    <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
+    
+    <xsl:call-template name="snippet-editor">
+      <xsl:with-param name="elementRef" select="$elementRef"/>
+      <xsl:with-param name="widgetMode" select="$widgetMode"/>
+      <xsl:with-param name="thesaurusId" select="$thesaurusId"/>
+      <xsl:with-param name="listOfKeywords" select="$listOfKeywords"/>
+      <xsl:with-param name="listOfTransformations" select="$listOfTransformations"/>
+      <xsl:with-param name="transformation" select="$transformation"/>
+    </xsl:call-template>
+    
+  </xsl:template>
+  
+  
+  <xsl:template name="snippet-editor">
+    <xsl:param name="elementRef"/>
+    <xsl:param name="widgetMode" select="''"/>
+    <xsl:param name="thesaurusId"/>
+    <xsl:param name="listOfKeywords"/>
+    <xsl:param name="listOfTransformations"/>
+    <xsl:param name="transformation"/>
+    
     <!-- The widget configuration -->
-    <div class="thesaurusPickerCfg" id="thesaurusPicker_{../geonet:element/@ref}" 
-      config="{{mode: '{$widgetMode}', thesaurus:'{normalize-space(gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])
+    <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
+      config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
       }'}}"/>
     
     <!-- The widget container -->
-    <div class="thesaurusPicker" id="thesaurusPicker_{../geonet:element/@ref}_panel"/>
+    <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>
     
     <!-- Create a textarea which contains the XML snippet for updates.
     The name of the element starts with _X which means XML snippet update mode.
     -->
-    <textarea id="thesaurusPicker_{../geonet:element/@ref}_xml" name="_X{../geonet:element/@ref}" rows="" cols="" class="debug">
+    <textarea id="thesaurusPicker_{$elementRef}_xml" name="_X{$elementRef}" rows="" cols="" class="debug">
       <xsl:apply-templates mode="geonet-cleaner" select="."/>
     </textarea>
+    
   </xsl:template>
+  
+  
   
   <!-- ============================================================================= -->
   <!-- descriptiveKeywords -->
@@ -1309,13 +1341,17 @@
           <xsl:with-param name="edit"    select="$edit"/>
           <xsl:with-param name="content">
             
+            <xsl:variable name="thesaurusName" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
+            <xsl:variable name="thesaurusCode" select="if (gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+            
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor. 
               TODO : check that the thesaurus is available in the catalogue to not 
               to try to initialize a widget with a non existing thesaurus. -->
-              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
-                gmd:identifier/gmd:MD_Identifier/gmd:code">
+              <xsl:when test="$thesaurusCode != ''">
                 <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
                   <xsl:with-param name="edit" select="$edit"/>
                   <xsl:with-param name="schema" select="$schema"/>

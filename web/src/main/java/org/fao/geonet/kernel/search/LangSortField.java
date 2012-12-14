@@ -3,11 +3,16 @@ package org.fao.geonet.kernel.search;
 import bak.pcj.map.MapDefaults;
 import bak.pcj.map.ObjectKeyByteChainedHashMap;
 import bak.pcj.map.ObjectKeyByteMap;
-import org.apache.lucene.index.IndexReader;
+import bak.pcj.map.ObjectKeyByteMapIterator;
+
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.search.FieldCache;
+import org.apache.lucene.search.FieldCache.DocTermsIndex;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.FieldCache.DocTerms;
+import org.apache.lucene.util.BytesRef;
 
 import java.io.IOException;
 
@@ -18,11 +23,8 @@ public class LangSortField extends SortField {
         super(MD_DOC_LANG_FIELD, new LangFieldComparatorSource(currentLocale));
     }
 
-    private static final long serialVersionUID = 1L;
-
     static class LangFieldComparatorSource extends FieldComparatorSource {
 
-        private static final long serialVersionUID = 1L;
         private String currentLocale;
 
         public LangFieldComparatorSource( String currentLocale ) {
@@ -30,26 +32,28 @@ public class LangSortField extends SortField {
         }
 
         @Override
-        public FieldComparator newComparator( String fieldname, int numHits, int sortPos, boolean reversed )
+        public FieldComparator<String> newComparator( String fieldname, int numHits, int sortPos, boolean reversed )
                 throws IOException {
             return new LangFieldComparator(currentLocale, numHits);
         }
     }
 
-    static class LangFieldComparator extends FieldComparator {
+    static class LangFieldComparator extends FieldComparator<String> {
 
         private ObjectKeyByteMap langCodeValue = new ObjectKeyByteChainedHashMap();
         private byte nextVal;
+        private String defaultLocale;
 
         public LangFieldComparator( String currentLocale, int numHits ) {
             this.values = new byte[numHits];
             langCodeValue.put(currentLocale, (byte) 1);
             langCodeValue.put(null, (byte) 255);
             nextVal = (byte) 2;
+            this.defaultLocale = currentLocale;
         }
 
         private byte[] values;
-        private String[] currentReaderValues;
+        private DocTermsIndex currentReaderValues;
         // -2 indicates not set
         private int bottom = -2;
 
@@ -60,7 +64,7 @@ public class LangSortField extends SortField {
 
         @Override
         public int compareBottom( int doc ) {
-            final String val2 = currentReaderValues[doc];
+            final String val2 = readerValue(doc);
             if (bottom == -2) {
                 if (val2 == null) {
                     return 0;
@@ -74,7 +78,13 @@ public class LangSortField extends SortField {
 
         @Override
         public void copy( int slot, int doc ) {
-            values[slot] = intValue(currentReaderValues[doc]);
+            String locale = readerValue(doc);
+            values[slot] = intValue(locale);
+        }
+
+        private String readerValue(int docID) {
+            int ord = currentReaderValues.getOrd(docID);
+            return currentReaderValues.lookup(ord, new BytesRef(3)).utf8ToString();
         }
 
         private byte intValue( String locale ) {
@@ -88,8 +98,9 @@ public class LangSortField extends SortField {
         }
 
         @Override
-        public void setNextReader( IndexReader reader, int docBase ) throws IOException {
-            currentReaderValues = FieldCache.DEFAULT.getStrings(reader, MD_DOC_LANG_FIELD);
+        public FieldComparator<String> setNextReader(AtomicReaderContext context) throws IOException {
+            currentReaderValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), MD_DOC_LANG_FIELD);
+            return this;
         }
 
         @Override
@@ -97,10 +108,26 @@ public class LangSortField extends SortField {
             this.bottom = values[bottom];
         }
 
-        @SuppressWarnings("rawtypes")
         @Override
-        public Comparable value( int slot ) {
-            return values[slot];
+        public int compareDocToValue(int doc, String value) throws IOException {
+            return intValue(readerValue(doc)) - intValue(value);
+        }
+
+        @Override
+        public String value(int slot) {
+            String lang = this.defaultLocale;
+            byte val = values[slot];
+            ObjectKeyByteMapIterator iter = langCodeValue.entries();
+            while(iter.hasNext()) {
+                iter.next();
+                if(iter.getValue() == val) {
+                    if(iter.getKey() != null) {
+                        lang = (String) iter.getKey();
+                    }
+                    break;
+                }
+            }
+            return lang;
         }
     }
 }

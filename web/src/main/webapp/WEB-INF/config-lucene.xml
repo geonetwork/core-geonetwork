@@ -127,6 +127,8 @@
       <field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
       <field name="serviceType" tagName="serviceType"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="_indexingError" tagName="idxError"/>
+      <field name="_indexingErrorMsg" tagName="idxMsg"/>
     </dumpFields>
   </search>
 
@@ -190,13 +192,13 @@
       <Param name="stopWords" type="java.io.File" value="/path/to/resources/stopwords/en.txt"/>
     </Field>
     -->
-    <Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="_cat" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="subject" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_cat" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     
 
-    <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="keyword" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>

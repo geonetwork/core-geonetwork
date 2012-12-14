@@ -30,8 +30,6 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -47,7 +45,6 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -57,8 +54,8 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -70,47 +67,17 @@ import java.util.Set;
  */
 public class SearchController {
     
-    private final Element _summaryConfig;
 	private LuceneConfig _luceneConfig;
-	private final FieldSelector _selector;
-	private final FieldSelector _uuidselector;
+	private final Set<String> _selector;
+	private final Set<String> _uuidselector;
     private GMLConfiguration _gmlConfig;
 
-	public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
-		try {
-			if (summaryConfig != null) {
-				_summaryConfig = Xml.loadStream(new FileInputStream(
-						summaryConfig));
-			} else {
-				_summaryConfig = null;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading summary configuration file", e);
-		}
-
+	public SearchController(LuceneConfig luceneConfig) {
 		_luceneConfig = luceneConfig;
 		
-		_selector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
-
-		_uuidselector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
-		_gmlConfig = new GMLConfiguration();
+		_selector = Collections.singleton("_id");
+		_uuidselector = Collections.singleton("_uuid");
+		_gmlConfig = new GMLConfiguration();		
     }
 	
     public void setLuceneConfig(LuceneConfig newConfig) {
@@ -152,12 +119,12 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _gmlConfig, _luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _luceneConfig, _selector, _uuidselector);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
 		// search for results, filtered and sorted
-        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
+        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
         // retrieve actual metadata for results

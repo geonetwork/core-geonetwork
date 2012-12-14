@@ -183,7 +183,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                                 } else {
                                     transformedLoadedGeom = ExtentHelper.reducePrecision(
                                             JTS.transform(ch03LoadedGeom, ExtentHelper.CH03_TO_WGS84)
-                                            ,DefaultGeographicCRS.WGS84);
+                                            ,ExtentHelper.COORD_DIGITS);
                                     transformedLoadedGeom.setSRID(4326);
                                 }
                                 if (matchingGeom(geometry, transformedLoadedGeom)
@@ -737,7 +737,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             
             if(geometry != null) {
                 geometry.setSRID(4326);
-                ExtentHelper.reducePrecision(geometry, DefaultGeographicCRS.WGS84);
+                ExtentHelper.reducePrecision(geometry, ExtentHelper.COORD_DIGITS);
                 if (geometry instanceof Polygon) {
                     results.put(inclusion(polygonBBoxElem),(Polygon) geometry);
                 } else if (geometry instanceof MultiPolygon) {

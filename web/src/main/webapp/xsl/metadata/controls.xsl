@@ -105,14 +105,14 @@
           <xsl:choose>
             <xsl:when test="normalize-space($linkTokens[2])">
               <a id="add_{$id}" class="small add" onclick="if (noDoubleClick()) {$linkTokens[1]}"
-                target="_blank" alt="{/root/gui/strings/add}" title="{/root/gui/strings/add}"
+                target="_blank" alt="{/root/gui/strings/add[not(@js)]}" title="{/root/gui/strings/add[not(@js)]}"
                 style="display:none;">
                 <span>&#160;</span>
               </a>
             </xsl:when>
             <xsl:otherwise>
               <a id="add_{$id}" class="small add" onclick="if (noDoubleClick()) {$addLink}"
-                target="_blank" alt="{/root/gui/strings/add}" title="{/root/gui/strings/add}">
+                target="_blank" alt="{/root/gui/strings/add[not(@js)]}" title="{/root/gui/strings/add[not(@js)]}">
                 <span>&#160;</span>
               </a>
             </xsl:otherwise>

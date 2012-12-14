@@ -22,22 +22,21 @@
 
 package org.fao.geonet.kernel.search;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.lucene.analysis.ASCIIFoldingFilter;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
-import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.standard.StandardFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.util.Version;
-import org.fao.geonet.constants.Geonet;
-
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
 import java.util.Set;
 
 import jeeves.utils.Log;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.fao.geonet.constants.Geonet;
 
 /**
  * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and with added LowercaseFilter and
@@ -48,10 +47,9 @@ import jeeves.utils.Log;
  *
  * @author heikki doeleman
  */
-public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
+public final class GeoNetworkAnalyzer extends Analyzer {
  
-    private Set<String> stopwords = new HashSet<String>();
-    private boolean enablePositionIncrements = true;
+    private CharArraySet stopwords;
     private boolean ignoreCase = true;
     private char[] charsToIgnore;
 
@@ -59,16 +57,18 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
      * Creates this analyzer using no stopwords.
      */
     public GeoNetworkAnalyzer() {
-        super();
+        this(null, null);
     }
 
     /**
      * 
      */
     public GeoNetworkAnalyzer(Set<String> stopwords, char[] charsToIgnore) {
-        super();
-        this.stopwords = stopwords;
-        this.charsToIgnore = charsToIgnore;
+        if(stopwords == null || stopwords.isEmpty()) {
+            this.stopwords = CharArraySet.EMPTY_SET;
+        } else {
+            this.stopwords = new CharArraySet(Geonet.LUCENE_VERSION, stopwords, ignoreCase);
+        }        this.charsToIgnore = charsToIgnore;
         if(charsToIgnore != null) {
         	for(char s : charsToIgnore) {
         		Log.debug("GeoNetworkAnalyzer", "character to ignore: " + s);
@@ -92,20 +92,28 @@ public final class GeoNetworkAnalyzer extends GeoNetworkReusableAnalyzerBase {
      */
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-        final Tokenizer source = new StandardTokenizer(Version.LUCENE_30, wrapReader(reader));
+		/*
+        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
+        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION, new StandardFilter(Geonet.LUCENE_VERSION, source)));
+        if(CollectionUtils.isNotEmpty(this.stopwords)) {
+            return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords));
+*/
+        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
+        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION, new StandardFilter(Geonet.LUCENE_VERSION, source)));
+
         if(this.stopwords!=null && !this.stopwords.isEmpty()) {
-            return new TokenStreamComponents(source, new StopFilter(enablePositionIncrements, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source))), this.stopwords, ignoreCase)){
+            return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords)) {
                 @Override
-                protected boolean reset(final Reader reader) throws IOException {
-                    return super.reset(wrapReader(reader));
+                protected void setReader(final Reader reader) throws IOException {
+                    super.setReader(wrapReader(reader));
                 }
             };
         }
         else {
-            return new TokenStreamComponents(source, new ASCIIFoldingFilter(new LowerCaseFilter(new StandardFilter(source)))){
+            return new TokenStreamComponents(source, asciiFoldingFilter){
                 @Override
-                protected boolean reset(final Reader reader) throws IOException {
-                    return super.reset(wrapReader(reader));
+                protected void setReader(final Reader reader) throws IOException {
+                    super.setReader(wrapReader(reader));
                 }
             };
         }

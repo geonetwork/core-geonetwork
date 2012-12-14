@@ -534,7 +534,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         var view = this;
         Ext.each(records, function (r) {
             var links = r.get('links'),
-                id = r.get('id');
+                id = r.get('id'),
+                uuid = r.get('uuid');
             
             if (links.length > 0) {
                 var div = Ext.query('#md-links-' + id, view.el.dom.body),
@@ -590,7 +591,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                         handler: function (b, e) {
                                             // FIXME : ref to app
                                             app.switchMode('1', true);
-                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), id]]);
+                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
                                         }
                                     });
                                 }

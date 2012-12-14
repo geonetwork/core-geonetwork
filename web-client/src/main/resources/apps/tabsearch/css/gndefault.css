@@ -411,3 +411,75 @@ dl.xml {
 dl.xml * dd {
     padding-left : 2px;
 }
+div.facets * ul,
+div.facets * li {
+    list-style: none;
+}
+/**
+ * Facet category label
+ */
+div.facets > ul > li {
+    margin: 0px;
+    padding: 0px;
+    border-top: 1px solid #CCC;
+    font-weight: bold;
+}
+/**
+ * Facet sub elements
+ */
+div.facets ul ul {
+    margin-left: 5px;
+    margin-bottom: 5px;
+    font-size: 85%;
+}
+/**
+ * Facet count between (number) displayed next to a facet value
+ */
+.facet-count {
+    color: #71C0DD;
+    padding-left: 3px;
+}
+/**
+ * Facet clickable link which trigger the filter action
+ */
+div.facets * a {
+    text-decoration: none;
+}
+div.facets * .facet-more-bt, 
+div.facets * .facet-less-bt {
+    color: #71C0DD;
+}
+.breadcrumb * .x-btn-tl, 
+.breadcrumb * .x-btn-tr, 
+.breadcrumb * .x-btn-tc, 
+.breadcrumb * .x-btn-ml, 
+.breadcrumb * .x-btn-mr, 
+.breadcrumb * .x-btn-mc, 
+.breadcrumb * .x-btn-bl, 
+.breadcrumb * .x-btn-br, 
+.breadcrumb * .x-btn-bc{
+    background: none;
+}
+.breadcrumb * button {
+    color: #0076A1;
+    font-size: smaller;
+    font-weight: bold;
+}
+.breadcrumb * button:hover {
+    color : #959532;
+    text-decoration: underline;
+}
+.breadcrumb-mn {
+    background-color: #FFF !important;
+    background-image: none;
+}
+.breadcrumb-mn * .current-mn {
+    font-weight: bold;
+}
+.breadcrumb-mn * a.x-menu-item {
+    line-height: 10px;
+}
+.breadcrumb-mn * .x-menu-item-icon {
+    height: 10px;
+    width: 10px;
+}

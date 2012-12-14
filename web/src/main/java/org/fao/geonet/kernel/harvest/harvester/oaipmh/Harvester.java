@@ -268,7 +268,7 @@ class Harvester
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id, false, false, context);
+		dataMan.indexMetadata(dbms, id, false, context);
 		result.added++;
 	}
 
@@ -474,7 +474,7 @@ class Harvester
 			addCategories(id);
 
 			dbms.commit();
-			dataMan.indexMetadata(dbms, id, false, false, context);
+			dataMan.indexMetadata(dbms, id, false, context);
 			result.updated++;
 		}
 	}

@@ -294,7 +294,11 @@ public class ExtentHelper
             // its ok
         }
         
-        Coordinate[] coords = geometry.getCoordinates();
+        return reducePrecision(geometry, decimals);
+    }
+
+	public static Geometry reducePrecision(Geometry geometry, int decimals) {
+		Coordinate[] coords = geometry.getCoordinates();
         for (Coordinate coord : coords) {
             coord.x = reducePrecision(coord.x, decimals);
             coord.y = reducePrecision(coord.y, decimals);
@@ -302,7 +306,7 @@ public class ExtentHelper
         }
 
         return geometry;
-    }
+	}
 
     public static double reducePrecision(double x, int decimals) {
         if(decimals == 0) {

@@ -13,6 +13,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 
@@ -34,7 +35,8 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                GeonetworkMultiReader reader = searchMan.getIndexReader(-1).two();
+                IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(-1);
+				GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 IndexSearcher searcher = new IndexSearcher(reader);
 
                 try {
@@ -52,7 +54,7 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
                 } finally {
-                    searchMan.releaseIndexReader(reader);
+                    searchMan.releaseIndexReader(indexAndTaxonomy);
                 }
             }
         };

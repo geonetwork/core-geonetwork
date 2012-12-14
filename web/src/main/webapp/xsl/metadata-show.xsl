@@ -97,7 +97,7 @@
 							<xsl:variable name="buttons">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">
-										<xsl:with-param name="metadata" select="."/>
+										<xsl:with-param name="metadata" select="$metadata"/>
 										<xsl:with-param name="buttonBarId" select="1"/>
 									</xsl:call-template>
 								</td></tr>
@@ -144,7 +144,7 @@
 							<xsl:if test="$buttons!=''">
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">
-										<xsl:with-param name="metadata" select="."/>
+										<xsl:with-param name="metadata" select="$metadata"/>
 										<xsl:with-param name="buttonBarId" select="2"/>
 									</xsl:call-template>
 								</td></tr>

@@ -1,5 +1,5 @@
 Array.prototype.contains = function(element) {
-	return this.indexOf(element) !== -1;
+    return this.indexOf(element) !== -1;
 };
 
 Ext.namespace("Ext.ux"); 
@@ -26,16 +26,16 @@ Ext.namespace("Ext.ux");
  *  
  */ 
 Ext.ux.DDView = function(config) {
-	if (!config.itemSelector) {
-		var tpl = config.tpl;
-		if (this.classRe.test(tpl)) {
-			config.tpl = tpl.replace(this.classRe, 'class=$1x-combo-list-item $2$1');
-		}
-		else {
-			config.tpl = tpl.replace(this.tagRe, '$1 class="x-combo-list-item" $2');
-		}
-		config.itemSelector = ".x-combo-list-item";
-	}
+    if (!config.itemSelector) {
+        var tpl = config.tpl;
+        if (this.classRe.test(tpl)) {
+            config.tpl = tpl.replace(this.classRe, 'class=$1x-combo-list-item $2$1');
+        }
+        else {
+            config.tpl = tpl.replace(this.tagRe, '$1 class="x-combo-list-item" $2');
+        }
+        config.itemSelector = ".x-combo-list-item";
+    }
     Ext.ux.DDView.superclass.constructor.call(this, Ext.apply(config, { 
         border: false 
     })); 
@@ -47,7 +47,7 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
 /**    @cfg {Boolean} copy Causes drag operations to copy nodes rather than move. */ 
 /**    @cfg {Boolean} allowCopy Causes ctrl/drag operations to copy nodes rather than move. */ 
 
-	sortDir: 'ASC',
+    sortDir: 'ASC',
 
     isFormField: true, 
      
@@ -61,22 +61,23 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
 
     msgTarget: 'qtip', 
 
-	afterRender: function() {
-		Ext.ux.DDView.superclass.afterRender.call(this);
-	    if (this.dragGroup) { 
-	        this.setDraggable(this.dragGroup.split(",")); 
-	    } 
-	    if (this.dropGroup) { 
-	        this.setDroppable(this.dropGroup.split(",")); 
-	    } 
-	    if (this.deletable) { 
-	        this.setDeletable(); 
-	    } 
-	    this.isDirtyFlag = false; 
-	    this.addEvents( 
-	        "drop" 
-	    );
-	},
+    afterRender: function() {
+        Ext.ux.DDView.superclass.afterRender.call(this);
+        if (this.dragGroup) { 
+            this.setDraggable(this.dragGroup.split(",")); 
+        } 
+        if (this.dropGroup) { 
+            this.setDroppable(this.dropGroup.split(",")); 
+        } 
+        if (this.deletable) { 
+            this.setDeletable(); 
+        } 
+        this.isDirtyFlag = false; 
+        this.addEvents( 
+            "drop",
+            "dropend"
+        );
+    },
      
     validate: function() { 
         return true; 
@@ -295,9 +296,9 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
     }, 
 
     onNodeEnter : function(n, dd, e, data){ 
-    	if (this.highlightColor && (data.sourceView != this)) {
-	    	this.el.highlight(this.highlightColor);
-	    }
+        if (this.highlightColor && (data.sourceView != this)) {
+            this.el.highlight(this.highlightColor);
+        }
         return false; 
     }, 
      
@@ -305,9 +306,9 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
         var dragElClass = this.dropNotAllowed; 
         var pt = this.getDropPoint(e, n, dd); 
         if (this.isValidDropPoint(pt, n, data)) { 
-    		if (this.appendOnly || this.sortField) {
-    			return "x-tree-drop-ok-below";
-    		}
+            if (this.appendOnly || this.sortField) {
+                return "x-tree-drop-ok-below";
+            }
 
 //            set the insert point style on the target node 
             if (pt) { 
@@ -384,14 +385,14 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
             var r = data.records[i]; 
             var dup = this.store.getById(r.id); 
             if (dup && (dd != this.dragZone)) { 
-				if(!this.allowDup && !this.allowTrash){
-                	Ext.fly(this.getNode(this.store.indexOf(dup))).frame("red", 1); 
-					return true
-				}
-				var x=new Ext.data.Record();
-				r.id=x.id;
-				delete x;
-			}
+                if(!this.allowDup && !this.allowTrash){
+                    Ext.fly(this.getNode(this.store.indexOf(dup))).frame("red", 1); 
+                    return true
+                }
+                var x=new Ext.data.Record();
+                r.id=x.id;
+                delete x;
+            }
             if (data.copy) { 
                 this.store.insert(insertAt++, r.copy()); 
             } else { 
@@ -401,12 +402,13 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
                 } 
                 if(!this.allowTrash)this.store.insert(insertAt++, r); 
             } 
-			if(this.sortField){
-				this.store.sort(this.sortField, this.sortDir);
-			}
+            if(this.sortField){
+                this.store.sort(this.sortField, this.sortDir);
+            }
             this.isDirtyFlag = true; 
         } 
         this.dragZone.cachedTarget = null; 
+        this.fireEvent("dropend", this, n, dd, e, data);
         return true; 
     }, 
 
@@ -423,8 +425,8 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
         if(n){ 
             Ext.fly(n).removeClass([ 
                 "x-view-drag-insert-above", 
-				"x-view-drag-insert-left",
-				"x-view-drag-insert-right",
+                "x-view-drag-insert-left",
+                "x-view-drag-insert-right",
                 "x-view-drag-insert-below"]); 
             this.lastInsertClass = "_noclass"; 
         } 
@@ -548,4 +550,4 @@ Ext.extend(Ext.ux.DDView, Ext.DataView, {
         } 
         return true; 
     } 
-});  
+});

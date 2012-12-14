@@ -33,87 +33,92 @@ Ext.namespace('GeoNetwork');
  */
 GeoNetwork.LogoManagerPanel = Ext.extend(Ext.Panel, {
     store: undefined,
-    dview: undefined,
+    view: undefined,
+    uploadForm: undefined,
     tb: undefined,
-    height: 500,
+    height: 600,
+    autoWidth: true,
+    layout: 'column',
     border: false,
-    layout: 'border',
-    
     /**
      * private: method[initComponent] Initializes the logo view
      */
-    initComponent : function(renderTo) {
+    initComponent: function (renderTo) {
         this.renderTo = renderTo;
-        
+
+        var tpl = new Ext.XTemplate(
+                '<tpl for="."><div class="logo-wrap"><div id="{name}" class="logo">',
+                '<img src="../../images/harvesting/{name}" title="{name}"/><span>{name}</span></div></div>',
+                '</tpl>');
+
+        var logo = Ext.data.Record.create([ {
+            name: 'name',
+            mapping: ''
+        } ]);
+
         this.store = new Ext.data.Store({
-            autoDestroy : true,
-            proxy : new Ext.data.HttpProxy({
-                method : 'GET',
-                url : 'xml.harvesting.info?type=icons',
-                disableCaching : false
+            autoDestroy: true,
+            proxy: new Ext.data.HttpProxy({
+                method: 'GET',
+                url: 'xml.harvesting.info?type=icons',
+                disableCaching: false
             }),
-            reader : new Ext.data.XmlReader({
-                record : 'icon',
-                id : 'icon'
-            }, Ext.data.Record.create([{
-                name : 'name',
-                mapping : ''
-            }])),
-            fields : [ 'name' ]
+            reader: new Ext.data.XmlReader({
+                record: 'icon',
+                id: 'icon'
+            }, logo),
+            fields: [ 'name' ]
         });
 
         var lp = this;
         this.tb = new Ext.Toolbar({
-            disabled : true,
-            items : [{
+            disabled: true,
+            items: [{
                 xtype: 'tbtext',
-                text : translate('selectedLogo')
+                text: translate('selectedLogo')
             }, {
-                xtype : 'button',
-                text : translate('logoDel'),
-                listeners : {
-                    click : function() {
+                xtype: 'button',
+                text: translate('logoDel'),
+                listeners: {
+                    click: function () {
                         this.removeSelectedLogo();
                     },
-                    scope : lp
+                    scope: lp
                 }
             }, {
-                xtype : 'button',
-                text : translate('logoForNode'),
-                listeners : {
-                    click : function() {
+                xtype: 'button',
+                text: translate('logoForNode'),
+                listeners: {
+                    click: function() {
                         this.setSelectedLogo(0);
                     },
-                    scope : lp
+                    scope: lp
                 }
             }, {
-                xtype : 'button',
-                text : translate('logoForNodeFavicon'),
-                listeners : {
-                    click : function() {
+                xtype: 'button',
+                text: translate('logoForNodeFavicon'),
+                listeners: {
+                    click: function() {
                         this.setSelectedLogo(1);
                     },
-                    scope : lp
+                    scope: lp
                 }
             } ]
         });
 
-        this.dview = new Ext.DataView({
+        this.view = new Ext.DataView({
             store: this.store,
-            tpl: new Ext.XTemplate(
-                '<tpl for="."><div class="logo-wrap"><div id="{name}" class="logo">',
-                '<img src="../../images/harvesting/{name}" title="{name}"/><span>{name}</span></div></div>',
-                '</tpl>'
-            ),
+            tpl: tpl,
             singleSelect: true,
             selectedClass: 'logo-selected',
             overClass: 'logo-over',
             itemSelector: 'div.logo-wrap',
-            autoScroll: true,
-            height: 445, // required for FF
+            autoScroll: true,   // Does not look to work
+            height: 500,
             listeners: {
-                "selectionchange": function() {
-                    var selection = this.dview.getSelectedIndexes();
+                selectionchange: function() {
+                    var selection = this.view
+                            .getSelectedIndexes();
                     if (selection.length > 0) {
                         this.tb.enable();
                     } else {
@@ -123,112 +128,121 @@ GeoNetwork.LogoManagerPanel = Ext.extend(Ext.Panel, {
                 scope: lp
             }
         });
-
         this.items = [{
-            title: translate('logoRegistered'),
-            bbar: this.tb,
-            region: 'center',
-            layout: 'fit',
-            border: true,
-            items: [ this.dview ]
-        }, {
-            region: 'west',
-            border: true,
-            minWidth: 250,
-            width: 250,
-            split: true,
-            layout: 'fit',
-            title: translate('logoAdd'),
-            bodyStyle: 'padding: 10px;',
-            items: [{
-                xtype: 'form',
+            columnWidth: .7,
+            baseCls: 'x-plain',
+            items: [new Ext.Panel({
+                title: translate('logoRegistered'),
+                bbar: this.tb,
                 border: false,
-                fileUpload: true,
-                monitorValid: true,
-                items: [{
-                    xtype: 'fileuploadfield',
-                    id: 'form-file',
-                    allowBlank: false,
-                    emptyText: translate('logoSelect'),
-                    hideLabel: true,
-                    name: 'fname'
-                }],
-                buttons: [{
-                    text: translate('upload'),
-                    formBind: true,
-                    handler: function() {
-                        if (this.ownerCt.getForm().isValid()) {
-                            this.ownerCt.getForm().submit({
-                                url: 'logo.add',
-                                scope: lp,
-                                success: function(fp,action) {
-                                    this.store.reload();
-                                },
-                                failure : function(response) {
-                                    Ext.Msg.alert('Error',response.responseText);
-                                }
-                            });
-                        }
-                    }
-                }]
-            }] 
+                items: [ this.view ]
+            })]
+        }, {
+            columnWidth: .3, 
+            baseCls: 'x-plain',
+            items: [this.getUploadForm()]
         }];
-
+        this.store.on('load', function () {
+            // autoScroll property does not work. So set the overflow.
+            this.view.el.dom.style.overflow = 'auto';
+        }, this);
+        
         this.store.load();
 
         GeoNetwork.LogoManagerPanel.superclass.initComponent
                 .call(this);
-        
+
     },
-    
     /** private: method[onDestroy] 
      * 
      *  Private method called during
      *  the destroy sequence.
      */
-    onDestroy : function() {
+    onDestroy: function () {
         GeoNetwork.LogoManagerPanel.superclass.onDestroy.apply(
                 this, arguments);
     },
-    
     /** private: method[removeSelectedLogo] 
      * 
      *  Call logo.delete service to remove selected one.
      */
-    removeSelectedLogo : function() {
+    removeSelectedLogo: function () {
         var lp = this;
-        var selection = this.dview.getSelectedIndexes();
-        var record = this.dview.getStore().getAt(selection[0]);
+        var selection = this.view.getSelectedIndexes();
+        var record = this.view.getStore().getAt(selection[0]);
         var name = record.get('name');
         OpenLayers.Request.GET({
-            url : 'logo.delete?fname=' + name,
-            success : function(response) {
+            url: 'logo.delete?fname=' + name,
+            success: function (response) {
                 lp.store.reload();
             },
-            failure : function(response) {
+            failure: function (response) {
                 Ext.Msg.alert('Error', response.responseText);
             }
         });
     },
-    
     /** private: method[setSelectedLogo] 
      * 
      *  Call logo.set service to remove selected one.
      */
-    setSelectedLogo : function(favicon) {
+    setSelectedLogo: function (favicon) {
         var lp = this;
-        var selection = this.dview.getSelectedIndexes();
-        var record = this.dview.getStore().getAt(selection[0]);
+        var selection = this.view.getSelectedIndexes();
+        var record = this.view.getStore().getAt(selection[0]);
         var name = record.get('name');
         OpenLayers.Request.GET({
             url: 'logo.set?fname=' + name + "&favicon=" + favicon,
-            success: function(response) {
-                // nothing in here
+            success: function (response) {
             },
-            failure: function(response) {
+            failure: function (response) {
                 Ext.Msg.alert('Error', response.responseText);
             }
         });
+    },
+    getUploadForm: function () {
+        var the = this;
+        this.uploadForm = new Ext.FormPanel({
+            title: translate('logoAdd'),
+            fileUpload: true,
+            region: 'west',
+            minWidth: 250,
+            width: 250,
+            split: true,
+            items: {
+                xtype: 'fileuploadfield',
+                id: 'form-file',
+                allowBlank: false,
+                emptyText: translate('logoSelect'),
+                hideLabel: true,
+                name: 'fname'
+            },
+            buttons: [ {
+                text: translate('upload'),
+                scope: the,
+                handler: function () {
+                    if (this.uploadForm.getForm()
+                            .isValid()) {
+                        this.uploadForm
+                                .getForm()
+                                .submit({
+                            url: 'logo.add',
+                            scope: this,
+                            success: function (fp, action) {
+                                this.store
+                                        .reload();
+                            },
+                            failure: function (response) {
+                                Ext.Msg
+                                        .alert(
+                                                'Error',
+                                                response.responseText);
+                            }
+                        });
+                    }
+                }
+            } ]
+        });
+        return this.uploadForm;
     }
 });
 

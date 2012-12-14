@@ -86,9 +86,9 @@ public class Get implements Service
             @SuppressWarnings("unchecked")
             @Override
             public Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                    String extentTypeCode, CoordinateReferenceSystem crs) throws Exception
+                    String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
             {
-                Element fullObject = get.gmdFormat(feature, GMD_POLYGON, featureType, extentTypeCode, crs);
+                Element fullObject = get.gmdFormat(feature, GMD_POLYGON, featureType, extentTypeCode, crs, coordPrecision);
                 List<Element> geographicElements = new ArrayList<Element>(fullObject.getChildren("geographicElement",
                         GMD_NAMESPACE));
 
@@ -120,41 +120,41 @@ public class Get implements Service
         {
             @Override
             public Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                    String extentTypeCode, CoordinateReferenceSystem crs) throws Exception
+                    String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
             {
-                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs);
+                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs, coordPrecision);
             }
         },
         GMD_POLYGON
         {
             @Override
             public Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                    String extentTypeCode, CoordinateReferenceSystem crs) throws Exception
+                    String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
             {
-                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs);
+                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs, coordPrecision);
             }
         },
         GMD_COMPLETE
         {
             @Override
             public Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                    String extentTypeCode, CoordinateReferenceSystem crs) throws Exception
+                    String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
             {
-                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs);
+                return get.gmdFormat(feature, this, featureType, extentTypeCode, crs, coordPrecision);
             }
         },
         WKT
         {
             @Override
             public Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                    String extentTypeCode, CoordinateReferenceSystem crs) throws Exception
+                    String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
             {
-                return get.formatWKT(feature, featureType, wfs, crs);
+                return get.formatWKT(feature, featureType, wfs, crs, coordPrecision);
             }
         };
 
         public abstract Element format(Get get, SimpleFeature feature, FeatureType featureType, Source wfs,
-                String extentTypeCode, CoordinateReferenceSystem crs) throws Exception;
+                String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception;
 
         public static Format lookup(String formatParam)
         {
@@ -190,8 +190,12 @@ public class Get implements Service
         final String extentTypeCode = Util.getParamText(params, ExtentHelper.EXTENT_TYPE_CODE);
         final String epsgCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
         CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
+        int coordDigits = ExtentHelper.COORD_DIGITS;
         if(epsgCode != null) {
         	crs = CRS.decode(epsgCode, true);
+        	if(epsgCode.contains("21781")) {
+        		coordDigits = 0;
+        	}
         }
 
         Format format = Format.lookup(formatParam);
@@ -232,11 +236,11 @@ public class Get implements Service
 
         final Query q = featureType.createQuery(filter,properties);
 
-        final Element xml = resolve(format, id, featureSource, q, featureType, wfs, extentTypeCode, crs);
+        final Element xml = resolve(format, id, featureSource, q, featureType, wfs, extentTypeCode, crs, coordDigits);
         return xml;
     }
 
-    protected Element formatWKT(SimpleFeature next, FeatureType featureType, Source wfs, CoordinateReferenceSystem crs) throws Exception
+    protected Element formatWKT(SimpleFeature next, FeatureType featureType, Source wfs, CoordinateReferenceSystem crs, int coordDigits) throws Exception
     {
         final Element response = new Element("response");
 
@@ -264,7 +268,7 @@ public class Get implements Service
             Geometry geometry = (Geometry) next.getDefaultGeometry();
             MathTransform transform = CRS.findMathTransform(next.getFeatureType().getCoordinateReferenceSystem(), crs);
             Geometry transformed = JTS.transform(geometry, transform);
-            final String wkt = writer.writeFormatted(reducePrecision(transformed, crs));
+            final String wkt = writer.writeFormatted(reducePrecision(transformed, coordDigits));
             String openLayersCompatibleWKT = wkt.replaceAll("\\s+", " ");
 			geomElem.setText(openLayersCompatibleWKT);
             featureElem.addContent(geomElem);
@@ -290,14 +294,14 @@ public class Get implements Service
     }
 
     private Element resolve(Format format, String id, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
-            Query q, FeatureType featureType, Source wfs, String extentTypeCode, CoordinateReferenceSystem crs) throws Exception, Exception
+            Query q, FeatureType featureType, Source wfs, String extentTypeCode, CoordinateReferenceSystem crs, int coordDigits) throws Exception, Exception
     {
         final FeatureIterator<SimpleFeature> features = featureSource.getFeatures(q).features();
         try {
             if (features.hasNext()) {
                 final SimpleFeature feature = features.next();
 
-                return format.format(this, feature, featureType, wfs, extentTypeCode, crs);
+                return format.format(this, feature, featureType, wfs, extentTypeCode, crs, coordDigits);
             } else {
                 return ExtentHelper.error("no features founds with ID=" + id);
             }
@@ -318,7 +322,7 @@ public class Get implements Service
         this._appPath = appPath;
     }
 
-    private Element gmdFormat(SimpleFeature feature, Format format, FeatureType featureType, String extentTypeCode, CoordinateReferenceSystem crs)
+    private Element gmdFormat(SimpleFeature feature, Format format, FeatureType featureType, String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision)
             throws Exception
     {
 
@@ -336,7 +340,7 @@ public class Get implements Service
 
             break;
         case GMD_COMPLETE:
-            geoExTypeEl = boundingPolygon(feature,crs);
+            geoExTypeEl = boundingPolygon(feature,crs, coordPrecision);
             geographicElement.addContent(geoExTypeEl);
             addExtentTypeCode(geoExTypeEl, extentTypeCode);
 
@@ -348,7 +352,7 @@ public class Get implements Service
 
             break;
         case GMD_POLYGON:
-            geoExTypeEl = boundingPolygon(feature,crs);
+            geoExTypeEl = boundingPolygon(feature,crs, coordPrecision);
             geographicElement.addContent(geoExTypeEl);
             addExtentTypeCode(geoExTypeEl, extentTypeCode);
 
@@ -483,18 +487,18 @@ public class Get implements Service
         return dec;
     }
 
-    private Element boundingPolygon(SimpleFeature feature, CoordinateReferenceSystem crs) throws Exception
+    private Element boundingPolygon(SimpleFeature feature, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
     {
         final Element boundingPoly = new Element("EX_BoundingPolygon", GMD_NAMESPACE);
         final Element polyon = new Element("polygon", GMD_NAMESPACE);
-        final Element geom = encodeAsGML(feature, crs);
+        final Element geom = encodeAsGML(feature, crs, coordPrecision);
         geom.detach();
         boundingPoly.addContent(polyon);
         polyon.addContent(geom);
         return boundingPoly;
     }
 
-    private Element encodeAsGML(SimpleFeature feature, CoordinateReferenceSystem crs) throws Exception
+    private Element encodeAsGML(SimpleFeature feature, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
     {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         final Encoder encoder = new Encoder(gmlConfiguration);
@@ -502,7 +506,7 @@ public class Get implements Service
         final CoordinateReferenceSystem baseCrs = feature.getFeatureType().getCoordinateReferenceSystem();
         MathTransform transform = CRS.findMathTransform(baseCrs, crs, true);
         Geometry transformed = JTS.transform((Geometry) feature.getDefaultGeometry(), transform );
-        reducePrecision(transformed,crs);
+        reducePrecision(transformed, coordPrecision);
 
         ExtentHelper.addGmlId(transformed);
         encoder.encode(transformed, org.geotools.gml3.GML.geometryMember, outputStream);

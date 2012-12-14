@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.fao.xsl.TransformationTestSupport;
 import org.geotools.xml.Parser;
@@ -90,7 +91,7 @@ public class ExtractGeometriesTest
     {
         Element xml = TransformationTestSupport.getXML(null, "/data/extractgeoms/"+metadataFile);
         Geometry geometries = SpatialIndexWriter.extractGeometriesFrom(
-                TransformationTestSupport.geonetworkWebapp.getAbsolutePath()+File.separator+"WEB-INF"+File.separator+"data"+File.separator+"config"+File.separator+"schema_plugins"+File.separator+metadataType, xml, PARSER);
+                TransformationTestSupport.geonetworkWebapp.getAbsolutePath()+File.separator+"WEB-INF"+File.separator+"data"+File.separator+"config"+File.separator+"schema_plugins"+File.separator+metadataType, xml, PARSER, new HashMap<String, String>());
         assertNotNull(geometries);
     }
 

@@ -55,19 +55,17 @@ import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.SetBasedFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Email;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -226,7 +224,8 @@ public final class Utils {
 
         SearchManager searchManager = gc.getSearchmanager();
 
-        GeonetworkMultiReader reader = searchManager.getIndexReader(-1).two();
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(-1);
+		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
@@ -243,13 +242,12 @@ public final class Utils {
                 requiredFields.add("_id");
                 requiredFields.add("_owner");
                 requiredFields.add(field);
-                FieldSelector selector = new SetBasedFieldSelector(requiredFields, Collections.<String>emptySet()); 
                 Term term = new Term(field, "*id=" + concreteId + "*");
                 WildcardQuery query = new WildcardQuery(term);
                 TopDocs tdocs = searcher.search(query, Integer.MAX_VALUE);
 
                 for( ScoreDoc sdoc : tdocs.scoreDocs ) {
-                    Document element = reader.document(sdoc.doc, selector);
+                    Document element = reader.document(sdoc.doc, requiredFields);
 
                     List<String> xlinks = new ArrayList<String>();
                     for( String value : element.getValues(field) ) {
@@ -267,7 +265,7 @@ public final class Utils {
             }
             return results;
         } finally {
-            try{searcher.close();}finally{searchManager.releaseIndexReader(reader);}
+            searchManager.releaseIndexReader(indexAndTaxonomy);
         }
     }
 

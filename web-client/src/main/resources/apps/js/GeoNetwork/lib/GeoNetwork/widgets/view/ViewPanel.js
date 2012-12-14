@@ -118,6 +118,87 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             '<td><ul>' + link + '</ul></td></tr>');
         }
     },
+    extractorWindow: null,
+    extractorPanel: null,
+    showExtractor: function (url, layer, version) {
+//        if (this.extractorWindow) {
+//            this.extractorWindow.close();
+//            this.extractorWindow = undefined;
+//        }
+        if (!this.extractorWindow) {
+            var options = {
+                    projection: GeoNetwork.map.PROJECTION,
+                    theme: null,
+                    maxExtent: GeoNetwork.map.EXTENT
+                };
+            var map = new OpenLayers.Map(options);
+            map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
+            this.extractorPanel = new GeoNetwork.WxSExtractor({
+                url: url,
+                version: version || '1.1.0', 
+                layer: layer,
+                map: map,
+                split: true,
+                region: 'center'
+            });
+            
+            this.extractorWindow = new Ext.Window({
+                title: OpenLayers.i18n('extractorTitle') + url,
+                width: 600,
+                height: 350,
+                plain: true,
+                layout: 'border',
+                modal: true,
+                items: [this.extractorPanel, new GeoExt.MapPanel({
+                    border: false,
+                    map: map,
+                    region: 'west',
+                    split: true,
+                    width: 200
+                })],
+                closeAction: 'hide',
+                constrain: true,
+                iconCls: 'WFSDownloadIcon'
+            });
+        } else {
+            this.extractorPanel.getCapabilities(url, layer);
+        }
+        this.extractorWindow.setTitle(OpenLayers.i18n('extractorTitle') + url);
+        this.extractorWindow.show();
+    },
+    /**
+     * Hack to search for WFS link in the relation table and init a data extractor widget
+     * TODO : use a class selector instead or use the link in the results store
+     */
+    createExtractor: function () {
+        var rows = Ext.query('table.related tr', this.body.dom);
+        var panel = this;
+        
+        Ext.each(rows, function (item) {
+            // Check WFS is in protocol name
+            var cols = Ext.get(item).select('td');
+            var label = cols.item(0).child('span');
+            
+            if (label !== null && label.dom.innerHTML.indexOf('WFS') !== -1) {
+                var layers = Ext.query("li", cols.item(1).dom);
+                Ext.each(layers, function (layer) {
+                    var el = Ext.get(layer);
+                    var url = el.child('a').getAttribute('href');
+                    layer = el.child('a').dom.innerHTML; // TODO if a description available
+                    el.insertHtml('beforeEnd', '<span id="wfs-download-' + layer + '">');
+                    var downloadBt = new Ext.Button({
+                        text: OpenLayers.i18n('dataDownload'),
+                        iconCls: 'WFSDownloadIcon',
+                        renderTo: "wfs-download-" + layer,
+                        handler: function () {
+                            panel.showExtractor(url, layer);
+                        }
+                    });
+                });
+                
+            }
+        });
+    },
     createActionMenu: function(){
         if (!this.actionMenu) {
         
@@ -249,6 +330,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         // Related metadata are only displayed in view mode with no tabs
         if (this.currTab === 'view-simple' || this.currTab === 'inspire' || this.currTab === 'simple') {
+            this.createExtractor();
             this.getLinkedData();
         }
         
