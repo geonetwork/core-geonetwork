@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd"> 
+
+<!-- Config to allow JNDIPool (in config.xml) to be used with Jetty 
+			1. Configure the following to suit your db
+			2. Copy jdbc drivers for your db to:
+			   <geonetwork_install_dir>/jetty/lib/ext (not necessary for postgis) -->
+
+		<!-- this is a sample config for postgis - change driverClassName,
+		     url and validationQuery and it can be used for other dbs eg Oracle 
+					 use <Set name="validationQuery">SELECT 1 FROM DUAL</Set> - see
+					 config.xml for validation queries used by other dbs --> 
+    
+	<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+		<New id="gnresources" class="org.eclipse.jetty.plus.jndi.Resource">
+			<Arg></Arg> 
+     	<Arg>jdbc/geonetwork</Arg>
+     	<Arg>
+        <New class="org.apache.commons.dbcp.BasicDataSource">
+          <Set name="driverClassName">org.postgis.DriverWrapper</Set>
+          <Set name="url">jdbc:postgresql_postGIS://localhost:5432/gndb</Set>
+          <Set name="username">your_username</Set>
+          <Set name="password">your_password</Set>
+          <Set name="validationQuery">SELECT 1</Set>
+					<Set name="maxActive">10</Set>
+					<Set name="maxIdle">10</Set>
+					<Set name="removeAbandoned">true</Set>
+					<Set name="removeAbandonedTimeout">3600</Set>
+					<Set name="logAbandoned">true</Set>
+					<Set name="testOnBorrow">true</Set>
+					<Set name="defaultAutoCommit">false</Set>
+					<Set name="defaultTransactionIsolation">2</Set>
+					<Set name="accessToUnderlyingConnectionAllowed">true</Set>
+        </New>
+    	</Arg>
+			<Call name="bindToENC">
+				<Arg>jdbc/geonetwork</Arg>  
+			</Call>
+   	</New>
+	</Configure>
