@@ -58,8 +58,9 @@
 				
 				<xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
 					<dc:subject>
-						<xsl:value-of select="gmx:Anchor/@xlink:href"></xsl:value-of>
-					</dc:subject>
+                        <xsl:attribute name="href"><xsl:value-of select="gmx:Anchor/@xlink:href"></xsl:value-of></xsl:attribute>
+                        <xsl:value-of select="gmx:Anchor"></xsl:value-of>
+                    </dc:subject>
 				</xsl:for-each>
 				<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 					<dc:subject>
