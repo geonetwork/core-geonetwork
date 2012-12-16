@@ -977,7 +977,7 @@ public class SchemaManager {
      * @return
 	 */
 	private String buildSchemaPresentXslt(String name, String suffix) {
-		return "" + schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl";
+		return new File(schemaPluginsDir + "/" + name + "/present/metadata-" + name + suffix + ".xsl").toURI().toString();
 	}
 
 	/**
