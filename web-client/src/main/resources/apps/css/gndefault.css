@@ -529,6 +529,16 @@ dl.xml * dd {
 .linkPanel * h2 span {
     float: right;
 }
+.linkPanel * .x-btn-tl, .linkPanel * .x-btn-tr, 
+.linkPanel * .x-btn-tc, .linkPanel * .x-btn-ml, 
+.linkPanel * .x-btn-mr, .linkPanel * .x-btn-mc, 
+.linkPanel * .x-btn-bl, .linkPanel * .x-btn-br, 
+.linkPanel * .x-btn-bc {
+    background: none;
+}
+.linkPanel * .x-btn-noicon .x-btn-small .x-btn-text {
+    border-bottom: 1px black solid;
+}
 .relation-type {
     text-transform: uppercase;
     margin-left: 3px;
