@@ -23,13 +23,11 @@
 
 package jeeves.server.dispatchers.guiservices;
 
-import java.util.WeakHashMap;
 
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.BadInputEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.XmlFileCacher;
 
 import org.jdom.Element;
 
@@ -46,6 +44,7 @@ public class XmlFile implements GuiService
 	private final String  language;
 	private final String  defaultLang;
 	private final boolean localized;
+	private boolean isExternal;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -53,7 +52,15 @@ public class XmlFile implements GuiService
 	//---
 	//--------------------------------------------------------------------------
 
-	public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized) throws BadInputEx
+	/**
+	 * 
+	 * @param config
+	 * @param defaultLanguage the default language if the localized file doesn't exist
+	 * @param defaultLocalized localize file
+	 * @param isEternal if true then keep in cache always
+	 * @throws BadInputEx
+	 */
+	public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized, boolean isEternal) throws BadInputEx
 	{
 		defaultLang = defaultLanguage;
 
@@ -62,6 +69,7 @@ public class XmlFile implements GuiService
 		base = Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc");
 
 		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
+		this.isExternal = isEternal;
 
 		//--- handle localized attrib
 
@@ -86,7 +94,7 @@ public class XmlFile implements GuiService
         if(localized || preferedLanguage  == null) preferedLanguage = lang;
         if(preferedLanguage == null) preferedLanguage = defaultLang;
 
-        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang);
+        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang, isExternal);
         element.setName(name);
         return element;
 	}

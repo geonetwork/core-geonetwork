@@ -454,7 +454,7 @@ public final class LangUtils
         
         for (File file : loc.listFiles()) {
             if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
+                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName(), false);
                 String translation = Xml.selectString(xml, key);
                 if(translation != null && !translation.trim().isEmpty()) {
                     translations.put(file.getName(), translation);

@@ -287,7 +287,7 @@ public class ServiceManager
 	private GuiService getGuiService(String pack, Element elem) throws Exception
 	{
 		if (ConfigFile.Output.Child.XML.equals(elem.getName()))
-			return new XmlFile(elem, defaultLang, defaultLocal);
+			return new XmlFile(elem, defaultLang, defaultLocal, false);
 
 		if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
 			return new Call(elem, pack, appPath);

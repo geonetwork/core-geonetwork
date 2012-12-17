@@ -908,7 +908,7 @@ public class SchemaManager {
 				config.setAttribute("file",fname);
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
-				XmlFile xf = new XmlFile(config, defaultLang, true);
+				XmlFile xf = new XmlFile(config, defaultLang, true, true);
 				xfMap.put(fname, xf);
 			} else {
 				Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);
