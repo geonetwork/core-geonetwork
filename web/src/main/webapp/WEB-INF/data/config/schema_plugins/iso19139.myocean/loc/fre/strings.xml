@@ -23,7 +23,7 @@
     <orgCustodian>Product manager</orgCustodian>
     <orgServiceDesk>Local service desk</orgServiceDesk>
     <slidingWindow>Sliding window of updates</slidingWindow>
-    
+    <unknown>Unknown</unknown>
     
     <!-- Some hardcoded element name -->
     <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>

@@ -924,7 +924,7 @@
 							<xsl:with-param name="edit"   select="$edit"/>
 							<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/startDate"/>
 						</xsl:apply-templates>
-						
+						<!--
 						<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent/gmd:temporalElement/
 							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]">
@@ -932,8 +932,48 @@
 							<xsl:with-param name="edit"   select="$edit"/>
 							<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/endDate"/>
 						</xsl:apply-templates>
-						
-						
+						-->
+						<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+							gmd:EX_Extent/gmd:temporalElement/
+							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]">
+							<xsl:for-each select="*">
+								<xsl:apply-templates mode="simpleElement" select=".">
+									<xsl:with-param name="schema"  select="$schema"/>
+									<xsl:with-param name="edit"   select="$edit"/>
+									<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/endDate"/>
+									<xsl:with-param name="editAttributes" select="false()"/>
+									<xsl:with-param name="text">
+										<xsl:variable name="ref" select="geonet:element/@ref"/>
+	
+										<xsl:variable name="format">
+											<xsl:choose>
+												<xsl:when test="string-length(text()) = 10"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+												<xsl:when test="string-length(text()) > 10"><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:when>
+												<xsl:otherwise><xsl:text>%Y-%m-%d</xsl:text></xsl:otherwise>
+											</xsl:choose>
+										</xsl:variable>
+
+										<xsl:call-template name="calendar">
+											<xsl:with-param name="ref" select="$ref"/>
+											<xsl:with-param name="date" select="text()"/>
+											<xsl:with-param name="format" select="$format"/>
+											<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"></xsl:with-param>
+										</xsl:call-template>
+										
+										<xsl:variable name="indeterminatePositionId" select="concat('_', $ref ,'_indeterminatePosition')"/>
+										<div style="margin-left: 168px;">
+											<input type="hidden" id="{$indeterminatePositionId}" name="{$indeterminatePositionId}" value="{@indeterminatePosition}"/>
+											<input type="checkbox" onclick="indeterminatePositionCheck(this.checked, '_{$ref}', '{$indeterminatePositionId}');" id="{$indeterminatePositionId}_ck">
+												<xsl:if test="@indeterminatePosition = 'unknown'">
+													<xsl:attribute name="checked">checked</xsl:attribute>
+												</xsl:if>
+											</input>
+											<label for="{$indeterminatePositionId}_ck"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/unknown"/></label>
+										</div>
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:for-each>
 						<!--
 							Old field use for temporal resolution now stored in range dimension.
 							UFO is taking care of reporting the info in that field too.

@@ -1039,6 +1039,16 @@ function updateSlidingWindow(targetElementId) {
         (e_hour === "" ? "0" : e_hour) + "H";
 }
 
+function indeterminatePositionCheck(checked, ref, indeterminatePositionId) {
+    if (checked) {
+        document.getElementById(indeterminatePositionId).value = 'unknown';
+        document.getElementById(ref).value = '';
+        Ext.getCmp(ref).setDisabled(true);
+    } else {
+        document.getElementById(indeterminatePositionId).value = '';
+        Ext.getCmp(ref).setDisabled(false);
+    }
+}
 
 
 function doRemoveElementActionSimple(action, ref, parentref, htmlElementToRemoveId){

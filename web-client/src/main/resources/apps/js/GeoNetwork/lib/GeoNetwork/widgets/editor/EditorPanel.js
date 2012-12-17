@@ -1113,7 +1113,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 if (formatEl) {
                     format = formatEl.value;
                 }
-                
+                var disabledEl = Ext.getDom(id + '_disabled', this.editorMainPanel.dom);
                 var valueEl = Ext.getDom(id + '_cal', this.editorMainPanel.dom);
                 var value = (valueEl ? valueEl.value : '');
                 var showTime = format.indexOf('T') === -1 ? false : true;
@@ -1124,6 +1124,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         name: id,
                         id: id,
                         value: value,
+                        disabled: disabledEl.value === 'true',
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i',
                         hiddenFormat: 'Y-m-d\\TH:i:s',
@@ -1136,6 +1137,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         id: id,
                         width: 160,
                         value: value,
+                        disabled: disabledEl.value === 'true',
                         format: 'Y-m-d'
                     });
                 }
