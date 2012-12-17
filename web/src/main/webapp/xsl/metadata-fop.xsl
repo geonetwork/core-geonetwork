@@ -357,8 +357,11 @@
           <xsl:when test="$remote=false()">
             <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
+                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'/srv/fre/metadata.formatter.html?xsl=sextant&amp;uuid=', $metadata/geonet:info/uuid)"
+              />') </xsl:attribute>
+              <!--<xsl:attribute name="external-destination"> url('<xsl:value-of
                 select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)"
-                />') </xsl:attribute>
+                />') </xsl:attribute>-->
               <xsl:value-of select="$gui/strings/show"/>
           </fo:basic-link> <xsl:text>|</xsl:text> <fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
