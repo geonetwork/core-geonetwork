@@ -48,7 +48,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Default view mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
-        defaultViewMode: 'simple',
+        defaultEditMode: 'simple',
+        editMode: null,
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
          *  instead of keyword selection popup.
@@ -827,7 +828,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Initialized the metadata editor. The method could be used to create a metadata record
      *  from a template or from a parent metadata record.
      */
-    init: function(metadataId, create, group, child, isTemplate, fullPrivileges){
+    init: function(metadataId, create, group, child, isTemplate, fullPrivileges, schema){
         var url;
         
         this.metadataId = metadataId;
@@ -846,7 +847,13 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
             url = this.editUrl + '?id=' + this.metadataId;
         }
-        url += '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode);
+        var mode = this.defaultEditMode;
+        if (this.editMode.hasOwnProperty(schema)) {
+            mode = this.editMode[schema];
+        } else if (document.mainForm) {
+            mode = document.mainForm.currTab.value;
+        }
+        url += '&currTab=' + mode;
         
         this.loadUrl(url, undefined, this.loadCallback);
         

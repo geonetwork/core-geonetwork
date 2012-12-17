@@ -155,12 +155,14 @@ cat.app = function() {
         win.show();
 	}
 	
-	function edit(metadataId, create, group, child) {
-
+	function edit(metadataId, create, group, child, isTemplate, schema) {
+	    var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
+	    
 		if (!this.editorWindow) {
 			this.editorPanel = new GeoNetwork.editor.EditorPanel({
-				defaultViewMode : GeoNetwork.Settings.editor.defaultViewMode,
-				catalogue : catalogue,
+				defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
+				editMode : GeoNetwork.Settings.editor.editMode,
+                catalogue : catalogue,
 				xlinkOptions : {
 					CONTACT : true
 				}
@@ -206,7 +208,8 @@ cat.app = function() {
 
 		if (metadataId) {
 			this.editorWindow.show();
-			this.editorPanel.init(metadataId, create, group, child, undefined, true);
+			var recordSchema = record && record.get('schema');
+			this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
 		}
 	}
 

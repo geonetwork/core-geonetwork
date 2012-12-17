@@ -105,6 +105,10 @@ public class Create implements Service
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+		Element elCurrTab = params.getChild(Params.CURRTAB);
+		if (elCurrTab != null) {
+			context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+		}
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
 		return response;
 	}
