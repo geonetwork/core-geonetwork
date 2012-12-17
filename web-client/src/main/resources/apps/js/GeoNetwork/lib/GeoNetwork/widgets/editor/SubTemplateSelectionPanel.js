@@ -115,7 +115,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
      * Property: role
      * Default role to be used for all selected contacts.
      */
-    defaultRole: 'pointOfContact',
+    defaultRole: null,
     
     /**
      * APIProperty: SubTemplateSelected
@@ -267,7 +267,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.codeListStore.on({
             'load': function(){
-                Ext.getCmp('codeList').setValue(this.defaultRole);
+                this.defaultRole && Ext.getCmp('codeList').setValue(this.defaultRole);
             },
             scope: this
         });
