@@ -121,7 +121,7 @@
 	<wikiMEFOutput>MEF</wikiMEFOutput>
 	<removeStyling>Remove Markup/HTML styling</removeStyling>
 	<keepStyling>Keep Markup/HTML styling</keepStyling>
-       <asHtml>Export As Html Markup</asHtml>
+       
 	<localrating>Lokale Waardering</localrating>
     <autofixing>Automatische correcties</autofixing>
 	

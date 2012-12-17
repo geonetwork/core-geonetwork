@@ -384,8 +384,10 @@ div.button {
   min-height: 15px;
 }
 .nicEdit-main ol{ list-style:inside; list-style-type: decimal; } .nicEdit-main ul{ list-style: inside; list-style-type: disc; } 
+.nicEdit-main strong { font-weight:bold; display: inline; }
 
 .view-simple ol{ list-style:inside; list-style-type: decimal; } .view-simple ul{ list-style: inside; list-style-type: disc; } 
+.view-simple strong { font-weight:bold; display: inline; }
 
 .tgRight {
   background-image : url(../images/default/bullet_arrow_right.png);

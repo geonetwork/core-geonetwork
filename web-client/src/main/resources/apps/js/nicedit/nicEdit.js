@@ -58,8 +58,8 @@ var bkElement = bkClass.extend({
 		var o = obj = this;
 		if (obj.offsetParent) {
 			do {
-				curleft += obj.offsetLeft;
-				curtop += obj.offsetTop;
+				curleft += obj.offsetLeft - obj.scrollLeft;
+				curtop += obj.offsetTop - obj.scrollTop;
 			} while (obj = obj.offsetParent);
 		}
 		var b = (!window.opera) ? parseInt(this.getStyle('border-width') || this.style.border) || 0 : 0;

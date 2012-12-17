@@ -75,8 +75,9 @@ public final class XslUtil
         // add tags to allow in output html as we find the ones we require
         WHITE_LIST.addTags("span", "font");
         // add attributes to allow in output html as we find the ones we require
-        WHITE_LIST.addAttributes(":all", "color", "style");
+        WHITE_LIST.addAttributes(":all", "color", "style", "align");
         WHITE_LIST.addAttributes("font", "size", "face");
+        WHITE_LIST.addAttributes("a", "target", "href", "title");
         WHITE_LIST.addAttributes("a", "target", "href", "title");
     }
     /**
