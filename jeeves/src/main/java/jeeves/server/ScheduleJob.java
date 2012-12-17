@@ -15,7 +15,7 @@ import org.quartz.JobExecutionException;
  * 
  * @author jeichar
  */
-class ScheduleJob implements Job {
+public class ScheduleJob implements Job {
 
     public static final String NAME_FIELD_NAME = "scheduleName";
     
