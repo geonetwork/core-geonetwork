@@ -14,9 +14,11 @@
  -->
  <element name="che:individualFirstName" id="521.0">
   <label>First Name</label>
+  <description>Given name</description>
  </element>
  <element name="che:individualLastName" id="522.0">
   <label>Last Name</label>
+  <description>Surname</description>
  </element>
  <element name="che:organisationAcronym" id="501.0">
   <label>Organisation Acronym</label>
@@ -54,9 +56,11 @@
  </element>
  <element name="che:directNumber">
   <label>Direct number</label>
+  <description/>
  </element>
  <element name="che:mobile">
   <label>Mobile</label>
+  <description>Cellphone</description>
  </element>
  <element name="che:CHE_CI_Telephone" id="407.0">
   <label>Telephone</label>
@@ -91,6 +95,7 @@
  </element>
  <element name="che:CHE_CI_LegislationCode">
   <label>Code</label>
+  <description/>
  </element>
  <element name="che:legislationConstraints" id="582.0">
   <label>Legislation constraints</label>
@@ -349,6 +354,7 @@
  </element>
  <element name="che:focalDistance" id="578">
   <label>Focal distance</label>
+  <description/>
  </element>
  <element name="che:CHE_MD_CoverageDescription" id="239.0">
   <label>Coverage Description</label>
