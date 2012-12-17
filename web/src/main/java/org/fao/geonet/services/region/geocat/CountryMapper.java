@@ -18,7 +18,7 @@ public class CountryMapper extends DatastoreMapper {
 
 	@Override
 	public boolean accepts(String regionId) {
-		return regionId.startsWith(PREFIX);
+		return regionId.startsWith(BASE_PREFIX+PREFIX);
 	}
 
 	@Override

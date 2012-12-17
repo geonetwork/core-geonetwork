@@ -252,7 +252,7 @@ public abstract class SpatialFilter extends Filter
     {
         for(java.util.Iterator<FeatureId> iter=matches.iterator();iter.hasNext();){
             FeatureId id = iter.next();
-          Geometry geom = (Geometry) jcs.get(id.getID());
+            Geometry geom = (Geometry) jcs.get(id.getID());
             if( geom!=null ){
                 iter.remove();
                 SimpleFeature feature = SimpleFeatureBuilder.build(FEATURE_TYPE, new Object[]{geom}, id.getID());

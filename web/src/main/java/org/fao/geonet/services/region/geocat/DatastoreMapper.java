@@ -23,6 +23,8 @@ public abstract class DatastoreMapper {
 
 	protected static final String THE_GEOM = "the_geom";
 
+	protected static final String BASE_PREFIX = "region:";
+
 	public static final String SIMPLIFIED_ATT = "simplified";
 	
 	public abstract boolean accepts(String regionId);
@@ -41,7 +43,7 @@ public abstract class DatastoreMapper {
 
 	public final Filter idFilter(MapperState state, String regionId) {
 		Expression propertyExpression = state.filterFactory.property(idPropertyName());
-		Expression requiredValue = state.filterFactory.literal(regionId.substring(categoryId().length()+1));
+		Expression requiredValue = state.filterFactory.literal(regionId.substring(BASE_PREFIX.length()+categoryId().length()+1));
 		return state.filterFactory.equal(propertyExpression, requiredValue, false);
 	}
 

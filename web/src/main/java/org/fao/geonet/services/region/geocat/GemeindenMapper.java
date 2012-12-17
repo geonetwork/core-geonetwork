@@ -21,7 +21,7 @@ public class GemeindenMapper extends DatastoreMapper {
 
 	@Override
 	public boolean accepts(String regionId) {
-		return regionId.startsWith(PREFIX);
+		return regionId.startsWith(BASE_PREFIX+PREFIX);
 	}
 
 	@Override
