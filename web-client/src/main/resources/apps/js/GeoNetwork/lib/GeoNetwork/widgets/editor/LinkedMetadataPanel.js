@@ -124,6 +124,12 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             metadataId: this.metadataId,
             versionId: this.versionId,
             metadataSchema: this.metadataSchema,
+            onlinesrc: {
+                // FIXME : hardcoded configuration for myocean metadata
+                // where only metadata online source could be used
+                linkADocument: this.metadataSchema !== 'iso19139.myocean',
+                linkAMetadata: this.metadataSchema === 'iso19139.myocean'
+            },
             getThumbnail: this.catalogue.services.mdGetThumbnail,
             setThumbnail: this.catalogue.services.mdSetThumbnail,
             unsetThumbnail: this.catalogue.services.mdUnsetThumbnail

@@ -54,6 +54,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         uploadDocument: false,
         metadataSchema: 'iso19139',
         protocolForServices: ['application/vnd.ogc.wms_xml', 'application/vnd.ogc.wfs_xml'],
+        onlinesrc: {
+            linkADocument: true,
+            linkAMetadata: false
+        },
         hiddenParameters: {
             service: [{
                 name: 'E_type',
@@ -72,22 +76,39 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             sibling: [{
                 name: 'E__groupPublished',
                 value: ''
+            }],
+            onlinesrc: [{
+                name: 'E__groupPublished',
+                value: null
             }]
         },
         /*
          * Configuration for sibling per profil and per initiative type
-         * Required for MyOCeann
+         * Required for MyOcean
+         * Configuration for online source to restrict to a group
          */
         hiddenParametersValues: {
-            'iso19139.myocean': {
-                document: [{
-                    id: 'E__groupPublished',
-                    value: 'MYOCEAN-DOCUMENTS'
-                }],
-                upstream: [{
-                    id: 'E__groupPublished',
-                    value: 'MYOCEAN-UPSTREAM-PRODUCTS'
-                }]
+            sibling: {
+                // Depends on schema
+                'iso19139.myocean': {
+                    // and depends on codelist value
+                    // Updated when codelist change
+                    document: [{
+                        id: 'E__groupPublished',
+                        value: 'MYOCEAN-DOCUMENTS'
+                    }],
+                    upstream: [{
+                        id: 'E__groupPublished',
+                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                    }]
+                }
+            },
+            onlinesrc: {
+                // Depends on schema
+                // Updated when window created
+                'iso19139.myocean': {
+                    'E__groupPublished': 'MYOCEAN-DOCUMENTS'
+                }
             }
         }
     },
@@ -145,13 +166,17 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
      * Add hidden textfields in an item list.
      */
     getHiddenFormInput: function (items) {
-        var i;
+        var i, self = this;
         
         Ext.each(this.hiddenParameters[this.type], function (item) {
+            var value = item.value;
+            if (self.hiddenParametersValues[self.type] && self.hiddenParametersValues[self.type][self.metadataSchema]) {
+                value = self.hiddenParametersValues[self.type][self.metadataSchema][item.name];
+            }
             items.push({
                 xtype: 'textfield',
                 name: item.name,
-                value: item.value,
+                value: value,
                 hidden: true
             });
         });
@@ -208,7 +233,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     select: function (combo, record, index) {
                         this.initiativeType = combo.getValue();
-                        var allValues = this.hiddenParametersValues[this.metadataSchema];
+                        var allValues = this.hiddenParametersValues.sibling[this.metadataSchema];
                         var paramsValue = allValues && allValues[this.initiativeType];
 //                        this.formPanel.getForm().reset();
                         if (paramsValue) {
@@ -290,7 +315,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     'change': function (field) {
                         this.layerName = field.getValue();
-                        console.log(this.layerName);
                     },
                     scope: this
                 }
@@ -705,18 +729,29 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         } else if (this.type === 'onlinesrc') {
 //            this.add(this.generateMetadataSearchForm(cancelBt));
 //            this.add(this.generateDocumentUploadForm());
-            this.add(new Ext.TabPanel({
-                activeTab: 0,
-                items: [{
-                    title: OpenLayers.i18n('linkADocument'),
-                    layout: 'fit',
-                    items: this.generateDocumentUploadForm(cancelBt)
-                }, {
+            var items = [];
+            if (this.onlinesrc.linkAMetadata === true) {
+                items.push({
                     title: OpenLayers.i18n('linkAMetadata'),
                     layout: 'fit',
                     items: this.generateMetadataSearchForm(cancelBt)
-                }]
-            }));
+                });
+            }
+            if (this.onlinesrc.linkADocument === true) {
+                items.push({
+                    title: OpenLayers.i18n('linkADocument'),
+                    layout: 'fit',
+                    items: this.generateDocumentUploadForm(cancelBt)
+                });
+            }
+            if (items.length === 1) {
+                this.add(items[0]);
+            } else {
+                this.add(new Ext.TabPanel({
+                    activeTab: 0,
+                    items: items
+                }));
+            }
         } else {
             
             this.add(this.generateMetadataSearchForm(cancelBt));

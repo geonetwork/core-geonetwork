@@ -217,7 +217,7 @@ GeoNetwork.Lang.fr = {
     'onlinesrc': 'Ressources en ligne',
     'remove': 'Supprimer',
     'linkADocument': 'Un document',
-    'linkAMetadata': ' ou des ressources en ligne existantes',
+    'linkAMetadata': ' Des ressources en ligne existantes',
     'linkAResource-': 'Associer une ressource',
     'linkAResource-thumbnail': 'Ajouter un aperçu à la métadonnée',
     'linkAResource-fcats': 'Associer un catalogue d\'attributs à la métadonnée',
