@@ -173,8 +173,8 @@ GeoNetwork.app = function() {
                 }
             });*/
 
-            //this.mapApp = new GeoNetwork.mapApp();
-            //this.mapApp.init();
+            this.mapApp = new GeoNetwork.mapApp();
+            this.mapApp.init();
 
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
@@ -335,8 +335,9 @@ GeoNetwork.app = function() {
                     {
                         region : 'north',
                         contentEl: 'header',
-                        //html: 'header',
-                        border : false
+                        border : false,
+                        padding: '0px',
+                        height: 'auto',
                     },
                     // Search/map 
                     {
@@ -349,7 +350,6 @@ GeoNetwork.app = function() {
                         width: 300,
                         border: false,
                         layout: 'border',
-                        defaults: {border: false},
                         items: [
                             // Search panel
                             {
@@ -373,7 +373,7 @@ GeoNetwork.app = function() {
                             // Map panel
                             {
                                 region: 'south',
-                                html: '<h1>Map</h1>',
+                                contentEl: 'map-div',
                                 border: false,
                                 height: 250,
                                 bodyStyle: 'background-color: #cccccc'
@@ -401,7 +401,6 @@ GeoNetwork.app = function() {
                         width: 250,
                         minWidth: 100,
                         maxWidth: 500,
-                        bodyStyle: "padding:10px"
                     }
                 ],
                 listeners: {

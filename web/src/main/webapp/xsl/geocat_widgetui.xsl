@@ -380,6 +380,8 @@
                 <div id="facets-panel-div"></div>
             </div>
 
+            <div id="map-div"></div>
+
             <xsl:choose>
                 <xsl:when test="/root/request/debug">
 

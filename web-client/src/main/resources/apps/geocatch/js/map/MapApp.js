@@ -96,6 +96,7 @@ GeoNetwork.mapApp = function() {
             map : map2,
             id: 'map',
             stateId : 'bigmap',
+            renderTo: 'map-div',
             prettyStateKeys : true
         });
 
