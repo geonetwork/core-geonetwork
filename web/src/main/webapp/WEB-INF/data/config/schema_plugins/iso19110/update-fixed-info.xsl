@@ -26,7 +26,7 @@
 	
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:versionDate">
+	<xsl:template match="gmx:versionDate|gfc:versionDate">
         <xsl:choose>
             <xsl:when test="/root/env/changeDate">
                 <xsl:copy>
@@ -41,7 +41,7 @@
 
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:characterSet">
+	<xsl:template match="gmx:characterSet|gfc:characterSet">
 	    <xsl:copy>
             <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="MD_CharacterSetCode" />
         </xsl:copy>
