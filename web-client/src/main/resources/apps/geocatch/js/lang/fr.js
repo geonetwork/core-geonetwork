@@ -34,7 +34,11 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 
 	'withinGeo': 'complètement à l\'intérieur ou égal',
 	'intersectGeo': 'au moins partiellement à l\'intérieur',
-	'containsGeo': 'comprend au moins'
+	'containsGeo': 'comprend au moins',
+
+	'kantone': 'Canton(s)',
+	'any2': 'Tous'
+
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.GeoCatCh.Lang.fr);

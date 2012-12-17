@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet java">
 
     <xsl:include href="banner.xsl"/>
 
@@ -91,14 +92,33 @@
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/normalize.min.css</xsl:attribute>
             </link>
+            <!--<link rel="stylesheet">
+                <xsl:attribute name="href"><xsl:value-of
+                        select="$appBaseUrl" />/css/gndefault.css</xsl:attribute>
+            </link>-->
             <link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/gnmetadatadefault.css</xsl:attribute>
             </link>
             <link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
+                        select="$appBaseUrl" />/css/gnmapdefault.css</xsl:attribute>
+            </link>
+
+            <link rel="stylesheet">
+                <xsl:attribute name="href"><xsl:value-of
+                        select="$appBaseUrl" />/css/geonetwork.css</xsl:attribute>
+            </link>
+
+        <link rel="stylesheet">
+                <xsl:attribute name="href"><xsl:value-of
+                        select="$appBaseUrl" />/css/metadata-view.css</xsl:attribute>
+            </link>
+                 <link rel="stylesheet">
+                <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/main.css</xsl:attribute>
             </link>
+
 
             <!--[if lt IE 7]> <link rel="stylesheet"> <xsl:attribute name="href"><xsl:value-of
                           select="$baseUrl" />/apps/ngr2/css/ltie7.css"/></xsl:attribute> </link> <![endif] -->
@@ -122,6 +142,14 @@
             <script>
                 Ext.onReady(function() {
                     GeoNetwork.Settings.GeoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
+                
+                    Ext.get("loading").hide();
+
+                    Ext.get("header").show();
+                    Ext.get("search").show();
+                    Ext.get("search-results").show();
+                    Ext.get("search-filter").show();            
+                    Ext.get("search-switcher").show();         
                 });
             </script>
 
@@ -133,7 +161,7 @@
                              <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install
                              Google Chrome Frame</a> to better experience this site.</p> <![endif] -->
 
-            <div id="header">
+            <div id="header" style="display:none">
                 <div>
                     <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float: right;"/>
                     <img src="/geonetwork/images/geocat_logo_li.gif" alt="geocat.ch logo"  />
@@ -180,7 +208,7 @@
                                 </li>
                                 <li id="adminMenu">
                                     <xsl:attribute name="style">
-                                        <xsl:if test="string(/root/gui/session/userId)=''">display:hidden</xsl:if>
+                                        <xsl:if test="string(/root/gui/session/userId)=''">display:none</xsl:if>
                                     </xsl:attribute>
 
                                     <xsl:choose>
@@ -221,7 +249,7 @@
                                 <label>
                                     <xsl:value-of select="/root/gui/strings/username" />:
                                 </label>
-                                <input type="text" id="username" name="username" />
+                                <input type="text" id="username" class="banner" name="username" />
                                 <label>
                                     <xsl:value-of select="/root/gui/strings/password" />:
                                 </label>
@@ -244,19 +272,18 @@
                            </xsl:choose>
                            <form name="logout" onsubmit="return false_();">
                                 <label id="username_label">
-                                    <xsl:value-of select="/root/gui/strings/user"/>
+                                    <xsl:value-of select="/root/gui/strings/username"/>
                                 </label>
                                 <label id="name_label">
                                     <xsl:text>: </xsl:text>
-                                    <xsl:value-of select="/root/gui/session/name"/>
+                                    <xsl:value-of select="/root/gui/session/name"/><xsl:text> </xsl:text><xsl:value-of select="/root/gui/session/surname"/>
                                 </label>
                                 <label id="profile_label">
-                                    <xsl:text> </xsl:text>
-                                    <xsl:value-of select="/root/gui/session/surname"/>
-                                    <xsl:text> </xsl:text>
+                                    <xsl:text> (</xsl:text>
+                                    <xsl:value-of select="/root/gui/session/profile"/>
+                                    <xsl:text>) </xsl:text>
                                 </label>
                                 <button class="banner" onclick="javascript:catalogue.logout();"><xsl:value-of select="/root/gui/strings/logout"/></button>
-                                <button class="banner" onclick="javascript:catalogue.admin();"><xsl:value-of select="/root/gui/strings/admin"/></button>
                             </form>
                         </form>
                         
@@ -265,7 +292,14 @@
                 </header>
             </div>
 
-            <div id="search">
+            <div id="loading">
+                <div class="loading-indicator">
+                    <img src="{/root/gui/url}/images/spinner.gif" width="32" height="32"/>GeoNetwork opensource catalogue<br />
+                    <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
+                </div>
+            </div>
+                
+            <div id="search" style="display:none;">
                 <fieldset id="search-form-fieldset">
                     <legend id="legend-search">
                         <xsl:value-of select="/root/gui/strings/search" />
@@ -277,12 +311,20 @@
                         <div id="advanced-search-options-content"></div>
                     </div>
                     
+                  
+                </fieldset>
+
+            </div>
+
+            <div id="search-switcher" style="display:none;">
+                    <div  id="search-submit-container">
                     <input type="button"
                         onclick="Ext.getCmp('advanced-search-options-content-form').fireEvent('search');"
                         id="search-submit" class="form-submit">
                         <xsl:attribute name="value"><xsl:value-of
                             select="/root/gui/strings/search" /></xsl:attribute>
                     </input>
+                    </div>
                     <div style="clear: both; display: hidden"></div>
                     <a id="show-advanced" href="javascript:showAdvancedSearch()">
                         <xsl:value-of select="/root/gui/strings/advancedOptions.show" />
@@ -290,14 +332,52 @@
                     <a id="hide-advanced" href="javascript:hideAdvancedSearch()" style="display:none">
                         <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
                     </a>
-                </fieldset>
+            </div>    
+            <div id="search-results" style="display:none">
+                <div id="results-main">
+                    <h2>SEARCH FOR GEODATA AND GEOSERVICES</h2>
+                    <img src="{/root/gui/url}/images/geocatII-web.jpg" alt="Geocat cat" width="100px"/>
 
-            </div>
-            
-            <div id="search-results">
+                    <div id="mostPopular">
+                       <h3><xsl:value-of select="/root/gui/strings/mostPopular"/></h3>
+                        <div id="mostpopular-metadata">
+
+                        <xsl:for-each select="/root/gui/mostPopular/*">
+                            <xsl:variable name="md">
+                                <xsl:apply-templates mode="brief" select="."/>
+                            </xsl:variable>
+                            <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
+                            <a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
+                                Metadata popular record <xsl:value-of select="position()" /> <xsl:value-of select="$metadata/title"/>
+                                <br/>
+                            </a>
+                        </xsl:for-each>
+                        </div>
+                    </div>
+                
+                    <div id="latestChanges">
+                       <h3><xsl:value-of select="/root/gui/strings/recentAdditions"/> <a href="../../srv/en/rss.latest?georss=simplepoint" alt="Latest news" title="Latest news"><img src="../../apps/images/default/feed.png"/></a></h3>
+                        <div id="latest-metadata">
+                           <xsl:for-each select="/root/gui/latestUpdated/*">
+                    <xsl:variable name="md">
+                        <xsl:apply-templates mode="brief" select="."/>
+                    </xsl:variable>
+                    <xsl:variable name="metadata" select="$md/*[1]"/>
+                    <a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
+                        Metadata recent record <xsl:value-of select="position()" /><xsl:value-of select="$metadata/title"/>
+                        <br/>
+                    </a>
+                </xsl:for-each>
+                        </div>
+                    </div>
+                </div>
+                
                 <div id="result-panel"></div>
             </div>
-             <div id="search-filter">
+
+             <div id="search-filter" style="display:none">
+                <div id="bread-crumb-div"></div>
+                <div id="facets-panel-div"></div>
             </div>
 
             <xsl:choose>
@@ -391,6 +471,11 @@
                                 select="$appBaseUrl" />/js/lang/fr.js</xsl:attribute>
                     </script>
 
+                                         <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$appBaseUrl" />/js/lang/it.js</xsl:attribute>
+                    </script>
+
                     <script type="text/javascript">
                         <xsl:attribute name="src"><xsl:value-of
                                 select="$appBaseUrl" />/js/GlobalFunctions.js</xsl:attribute>
@@ -410,6 +495,14 @@
                     <script type="text/javascript">
                         <xsl:attribute name="src"><xsl:value-of
                                 select="$appBaseUrl" />/js/map/MapApp.js</xsl:attribute>
+                    </script>
+                    <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$appBaseUrl" />/js/BreadCrumb.js</xsl:attribute>
+                    </script>
+                    <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$appBaseUrl" />/js/Templates.js</xsl:attribute>
                     </script>
                     <script type="text/javascript">
                         <xsl:attribute name="src"><xsl:value-of

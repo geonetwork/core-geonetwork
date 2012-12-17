@@ -34,7 +34,10 @@ GeoNetwork.GeoCatCh.Lang.de = {
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',
-	'containsGeo': 'umfasst mindestens'
+	'containsGeo': 'umfasst mindestens',
+
+	'kantone': 'Kanton(e)',
+	'any2': 'Alle'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);

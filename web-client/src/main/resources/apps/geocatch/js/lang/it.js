@@ -20,7 +20,7 @@
  */
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
-GeoNetwork.GeoCatCh.Lang.en = {
+GeoNetwork.GeoCatCh.Lang.it = {
 	'any': '- Any -',
 	'dataset': 'Data',
 	'basicgeodata': 'Basic Geodata',
@@ -41,4 +41,4 @@ GeoNetwork.GeoCatCh.Lang.en = {
     'any2': 'Any'
 };
 
-OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);
+OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);

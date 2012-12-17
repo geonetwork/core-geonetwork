@@ -45,6 +45,9 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : 'Text search',
                 hideLabel : false,
                 id : 'E_any',
+                // TODO: Check why if not set explicit width takes size much bigger than panel
+                /*anchor : '100%',*/
+                width: 180,
                 minChars : 2,
                 loadingText : '...',
                 hideTrigger : true,
@@ -69,7 +72,7 @@ GeoNetwork.searchApp = function() {
                 displayField : 'name',
                 valueField : 'id',
                 value : '',
-                emptyText : 'Any', // translate('any'),
+                emptyText : OpenLayers.i18n('any2'),
                 hideTrigger : true,
                 forceSelection : true,
                 editable : false,
@@ -100,6 +103,7 @@ GeoNetwork.searchApp = function() {
 
                     catalogue.startRecord = 1; // Reset start record
                     searching = true;
+
                     catalogue.search('simple-search-options-content-form',
                             app.searchApp.loadResults, null,
                             catalogue.startRecord, true);
@@ -305,6 +309,8 @@ GeoNetwork.searchApp = function() {
                         }
                     }
 
+                    Ext.get("results-main").dom.style.display = 'none';
+
                     catalogue.startRecord = 1; // Reset start record
                     searching = true;
                     catalogue.search('advanced-search-options-content-form',
@@ -473,7 +479,7 @@ GeoNetwork.searchApp = function() {
             return this.createSearchWFS(false, 'chtopo', 'kantoneBB', [
                     'KUERZEL', 'KANTONSNR', 'BOUNDING' ], {
                 id : 'kantoneComboBox',
-                fieldLabel : translate('kantone'),
+                fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
                 name : 'kantone',
@@ -713,11 +719,11 @@ GeoNetwork.searchApp = function() {
                 displaySerieMembers : true,
                 autoScroll : true,
                 autoWidth : false,
-                tpl : GeoNetwork.Templates.FULL,
+                tpl : GeoNetwork.Geocatch.Templates.FULL,
                 templates : {
                     SIMPLE : GeoNetwork.Templates.SIMPLE,
                     THUMBNAIL : GeoNetwork.Templates.THUMBNAIL,
-                    FULL : GeoNetwork.Templates.FULL
+                    FULL : GeoNetwork.Geocatch.Templates.FULL
                 },
                 featurecolor : GeoNetwork.Settings.results.featurecolor,
                 colormap : GeoNetwork.Settings.results.colormap,
@@ -748,6 +754,7 @@ GeoNetwork.searchApp = function() {
                 hidden : true,
                 bodyCssClass : 'md-view',
                 autoWidth : true,
+                //width: 500,                
                 layout : 'fit',
                 tbar : tBar,
                 items : metadataResultsView,
@@ -853,12 +860,26 @@ GeoNetwork.searchApp = function() {
             }
         },
         generateFacetedSearchPanel : function() {
+            var breadcrumb = new Ext.Panel({
+                id : 'bread-crumb',
+                renderTo : 'bread-crumb-div',
+                layout : 'table',
+                cls : 'breadcrumb',
+                defaultType : 'button',
+                border : false,
+                split : false,
+                layoutConfig : {
+                    columns : 3
+                }
+            });
+
             var facetsPanel = new GeoNetwork.FacetsPanel(
                     {
                         id : 'facets-panel',
-                        renderTo : 'search-filter',
+                        renderTo : 'facets-panel-div',
                         searchForm : Ext
                                 .getCmp('advanced-search-options-content-form'),
+                        breadcrumb: breadcrumb,
                         maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
                         facetListConfig : GeoNetwork.Settings.facetListConfig
                                 || []

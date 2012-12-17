@@ -222,6 +222,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/en.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/es.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/it.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/pl.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Drag.js</include>
@@ -462,10 +463,13 @@
                   <include>${project.build.directory}/classes/apps/geocatch/js/lang/en.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/lang/de.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/lang/fr.js</include>
+                  <include>${project.build.directory}/classes/apps/geocatch/js/lang/it.js</include>
 
                   <include>${project.build.directory}/classes/apps/geocatch/js/Settings.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/map/Settings.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/map/MapApp.js</include>
+                  <include>${project.build.directory}/classes/apps/geocatch/js/BreadCrumb.js</include>
+                  <include>${project.build.directory}/classes/apps/geocatch/js/Templates.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/search/SearchApp.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/user/LoginApp.js</include>
                   <include>${project.build.directory}/classes/apps/geocatch/js/GlobalFunctions.js</include>
