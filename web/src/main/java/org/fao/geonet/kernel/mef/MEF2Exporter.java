@@ -77,8 +77,7 @@ class MEF2Exporter {
 		FileOutputStream fos = new FileOutputStream(file);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 
-        for (Object uuid1 : uuids) {
-            String uuid = (String) uuid1;
+        for (String uuid : uuids) {
             createMetadataFolder(context, dbms, uuid, zos, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute);
         }

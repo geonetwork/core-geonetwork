@@ -1440,7 +1440,7 @@ public class LuceneSearcher extends MetaSearcher {
             for (Fieldable field : fields) {
                 String name = field.name();
                 String value = field.stringValue();
-                if (markupParser != null && dumpFields.get(name).isMarkup()) {
+                if (markupParser != null && dumpFields!= null && dumpFields.get(name) != null && dumpFields.get(name).isMarkup()) {
                     value = XslUtil.parseMarkupToText(value, markupParser);
                 }
                 // Dump the categories to the info element

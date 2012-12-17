@@ -176,6 +176,7 @@ public class Set implements Service
         new ConfigEntry(ConfigEntry.Type.STRING, false, "csw/metadataPublic",                          "system/csw/metadataPublic"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "clickablehyperlinks/enable", "system/clickablehyperlinks/enable"),
+		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "wysiwyg/enable", "system/wysiwyg/enable"),
 		
 		new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "localrating/enable", "system/localrating/enable"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "autofixing/enable", "system/autofixing/enable"),
@@ -222,6 +223,8 @@ public class Set implements Service
         new ConfigEntry(ConfigEntry.Type.STRING, false, "shib/defaultGroup",            "system/shib/defaultGroup"),
         
         new ConfigEntry(ConfigEntry.Type.STRING, true,  "wiki/markup",      "system/wiki/markup"),
+        new ConfigEntry(ConfigEntry.Type.STRING, true,  "wiki/output",      "system/wiki/output"),
+        new ConfigEntry(ConfigEntry.Type.STRING, true,  "wiki/mefoutput",   "system/wiki/mefoutput"),
 
 
 	};

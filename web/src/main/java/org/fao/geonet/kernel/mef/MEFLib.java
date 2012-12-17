@@ -37,6 +37,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -241,13 +242,15 @@ public class MEFLib {
         boolean withEditorValidationErrors = false;
         Element metadata = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
         metadata.removeChild("info", Edit.NAMESPACE);
+        String outputParamPath = Geonet.Settings.WIKI_MEFOUTPUT;
+        metadata = XslUtil.controlForMarkup(context, metadata, outputParamPath);
         Element mdEl = new Element("data").setText(Xml.getString(metadata));
         record.addContent(mdEl);
 
         return record;
 	}
 
-	/**
+    /**
 	 * Add an entry to ZIP file
 	 * 
 	 * @param zos

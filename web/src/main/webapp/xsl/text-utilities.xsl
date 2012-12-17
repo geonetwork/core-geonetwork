@@ -34,7 +34,10 @@
 		
 	<xsl:template name="processText">
 		<xsl:param name="node" select="."/>
+		<xsl:param name="markupType" select="/root/gui/env/wiki/markup"/>
+		<xsl:param name="wysiwygEnabled" select="/root/gui/env/wysiwyg/enable"/>
 		<xsl:param name="text"/>
+		
 	    <xsl:variable name="allowMarkup">
 			<xsl:apply-templates mode="permitMarkup" select="$node"/>
 		</xsl:variable>
@@ -48,8 +51,8 @@
 				 hyperlinks. -->
 			<xsl:copy-of select="$text"/>
 		  </xsl:when>
-          <xsl:when test="/root/gui/env/wiki/markup != 'none' and $allowMarkup = 'true'">
-            <xsl:copy-of select="java:parseWikiText($text, string($text), string(/root/gui/env/wiki/markup))"></xsl:copy-of>
+          <xsl:when test="($markupType != 'none' or $wysiwygEnabled = 'true') and $allowMarkup = 'true'">
+             <xsl:copy-of select="java:parseWikiText($text, string($text), string($markupType))"></xsl:copy-of>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="addLineBreaksAndHyperlinks">

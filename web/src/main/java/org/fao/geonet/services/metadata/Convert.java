@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 //=============================================================================
@@ -46,13 +47,17 @@ import org.jdom.Element;
 
 public class Convert implements Service
 {
+    private boolean isExport;
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+       isExport = "y".equals(params.getValue("isExport", "n"));
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -72,6 +77,10 @@ public class Convert implements Service
 		Element elMd = new Show().exec(params, context);
 		if (elMd == null) throw new MetadataNotFoundEx(id);
 
+        if (isExport) {
+            elMd = XslUtil.controlForMarkup(context, elMd, Geonet.Settings.WIKI_OUTPUT);
+        }
+		
 		//--- get XSLT converter name from params
 		String styleSheet = Util.getParam(params, Params.STYLESHEET);
 

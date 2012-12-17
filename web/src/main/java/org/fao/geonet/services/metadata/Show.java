@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import jeeves.utils.Xml;
@@ -50,6 +51,7 @@ import jeeves.utils.Xml;
 
 public class Show implements Service
 {
+    private boolean isExport;
     //--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -68,6 +70,8 @@ public class Show implements Service
 
 		skip = params.getValue("addRefs", "n");
 		addRefs = skip.equals("y");
+		
+		isExport = "y".equals(params.getValue("isExport", "n"));
 		
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
@@ -129,6 +133,9 @@ public class Show implements Service
 			elMd = dm.enumerateTree(elMd);
 		}
 
+		if (isExport || Util.getParam(params, "isExport", false)) {
+		    elMd = XslUtil.controlForMarkup(context, elMd, Geonet.Settings.WIKI_OUTPUT);
+		}
 		//
 		// setting schemaLocation - if there isn't one then use the schemaLocation 
 		// that is in the GeoNetwork schema identification and if there isn't one 

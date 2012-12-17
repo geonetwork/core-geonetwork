@@ -224,7 +224,10 @@ ConfigView.prototype.setData = function(data)
 	
 	var hyperlinks = $('clickablehyperlinks.enable');
 	hyperlinks.checked = data['CLICKABLE_HYPERLINKS'] == 'true';
+	$('wysiwyg.enable').checked = data['WYSIWYG'] == 'true';
 	$('wiki.markup').value = data['WIKI_MARKUP'];
+	$('wiki.output').value = data['WIKI_OUTPUT'];
+	$('wiki.mefoutput').value = data['WIKI_MEFOUTPUT'];
 
 	$('localrating.enable').checked = data['LOCAL_RATING'] == 'true';
 	$('autofixing.enable').checked = data['AUTO_FIXING'] == 'true';
@@ -341,7 +344,10 @@ ConfigView.prototype.getData = function()
 		INDEXOPTIMIZER_INTERVAL_MIN:  $('indexoptimizer.interval.min') .value,
 
 		CLICKABLE_HYPERLINKS : $('clickablehyperlinks.enable').checked,
+		WYSIWYG : $('wysiwyg.enable').checked,
 		WIKI_MARKUP : $F('wiki.markup'),
+		WIKI_OUTPUT : $F('wiki.output'),
+		WIKI_MEFOUTPUT : $F('wiki.mefoutput'),
 		
 		LOCAL_RATING : $('localrating.enable').checked,
 		AUTO_FIXING : $('autofixing.enable').checked,

@@ -976,4 +976,5 @@ Ext.onReady(function () {
     
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
+    
 });

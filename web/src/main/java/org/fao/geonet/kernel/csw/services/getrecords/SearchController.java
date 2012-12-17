@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -280,6 +281,8 @@ public class SearchController {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element res = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        res = XslUtil.controlForMarkup(context, res, Geonet.Settings.WIKI_OUTPUT);
+        
 		SchemaManager scm = gc.getSchemamanager();
 		if (res==null) {
             return null;

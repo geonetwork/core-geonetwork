@@ -567,6 +567,10 @@
 					<td class="padded"><input id="clickablehyperlinks.enable" class="content" type="checkbox" value=""/></td>
 				</tr>
 				<tr>
+					<td class="padded" width="{$width}"><label for="wysiwyg.enable"><xsl:value-of select="/root/gui/config/wysiwyg"/></label></td>
+					<td class="padded"><input id="wysiwyg.enable" class="content" type="checkbox" value=""/></td>
+				</tr>
+				<tr>
 					<td class="padded" width="{$width}"><label for="wiki.markup"><xsl:value-of select="/root/gui/config/markup"/></label></td>
 					<td class="padded">
 						<select id="wiki.markup" name="wiki.markup" class="content">
@@ -576,6 +580,24 @@
 							<option value="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage">Textile Markup</option>
 							<option value="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage">Trac Wiki Markup</option>
 							<option value="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage">TWiki Markup</option>
+						</select>
+					</td>
+				</tr>
+				<tr id="wiki.output.row">
+					<td class="padded" width="{$width}"><label for="wiki.output"><xsl:value-of select="/root/gui/config/wikiOutput"/></label></td>
+					<td class="padded">
+						<select id="wiki.output" name="wiki.output" class="content">
+							<option value="strip"><xsl:value-of select="/root/gui/config/removeStyling"/></option>
+							<option value="keep"><xsl:value-of select="/root/gui/config/keepStyling"/></option>
+						</select>
+					</td>
+				</tr>
+				<tr id="wiki.mefoutput.row">
+					<td class="padded" width="{$width}"><label for="wiki.mefoutput"><xsl:value-of select="/root/gui/config/wikiMEFOutput"/></label></td>
+					<td class="padded">
+						<select id="wiki.mefoutput" name="wiki.mefoutput" class="content">
+							<option value="strip"><xsl:value-of select="/root/gui/config/removeStyling"/></option>
+							<option value="keep"><xsl:value-of select="/root/gui/config/keepStyling"/></option>
 						</select>
 					</td>
 				</tr>

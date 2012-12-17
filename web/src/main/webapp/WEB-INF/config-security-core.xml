@@ -24,6 +24,7 @@
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
+				<sec:filter-chain pattern="/xml/csw/test/*" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
 				<ref bean="coreFilterChain"/>
  				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,

@@ -7,7 +7,9 @@
 		<!-- Metadata export services -->
 		
 		<service name="xml_dublin-core">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<output sheet="conversion/export/xml_dc.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
@@ -17,7 +19,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_dublin-coreTooai_dc">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
@@ -26,7 +30,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml_fgdc-std">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<output sheet="conversion/export/xml_fgdc.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
@@ -36,7 +42,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_fgdc-stdTooai_dc">
-			<class name=".services.metadata.Convert" />
+			<class name=".services.metadata.Convert" >
+				<param name="isExport" value="y" />
+			</class>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
@@ -45,7 +53,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml_iso19115to19139">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<output sheet="conversion/export/xml_iso19115_to_19139.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
@@ -55,7 +65,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_iso19115Tooai_dc">
-			<class name=".services.metadata.Convert" />
+			<class name=".services.metadata.Convert" >
+				<param name="isExport" value="y" />
+			</class>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
@@ -64,7 +76,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_iso19139">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<output sheet="conversion/export/xml_iso19139.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
@@ -74,7 +88,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_iso19139Tooai_dc">
-			<class name=".services.metadata.Convert" />
+			<class name=".services.metadata.Convert" >
+				<param name="isExport" value="y" />
+			</class>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
@@ -83,7 +99,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="xml_iso19115toarccatalog8">
-			<class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 			<output sheet="conversion/export/xml_iso19115arccatalog.xsl" contentType="text/xml; charset=UTF-8"/>
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
@@ -93,7 +111,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	  
 	  <service name="xml_iso19110">
-	    <class name=".services.metadata.Show" />
+			<class name=".services.metadata.Show">
+				<param name="isExport" value="y" />
+			</class>
 	    <output sheet="conversion/export/xml_iso19110.xsl" contentType="text/xml; charset=UTF-8"/>
 	    <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 	      <xml name="error" file="xml/privileges-error.xml" />
@@ -103,7 +123,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	  
 	  <service name="xml_iso19110Tooai_dc">
-	    <class name=".services.metadata.Convert" />
+	    <class name=".services.metadata.Convert" >
+			<param name="isExport" value="y" />
+		</class>
 	    <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 	      <xml name="error" file="xml/privileges-error.xml" />
 	    </error>
@@ -112,7 +134,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	  
 	  <service name="xml_csw-record">
-	    <class name=".services.metadata.Convert" />
+	    <class name=".services.metadata.Convert" >
+			<param name="isExport" value="y" />
+		</class>
 	    <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 	      <xml name="error" file="xml/privileges-error.xml" />
 	    </error>
@@ -121,7 +145,9 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	  
 	  <service name="xml_csw-recordTooai_dc">
-	    <class name=".services.metadata.Convert" />
+	    <class name=".services.metadata.Convert" >
+			<param name="isExport" value="y" />
+		</class>
 	    <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 	      <xml name="error" file="xml/privileges-error.xml" />
 	    </error>
