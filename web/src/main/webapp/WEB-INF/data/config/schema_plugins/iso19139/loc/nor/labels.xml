@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv">
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx">
     <element name="gmd:MD_ScopeCode">
         <label>Nivåkode</label>
         <description>Kodeliste over de ulike hierarkiske nivå metadata gjelder for</description>
@@ -2452,5 +2452,26 @@ NOTE! Det vil være overlapp mellom disse overordnede kategoriene. Et tema kan d
     <element name="hidden-elements">
         <label>Hidden Elements</label>
         <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
-    </element>
+    </element> 
+    <!-- ==================================================== -->
+    <element name="gmx:name"> 
+        <label>Name</label> 
+        <description>Feature catalogue name</description> 
+    </element> 
+    <element name="gmx:scope"> 
+        <label>Scope</label> 
+        <description>Scope definition</description> 
+    </element> 
+    <element name="gmx:versionNumber"> 
+        <label>Version</label> 
+        <description>Catalogue version</description> 
+    </element> 
+    <element name="gmx:versionDate"> 
+        <label>Date</label> 
+        <description>Catalogue date</description> 
+    </element> 
+    <element name="gmx:fieldOfApplication"> 
+        <label>Field of application</label> 
+        <description>Field of application</description> 
+    </element> 
 </labels>

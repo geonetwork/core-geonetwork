@@ -5,8 +5,9 @@
 	xmlns:dct="http://purl.org/dc/terms/"	
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gfc="http://www.isotc211.org/2005/gfc"
+	xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:geonet="http://www.fao.org/geonetwork"
-	exclude-result-prefixes="gco gfc">
+	exclude-result-prefixes="gco gfc gmx">
 	
 	<xsl:param name="displayInfo"/>
 	
@@ -23,7 +24,7 @@
 			<dc:identifier><xsl:value-of select="@uuid"/></dc:identifier>
 			
 			<!-- DataIdentification -->
-			<xsl:for-each select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title><xsl:value-of select="."/></dc:title>
 			</xsl:for-each>
 			
@@ -41,14 +42,14 @@
 				<dc:relation><xsl:value-of select="."/></dc:relation>
 				</xsl:for-each>-->
 		
-			<xsl:for-each select="gfc:versionDate/gco:DateTime">
+			<xsl:for-each select="gmx:versionDate/gco:DateTime|gfc:versionDate/gco:DateTime">
 				<dct:modified><xsl:value-of select="."/></dct:modified>
 			</xsl:for-each>			
 			
-			<xsl:for-each select="gfc:scope">
+			<xsl:for-each select="gmx:scope|gfc:scope">
 				<dct:abstract><xsl:value-of select="gco:CharacterString"/></dct:abstract>
 			</xsl:for-each>
-			<xsl:for-each select="gfc:fieldOfApplication">
+			<xsl:for-each select="gmx:fieldOfApplication|gfc:fieldOfApplication">
 				<dct:abstract><xsl:value-of select="gco:CharacterString"/></dct:abstract>
 			</xsl:for-each>
 			
