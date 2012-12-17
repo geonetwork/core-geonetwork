@@ -174,10 +174,8 @@ GeoNetwork.mapApp = function() {
         if (node) {
             var layer;
             layer = node.attributes.layer;
-            if (layer) {
-                GeoNetwork.WindowManager.showWindow("wmsinfo");
-                GeoNetwork.WindowManager.getWindow("wmsinfo").showLayerInfo(layer);
-            }
+            GeoNetwork.WindowManager.showWindow("wmsinfo");
+            GeoNetwork.WindowManager.getWindow("wmsinfo").showLayerInfo(layer);
         }
     };
 
@@ -216,7 +214,18 @@ GeoNetwork.mapApp = function() {
                 Ext.getCmp("tbStylesButton").enable();
             }
 
-            Ext.getCmp("tbMetadataButton").enable();
+            if (node.layer && node.layer.dimensions && node.layer.dimensions.time) {
+                 Ext.getCmp("tbWmsTimeButton").enable();
+            } else {
+                Ext.getCmp("tbWmsTimeButton").disable();
+            }
+            if ((node.layer) && ((!node.layer.styles) || (node.layer.styles.length < 2))) {
+                Ext.getCmp("tbStylesButton").disable();
+            } else {
+                Ext.getCmp("tbStylesButton").enable();
+            }
+            Ext.getCmp("tbMetadataButton").setDisabled(!(node.layer instanceof OpenLayers.Layer.WMS));
+            
             Ext.getCmp("btnZoomToExtent").enable();
 
 
@@ -361,9 +370,9 @@ GeoNetwork.mapApp = function() {
             id: "tbStylesButton",
             handler: function() {
                 stylesLayerHandler(activeNode);
-                    },
+            },
             iconCls: 'layerStyles',
-            tooltip: "Layer styles"
+            tooltip: OpenLayers.i18n("chooseLayerStyle")
         });
         
         toctoolbar.push(action);
@@ -374,7 +383,7 @@ GeoNetwork.mapApp = function() {
             id: "tbMetadataButton",
             handler: function() {
                 metadataLayerHandler(activeNode);
-                    },
+            },
             iconCls: 'wmsInfo',
             tooltip: OpenLayers.i18n("metadataButtonText")
         });
@@ -387,9 +396,9 @@ GeoNetwork.mapApp = function() {
             id: "tbWmsTimeButton",
             handler: function() {
                 wmsTimeHandler(activeNode);
-                    },
+            },
             iconCls: 'wmsTime',
-            tooltip: "WMS Time"
+            tooltip: OpenLayers.i18n("wmsTime")
         });
         
         toctoolbar.push(action);
@@ -975,8 +984,9 @@ GeoNetwork.mapApp = function() {
 
                         c.items.get("addMenu").hide();
                         
-                        var layer = node.attributes.layer;
-
+                        var layer = node.layer;
+                        c.items.get("metadataMenu").setDisabled(!(layer instanceof OpenLayers.Layer.WMS));
+                        
                         if (layer && layer.dimensions && layer.dimensions.time) {
                             c.items.get("wmsTimeMenu").enable();
                         } else {
@@ -1206,15 +1216,15 @@ var processLayersSuccess = function(response) {
                             }});
 
                         var layerCap = getLayer(caps, caps.capability.layers, ol_layer);
-
                         if (layerCap) {
                             ol_layer.queryable = layerCap.queryable;
                             ol_layer.name = layerCap.title || ol_layer.name;
                             ol_layer.llbbox = layerCap.llbbox;
                             ol_layer.styles = layerCap.styles;
                             ol_layer.dimensions = layerCap.dimensions;
+                            ol_layer.metadataURLs = layerCap.metadataURLs;
+                            ol_layer.abstractInfo = layerCap['abstract']
                         }
-
                         map.addLayer(ol_layer);
                     }
                 }
@@ -1321,7 +1331,6 @@ var processLayersSuccess = function(response) {
                 return;
             }
         	var onlineResource = layerList[0][1];
-            
         	/* if null layer name, open the WMS Browser panel */
         	if (layerList[0][2]=='') {
         	    GeoNetwork.WindowManager.showWindow("addwms");

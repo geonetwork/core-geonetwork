@@ -166,7 +166,9 @@ GeoNetwork.wms.WMSLayerInfo.prototype = {
                 OpenLayers.Util.extend({layers: layer.name}, this.layerParams),
                 OpenLayers.Util.extend({minScale: layer.minScale,
                     queryable: layer.queryable, maxScale: layer.maxScale,
-                    description: layer.abstrack,
+                    description: layer["abstract"],
+                    keywords: layer.keywords,
+                    metadataURLs: layer.metadataURLs,
                     metadataURL: layer.metadataURL,
                     llbbox: layer.llbbox},
                         this.layerOptions));

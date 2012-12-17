@@ -77,6 +77,7 @@ Ext.extend(GeoNetwork.WmsLayerMetadataWindow, GeoNetwork.BaseWindow, {
 
     showLayerInfo: function(layer) {
         this.infoLayerPanel.layer = layer;
+        this.infoLayerPanel.metadataId = layer.options.metadata_id;
         this.infoLayerPanel.onlineresource = layer.url;
         this.infoLayerPanel.showLayerInfo(); 
     }

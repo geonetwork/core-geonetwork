@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<summary>
+<!-- 
+	Configuration of the taxonomy index used for faceting.
+	
+	An item element defined a facet with the following parameter:
+	
+	* name: the name of the facet (ie. the tag name in the XML response)
+	* plural: the plural for the name (ie. the parent tag of each facet values)
+	* indexKey: the name of the field in the index
+	* (optional) sortBy: the ordering for the facet. Defaults is by count.
+	* (optional) sortOrder: asc or desc. Defaults is descendant.
+	* (optional) max: the number of values to be returned for the facet. Defaults is 10.
 
+	When an item is modified or added, the index MUST be rebuild.
+-->
+<summary>
 	<def>
 		<hits>
-			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>            			
+			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
+			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
+			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType"/>
+			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
+			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
+			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
+			<item name="type" plural="types" indexKey="type"/>
+			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
+				sortBy="value" sortOrder="desc" max="40"/>
 		</hits>
-    <titles>
-      <item name="title" plural="titles" indexKey="title" order="freq" type="string" max="100"/>
-    </titles>
+		<titles>
+			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
+			/>
+		</titles>
 		<results>
-			<item name="keyword" plural="keywords" indexKey="keyword" order="freq" type="string" max="100"/>			
+			<item name="keyword" plural="keywords" indexKey="keyword" max="100"/>
 		</results>
 		<results_with_summary>
-			<!-- order defaults to "freq" if omitted and max defaults to 10 -->
-			<item name="denominator" plural="denominators" indexKey="denominator"
-				order="name" type="number" max="10" />
-			<item name="keyword" plural="keywords" indexKey="keyword" order="freq"
-				type="string" max="10" />
-			<item name="category" plural="categories" indexKey="topicCat"
-				order="name" type="string" max="10" />
-			<item name="spatialRepresentation" plural="spatialRepresentations"
-				indexKey="spatialRepresentation" type="string" order="freq" max="10" />
-			<item name="organisationName" plural="organisationNames"
-				indexKey="orgName" order="freq" type="string" max="10" />
-			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"
-				order="freq" type="string" max="10" />
-			<item name="type" plural="types" indexKey="type" order="freq"
-				type="string" max="10" />
-			<item name="created" plural="created" indexKey="_createDate"
-				type="date" order="freq" max="10" />
+			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
+			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc" max="20"/>
+			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType"/>
+			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
+			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
+			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
+			<item name="type" plural="types" indexKey="type"/>
+			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
+				sortOrder="asc" max="40"/>
 		</results_with_summary>
 	</def>
-	<typeConfig>
-		<dateFormat>yyyy-MM-dd'T'hh:mm:ss</dateFormat>
-		<dateFormat>yyyy-MM-dd't'hh:mm:ss</dateFormat>
-		<dateFormat>yyyy-MM-dd</dateFormat>
-	</typeConfig>
 </summary>

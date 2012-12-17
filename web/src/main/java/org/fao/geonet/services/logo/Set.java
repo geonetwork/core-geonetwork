@@ -102,7 +102,7 @@ public class Set implements Service {
                 String logo = nodeLogoDirectory + File.separator + nodeUuid + ".gif";
                 String defaultLogo = nodeLogoDirectory + File.separator + "logo.gif";
     
-                if (file.endsWith(".png")) {
+                if (!file.endsWith(".gif")) {
                     ImageIO.write(source, "gif", new File(logo));
                     ImageIO.write(source, "gif", new File(defaultLogo));
                 } else {
