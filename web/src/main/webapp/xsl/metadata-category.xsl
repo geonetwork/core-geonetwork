@@ -34,7 +34,7 @@
 									<tr>
 										<td class="padded">
 											<label for="_{$categId}">
-											  <img class="category" src="../../images/category/{name}.png"/>
+											  <!-- <img class="category" src="../../images/category/{name}.png"/> -->
 												<xsl:value-of select="label/child::*[name() = $lang]"/>
 											</label>
 										</td>

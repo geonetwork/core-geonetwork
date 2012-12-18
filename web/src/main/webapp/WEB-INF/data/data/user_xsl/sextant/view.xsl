@@ -35,6 +35,10 @@
 					<div>
 						<div class="result-metadata-modal-tabs">
 							<div id="result-metadata-modal-tab-1">
+							    <div class="result-metadata-modal-resume"  style="border-bottom: 1px solid #EFEFEF;">
+							      <h6><xsl:value-of select="$title" /></h6>
+							    </div>
+							    <br/>
 								<div class="result-metadata-modal-resume">
 									<h6>
 									<xsl:call-template name="getTitle">
