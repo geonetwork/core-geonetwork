@@ -91,13 +91,11 @@ GeoNetwork.mapApp = function() {
         }, this);
 
         var panel2 = new GeoExt.MapPanel({
-            height : 500,
-            width: '100%',
+            height : 250,
             map : map2,
+            width: 400,
             id: 'map',
-            stateId : 'bigmap',
-            renderTo: 'map-div',
-            prettyStateKeys : true
+            renderTo: 'map-div'
         });
 
         panel2.map = map2;
