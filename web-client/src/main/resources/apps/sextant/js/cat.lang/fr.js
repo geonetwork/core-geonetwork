@@ -29,5 +29,7 @@ cat.lang.fr = {
     ,"wmsPortlet": "Geoviewer"
     ,"downloadPortlet":"Panier"
     ,'chooseGroup': 'Selectionner un catalogue'
+    ,"thumbnail_not_available": "Imagette non disponible"
+    ,"click_to_zoom": "cliquez pour zoomer sur la zone"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

@@ -497,6 +497,9 @@ div.md-action-menu span.list-icon {
 .result-list li.md-full tbody{
 	vertical-align:inherit;
 }
+.result-list li.md-full img.thumb-list-img {
+	cursor: pointer;	
+}
 div.no-icon-menu a.x-menu-item {
     padding-left: 3px;
 }
