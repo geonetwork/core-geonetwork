@@ -7,7 +7,7 @@
 	<external.theme.inspire-theme>INSPIRE Spatial Data Themes, version 1.0</external.theme.inspire-theme>
 	<external._none_.gemet>GEMET concepts</external._none_.gemet>
 	<downloadBackup>Download Backup file</downloadBackup>
-	<downloadBackupDesc>Download file containing all metadata in catalog</downloadBackupDesc>
+	<downloadBackupDesc>Download un file con tutti i metadati del catalogo</downloadBackupDesc>
 	<ContactSelectionTitle js="true">Selezione Contatti</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Selezione Formati</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Selezione Estensioni</ExtentSelectionTitle>
