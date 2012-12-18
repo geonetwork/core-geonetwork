@@ -30,7 +30,8 @@ public class XmlCacheManager {
         
         return cacheMap;
     }
-    private Map<String, XmlFileCacher> getVolatileCacheMap(boolean localized, String base, String file) {
+    @SuppressWarnings("unchecked")
+	private Map<String, XmlFileCacher> getVolatileCacheMap(boolean localized, String base, String file) {
     	try {
 	    	JeevesJCS cache = JeevesJCS.getInstance(XML_FILE_CACHE_KEY);
 	    	String key = localized+":"+base+":"+file;
@@ -40,9 +41,9 @@ public class XmlCacheManager {
 				cache.put(key, cacheMap);
 	    	}
 	    	return cacheMap;
-    	} catch (CacheException e) {
-    		Log.error(Log.JEEVES, "Failed to load XmlFile cache", e);
-    		return getExternalCacheMap(localized, base, file); 
+    	} catch (Exception e) {
+    		Log.error(Log.JEEVES, "JeevesJCS cache not available, THIS IS NOT AN ERROR IF TESTING", e);
+    		return getExternalCacheMap(localized, base, file);
     	}
     	
     }
