@@ -58,10 +58,11 @@
         <executions>
           <execution>
             <!-- 
-                This phase does not belong to the default lifecycle for a jar/war packaging.
-                It has to be run explicitely as mvn command argument for generating obfuscated js. 
+                minified files need to be generated before resource
+                phase so they are copied to target folder.  If not in target folder
+                then they will not be copied to jar.
              -->
-            <phase>prepare-package</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>compress</goal>
             </goals>

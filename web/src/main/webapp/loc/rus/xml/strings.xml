@@ -306,7 +306,7 @@ ISO 19115 не позволяет иметь более одного.
 	<cannotRetrieveGroup js="true">Не удалось получить группы</cannotRetrieveGroup>
 	<selectNewOwner js="true">Выберите пользователя, который будет новым владельцем</selectNewOwner>
 	<selectOwnerGroup js="true">Выберите группу, которой принадлежит выбранный пользователь</selectOwnerGroup>
-	<selectOneFile js="true">Лучше выбрать хотя бы один файл для загрузки!</selectOneFile>
+	<selectOneFileDownload js="true">Лучше выбрать хотя бы один файл для загрузки!</selectOneFileDownload>
 	<checkEmail js="true">Пожалуйста, заполните правильно адрес электронной почты</checkEmail>
 	<addName js="true">Пожалуйста, заполните имя или организацию</addName>
 	<noComment js="true">Без комментариев</noComment>
@@ -329,7 +329,7 @@ ISO 19115 не позволяет иметь более одного.
 	<errorSaveFailed js="true">Ошибка: не удалось сохранить форму </errorSaveFailed>
 	<errorOnAction js="true">Ошибка: действие не удалось </errorOnAction>
 	<errorChangeProtocol js="true">Возможно, файл был загружен. Вы не можете изменить протокол, пока вы не удалите этот файл</errorChangeProtocol>
-	<selectOneFile js="true">Выберите с помощью обзора или введите имя файла до нажатия Загрузить!</selectOneFile>
+	<selectOneFileUpload js="true">Выберите с помощью обзора или введите имя файла до нажатия Загрузить!</selectOneFileUpload>
 	<uploadFailed js="true">Ошибка: Сбой при загрузке! - Вернуться </uploadFailed>
 	<uploadSetFileNameFailed js="true">Ошибка: Загрузка прошла успешно, но не удалось установить имя файла!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Не удается получить подсказку с сервера</cannotGetTooltip>

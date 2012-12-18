@@ -233,7 +233,7 @@
 	<cannotRetrieveGroup js="true">Kan ikke hente grupper</cannotRetrieveGroup>
 	<selectNewOwner js="true">Velg brukeren som skal bli ny eier</selectNewOwner>
 	<selectOwnerGroup js="true">Velg en gruppe som den valgte bruker tilhører</selectOwnerGroup>
-	<selectOneFile js="true">Du må velge minst en fil for nedlasting!</selectOneFile>
+	<selectOneFileDownload js="true">Du må velge minst en fil for nedlasting!</selectOneFileDownload>
 	<checkEmail js="true">Vennligst fyll inn en korrekt e-postadresse</checkEmail>
 	<addName js="true">Vennligst fyll inn et navn eller en organisasjon</addName>
 	<noComment js="true">Ingen kommentar</noComment>
@@ -255,7 +255,7 @@
 	<errorSaveFailed js="true">Feil: kunne ikke lagre skjema</errorSaveFailed>
 	<errorOnAction js="true">Feil: Kan ikke utføre operasjonen </errorOnAction>
 	<errorChangeProtocol js="true">En fil kan ha blitt lastet opp. Du kan ikke endre protokollen før du sletter den filen</errorChangeProtocol>
-	<selectOneFile js="true">Finn eller tast inn et filenavn før du klikker på Last opp!</selectOneFile>
+	<selectOneFileUpload js="true">Finn eller tast inn et filenavn før du klikker på Last opp!</selectOneFileUpload>
 	<uploadFailed js="true">Feil: Opplasting feilet! - ble returnert </uploadFailed>
 	<uploadSetFileNameFailed js="true">Feil: Opplasting gikk bra, men filenavnet kan ikke settes!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Kan ikke hente hjelpetekst fra server</cannotGetTooltip>

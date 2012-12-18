@@ -249,7 +249,7 @@
 	<cannotRetrieveGroup js="true">Ryhmiä ei voida hakea.</cannotRetrieveGroup>
 	<selectNewOwner js="true">Valitse käyttäjä, josta tulee uusi omistaja.</selectNewOwner>
 	<selectOwnerGroup je="true">Valitse ryhmä, johon valittu käyttäjä kuuluu.</selectOwnerGroup>
-	<selectOneFile je="true">Valitse vähintään yksi tiedosto tallennettavaksi.</selectOneFile>
+	<selectOneFileDownload je="true">Valitse vähintään yksi tiedosto tallennettavaksi.</selectOneFileDownload>
 	<checkEmail js="true">Täytä voimassaoleva sähköpostiosoite.</checkEmail>
 	<addName js="true">Täytä nimi tai sähköpostiosoite.</addName>
 	<noComment js="true">Ei kommentoitavaa.</noComment>
@@ -272,7 +272,7 @@
 	<errorSaveFailed js="true">Virhe: Lomaketta ei voitu tallentaa.</errorSaveFailed>
 	<errorOnAction js="true">Virhe: Operaatiota ei voitu suorittaa.</errorOnAction>
 	<errorChangeProtocol js="true">Tiedosto voi olla tallennettuna. Et voi muuttaa protokollaa ennen tiedoston poistoa.</errorChangeProtocol>
-	<selectOneFile js="true">Valitse tiedosto selaamalla tai kirjoita tallennettavan tiedoston nimi ennen tallennuksen aloittamista.</selectOneFile>
+	<selectOneFileUpload js="true">Valitse tiedosto selaamalla tai kirjoita tallennettavan tiedoston nimi ennen tallennuksen aloittamista.</selectOneFileUpload>
 	<uploadFailed js="true">Virhe: Tiedoston tallennus epäonnistui. </uploadFailed>
 	<uploadSetFileNameFailed js="true">Virhe: Tiedoston tallennus onnistui, mutta tiedoston nimeä ei voitu asettaa.</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Työkaluvihjeitä ei voida näyttää palvelimelta.</cannotGetTooltip>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gfc:FC_FeatureCatalogue xmlns:gfc="http://www.isotc211.org/2005/gfc"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx"
     uuid="56cf8277-e2be-48ef-9bb7-05a10dedf665">
-    <gfc:name>
+    <gmx:name>
         <gco:CharacterString>Feature catalogue template in ISO19110</gco:CharacterString>
-    </gfc:name>
-    <gfc:scope>
+    </gmx:name>
+    <gmx:scope>
         <gco:CharacterString>Scope</gco:CharacterString>
-    </gfc:scope>
-    <gfc:fieldOfApplication>
+    </gmx:scope>
+    <gmx:fieldOfApplication>
         <gco:CharacterString/>
-    </gfc:fieldOfApplication>
-    <gfc:versionNumber>
+    </gmx:fieldOfApplication>
+    <gmx:versionNumber>
         <gco:CharacterString>1.0</gco:CharacterString>
-    </gfc:versionNumber>
-    <gfc:versionDate>
+    </gmx:versionNumber>
+    <gmx:versionDate>
         <gco:DateTime>2009-10-12T13:11:25</gco:DateTime>
-    </gfc:versionDate>
+    </gmx:versionDate>
     <gfc:producer>
         <gmd:CI_ResponsibleParty>
             <gmd:individualName>
@@ -85,8 +85,16 @@
                 <gco:LocalName>Local name</gco:LocalName>
             </gfc:aliases>
             <gfc:featureCatalogue/>
+             <gfc:constrainedBy>
+                <gfc:FC_Constraint>
+                    <gfc:description>
+                        <gco:CharacterString>Description of the feature catalogue</gco:CharacterString>
+                    </gfc:description>
+                </gfc:FC_Constraint>
+            </gfc:constrainedBy>
             <gfc:carrierOfCharacteristics>
                 <gfc:FC_FeatureAttribute>
+                    <gfc:featureType/>
                     <gfc:memberName>
                         <gco:LocalName>Type</gco:LocalName>
                     </gfc:memberName>
@@ -95,7 +103,6 @@
                     </gfc:definition>
                     <gfc:cardinality>
                         <gco:Multiplicity>
-
                             <gco:range>
                                 <gco:MultiplicityRange>
                                     <gco:lower>
@@ -108,13 +115,19 @@
                             </gco:range>
                         </gco:Multiplicity>
                     </gfc:cardinality>
-                    <gfc:featureType/>
                     <gfc:valueMeasurementUnit>
                         <gml:UnitDefinition xmlns:gml="http://www.opengis.net/gml" gml:id="unknown">
                             <gml:description/>
                             <gml:identifier codeSpace="unknown"/>
                         </gml:UnitDefinition>
                     </gfc:valueMeasurementUnit>
+                     <gfc:valueType>
+                        <gco:TypeName>
+                            <gco:aName>
+                                <gco:CharacterString>CHARACTER</gco:CharacterString>
+                            </gco:aName>
+                        </gco:TypeName>
+                    </gfc:valueType>
                     <gfc:listedValue>
                         <gfc:FC_ListedValue>
                             <gfc:label>
@@ -138,17 +151,11 @@
                             </gfc:code>
                         </gfc:FC_ListedValue>
                     </gfc:listedValue>
-                    <gfc:valueType>
-                        <gco:TypeName>
-                            <gco:aName>
-                                <gco:CharacterString>CHARACTER</gco:CharacterString>
-                            </gco:aName>
-                        </gco:TypeName>
-                    </gfc:valueType>
                 </gfc:FC_FeatureAttribute>
             </gfc:carrierOfCharacteristics>
             <gfc:carrierOfCharacteristics>
                 <gfc:FC_FeatureAttribute>
+                    <gfc:featureType/>
                     <gfc:memberName>
                         <gco:LocalName>Identifier</gco:LocalName>
                     </gfc:memberName>
@@ -161,17 +168,14 @@
                                 <gco:MultiplicityRange>
                                     <gco:lower>
                                         <gco:Integer>1</gco:Integer>
-
                                     </gco:lower>
                                     <gco:upper>
-                                        <gco:UnlimitedInteger xsi:nil="false" isInfinite="false"
-                                            >1</gco:UnlimitedInteger>
+                                        <gco:UnlimitedInteger xsi:nil="false" isInfinite="false">1</gco:UnlimitedInteger>
                                     </gco:upper>
                                 </gco:MultiplicityRange>
                             </gco:range>
                         </gco:Multiplicity>
                     </gfc:cardinality>
-                    <gfc:featureType/>
                     <gfc:valueType>
                         <gco:TypeName>
                             <gco:aName>
@@ -195,7 +199,6 @@
                                 <gco:MultiplicityRange>
                                     <gco:lower>
                                         <gco:Integer>0</gco:Integer>
-
                                     </gco:lower>
                                     <gco:upper>
                                         <gco:UnlimitedInteger isInfinite="true" xsi:nil="true"/>
@@ -213,13 +216,6 @@
                     </gfc:valueType>
                 </gfc:FC_FeatureAttribute>
             </gfc:carrierOfCharacteristics>
-            <gfc:constrainedBy>
-                <gfc:FC_Constraint>
-                    <gfc:description>
-                        <gco:CharacterString>Description of the feature catalogue</gco:CharacterString>
-                    </gfc:description>
-                </gfc:FC_Constraint>
-            </gfc:constrainedBy>
         </gfc:FC_FeatureType>
     </gfc:featureType>
 </gfc:FC_FeatureCatalogue>

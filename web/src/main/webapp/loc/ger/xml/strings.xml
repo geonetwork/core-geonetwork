@@ -295,7 +295,7 @@
 	<cannotRetrieveGroup js="true">Kann die Gruppen nicht finden</cannotRetrieveGroup>
 	<selectNewOwner js="true">Wählen Sie den Benutzer der neuer Besitzer werden soll</selectNewOwner>
 	<selectOwnerGroup js="true">Wählen Sie eine Gruppe zu welcher der ausgewählte Benutzer gehört</selectOwnerGroup>
-	<selectOneFile js="true">Sie sollten mindestens eine Datei zum Download auswählen!</selectOneFile>
+	<selectOneFileDownload js="true">Sie sollten mindestens eine Datei zum Download auswählen!</selectOneFileDownload>
 	<checkEmail js="true">Bitte geben Sie eine gültige E-Mail-Adresse an</checkEmail>
 	<addName js="true">Bitte geben Sie einen Namen oder eine Organisation an</addName>
 	<noComment js="true">Kein Kommentar</noComment>
@@ -318,7 +318,7 @@
 	<errorSaveFailed js="true">Fehler: Element konnte nicht gespeichert werden </errorSaveFailed>
 	<errorOnAction js="true">Fehler: Weitere Aktion konnte nicht ausgeführt werden  </errorOnAction>
 	<errorChangeProtocol js="true">Eine Datei wurde hochgeladen. Das Protokoll kann nicht geändert werden bevor die Datei entfernt wurde.</errorChangeProtocol>
-	<selectOneFile js="true">Durchsuchen, oder einen Dateinamen angeben bevor "hochladen" gedrückt wird!</selectOneFile>
+	<selectOneFileUpload js="true">Durchsuchen, oder einen Dateinamen angeben bevor "hochladen" gedrückt wird!</selectOneFileUpload>
 	<uploadFailed js="true">Fehler: Upload fehlgeschlagen! - zurück </uploadFailed>
 	<uploadSetFileNameFailed js="true">Fehler: Upload ausgeführt aber Dateiname konnte nicht gesetzt werden!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Tooltips vom Server nicht erhältlich</cannotGetTooltip>
