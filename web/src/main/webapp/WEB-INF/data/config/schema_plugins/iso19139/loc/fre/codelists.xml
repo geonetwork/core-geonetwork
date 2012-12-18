@@ -1524,7 +1524,7 @@
 			<description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
 		</entry>
 		<entry>
-			<code>environment_NatureConservation</code>
+			<code>environment_NatureProtection</code>
 			<label>Protection de l'environnement</label>
 		</entry>
 		<entry>
