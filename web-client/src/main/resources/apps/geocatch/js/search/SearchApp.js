@@ -29,7 +29,44 @@ GeoNetwork.searchApp = function() {
         init : function() {
 
             this.generateSimpleSearchForm();
-            this.advSearchForm = this.generateAdvancedSearchForm();
+
+            this.advSearchForm = new GeoNetwork.SearchFormPanel({
+                id : 'advanced-search-options-content-form',
+                renderTo : 'advanced-search-options-content',
+                width : 250,
+                searchCb : function() {
+
+                    var any = Ext.get('E_any');
+                    if (any) {
+                        if (any.getValue() === OpenLayers
+                                .i18n('fullTextSearch')) {
+                            any.setValue('');
+                        }
+                    }
+
+                    catalogue.startRecord = 1; // Reset start record
+                    searching = true;
+                    catalogue.search('advanced-search-options-content-form',
+                            app.searchApp.loadResults, null,
+                            catalogue.startRecord, true);
+                },
+                listeners : {
+                    onreset : function() {
+                        if (Ext.getCmp('facets-panel')) {
+                            Ext.getCmp('facets-panel').reset();
+                        }
+                        this.fireEvent('search');
+
+                        GeoNetwork.Util.updateHeadInfo({
+                            title : catalogue.getInfo().name
+                        });
+                    }
+                },
+                items : this.generateAdvancedSearchForm(),
+            });
+
+            hideAdvancedSearch();
+
             this.createResultsPanel(null);
         },
 
@@ -45,9 +82,10 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : 'Text search',
                 hideLabel : false,
                 id : 'E_any',
-                // TODO: Check why if not set explicit width takes size much bigger than panel
-                /*anchor : '100%',*/
-                width: 180,
+                // TODO: Check why if not set explicit width takes size much
+                // bigger than panel
+                /* anchor : '100%', */
+                width : 180,
                 minChars : 2,
                 loadingText : '...',
                 hideTrigger : true,
@@ -125,218 +163,695 @@ GeoNetwork.searchApp = function() {
             });
         },
         generateAdvancedSearchForm : function() {
-            var advancedCriteria = [];
+            var f = [ {
+                fieldLabel : translate("searchText"),
+                id : "anyField",
+                anchor : "100%",
+                name : "T_AnyText"
+            }, {
+                fieldLabel : translate("rtitle"),
+                name : "T_title",
+                anchor : "100%",
+                id : "TitleField"
+            }, {
+                fieldLabel : translate("abstract"),
+                name : "T_abstract",
+                anchor : "100%",
+                id : "AbstractField"
+            }, new Ext.ux.form.SuperBoxSelect({
+                fieldLabel : translate("keyword"),
+                id : "keywordsCombo",
+                name : "[E1.0_keyword",
+                store : this.createKeywordsStore(),
+                mode : "local",
+                displayField : "name",
+                valueField : "value",
+                forceSelection : false,
+                triggerAction : "all",
+                selectOnFocus : true,
+                anchor : "100%"
+            }), new Ext.ux.form.SuperBoxSelect({
+                fieldLabel : translate("theme"),
+                name : "[E1.0_topicCat",
+                id : "topicCat",
+                store : new Ext.data.SimpleStore({
+                    data : translate("topicCat"),
+                    fields : [ "name", "label" ],
+                    sortInfo : {
+                        field : "label",
+                        direction : "ASC"
+                    }
+                }),
+                mode : "local",
+                displayField : "label",
+                valueField : "name",
+                typeAhead : true,
+                forceSelection : true,
+                triggerAction : "all",
+                selectOnFocus : true,
+                anchor : "100%"
+            }), {
+                fieldLabel : translate("contact"),
+                anchor : "100%",
+                name : "T_creator"
+            }, {
+                fieldLabel : translate("organisationName"),
+                anchor : "100%",
+                name : "T_orgName"
+            } ];
 
-            // This is the full text search field populated when the
-            // one from the simple search form is updated.
-            // This field is hidden
-            var any = new Ext.form.TextField({
-                name : 'E_any_OR_geokeyword',
-                id : 'E_trueany',
-                hidden : true
+            f = f.concat([
+                    {
+                        xtype : "combo",
+                        fieldLabel : translate("template"),
+                        anchor : "100%",
+                        name : "E__isTemplate",
+                        value : "n",
+                        store : [ [ "n", translate("no") ],
+                                [ "y", translate("yes") ] ],
+                        mode : "local",
+                        displayField : "name",
+                        valueField : "value",
+                        hideTrigger : true,
+                        forceSelection : true,
+                        editable : false,
+                        triggerAction : "all",
+                        selectOnFocus : true
+                    }, {
+                        fieldLabel : translate("identifier"),
+                        anchor : "100%",
+                        name : "S_basicgeodataid"
+                    }, new Ext.ux.form.SuperBoxSelect({
+                        id : "formatCombo",
+                        fieldLabel : translate("formatTxt"),
+                        name : "E1.0_format",
+                        store : translate("formats"),
+                        mode : "local",
+                        displayField : "label",
+                        valueField : "name",
+                        emptyText : translate("any"),
+                        typeAhead : true,
+                        forceSelection : true,
+                        triggerAction : "all",
+                        selectOnFocus : true,
+                        anchor : "100%"
+                    }) ])
+
+            f.push({
+                xtype : "hidden",
+                name : "E_similarity",
+            // FIXME
+            // value : searchTools.DEFAULT_SIMILARITY
             });
-
-            // Multi select keyword
-            var themekeyStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-                url : catalogue.services.opensearchSuggest,
-                rootId : 1,
-                baseParams : {
-                    field : 'keyword'
-                }
-            });
-
-            var themekeyField = new Ext.ux.form.SuperBoxSelect({
-                hideLabel : false,
-                minChars : 0,
-                queryParam : 'q',
-                hideTrigger : false,
-                id : 'E_themekey',
-                name : 'E_themekey',
-                store : themekeyStore,
-                valueField : 'value',
-                displayField : 'value',
-                valueDelimiter : ' or ',
-                // tpl: tpl,
-                fieldLabel : OpenLayers.i18n('keyword')
-            });
-
-            var orgNameStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-                url : catalogue.services.opensearchSuggest,
-                rootId : 1,
-                baseParams : {
-                    field : 'orgName'
-                }
-            });
-
-            var orgNameField = new Ext.ux.form.SuperBoxSelect({
-                hideLabel : false,
-                minChars : 0,
-                queryParam : 'q',
-                hideTrigger : false,
-                id : 'E_orgName',
-                name : 'E_orgName',
-                store : orgNameStore,
-                valueField : 'value',
-                displayField : 'value',
-                valueDelimiter : ' or ',
-                // tpl: tpl,
-                fieldLabel : OpenLayers.i18n('org')
-            });
-            // var denominatorField = GeoNetwork.util.SearchFormTools
-            // .getScaleDenominatorField(true);
-
-            // var groupField = GeoNetwork.util.SearchFormTools.getGroupField(
-            // catalogue.services.getGroups, true);
-            var metadataTypeField = GeoNetwork.util.SearchFormTools
-                    .getMetadataTypeField(true);
-            // var validField = GeoNetwork.util.SearchFormTools
-            // .getValidField(true);
-
-            // Add hidden fields to be use by quick metadata links from the
-            // admin panel (eg. my metadata).
-            var ownerField = new Ext.form.TextField({
-                name : 'E__owner',
-                hidden : true
-            });
-            var isHarvestedField = new Ext.form.TextField({
-                name : 'E__isHarvested',
-                hidden : true
-            });
-            var siteId = new Ext.form.TextField({
-                name : 'E_siteId',
-                hidden : true
-            });
-            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
-                    .getServiceTypeField(true);
-            advancedCriteria.push(themekeyField, orgNameField,
-                    metadataTypeField, ownerField, isHarvestedField, siteId);
-
-            var optionFields = GeoNetwork.util.SearchFormTools
-                    .getOptions(catalogue.services);
-
-            var what = {
-                title : OpenLayers.i18n('What'),
-                id : 'what_adv_search',
-                margins : '0 5 0 5',
-                layout : 'form',
-                forceLayout : true,
-                items : [ any, advancedCriteria, optionFields ]
-            };
-
-            var mapLayers = [];
-            for ( var i = 0; i < GeoNetwork.map.BACKGROUND_LAYERS.length; i++) {
-                mapLayers.push(GeoNetwork.map.BACKGROUND_LAYERS[i].clone());
-            }
-            var geomWithMapField = {
-                xtype : 'gn_geometrymapfield',
-                id : 'geometryMap',
-                layers : mapLayers,
-                width : '100%',
-                height : '220',
-                mapOptions : GeoNetwork.map.MAP_OPTIONS,
-                activated : false
-            // restrictToMapExtent: true
-            };
-            var where = {
-                title : OpenLayers.i18n('Where'),
-                id : 'where_adv_search',
-                margins : '0 5 0 5',
-                bodyStyle : 'padding:0px',
-                layout : 'form',
-                items : [ geomWithMapField ]
-            };
-
-            var when = {
-                title : OpenLayers.i18n('When'),
-                id : 'when_adv_search',
-                margins : '0 5 0 5',
-                forceLayout : true,
-                defaultType : 'datefield',
-                layout : 'form',
-                defaults : {
-                    anchor : '100%'
-                },
-                items : GeoNetwork.util.SearchFormTools.getWhen()
-            };
-
-            var inspireFields = GeoNetwork.util.INSPIRESearchFormTools
-                    .getINSPIREFields(catalogue.services, true, {
-                        withAnnex : true,
-                        withTheme : true
-                    });
-            inspireFields.push(serviceTypeField);
-
-            var inspire = {
-                title : 'INSPIRE',
-                id : 'inspire_adv_search',
-                margins : '0 5 0 5',
-                defaultType : 'datefield',
-                layout : 'form',
-                defaults : {
-                    anchor : '100%'
-                },
-                items : inspireFields
-            };
-
-            var formItems = [];
-
-            formItems.push({
-                id : 'advSearchTabs',
-                layout : 'hbox',
-                plain : true,
-                forceLayout : false,
-                border : false,
-                deferredRender : false,
-                items : [ what, where, when, inspire ]
-            });
-
-            this.setAdminFieldsCallback([ metadataTypeField ]);
-
-            return new GeoNetwork.SearchFormPanel({
-                id : 'advanced-search-options-content-form',
-                renderTo : 'advanced-search-options-content',
-                stateId : 's',
-                layout : 'hbox',
+            var d = [ {
+                xtype : "fieldset",
+                title : translate("what"),
                 autoHeight : true,
-                border : false,
-                searchCb : function() {
-
-                    var any = Ext.get('E_any');
-                    if (any) {
-                        if (any.getValue() === OpenLayers
-                                .i18n('fullTextSearch')) {
-                            any.setValue('');
-                        }
-                    }
-
-                    Ext.get("results-main").dom.style.display = 'none';
-
-                    catalogue.startRecord = 1; // Reset start record
-                    searching = true;
-                    catalogue.search('advanced-search-options-content-form',
-                            app.searchApp.loadResults, null,
-                            catalogue.startRecord, true);
-                    app.searchApp.firstSearch = true;
-                    showSearch();
+                defaultType : "textfield",
+                labelWidth : this.labelWidth,
+                layout : "form",
+                layoutConfig : {
+                    labelSeparator : ""
                 },
-                listeners : {
-                    onreset : function() {
-                        if (Ext.getCmp('facets-panel')) {
-                            Ext.getCmp('facets-panel').reset();
-                        }
-                        this.fireEvent('search');
+                cls : "compressedFieldSet",
+                items : f
+            } ];
+            var c = [ this.getTypeCombo() ];
+            c = c.concat([
+                    {
+                        xtype : "combo",
+                        fieldLabel : translate("valid"),
+                        anchor : "100%",
+                        name : "E__valid",
+                        store : [ [ "", translate("any") ],
+                                [ "1", translate("yes") ],
+                                [ "0", translate("no") ],
+                                [ "-1", translate("unChecked") ] ],
+                        mode : "local",
+                        displayField : "name",
+                        valueField : "value",
+                        emptyText : translate("any"),
+                        hideTrigger : true,
+                        forceSelection : true,
+                        editable : false,
+                        triggerAction : "all",
+                        selectOnFocus : true
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : translate("toEdit"),
+                        id : "toEdit",
+                        name : "B_toEdit"
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : translate("toPublish"),
+                        id : "toPublish",
+                        name : "B_toPublish"
+                    } ]);
 
-                        GeoNetwork.Util.updateHeadInfo({
-                            title : catalogue.getInfo().name
-                        });
-                    }
+            d.push({
+                xtype : "fieldset",
+                labelWidth : this.labelWidth,
+                title : translate("type") + "?",
+                autoHeight : true,
+                defaultType : "textfield",
+                cls : "compressedFieldSet",
+                layout : "form",
+                layoutConfig : {
+                    labelSeparator : ""
                 },
-                forceLayout : true,
-                padding : 2,
-                items : formItems
+                items : c
             });
+            var b = new Ext.form.ComboBox({
+                fieldLabel : translate("country"),
+                name : "country",
+                store : this.createCountryStore(),
+                mode : "local",
+                displayField : "name",
+                valueField : "value",
+                emptyText : translate("any"),
+                forceSelection : true,
+                triggerAction : "all",
+                selectOnFocus : true,
+                anchor : "100%"
+            });
+            var a = this.getKantoneCombo(true);
+            var e = this.getGemeindenCombo(true);
+            b.on("select", function(h, g) {
+                this.getKantoneCombo().combo.setValue("");
+                delete this.getKantoneCombo().combo.lastQuery;
+                this.getGemeindenCombo().combo.setValue("");
+                delete this.getGemeindenCombo().combo.lastQuery;
+                if (g && g.get("bbox")) {
+                    app.mapApp.getMap().zoomToExtent(g.get("bbox"))
+                }
+                var i = g && g.get("name") == "LI";
+                this.getKantoneCombo().combo.setDisabled(i);
+                this.getGemeindenCombo().combo.setDisabled(i);
+                highlightGeographicFilter()
+            }, this);
+            d
+                    .push({
+                        xtype : "fieldset",
+                        labelWidth : this.labelWidth,
+                        id : "searchWhere",
+                        title : translate("where"),
+                        autoHeight : true,
+                        defaultType : "textfield",
+                        cls : "compressedFieldSet",
+                        layout : "form",
+                        layoutConfig : {
+                            labelSeparator : ""
+                        },
+                        items : [
+                                {
+                                    xtype : "radiogroup",
+                                    hideLabel : true,
+                                    vertical : true,
+                                    columns : 1,
+                                    defaults : {
+                                        name : "whereType",
+                                        boxLabel : "",
+                                        itemCls : "compressedFormItem"
+                                    },
+                                    items : [
+                                            {
+                                                inputValue : "none",
+                                                boxLabel : translate("wherenone"),
+                                                checked : true,
+                                                listeners : {
+                                                    check : app.searchApp
+                                                            .updateWhereForm("none")
+                                                }
+                                            },
+                                            {
+                                                inputValue : "bbox",
+                                                boxLabel : translate("bbox"),
+                                                listeners : {
+                                                    check : app.searchApp
+                                                            .updateWhereForm("bbox")
+                                                }
+                                            },
+                                            {
+                                                inputValue : "gg25",
+                                                boxLabel : translate("adminUnit"),
+                                                listeners : {
+                                                    check : app.searchApp
+                                                            .updateWhereForm("gg25")
+                                                }
+                                            },
+                                            {
+                                                inputValue : "polygon",
+                                                boxLabel : translate("drawOnMap"),
+                                                listeners : {
+                                                    check : app.searchApp
+                                                            .updateWhereForm("polygon")
+                                                }
+                                            } ]
+                                },
+                                {
+                                    xtype : "panel",
+                                    id : "adminBorders",
+                                    border : false,
+                                    layout : "form",
+                                    hidden : true,
+                                    layoutConfig : {
+                                        labelSeparator : ""
+                                    },
+                                    items : [ b, a.combo, e.combo ]
+                                },
+                                {
+                                    xtype : "panel",
+                                    id : "drawPolygon",
+                                    border : false,
+                                    hidden : true,
+                                    html : '<span id="drawPolygonSpan"><a href="javascript:geocat.drawWherePolygon()">'
+                                            + translate("startNewPolygon")
+                                            + "</a></span>"
+                                },
+                                {
+                                    xtype : "combo",
+                                    store : [
+                                            [ OpenLayers.Filter.Spatial.WITHIN,
+                                                    translate("withinGeo") ],
+                                            [
+                                                    OpenLayers.Filter.Spatial.INTERSECTS,
+                                                    translate("intersectGeo") ],
+                                            [
+                                                    OpenLayers.Filter.Spatial.CONTAINS,
+                                                    translate("containsGeo") ] ],
+                                    hideTrigger : true,
+                                    forceSelection : true,
+                                    editable : false,
+                                    triggerAction : "all",
+                                    selectOnFocus : true,
+                                    fieldLabel : translate("type"),
+                                    name : "boundingRelation",
+                                    value : OpenLayers.Filter.Spatial.WITHIN
+                                } ],
+                        listeners : {
+                            expand : function() {
+                                app.searchApp.updateWhereForm("bbox")(null,
+                                        true)
+                            },
+                            collapse : function() {
+                            }
+                        }
+                    });
+            d.push({
+                xtype : "fieldset",
+                title : translate("when"),
+                autoHeight : true,
+                defaultType : "textfield",
+                cls : "compressedFieldSet",
+                layout : "form",
+                labelWidth : this.labelWidth,
+                layoutConfig : {
+                    labelSeparator : ""
+                },
+                items : [ {
+                    xtype : "datefield",
+                    fieldLabel : translate("from"),
+                    format : "d/m/Y",
+                    postfix : "T00:00:00",
+                    name : ">=_TempExtent_end"
+                }, {
+                    xtype : "datefield",
+                    fieldLabel : translate("to"),
+                    format : "d/m/Y",
+                    postfix : "T23:59:59",
+                    name : "<=_TempExtent_begin"
+                } ]
+            });
+            d.push({
+                xtype : "fieldset",
+                labelWidth : this.labelWidth,
+                title : translate("source"),
+                autoHeight : true,
+                defaultType : "textfield",
+                cls : "compressedFieldSet",
+                layout : "form",
+                layoutConfig : {
+                    labelSeparator : ""
+                },
+                items : [ new Ext.ux.form.SuperBoxSelect({
+                    fieldLabel : translate("catalog"),
+                    name : "[V_",
+                    store : translate("sources_groups"),
+                    mode : "local",
+                    displayField : "label",
+                    valueField : "name",
+                    typeAhead : true,
+                    forceSelection : true,
+                    triggerAction : "all",
+                    selectOnFocus : true,
+                    anchor : "100%"
+                }) ]
+            });
+            return d;
+
+        },
+        createKeywordsStore : function() {
+            var a = Ext.data.Record.create([ {
+                name : "name",
+                mapping : "@name",
+                sortDir : "ASC"
+            }, {
+                name : "value",
+                mapping : "@name"
+            } ]);
+            var b = new Ext.data.Store({
+                reader : new Ext.data.XmlReader({
+                    record : "keyword",
+                    id : "@name"
+                }, a),
+                proxy : new Ext.data.HttpProxy({
+                    url : geocat.baseUrl + "srv/" + geocat.language
+                            + "/geocat.keywords.list",
+                    method : "GET",
+                    disableCaching : false
+                })
+            });
+            b.add(new a({
+                name : translate("any"),
+                value : ""
+            }));
+            b.load({
+                add : true
+            });
+            return b
+        },
+        getTypeCombo : function() {
+            return {
+                xtype : "combo",
+                fieldLabel : translate("type"),
+                name : "E1.0_type",
+                store : translate("dataTypes"),
+                mode : "local",
+                value : "",
+                emptyText : translate("any"),
+                hideTrigger : true,
+                forceSelection : true,
+                editable : false,
+                triggerAction : "all",
+                selectOnFocus : true,
+                anchor : "100%"
+            }
+        },
+        createCountryStore : function() {
+            var a = Ext.data.Record.create([ {
+                name : "name",
+                mapping : "name"
+            }, {
+                name : "value",
+                mapping : "value"
+            }, {
+                name : "bbox",
+                mapping : "bbox"
+            } ]);
+            return new Ext.data.Store({
+                reader : new Ext.data.JsonReader({
+                    root : "root",
+                    id : "value"
+                }, a),
+                data : {
+                    root : [
+                            {
+                                name : translate("any"),
+                                value : "",
+                                bbox : null
+                            },
+                            {
+                                name : "CH",
+                                value : "0",
+                                bbox : new OpenLayers.Bounds(485000, 73000,
+                                        836000, 297000)
+                            },
+                            {
+                                name : "LI",
+                                value : "1",
+                                bbox : new OpenLayers.Bounds(754500, 213000,
+                                        767000, 237500)
+                            } ]
+                }
+            })
+        },
+        updateWhereForm : function(a) {
+            return function(b, c) {
+                var d = Ext.getCmp("adminBorders");
+                var e = Ext.getCmp("drawPolygon");
+                geocat.drawFeature.deactivate();
+                if (c) {
+                    switch (a) {
+                    case "bbox":
+                        d.setVisible(false);
+                        e.setVisible(false);
+                        geocat.map.events.register("moveend", null,
+                                geocat.highlightGeographicFilter);
+                        break;
+                    case "gg25":
+                        d.setVisible(true);
+                        e.setVisible(false);
+                        geocat.map.events.unregister("moveend", null,
+                                geocat.highlightGeographicFilter);
+                        break;
+                    case "polygon":
+                        d.setVisible(false);
+                        e.setVisible(true);
+                        geocat.map.events.unregister("moveend", null,
+                                geocat.highlightGeographicFilter);
+                        if (geocat.selectionFeature) {
+                            geocat.vectorLayer
+                                    .destroyFeatures(geocat.selectionFeature);
+                            geocat.selectionFeature = null
+                        }
+                        geocat.drawWherePolygon();
+                        break
+                    }
+                    geocat.highlightGeographicFilter(null, a);
+                    geocat.fixLayout()
+                }
+            }
+        },
+        createSearchWFS : function(n, m, k, g, a, d) {
+            var h = [];
+            var j = "";
+            for ( var e = 0; e < g.length; ++e) {
+                var b = g[e];
+                if (d != undefined && d[b] != undefined) {
+                    h.push({
+                        name : b,
+                        mapping : b,
+                        convert : d[b]
+                    })
+                } else {
+                    h.push({
+                        name : b,
+                        mapping : b
+                    })
+                }
+                j += "    <ogc:PropertyName>" + m + ":" + b
+                        + "</ogc:PropertyName>"
+            }
+            var l = Ext.data.Record.create(h);
+            var f = new Ext.data.XmlReader({
+                record : k,
+                id : "@fid"
+            }, l);
+            var c;
+            if (n) {
+                c = new Ext.data.Store({
+                    reader : f,
+                    sortInfo : {
+                        field : a.displayField,
+                        direction : "ASC"
+                    }
+                });
+                searchTools.readWFS(geocat.geoserverUrl + "/wfs", m, k, g,
+                        null, {
+                            success : function(i) {
+                                c.loadData(i.responseXML);
+                                c.add(new l({}))
+                            }
+                        })
+            } else {
+                c = new Ext.data.Store({
+                    reader : f,
+                    sortInfo : {
+                        field : a.displayField,
+                        direction : "ASC"
+                    },
+                    load : function(i) {
+                        i = i || {};
+                        if (this.fireEvent("beforeload", this, i) !== false) {
+                            this.storeOptions(i);
+                            var r = this.baseParams[p.queryParam];
+                            var q = new OpenLayers.Filter.Comparison({
+                                type : OpenLayers.Filter.Comparison.LIKE,
+                                property : a.searchField || a.displayField,
+                                value : r.toLowerCase() + ".*"
+                            });
+                            if (a.updateFilter) {
+                                q = a.updateFilter.call(p, q)
+                            }
+                            searchTools.readWFS(geocat.geoserverUrl + "/wfs",
+                                    m, k, g, q, {
+                                        success : function(s) {
+                                            c.loadData(s.responseXML);
+                                            c.add(new l({}))
+                                        }
+                                    });
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+                })
+            }
+            OpenLayers.Util.applyDefaults(a, {
+                store : c,
+                loadingText : "Searching...",
+                mode : n ? "local" : "remote",
+                hideTrigger : false,
+                typeAhead : true,
+                anchor : "100%",
+                selectOnFocus : true
+            });
+            var p = new Ext.ux.form.SuperBoxSelect(a);
+            var o = function(w) {
+                var r = w.getRecords();
+                if (r.length == 0) {
+                    return;
+                }
+                var v = new OpenLayers.Format.WKT();
+                var x = null;
+                for ( var t = 0; t < r.length; ++t) {
+                    var q = r[t];
+                    if (q.get("BOUNDING")) {
+                        var s = v.read(q.get("BOUNDING"));
+                        if (x) {
+                            x.extend(s.geometry.getBounds())
+                        } else {
+                            x = s.geometry.getBounds()
+                        }
+                    }
+                }
+                try {
+                    if (x) {
+                        app.mapApp.getMap().zoomToExtent(x)
+                    }
+                } catch (u) {
+                }
+            };
+            p.on("change", o);
+            return {
+                combo : p,
+                store : c,
+                refreshContour : function() {
+                    o(p)
+                }
+            }
         },
 
+        getGemeindenCombo : function(a) {
+            if (a && this.gemeindenCombo) {
+                this.gemeindenCombo.combo.destroy();
+                delete this.gemeindenCombo
+            }
+            if (this.gemeindenCombo) {
+                return this.gemeindenCombo
+            }
+            this.gemeindenCombo = this
+                    .createSearchWFS(
+                            false,
+                            "chtopo",
+                            "gemeindenBB",
+                            [ "GEMNAME_L", "GEMNAME", "OBJECTVAL", "KANTONSNR",
+                                    "BOUNDING" ],
+                            {
+                                id : "gemeindenComboBox",
+                                fieldLabel : translate("city"),
+                                searchField : "GEMNAME_L",
+                                displayField : "GEMNAME",
+                                valueField : "OBJECTVAL",
+                                listWidth : 200,
+                                name : "gemeinden",
+                                loadingText : "Searching...",
+                                triggerAction : "all",
+                                minChars : 1,
+                                anchor : "100%",
+                                updateFilter : function(d) {
+                                    if (this.kantonFilter) {
+                                        var b = new OpenLayers.Filter.Logical(
+                                                {
+                                                    type : OpenLayers.Filter.Logical.OR,
+                                                    filters : []
+                                                });
+                                        for ( var c = 0; c < this.kantonFilter.length; ++c) {
+                                            b.filters
+                                                    .push(new OpenLayers.Filter.Comparison(
+                                                            {
+                                                                type : OpenLayers.Filter.Comparison.EQUAL_TO,
+                                                                property : "KANTONSNR",
+                                                                value : this.kantonFilter[c]
+                                                                        .get("KANTONSNR")
+                                                            }))
+                                        }
+                                        return new OpenLayers.Filter.Logical(
+                                                {
+                                                    type : OpenLayers.Filter.Logical.AND,
+                                                    filters : [ d, b ]
+                                                })
+                                    } else {
+                                        return d
+                                    }
+                                }
+                            }, {
+                                GEMNAME : function(n, g) {
+                                    if (!n) {
+                                        return ""
+                                    }
+                                    var j = n.indexOf('"');
+                                    var o = n.lastIndexOf('"');
+                                    var l = n.indexOf("<");
+                                    var d = n.lastIndexOf(">");
+                                    if (l > -1) {
+                                        var k = "<data>"
+                                                + n.substring(l, d + 1)
+                                                + "</data>";
+                                        var f = searchTools.loadXMLString(k);
+                                        var i = geocat.language.substring(0, 2)
+                                                .toUpperCase();
+                                        var m = Ext.DomQuery.selectValue(
+                                                "//DE", f, n);
+                                        var b = Ext.DomQuery.selectValue(
+                                                "//EN", f, m);
+                                        var h = Ext.DomQuery.selectValue(
+                                                "//FR", f, b);
+                                        var e = Ext.DomQuery.selectValue(
+                                                "//IT", f, h);
+                                        var c = Ext.DomQuery.selectValue("//"
+                                                + i, f, e);
+                                        return c
+                                    } else {
+                                        if (j > -1) {
+                                            return n.substring(j, o + 1)
+                                        } else {
+                                            return n
+                                        }
+                                    }
+                                }
+                            });
+            this.gemeindenCombo.combo.on("change", function(c) {
+                if (c.getRecords().length == 0) {
+                    var b = this.getKantoneCombo().combo.getValue();
+                    if (b) {
+                        this.getKantoneCombo().refreshContour()
+                    }
+                }
+                highlightGeographicFilter()
+            }, this);
+            return this.gemeindenCombo
+        },
         /**
          * Set event in order to display some search criteria only when user is
          * logged in.
@@ -617,7 +1132,7 @@ GeoNetwork.searchApp = function() {
                 }
                 try {
                     if (bbox)
-                        geocat.map.zoomToExtent(bbox);
+                        app.mapApp.getMap().zoomToExtent(bbox);
                 } catch (e) {
                 }
             };
@@ -754,7 +1269,7 @@ GeoNetwork.searchApp = function() {
                 hidden : true,
                 bodyCssClass : 'md-view',
                 autoWidth : true,
-                //width: 500,                
+                // width: 500,
                 layout : 'fit',
                 tbar : tBar,
                 items : metadataResultsView,
@@ -765,6 +1280,9 @@ GeoNetwork.searchApp = function() {
             return resultPanel;
         },
         loadResults : function(response, query) {
+            
+            showSearch();
+            
             // Ext.state.Manager.getProvider().updateLastSearch(query);
             // Show "List results" panel
             var facetPanel = Ext.getCmp('facets-panel');
@@ -787,28 +1305,26 @@ GeoNetwork.searchApp = function() {
                 Ext
                         .getCmp('nextBt')
                         .setDisabled(
-                                catalogue.startRecord
-                                        + parseInt(Ext.getCmp('E_hitsperpage')
-                                                .getValue(), 10) > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('nextBt_up')) {
                 Ext
                         .getCmp('nextBt_up')
                         .setDisabled(
-                                catalogue.startRecord
-                                        + parseInt(Ext.getCmp('E_hitsperpage')
-                                                .getValue(), 10) > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
             }
 
-            if (Ext.getCmp('E_sortBy').getValue()) {
-                Ext.getCmp('sortByToolBar').setValue(
-                        Ext.getCmp('E_sortBy').getValue() + "#"
-                                + Ext.getCmp('sortOrder').getValue());
-            } else {
-                if (Ext.getCmp('sortByToolBar')) {
+            if (Ext.getCmp('E_sortBy')) {
+                if (Ext.getCmp('E_sortBy').getValue()) {
                     Ext.getCmp('sortByToolBar').setValue(
-                            Ext.getCmp('E_sortBy').getValue());
+                            Ext.getCmp('E_sortBy').getValue() + "#"
+                                    + Ext.getCmp('sortOrder').getValue());
+                } else {
+                    if (Ext.getCmp('sortByToolBar')) {
+                        Ext.getCmp('sortByToolBar').setValue(
+                                Ext.getCmp('E_sortBy').getValue());
+                    }
                 }
             }
 
@@ -879,7 +1395,7 @@ GeoNetwork.searchApp = function() {
                         renderTo : 'facets-panel-div',
                         searchForm : Ext
                                 .getCmp('advanced-search-options-content-form'),
-                        breadcrumb: breadcrumb,
+                        breadcrumb : breadcrumb,
                         maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
                         facetListConfig : GeoNetwork.Settings.facetListConfig
                                 || []

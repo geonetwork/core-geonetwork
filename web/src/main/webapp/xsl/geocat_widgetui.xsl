@@ -307,7 +307,7 @@
                     
                      <div id="simple-search-options-content"></div>
 
-                    <div id="advanced-search-options" style="display:none;">
+                    <div id="advanced-search-options">
                         <div id="advanced-search-options-content"></div>
                     </div>
                     
