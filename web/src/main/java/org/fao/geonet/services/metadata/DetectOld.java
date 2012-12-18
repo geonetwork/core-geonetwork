@@ -23,7 +23,7 @@ import jeeves.utils.Util;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.DuplicateFilter;
+import org.apache.lucene.sandbox.queries.DuplicateFilter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermRangeQuery;
@@ -33,6 +33,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Email;
 import org.fao.geonet.kernel.reusable.Utils;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.util.ISODate;
@@ -144,11 +145,12 @@ public class DetectOld implements Service
         calendar.add(Calendar.MONTH, -1 * limit);
 
         ISODate to = new ISODate(calendar.getTimeInMillis());
-        TermRangeQuery query = new TermRangeQuery("_changeDate", null, to.getDate(), false, false);
+        TermRangeQuery query = TermRangeQuery.newStringRange("_changeDate", null, to.getDate(), false, false);
 
         DuplicateFilter filter = new DuplicateFilter(query.getField());
 
-        GeonetworkMultiReader reader = sm.getIndexReader(-1).two();
+        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(-1);
+		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
@@ -167,7 +169,7 @@ public class DetectOld implements Service
 
             return results;
         } finally {
-            try{searcher.close();}finally{sm.releaseIndexReader(reader);}
+            sm.releaseIndexReader(indexAndTaxonomy);
         }
     }
 

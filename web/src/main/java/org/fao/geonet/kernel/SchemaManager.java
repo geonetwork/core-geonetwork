@@ -85,6 +85,7 @@ public class SchemaManager {
 	private String	 defaultSchema;
 	private String 	 FS         = File.separator;
 	private	String	 basePath;
+	private String resourcePath;
 	private int numberOfSchemasAdded = 0;
 	private int numberOfCoreSchemasAdded = 0;
 	
@@ -119,11 +120,12 @@ public class SchemaManager {
 		* @param defaultLang the default language (taken from context)
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
-	private SchemaManager(String basePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+	private SchemaManager(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 
 		hmSchemas .clear();
 
 		this.basePath = basePath;
+		this.resourcePath = resourcePath;
 		this.schemaPluginsDir  = sPDir;
 		this.defaultLang = defaultLang;
 		this.defaultSchema = defaultSchema;
@@ -163,9 +165,9 @@ public class SchemaManager {
      * @return
      * @throws Exception
      */
-	public synchronized static SchemaManager getInstance(String basePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+	public synchronized static SchemaManager getInstance(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
 		if (schemaManager == null) {
-			schemaManager = new SchemaManager(basePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema);
+			schemaManager = new SchemaManager(basePath, resourcePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema);
 		}
 		return schemaManager;
 	}
@@ -906,7 +908,7 @@ public class SchemaManager {
 				config.setAttribute("file",fname);
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
-				XmlFile xf = new XmlFile(config, defaultLang, true);
+				XmlFile xf = new XmlFile(config, defaultLang, true, true);
 				xfMap.put(fname, xf);
 			} else {
 				Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);
@@ -1180,7 +1182,7 @@ public class SchemaManager {
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
 
-		String pubSchemaDir = basePath + Geonet.Path.SCHEMAS + name; 
+		String pubSchemaDir = resourcePath + FS + Geonet.Path.SCHEMAS + name; 
 		Log.debug(Geonet.SCHEMA_MANAGER, "Removing published schemas directory "+pubSchemaDir);
 		deleteOp = deleteDir(new File(pubSchemaDir));
 		Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
@@ -1674,7 +1676,7 @@ public class SchemaManager {
 			}
 		};
 
-		File webAppDir = new File(basePath + Geonet.Path.SCHEMAS);
+		File webAppDir = new File(resourcePath + FS + Geonet.Path.SCHEMAS);
 		webAppDir.mkdirs();
 
 		File webAppDirSchemaXSD = new File(webAppDir, name);

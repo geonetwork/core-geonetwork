@@ -89,7 +89,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                     if (newTodayRecord != null) {
                         newTodayRecord.insertInto(dbms);
                     }
-                    dataManager.indexMetadata(dbms, id, false, false, null);
+                    dataManager.indexMetadata(dbms, id, false, null);
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
                     Log.error(Geonet.INDEX_ENGINE, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "

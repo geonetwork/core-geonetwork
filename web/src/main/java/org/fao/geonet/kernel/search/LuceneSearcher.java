@@ -31,16 +31,21 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.text.CharacterIterator;
+import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
@@ -51,25 +56,34 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
-import org.apache.lucene.document.Fieldable;
-import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.facet.search.FacetsCollector;
+import org.apache.lucene.facet.search.params.CountFacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
+import org.apache.lucene.facet.search.params.FacetSearchParams;
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
+import org.apache.lucene.facet.search.results.FacetResult;
+import org.apache.lucene.facet.search.results.FacetResultNode;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queries.ChainedFilter;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.ChainedFilter;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.MultiCollector;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -85,6 +99,8 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.search.LuceneConfig.Facet;
+import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
@@ -100,9 +116,16 @@ import org.fao.geonet.services.region.RegionsDAO;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
-import bak.pcj.map.ObjectKeyIntMap;
-import bak.pcj.map.ObjectKeyIntMapIterator;
-import bak.pcj.map.ObjectKeyIntOpenHashMap;
+import java.util.Iterator;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Ranges;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * search metadata locally using lucene.
@@ -110,16 +133,14 @@ import bak.pcj.map.ObjectKeyIntOpenHashMap;
 public class LuceneSearcher extends MetaSearcher {
 	private static SearchManager _sm;
 	private String        _styleSheetName;
-	private Element       _summaryConfig;
 
 	private Query         _query;
 	private Filter        _filter;
 	private Sort          _sort;
 	private Element       _elSummary;
-	private FieldSelector _selector;
-	private GeonetworkMultiReader		_reader;
+	
+	private IndexAndTaxonomy _indexAndTaxonomy;
 
-	private int           _maxSummaryKeys;
 	private int           _maxHitsInSummary;
 	private int           _numHits;
 	private String        _resultType;
@@ -128,6 +149,7 @@ public class LuceneSearcher extends MetaSearcher {
 	private Set<String>	_tokenizedFieldSet;
 	private LuceneConfig _luceneConfig;
 	private String _boostQueryClass;
+
 	
 	/**
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
@@ -143,16 +165,9 @@ public class LuceneSearcher extends MetaSearcher {
      * @param summaryConfig
      * @param luceneConfig
      */
-	public LuceneSearcher (SearchManager sm, String styleSheetName, Element summaryConfig, LuceneConfig luceneConfig) {
+	public LuceneSearcher (SearchManager sm, String styleSheetName, LuceneConfig luceneConfig) {
 		_sm             = sm;
 		_styleSheetName = styleSheetName;
-		_summaryConfig  = summaryConfig;
-		_selector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
 
 		// build _tokenizedFieldSet
 		_luceneConfig = luceneConfig;
@@ -173,17 +188,19 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
-
+		// Open the IndexReader first, and then the TaxonomyReader.
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher search()");
         
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		_language = determineLanguage(srvContext, request, _sm.get_settingInfo());
-		_reader = _sm.getNewIndexReader().two();
+		_indexAndTaxonomy = _sm.getNewIndexReader();
+
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
-		initSearchRange(srvContext);
+
+        initSearchRange(srvContext);
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher computing query");
         computeQuery(srvContext, getTo() - 1, request, config);
@@ -269,10 +286,12 @@ public class LuceneSearcher extends MetaSearcher {
 				for (int i = 0; i < nrHits; i++) {
 					Document doc;
 					if (inFastMode) {
-						doc = _reader.document(tdocs.scoreDocs[i].doc); // no selector
+						doc = _indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc); // no selector
 					}
                     else {
-						doc = _reader.document(tdocs.scoreDocs[i].doc, _selector);
+                        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id");
+						_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+						doc = docVisitor.getDocument();
 					}
 					String id = doc.get("_id");
 					Element md = null;
@@ -372,15 +391,9 @@ public class LuceneSearcher extends MetaSearcher {
 				}
 				Document doc;
 
-				doc = _reader.document(tdocs.scoreDocs[i].doc,
-						new FieldSelector() {
-							public final FieldSelectorResult accept(String name) {
-								if (name.equals(searchField))
-									return FieldSelectorResult.LOAD;
-								else
-									return FieldSelectorResult.NO_LOAD;
-							}
-						});
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(searchField);
+				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+				doc = docVisitor.getDocument();
 
 				String[] values = doc.getValues(searchField);
 				
@@ -443,10 +456,10 @@ public class LuceneSearcher extends MetaSearcher {
         if(!closed) {
             try {
                 closed = true;
-                if (_reader != null) {
-                    _sm.releaseIndexReader(_reader);
+                if (_indexAndTaxonomy != null) {
+                    _sm.releaseIndexReader(_indexAndTaxonomy);
                 }
-                _reader = null;
+                _indexAndTaxonomy = null;
             } catch (IOException e) {
                 Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
                 e.printStackTrace();
@@ -517,6 +530,7 @@ public class LuceneSearcher extends MetaSearcher {
                 if(Log.isDebugEnabled(Geonet.LUCENE))
                     Log.debug(Geonet.LUCENE, "autodetection is disabled or detection failed");
 
+
                 // servicecontext available
                 if (srvContext != null) {
                     if(Log.isDebugEnabled(Geonet.LUCENE))
@@ -547,15 +561,7 @@ public class LuceneSearcher extends MetaSearcher {
 	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
         _language = determineLanguage(srvContext, request, _sm.get_settingInfo());
-
-		String sMaxRecordsInKeywordSummary = request.getChildText("maxHitsInSummary");
-		if (sMaxRecordsInKeywordSummary == null) sMaxRecordsInKeywordSummary = config.getValue("maxHitsInSummary", "1000");
-		_maxHitsInSummary = Integer.parseInt(sMaxRecordsInKeywordSummary);
-
-		String sMaxSummaryKeys = request.getChildText("maxSummaryKeys");
-		if (sMaxSummaryKeys == null) sMaxSummaryKeys = config.getValue("maxSummaryKeys", "10");
-		_maxSummaryKeys = Integer.parseInt(sMaxSummaryKeys);
-
+        
 		if (srvContext != null) {
 			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -643,7 +649,7 @@ public class LuceneSearcher extends MetaSearcher {
 
                 try {
                     // only for debugging -- might cause NPE is query was wrongly constructed
-                    //Query rw = _query.rewrite(_reader);
+                    //Query rw = _query.rewrite(_indexAndTaxonomy.indexReader);
                     //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
                     //System.out.println("** rewritten:\n"+ rw);
                 }
@@ -804,12 +810,13 @@ public class LuceneSearcher extends MetaSearcher {
 		} else {
 			numHits = endHit;
 		}
-
-		Pair<TopDocs,Element> results = LuceneSearcher.doSearchAndMakeSummary(numHits, startHit, endHit,
-                _maxSummaryKeys, _language, _resultType, _summaryConfig,
-                _reader, _query, _filter, _sort, computeSummary,
-                _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
-        );
+		
+		Pair<TopDocs,Element> results = doSearchAndMakeSummary( endHit, startHit, endHit, 
+				_language, _luceneConfig.getTaxonomy().get(_resultType), _indexAndTaxonomy.indexReader, 
+				_query, _filter, _sort, _indexAndTaxonomy.taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(),
+				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+		);
+		
 		TopDocs hits = results.one();
 		_elSummary = results.two();
 		_numHits = Integer.parseInt(_elSummary.getAttributeValue("count"));
@@ -895,7 +902,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @return sortfield
      */
     private static SortField makeSortField(String sortBy, boolean sortOrder, String searchLang) {
-        int sortType = SortField.STRING;
+        SortField.Type sortType = SortField.Type.STRING;
 
         if( sortBy.equals(Geonet.SearchResult.SortBy.RELEVANCE) ){
             return null;
@@ -907,17 +914,17 @@ public class LuceneSearcher extends MetaSearcher {
         // internal Lucene fields (ie. not defined in index-fields.xsl).
         if (sortBy.equals(Geonet.SearchResult.SortBy.POPULARITY)
         		|| sortBy.equals(Geonet.SearchResult.SortBy.RATING)) {
-            sortType = SortField.INT;
+            sortType = SortField.Type.INT;
             sortBy = "_" + sortBy;
         } else if (sortBy.equals(Geonet.SearchResult.SortBy.SCALE_DENOMINATOR)) {
-            sortType = SortField.INT;
-        } else if (sortBy.equals(Geonet.SearchResult.SortBy.DATE)
+            sortType = SortField.Type.INT;
+        } else if (sortBy.equals(Geonet.SearchResult.SortBy.DATE) 
         		|| sortBy.equals(Geonet.SearchResult.SortBy.TITLE)) {
             sortBy = "_" + sortBy;
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sort by: " + sortBy + " order: " + sortOrder + " type: " + sortType);
-        if (sortType == SortField.STRING) {
+        if (sortType == org.apache.lucene.search.SortField.Type.STRING) {
             if(searchLang != null) {
                 return new SortField(sortBy, new CaseInsensitiveFieldComparatorSource(searchLang), sortOrder);
             } else {
@@ -1027,7 +1034,7 @@ public class LuceneSearcher extends MetaSearcher {
 				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
 				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
 
-				returnValue = new TermRangeQuery(fld, lowerTxt, upperTxt, inclusive, inclusive);
+				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
 			}
 		}
 		else if (name.equals("DateRangeQuery"))
@@ -1136,196 +1143,7 @@ public class LuceneSearcher extends MetaSearcher {
             return LuceneQueryBuilder.constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, tokenizedFieldSet);
         }
 
-    /**
-     * TODO javadoc.
-     *
-     * @param summaryConfig
-     * @param resultType
-     * @param maxSummaryKeys
-     * @return
-     * @throws Exception
-     */
-	private static Map<String,Map<String,Object>> getSummaryConfig(Element summaryConfig, String resultType, int maxSummaryKeys) throws Exception {
 
-		Map<String, Map<String,Object>> results = new HashMap<String, Map<String, Object>>();
-
-		Element resultTypeConfig = summaryConfig.getChild("def").getChild(resultType);
-        @SuppressWarnings(value = "unchecked")
-		List<Element> elements = resultTypeConfig.getChildren();
-
-		for (Element summaryElement : elements) {
-			String name = summaryElement.getAttributeValue("name");
-			String plural = summaryElement.getAttributeValue("plural");
-			String key = summaryElement.getAttributeValue("indexKey");
-			String order = summaryElement.getAttributeValue("order");
-			String maxString = summaryElement.getAttributeValue("max");
-            String type = summaryElement.getAttributeValue("type");
-            String translator = summaryElement.getAttributeValue("translator");
-			if (order == null) {
-				order = "frequency";
-			}
-			int max;
-			if (maxString == null) {
-				max = 10;
-			} else {
-				max = Integer.parseInt(maxString);
-			}
-			max = Math.min(maxSummaryKeys, max);
-			if( type==null ){
-				type = "string";
-			}
-
-			Map<String,Object> values = new HashMap<String,Object>();
-			values.put("name", name);
-			values.put("plural", plural);
-			values.put("max", max);
-			values.put("order", order);
-			values.put("type", type);
-			values.put("translator", translator);
-			values.put("typeConfig", summaryConfig.getChild("typeConfig"));
-			results.put(key,values);
-		}
-
-		return results;
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param langCode
-     * @param summaryConfigValuesForKey
-     * @return
-     * @throws Exception
-     */
-	private static SummaryComparator getSummaryComparator(String langCode, Map<String, Object> summaryConfigValuesForKey) throws Exception {
-			SortOption sortOption = SortOption.parse((String)summaryConfigValuesForKey.get("order"));
-			return new SummaryComparator(sortOption, Type.parse((String)summaryConfigValuesForKey.get("type")), langCode,
-                    (Element)summaryConfigValuesForKey.get("typeConfig"));
-	}
-
-	//--------------------------------------------------------------------------------
-
-	private static Map<String, ObjectKeyIntOpenHashMap> prepareSummaryMaps(Set<String> indexKeys) throws Exception
-	{
-		Map<String, ObjectKeyIntOpenHashMap> summaryMaps = new HashMap<String, ObjectKeyIntOpenHashMap>();
-		for (String key : indexKeys) {
-			summaryMaps.put(key, new ObjectKeyIntOpenHashMap());
-		}
-		return summaryMaps;
-	}
-
-	//--------------------------------------------------------------------------------
-
-	private static Map<String, ObjectKeyIntOpenHashMap> buildSummaryMaps(Element elSummary, IndexReader reader, ScoreDoc[] sdocs, final Map<String, ObjectKeyIntOpenHashMap> summaryMaps) {
-		elSummary.setAttribute("hitsusedforsummary", sdocs.length+"");
-
-		FieldSelector keySelector = new FieldSelector() {
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id") || summaryMaps.get(name) != null) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-
-		bak.pcj.set.IntBitSet read=new bak.pcj.set.IntBitSet(sdocs.length);
-        for (ScoreDoc sdoc : sdocs) {
-            Document doc = null;
-            try {
-                doc = reader.document(sdoc.doc, keySelector);
-                String _id = doc.get("_id");
-                int id = Integer.parseInt(_id);
-                if(read.contains(id)) continue;
-                read.add(id);
-
-                for (String key : summaryMaps.keySet()) {
-                    Set<String> alreadyFound = new HashSet<String>();
-                    ObjectKeyIntMap summary = summaryMaps.get(key);
-                    String hits[] = doc.getValues(key);
-                    if (hits != null) {
-                        for (String info : hits) {
-                            Integer catCount = summary.get(info);
-                            if(alreadyFound.contains(info)) continue;
-                            alreadyFound.add(info);
-                            if (catCount == null) {
-                                catCount = 1;
-                            }
-                            else {
-                                catCount = catCount + 1;
-                            }
-                            summary.put(info, catCount);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-            	Log.error(Geonet.SEARCH_ENGINE, "Error with Lucene Reader: " + reader +" while loading document: "+ sdoc.doc, e);
-                if(e instanceof org.apache.lucene.store.AlreadyClosedException) {
-                	break;
-                }
-            }
-
-        }
-
-		return summaryMaps;
-	}
-
-	//--------------------------------------------------------------------------------
-
-	private static Element addSortedSummaryKeys(Element elSummary, String langCode, Map<String,ObjectKeyIntOpenHashMap> summaryMaps, Map<String,Map<String,Object>> summaryConfigValues) throws Exception {
-
-		for ( String indexKey : summaryMaps.keySet() ) {
-			Map <String,Object> summaryConfigValuesForKey = summaryConfigValues.get(indexKey);
-            Element rootElem = new Element((String)summaryConfigValuesForKey.get("plural"));
-            String translatorString = (String)summaryConfigValuesForKey.get("translator");
-            Translator translator;
-            
-            if (ServiceContext.get() != null) {
-                ServiceContext context = ServiceContext.get();
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                String schemaDir = gc.getSchemamanager().getSchema("iso19139.che").getSchemaDir();
-                translator = Translator.createTranslator(translatorString, schemaDir, langCode, dbms);
-            } else {
-                translator = Translator.PASS_THROUGH;
-            }
-            // sort according to frequency
-			SummaryComparator summaryComparator = getSummaryComparator(langCode, summaryConfigValuesForKey);
-			ObjectKeyIntOpenHashMap summary = summaryMaps.get(indexKey);
-
-			if(summary.isEmpty()) continue;
-		  Log.debug(Geonet.SEARCH_ENGINE, "Sorting "+summary.size()+" according to frequency of " + indexKey);
-
-			TreeSet<SummaryComparator.SummaryElement> sortedSummary = new TreeSet<SummaryComparator.SummaryElement>(summaryComparator);
-			ObjectKeyIntMapIterator entries = summary.entries();
-			while(entries.hasNext()) {
-			    entries.next();
-                sortedSummary.add(new SummaryComparator.SummaryElement(entries));
-			}
-
-			Integer max = (Integer)summaryConfigValuesForKey.get("max");
-
-			int nKeys = 0;
-            for (SummaryComparator.SummaryElement me : sortedSummary) {
-                if (++nKeys > max) {
-                    break;
-                }
-
-                String keyword = me.name;
-                int keyCount = me.count;
-
-                String name = (String) summaryConfigValuesForKey.get("name");
-                
-                Element childElem = new Element(name);
-                childElem.setAttribute("count", Integer.toString(keyCount));
-                childElem.setAttribute("title", translator.translate(keyword));
-                childElem.setAttribute("name", keyword);
-                childElem.setAttribute("indexKey", indexKey);
-
-                rootElem.addContent(childElem);
-            }
-			elSummary.addContent(rootElem);
-		}
-
-		return elSummary;
-	}
 	
 	/**
 	 * Do Lucene search and optionally build a summary for the search.
@@ -1333,31 +1151,28 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param numHits	the maximum number of hits to collect
 	 * @param startHit	the start hit to return in the TopDocs if not building summary
 	 * @param endHit	the end hit to return in the TopDocs if not building summary
-	 * @param maxSummaryKeys	the max number of keys to process in a summary
 	 * @param langCode	the language code used by SummaryComparator
-	 * @param resultType	the resultType is used to define the type of summary to build according to summary configuration in config-summary.xml.
 	 * @param summaryConfig	the summary configuration
 	 * @param reader  reader
 	 * @param query   query
 	 * @param cFilter filter
 	 * @param sort	the sort criteria
+	 * @param taxonomyReader	A {@link TaxonomyReader} use to compute facets (ie. summary)
 	 * @param buildSummary	true to build query summary element. Summary is stored in the second element of the returned Pair.
 	 * @param trackDocScores	specifies whether document scores should be tracked and set on the results. 
 	 * @param trackMaxScore	specifies whether the query's maxScore should be tracked and set on the resulting TopDocs.
 	 * @param docsScoredInOrder	specifies whether documents are scored in doc Id order or not by the given Scorer
-	 *
 	 * @return	the topDocs for the search. When building summary, topDocs will contains all search hits
 	 * and need to be filtered to return only required hits according to search parameters.
 	 * 
 	 * @throws Exception hmm
 	 */
-	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit,
-                                                                int maxSummaryKeys, String langCode, String resultType,
-                                                                Element summaryConfig,  IndexReader reader, Query query,
-                                                                Filter cFilter, Sort sort, boolean buildSummary,
-                                                                boolean trackDocScores, boolean trackMaxScore,
-                                                                boolean docsScoredInOrder) throws Exception {
-
+	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
+			Map<String, FacetConfig> summaryConfig, IndexReader reader, 
+			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
+			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
+	{
+		Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
@@ -1370,36 +1185,180 @@ public class LuceneSearcher extends MetaSearcher {
             if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                 Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
         }
-		new IndexSearcher(reader).search(query, cFilter, tfc);
+        IndexSearcher searcher = new IndexSearcher(reader);
 
-		Element elSummary= new Element("summary");
+        Element elSummary= new Element("summary");
+
+        if (taxonomyReader != null && buildSummary) {
+        	// configure facets from configuration file
+        	FacetSearchParams fsp = buildFacetSearchParams(summaryConfig);
+        	FacetsCollector facetCollector = new FacetsCollector(fsp,
+        			reader, taxonomyReader);
+        	
+        	searcher.search(query, cFilter, MultiCollector.wrap(tfc, facetCollector));
+        	try {
+
+            	buildFacetSummary(elSummary, summaryConfig, facetCollector);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
+			}
+			
+        } else {
+            searcher.search(query, cFilter, tfc);
+        }
 		elSummary.setAttribute("count", tfc.getTotalHits()+"");
 		elSummary.setAttribute("type", "local");
-
-		// topDocs could only be called once.
-		// A second call will return null docs.
-		TopDocs tdocs;
-			
-		if (buildSummary) {
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                Log.debug(Geonet.SEARCH_ENGINE, "Building summary");
-
-			// -- prepare
-			Map<String, Map<String,Object>> summaryConfigValues = LuceneSearcher.getSummaryConfig(summaryConfig, resultType, maxSummaryKeys);
-			if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE, "ResultType is "+resultType+", SummaryKeys are "+summaryConfigValues);
-			Map<String,ObjectKeyIntOpenHashMap> summaryMaps = prepareSummaryMaps(summaryConfigValues.keySet());
-
-			// -- get all hits from search to build the summary
-			tdocs = tfc.topDocs(0, numHits);
-
-			// -- add summary keys to summary element
-			summaryMaps = LuceneSearcher.buildSummaryMaps(elSummary, reader, tdocs.scoreDocs, summaryMaps);
-			elSummary = LuceneSearcher.addSortedSummaryKeys(elSummary, langCode, summaryMaps, summaryConfigValues);
-		} else {
-			tdocs = tfc.topDocs(startHit, endHit);
+		if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+            Log.debug(Geonet.SEARCH_ENGINE, " Get top docs from " + startHit + " ... " + endHit + " (total: " + tfc.getTotalHits() + ")");
 		}
+		TopDocs tdocs = tfc.topDocs(startHit, endHit);
 
 		return Pair.read(tdocs,elSummary);
+	}
+
+	/**
+	 * Create an XML summary from the search facets collector.
+	 * 
+	 * @param elSummary	The element in which to add the facet report
+	 * @param summaryConfigValues	The summary configuration
+	 * @param facetCollector
+	 * @throws IOException
+	 */
+    private static void buildFacetSummary(Element elSummary,
+            Map<String, FacetConfig> summaryConfigValues,
+            FacetsCollector facetCollector) throws IOException {
+        DecimalFormat doubleFormat = new DecimalFormat("0");
+
+        try {
+            for (Iterator<FacetResult> iterator = facetCollector
+                    .getFacetResults().iterator(); iterator.hasNext();) {
+                FacetResult result = (FacetResult) iterator.next();
+
+                String label = result.getFacetResultNode().getLabel()
+                        .toString();
+                FacetConfig config = summaryConfigValues.get(label);
+                String facetName = config.getPlural();
+
+                Element facets = new Element(facetName);
+                FacetResultNode frn = result.getFacetResultNode();
+                if (frn.getNumSubResults() != 0) {
+
+                    Map<String, Double> facetValues = new LinkedHashMap<String, Double>();
+
+                    // facetValues = new TreeMap<String, Double>(comparator)
+                    for (Iterator subresults = frn.getSubResults().iterator(); subresults
+                            .hasNext();) {
+                        FacetResultNode node = (FacetResultNode) subresults
+                                .next();
+                        facetValues.put(node.getLabel().lastComponent(),
+                                node.getValue());
+                    }
+                    List<Entry<String, Double>> entries = new ArrayList<Entry<String, Double>>(
+                            facetValues.entrySet());
+
+                    if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                        Log.debug(Geonet.FACET_ENGINE, facetName
+                                + ":\tSorting facet by " + config.getSortBy().toString()
+                                + " (" + config.getSortOrder().toString() + ")");
+                    }
+
+                    // No need for a custom comparator Lucene facet request is
+                    // made by count descending order
+                    if (Facet.SortBy.COUNT != config.getSortBy()) {
+                        Comparator c = null;
+                        if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
+                            // Create a numeric comparator
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    try {
+                                        Double d1 = Double.valueOf(e1.getKey());
+                                        Double d2 = Double.valueOf(e2.getKey());
+
+                                        return d1.compareTo(d2);
+                                    } catch (NumberFormatException e) {
+                                        // String comparison
+                                        Log.warning(
+                                                Geonet.FACET_ENGINE,
+                                                "Failed to compare numeric values ("
+                                                        + e1.getKey()
+                                                        + " / "
+                                                        + e2.getKey()
+                                                        + ") for facet. Check sortBy option in summary configuration.");
+                                        return e1.getKey().compareTo(
+                                                e2.getKey());
+                                    }
+                                }
+                            };
+                        } else {
+                            c = new Comparator<Entry<String, Double>>() {
+                                public int compare(
+                                        final Entry<String, Double> e1,
+                                        final Entry<String, Double> e2) {
+                                    return e1.getKey().compareTo(e2.getKey());
+                                }
+                            };
+                        }
+                        Collections.sort(entries, c);
+
+                        if (Facet.SortOrder.DESCENDING == config.getSortOrder()) {
+                            Collections.reverse(entries);
+                        }
+                    }
+                    for (Entry<String, Double> entry : entries) {
+                        String facetValue = entry.getKey();
+                        String facetCount = doubleFormat.format(entry
+                                .getValue());
+
+                        if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
+                            Log.debug(Geonet.FACET_ENGINE, " - " + facetValue
+                                    + " (" + facetCount + ")");
+                        }
+                        Element facet = new Element(config.getName());
+                        facet.setAttribute("count", facetCount);
+                        facet.setAttribute("name", facetValue);
+                        facets.addContent(facet);
+                    }
+                }
+                elSummary.addContent(facets);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.error(
+                    Geonet.FACET_ENGINE,
+                    "Check facet configuration. This may happen when a facet is configured"
+                            + " but does not exist in the taxonomy index. Error is: "
+                            + e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
+
+	/**
+	 * Build facet search params according to the summary configuration file.
+	 * 
+	 * FacetRequest sort order and sort by option is the default (ie. by count descending).
+	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(Element, Map, FacetsCollector)}.
+	 * 
+	 * @param summaryConfigValues
+	 * @return
+	 */
+	private static FacetSearchParams buildFacetSearchParams(
+			Map<String, FacetConfig> summaryConfigValues) {
+		FacetSearchParams fsp = new FacetSearchParams();
+		
+		for (String key : summaryConfigValues.keySet()) {
+			FacetConfig config = summaryConfigValues.get(key);
+			
+			int max = config.getMax();
+			
+			FacetRequest facetRequest = new CountFacetRequest(
+					new CategoryPath(key), max);
+			facetRequest.setSortBy(SortBy.VALUE);
+			facetRequest.setSortOrder(SortOrder.DESCENDING);
+			fsp.addFacetRequest(facetRequest);
+		}
+		return fsp;
 	}
 
 	/**
@@ -1440,11 +1399,14 @@ public class LuceneSearcher extends MetaSearcher {
         if ((dumpAllField || dumpFields != null) && searchLang != null && multiLangSearchTerm != null) {
             // get the translated fields and dump those instead of the non-translated
             for (String fieldName : multiLangSearchTerm) {
-                Field[] values = doc.getFields(LuceneConfig.multilingualSortFieldName(fieldName, searchLang));
-                for (Field f : values) {
+                IndexableField[] values = doc.getFields(LuceneConfig.multilingualSortFieldName(fieldName, searchLang));
+                for (IndexableField f : values) {
                     if(f != null) {
-                        addedTranslation.add(fieldName);
-                        md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
+                        String stringValue = f.stringValue();
+                        if(!stringValue.trim().isEmpty()) {
+                            addedTranslation.add(fieldName);
+                            md.addContent(new Element(dumpFields.get(fieldName)).setText(stringValue));
+                        }
                     }
                 }
             }
@@ -1454,8 +1416,8 @@ public class LuceneSearcher extends MetaSearcher {
         }
         if (dumpFields != null) {
             for (String fieldName : dumpFields.keySet()) {
-                Field[] values = doc.getFields(fieldName);
-                for (Field f : values) {
+                IndexableField[] values = doc.getFields(fieldName);
+                for (IndexableField f : values) {
                     if (f != null) {
                         if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
                             md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
@@ -1465,8 +1427,8 @@ public class LuceneSearcher extends MetaSearcher {
             }
         }
         else {
-	        List<Fieldable> fields = doc.getFields();
-            for (Fieldable field : fields) {
+	        List<IndexableField> fields = doc.getFields();
+            for (IndexableField field : fields) {
                 String fieldName = field.name();
                 String fieldValue = field.stringValue();
 
@@ -1494,19 +1456,13 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @throws Exception hmm
 	 */
     public List<String> getAllUuids(int maxHits) throws Exception {
-
-        FieldSelector uuidselector = new FieldSelector() {
-            public final FieldSelectorResult accept(String name) {
-                if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-                else return FieldSelectorResult.NO_LOAD;
-            }
-        };
-
         List<String> response = new ArrayList<String>();
 		TopDocs tdocs = performQuery(0, maxHits, false);
 
         for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-            Document doc = _reader.document(sdoc.doc, uuidselector);
+            DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
+            _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+            Document doc = docVisitor.getDocument();
             String uuid = doc.get("_uuid");
             if (uuid != null) response.add(uuid);
         }
@@ -1524,29 +1480,14 @@ public class LuceneSearcher extends MetaSearcher {
      */
     public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
 
-			FieldSelector mdInfoSelector = new FieldSelector() {
-				public final FieldSelectorResult accept(String name) {
-					if (name.equals("_id"))          return FieldSelectorResult.LOAD;
-					if (name.equals("_root"))        return FieldSelectorResult.LOAD;
-					if (name.equals("_schema"))      return FieldSelectorResult.LOAD;
-					if (name.equals("_createDate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_changeDate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_source"))      return FieldSelectorResult.LOAD;
-					if (name.equals("_isTemplate"))  return FieldSelectorResult.LOAD;
-					if (name.equals("_title"))       return FieldSelectorResult.LOAD;
-					if (name.equals("_uuid"))        return FieldSelectorResult.LOAD;
-					if (name.equals("_isHarvested")) return FieldSelectorResult.LOAD;
-					if (name.equals("_owner"))       return FieldSelectorResult.LOAD;
-					if (name.equals("_groupOwner"))  return FieldSelectorResult.LOAD;
-					else return FieldSelectorResult.NO_LOAD;
-				}
-			};
-
       Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
 			TopDocs tdocs = performQuery(0, maxHits, false);
 
       for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-          Document doc = _reader.document(sdoc.doc, mdInfoSelector);
+          DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
+                  "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
+          _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+          Document doc = docVisitor.getDocument();
 
           MdInfo mdInfo = new MdInfo();
           mdInfo.id           = doc.get("_id");
@@ -1593,9 +1534,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
     public static String getMetadataFromIndex(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            List<String> fieldnames = new ArrayList<String>();
-            fieldnames.add(fieldname);
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, id, fieldnames).get(fieldname);
+            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
@@ -1609,9 +1548,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception
      */
     public static String getMetadataFromIndexById(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            List<String> fieldnames = new ArrayList<String>();
-            fieldnames.add(fieldname);
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, fieldnames).get(fieldname);
+            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
@@ -1624,7 +1561,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String uuid, List<String> fieldnames) throws Exception {
+    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String uuid, Set<String> fieldnames) throws Exception {
         return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_uuid", uuid, fieldnames);
     }
 
@@ -1639,15 +1576,16 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, List<String> fieldnames) throws Exception {
-        MapFieldSelector selector = new MapFieldSelector(fieldnames);
-        final GeonetworkMultiReader reader;
+    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
+        final IndexAndTaxonomy indexAndTaxonomy;
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
+        GeonetworkMultiReader reader;
         if (context != null) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             searchmanager = gc.getSearchmanager();
-            reader = searchmanager.getNewIndexReader().two();
+            indexAndTaxonomy = searchmanager.getNewIndexReader();
+            reader = indexAndTaxonomy.indexReader;
         } else {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");
         }
@@ -1667,8 +1605,10 @@ public class LuceneSearcher extends MetaSearcher {
             TopDocs tdocs = searcher.search(query, filter, 1, sort);
 
             for( ScoreDoc sdoc : tdocs.scoreDocs ) {
-                Document doc = reader.document(sdoc.doc, selector);
-
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(fieldnames);
+                reader.document(sdoc.doc, docVisitor);
+                Document doc = docVisitor.getDocument();
+                
                 for( String fieldname : fieldnames ) {
                     values.put(fieldname, doc.get(fieldname));
                 }
@@ -1681,14 +1621,8 @@ public class LuceneSearcher extends MetaSearcher {
         catch (IOException e) {
             // TODO: handle exception
             Log.error(Geonet.LUCENE, e.getMessage());
-        }
-        finally {
-            try {
-                searcher.close();
-            }
-            finally {
-                searchmanager.releaseIndexReader(reader);
-            }
+        } finally {
+            searchmanager.releaseIndexReader(indexAndTaxonomy);
         }
         return values;
     }
@@ -1728,13 +1662,15 @@ public class LuceneSearcher extends MetaSearcher {
             phrase = true;
         }
 		
-		TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
-		TermAttribute termAtt = ts.addAttribute(TermAttribute.class);
 
 		List<String> tokenList = new ArrayList<String>();
 		try {
+		    TokenStream ts = a.tokenStream(field, new StringReader(requestStr));
+		    ts.reset();
+		    CharTermAttribute termAtt = ts.addAttribute(CharTermAttribute.class);
 			while (ts.incrementToken()) {
-				tokenList.add(termAtt.term());
+				String string = termAtt.toString();
+                tokenList.add(string);
 			}
 		}
         catch (Exception e) {

@@ -76,7 +76,7 @@
         </addXML>
         <addXml xpath="schedules">
         	<schedule name="unpublish-invalid-metadata" when="0 0 1 ? * MON-FRI" class=".kernel.UnpublishInvalidMetadataJob" />
-        	<schedule name="unpublish-invalid-metadata" when="0 0 3 ? * MON-FRI *" class=".geocat.ArchiveAllMetadataJob" />
+        	<schedule name="archive-all-metadata" when="0 0 3 ? * MON-FRI *" class=".geocat.ArchiveAllMetadataJob" />
         </addXml>
     </file>
     <file name=".*/WEB-INF/config-monitoring.xml">

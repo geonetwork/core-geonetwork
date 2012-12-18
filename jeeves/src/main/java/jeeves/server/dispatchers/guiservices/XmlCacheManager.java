@@ -8,28 +8,54 @@ import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
 
+import jeeves.JeevesJCS;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.XmlFileCacher;
 
+import org.apache.jcs.access.exception.CacheException;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 public class XmlCacheManager {
-    WeakHashMap<String, Map<String, XmlFileCacher>> xmlCaches = new WeakHashMap<String, Map<String, XmlFileCacher>>();
-    private Map<String, XmlFileCacher> getCacheMap(boolean localized, String base, String file) {
+    private static final String XML_FILE_CACHE_KEY = "XmlFile";
+	Map<String, Map<String, XmlFileCacher>> eternalCaches = new HashMap<String, Map<String, XmlFileCacher>>();
+    private Map<String, XmlFileCacher> getExternalCacheMap(boolean localized, String base, String file) {
         String key = localized+":"+base+":"+file;
-        Map<String, XmlFileCacher> cacheMap = xmlCaches.get(key);
+        Map<String, XmlFileCacher> cacheMap = eternalCaches.get(key);
         if(cacheMap == null) {
             cacheMap = new HashMap<String, XmlFileCacher>(10);
-            xmlCaches.put(key, cacheMap);
+            eternalCaches.put(key, cacheMap);
         }
         
         return cacheMap;
     }
-    public synchronized Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang) throws JDOMException, IOException {
+    @SuppressWarnings("unchecked")
+	private Map<String, XmlFileCacher> getVolatileCacheMap(boolean localized, String base, String file) {
+    	try {
+	    	JeevesJCS cache = JeevesJCS.getInstance(XML_FILE_CACHE_KEY);
+	    	String key = localized+":"+base+":"+file;
+	    	Map<String, XmlFileCacher> cacheMap = (Map<String, XmlFileCacher>) cache.get(key);
+	    	if(cacheMap == null) {
+	    		cacheMap = new HashMap<String, XmlFileCacher>(10);
+				cache.put(key, cacheMap);
+	    	}
+	    	return cacheMap;
+    	} catch (Exception e) {
+    		Log.error(Log.JEEVES, "JeevesJCS cache not available, THIS IS NOT AN ERROR IF TESTING", e);
+    		return getExternalCacheMap(localized, base, file);
+    	}
+    	
+    }
+    public synchronized Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang, boolean isExternal) throws JDOMException, IOException {
 
-        Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
+        Map<String, XmlFileCacher> cacheMap;
+        
+        if(isExternal) {
+        	cacheMap = getExternalCacheMap(localized, base, file);
+        } else {
+        	cacheMap = getVolatileCacheMap(localized, base, file);
+        }
         
         String appPath = context.getAppPath();
         String xmlFilePath;

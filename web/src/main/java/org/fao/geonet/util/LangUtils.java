@@ -22,7 +22,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
@@ -283,8 +283,8 @@ public final class LangUtils
             Iterator<AttributeImpl> iterator = stream.getAttributeImplsIterator();
             while (iterator.hasNext()) {
                 AttributeImpl next = iterator.next();
-                if(next instanceof TermAttribute) {
-                    String term = ((TermAttribute) next).term();
+                if(next instanceof CharTermAttribute) {
+                    String term = ((CharTermAttribute) next).toString();
                     if(term.length() > 0)
                         strings.add(term);
                 }
@@ -454,7 +454,7 @@ public final class LangUtils
         
         for (File file : loc.listFiles()) {
             if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
+                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName(), false);
                 String translation = Xml.selectString(xml, key);
                 if(translation != null && !translation.trim().isEmpty()) {
                     translations.put(file.getName(), translation);

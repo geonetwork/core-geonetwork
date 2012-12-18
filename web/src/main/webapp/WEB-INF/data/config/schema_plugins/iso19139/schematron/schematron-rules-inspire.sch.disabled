@@ -530,10 +530,10 @@ USA.
 			<sch:let name="otherConstraintInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
 
-			<sch:assert test="accessConstraints_count">
+			<sch:assert test="$accessConstraints_count">
 				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
 			</sch:assert>
-			<sch:report test="accessConstraints_count">
+			<sch:report test="$accessConstraints_count">
 				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
 			</sch:report>
 			<sch:assert test="not($accessConstraints)">

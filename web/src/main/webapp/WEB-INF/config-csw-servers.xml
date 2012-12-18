@@ -39,5 +39,11 @@
             </service>
 
         -->
+        <service name="csw-integration-test">
+           <class name=".services.main.CswDiscoveryDispatcher" >
+               <param name="filter" value="+spatialRepresentationType:vector"/>
+           </class>
+        </service>
+        
     </services>
 </geonet>

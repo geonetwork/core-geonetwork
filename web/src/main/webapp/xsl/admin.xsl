@@ -412,9 +412,7 @@
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'download.backup'"/>
 					        <xsl:with-param name="title" select="/root/gui/strings/downloadBackup"/>
-							<xsl:with-param name="desc">
-								Find all metadata with xlinks that don't resolve to a valid reusable object
-							</xsl:with-param>
+							<xsl:with-param name="desc" select="/root/gui/strings/downloadBackupDesc"/>
 						</xsl:call-template>
  
 					</xsl:variable>
@@ -632,7 +630,7 @@
 			</td>
 			<td>
 				<button class="content"
-					onclick="idxOperation('metadata.admin.index.rebuild','waitIdx', this.name, true)"
+					onclick="idxOperation('metadata.admin.index.rebuild?reset=yes','waitIdx', this.name, true)"
 					id="btIdx" name="btIdx">
 					<xsl:value-of select="/root/gui/strings/rebuild"/>
 				</button>

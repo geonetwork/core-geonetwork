@@ -7,11 +7,12 @@
 	<external.theme.inspire-theme>INSPIRE Spatial Data Themes, version 1.0</external.theme.inspire-theme>
 	<external._none_.gemet>GEMET Thesaurus</external._none_.gemet>
 	<downloadBackup>Backup-Datei downloaden</downloadBackup>
+	<downloadBackupDesc>Backup-Datei mit sämtlichen Metadaten downloaden</downloadBackupDesc>
 	<ContactSelectionTitle js="true">Kontaktauswahl</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
 	<refine.titles js="true">Title</refine.titles>
-	<refine.keyword js="true">Schlüsselworter</refine.keyword>
+	<refine.keyword js="true">Schlüsselwörter</refine.keyword>
 	<refine.resolution js="true">Räumliche Auflösung</refine.resolution>
 	<refine.category js="true">Thematik</refine.category>
 	<refine.spatialRepresentation js="true">Struktur der räumlichen Daten</refine.spatialRepresentation>

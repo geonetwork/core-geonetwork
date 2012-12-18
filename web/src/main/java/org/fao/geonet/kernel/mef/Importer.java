@@ -390,7 +390,7 @@ public class Importer {
 					addOperations(context, dm, dbms, defaultPrivileges(), id.get(index), groupId);
 				}
 
-				dm.indexMetadata(dbms, id.get(index), true, true, context, true);
+				dm.indexMetadata(dbms, id.get(index), true, context, true);
 			}
 
             private Element defaultPrivileges() {

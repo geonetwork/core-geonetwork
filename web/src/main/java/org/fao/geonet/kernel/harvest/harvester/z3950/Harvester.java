@@ -343,7 +343,6 @@ class Harvester {
 						result.doesNotValidate++;
 					} 
 				}
-			
 				dataMan.indexInThreadPoolIfPossible(dbms, ""+id, false);
 
 				result.addedMetadata++;

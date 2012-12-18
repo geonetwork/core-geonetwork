@@ -11,11 +11,14 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.monitor.MonitorManager;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
@@ -26,6 +29,7 @@ import jeeves.utils.SerialFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
@@ -48,8 +52,11 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		ProviderManager providerManager = context.getProviderManager();
 		SerialFactory serialFactory = context.getSerialFactory();
 		JeevesApplicationContext appContext = context.getApplicationContext();
-		ServiceContext serviceContext = new ServiceContext("none", appContext , new XmlCacheManager() , monitorManager, providerManager, serialFactory, null, context.allContexts());
-		
+		ProfileManager profileManager = context.getProfileManager();
+		ServiceContext serviceContext = new ServiceContext("none", appContext , new XmlCacheManager() , monitorManager, providerManager, serialFactory, profileManager , context.allContexts());
+		serviceContext.setAppPath(context.getAppPath());
+		serviceContext.setBaseUrl(context.getBaseUrl());
+		serviceContext.setAsThreadLocal();
 		createBackup(serviceContext);
 	}
 
@@ -66,9 +73,11 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 	    if(!backupIsRunning.compareAndSet(false, true)) {
 	        return;
 	    }
+	    Dbms dbms = null;
 		try {
+			loginAsAdmin(serviceContext);
     		Log.info(BACKUP_LOG, "Starting backup of all metadata");
-    		Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+			dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
     		@SuppressWarnings("unchecked")
     		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
 
@@ -98,8 +107,21 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		} catch (Throwable t) {
 			Log.error(BACKUP_LOG, "Failed to create a back up of metadata", t);
 		} finally {
+			if(dbms != null) {
+				serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+			}
 		    backupIsRunning.set(false);
 		}
+	}
+
+	private void loginAsAdmin(ServiceContext serviceContext) {
+		JeevesUser user = new JeevesUser(serviceContext.getProfileManager());
+		user.setId("1");
+		user.setUsername("Admin");
+		user.setProfile(Profile.ADMINISTRATOR);
+		UserSession session = new UserSession();
+		session.loginAs(user);
+		serviceContext.setUserSession(session);
 	}
 
 }

@@ -57,12 +57,14 @@ public class ScheduleManager
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
+    private ProfileManager profileManager;
     private JeevesApplicationContext jeevesApplicationContext;
 
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
 	private Scheduler scheduler;
 
     private Map<String, ScheduleInfo> vSchedules = new HashMap<String, ScheduleInfo>();
+
 	
     //--------------------------------------------------------------------------
 	//---
@@ -167,6 +169,14 @@ public class ScheduleManager
     public ScheduleInfo getScheduleInfo(String scheduleName) {
         return vSchedules.get(scheduleName);
     }
+
+	public void setProfileManager(ProfileManager profileManager) {
+		this.profileManager = profileManager;
+	}
+
+	public ProfileManager getProfileMan() {
+		return profileManager;
+	}
 
 	//---------------------------------------------------------------------------
 

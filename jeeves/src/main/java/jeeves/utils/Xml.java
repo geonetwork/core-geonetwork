@@ -26,6 +26,8 @@ package jeeves.utils;
 import jeeves.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -242,10 +244,19 @@ public final class Xml
      */
 
 	public synchronized static byte[] convertFileToUTF8ByteArray(File file) throws IOException, CharacterCodingException {
-			DataInputStream inStream = new DataInputStream(new FileInputStream(file));
-			byte[] buf = new byte[(int)file.length()];
-			int nrRead = inStream.read(buf);
-		
+			DataInputStream inStream = null;
+			FileInputStream fin = null; 
+			byte[] buf;
+			int nrRead;
+			try {
+				fin = new FileInputStream(file);
+				inStream = new DataInputStream(fin);
+				buf = new byte[(int)file.length()];
+				nrRead = inStream.read(buf);
+			} finally {
+				IOUtils.closeQuietly(fin);
+				IOUtils.closeQuietly(inStream);
+			}
 			UniversalDetector detector = new UniversalDetector(null);
 			detector.handleData(buf, 0, nrRead);
 			detector.dataEnd();

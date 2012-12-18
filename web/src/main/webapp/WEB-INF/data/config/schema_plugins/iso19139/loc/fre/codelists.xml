@@ -1490,7 +1490,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biota</code>
-			<label>Biologie, faune et flore</label>
+			<label>Forêt, faune et flore</label>
 			<description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1502,13 +1502,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
-			<label>Climatologie, météorologie</label>
+			<label>Atmosphère, climatologie</label>
 			<description>Processus et phénomènes atmosphériques. Exemples : climat, météorologie, conditions atmosphériques, changements climatiques, couverture nuageuse</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>economy</code>
-			<label>Economie</label>
+			<label>Activités économiques</label>
 			<description>Activités économiques. Exemples : production, travail, revenu, commerce, industrie, tourisme et éco-tourisme, foresterie, pêche, chasse, exploration et exploitation des ressources minières, pétrole, gaz naturel</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1520,34 +1520,39 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>Environnement</label>
+			<label>Environnement, nature</label>
 			<description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
 		</entry>
 		<entry>
-			<code>environment_NatureConservation</code>
-			<label>Protection de l'environnement</label>
+			<code>environment_EnvironmentalProtection</code>
+			<label>Protection de l'environnement, bruit</label>
+            <description/>
 		</entry>
 		<entry>
-			<code>NatureConservation</code>
-			<label>Conservation de la nature</label>
+			<code>environment_NatureProtection</code>
+			<label>Protection de la nature</label>
+            <description>Protection de la nature et du paysage</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Sciences de la terre, géosciences</label>
+			<label>Géosciences, dangers naturels</label>
 			<description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Geology</code>
 			<label>Géologie</label>
+            <description/>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Soils</code>
 			<label>Sols</label>
+            <description/>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_NaturalHazards</code>
-			<label>Risques naturels</label>
+			<label>Dangers naturels</label>
+            <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1558,31 +1563,34 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>Carte de référence de la couverture terrestre</label>
+			<label>Cartes de référence, images</label>
 			<description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et satellitale, carte thématiques, carte topographiques</description>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_BaseMaps</code>
-			<label>Cartes de base</label>
+			<label>Cartes de référence</label>
+            <description/>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_EarthCover</code>
-			<label>Couverture terrestre</label>
+			<label>Couverture et utilisation du sol</label>
+            <description/>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>Imagerie satellite</label>
+			<label>Images aériennes et satellitaires</label>
+            <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
-			<label>Infrastructures militaires</label>
-			<description>Bases militaires et infrastructures</description>
+			<label>Armée, sécurité</label>
+			<description>Bases militaires et infrastructures de sécurité</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Eaux intérieures, Hydrographie</label>
+			<label>Hydrographie</label>
 			<description>Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques, barrages, débits, qualité de l’eau</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1600,39 +1608,41 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>Cadastre, aménagement</label>
+			<label>Dévéloppement territorial, cadastre foncier</label>
 			<description>Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques</description>
 		</entry>
 		<entry>
 			<code>planningCadastre_Planning</code>
-			<label>Aménagement</label>
+			<label>Dévéloppement territorial</label>
+            <description/>
 		</entry>
 		<entry>
 			<code>planningCadastre_Cadastre</code>
-			<label>Cadastre</label>
+			<label>Cadastre foncier</label>
+            <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>society</code>
-			<label>Société</label>
+			<label>Population, Société, culture</label>
 			<description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes  sociaux, croyances, us et coutumes, crimes et justices</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>Constructions et ouvrages</label>
+			<label>Edifices, infrastructures, ouvrages</label>
 			<description>Aménagements urbains. Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
-			<label>Infrastructures de transport</label>
+			<label>Transport</label>
 			<description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Télécommunication, approvisionnement et énergie</label>
+			<label>Approvisionnement, élimination, communication</label>
 			<description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

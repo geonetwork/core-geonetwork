@@ -49,6 +49,7 @@ function init()
 		{ id:'csw.name',        type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.capabUrl',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.capabUrl',    type:'url' },
+		{ id:'csw.outputSchema',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.username',    type:'length',   minSize :0,  maxSize :200 },
 		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 }
 	]);
@@ -65,6 +66,7 @@ function setEmpty()
 	removeAllSearch();
 	
 	$('csw.capabUrl').value = '';
+	$('csw.outputSchema').value = '';
 	
 	var icons = $('csw.icon').options;
 	
@@ -89,6 +91,7 @@ function setData(node)
 	var searches = node.getElementsByTagName('searches')[0];
 
 	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
+	hvutil.setOption(site, 'outputSchema', 'csw.outputSchema');
 	hvutil.setOption(site, 'icon',            'csw.icon');
 	
 	//--- add search entries
@@ -121,6 +124,7 @@ function getData()
 	var data = this.getDataCommon();
 	
 	data.CAPAB_URL = $F('csw.capabUrl');
+	data.OUTPUT_SCHEMA = $F('csw.outputSchema');
 	data.ICON      = $F('csw.icon');
 	
 	//--- retrieve search information

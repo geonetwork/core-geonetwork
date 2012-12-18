@@ -291,7 +291,7 @@ public class DataManager {
     public void indexInThreadPoolIfPossible(Dbms dbms, String id, boolean processSharedObjects) throws Exception {
         if(ServiceContext.get() == null ) {
             boolean indexGroup = false;
-            indexMetadata(dbms, id, indexGroup, processSharedObjects, getServiceContext());
+            indexMetadata(dbms, id, processSharedObjects, getServiceContext());
         } else {
             indexInThreadPool(ServiceContext.get(), id, dbms, processSharedObjects);
         }
@@ -392,8 +392,7 @@ public class DataManager {
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadata(dbms, ids.get(i), true, processSharedObjects, context, performValidation);
-                                    dbms.commit();
+                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation);
                                 }
                                 catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
@@ -404,7 +403,7 @@ public class DataManager {
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), false, processSharedObjects, context, performValidation);
+                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation);
                     }
                 }
                 finally {
@@ -423,29 +422,17 @@ public class DataManager {
             }
         }
     }
-   /**
-     *
-     * @param dbms
-     * @param id
-     * @throws Exception
-     */
-	public void indexMetadataGroup(Dbms dbms, String id, boolean processSharedObjects, ServiceContext srvContext, boolean performValidation) throws Exception {
-	    if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-	        Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
-		indexMetadata(dbms, id, true,processSharedObjects, servContext, performValidation);
-	}
-    public void indexMetadata(Dbms dbms, String id, boolean indexGroup, boolean processSharedObjects, ServiceContext servContext) throws Exception {
-        indexMetadata(dbms, id, indexGroup, processSharedObjects, servContext, false);
+    public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext) throws Exception {
+        indexMetadata(dbms, id, processSharedObjects, servContext, false);
     }
     /**
      * TODO javadoc.
      *
      * @param dbms
      * @param id
-     * @param indexGroup
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean indexGroup, boolean processSharedObjects, ServiceContext servContext, boolean performValidation) throws Exception {
+	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = new Integer(id);
@@ -629,12 +616,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            if (indexGroup) {
-                searchMan.indexGroup(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
-            }
-            else {
-                searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
-            }
+            searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
         }
 		catch (Exception x) {
 			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + id + " is corrupt/invalid - ignoring it. Error: " + x.getMessage());
@@ -1340,7 +1322,7 @@ public class DataManager {
         ServiceContext context = ServiceContext.get();
         if(context == null) context = servContext;
 
-        indexMetadata(dbms, Integer.toString(id), indexGroup,false, context);
+        indexMetadata(dbms, Integer.toString(id), false, context);
 	}
 
     /**
@@ -1606,6 +1588,10 @@ public class DataManager {
     public String insertMetadata(ServiceContext context, Dbms dbms, String schema, Element metadata, int id, String uuid, int owner, String group, String source,
                                  String isTemplate, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
+    	if("n".equals(isTemplate) && !"iso19139.che".equals(schema)) {
+    		throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  Apply a import stylesheet to convert file to iso19139.che");
+    	}
+    	
         // TODO resolve confusion about datatypes
         String id$ = Integer.toString(id);
 
@@ -1883,7 +1869,7 @@ public class DataManager {
                 //--- update search criteria
                 boolean indexGroup = false;
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, indexGroup, processSharedObjects, servContext);
+                indexMetadata(dbms, id, processSharedObjects, servContext);
             }
 		}
 		return true;
@@ -2672,8 +2658,7 @@ public class DataManager {
      */
 	public void setStatus(ServiceContext context, Dbms dbms, int id, int status, String changeDate, String changeMessage) throws Exception {
 		setStatusExt(context, dbms, id, status, changeDate, changeMessage);
-    boolean indexGroup = false;
-    indexMetadata(dbms, Integer.toString(id), indexGroup, true, context);
+    indexMetadata(dbms, Integer.toString(id), true, context);
 	}
 
     /**
@@ -3676,7 +3661,7 @@ public class DataManager {
             String query = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
             dbms.execute(query, new Integer(id));
             boolean indexGroup = false;
-            indexMetadata(dbms, id, indexGroup,false, srvContext);
+            indexMetadata(dbms, id,false, srvContext);
         }
         catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());

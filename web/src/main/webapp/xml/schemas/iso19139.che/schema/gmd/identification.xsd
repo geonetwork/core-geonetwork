@@ -263,7 +263,7 @@
 			<xs:enumeration value="elevation"/>
 			<xs:enumeration value="environment"/>
 			<xs:enumeration value="environment_EnvironmentalProtection"/>
-			<xs:enumeration value="environment_NatureConservation"/>
+			<xs:enumeration value="environment_NatureProtection"/>
 			<xs:enumeration value="geoscientificInformation"/>
 			<xs:enumeration value="geoscientificInformation_Geology"/>
 			<xs:enumeration value="geoscientificInformation_Soils"/>

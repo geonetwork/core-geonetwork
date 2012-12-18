@@ -1529,7 +1529,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biota</code>
-			<label>Biologia</label>
+			<label>Bosco, flora, fauna</label>
 			<description>Flora e/o fauna nell’ambiente naturale
 				Esempi: fauna selvatica, vegetazione, scienze biologiche, ecologia, habitat
 			</description>
@@ -1544,14 +1544,14 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
-			<label>Climatologia e meteorologia</label>
+			<label>Atmosfera, climatologia</label>
 			<description>Processi e  fenomeni dell’atmosfera
 				Esempi: annuvolamento, clima,  condizioni atmosferiche, cambiamenti climatici, precipitazioni</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>economy</code>
-			<label>Economia</label>
+			<label>Attività economiche</label>
 			<description>Attività economiche
 				Esempi: produzione, lavoro, commercio, reddito, industria, turismo, ecoturismo, silvicoltura,
 				pesca, esplorazione e sfruttamento delle risorse come minerali, petrolio e gas.</description>
@@ -1559,14 +1559,14 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>elevation</code>
-			<label>Quote e prodotti derivati</label>
+			<label>Altimetria</label>
 			<description>Quote sopra o sotto il livello del mare
 				Esempi: altitudine, DEM, batimetria, pendenze e prodotti derivati</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>Ambiente</label>
+			<label>Protezione ambiente e natura</label>
 			<description>Risorse ambientali, protezione e conservazione dell’ambiente
 				Esempi: inquinamento ambientale, trattamento dei rifiuti, valutazione di impatto ambientale,
 				monitoraggio del rischio ambientale, riserve naturali, paesaggio
@@ -1574,16 +1574,16 @@ polvere</description>
 		</entry>
 		<entry>
 			<code>environment_EnvironmentalProtection</code>
-			<label>Environmental protection</label>
+			<label>Protezione ambiente, rumore</label>
 		</entry>
 		<entry>
-			<code>environment_NatureConservation</code>
-			<label>Nature conservation</label>
+			<code>environment_NatureProtection</code>
+			<label>Protezione della natura e del paesaggio</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Informazioni geoscientifiche</label>
+			<label>Geoscienze, rischi</label>
 			<description>Informazioni riguardanti le Scienze della Terra
 				Esempi: entità e processi geofisici, geologia, minerali,
 				struttura e origine delle rocce terrestri, rischi di terremoti,
@@ -1592,15 +1592,15 @@ polvere</description>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Geology</code>
-			<label>Geology</label>
+			<label>Geologia</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Soils</code>
-			<label>Soils</label>
+			<label>Suolo</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_NaturalHazards</code>
-			<label>Natural hazards</label>
+			<label>Rischi naturali</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1613,29 +1613,34 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>Mappe di base</label>
+			<label>Carte di base, immagini</label>
 			<description>Mappe di base
 				Esempi: copertura territoriale, carte topografiche, immagini</description>
 		</entry>
 		<entry>
+			<code>imageryBaseMapsEarthCover_BaseMaps</code>
+			<label>Carte di base, modelli del territorio</label>
+		</entry>
+		<entry>
+		<entry>
 			<code>imageryBaseMapsEarthCover_EarthCover</code>
-			<label>Earth cover</label>
+			<label>Copertura e utilizzo del suolo</label>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>Imagery</label>
+			<label>Immagini aeree e satellitari</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
-			<label>Informazioni militari</label>
+			<label>Armata, sicurezza</label>
 			<description>Basi, strutture e attività militari
 				Esempi: addestramento, trasporto militare, raccolta di informazioni</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Acque interne</label>
+			<label>Idrografia</label>
 			<description>Caratteristiche delle acque
 				interne, sistemi di drenaggio e
 				loro caratteristiche
@@ -1648,7 +1653,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>location</code>
-			<label>Posizione</label>
+			<label>Localizzazione, sistemi di riferimento</label>
 			<description>Informazioni e servizi sulla
 				localizzazione
 				Esempi:      indirizzi,    reti
@@ -1660,7 +1665,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>oceans</code>
-			<label>Acque marine</label>
+			<label>Oceani</label>
 			<description>Entità e caratteristiche dei
 				corpi d’acqua salata (escluse
 				le acque interne)
@@ -1671,7 +1676,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>Pianificazione del territorio e catasto</label>
+			<label>Pianificazione, catasto</label>
 			<description>Pianificazione del territorio
 				Esempi: carte dell’uso del
 				suolo, carte di zonizzazione,
@@ -1681,16 +1686,16 @@ polvere</description>
 		</entry>
 		<entry>
 			<code>planningCadastre_Planning</code>
-			<label>Planning</label>
+			<label>Pianificazione e sviluppo territoriale</label>
 		</entry>
 		<entry>
 			<code>planningCadastre_Cadastre</code>
-			<label>Cadastre</label>
+			<label>Terreni catastali</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>society</code>
-			<label>Società</label>
+			<label>Popolazione, società, cultura</label>
 			<description>Caratteristiche    sociali   e
 				culturali
 				Esempi:          antropologia,
@@ -1705,7 +1710,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>Strutture</label>
+			<label>Edifici, infrastrutture, costruzioni</label>
 			<description>Costruzioni, manufatti
 				Esempi:      palazzi,  musei,
 				chiese, fabbriche, monumenti,
@@ -1728,7 +1733,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Reti, infrastrutture e servizi di comunicazione</label>
+			<label>Alimentazione, eliminazione, comunicazione</label>
 			<description>Energia, acqua e sistemi dei
 				rifiuti, infrastrutture e servizi
 				di comunicazione

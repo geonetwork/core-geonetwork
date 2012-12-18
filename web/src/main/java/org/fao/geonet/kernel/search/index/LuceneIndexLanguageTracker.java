@@ -16,10 +16,13 @@ import jeeves.utils.Log;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MergeScheduler;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
@@ -27,6 +30,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NRTCachingDirectory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -44,9 +48,12 @@ public class LuceneIndexLanguageTracker {
     private final Timer commitTimer;
     private final LuceneConfig luceneConfig;
     private final File indexContainingDir;
+    private final TaxonomyIndexTracker taxonomyIndexTracker;
     private AtomicLong version = new AtomicLong(0);
 
-    public LuceneIndexLanguageTracker(File indexContainingDir,LuceneConfig luceneConfig) throws CorruptIndexException, LockObtainFailedException, IOException {
+    public LuceneIndexLanguageTracker(File indexContainingDir, File taxonomyDir, LuceneConfig luceneConfig) throws CorruptIndexException, LockObtainFailedException, IOException {
+        this.taxonomyIndexTracker = new TaxonomyIndexTracker(taxonomyDir, luceneConfig);
+        
         this.luceneConfig = luceneConfig;
         this.indexContainingDir = indexContainingDir;
         this.commitTimer = new Timer("Lucene index commit timer", true);
@@ -56,6 +63,7 @@ public class LuceneIndexLanguageTracker {
     private void init(File indexContainingDir, LuceneConfig luceneConfig) throws IOException, CorruptIndexException,
             LockObtainFailedException {
         indexContainingDir.mkdirs();
+
         Set<File> indices = listIndices(indexContainingDir);
         for (File indexDir : indices) {
             open(indexDir);
@@ -71,10 +79,11 @@ public class LuceneIndexLanguageTracker {
         double maxCachedMB = luceneConfig.getRAMBufferSize();
         NRTCachingDirectory cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD, maxCachedMB);
         IndexWriterConfig conf = new IndexWriterConfig(Geonet.LUCENE_VERSION, SearchManager.getAnalyzer(language, false));
-        conf.setMergeScheduler(cachedFSDir.getMergeScheduler());
+        ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
+        conf.setMergeScheduler(mergeScheduler);
         IndexWriter writer = new IndexWriter(cachedFSDir, conf);
         TrackingIndexWriter trackingIndexWriter = new TrackingIndexWriter(writer);
-        GeonetworkNRTManager nrtManager = new GeonetworkNRTManager(luceneConfig, language, trackingIndexWriter, null, true);
+        GeonetworkNRTManager nrtManager = new GeonetworkNRTManager(luceneConfig, language, trackingIndexWriter, null, true, taxonomyIndexTracker);
 
         dirs.put(language, cachedFSDir);
         trackingWriters.put(language, trackingIndexWriter);
@@ -99,7 +108,7 @@ public class LuceneIndexLanguageTracker {
         return locale;
     }
     
-    synchronized Pair<Long, GeonetworkMultiReader> aquire(long versionToken) throws IOException {
+    synchronized IndexAndTaxonomy aquire(long versionToken) throws IOException {
         long finalVersion = versionToken;
         Map<Pair<Long, IndexSearcher>, GeonetworkNRTManager> searchers = new HashMap<Pair<Long, IndexSearcher>, GeonetworkNRTManager>((int) (searchManagers.size() * 1.5));
         IndexReader[] readers = new IndexReader[searchManagers.size()];
@@ -119,25 +128,31 @@ public class LuceneIndexLanguageTracker {
         
         if(tokenExpired) {
             finalVersion = version.getAndIncrement();
+            taxonomyIndexTracker.maybeRefresh();
             for (Map.Entry<Pair<Long, IndexSearcher>, GeonetworkNRTManager> entry: searchers.entrySet()) {
                 entry.getValue().updateVersion(versionToken, finalVersion, entry.getKey().one());
             }
             
         }
-        return Pair.read(finalVersion, new GeonetworkMultiReader(readers, searchers));
+        return new IndexAndTaxonomy(finalVersion, new GeonetworkMultiReader(readers, searchers), taxonomyIndexTracker.acquire());
     }
+
     synchronized void commit() throws CorruptIndexException, IOException {
+        // before a writer commits the IndexWriter, it must commit the TaxonomyWriter.
+        taxonomyIndexTracker.commit();
         for (TrackingIndexWriter writer : trackingWriters.values()) {
             writer.getIndexWriter().commit();
         }
     }
     synchronized void withWriter(Function function) throws CorruptIndexException, IOException {
         for (TrackingIndexWriter writer : trackingWriters.values()) {
-            function.apply(writer);
+            function.apply(taxonomyIndexTracker.writer(), writer);
         }
     }
-    synchronized void addDocument(String language, Document doc) throws CorruptIndexException, LockObtainFailedException, IOException {
+    synchronized void addDocument(String language, Document doc, List<CategoryPath> categories) throws CorruptIndexException, LockObtainFailedException, IOException {
         open(language);
+        // Add taxonomy first
+        taxonomyIndexTracker.addDocument(doc, categories);
         trackingWriters.get(language).addDocument(doc);
     }
     synchronized void open(String language) throws CorruptIndexException, LockObtainFailedException, IOException {
@@ -149,8 +164,9 @@ public class LuceneIndexLanguageTracker {
     }
     
     public synchronized void reset() throws IOException {
-        close();
-
+        // reset taxonomy first
+        taxonomyIndexTracker.reset();
+        close(false);
         FileUtils.deleteDirectory(indexContainingDir);
         indexContainingDir.mkdirs();
         dirs.clear();
@@ -158,9 +174,14 @@ public class LuceneIndexLanguageTracker {
         searchManagers.clear();
         init(indexContainingDir, luceneConfig);
     }
-    public synchronized void close() throws IOException {
+    public synchronized void close(boolean closeTaxonomy) throws IOException {
         List<Throwable> errors = new ArrayList<Throwable>(5);
 
+        if (closeTaxonomy) {
+            // before a writer close's the IndexWriter, it must close() the TaxonomyWriter.
+            taxonomyIndexTracker.close(errors);
+        }
+        
         for (GeonetworkNRTManager manager: searchManagers.values()) {
             try {
                 manager.close();
@@ -189,7 +210,6 @@ public class LuceneIndexLanguageTracker {
             for (Throwable throwable : errors) {
                 Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
             }
-            throw new RuntimeException("There were errors while closing lucene indices");
         }
     }
     public synchronized void optimize() throws CorruptIndexException, IOException {
@@ -228,4 +248,5 @@ public class LuceneIndexLanguageTracker {
         }
         
     }
+
 }

@@ -21,7 +21,6 @@
 		
 		<xsl:variable name="dataset" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' or normalize-space(gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue)=''"/>
 		
-		<!-- thumbnail -->
 		<tr>
 			<td valign="middle" colspan="2">
 				<xsl:if test="/root/gui/config/editor-metadata-relation">	

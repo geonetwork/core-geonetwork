@@ -1685,7 +1685,7 @@
 
 		<entry>
 			<code>biota</code>
-			<label>Biologie</label>
+			<label>Wald, Flora, Fauna</label>
 			<description>Flora und/oder Fauna in der natürlichen Umgebung, z.B. wild lebende Tiere, Vegetation, Biowissenschaften, Ökologie, Wildnis, marine Lebewesen, Feuchtgebiete, Habitate, Biotope</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1699,96 +1699,108 @@
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
 
-			<label>Atmosphäre</label>
+			<label>Atmosphäre, Luft, Klima</label>
 			<description>Prozesse und Naturereignisse der Atmosphäre inkl. Klimatologie und Meteorologie, z.B. Wolkenbedeckung, Wetter, Klima, Witterungsverhältnisse, Klimawandel, Niederschlag</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>economy</code>
-			<label>Wirtschaft</label>
+			<label>Wirtschaftliche Aktivitäten</label>
 
 			<description>Wirtschaftliche Aktivitäten, Verhältnisse und Beschäftigung, z.B. Produktion, Arbeit, Einkommen, Handel, Industrie, Tourismus und Ökotourismus, Forstwirtschaft, Fischerei, kommerzielle und subsistente Jagd, Erkundung und Ausbeutung von Ressourcen, wie Minerale, Öl und Gas</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>elevation</code>
-			<label>Höhenangaben</label>
+			<label>Höhen</label>
 			<description>Höhenangabe bezogen auf ein Höhenreferenzsystem, z.B. Höhenlage, Bathymetrie, digitale Geländemodelle, Hangneigung, Höhenmodelle, abgeleitete Daten</description>
 
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>Umwelt</label>
+			<label>Umwelt-, Naturschutz</label>
 			<description>Umweltressourcen, Umweltschutz und Umwelterhaltung, z.B. Umweltverschmutzung, Abfalllagerung und -verwertung, Umweltverträglichkeitsstudie, Umweltrisikomonitoring, Naturreservate, Landschaft</description>
 		</entry>
 		<entry>
 			<code>environment_EnvironmentalProtection</code>
-			<label>Environmental protection</label>
+			<label>Umweltschutz, Lärm</label>
+                          <description/>
 		</entry>
 		<entry>
-			<code>environment_NatureConservation</code>
-			<label>Nature conservation</label>
-		</entry>
+			<code>environment_NatureProtection</code>
+			<label>Natur- und Landschaftsschutz</label>
+		         <description/>
+                  </entry>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Geowissenschaften</label>
+			<label>Geowissenschaften, Risiken</label>
 			<description>Geowissenschaftliche Informationen, z.B. geophysikalische Eigenschaften und Prozesse, Geologie, Minerale, Zusammensetzung, Struktur und Entstehung des Erdgesteins, Erdbebenrisikoanalysen, vulkanische Aktivität, Erdrutsche, gravimetrische Informationen, Böden, Permafrost, Hydrogeologie, Erosion</description>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Geology</code>
-			<label>Geology</label>
+			<label>Geologie</label>
+                          <description/>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Soils</code>
-			<label>Soils</label>
+			<label>Boden</label>
+                          <description/>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_NaturalHazards</code>
-			<label>Natural hazards</label>
+			<label>Naturbedingte Risiken</label>
+                          <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<entry>
 			<code>health</code>
-			<label>Gesundheitswesen</label>
+			<label>Gesundheit</label>
 			<description>Gesundheit, Gesundheitsdienste, Humanökologie und Betriebssicherheit, z.B. Erkrankungen und Krankheit, Gesundheitsfaktoren, Hygiene, Drogenmissbrauch, psychische und physische Gesundheit, Gesundheitsdienste</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 
 			<code>imageryBaseMapsEarthCover</code>
-			<label>Oberflächenbeschreibung</label>
+			<label>Grundlagen, Bilddaten</label>
 			<description>Basiskarten und -daten, z.B. Landbedeckung, topografische Karten, Luftbilder, Ortsnamen</description>
 		</entry>
 		<entry>
+			<code>imageryBaseMapsEarthCover_BaseMaps</code>
+			<label>Basiskarten, Landschaftsmodelle</label>
+                          <description/>
+		</entry>
+		<entry>
 			<code>imageryBaseMapsEarthCover_EarthCover</code>
-			<label>Earth cover</label>
+			<label>Bodenbedeckung, Bodennutzung</label>
+                          <description/>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>Imagery</label>
+			<label>Luft- und Satellitenbilder</label>
+                          <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
 
-			<label>Militär und Aufklärung</label>
+			<label>Militär, Sicherheit</label>
 			<description>Militärbasen, militärische Einrichtungen und Aktivitäten, z.B. Kasernen, Truppenübungsplätze, militärisches Transportwesen, Nachrichtendienst</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Binnengewässer</label>
+			<label>Gewässer</label>
 
 			<description>Binnengewässerdaten, Gewässernetze und deren Eigenschaften, z.B. Flüsse und Gletscher, Salzseen, Wassernutzungspläne, Dämme, Strömungen, Hochwasser, Wasserqualität</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>location</code>
-			<label>Ortsangaben</label>
+			<label>Ortsangaben, Referenzsysteme</label>
 			<description>Positionierungsangaben und -dienste, z.B. Adressen, Vermessungsnetze, Kontrollpunkte, Postleitzahlenbereiche, Ortsnamen, Gazetteer</description>
 
 		</entry>
@@ -1802,42 +1814,44 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>Planungsunterlagen, Kataster</label>
+			<label>Raumplanung, Grundstückkataster</label>
 			<description>Informationen für die Flächennutzungsplanung, z.B. Landnutzungspläne, Flächennutzungspläne, Katastervermessung, Liegenschaften, Bebauungspläne, Landschaftsprogramm</description>
 		</entry>
 		<entry>
 			<code>planningCadastre_Planning</code>
-			<label>Planning</label>
+			<label>Raumplanung, Raumentwicklung</label>
+                          <description/>
 		</entry>
 		<entry>
 			<code>planningCadastre_Cadastre</code>
-			<label>Cadastre</label>
+			<label>Grundstückkataster</label>
+                          <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<entry>
 			<code>society</code>
-			<label>Gesellschaft</label>
+			<label>Bevölkerung, Gesellschaft, Kultur</label>
 			<description>Kulturelle und gesellschaftliche Merkmale, z.B. Besiedlung, Anthropologie, Archäologie, Bildung, Religion, Sitten und Bräuche, demografische Daten, Erholungsgebiete und -aktivitäten, Sozialstudie, Verbrechen und Justiz, Zensusdaten</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 
 			<code>structure</code>
-			<label>Bauwerke</label>
+			<label>Gebäude, Anlagen</label>
 			<description>Anthropogene Bauten, z.B. Gebäude, Museen, Kirchen, Fabriken, Wohngebäude, Denkmäler, Geschäfte, Türme</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
 
-			<label>Verkehrswesen</label>
+			<label>Verkehr</label>
 			<description>Mittel und Wege zur Beförderung von Personen und/oder Gütern, z.B. Strassen, Flughäfen/Landepisten, Schifffahrtswege, Tunnel, Seekarten, Positionen von Fahrzeugen, Luftfahrtskarten, Schienennetz</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Ver- und Entsorgung, Kommunikation</label>
+			<label>Ver-, Entsorgung, Kommunikation</label>
 
 			<description>Energie-, Wasser- und Abfallsysteme, Kommunikationsinfrastruktur und -dienste, z.B. Wasserkraft, geothermische, solare und nukleare Energiequellen, Wasseraufbereitung- und verteilung, Abwassersammlung- und aufbereitung, Hochspannungs- und Gasleitungen, Datenkommunikation, Telekommunikation, Radio, Kommunikationsnetzwerke</description>
 		</entry>

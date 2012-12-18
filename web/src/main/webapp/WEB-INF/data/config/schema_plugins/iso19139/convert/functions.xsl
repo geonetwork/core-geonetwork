@@ -154,7 +154,7 @@
         <xsl:variable name="locStringTitles" select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString"/>
         <xsl:choose>
         <xsl:when    test="string-length(string($docLangTitle)) != 0">
-            <xsl:value-of select="$docLangTitle"/>
+            <xsl:value-of select="$docLangTitle[1]"/>
         </xsl:when>
         <xsl:when    test="string-length(string($charStringTitle[1])) != 0">
             <xsl:value-of select="string($charStringTitle[1])"/>
