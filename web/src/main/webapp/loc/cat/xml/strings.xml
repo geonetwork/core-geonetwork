@@ -290,7 +290,7 @@
 	<cannotRetrieveGroup js="true">No ha estat possible obtenir la llista de grups</cannotRetrieveGroup>
 	<selectNewOwner js="true">Seleccioneu l'usuari que serà el nou propietari</selectNewOwner>
 	<selectOwnerGroup js="true">Seleccioneu un grup on l'usuari pertanyerà</selectOwnerGroup>
-	<selectOneFile js="true">Hauríeu de seleccionar com a mínim un arxiu per descarregar!</selectOneFile>
+	<selectOneFileDownload js="true">Hauríeu de seleccionar com a mínim un arxiu per descarregar!</selectOneFileDownload>
 	<checkEmail js="true">Si us plau, indiqueu una adreça de correu vàlida</checkEmail>
 	<addName js="true">Si us plau, indiqueu un nom o organització</addName>
 	<noComment js="true">Sense comentaris</noComment>
@@ -313,7 +313,7 @@
 	<errorSaveFailed js="true">Error: No s'ha pogut salvar el formulari</errorSaveFailed>
 	<errorOnAction js="true">Error: No s'ha pogut realitzar l'acció </errorOnAction>
 	<errorChangeProtocol js="true">És probable que un arxiu hagi estat enviat. No podeu canviar el protocol fins que no esborreu aquest arxiu </errorChangeProtocol>
-	<selectOneFile js="true">Buscar o escriure un nom d'arxiu abans de l'enviament!</selectOneFile>
+	<selectOneFileUpload js="true">Buscar o escriure un nom d'arxiu abans de l'enviament!</selectOneFileUpload>
 	<uploadFailed js="true">Error: L'enviament ha fallat! - Informació: </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: L'arxiu ha estat enviat però no ha estat possible definir el nom d'arxiu!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">No s'ha trobat indicadors de funció (tooltips) al servidor</cannotGetTooltip>

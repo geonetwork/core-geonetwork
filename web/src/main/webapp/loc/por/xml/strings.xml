@@ -300,7 +300,7 @@
 	<cannotRetrieveGroup js="true">Não consegue recuperar grupos</cannotRetrieveGroup>
 	<selectNewOwner js="true">Escolha o utilizador quem será o dono novo</selectNewOwner>
 	<selectOwnerGroup js="true">Escolha um grupo ao qual o utilizador seleccionado pertence</selectOwnerGroup>
-	<selectOneFile js="true">Deve escolher pelo menos um ficheiro para fazer o download!</selectOneFile>
+	<selectOneFileDownload js="true">Deve escolher pelo menos um ficheiro para fazer o download!</selectOneFileDownload>
 	<checkEmail js="true">Por favor preencha endereço de email cerrecto</checkEmail>
 	<addName js="true">Por favor preencha um nome ou uma organização</addName>
 	<noComment js="true">Sem comentário</noComment>
@@ -323,7 +323,7 @@
 	<errorSaveFailed js="true">Erro: Não conseguiu gravar formulário</errorSaveFailed>
 	<errorOnAction js="true">Erro: Não conseguiu executar acção</errorOnAction>
 	<errorChangeProtocol js="true">Um ficheiro deve ter sido carregado. Não pode alterar o protocolo antes de remover aquele ficheiro</errorChangeProtocol>
-	<selectOneFile js="true">Procure ou digite o nome dum ficheiro antes de carregar em upload!</selectOneFile>
+	<selectOneFileUpload js="true">Procure ou digite o nome dum ficheiro antes de carregar em upload!</selectOneFileUpload>
 	<uploadFailed js="true">Erro: Upload falhou! - retornou</uploadFailed>
 	<uploadSetFileNameFailed js="true">Erro: Upload foi sucedido mas não era possível de nomear o ficheiro!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Não recebe tooltips de servidor</cannotGetTooltip>

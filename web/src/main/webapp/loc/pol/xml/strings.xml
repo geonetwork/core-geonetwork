@@ -289,7 +289,7 @@
 	<cannotRetrieveGroup js="true">Nie można pozyskać grup</cannotRetrieveGroup>
 	<selectNewOwner js="true">Wybierz użytkownika, który będzie nowym właścicielem</selectNewOwner>
 	<selectOwnerGroup js="true">Wybierz grupę, do której należy wybrany użytkownik</selectOwnerGroup>
-	<selectOneFile js="true">Wybierz plik do pobrania!</selectOneFile>
+	<selectOneFileDownload js="true">Wybierz plik do pobrania!</selectOneFileDownload>
 	<checkEmail js="true">Podaj poprawny adres e-mail</checkEmail>
 	<addName js="true">Podaj nazwiskolub organizację</addName>
 	<noComment js="true">Bez komentarza</noComment>
@@ -312,7 +312,7 @@
 	<errorSaveFailed js="true">Błąd: nie można zapisać formularza</errorSaveFailed>
 	<errorOnAction js="true">Błąd: nie można wykonać akcji </errorOnAction>
 	<errorChangeProtocol js="true">Plik mógł zostać załadowany. Nie możesz zmienić protokołu dopóki nie usuniesz tego pliku</errorChangeProtocol>
-	<selectOneFile js="true">Wybierz plik do załadowania!</selectOneFile>
+	<selectOneFileUpload js="true">Wybierz plik do załadowania!</selectOneFileUpload>
 	<uploadFailed js="true">Błąd: ładowanie nieudane! - zwrócono </uploadFailed>
 	<uploadSetFileNameFailed js="true">Błąd: ładowanie powiodło się, ale nie można określić nazwy pliku!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Nie można pobrać podpowiedzi z serwera</cannotGetTooltip>
