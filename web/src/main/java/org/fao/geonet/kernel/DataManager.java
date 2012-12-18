@@ -1588,6 +1588,10 @@ public class DataManager {
     public String insertMetadata(ServiceContext context, Dbms dbms, String schema, Element metadata, int id, String uuid, int owner, String group, String source,
                                  String isTemplate, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
+    	if("n".equals(isTemplate) && !"iso19139.che".equals(schema)) {
+    		throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  Apply a import stylesheet to convert file to iso19139.che");
+    	}
+    	
         // TODO resolve confusion about datatypes
         String id$ = Integer.toString(id);
 
