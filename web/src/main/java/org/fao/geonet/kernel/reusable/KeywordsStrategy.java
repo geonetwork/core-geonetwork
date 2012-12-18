@@ -406,8 +406,11 @@ public final class KeywordsStrategy extends ReplacementStrategy
     		return href;
     	}
     	
-        String startId = URLDecoder.decode(Utils.id(href), "UTF-8");
-        if(startId!=null && startId.startsWith(NAMESPACE)) return href;
+        String rawId = Utils.id(href);
+        if(rawId != null) {
+			String startId = URLDecoder.decode(rawId, "UTF-8");
+	        if(startId!=null && startId.startsWith(NAMESPACE)) return href;
+        }
          
         String code = UUID.randomUUID().toString();
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(NON_VALID_THESAURUS_NAME);
