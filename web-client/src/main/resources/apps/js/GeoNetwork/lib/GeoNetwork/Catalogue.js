@@ -1126,7 +1126,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         	
         	intervalID = setInterval(function (){
         		loginAttempts += 1;
-        		if(loginAttempts > (5*60*2)) {
+        		if(loginAttempts > (2)) {
         			clearInterval (intervalID);
         			app.identifiedUser = undefined;
 	                app.onAfterBadLogin();

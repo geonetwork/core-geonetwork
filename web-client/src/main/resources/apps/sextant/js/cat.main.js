@@ -8,7 +8,7 @@ var cookie;
 cat.app = function() {
 
 	var geonetworkUrl;
-	var searching = false;
+	var searching = true;
 
 	/**
 	 * Application parameters are :
@@ -60,17 +60,17 @@ cat.app = function() {
 //	}
 	
 	function search() {
-		searching = true;
-		Ext.get('load-spinner').show();
-		cookie.set('cat.search.page', catalogue.startRecord);
-		
-		//applyAppSearchFilter();
-		
-		catalogue.search('searchForm', app.loadResults, null,
-				catalogue.startRecord, true);
-	}
+        searching = true;
+        Ext.get('load-spinner').show();
+        cookie.set('cat.search.page', catalogue.startRecord);
 
-	function createLanguageSwitcher(lang){
+        if (metadataResultsView && Ext.getCmp('geometryMap')) {
+            metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
+        }
+        catalogue.search('searchForm', app.loadResults, null, catalogue.startRecord, true);
+    }
+
+    function createLanguageSwitcher(lang){
         return new Ext.form.FormPanel({
             renderTo: 'lang-form',
             width: 95,
@@ -509,9 +509,7 @@ cat.app = function() {
 				}),
 			searchCb : function() {
 
-				if (metadataResultsView && Ext.getCmp('geometryMap')) {
-					metadataResultsView.addMap(Ext.getCmp('geometryMap').map, true);
-				}
+				
 				
 				var any = Ext.get('E_any');
 				if (any) {
@@ -750,7 +748,9 @@ cat.app = function() {
 								search();
 							} else if(searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
-								search();
+								if(!catalogue.casEnabled) {
+								    search();
+								}
 							}
 							fitHeightToBody(o);
 							
@@ -795,7 +795,7 @@ cat.app = function() {
 
 			resultPanel.setHeight(Ext.getCmp('center').getHeight());
 
-			var events = [ 'afterDelete', 'afterRating', 'afterLogout',
+			var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterBadLogin',
 					'afterLogin' ];
 			Ext.each(events, function(e) {
 				catalogue.on(e, function() {
