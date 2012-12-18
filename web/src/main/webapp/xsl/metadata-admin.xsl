@@ -20,9 +20,8 @@
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
 				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
-				<xsl:variable name="isNotReviewer" select="not(/root/response/groups/group[id=$groupOwner and userProfile='Reviewer'])"/>
-				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
-				
+				<xsl:variable name="isNotReviewer" select="not(count(/root/response/groups/group[@userGroup='true' and userProfile='Reviewer']/oper[id=2 and on]) > 0)"/>
+				<xsl:variable name="disabled" select="not(count(/root/response/groups/group[@userGroup='true' and userProfile='Editor']/oper[id=2 and on]) > 0)"/>
 				
 				<div id="privileges">
 					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
