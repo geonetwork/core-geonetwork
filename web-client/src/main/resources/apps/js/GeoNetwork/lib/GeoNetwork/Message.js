@@ -41,13 +41,25 @@ GeoNetwork.Message = function () {
          */
         msg : function (config) {
             // title, format, status, target
+            
+            var id = "msg-div";
+            if(config.id){
+                id = config.id;
+            }
+            
             if (!msgCt) {
-                msgCt = Ext.DomHelper.insertFirst(document.body, {id: 'msg-div'}, true);
+                msgCt = Ext.DomHelper.insertFirst(document.body, {id: id}, true);
             }
             msgCt.alignTo(config.target || document, 't-t');
             var s = OpenLayers.String.format(config.msg, config.tokens);
             var m = Ext.DomHelper.append(msgCt, {html: createBox(config.title, s, config.status)}, true);
-            m.slideIn('t').pause(2).fadeOut({remove: true});
+            
+            var seconds_to_wait = config.pause;
+            if(!seconds_to_wait || isNaN(seconds_to_wait)){
+                seconds_to_wait = 2;
+            }
+            
+            m.slideIn('t').pause(seconds_to_wait).fadeOut({remove: true});
         }
     };
 };
