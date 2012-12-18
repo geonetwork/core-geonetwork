@@ -1378,7 +1378,7 @@ GeoNetwork.searchApp = function() {
         generateFacetedSearchPanel : function() {
             var breadcrumb = new Ext.Panel({
                 id : 'bread-crumb',
-                renderTo : 'bread-crumb-div',
+                //renderTo : 'bread-crumb-div',
                 layout : 'table',
                 cls : 'breadcrumb',
                 defaultType : 'button',
@@ -1392,7 +1392,8 @@ GeoNetwork.searchApp = function() {
             var facetsPanel = new GeoNetwork.FacetsPanel(
                     {
                         id : 'facets-panel',
-                        renderTo : 'facets-panel-div',
+//                        renderTo : 'facets-panel-div',
+                        renderTo: 'search-filter',
                         searchForm : Ext
                                 .getCmp('advanced-search-options-content-form'),
                         breadcrumb : breadcrumb,

@@ -252,6 +252,7 @@ GeoNetwork.app = function() {
                 },
                 // Filter panel
                 {
+                    id: 'facets-container',
                     region : 'east',
                     contentEl : 'search-filter',
                     split : true,
