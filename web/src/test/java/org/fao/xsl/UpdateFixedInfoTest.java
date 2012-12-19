@@ -29,7 +29,9 @@ public class UpdateFixedInfoTest {
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_EarthCover</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_BaseMaps</gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation_Geology </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation_Soils </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
+				"       <gmd:topicCategory><gmd:MD_TopicCategoryCode> geoscientificInformation </gmd:MD_TopicCategoryCode></gmd:topicCategory>" +
 				"     </che:CHE_MD_DataIdentification>" +
 				"   </gmd:identificationInfo>" +
 				"</che:CHE_MD_Metadata>", false);
@@ -37,12 +39,12 @@ public class UpdateFixedInfoTest {
 		assertCorrectElements(transformed);
 		
 		transformed = Xml.transform(transformed, pathToXsl);
-		System.out.println(Xml.getString(transformed));
+//		System.out.println(Xml.getString(transformed));
 		assertCorrectElements(transformed);
 	}
 	private void assertCorrectElements(Element transformed) {
-		findAndAssert(transformed, new Count(0, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("environment"))));
-		findAndAssert(transformed, new Count(12, new Finder("topicCategory")));
+		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("environment"))));
+		findAndAssert(transformed, new Count(13, new Finder("topicCategory")));
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("geoscientificInformation"))));
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("planningCadastre"))));
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("planningCadastre_Cadastre"))));
