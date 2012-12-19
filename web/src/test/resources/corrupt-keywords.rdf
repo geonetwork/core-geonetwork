@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+  <skos:ConceptScheme rdf:about="http://custom.shared.obj.ch/concept">
+    <dc:title>Geocat Validated Keywords</dc:title>
+    <dc:description>Geocat Validated Keywords.</dc:description>
+    <dc:creator>
+      <foaf:Organization>
+        <foaf:name>Swisstopo</foaf:name>
+      </foaf:Organization>
+    </dc:creator>
+    <dc:uri>http://www.geocat.ch</dc:uri>
+  </skos:ConceptScheme>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f9601e3a-1715-4247-b319-9327f01dc4e6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="deu">Naturereignis</skos:prefLabel>
+	<skos:scopeNote xml:lang="deu"></skos:scopeNote>
+	<skos:prefLabel xml:lang="ita">evento naturale</skos:prefLabel>
+	<skos:scopeNote xml:lang="ita"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fra">événement naturel</skos:prefLabel>
+	<skos:scopeNote xml:lang="fra"></skos:scopeNote>
+	<skos:prefLabel xml:lang="eng">natural event</skos:prefLabel>
+	<skos:scopeNote xml:lang="eng"></skos:scopeNote>
+	<skos:prefLabel xml:lang="roh"></skos:prefLabel>
+	<skos:scopeNote xml:lang="roh"></skos:scopeNote>
+</rdf:Description>
+</rdf:RDF>
