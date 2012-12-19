@@ -2985,6 +2985,13 @@
 							<xsl:with-param name="schema" select="$schema"/>
 						</xsl:call-template>
 					</xsl:with-param>
+
+					<xsl:with-param name="helpLink">
+		                <xsl:call-template name="getHelpLink">
+		                    <xsl:with-param name="name" select="name(.)"/>
+		                    <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		            </xsl:with-param>
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
