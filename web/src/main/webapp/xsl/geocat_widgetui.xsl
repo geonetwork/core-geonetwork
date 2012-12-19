@@ -105,12 +105,12 @@
                         select="$appBaseUrl" />/css/gnmapdefault.css</xsl:attribute>
             </link>
 
-            <link rel="stylesheet">
+            <!--<link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/geonetwork.css</xsl:attribute>
-            </link>
+            </link>-->
 
-        <link rel="stylesheet">
+            <link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/metadata-view.css</xsl:attribute>
             </link>
