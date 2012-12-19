@@ -90,8 +90,6 @@ import java.util.concurrent.Executors;
 public class DataManager {
     
 
-    private boolean hideWithheldElements;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor

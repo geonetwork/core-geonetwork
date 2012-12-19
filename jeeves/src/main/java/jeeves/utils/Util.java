@@ -145,10 +145,12 @@ public final class Util
 		if (value == null)
 			return defValue;
 
-		if (value.equals("true") || value.equals("on"))
+		value = value.toLowerCase();
+
+		if (value.equals("true") || value.equals("on") || value.equals("yes"))
 			return true;
 
-		if (value.equals("false"))
+		if (value.equals("false") || value.equals("off") || value.equals("no"))
 			return false;
 
 		throw new BadParameterEx(name, value);
