@@ -20,8 +20,20 @@
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
 				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
+				
+				<!-- 
+				Is current user Reviewer of a group where the metadata is editable ?
+				-->
 				<xsl:variable name="isNotReviewer" select="not(count(/root/response/groups/group[@userGroup='true' and userProfile='Reviewer']/oper[id=2 and on]) > 0)"/>
-				<xsl:variable name="disabled" select="not(count(/root/response/groups/group[@userGroup='true' and userProfile='Editor']/oper[id=2 and on]) > 0)"/>
+				
+				<!-- 
+				Disable checkbox for internal group if:
+				* user is not an Aministrator
+				* user who do not have Editor privileges for the current metadata for any of his groups
+				-->
+				<xsl:variable name="disabled" select="if (/root/response/owner='true') then false() else 
+													if (count(/root/response/groups/group[@userGroup='true' and userProfile='Editor']/oper[id=2 and on]) > 0) then false()
+													else true()"/>
 				
 				<div id="privileges">
 					<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
