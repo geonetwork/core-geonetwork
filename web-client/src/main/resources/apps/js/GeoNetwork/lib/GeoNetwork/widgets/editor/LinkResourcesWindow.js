@@ -107,7 +107,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 // Depends on schema
                 // Updated when window created
                 'iso19139.myocean': {
-                    'E__groupPublished': 'MYOCEAN-DOCUMENTS'
+                    'E__groupPublished': 'MYOCEAN-SERVICES-AND-DATASETS'
                 }
             }
         }

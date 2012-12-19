@@ -848,7 +848,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             url = this.editUrl + '?id=' + this.metadataId;
         }
         var mode = this.defaultEditMode;
-        if (this.editMode.hasOwnProperty(schema)) {
+        if (this.editMode && this.editMode.hasOwnProperty(schema)) {
             mode = this.editMode[schema];
         } else if (document.mainForm) {
             mode = document.mainForm.currTab.value;
