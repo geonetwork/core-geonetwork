@@ -44,6 +44,8 @@ GeoNetwork.searchApp = function() {
                         }
                     }
 
+                    Ext.get("results-main").dom.style.display = 'none';
+
                     catalogue.startRecord = 1; // Reset start record
                     searching = true;
                     catalogue.search('advanced-search-options-content-form',
@@ -162,24 +164,30 @@ GeoNetwork.searchApp = function() {
                 items : formItems
             });
         },
+
+        /**
+         * api:method[generateAdvancedSearchForm]
+         * 
+         * Creates advanced search form
+         */
         generateAdvancedSearchForm : function() {
             var f = [ {
-                fieldLabel : translate("searchText"),
+                fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
                 anchor : "100%",
                 name : "T_AnyText"
             }, {
-                fieldLabel : translate("rtitle"),
+                fieldLabel : OpenLayers.i18n("rtitle"),
                 name : "T_title",
                 anchor : "100%",
                 id : "TitleField"
             }, {
-                fieldLabel : translate("abstract"),
+                fieldLabel : OpenLayers.i18n("abstract"),
                 name : "T_abstract",
                 anchor : "100%",
                 id : "AbstractField"
             }, new Ext.ux.form.SuperBoxSelect({
-                fieldLabel : translate("keyword"),
+                fieldLabel : OpenLayers.i18n("keyword"),
                 id : "keywordsCombo",
                 name : "[E1.0_keyword",
                 store : this.createKeywordsStore(),
@@ -191,11 +199,11 @@ GeoNetwork.searchApp = function() {
                 selectOnFocus : true,
                 anchor : "100%"
             }), new Ext.ux.form.SuperBoxSelect({
-                fieldLabel : translate("theme"),
+                fieldLabel : OpenLayers.i18n("theme"),
                 name : "[E1.0_topicCat",
                 id : "topicCat",
                 store : new Ext.data.SimpleStore({
-                    data : translate("topicCat"),
+                    data : OpenLayers.i18n("topicCat"),
                     fields : [ "name", "label" ],
                     sortInfo : {
                         field : "label",
@@ -211,11 +219,11 @@ GeoNetwork.searchApp = function() {
                 selectOnFocus : true,
                 anchor : "100%"
             }), {
-                fieldLabel : translate("contact"),
+                fieldLabel : OpenLayers.i18n("contact"),
                 anchor : "100%",
                 name : "T_creator"
             }, {
-                fieldLabel : translate("organisationName"),
+                fieldLabel : OpenLayers.i18n("organisationName"),
                 anchor : "100%",
                 name : "T_orgName"
             } ];
@@ -223,12 +231,12 @@ GeoNetwork.searchApp = function() {
             f = f.concat([
                     {
                         xtype : "combo",
-                        fieldLabel : translate("template"),
+                        fieldLabel : OpenLayers.i18n("template"),
                         anchor : "100%",
                         name : "E__isTemplate",
                         value : "n",
-                        store : [ [ "n", translate("no") ],
-                                [ "y", translate("yes") ] ],
+                        store : [ [ "n", OpenLayers.i18n("no") ],
+                                [ "y", OpenLayers.i18n("yes") ] ],
                         mode : "local",
                         displayField : "name",
                         valueField : "value",
@@ -236,25 +244,28 @@ GeoNetwork.searchApp = function() {
                         forceSelection : true,
                         editable : false,
                         triggerAction : "all",
-                        selectOnFocus : true
+                        selectOnFocus : true,
+                        hidden: !catalogue.isIdentified()
                     }, {
-                        fieldLabel : translate("identifier"),
+                        fieldLabel : OpenLayers.i18n("identifier"),
                         anchor : "100%",
-                        name : "S_basicgeodataid"
+                        name : "S_basicgeodataid",
+                        hidden: !catalogue.isIdentified()
                     }, new Ext.ux.form.SuperBoxSelect({
                         id : "formatCombo",
-                        fieldLabel : translate("formatTxt"),
+                        fieldLabel : OpenLayers.i18n("formatTxt"),
                         name : "E1.0_format",
-                        store : translate("formats"),
+                        store : OpenLayers.i18n("formats"),
                         mode : "local",
                         displayField : "label",
                         valueField : "name",
-                        emptyText : translate("any"),
+                        emptyText : OpenLayers.i18n("any"),
                         typeAhead : true,
                         forceSelection : true,
                         triggerAction : "all",
                         selectOnFocus : true,
-                        anchor : "100%"
+                        anchor : "100%",
+                        hidden: !catalogue.isIdentified()
                     }) ])
 
             f.push({
@@ -265,7 +276,7 @@ GeoNetwork.searchApp = function() {
             });
             var d = [ {
                 xtype : "fieldset",
-                title : translate("what"),
+                title : OpenLayers.i18n("what"),
                 autoHeight : true,
                 defaultType : "textfield",
                 labelWidth : this.labelWidth,
@@ -280,38 +291,41 @@ GeoNetwork.searchApp = function() {
             c = c.concat([
                     {
                         xtype : "combo",
-                        fieldLabel : translate("valid"),
+                        fieldLabel : OpenLayers.i18n("valid"),
                         anchor : "100%",
                         name : "E__valid",
-                        store : [ [ "", translate("any") ],
-                                [ "1", translate("yes") ],
-                                [ "0", translate("no") ],
-                                [ "-1", translate("unChecked") ] ],
+                        store : [ [ "", OpenLayers.i18n("any") ],
+                                [ "1", OpenLayers.i18n("yes") ],
+                                [ "0", OpenLayers.i18n("no") ],
+                                [ "-1", OpenLayers.i18n("unChecked") ] ],
                         mode : "local",
                         displayField : "name",
                         valueField : "value",
-                        emptyText : translate("any"),
+                        emptyText : OpenLayers.i18n("any"),
                         hideTrigger : true,
                         forceSelection : true,
                         editable : false,
                         triggerAction : "all",
-                        selectOnFocus : true
-                    }, {
+                        selectOnFocus : true,
+                        hidden: !catalogue.isIdentified()
+                    }, /*{
                         xtype : "checkbox",
-                        fieldLabel : translate("toEdit"),
+                        fieldLabel : OpenLayers.i18n("toEdit"),
                         id : "toEdit",
-                        name : "B_toEdit"
+                        name : "B_toEdit",
+                        hidden: !catalogue.isIdentified()
                     }, {
                         xtype : "checkbox",
-                        fieldLabel : translate("toPublish"),
+                        fieldLabel : OpenLayers.i18n("toPublish"),
                         id : "toPublish",
-                        name : "B_toPublish"
-                    } ]);
+                        name : "B_toPublish",
+                        hidden: !catalogue.isIdentified()
+                    }*/ ]);
 
             d.push({
                 xtype : "fieldset",
                 labelWidth : this.labelWidth,
-                title : translate("type") + "?",
+                title : OpenLayers.i18n("type") + "?",
                 autoHeight : true,
                 defaultType : "textfield",
                 cls : "compressedFieldSet",
@@ -322,13 +336,13 @@ GeoNetwork.searchApp = function() {
                 items : c
             });
             var b = new Ext.form.ComboBox({
-                fieldLabel : translate("country"),
+                fieldLabel : OpenLayers.i18n("country"),
                 name : "country",
                 store : this.createCountryStore(),
                 mode : "local",
                 displayField : "name",
                 valueField : "value",
-                emptyText : translate("any"),
+                emptyText : OpenLayers.i18n("any"),
                 forceSelection : true,
                 triggerAction : "all",
                 selectOnFocus : true,
@@ -354,7 +368,7 @@ GeoNetwork.searchApp = function() {
                         xtype : "fieldset",
                         labelWidth : this.labelWidth,
                         id : "searchWhere",
-                        title : translate("where"),
+                        title : OpenLayers.i18n("where"),
                         autoHeight : true,
                         defaultType : "textfield",
                         cls : "compressedFieldSet",
@@ -376,7 +390,7 @@ GeoNetwork.searchApp = function() {
                                     items : [
                                             {
                                                 inputValue : "none",
-                                                boxLabel : translate("wherenone"),
+                                                boxLabel : OpenLayers.i18n("wherenone"),
                                                 checked : true,
                                                 listeners : {
                                                     check : app.searchApp
@@ -385,7 +399,7 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "bbox",
-                                                boxLabel : translate("bbox"),
+                                                boxLabel : OpenLayers.i18n("bbox"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("bbox")
@@ -393,7 +407,7 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "gg25",
-                                                boxLabel : translate("adminUnit"),
+                                                boxLabel : OpenLayers.i18n("adminUnit"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("gg25")
@@ -401,7 +415,7 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "polygon",
-                                                boxLabel : translate("drawOnMap"),
+                                                boxLabel : OpenLayers.i18n("drawOnMap"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("polygon")
@@ -425,26 +439,26 @@ GeoNetwork.searchApp = function() {
                                     border : false,
                                     hidden : true,
                                     html : '<span id="drawPolygonSpan"><a href="javascript:geocat.drawWherePolygon()">'
-                                            + translate("startNewPolygon")
+                                            + OpenLayers.i18n("startNewPolygon")
                                             + "</a></span>"
                                 },
                                 {
                                     xtype : "combo",
                                     store : [
                                             [ OpenLayers.Filter.Spatial.WITHIN,
-                                                    translate("withinGeo") ],
+                                                    OpenLayers.i18n("withinGeo") ],
                                             [
                                                     OpenLayers.Filter.Spatial.INTERSECTS,
-                                                    translate("intersectGeo") ],
+                                                    OpenLayers.i18n("intersectGeo") ],
                                             [
                                                     OpenLayers.Filter.Spatial.CONTAINS,
-                                                    translate("containsGeo") ] ],
+                                                    OpenLayers.i18n("containsGeo") ] ],
                                     hideTrigger : true,
                                     forceSelection : true,
                                     editable : false,
                                     triggerAction : "all",
                                     selectOnFocus : true,
-                                    fieldLabel : translate("type"),
+                                    fieldLabel : OpenLayers.i18n("type"),
                                     name : "boundingRelation",
                                     value : OpenLayers.Filter.Spatial.WITHIN
                                 } ],
@@ -459,7 +473,7 @@ GeoNetwork.searchApp = function() {
                     });
             d.push({
                 xtype : "fieldset",
-                title : translate("when"),
+                title : OpenLayers.i18n("when"),
                 autoHeight : true,
                 defaultType : "textfield",
                 cls : "compressedFieldSet",
@@ -470,13 +484,13 @@ GeoNetwork.searchApp = function() {
                 },
                 items : [ {
                     xtype : "datefield",
-                    fieldLabel : translate("from"),
+                    fieldLabel : OpenLayers.i18n("from"),
                     format : "d/m/Y",
                     postfix : "T00:00:00",
                     name : ">=_TempExtent_end"
                 }, {
                     xtype : "datefield",
-                    fieldLabel : translate("to"),
+                    fieldLabel : OpenLayers.i18n("to"),
                     format : "d/m/Y",
                     postfix : "T23:59:59",
                     name : "<=_TempExtent_begin"
@@ -485,7 +499,7 @@ GeoNetwork.searchApp = function() {
             d.push({
                 xtype : "fieldset",
                 labelWidth : this.labelWidth,
-                title : translate("source"),
+                title : OpenLayers.i18n("source"),
                 autoHeight : true,
                 defaultType : "textfield",
                 cls : "compressedFieldSet",
@@ -494,9 +508,9 @@ GeoNetwork.searchApp = function() {
                     labelSeparator : ""
                 },
                 items : [ new Ext.ux.form.SuperBoxSelect({
-                    fieldLabel : translate("catalog"),
+                    fieldLabel : OpenLayers.i18n("catalog"),
                     name : "[V_",
-                    store : translate("sources_groups"),
+                    store : OpenLayers.i18n("sources_groups"),
                     mode : "local",
                     displayField : "label",
                     valueField : "name",
@@ -532,7 +546,7 @@ GeoNetwork.searchApp = function() {
                 })
             });
             b.add(new a({
-                name : translate("any"),
+                name : OpenLayers.i18n("any"),
                 value : ""
             }));
             b.load({
@@ -543,12 +557,14 @@ GeoNetwork.searchApp = function() {
         getTypeCombo : function() {
             return {
                 xtype : "combo",
-                fieldLabel : translate("type"),
+                fieldLabel : OpenLayers.i18n("type"),
                 name : "E1.0_type",
-                store : translate("dataTypes"),
+                store : this.getTypeStore(),
+                displayField : 'name',
+                valueField : 'id',
                 mode : "local",
                 value : "",
-                emptyText : translate("any"),
+                emptyText : OpenLayers.i18n("any"),
                 hideTrigger : true,
                 forceSelection : true,
                 editable : false,
@@ -576,7 +592,7 @@ GeoNetwork.searchApp = function() {
                 data : {
                     root : [
                             {
-                                name : translate("any"),
+                                name : OpenLayers.i18n("any"),
                                 value : "",
                                 bbox : null
                             },
@@ -769,7 +785,7 @@ GeoNetwork.searchApp = function() {
                                     "BOUNDING" ],
                             {
                                 id : "gemeindenComboBox",
-                                fieldLabel : translate("city"),
+                                fieldLabel : OpenLayers.i18n("city"),
                                 searchField : "GEMNAME_L",
                                 displayField : "GEMNAME",
                                 valueField : "OBJECTVAL",
