@@ -522,7 +522,16 @@ div.button {
 }
 /* Icon and button - end */
 
+/* WYSIWIG editor */
+.buttons a.wysiwyg span {
+  background-image : url(../images/default/bullet_toggle_wysiwyg.png);
+}
+.nicEdit-main ol{ list-style:inside; list-style-type: decimal; } .nicEdit-main ul{ list-style: inside; list-style-type: disc; } 
+.nicEdit-main strong { font-weight:bold; display: inline; }
 
+.view-simple ol{ list-style:inside; list-style-type: decimal; } .view-simple ul{ list-style: inside; list-style-type: disc; } 
+.view-simple strong { font-weight:bold; display: inline; }
+/* End WYSIWIG editor */
 
 /* Codelist have a class attribute which could
 be use for custom styling in view mode */
@@ -542,3 +551,4 @@ be use for custom styling in view mode */
 .gmlduration + * input {
     float: none !important;
 }
+
