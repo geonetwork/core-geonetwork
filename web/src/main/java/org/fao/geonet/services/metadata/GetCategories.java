@@ -38,6 +38,7 @@ import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 
@@ -116,12 +117,85 @@ public class GetCategories implements Service
 				el.addContent(new Element("on"));
 		}
 
+
+		//-----------------------------------------------------------------------
+		//--- retrieve groups operations
+
+		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
+
+		Element elOper = Lib.local.retrieve(dbms, "Operations").setName(Geonet.Elem.OPERATIONS);
+
+		Element elGroup = Lib.local.retrieve(dbms, "Groups");
+
+		List listGroup = elGroup.getChildren();
+
+		for(int i=0; i<listGroup.size(); i++)
+		{
+			Element el = (Element) listGroup.get(i);
+			
+			el.setName(Geonet.Elem.GROUP);
+			String sGrpId = el.getChildText("id");
+			int grpId = Integer.parseInt(sGrpId);
+
+			//--- get all group informations (user member and user profile)
+			
+			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
+			
+			String query = "SELECT profile FROM UserGroups WHERE userId=? AND groupId=?";
+			Element profiles = dbms.select(query, context.getUserSession().getUserIdAsInt(), grpId);
+			List profilesList = profiles.getChildren();
+			for (Object aProfile : profilesList) {
+				Element pEl = (Element) aProfile;
+				String profile = pEl.getChildText("profile");
+				el.addContent(new Element("userProfile").setText(profile));
+			}
+
+
+			//--- get all operations that this group can do on given metadata
+
+			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
+
+			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
+
+			//--- now extend the group list adding proper operations
+
+			List listOper = elOper.getChildren();
+
+			for(int j=0; j<listOper.size(); j++)
+			{
+				String operId = ((Element) listOper.get(j)).getChildText("id");
+
+				Element elGrpOper = new Element(Geonet.Elem.OPER)
+													.addContent(new Element(Geonet.Elem.ID).setText(operId));
+
+				boolean bFound = false;
+
+				for(int k=0; k<listAllow.size(); k++)
+				{
+					Element elAllow = (Element) listAllow.get(k);
+
+					if (operId.equals(elAllow.getChildText("operationid")))
+					{
+						bFound = true;
+						break;
+					}
+				}
+
+				if (bFound)
+					elGrpOper.addContent(new Element(Geonet.Elem.ON));
+
+				el.addContent(elGrpOper);
+			}
+		}
+		
 		//-----------------------------------------------------------------------
 		//--- put all together
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
 										.addContent(new Element(Geonet.Elem.ID).setText(id))
 										.addContent(elCateg)
+										.addContent(elOper)
+										.addContent(elGroup)
 										.addContent(isOwner);
 
 		return elRes;

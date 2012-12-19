@@ -11,8 +11,10 @@
 			<xsl:with-param name="title" select="/root/gui/strings/categories"/>
 			<xsl:with-param name="content">
 
-				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
-
+				<xsl:variable name="disabled" select="if (/root/response/owner='true') then false() else 
+					if (count(/root/response/groups/group[@userGroup='true' and userProfile='Editor']/oper[id=2 and on]) > 0) then false()
+					else true()"/>
+				
 				<div id="categories" align="center">
 					<xsl:choose>
 						<xsl:when test="/root/response/categories/*">
