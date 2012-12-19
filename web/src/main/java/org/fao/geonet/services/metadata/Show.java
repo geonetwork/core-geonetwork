@@ -111,7 +111,7 @@ public class Show implements Service
 			skipPopularity = skip.equals("y");
 		}
 		
-		boolean witholdWithheldElements = Util.getParam(params, "withheld", false);
+		boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
 		if (witholdWithheldElements) {
 		   XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
 		}
