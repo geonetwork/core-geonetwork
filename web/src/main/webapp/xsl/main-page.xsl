@@ -53,7 +53,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
