@@ -6,7 +6,7 @@
 	xmlns:srv="http://www.isotc211.org/2005/srv"
     xmlns:che="http://www.geocat.ch/2008/che"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-	exclude-result-prefixes="gco gmd dc exslt geonet">
+	exclude-result-prefixes="che gco gmd dc exslt geonet">
 
     <xsl:template name="geocatButtons">
         <xsl:param name="metadata"/>
@@ -26,7 +26,10 @@
                                 <xsl:call-template name="logo"/>
                             </td>
                             <td class="padded" width="90%">
-                                <h1 align="left">
+                                <h1 align="middle">
+		                           	<xsl:if test="/root/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:status/gmd:MD_ProgressCode[@codeListValue = 'historicalArchive']">
+                	            		<img src="{/root/gui/url}/apps/geocatch/images/archived.png" alt="/root/gui/strings/archived"/>
+        		                   	</xsl:if>
                                     <xsl:value-of select="$metadata/title"/>
                                 </h1>
                             </td>

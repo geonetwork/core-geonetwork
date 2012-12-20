@@ -165,6 +165,10 @@
     		<xsl:for-each select="gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
+			
+			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
+				<Field name="statusProgressCode" string="{string(.)}" store="true" index="true" token="false"/>
+			</xsl:for-each>
 
 			<xsl:for-each select="che:basicGeodataID/gco:CharacterString">
 			    <Field name="basicgeodataid" string="{string(.)}" store="true" index="true" token="false"/>

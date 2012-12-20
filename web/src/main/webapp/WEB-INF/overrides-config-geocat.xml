@@ -103,12 +103,12 @@
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-xlinks-"/>
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-search-"/>		    
     		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>
-	        <java class="v110.UpdateRDF"/>		    
         </addXml>
 		<addXml xpath="">
 			<migrate>
 				<version id="110">
 					<file path="WEB-INF/classes/setup/sql/migrate/v110" filePrefix="migrate-" />
+			        <java class="v110.UpdateRDF"/>		    
 				</version>
 			</migrate>		    
         </addXml>
@@ -135,6 +135,7 @@
     <file name=".*WEB-INF/config-lucene.xml">
     	<addXml xpath="search/dumpFields">
 	      <field name="wms_uri" tagName="wmsuri"/>
+	      <field name="statusProgressCode" tagName="statusProgressCode"/>
     	</addXml>
     	<addXml xpath="tokenized">
     		<Field name="orgName"/>
