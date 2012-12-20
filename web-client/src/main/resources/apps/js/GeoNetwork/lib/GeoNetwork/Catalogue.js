@@ -1110,37 +1110,51 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-    	var intervalID;
-    	var loginAttempts = 0;
-    	var loginWindow;
         if (this.casEnabled) {
-        	var framePanel = new Ext.Panel({
-        		hidden: true,
-        		renderTo: 'casLogin-frame-win',
-        		width: 800,
-        		height: 500,
-        		html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
-        				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>'
-        		
-        	});
-        	
-        	intervalID = setInterval(function (){
-        		loginAttempts += 1;
-        		if(loginAttempts > (2)) {
-        			clearInterval (intervalID);
-        			app.identifiedUser = undefined;
-	                app.onAfterBadLogin();
-        		} 
-        		else if (framePanel.rendered) {
-        			var iframe = document.getElementById('casLoginFrame');
-        			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        			var connectedDiv = innerDoc.getElementById('content_container');
-        			if(connectedDiv) {
-        				clearInterval (intervalID);
-        				app.isLoggedIn();
-        			}
-        		}
-        	}, 500);
+            var framePanel = new Ext.Panel({
+               hidden: true,
+               renderTo: 'casLogin-frame-win',
+               width: 800,
+               height: 500,
+               html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
+                      this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>',
+               listeners: {
+                   afterrender: {
+                       fn: function() {
+                           
+                           var intervalID;
+                           var loginAttempts = 0;
+                           
+                           intervalID = setInterval(function (){
+                               loginAttempts += 1;
+                               if(loginAttempts > (25)) {
+                                   clearInterval (intervalID);
+                                   app.identifiedUser = undefined;
+                                   app.onAfterBadLogin();
+                               } 
+                               else  {
+                                   
+                                   var iframe = document.getElementById('casLoginFrame');
+                                   var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                                   
+                                   // Test if the CAS login form is in the iframe
+                                   if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                                       clearInterval (intervalID);
+                                       app.onAfterBadLogin();
+                                   }
+                                   
+                                   // Test there auth have been made
+                                   var connectedDiv = innerDoc.getElementById('content_container');
+                                   if(connectedDiv) {
+                                       clearInterval (intervalID);
+                                       app.isLoggedIn();
+                                   }
+                               }
+                           }, 200);
+                       }
+                   }
+               }
+            });
         } else {
 			OpenLayers.Request.POST({
 			    url: this.services.login,
