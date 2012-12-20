@@ -395,7 +395,7 @@ GeoNetwork.util.SearchTools = {
                      */
                     var first = cur.items.get(0);
                     result[first.getName()] = first.getGroupValue();
-                } else if (cur.isXType('checkbox')) {
+                } else if (cur.isXType('checkbox') && cur.getValue()) {
                     result[cur.getName()] = cur.getValue();
                 } else if (cur.isXType('datefield')) {
                     if (cur.getValue() !== "") {
