@@ -240,9 +240,10 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 editable: false
             }, {
                 id: 'filename',
-                header: OpenLayers.i18n('id'),
+                header: '1'+OpenLayers.i18n('id'),
                 dataIndex: 'filename',
-                editable: false
+                editable: false,
+                hidden: true
             }, {
                 id: 'theme',
                 header: OpenLayers.i18n('Theme'),
