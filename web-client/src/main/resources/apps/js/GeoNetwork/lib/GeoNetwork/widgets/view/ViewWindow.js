@@ -76,7 +76,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is true.
          */
-        permalink: true
+        permalink: false
     },
     serviceUrl: undefined,
     catalogue: undefined,
