@@ -553,7 +553,8 @@ function doProtocolChange(ref) {
 function validateTopicCategory(id) {
   var el = Ext.get(id);
   var val = el.getValue();
-  if (el.dom.selectedOptions.length > 0 && el.dom.selectedOptions[0].getAttribute('disabled') == 'true') {
+  if (val == null || val.length == 0 || 
+      (el.dom.selectedOptions.length > 0 && el.dom.selectedOptions[0].getAttribute('disabled') == 'true')) {
     el.addClass('error');
   } else {
     el.removeClass('error');
