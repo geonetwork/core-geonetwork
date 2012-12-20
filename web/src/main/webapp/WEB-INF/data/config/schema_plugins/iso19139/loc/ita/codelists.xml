@@ -1621,7 +1621,7 @@ polvere</description>
 			<code>imageryBaseMapsEarthCover_BaseMaps</code>
 			<label>Carte di base, modelli del territorio</label>
 		</entry>
-		<entry>
+		
 		<entry>
 			<code>imageryBaseMapsEarthCover_EarthCover</code>
 			<label>Copertura e utilizzo del suolo</label>
