@@ -57,7 +57,10 @@
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/geoext/resources/css/geoext-all-debug.css"/>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all-debug.js" /><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js" /><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/nl.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/de.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/en.js"/><xsl:text>&#10;</xsl:text>
@@ -67,6 +70,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/fi.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/it.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Lang/tr.js"/><xsl:text>&#10;</xsl:text>
+				
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
 
