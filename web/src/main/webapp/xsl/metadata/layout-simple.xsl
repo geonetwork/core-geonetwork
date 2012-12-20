@@ -17,20 +17,35 @@
 
     <table class="gn">
       <tr>
-        <td colspan="2">
+        <td colspan="2" class="title-td">
           <span class="title">
             <xsl:copy-of select="$title"/>
           </span>
         </td>
       </tr>
-      <tr>
-        <td>
-          <xsl:copy-of select="$abstract"/>
-        </td>
-        <td class="right">
-          <xsl:copy-of select="$logo"/>
-        </td>
-      </tr>
+      <xsl:choose>
+	      <xsl:when test="$logo">
+		      <tr>
+		        <td class="abstract">
+		          <xsl:copy-of select="$abstract"/>
+		        </td>
+		        <td class="right">
+		          <xsl:copy-of select="$logo"/>
+		        </td>
+		      </tr>
+	      </xsl:when>
+          <xsl:otherwise>
+            <tr>
+                <td colspan="2" class="abstract">
+                  <xsl:copy-of select="$abstract"/>
+                </td>
+              </tr>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="$logo">
+      
+      </xsl:if>
+      
       <tr>
         <td colspan="2">
           <xsl:copy-of select="$relatedResources"/>

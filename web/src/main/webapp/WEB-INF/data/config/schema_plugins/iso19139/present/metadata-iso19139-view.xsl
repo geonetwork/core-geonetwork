@@ -29,9 +29,6 @@
           </xsl:with-param>
         </xsl:call-template>
       </xsl:with-param>
-      <xsl:with-param name="logo">
-        <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>
-      </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"
           select="gmd:distributionInfo"
@@ -576,7 +573,15 @@
                            <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gco:CharacterString"/>&#160;
                           </xsl:when>
                           <xsl:otherwise>
-                            <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+                            <xsl:choose>
+                              <xsl:when test="string-length(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) > 100">
+                                <xsl:value-of select="concat(substring(gmd:CI_OnlineResource/gmd:linkage/gmd:URL, 0, 120),'...')"/>&#160;
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>&#160;
+                              </xsl:otherwise>
+                            </xsl:choose>
+                            
                           </xsl:otherwise>
                         </xsl:choose>
                       </xsl:otherwise>

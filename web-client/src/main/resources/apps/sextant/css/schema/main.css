@@ -88,3 +88,14 @@ body {
 #result-metadata-modal-tab-2-content * table.gn td.right img{
 	display:none;
 }
+#result-metadata-modal-tab-2-content * table.gn td.abstract {
+    padding-right: 40px;
+    text-align: justify;
+}
+
+#result-metadata-modal-tab-2-content * table.gn td span.title {
+	padding-left: 9px;
+}
+#result-metadata-modal-tab-2-content * table.gn td.title-td {
+    padding-top: 12px;
+}
