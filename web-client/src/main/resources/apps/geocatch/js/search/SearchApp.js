@@ -1284,8 +1284,7 @@ GeoNetwork.searchApp = function() {
                 border : false,
                 hidden : true,
                 bodyCssClass : 'md-view',
-                autoWidth : true,
-                // width: 500,
+                anchor: "100% 100%",
                 layout : 'fit',
                 tbar : tBar,
                 items : metadataResultsView,
@@ -1394,22 +1393,22 @@ GeoNetwork.searchApp = function() {
         generateFacetedSearchPanel : function() {
             var breadcrumb = new Ext.Panel({
                 id : 'bread-crumb',
-                //renderTo : 'bread-crumb-div',
+                renderTo : 'bread-crumb-div',
                 layout : 'table',
                 cls : 'breadcrumb',
                 defaultType : 'button',
                 border : false,
                 split : false,
                 layoutConfig : {
-                    columns : 3
+                    columns : 1
                 }
             });
 
             var facetsPanel = new GeoNetwork.FacetsPanel(
                     {
                         id : 'facets-panel',
-//                        renderTo : 'facets-panel-div',
-                        renderTo: 'search-filter',
+                        renderTo : 'facets-panel-div',
+                        //renderTo: 'search-filter',
                         searchForm : Ext
                                 .getCmp('advanced-search-options-content-form'),
                         breadcrumb : breadcrumb,

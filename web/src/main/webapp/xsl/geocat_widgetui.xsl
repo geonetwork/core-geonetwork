@@ -333,13 +333,13 @@
                         <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
                     </a>
             </div>    
-            <div id="search-results" style="display:none">
+            <div id="search-results" style="display:none; height: 100%">
                 <div id="results-main">
                     <h2>SEARCH FOR GEODATA AND GEOSERVICES</h2>
                     <img src="{/root/gui/url}/images/geocatII-web.jpg" alt="Geocat cat" width="100px"/>
 
-                    <div id="mostPopular">
-                       <h3><xsl:value-of select="/root/gui/strings/mostPopular"/></h3>
+                    <fieldset id="mostPopular">
+                       <legend><xsl:value-of select="/root/gui/strings/mostPopular"/></legend>
                         <div id="mostpopular-metadata">
 
                         <xsl:for-each select="/root/gui/mostPopular/*">
@@ -353,23 +353,23 @@
                             </a>
                         </xsl:for-each>
                         </div>
-                    </div>
+                    </fieldset>
                 
-                    <div id="latestChanges">
-                       <h3><xsl:value-of select="/root/gui/strings/recentAdditions"/> <a href="../../srv/en/rss.latest?georss=simplepoint" alt="Latest news" title="Latest news"><img src="../../apps/images/default/feed.png"/></a></h3>
+                    <fieldset id="latestChanges">
+                       <legend><xsl:value-of select="/root/gui/strings/recentAdditions"/>&#160;<a href="../../srv/en/rss.latest?georss=simplepoint" alt="Latest news" title="Latest news"><img src="../../apps/images/default/feed.png"/></a></legend>
                         <div id="latest-metadata">
                            <xsl:for-each select="/root/gui/latestUpdated/*">
-                    <xsl:variable name="md">
-                        <xsl:apply-templates mode="brief" select="."/>
-                    </xsl:variable>
-                    <xsl:variable name="metadata" select="$md/*[1]"/>
-                    <a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
-                        Metadata recent record <xsl:value-of select="position()" /><xsl:value-of select="$metadata/title"/>
-                        <br/>
-                    </a>
-                </xsl:for-each>
+								<xsl:variable name="md">
+									<xsl:apply-templates mode="brief" select="."/>
+								</xsl:variable>
+								<xsl:variable name="metadata" select="$md/*[1]"/>
+								<a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
+									Metadata recent record <xsl:value-of select="position()" /><xsl:value-of select="$metadata/title"/>
+									<br/>
+								</a>
+							</xsl:for-each>
                         </div>
-                    </div>
+                    </fieldset>
                 </div>
                 
                 <div id="result-panel"></div>
