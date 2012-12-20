@@ -213,13 +213,6 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<!--  <xsl:template priority="10" match="gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='environment']|
-				gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='geoscientificInformation']|
-				gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='planningCadastre']|
-				gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='imageryBaseMapsEarthCover']" >
-	</xsl:template>
-	 -->
-	 
 	 <xsl:template priority="20" match="
 		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='environment' and 
 		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'environment')] or 

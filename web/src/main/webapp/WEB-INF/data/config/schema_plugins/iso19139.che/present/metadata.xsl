@@ -1862,89 +1862,113 @@ priority="40">
 <!--
     =============================================================================
 -->
-<!-- 	<xsl:template mode="iso19139" match="gmd:topicCategory[gmd:MD_TopicCategoryCode='environment']|
-				gmd:topicCategory[gmd:MD_TopicCategoryCode='geoscientificInformation']|
-				gmd:topicCategory[gmd:MD_TopicCategoryCode='planningCadastre']|
-				gmd:topicCategory[gmd:MD_TopicCategoryCode='imageryBaseMapsEarthCover']" priority="10">
-	</xsl:template>
-	 -->
+	 <xsl:template mode="iso19139" priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='environment' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'environment')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'environment')])] "/>
+	 <xsl:template mode="iso19139" priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='geoscientificInformation' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'geoscientificInformation')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'geoscientificInformation')])] "/>
+	 <xsl:template mode="iso19139" priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='planningCadastre' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'planningCadastre')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'planningCadastre')])] "/>
+	 <xsl:template mode="iso19139" priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='imageryBaseMapsEarthCover' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')])] "/>
+
+
 	<xsl:template mode="iso19139" match="gmd:MD_TopicCategoryCode" priority="10">
  		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
 		<xsl:choose>
-		<xsl:when test="$edit">
-		<xsl:variable name="name"  select="name(.)"/>
-		<xsl:variable name="value" select="string(.)"/>
-		
-		<xsl:variable name="list">
-			<items>
-				<xsl:for-each select="geonet:element/geonet:text">
-					<xsl:variable name="choiceValue" select="string(@value)"/>							
-					<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
-					
-					<item>
-						<value>
-							<xsl:if test="contains(@value,'_')">
-								<xsl:attribute name="parent"><xsl:value-of select="substring-before(@value, '_')" /></xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="@value"/>
-						</value>
-						<label>
-							<xsl:choose>
-								<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
-							</xsl:choose>									
-						</label>
-					</item>
-				</xsl:for-each>
-			</items>
-		</xsl:variable>
-		
-		<select class="md" name="_{geonet:element/@ref}" size="1">
-			<option name=""/>
-			
-			<xsl:for-each select="exslt:node-set($list)//item">
-				<xsl:sort select="value" />
-				<xsl:variable name="curValue" select="value"/>
-				<xsl:choose>
-					<xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">
-						<optgroup>
-							<xsl:attribute name="label"><xsl:value-of select="label" /></xsl:attribute>
-							<xsl:for-each select="exslt:node-set($list)//item[value/@parent=$curValue]">
-								<option>
-									<xsl:if test="value=$value">
-										<xsl:attribute name="selected" />
+			<xsl:when test="$edit">
+				<xsl:variable name="name"  select="name(.)"/>
+				<xsl:variable name="value" select="string(.)"/>
+				
+				<xsl:variable name="list">
+					<items>
+						<xsl:for-each select="geonet:element/geonet:text">
+							<xsl:variable name="choiceValue" select="string(@value)"/>							
+							<xsl:variable name="label" select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+							<item>
+								<value>
+									<xsl:if test="contains(@value,'_')">
+										<xsl:attribute name="parent"><xsl:value-of select="substring-before(@value, '_')" /></xsl:attribute>
 									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
-									<xsl:value-of select="label" />
-								</option>
-							</xsl:for-each>
-						</optgroup>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="not(value/@parent)">
-							<option>
-								<xsl:if test="value=$value">
-									<xsl:attribute name="selected" />
+									<xsl:value-of select="@value"/>
+								</value>
+								<label>
+									<xsl:choose>
+										<xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+									</xsl:choose>									
+								</label>
+							</item>
+						</xsl:for-each>
+					</items>
+				</xsl:variable>
+				<xsl:variable name="selector">
+				<select id="topic{geonet:element/@ref}" class="md topicCategory" name="_{geonet:element/@ref}" size="1" onchange="validateTopicCategory('topic{geonet:element/@ref}')">
+					<option name=""/>
+					
+					<xsl:for-each select="exslt:node-set($list)//item">
+						<xsl:sort select="value" />
+						<xsl:variable name="curValue" select="value"/>
+						<xsl:choose>
+							<xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">
+								<optgroup>
+									<xsl:attribute name="label"><xsl:value-of select="label" /></xsl:attribute>
+									<xsl:if test="value=$value">
+										<option value="{value}" disabled="true">
+											<xsl:if test="value=$value">
+												<xsl:attribute name="selected" />
+											</xsl:if>
+											<xsl:value-of select="label" />
+										</option>
+									</xsl:if>
+									<xsl:for-each select="exslt:node-set($list)//item[value/@parent=$curValue]">
+										<option value="{value}">
+											<xsl:if test="value=$value">
+												<xsl:attribute name="selected" />
+											</xsl:if>
+											<xsl:value-of select="label" />
+										</option>
+									</xsl:for-each>
+								</optgroup>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="not(value/@parent)">
+									<option value="{value}">
+										<xsl:if test="value=$value">
+											<xsl:attribute name="selected" />
+										</xsl:if>
+										<xsl:value-of select="label" />
+									</option>
 								</xsl:if>
-								<xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
-									<xsl:value-of select="label" />
-							</option>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-			
-			</xsl:for-each>
-			
-		</select>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:apply-templates mode="simpleElement" select=".">
-				<xsl:with-param name="schema" select="$schema"/>
-				<xsl:with-param name="edit"   select="$edit"/>
-			</xsl:apply-templates>
-		</xsl:otherwise>
+							</xsl:otherwise>
+						</xsl:choose>
+					
+					</xsl:for-each>
+					
+				</select>
+				</xsl:variable>
+				
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="text"   select="$selector"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="false()"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
 		</xsl:choose>
     </xsl:template>
 <!--
