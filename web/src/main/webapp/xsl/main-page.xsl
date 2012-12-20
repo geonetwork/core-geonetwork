@@ -53,7 +53,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
@@ -75,6 +75,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fi.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/ca.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/tr.js"/><xsl:text>&#10;</xsl:text>
