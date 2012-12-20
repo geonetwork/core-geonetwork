@@ -53,15 +53,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Importer {
-	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath)
-			throws Exception {
-			return doImport(params, context, mefFile, stylePath, false);
-	}
 
 	public static List<String> doImport(final Element params,
 			final ServiceContext context, File mefFile, final String stylePath,
-			final boolean indexGroup) throws Exception {
+			final Dbms dbms) throws Exception {
 		final GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		final DataManager dm = gc.getDataManager();
@@ -71,9 +66,6 @@ public class Importer {
 				.getMandatoryValue("preferredSchema") != null ? gc
 				.getHandlerConfig().getMandatoryValue("preferredSchema")
 				: "iso19139");
-
-		final Dbms dbms = (Dbms) context.getResourceManager().open(
-				Geonet.Res.MAIN_DB);
 
 		final List<String> id = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
@@ -88,7 +80,7 @@ public class Importer {
 		}
 
 		IVisitor visitor;
-
+	
 		if (fileType.equals("single"))
 			visitor = new XmlVisitor();
 		else if (fileType.equals("mef"))
@@ -397,13 +389,6 @@ public class Importer {
 				else
 					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
 
-				if (indexGroup) {
-					dbms.commit();
-					dm.indexMetadata(dbms, id.get(index));
-				}
-                else {
-                    dm.indexInThreadPool(context,id.get(index),dbms);
-				}
 			}
 
 			// --------------------------------------------------------------------
@@ -426,6 +411,7 @@ public class Importer {
 		});
 
 		return id;
+
 	}
 
 	public static void importRecord(String uuid, String localId,

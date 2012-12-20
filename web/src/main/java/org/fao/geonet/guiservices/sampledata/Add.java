@@ -34,6 +34,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
@@ -70,6 +71,7 @@ public class Add implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager schemaMan = gc.getSchemamanager();
+		DataManager dm = gc.getDataManager();
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
@@ -99,7 +101,10 @@ public class Add implements Service {
 				try {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                         Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
-					MEFLib.doImport(params, context, file, "");
+					List<String> ids = MEFLib.doImport(params, context, file, "", dbms);
+					for (String id : ids) {
+						dm.indexMetadata(dbms, id);
+					}
 					dbms.commit();
 				}
                 catch (Exception e) {
