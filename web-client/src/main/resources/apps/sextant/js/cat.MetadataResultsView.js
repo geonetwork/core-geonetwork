@@ -174,25 +174,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             }
         });
     },
-    
-    zoomToExtent: function(record) {
-        if (this.maps.length !== 0) {
-            var uuid = record.get('uuid');
             
-            for (j = 0; j < this.maps.length; j++) {
-                var l = this.maps[j].layer;
-                if (l.features) {
-                    for (i = 0; i < l.features.length; i++) {
-                        if (uuid === l.features[i].attributes.id) {
-                            this.maps[j].map.zoomToExtent(l.features[i].geometry.getBounds());
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
-    },
-        
     /**
      * Called after the ListView is rendered
      * Check if there are some WMS or Download links. Display buttons if needed
@@ -209,12 +191,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	var downloadMenu = Ext.DomQuery.jsSelect('div.downloadMenu', lis[i]);
         	var adminMenu = Ext.DomQuery.jsSelect('div.md-action-menu', lis[i]);
         	
-        	var thumbImg= Ext.DomQuery.jsSelect('img.thumb-list-img', lis[i]);
-        	var rec = records[i];
-        	if(thumbImg && thumbImg.length > 0) {
-        	    Ext.get(thumbImg[0]).on('click', Ext.createDelegate(this.zoomToExtent, this, [rec])
-        	    );
-        	}
         	// Hide admin button (and sep)if not connected
         	if(!isAdmin || records[i].get('isharvested') == 'y' || records[i].get('edit') === 'false') {
         		Ext.get(adminMenu).addClass('mdHiddenBtn');
