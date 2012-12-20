@@ -22,6 +22,8 @@
     <xsl:template name="iso19139.cheCompleteTab">
 	    <xsl:param name="tabLink"/>
 	    <xsl:param name="schema"/>
+	    
+	    
 		<xsl:call-template name="displayTab">
 			<xsl:with-param name="tab"     select="'complete'"/>
 			<xsl:with-param name="text"    select="/root/gui/strings/completeTab"/>
@@ -1860,16 +1862,18 @@ priority="40">
 <!--
     =============================================================================
 -->
-	<xsl:template mode="iso19139" match="gmd:topicCategory[gmd:MD_TopicCategoryCode='environment']|
+<!-- 	<xsl:template mode="iso19139" match="gmd:topicCategory[gmd:MD_TopicCategoryCode='environment']|
 				gmd:topicCategory[gmd:MD_TopicCategoryCode='geoscientificInformation']|
 				gmd:topicCategory[gmd:MD_TopicCategoryCode='planningCadastre']|
 				gmd:topicCategory[gmd:MD_TopicCategoryCode='imageryBaseMapsEarthCover']" priority="10">
 	</xsl:template>
-	
+	 -->
 	<xsl:template mode="iso19139" match="gmd:MD_TopicCategoryCode" priority="10">
  		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
 		
+		<xsl:choose>
+		<xsl:when test="$edit">
 		<xsl:variable name="name"  select="name(.)"/>
 		<xsl:variable name="value" select="string(.)"/>
 		
@@ -1934,6 +1938,14 @@ priority="40">
 			</xsl:for-each>
 			
 		</select>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates mode="simpleElement" select=".">
+				<xsl:with-param name="schema" select="$schema"/>
+				<xsl:with-param name="edit"   select="$edit"/>
+			</xsl:apply-templates>
+		</xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
 <!--
     =============================================================================
