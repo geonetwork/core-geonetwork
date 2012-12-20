@@ -236,11 +236,14 @@ input[type="button"] {
 }
 
 #search-submit-container {
+	background-color: #DFE8F6; 
 	padding: 5px;
 }
 
 #show-advanced,#hide-advanced {
-	font-size: 11px;
+	font-size: 12px;
+	margin-top:5px;
+	margin-bottom:5px;
 }
 /* GeoNetwork Message */
 .alert {

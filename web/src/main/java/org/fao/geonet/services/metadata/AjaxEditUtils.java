@@ -17,7 +17,9 @@ import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
@@ -505,6 +507,8 @@ public class AjaxEditUtils extends EditUtils {
 		String uName = el.getName();
 		Namespace ns = el.getNamespace();
 		Element parent = el.getParentElement();
+		/** GEOCAT HACK to remove "parent" topicCategories **/
+		removeParentTopicCategory(parent, el);
 		Element result = null;
 		if (parent != null) {
 			int me = parent.indexOf(el);
@@ -562,6 +566,22 @@ public class AjaxEditUtils extends EditUtils {
 		return result;
 	}
 
+	private void removeParentTopicCategory(Element parent, Element el) throws JDOMException {
+		if (el.getName().equals("topicCategory") && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())) {
+			String tag = el.getChildTextTrim("MD_TopicCategoryCode",Geonet.Namespaces.GMD);
+			if(tag!=null && tag.contains("_")) {
+				String parentCatCode = tag.split("_")[0];
+				List<?> related = Xml.selectNodes(parent, "gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode),'"+parentCatCode+"_')]", Geonet.Namespaces.iso19139Namespaces);
+				if(related.size() == 1) {
+					List<?> parentCategories = Xml.selectNodes(parent, "gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode) = '"+parentCatCode+"']", Geonet.Namespaces.iso19139Namespaces);
+					for (Object object : parentCategories) {
+						((Content)object).detach();
+					}
+				}
+			}
+		}
+		
+	}
 	/**
 	 * Removes attribute in embedded mode.
 	 *

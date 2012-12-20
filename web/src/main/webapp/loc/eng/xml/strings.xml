@@ -212,7 +212,6 @@
     <xlink.new js="true">New</xlink.new>
     <xlink.newGeographic js="true">New (Geographic only)</xlink.newGeographic>
     <noXlink js="true">Invalid selected element.</noXlink>
-
 	<displayValidationReport>Validation report</displayValidationReport>
 	<publishOnlyIfAdminOrValid>Metadata could be published only if valid against ISO rules or if you're an administrator.</publishOnlyIfAdminOrValid>
 	<xsdValid>XSD valid</xsdValid>
