@@ -300,7 +300,7 @@
 	<cannotRetrieveGroup js="true">Non è stato possibile recuperare i gruppi</cannotRetrieveGroup>
 	<selectNewOwner js="true">Selezionare l'utente che sarà il nuovo proprietario</selectNewOwner>
 	<selectOwnerGroup js="true">Selezionare il gruppo a cui appartiene l'utente selezionato</selectOwnerGroup>
-	<selectOneFile js="true">Selezionare almeno un file da scaricare!</selectOneFile>
+	<selectOneFileDownload js="true">Selezionare almeno un file da scaricare!</selectOneFileDownload>
 	<checkEmail js="true">Inserire un indirizzo email corretto</checkEmail>
 	<addName js="true">Inserire un nome o un'organizzazione</addName>
 	<noComment js="true">Nessun commento</noComment>
@@ -323,7 +323,7 @@
 	<errorSaveFailed js="true">Errore: nono si può salvare la form</errorSaveFailed>
 	<errorOnAction js="true">Errore: non si può effettuare l'operazione</errorOnAction>
 	<errorChangeProtocol js="true">Potrebbe essere stato caricato un file. Rimuovere il file prima di cambiare il protocollo</errorChangeProtocol>
-	<selectOneFile js="true">Ricercare o inserire un nome di file prima di premere carica!</selectOneFile> 
+	<selectOneFileUpload js="true">Ricercare o inserire un nome di file prima di premere carica!</selectOneFileUpload>
 	<uploadFailed js="true">Errore: caricamento fallito! - ritorno </uploadFailed>
 	<uploadSetFileNameFailed js="true">Errore: il caricamento è avvenuto ma non è possibile impostare il nome del file!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Impossibile caricare il tooltip dal server</cannotGetTooltip>

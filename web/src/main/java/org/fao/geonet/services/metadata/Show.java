@@ -37,10 +37,12 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
+
 import jeeves.utils.Xml;
 
 //=============================================================================
@@ -105,6 +107,10 @@ public class Show implements Service
 			skipPopularity = skip.equals("y");
 		}
 		
+		boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
+		if (witholdWithheldElements) {
+		   XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
+		}
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");
 		

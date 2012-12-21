@@ -302,7 +302,7 @@
 	<cannotRetrieveGroup js="true">Cannot retrieve groups</cannotRetrieveGroup>
 	<selectNewOwner js="true">Select the user who will be the new owner</selectNewOwner>
 	<selectOwnerGroup js="true">Select a group that the selected user belongs to</selectOwnerGroup>
-	<selectOneFile js="true">You'd better select at least one file to download!</selectOneFile>
+	<selectOneFileDownload js="true">You'd better select at least one file to download!</selectOneFileDownload>
 	<checkEmail js="true">Please fill correct email address</checkEmail>
 	<addName js="true">Please fill in a name or organization</addName>
 	<noComment js="true">No comment</noComment>
@@ -325,7 +325,7 @@
 	<errorSaveFailed js="true">Error: Could not save form</errorSaveFailed>
 	<errorOnAction js="true">Error: Could not do action </errorOnAction>
 	<errorChangeProtocol js="true">A file may have been uploaded. You cannot change the protocol until you remove that file</errorChangeProtocol>
-	<selectOneFile js="true">Browse for, or enter a file name before pressing upload!</selectOneFile>
+	<selectOneFileUpload js="true">Browse for, or enter a file name before pressing upload!</selectOneFileUpload>
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>

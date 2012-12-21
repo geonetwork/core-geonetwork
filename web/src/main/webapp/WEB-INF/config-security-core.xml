@@ -28,6 +28,7 @@
 				<sec:filter-chain pattern="/xml/csw/test/*" filters="" />
 				<sec:filter-chain pattern="/xml/schemas/**" filters="" />
 				<sec:filter-chain pattern="/xsl/harvesting/**" filters="" />
+				<sec:filter-chain pattern="/xsl/ownership/**" filters="" />
 				<ref bean="coreFilterChain"/>
  				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
  				logoutFilter,

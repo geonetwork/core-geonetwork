@@ -35,7 +35,9 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -108,6 +110,7 @@ public class LuceneConfig {
         private Facet.SortBy sortBy = Facet.SortBy.COUNT;
         private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
         private int max;
+        private String translator;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -118,6 +121,7 @@ public class LuceneConfig {
             name = summaryElement.getAttributeValue("name");
             plural = summaryElement.getAttributeValue("plural");
             indexKey = summaryElement.getAttributeValue("indexKey");
+            translator = summaryElement.getAttributeValue("translator");
             
             String maxString = summaryElement.getAttributeValue("max");
             if (maxString == null) {
@@ -190,6 +194,13 @@ public class LuceneConfig {
          */
         public int getMax() {
             return max;
+        }
+        public Translator getTranslator(ServiceContext context, String langCode) {
+            try {
+                return Translator.createTranslator(translator, context, langCode);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 	}
 

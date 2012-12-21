@@ -36,6 +36,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
@@ -63,6 +64,11 @@ public class View implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		UserSession session = context.getUserSession();
+
+        boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
+        if (witholdWithheldElements) {
+           XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
+        }
 
 		// -----------------------------------------------------------------------
 		// --- handle current tab

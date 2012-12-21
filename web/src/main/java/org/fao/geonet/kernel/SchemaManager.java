@@ -30,6 +30,7 @@ package org.fao.geonet.kernel;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.ConfigurationOverrides;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -1380,6 +1381,8 @@ public class SchemaManager {
                 Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
 		} else {
 			Element root = Xml.loadFile(xmlConvFile);
+			ConfigurationOverrides.updateWithOverrides(xmlConvFile, null, basePath, root);
+			
 			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
 			result = root.getChildren();
 		}
