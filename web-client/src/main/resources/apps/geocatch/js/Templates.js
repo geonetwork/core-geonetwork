@@ -115,71 +115,52 @@ GeoNetwork.Geocatch.Templates = Ext.extend(Ext.XTemplate, {
     }
 });
 
+GeoNetwork.Geocatch.Templates.RELATIONS = 
+    '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '">\
+        <span></span>\
+        <ul id="md-relation-{id}"></ul>\
+    </div>';
+
+GeoNetwork.Geocatch.Templates.ABSTRACT = 
+    '<p class="abstract">{[values.abstract.substring(0, 350)]} (...)</p>';
+
+GeoNetwork.Geocatch.Templates.LINKS = 
+    '<div class="md-links" id="md-links-{id}"></div>';
+
+
+GeoNetwork.Geocatch.Templates.TITLE = 
+    '<h1>\
+        <input type="checkbox" \
+            <tpl if="selected==\'true\'">checked="true"</tpl>\
+            class="selector" \
+            onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>\
+        <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;"\
+                    onmouseover="geocat.highlightMapAndDiv(\'{uuid}\', this)"\
+                    onmouseout="geocat.highlightMapAndDiv(null, this)">{title}</a>\
+        <span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span>\
+    </h1>';
+
+
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
         '<ul style="padding-left: 10px">',
           '<tpl for=".">',
-            '<li class="md md-full" style="{featurecolorCSS}">',
-                '<table><tr>',
-                //'<td class="left">',
-                    //GeoNetwork.Templates.LOGO,
-                //'</td>',
-                '<td id="{uuid}">',
-                    GeoNetwork.Templates.TITLE,
-                    '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters
-                    '<tpl if="subject">',
-                        '<p class="subject"><tpl for="subject">',
-                            '{value}{[xindex==xcount?"":", "]}',
-                        '</tpl></p>',
-                    '</tpl>',
-                    '<div class="md-links" id="md-links-{id}">',
-                    '</div>',
-                '</td><td class="thumb">',
-                        GeoNetwork.Templates.RATING_TPL,
-                        '<div class="thumbnail">',
-                            '<tpl if="thumbnail">',
-                                '<a rel="lightbox" href="{thumbnail}"><img src="{thumbnail}" alt="Thumbnail"/></a>', 
-                            '</tpl>',
-                            '<tpl if="thumbnail==\'\'"></tpl>',
-                        '</div>',
-                '</td><td class="icon">',
-                // Validity and category information
-                '<tpl if="valid != \'-1\'">',
-                    '<span class="badge badge-',
-                        '<tpl if="valid == \'1\'">success</tpl>',
-                        '<tpl if="valid == \'0\'">error</tpl>',
-                        '" title="' + OpenLayers.i18n('validityInfo'),
-                        '<tpl for="valid_details">',
-                          '{values.type}: ',
-                            '<tpl if="values.valid == \'1\'">' + OpenLayers.i18n('valid')  + '</tpl>',
-                            '<tpl if="values.valid == \'0\'">' + OpenLayers.i18n('notValid')  + '</tpl>',
-                            '<tpl if="values.valid == \'-1\'">' + OpenLayers.i18n('notDetermined')  + '</tpl>',
-                            '<tpl if="values.ratio != \'\'"> ({values.ratio}) </tpl> - ',
-                        '</tpl>',
-                    '">&nbsp;</span>',
-                '</tpl>',
-                '</td><td class="icon" title="' + OpenLayers.i18n('metadataCategories') + '">',
-                '<tpl for="category">',
-                  '<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',
-                '</tpl>',
-                '</td></tr></table>',
-                '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '"><span></span><ul id="md-relation-{id}"></ul></div>',
-                '<div class="md-contact">',
-                  '<tpl for="contact">',
-                      // metadata contact are not displayed.
-                      '<tpl if="applies==\'resource\'">',
-                          '<span title="{role} - {applies}"><tpl if="values.logo !== undefined && values.logo !== \'\'">',
-                              '<img src="{logo}" class="orgLogo"/>',
-                          '</tpl>',
-                          '{name}&nbsp;&nbsp;</span>',
-                      '</tpl>',
-                  '</tpl>',
-                  '<tpl if="edit==\'true\' && isharvested!=\'y\'">',
-                      '<br/><span class="md-mn md-mn-user" title="' + OpenLayers.i18n('ownerName') + '">{ownername} - ' + OpenLayers.i18n('lastUpdate') + '{[values.changedate.split(\'T\')[0]]}</span>',
-                  '</tpl>',
-                '</div>',
-            '</li>',
-        '</tpl>',
-    '</ul>',
+                '<li class="md md-full" style="{featurecolorCSS}">',
+                    '<table>\
+                        <tr>',
+                            '<td class="left">',
+                                GeoNetwork.Templates.LOGO,
+                            '</td>',
+                            '<td id="{uuid}">',
+                                GeoNetwork.Geocatch.Templates.TITLE,
+                                GeoNetwork.Geocatch.Templates.ABSTRACT,
+                                GeoNetwork.Geocatch.Templates.LINKS,
+                            '</td>\
+                        </tr>\
+                    </table>',
+                    GeoNetwork.Templates.RELATIONS,
+                '</li>',
+            '</tpl>',
+        '</ul>',
     {
         hasDownloadLinks: function(values) {
             var i;
