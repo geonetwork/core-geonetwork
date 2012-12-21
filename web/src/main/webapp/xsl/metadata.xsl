@@ -2101,5 +2101,9 @@
     <xsl:param name="color"/>
     <xsl:param name="block"/>
   </xsl:template>
-
+  <xsl:template name="complexElementFop">
+    <xsl:param name="title"/>
+    <xsl:param name="text"/>
+    <xsl:param name="content"/>
+  </xsl:template>
 </xsl:stylesheet>
