@@ -5,8 +5,9 @@
 										xmlns:dct="http://purl.org/dc/terms/"										
 										xmlns:gco="http://www.isotc211.org/2005/gco"
 										xmlns:gfc="http://www.isotc211.org/2005/gfc"
+										xmlns:gmx="http://www.isotc211.org/2005/gmx"
 										xmlns:geonet="http://www.fao.org/geonetwork"
-										exclude-result-prefixes="gco gfc">
+										exclude-result-prefixes="gco gfc gmx">
 
 	<xsl:param name="displayInfo"/>
 	
@@ -23,7 +24,7 @@
 			<dc:identifier><xsl:value-of select="@uuid"/></dc:identifier>
 			
 			<!-- DataIdentification -->
-			<xsl:for-each select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title><xsl:value-of select="."/></dc:title>
 			</xsl:for-each>
 

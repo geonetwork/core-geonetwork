@@ -61,7 +61,6 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DocumentStoredFieldVisitor;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.facet.search.FacetsCollector;
 import org.apache.lucene.facet.search.params.CountFacetRequest;
 import org.apache.lucene.facet.search.params.FacetRequest;
@@ -102,8 +101,6 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.search.LuceneConfig.Facet;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
-import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -118,10 +115,7 @@ import org.jdom.Element;
 
 import java.util.Iterator;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Ranges;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -694,8 +688,8 @@ public class LuceneSearcher extends MetaSearcher {
 		    // Use RegionsData rather than fetching from the DB everytime
 		    //
 		    //request.addContent(Lib.db.select(dbms, "Regions", "region"));
-//			RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
-//		    request.addContent(dao.getAllRegionsAsXml(srvContext));
+			//RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
+		    //request.addContent(dao.getAllRegionsAsXml(srvContext));
 		}
 
         /*
@@ -1198,7 +1192,7 @@ public class LuceneSearcher extends MetaSearcher {
         	searcher.search(query, cFilter, MultiCollector.wrap(tfc, facetCollector));
         	try {
 
-            	buildFacetSummary(elSummary, summaryConfig, facetCollector);
+            	buildFacetSummary(elSummary, summaryConfig, facetCollector, langCode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
@@ -1223,11 +1217,12 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param elSummary	The element in which to add the facet report
 	 * @param summaryConfigValues	The summary configuration
 	 * @param facetCollector
+	 * @param langCode 
 	 * @throws IOException
 	 */
     private static void buildFacetSummary(Element elSummary,
             Map<String, FacetConfig> summaryConfigValues,
-            FacetsCollector facetCollector) throws IOException {
+            FacetsCollector facetCollector, String langCode) throws IOException {
         DecimalFormat doubleFormat = new DecimalFormat("0");
 
         try {
@@ -1240,6 +1235,20 @@ public class LuceneSearcher extends MetaSearcher {
                 FacetConfig config = summaryConfigValues.get(label);
                 String facetName = config.getPlural();
 
+
+                Translator translator;
+                if (ServiceContext.get() != null) {
+                    try {
+                        ServiceContext context = ServiceContext.get();
+                        
+                        translator = config.getTranslator(context, langCode);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    translator = Translator.NULL_TRANSLATOR;
+                }
+                
                 Element facets = new Element(facetName);
                 FacetResultNode frn = result.getFacetResultNode();
                 if (frn.getNumSubResults() != 0) {
@@ -1316,9 +1325,15 @@ public class LuceneSearcher extends MetaSearcher {
                             Log.debug(Geonet.FACET_ENGINE, " - " + facetValue
                                     + " (" + facetCount + ")");
                         }
+                        
+                        String translatedValue = translator.translate(facetValue);
+                        
                         Element facet = new Element(config.getName());
                         facet.setAttribute("count", facetCount);
                         facet.setAttribute("name", facetValue);
+                        if (translatedValue != null) {
+                            facet.setAttribute("label", translatedValue);
+                        }
                         facets.addContent(facet);
                     }
                 }

@@ -96,8 +96,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataManager {
 
-    private boolean hideWithheldElements;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor

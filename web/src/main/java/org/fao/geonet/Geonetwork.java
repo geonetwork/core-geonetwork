@@ -586,31 +586,31 @@ public class Geonetwork implements ApplicationHandler {
                     @SuppressWarnings(value = "unchecked")
                     List<Element> versionConfiguration = version.getChildren();
                     for(Element file : versionConfiguration) {
-                        if(file.getName().equals("java")) {
-                            try {
+                    	if(file.getName().equals("java")) {
+	                        try {
                             	String className = file.getAttributeValue("class");
                                 logger.info("         - Java migration class:" + className);
-                                settingMan.refresh(dbms);
-								DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-                                task.update(settingMan, dbms);
-                            } catch (Exception e) {
-                                logger.info("          Errors occurs during Java migration file: " + e.getMessage());
-                                e.printStackTrace();
-                                anyMigrationError = true;
-                            }
-                        } else {
-                            String filePath = path + file.getAttributeValue("path");
-                            String filePrefix = file.getAttributeValue("filePrefix");
-                            anyMigrationAction = true;
-                            logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-                            try {
-                                Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-                            } catch (Exception e) {
-                                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                                e.printStackTrace();
-                                anyMigrationError = true;
-                            }
-                        }
+	                        	settingMan.refresh(dbms);
+	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+	                            task.update(settingMan, dbms);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	} else {
+	                        String filePath = path + file.getAttributeValue("path");
+	                        String filePrefix = file.getAttributeValue("filePrefix");
+	                        anyMigrationAction = true;
+	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+	                        try {
+	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+	                        } catch (Exception e) {
+	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+	                            e.printStackTrace();
+	                            anyMigrationError = true;
+	                        }
+                    	}
                     }
                 }
             }
