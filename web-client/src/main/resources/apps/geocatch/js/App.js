@@ -187,49 +187,53 @@ GeoNetwork.app = function() {
             app.mapApp = new GeoNetwork.mapApp();
             app.mapApp.init();
 
-            // Application layout
+            var margins = '35 0 0 0';
+
+            var formpanel = {
+                region : 'center',
+                autoHeight : true,
+                labelWidth : 70,
+                bodyStyle : 'padding:15px',
+                border : false,
+                forceLayout : true,
+                padding : 5,
+                items : [ app.searchApp.simpleSearchForm,
+                        app.searchApp.advSearchForm ]
+            };
+
             this.viewport = new Ext.Viewport({
                 layout : 'border',
-                layoutConfig : {
-                    minWidth : 1080
+                id : 'vp',
+                listeners : {
+                    render : function() {
+                    }
                 },
-                items : [
-                // Header
+                items : [// Header
                 {
                     region : 'north',
                     contentEl : 'header',
                     border : false,
                     margins : '0 0 0 0',
                     autoHeight : true
-                },
-                // Search/map
-                {
+                }, {
                     region : 'west',
-                    border : false,
+                    id : 'west',
                     split : true,
                     minWidth : 300,
-                    maxWidth : 400,
                     width : 300,
-                    margins : '0 0 0 0',
-                    border : false,
-                    layout : 'border',
-                    items : [
-                    // Search panel
-                    {
-                        region : 'center',
-                        layout : 'border',
-                        items : [ {
-                            region : 'center',
-                            contentEl : 'search',
-                            border : false
-                        }, {
-                            region : 'south',
-                            id : 'searchSwitch',
-                            border : false,
-                            contentEl : 'search-switcher'
-                        } ]
-
+                    maxWidth : 400,
+                    autoScroll : true,
+                    collapsible : true,
+                    hideCollapseTool : true,
+                    collapseMode : 'mini',
+                    margins : margins,
+                    // layout : 's',
+                    forceLayout : true,
+                    layoutConfig : {
+                        animate : true
                     },
+                    layout : 'border',
+                    items : [ formpanel,
                     // Map panel
                     {
                         region : 'south',
@@ -252,7 +256,7 @@ GeoNetwork.app = function() {
                 },
                 // Filter panel
                 {
-                    id: 'facets-container',
+                    id : 'facets-container',
                     region : 'east',
                     contentEl : 'search-filter',
                     split : true,
@@ -265,11 +269,7 @@ GeoNetwork.app = function() {
                     minWidth : 100,
                     maxWidth : 500,
                     height : '100%'
-                } ],
-                listeners : {
-                    render : function(e) {
-                    }
-                }
+                } ]
             });
         },
 

@@ -1,5 +1,5 @@
 /* to keep footer down -- from http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page */
-html,body {
+ html,body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -11,19 +11,15 @@ body {
 	min-width: 900px;
 }
 
-form {
-	display: inline;
-}
-
 #container {
 	min-height: 100%;
 	position: relative;
-}
+} 
 
 #main {
 	padding: 3px;
-	padding-bottom: 40px; /* height of the footer */
-}
+	padding-bottom: 40px; height of the footer
+} 
 
 #header header {
 	background: #E26F02;
@@ -68,7 +64,7 @@ form {
 
 #bread-crumb-div,#facets-panel-div {
 	padding: 5px;
-}
+} 
 
 /* ==============
  MOBILE: Menu

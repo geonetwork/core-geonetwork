@@ -298,23 +298,6 @@
                     <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
                 </div>
             </div>
-                
-            <div id="search" style="display:none;">
-                <fieldset id="search-form-fieldset">
-                    <legend id="legend-search">
-                        <xsl:value-of select="/root/gui/strings/search" />
-                    </legend>
-                    
-                     <div id="simple-search-options-content"></div>
-
-                    <div id="advanced-search-options">
-                        <div id="advanced-search-options-content"></div>
-                    </div>
-                    
-                  
-                </fieldset>
-
-            </div>
 
             <div id="search-switcher" style="display:none;">
                     <div  id="search-submit-container">

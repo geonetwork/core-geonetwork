@@ -26,46 +26,14 @@ GeoNetwork.searchApp = function() {
 
     // Public Space
     return {
+
+        simpleSearchForm : undefined,
+        advSearchForm : undefined,
         init : function() {
 
-            this.generateSimpleSearchForm();
+            this.simpleSearchForm = this.generateSimpleSearchForm();
 
-            this.advSearchForm = new GeoNetwork.SearchFormPanel({
-                id : 'advanced-search-options-content-form',
-                renderTo : 'advanced-search-options-content',
-                width : 250,
-                searchCb : function() {
-
-                    var any = Ext.get('E_any');
-                    if (any) {
-                        if (any.getValue() === OpenLayers
-                                .i18n('fullTextSearch')) {
-                            any.setValue('');
-                        }
-                    }
-
-                    Ext.get("results-main").dom.style.display = 'none';
-
-                    catalogue.startRecord = 1; // Reset start record
-                    searching = true;
-                    catalogue.search('advanced-search-options-content-form',
-                            app.searchApp.loadResults, null,
-                            catalogue.startRecord, true);
-                },
-                listeners : {
-                    onreset : function() {
-                        if (Ext.getCmp('facets-panel')) {
-                            Ext.getCmp('facets-panel').reset();
-                        }
-                        this.fireEvent('search');
-
-                        GeoNetwork.Util.updateHeadInfo({
-                            title : catalogue.getInfo().name
-                        });
-                    }
-                },
-                items : this.generateAdvancedSearchForm(),
-            });
+            this.advSearchForm = this.generateAdvancedSearchForm();
 
             hideAdvancedSearch();
 
@@ -86,8 +54,7 @@ GeoNetwork.searchApp = function() {
                 id : 'E_any',
                 // TODO: Check why if not set explicit width takes size much
                 // bigger than panel
-                /* anchor : '100%', */
-                width : 180,
+                anchor : '-10',
                 minChars : 2,
                 loadingText : '...',
                 hideTrigger : true,
@@ -102,7 +69,7 @@ GeoNetwork.searchApp = function() {
                         Ext.getCmp('E_trueany').setValue(this.getValue());
                     }
                 }
-            });
+            })
 
             var fieldType = new Ext.form.ComboBox({
                 fieldLabel : 'Type',
@@ -118,7 +85,7 @@ GeoNetwork.searchApp = function() {
                 editable : false,
                 triggerAction : 'all',
                 selectOnFocus : true,
-                anchor : '100%'
+                anchor : '-10',
             });
 
             var fieldKantone = this.getKantoneCombo().combo;
@@ -127,9 +94,10 @@ GeoNetwork.searchApp = function() {
 
             return new GeoNetwork.SearchFormPanel({
                 id : 'simple-search-options-content-form',
-                renderTo : 'simple-search-options-content',
-                stateId : 's',
                 autoHeight : true,
+                labelWidth : 70,
+                bodyStyle : 'padding:15px',
+                region : 'north',
                 border : false,
                 searchCb : function() {
 
@@ -174,17 +142,17 @@ GeoNetwork.searchApp = function() {
             var f = [ {
                 fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
-                anchor : "100%",
+                anchor : '-10',
                 name : "T_AnyText"
             }, {
                 fieldLabel : OpenLayers.i18n("rtitle"),
                 name : "T_title",
-                anchor : "100%",
+                anchor : '-10',
                 id : "TitleField"
             }, {
                 fieldLabel : OpenLayers.i18n("abstract"),
                 name : "T_abstract",
-                anchor : "100%",
+                anchor : '-10',
                 id : "AbstractField"
             }, new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("keyword"),
@@ -197,7 +165,7 @@ GeoNetwork.searchApp = function() {
                 forceSelection : false,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : "100%"
+                anchor : '-10',
             }), new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("theme"),
                 name : "[E1.0_topicCat",
@@ -217,14 +185,14 @@ GeoNetwork.searchApp = function() {
                 forceSelection : true,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : "100%"
+                anchor : '-10',
             }), {
                 fieldLabel : OpenLayers.i18n("contact"),
-                anchor : "100%",
+                anchor : '-10',
                 name : "T_creator"
             }, {
                 fieldLabel : OpenLayers.i18n("organisationName"),
-                anchor : "100%",
+                anchor : '-10',
                 name : "T_orgName"
             } ];
 
@@ -245,12 +213,12 @@ GeoNetwork.searchApp = function() {
                         editable : false,
                         triggerAction : "all",
                         selectOnFocus : true,
-                        hidden: !catalogue.isIdentified()
+                        hidden : !catalogue.isIdentified()
                     }, {
                         fieldLabel : OpenLayers.i18n("identifier"),
-                        anchor : "100%",
+                        anchor : '-10',
                         name : "S_basicgeodataid",
-                        hidden: !catalogue.isIdentified()
+                        hidden : !catalogue.isIdentified()
                     }, new Ext.ux.form.SuperBoxSelect({
                         id : "formatCombo",
                         fieldLabel : OpenLayers.i18n("formatTxt"),
@@ -264,8 +232,8 @@ GeoNetwork.searchApp = function() {
                         forceSelection : true,
                         triggerAction : "all",
                         selectOnFocus : true,
-                        anchor : "100%",
-                        hidden: !catalogue.isIdentified()
+                        anchor : '-10',
+                        hidden : !catalogue.isIdentified()
                     }) ])
 
             f.push({
@@ -292,7 +260,7 @@ GeoNetwork.searchApp = function() {
                     {
                         xtype : "combo",
                         fieldLabel : OpenLayers.i18n("valid"),
-                        anchor : "100%",
+                        anchor : '-10',
                         name : "E__valid",
                         store : [ [ "", OpenLayers.i18n("any") ],
                                 [ "1", OpenLayers.i18n("yes") ],
@@ -307,20 +275,15 @@ GeoNetwork.searchApp = function() {
                         editable : false,
                         triggerAction : "all",
                         selectOnFocus : true,
-                        hidden: !catalogue.isIdentified()
-                    }, /*{
-                        xtype : "checkbox",
-                        fieldLabel : OpenLayers.i18n("toEdit"),
-                        id : "toEdit",
-                        name : "B_toEdit",
-                        hidden: !catalogue.isIdentified()
-                    }, {
-                        xtype : "checkbox",
-                        fieldLabel : OpenLayers.i18n("toPublish"),
-                        id : "toPublish",
-                        name : "B_toPublish",
-                        hidden: !catalogue.isIdentified()
-                    }*/ ]);
+                        hidden : !catalogue.isIdentified()
+                    }, /*
+                         * { xtype : "checkbox", fieldLabel :
+                         * OpenLayers.i18n("toEdit"), id : "toEdit", name :
+                         * "B_toEdit", hidden: !catalogue.isIdentified() }, {
+                         * xtype : "checkbox", fieldLabel :
+                         * OpenLayers.i18n("toPublish"), id : "toPublish", name :
+                         * "B_toPublish", hidden: !catalogue.isIdentified() }
+                         */]);
 
             d.push({
                 xtype : "fieldset",
@@ -330,6 +293,7 @@ GeoNetwork.searchApp = function() {
                 defaultType : "textfield",
                 cls : "compressedFieldSet",
                 layout : "form",
+                anchor : '-10',
                 layoutConfig : {
                     labelSeparator : ""
                 },
@@ -346,7 +310,7 @@ GeoNetwork.searchApp = function() {
                 forceSelection : true,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : "100%"
+                anchor : '-10',
             });
             var a = this.getKantoneCombo(true);
             var e = this.getGemeindenCombo(true);
@@ -373,6 +337,7 @@ GeoNetwork.searchApp = function() {
                         defaultType : "textfield",
                         cls : "compressedFieldSet",
                         layout : "form",
+                        anchor : '-10',
                         layoutConfig : {
                             labelSeparator : ""
                         },
@@ -390,7 +355,8 @@ GeoNetwork.searchApp = function() {
                                     items : [
                                             {
                                                 inputValue : "none",
-                                                boxLabel : OpenLayers.i18n("wherenone"),
+                                                boxLabel : OpenLayers
+                                                        .i18n("wherenone"),
                                                 checked : true,
                                                 listeners : {
                                                     check : app.searchApp
@@ -399,7 +365,8 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "bbox",
-                                                boxLabel : OpenLayers.i18n("bbox"),
+                                                boxLabel : OpenLayers
+                                                        .i18n("bbox"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("bbox")
@@ -407,7 +374,8 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "gg25",
-                                                boxLabel : OpenLayers.i18n("adminUnit"),
+                                                boxLabel : OpenLayers
+                                                        .i18n("adminUnit"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("gg25")
@@ -415,7 +383,8 @@ GeoNetwork.searchApp = function() {
                                             },
                                             {
                                                 inputValue : "polygon",
-                                                boxLabel : OpenLayers.i18n("drawOnMap"),
+                                                boxLabel : OpenLayers
+                                                        .i18n("drawOnMap"),
                                                 listeners : {
                                                     check : app.searchApp
                                                             .updateWhereForm("polygon")
@@ -439,20 +408,25 @@ GeoNetwork.searchApp = function() {
                                     border : false,
                                     hidden : true,
                                     html : '<span id="drawPolygonSpan"><a href="javascript:geocat.drawWherePolygon()">'
-                                            + OpenLayers.i18n("startNewPolygon")
+                                            + OpenLayers
+                                                    .i18n("startNewPolygon")
                                             + "</a></span>"
                                 },
                                 {
                                     xtype : "combo",
                                     store : [
-                                            [ OpenLayers.Filter.Spatial.WITHIN,
-                                                    OpenLayers.i18n("withinGeo") ],
+                                            [
+                                                    OpenLayers.Filter.Spatial.WITHIN,
+                                                    OpenLayers
+                                                            .i18n("withinGeo") ],
                                             [
                                                     OpenLayers.Filter.Spatial.INTERSECTS,
-                                                    OpenLayers.i18n("intersectGeo") ],
+                                                    OpenLayers
+                                                            .i18n("intersectGeo") ],
                                             [
                                                     OpenLayers.Filter.Spatial.CONTAINS,
-                                                    OpenLayers.i18n("containsGeo") ] ],
+                                                    OpenLayers
+                                                            .i18n("containsGeo") ] ],
                                     hideTrigger : true,
                                     forceSelection : true,
                                     editable : false,
@@ -477,6 +451,7 @@ GeoNetwork.searchApp = function() {
                 autoHeight : true,
                 defaultType : "textfield",
                 cls : "compressedFieldSet",
+                anchor : '-10',
                 layout : "form",
                 labelWidth : this.labelWidth,
                 layoutConfig : {
@@ -486,6 +461,7 @@ GeoNetwork.searchApp = function() {
                     xtype : "datefield",
                     fieldLabel : OpenLayers.i18n("from"),
                     format : "d/m/Y",
+                    anchor : '-10',
                     postfix : "T00:00:00",
                     name : ">=_TempExtent_end"
                 }, {
@@ -493,6 +469,7 @@ GeoNetwork.searchApp = function() {
                     fieldLabel : OpenLayers.i18n("to"),
                     format : "d/m/Y",
                     postfix : "T23:59:59",
+                    anchor : '-10',
                     name : "<=_TempExtent_begin"
                 } ]
             });
@@ -521,7 +498,41 @@ GeoNetwork.searchApp = function() {
                     anchor : "100%"
                 }) ]
             });
-            return d;
+            return new GeoNetwork.SearchFormPanel({
+                id : 'advanced-search-options-content-form',
+                width : 250,
+                searchCb : function() {
+
+                    var any = Ext.get('E_any');
+                    if (any) {
+                        if (any.getValue() === OpenLayers
+                                .i18n('fullTextSearch')) {
+                            any.setValue('');
+                        }
+                    }
+
+                    Ext.get("results-main").dom.style.display = 'none';
+
+                    catalogue.startRecord = 1; // Reset start record
+                    searching = true;
+                    catalogue.search('advanced-search-options-content-form',
+                            app.searchApp.loadResults, null,
+                            catalogue.startRecord, true);
+                },
+                listeners : {
+                    onreset : function() {
+                        if (Ext.getCmp('facets-panel')) {
+                            Ext.getCmp('facets-panel').reset();
+                        }
+                        this.fireEvent('search');
+
+                        GeoNetwork.Util.updateHeadInfo({
+                            title : catalogue.getInfo().name
+                        });
+                    }
+                },
+                items : d
+            });
 
         },
         createKeywordsStore : function() {
@@ -1284,7 +1295,7 @@ GeoNetwork.searchApp = function() {
                 border : false,
                 hidden : true,
                 bodyCssClass : 'md-view',
-                anchor: "100% 100%",
+                anchor : "100% 100%",
                 layout : 'fit',
                 tbar : tBar,
                 items : metadataResultsView,
@@ -1295,9 +1306,9 @@ GeoNetwork.searchApp = function() {
             return resultPanel;
         },
         loadResults : function(response, query) {
-            
+
             showSearch();
-            
+
             // Ext.state.Manager.getProvider().updateLastSearch(query);
             // Show "List results" panel
             var facetPanel = Ext.getCmp('facets-panel');
@@ -1408,7 +1419,7 @@ GeoNetwork.searchApp = function() {
                     {
                         id : 'facets-panel',
                         renderTo : 'facets-panel-div',
-                        //renderTo: 'search-filter',
+                        // renderTo: 'search-filter',
                         searchForm : Ext
                                 .getCmp('advanced-search-options-content-form'),
                         breadcrumb : breadcrumb,
