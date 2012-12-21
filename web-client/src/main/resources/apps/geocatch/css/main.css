@@ -157,7 +157,7 @@ form {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	width: 50%;
+	width: 80%;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
 }
@@ -166,7 +166,7 @@ form {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	width: 80%;
+	min-width: '800px';
 	background-color: #CCCCCC;
 	width: 80%;
 	font-size: 0.6em;
