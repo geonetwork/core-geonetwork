@@ -144,7 +144,9 @@ var bkLib = {
 	isMSIE : (navigator.appVersion.indexOf("MSIE") != -1),
 	
 	addEvent : function(obj, type, fn) {
-		(obj.addEventListener) ? obj.addEventListener( type, fn, false ) : obj.attachEvent("on"+type, fn);	
+	    if (obj != null) {
+	        (obj.addEventListener) ? obj.addEventListener( type, fn, false ) : obj.attachEvent("on"+type, fn);
+	    }
 	},
 	
 	toArray : function(iterable) {
