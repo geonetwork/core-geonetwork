@@ -47,7 +47,8 @@ GeoNetwork.mapApp = function() {
             projection : GeoNetwork.map.MAP_OPTIONS.projection,
             resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
             restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
-                    .clone()
+                    .clone(),
+            controls : []
         });
 
         Ext.each(GeoNetwork.map.MAP_OPTIONS.controls, function(control) {
@@ -93,9 +94,9 @@ GeoNetwork.mapApp = function() {
         var panel2 = new GeoExt.MapPanel({
             height : 250,
             map : map2,
-            width: 400,
-            id: 'map',
-            renderTo: 'map-div'
+            width : 400,
+            id : 'map',
+            renderTo : 'map-div'
         });
 
         panel2.map = map2;
@@ -103,7 +104,7 @@ GeoNetwork.mapApp = function() {
         app.mapApp.maps.push(map2);
 
         addMapControls();
-        
+
         return panel2;
     };
 
@@ -281,10 +282,10 @@ GeoNetwork.mapApp = function() {
         }
     };
     var createPrintPanel = function(map) {
-    	// Only allow createPrintPanel once
-    	if (printProvider !== undefined) {
-    		return;
-    	}
+        // Only allow createPrintPanel once
+        if (printProvider !== undefined) {
+            return;
+        }
         // The printProvider that connects us to the print service
         printProvider = new GeoExt.data.PrintProvider({
             method : "POST",
@@ -640,9 +641,8 @@ GeoNetwork.mapApp = function() {
                 moveLayerToTop(featureinfolayer);
                 GeoNetwork.WindowManager.showWindow("featureinfo");
                 GeoNetwork.WindowManager.getWindow("featureinfo").setMap(
-                        // FIXME does not exist getMainMap()
-                        app.mapApp.maps[0]
-                        );
+                // FIXME does not exist getMainMap()
+                app.mapApp.maps[0]);
                 GeoNetwork.WindowManager.getWindow("featureinfo").setFeatures(
                         evt.features);
             },
@@ -1127,7 +1127,7 @@ GeoNetwork.mapApp = function() {
      * 
      */
     var createViewport = function(mapOverlay) {
-//        createPrintPanel(app.mapApp.getMap());
+        // createPrintPanel(app.mapApp.getMap());
         createToolbars();
         createTree();
         createLegendPanel();
@@ -1135,7 +1135,7 @@ GeoNetwork.mapApp = function() {
         viewport = new Ext.Panel({
             layout : 'border',
             id : 'big-map',
-            renderTo: 'big-map-container',
+            renderTo : 'big-map-container',
             border : false,
             items : [ {
                 id : 'layerManager',
@@ -1155,15 +1155,15 @@ GeoNetwork.mapApp = function() {
                 region : 'center',
                 layout : 'fit',
                 xtype : 'gx_mappanel',
-                tbar: toolbar,
+                tbar : toolbar,
                 frame : false,
                 border : false,
                 margins : '2px 2px 2px 2px',
                 items : [ mapOverlay ]
             } ],
-            listeners: {
-                afterlayout: function () {
-//                    createPrintPanel(app.mapApp.getMap());
+            listeners : {
+                afterlayout : function() {
+                    // createPrintPanel(app.mapApp.getMap());
                 }
             }
         });
@@ -1443,8 +1443,9 @@ GeoNetwork.mapApp = function() {
         },
         createWmsLayer : function(name, url, params, options) {
             Ext.each(app.mapApp.maps, function(map) {
-                map.adLayer(new OpenLayers.Layer.WMS(name, url, params,
-                        options));
+                map
+                        .adLayer(new OpenLayers.Layer.WMS(name, url, params,
+                                options));
             });
         },
         createLayer : function(olLayer) {
@@ -1459,7 +1460,7 @@ GeoNetwork.mapApp = function() {
         init : function() {
             return generateMaps();
         },
-        initPrint: function () {
+        initPrint : function() {
             createPrintPanel(app.mapApp.getMap());
         },
         /**
@@ -1475,7 +1476,8 @@ GeoNetwork.mapApp = function() {
                 maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
                 projection : GeoNetwork.map.MAP_OPTIONS.projection,
                 resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
-                restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent.clone()
+                restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
+                        .clone()
             });
 
             Ext.each(GeoNetwork.map.MAP_OPTIONS.controls, function(control) {
