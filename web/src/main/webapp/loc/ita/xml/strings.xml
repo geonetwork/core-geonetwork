@@ -62,7 +62,7 @@
 	<yes js="true">Sì</yes>
 	<no js="true">No</no>
 	<intersectGeo js="true">Interseca</intersectGeo>
-	<withinGeo js="true">Comletamente contenuto o uguale</withinGeo>
+	<withinGeo js="true">Completamente contenuto o uguale</withinGeo>
 	<containsGeo js="true">Contiene almeno</containsGeo>
 	<layerTree js="true">Layer tree</layerTree>
 	<nothingFound js="true">Niente trovato</nothingFound>
@@ -1441,7 +1441,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<thesaurus>
 		<load>Carica dalla repository di thesauri di GeoNetwork</load>
 		<addelement>Aggiungi termine</addelement>
-		<admin>Gestisci thesaurus</admin>
+		<admin>Gestione dei thesauri</admin>
 		<broader>Termine più ampio</broader>
 		<category>Categoria del thesaurus</category>
 		<consultation>Vista del thesaurus</consultation>
