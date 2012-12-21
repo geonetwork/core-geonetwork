@@ -87,20 +87,6 @@
             </table>
         </div>
         <div align="left" style="{$style}">
-        <table>
-                <tr>
-                    <td class="padded">
-                        <input align="left" type="checkbox" id="requestedLanguage.sorted" name="requestedlanguage"/>
-                    </td>
-                    <td class="padded">
-                        <label for="requestedLanguage.sorted">
-                            <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
-                        </label>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div align="left" style="{$style}">
         	<label for="requestedLanguage.only">
                 <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
             </label>
@@ -121,17 +107,6 @@
                 <span id="requestedlanguage_only.subpanel">
                     <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.only']"/>
                 </span>
-            </div>
-            <div align="left" style="{$style}">
-              <input align="left" type="radio" id="requestedLanguage.ignored" value="ignored" name="requestedlanguage"/>
-              <label for="requestedLanguage.ignored">
-                <xsl:value-of select="/root/gui/config/requestedlanguageignored"/>
-              </label>
-              <div align="left" style="{$style}">
-                <span id="requestedlanguage_ignored.subpanel">
-                  <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.ignored']"/>
-                </span>
-              </div>
             </div>
         </div>
     </xsl:template>
