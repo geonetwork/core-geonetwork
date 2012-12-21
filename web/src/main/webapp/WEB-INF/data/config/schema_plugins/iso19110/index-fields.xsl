@@ -27,34 +27,43 @@
 
 			<!-- For multilingual docs it is good to have a title in the default locale.  In this type of metadata we don't have one but in the general case we do so we need to add it to all -->
 			<Field name="_defaultTitle"
-				string="{/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|/gfc:FC_FeatureType/gfc:typeName/gco:LocalName}"
+				string="{/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+				/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+				/gfc:FC_FeatureType/gfc:typeName/gco:LocalName}"
 				store="true" index="true"/>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Title === -->
 			<xsl:apply-templates
-				select="/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|/gfc:FC_FeatureType/gfc:typeName/gco:LocalName">
+				select="/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+				/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+				/gfc:FC_FeatureType/gfc:typeName/gco:LocalName">
 				<xsl:with-param name="name" select="'title'"/>
 				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- not tokenized title for sorting -->
 			<Field name="_title"
-				string="{string(/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|/gfc:FC_FeatureType/gfc:typeName/gco:LocalName)}"
+				string="{string(/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+				/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+				/gfc:FC_FeatureType/gfc:typeName/gco:LocalName)}"
 				store="false" index="true"/>
 
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Abstract === -->
 			<xsl:apply-templates
-				select="/gfc:FC_FeatureCatalogue/gfc:scope/gco:CharacterString|/gfc:FC_FeatureType/gfc:definition/gco:CharacterString">
+				select="/gfc:FC_FeatureCatalogue/gmx:scope/gco:CharacterString|
+				/gfc:FC_FeatureCatalogue/gfc:scope/gco:CharacterString|
+				/gfc:FC_FeatureType/gfc:definition/gco:CharacterString">
 				<xsl:with-param name="name" select="'abstract'"/>
 				<xsl:with-param name="store" select="'true'"/>
 			</xsl:apply-templates>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Revision date === -->
-			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
+			<xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
+				/gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
 				<Field name="revisionDate" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 

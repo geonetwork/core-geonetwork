@@ -107,7 +107,7 @@ public class Groups implements Service
 				response.addContent(record);
 				// List all group users or administrator
 				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
-									" WHERE (groupId=? AND profile != 'RegisteredUser') OR profile = 'Administrator'";
+									" WHERE (groupId=? AND usergroups.profile != 'RegisteredUser') OR users.profile = 'Administrator'";
 
 				Element editors = dbms.select(query, new Integer(groupId));
 
