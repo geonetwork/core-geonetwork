@@ -52,7 +52,7 @@ public class CodeListTranslator extends Translator {
         if(value != null) {
             return value;
         } else {
-            return key;
+            return null;
         }
     }
 

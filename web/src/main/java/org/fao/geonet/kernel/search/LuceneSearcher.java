@@ -1215,7 +1215,7 @@ public class LuceneSearcher extends MetaSearcher {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    translator = Translator.PASS_THROUGH;
+                    translator = Translator.NULL_TRANSLATOR;
                 }
                 
                 Element facets = new Element(facetName);
@@ -1300,7 +1300,9 @@ public class LuceneSearcher extends MetaSearcher {
                         Element facet = new Element(config.getName());
                         facet.setAttribute("count", facetCount);
                         facet.setAttribute("name", facetValue);
-                        facet.setAttribute("label", translatedValue);
+                        if (translatedValue != null) {
+                            facet.setAttribute("label", translatedValue);
+                        }
                         facets.addContent(facet);
                     }
                 }

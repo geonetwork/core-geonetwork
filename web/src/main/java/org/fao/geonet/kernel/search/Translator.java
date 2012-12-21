@@ -41,10 +41,10 @@ import jeeves.server.context.ServiceContext;
 public abstract class Translator implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static Translator PASS_THROUGH = new Translator() {
+    public static Translator NULL_TRANSLATOR = new Translator() {
         private static final long serialVersionUID = 1L;
         public String translate(String key) {
-            return key;
+            return null;
         }
     };
 
@@ -53,7 +53,7 @@ public abstract class Translator implements Serializable {
     public static Translator createTranslator(String translatorString, final ServiceContext context, final String langCode)
             throws Exception {
         if (translatorString == null || translatorString.length() == 0) {
-            return Translator.PASS_THROUGH;
+            return Translator.NULL_TRANSLATOR;
         }
         String key = translatorString + langCode;
 
