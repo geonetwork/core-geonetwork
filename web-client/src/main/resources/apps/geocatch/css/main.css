@@ -54,6 +54,10 @@ form {
 	display: none;
 }
 
+#simple-search-options-content,#search-form-fieldset {
+	width: 100%;
+}
+
 .arrow {
 	background-image: url('../images/arrow.gif');
 	background-repeat: no-repeat;
@@ -62,8 +66,7 @@ form {
 	font-size: 11px !important;
 }
 
-
-#bread-crumb-div, #facets-panel-div {
+#bread-crumb-div,#facets-panel-div {
 	padding: 5px;
 }
 
@@ -241,14 +244,14 @@ input[type="button"] {
 }
 
 #search-submit-container {
-	background-color: #DFE8F6; 
+	background-color: #DFE8F6;
 	padding: 5px;
 }
 
 #show-advanced,#hide-advanced {
 	font-size: 12px;
-	margin-top:5px;
-	margin-bottom:5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 /* GeoNetwork Message */
 .alert {
@@ -325,15 +328,6 @@ div.facets ul ul {
 	font-size: 85%;
 }
 
-.facet-count {
-	color: #71C0DD;
-	padding-left: 3px;
-}
-
-div.facets * a {
-	text-decoration: none;
-}
-
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	color: #E26F02;
 }
@@ -344,6 +338,17 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	background-repeat: no-repeat;
 	padding: 0 0 3px 7px;
 	margin-left: 5px;
+	color: #064377;
+}
+
+/* Result View */
+#resultsPanel .x-toolbar {
+	background: white;
+	border-bottom: 1px solid gray;
+}
+
+#resultsPanel {
+	min-width: 100%;
 }
 
 /* Icon based on protocol prefix in related resource table */
