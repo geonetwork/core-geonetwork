@@ -1000,7 +1000,6 @@ INSERT INTO Settings VALUES (950,1,'autodetect',NULL);
 INSERT INTO Settings VALUES (951,950,'enable','false');
 INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
 INSERT INTO Settings VALUES (953,952,'only','prefer_locale');
-INSERT INTO Settings VALUES (954,952,'sorted','false');
 
 
 -- ======================================================================
