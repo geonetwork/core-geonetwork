@@ -474,6 +474,7 @@
 
 		<!-- Metadata schema related -->
 		<allow service="xml.schema.info"/>
+	  <allow service="xml.schema.list"/>
 
 		<!-- Rating services -->
 		<allow service="xml.metadata.rate"/>
