@@ -301,6 +301,17 @@ class Harvester {
 			if (md == null) {
 				return;
 			}
+			
+			//--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
+            //--- In update we should use db uuid to update the xml uuid and keep in sych both.
+            try {
+                String schema = dataMan.autodetectSchema(md);
+                md = dataMan.setUUID(schema, record.uuid, md);
+            } catch(Exception e) {
+                log.error("  - Failed to set uuid for metadata with remote path : "+ rf.getPath());
+                return;
+            }
+
             //
             // update metadata
             //
