@@ -211,6 +211,27 @@ public class SchemaManager {
 		}
 	}
 
+	   /**
+     * Return the Id and Version of the schema
+     *
+     * @param name the metadata schema we want the MetadataSchema for
+     * @return Pair with schema Id and Version
+     */
+    public Pair<String,String> getIdVersion(String name) {
+        
+        beforeRead();
+        try {
+            Schema schema = hmSchemas.get(name);
+
+            if (schema == null)
+                throw new IllegalArgumentException("Schema not registered : " + name);
+
+            return Pair.read(schema.getId(),schema.getVersion());
+        } finally {
+            afterRead();
+        }
+    }
+
 	/**
      * Adds a plugin schema to the list of schemas registered here.
 	 *

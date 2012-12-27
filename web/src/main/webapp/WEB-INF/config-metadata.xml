@@ -670,10 +670,6 @@
 		<!-- Status                                                        -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.status.values.list">
-			<class name=".services.status.List"/>
-		</service>
-		
 		<service name="xml.metadata.status.set">
 			<class name=".services.metadata.UpdateStatus"/>
 		</service>
