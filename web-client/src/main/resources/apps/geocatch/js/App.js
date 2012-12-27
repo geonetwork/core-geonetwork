@@ -190,8 +190,8 @@ GeoNetwork.app = function() {
             var margins = '35 0 0 0';
 
             var formpanel = {
+                id : 'search-container',
                 region : 'center',
-                autoHeight : true,
                 labelWidth : 70,
                 bodyStyle : 'padding:15px',
                 border : false,
@@ -199,6 +199,16 @@ GeoNetwork.app = function() {
                 padding : 5,
                 items : [ app.searchApp.simpleSearchForm,
                         app.searchApp.advSearchForm, app.searchApp.switcher ]
+            };
+
+            var mappanel = // Map panel
+            {
+                region : 'south',
+                contentEl : 'map-div',
+                id : 'map-container',
+                border : false,
+                height : 250,
+                bodyStyle : 'background-color: #cccccc'
             };
 
             this.viewport = new Ext.Viewport({
@@ -211,6 +221,7 @@ GeoNetwork.app = function() {
                 items : [// Header
                 {
                     region : 'north',
+                    id : 'north',
                     contentEl : 'header',
                     border : false,
                     margins : '0 0 0 0',
@@ -233,21 +244,13 @@ GeoNetwork.app = function() {
                         animate : true
                     },
                     layout : 'border',
-                    items : [ formpanel,
-                    // Map panel
-                    {
-                        region : 'south',
-                        contentEl : 'map-div',
-                        border : false,
-                        height : 250,
-                        border : false,
-                        bodyStyle : 'background-color: #cccccc'
-                    } ]
+                    items : [ formpanel, mappanel ]
 
                 },
                 // Search results
                 {
                     region : 'center',
+                    id : 'center-container',
                     contentEl : 'search-results',
                     border : false,
                     autoHeight : true,

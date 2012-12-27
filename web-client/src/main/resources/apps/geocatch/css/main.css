@@ -18,7 +18,7 @@ body {
 
 #main {
 	padding: 3px;
-	padding-bottom: 40px; height of the footer
+	padding-bottom: 40px; /*height of the footer*/
 } 
 
 #header header {
@@ -242,6 +242,11 @@ input[type="button"] {
 	text-align: center;
 	display:block;
 }
+
+#search-container > div > div.x-panel-body{
+	overflow-y: auto;
+}
+
 /* GeoNetwork Message */
 .alert {
 	position: absolute;

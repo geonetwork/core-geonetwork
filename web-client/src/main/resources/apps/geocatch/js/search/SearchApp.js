@@ -156,7 +156,6 @@ GeoNetwork.searchApp = function() {
                     }
                 },
                 forceLayout : true,
-                padding : 5,
                 items : formItems
             });
         },
@@ -228,7 +227,7 @@ GeoNetwork.searchApp = function() {
                     {
                         xtype : "combo",
                         fieldLabel : OpenLayers.i18n("template"),
-                        anchor : "100%",
+                        anchor : "-10",
                         name : "E__isTemplate",
                         value : "n",
                         store : [ [ "n", OpenLayers.i18n("no") ],
@@ -272,11 +271,13 @@ GeoNetwork.searchApp = function() {
             });
             var d = [ {
                 xtype : "fieldset",
+                id : 'what-container',
                 title : OpenLayers.i18n("what"),
                 autoHeight : true,
                 defaultType : "textfield",
                 labelWidth : this.labelWidth,
                 layout : "form",
+                anchor : '-10',
                 layoutConfig : {
                     labelSeparator : ""
                 },
@@ -523,12 +524,13 @@ GeoNetwork.searchApp = function() {
                     forceSelection : true,
                     triggerAction : "all",
                     selectOnFocus : true,
-                    anchor : "100%"
+                    anchor : "-10"
                 }) ]
             });
             return new GeoNetwork.SearchFormPanel({
                 id : 'advanced-search-options-content-form',
-                width : 250,
+                labelWidth : 70,
+                bodyStyle : 'padding:15px',
                 style : {
                     display : 'none'
                 },
@@ -612,7 +614,7 @@ GeoNetwork.searchApp = function() {
                 editable : false,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : "100%"
+                anchor : "-10"
             }
         },
         createCountryStore : function() {
@@ -663,18 +665,21 @@ GeoNetwork.searchApp = function() {
                     case "bbox":
                         d.setVisible(false);
                         e.setVisible(false);
+                        // FIXME there is no geocat.map
                         geocat.map.events.register("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "gg25":
                         d.setVisible(true);
                         e.setVisible(false);
+                        // FIXME there is no geocat.map
                         geocat.map.events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "polygon":
                         d.setVisible(false);
                         e.setVisible(true);
+                        // FIXME there is no geocat.map
                         geocat.map.events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         if (geocat.selectionFeature) {
@@ -771,7 +776,7 @@ GeoNetwork.searchApp = function() {
                 mode : n ? "local" : "remote",
                 hideTrigger : false,
                 typeAhead : true,
-                anchor : "100%",
+                anchor : "-10",
                 selectOnFocus : true
             });
             var p = new Ext.ux.form.SuperBoxSelect(a);
@@ -836,7 +841,7 @@ GeoNetwork.searchApp = function() {
                                 loadingText : "Searching...",
                                 triggerAction : "all",
                                 minChars : 1,
-                                anchor : "100%",
+                                anchor : "-10",
                                 updateFilter : function(d) {
                                     if (this.kantonFilter) {
                                         var b = new OpenLayers.Filter.Logical(
@@ -1049,16 +1054,26 @@ GeoNetwork.searchApp = function() {
          * 
          */
         getKantoneCombo : function(createNew) {
+
+            // FIXME parameter is not being used
+            var id = 'kantoneComboBox';
+
+            if (Ext.getCmp(id)) {
+                var d = new Date();
+                var n = d.getMilliseconds();
+                id = id + n;
+            }
+
             return this.createSearchWFS(false, 'chtopo', 'kantoneBB', [
                     'KUERZEL', 'KANTONSNR', 'BOUNDING' ], {
-                id : 'kantoneComboBox',
+                id : id,
                 fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
                 name : 'kantone',
                 triggerAction : 'all',
                 minChars : 1,
-                anchor : '100%'
+                anchor : '-10'
             });
         },
 
@@ -1164,7 +1179,7 @@ GeoNetwork.searchApp = function() {
                 mode : local ? 'local' : 'remote',
                 hideTrigger : false,
                 typeAhead : true,
-                anchor : '100%',
+                anchor : '-10',
                 selectOnFocus : true
             });
             var search = new Ext.ux.form.SuperBoxSelect(opts);
