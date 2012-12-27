@@ -82,7 +82,7 @@ GeoNetwork.app = function() {
                 listeners : {
                     select : function(cb, record, idx) {
 
-                        var lang = /srv\/([a-z]{3})\/geocat/
+                        var lang = /srv\/([a-z]{3})/
                                 .exec(window.location.href);
 
                         if (lang === null) {
@@ -292,10 +292,10 @@ GeoNetwork.app = function() {
 
 Ext.onReady(function() {
     // Language handling
-    var lang = /srv\/([a-z]{3})\/search/.exec(location.href);
+    var lang = /srv\/([a-z]{3})/.exec(location.href);
 
     if (lang === null) {
-        lang = "eng";
+        lang = GeoNetwork.Util.defaultLocale;
     }
 
     var url = /(.*)\/srv/.exec(location.href)[1];

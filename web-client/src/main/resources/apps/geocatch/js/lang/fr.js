@@ -37,7 +37,9 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'containsGeo': 'comprend au moins',
 
 	'kantone': 'Canton(s)',
-	'any2': 'Tous'
+	'any2': 'Tous',
+    'showAdvancedOptions' : 'Recherche avancée',
+    'hideAdvancedOptions' : 'Recherche simple'
 
 };
 
