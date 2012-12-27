@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
@@ -139,6 +140,12 @@ public class Info implements Service
 			else if (type.equals("z3950repositories"))
 				result.addContent(getZRepositories(context, sm));
 
+			else if (type.equals("schemas"))
+				result.addContent(getSchemas(gc.getSchemamanager()));
+
+			else if (type.equals("status"))
+				result.addContent(Lib.local.retrieve(dbms, "StatusValues"));
+
 			else
 				throw new BadParameterEx("type", type);
 		}
@@ -152,6 +159,40 @@ public class Info implements Service
 	//---
 	//--- Private methods
 	//---
+	//--------------------------------------------------------------------------
+
+	private Element getSchemas(SchemaManager schemaMan) throws Exception {
+
+    Element response = new Element("schemas");
+
+    for (String schema : schemaMan.getSchemas()) {
+      Element elem = new Element("schema")
+       .addContent(new Element("name")            .setText(schema))
+       .addContent(new Element("id")              .setText(schemaMan.getIdVersion(schema).one()))
+       .addContent(new Element("version")         .setText(schemaMan.getIdVersion(schema).two()))
+       .addContent(new Element("description")     .setText(schema))
+       .addContent(new Element("namespaces")      .setText(schemaMan.getNamespaceString(schema)));
+
+      // is it editable?
+      if (schemaMan.getSchema(schema).canEdit()) {
+        elem.addContent(new Element("edit").setText("true"));
+      } else {
+        elem.addContent(new Element("edit").setText("false"));
+      }
+
+      // get the conversion information and add it too
+      List<Element> convElems = schemaMan.getConversionElements(schema);
+      if (convElems.size() > 0) {
+        Element conv = new Element("conversions");
+        conv.addContent(convElems);
+        elem.addContent(conv);
+      }
+      response.addContent(elem);
+    }
+
+    return response;	
+	}
+
 	//--------------------------------------------------------------------------
 
 	private Element getGroups(ServiceContext context, Dbms dbms) throws SQLException

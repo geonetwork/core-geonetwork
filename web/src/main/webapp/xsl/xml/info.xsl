@@ -133,6 +133,27 @@
 
 	<!-- ============================================================================================= -->
 
+	<xsl:template match="schemas">
+		<xsl:copy-of select="."/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="statusvalues">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<status id="{id}">
+					<xsl:copy-of select="name"/>
+					<xsl:copy-of select="reserved"/>
+					<xsl:copy-of select="label"/>
+				</status>
+			</xsl:for-each>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
 	<xsl:template match="templates">
 		<xsl:copy>
 			<xsl:for-each select="record">

@@ -403,7 +403,6 @@
 		<allow service="xml.keyword.get"/>
 		<allow service="xml.file.disclaimer"/>
 		<allow service="xml.file.download"/>
-		<allow service="xml.metadata.status.values.list"/>
 		<allow service="xml.metadata.status.get"/>
 	  <allow service="search"/>
 	  <allow service="view"/>
@@ -474,7 +473,6 @@
 
 		<!-- Metadata schema related -->
 		<allow service="xml.schema.info"/>
-	  <allow service="xml.schema.list"/>
 
 		<!-- Rating services -->
 		<allow service="xml.metadata.rate"/>
