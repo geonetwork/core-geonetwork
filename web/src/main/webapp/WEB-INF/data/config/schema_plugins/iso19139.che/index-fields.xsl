@@ -468,32 +468,28 @@
 
     <!-- ========================================================================================= -->
     <!-- latlon coordinates indexed as numeric. -->
-    
+
+    <!-- Use analog template like ../iso19139/convert/functions.xsl that manages to index geobox, keeping in this one store=true -->
     <xsl:template match="*" mode="latLon">
         <xsl:variable name="format" select="'##.00'"></xsl:variable>
-        <xsl:for-each select="gmd:westBoundLongitude">          
-            <xsl:if test="number(gco:Decimal)">
-                <Field name="westBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
-            </xsl:if>
-        </xsl:for-each>
-    
-        <xsl:for-each select="gmd:southBoundLatitude">
-            <xsl:if test="number(gco:Decimal)">
-                <Field name="southBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
-            </xsl:if>
-        </xsl:for-each>
-    
-        <xsl:for-each select="gmd:eastBoundLongitude">
-            <xsl:if test="number(gco:Decimal)">
-                <Field name="eastBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
-            </xsl:if>
-        </xsl:for-each>
-    
-        <xsl:for-each select="gmd:northBoundLatitude">
-            <xsl:if test="number(gco:Decimal)">
-                <Field name="northBL" string="{format-number(gco:Decimal, $format)}" store="true" index="true"/>
-            </xsl:if>
-        </xsl:for-each> 
+
+        <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
+            and number(gmd:southBoundLatitude/gco:Decimal)
+            and number(gmd:eastBoundLongitude/gco:Decimal)
+            and number(gmd:northBoundLatitude/gco:Decimal)
+            ">
+            <Field name="westBL" string="{format-number(gmd:westBoundLongitude/gco:Decimal, $format)}" store="true" index="true"/>
+            <Field name="southBL" string="{format-number(gmd:southBoundLatitude/gco:Decimal, $format)}" store="true" index="true"/>
+
+            <Field name="eastBL" string="{format-number(gmd:eastBoundLongitude/gco:Decimal, $format)}" store="true" index="true"/>
+            <Field name="northBL" string="{format-number(gmd:northBoundLatitude/gco:Decimal, $format)}" store="true" index="true"/>
+
+            <Field name="geoBox" string="{concat(gmd:westBoundLongitude/gco:Decimal, '|',
+                gmd:southBoundLatitude/gco:Decimal, '|',
+                gmd:eastBoundLongitude/gco:Decimal, '|',
+                gmd:northBoundLatitude/gco:Decimal
+                )}" store="true" index="false"/>
+        </xsl:if>
     </xsl:template>
 
 	<!-- ========================================================================================= -->
