@@ -29,15 +29,41 @@ GeoNetwork.searchApp = function() {
 
         simpleSearchForm : undefined,
         advSearchForm : undefined,
+        switcher : undefined,
         init : function() {
 
             this.simpleSearchForm = this.generateSimpleSearchForm();
 
             this.advSearchForm = this.generateAdvancedSearchForm();
 
+            this.switcher = this.generateSwitcher();
+
             hideAdvancedSearch();
 
             this.createResultsPanel(null);
+        },
+
+        /***********************************************************************
+         * api:method[generateSwitcher]
+         * 
+         * Generate the switcher links between simple and advanced search
+         */
+        generateSwitcher : function() {
+
+            return new Ext.Panel(
+                    {
+                        html : '<div style="display:block;text-align:center;">'
+                                + '<input type="button" onclick="Ext.getCmp(\'advanced-search-options-content-form\').fireEvent(\'search\');"'
+                                + ' id="search-submit" class="form-submit" value="'
+                                + OpenLayers.i18n('Search')
+                                + '"></input></div>'
+                                + '<a id="show-advanced" href="javascript:showAdvancedSearch()">'
+                                + OpenLayers.i18n('showAdvancedOptions')
+                                + '</a>'
+                                + '<a id="hide-advanced" href="javascript:hideAdvancedSearch()" style="display:none">'
+                                + OpenLayers.i18n('hideAdvancedOptions')
+                                + '</a>'
+                    });
         },
 
         /**
@@ -99,6 +125,8 @@ GeoNetwork.searchApp = function() {
                 bodyStyle : 'padding:15px',
                 region : 'north',
                 border : false,
+                resetBt : null,
+                searchBt : null,
                 searchCb : function() {
 
                     var any = Ext.get('E_any');
@@ -501,6 +529,9 @@ GeoNetwork.searchApp = function() {
             return new GeoNetwork.SearchFormPanel({
                 id : 'advanced-search-options-content-form',
                 width : 250,
+                style : {
+                    display : 'none'
+                },
                 searchCb : function() {
 
                     var any = Ext.get('E_any');

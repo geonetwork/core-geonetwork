@@ -19,12 +19,28 @@
 
 // The following functions are for the advanced search hiding and showing
 function hide(id) {
+    if(id.el){
+        id = id.el;
+    }
+    
+    if(id.id){
+        id = id.id;
+    }
+    
     if (Ext.get(id)) {
         Ext.get(id).setVisibilityMode(Ext.Element.DISPLAY);
         Ext.get(id).hide();
     }
 }
 function show(id) {
+    if(id.el){
+        id = id.el;
+    }
+    
+    if(id.id){
+        id = id.id;
+    }
+    
     if (Ext.get(id)) {
         Ext.get(id).setVisibilityMode(Ext.Element.DISPLAY);
         Ext.get(id).show();
@@ -177,19 +193,15 @@ function resizeMap() {
 function showAdvancedSearch() {
     hide('show-advanced');
     show('hide-advanced');
-    hide("simple-search-options-content");
-    show('advanced-search-options');
-    if (Ext.getCmp('advanced-search-options-content-form')) {
-        Ext.getCmp('advanced-search-options-content-form').doLayout();
-    }
+    hide(Ext.getCmp('simple-search-options-content-form'));
+    show(Ext.getCmp('advanced-search-options-content-form'));
 }
 
 function hideAdvancedSearch() {
-    hide('advanced-search-options');
-    hide('legend-search');
     show('show-advanced');
     hide('hide-advanced');
-    show("simple-search-options-content");
+    hide(Ext.getCmp('advanced-search-options-content-form'));
+    show(Ext.getCmp('simple-search-options-content-form'));
 }
 function toggleMoreAdvancedOptions() {
 

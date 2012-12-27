@@ -198,7 +198,7 @@ GeoNetwork.app = function() {
                 forceLayout : true,
                 padding : 5,
                 items : [ app.searchApp.simpleSearchForm,
-                        app.searchApp.advSearchForm ]
+                        app.searchApp.advSearchForm, app.searchApp.switcher ]
             };
 
             this.viewport = new Ext.Viewport({

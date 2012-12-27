@@ -146,7 +146,7 @@
                     Ext.get("loading").hide();
 
                     Ext.get("header").show();
-                    Ext.get("search").show();
+                    <!-- Ext.get("search").show(); -->
                     Ext.get("search-results").show();
                     Ext.get("search-filter").show();            
                     Ext.get("search-switcher").show();         
@@ -308,13 +308,7 @@
                             select="/root/gui/strings/search" /></xsl:attribute>
                     </input>
                     </div>
-                    <div style="clear: both; display: hidden"></div>
-                    <a id="show-advanced" href="javascript:showAdvancedSearch()">
-                        <xsl:value-of select="/root/gui/strings/advancedOptions.show" />
-                    </a>
-                    <a id="hide-advanced" href="javascript:hideAdvancedSearch()" style="display:none">
-                        <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
-                    </a>
+                    
             </div>    
             <div id="search-results" style="display:none; height: 100%">
                 <div id="results-main">
@@ -364,6 +358,10 @@
             </div>
 
             <div id="map-div"></div>
+            
+            <script type="text/javascript">
+                GeoNetwork_URL = '<xsl:value-of select="$baseUrl" />';
+            </script>"
 
             <xsl:choose>
                 <xsl:when test="/root/request/debug">
