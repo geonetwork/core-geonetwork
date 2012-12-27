@@ -25,3 +25,7 @@ web-client/src/main/resources/apps/search/js/App-mini.js
 web-client/src/main/resources/apps/tabsearch/js/App-mini.js
 *.iml
 .idea/
+bin/config_delawen.sh
+web-client/src/main/resources/apps/geocatch/js/App-mini.js
+web/dev-config/log4j-delawen.cfg
+
