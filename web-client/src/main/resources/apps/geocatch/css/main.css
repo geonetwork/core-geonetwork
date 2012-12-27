@@ -153,7 +153,7 @@ body {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	width: 80%;
+	min-width: 650px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
 }
@@ -162,9 +162,8 @@ body {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: '800px';
+	min-width: 650px;
 	background-color: #CCCCCC;
-	width: 80%;
 	font-size: 0.6em;
 }
 
