@@ -190,6 +190,11 @@ GeoNetwork.app = function() {
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
 
+            app.mapApp = new GeoNetwork.mapApp();
+            app.mapApp.init();
+            
+            catalogue.resultsView .addMap(app.mapApp.getMap());
+
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
 
@@ -201,9 +206,6 @@ GeoNetwork.app = function() {
         },
 
         initializeAppLayout : function() {
-
-            app.mapApp = new GeoNetwork.mapApp();
-            app.mapApp.init();
 
             var margins = '35 0 0 0';
 
