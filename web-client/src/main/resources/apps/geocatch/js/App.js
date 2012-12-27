@@ -192,8 +192,8 @@ GeoNetwork.app = function() {
 
             app.mapApp = new GeoNetwork.mapApp();
             app.mapApp.init();
-            
-            catalogue.resultsView .addMap(app.mapApp.getMap());
+
+            catalogue.resultsView.addMap(app.mapApp.getMap());
 
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
@@ -210,15 +210,24 @@ GeoNetwork.app = function() {
             var margins = '35 0 0 0';
 
             var formpanel = {
-                id : 'search-container',
+                id : 'search-metacontainer',
                 region : 'center',
-                labelWidth : 70,
                 bodyStyle : 'padding:15px',
                 border : false,
+                layout: 'border',
                 forceLayout : true,
-                padding : 5,
-                items : [ app.searchApp.simpleSearchForm,
-                        app.searchApp.advSearchForm, app.searchApp.switcher ]
+                items : [
+                        {
+                            id : 'search-container',
+                            region : 'center',
+                            labelWidth : 70,
+                            bodyStyle : 'padding:15px',
+                            border : false,
+                            forceLayout : true,
+                            padding : 5,
+                            items : [ app.searchApp.simpleSearchForm,
+                                    app.searchApp.advSearchForm ]
+                        }, app.searchApp.switcher ]
             };
 
             var mappanel = // Map panel
@@ -273,7 +282,7 @@ GeoNetwork.app = function() {
                     contentEl : 'search-results',
                     border : false,
                     autoScroll : true,
-                    height:'100%',
+                    height : '100%',
                     margins : '0 0 0 0',
                     layout : 'fit'
                 },

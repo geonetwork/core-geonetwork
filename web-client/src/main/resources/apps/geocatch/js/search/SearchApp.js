@@ -52,6 +52,8 @@ GeoNetwork.searchApp = function() {
 
             return new Ext.Panel(
                     {
+                        height: 60,
+                        region: 'south',
                         html : '<div style="display:block;text-align:center;">'
                                 + '<input type="button" onclick="Ext.getCmp(\'advanced-search-options-content-form\').fireEvent(\'search\');"'
                                 + ' id="search-submit" class="form-submit" value="'
