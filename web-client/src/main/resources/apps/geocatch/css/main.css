@@ -86,7 +86,7 @@ body {
 	background: #01669E;
 }
 
-#nav a.selected {
+#nav a.banner-active {
 	background: #FFFFFF;
 	color: #01669E;
 }
@@ -153,7 +153,7 @@ body {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: 650px;
+	min-width: 750px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
 }

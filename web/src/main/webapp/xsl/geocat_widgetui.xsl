@@ -198,7 +198,7 @@
                                 </li>
                                 <li>
                                     <xsl:choose>
-                                        <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
+                                        <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='geocatui' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
                                             <a class="banner-active" href="geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
                                         </xsl:when>
                                         <xsl:otherwise>
