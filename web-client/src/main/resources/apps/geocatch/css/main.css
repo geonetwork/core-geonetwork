@@ -1,5 +1,5 @@
 /* to keep footer down -- from http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page */
- html,body {
+html,body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -14,12 +14,12 @@ body {
 #container {
 	min-height: 100%;
 	position: relative;
-} 
+}
 
 #main {
 	padding: 3px;
 	padding-bottom: 40px; /*height of the footer*/
-} 
+}
 
 #header header {
 	background: #E26F02;
@@ -64,7 +64,7 @@ body {
 
 #bread-crumb-div,#facets-panel-div {
 	padding: 5px;
-} 
+}
 
 /* ==============
  MOBILE: Menu
@@ -240,11 +240,15 @@ input[type="button"] {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	text-align: center;
-	display:block;
+	display: block;
 }
 
-#search-container > div > div.x-panel-body{
+#search-container>div>div.x-panel-body {
 	overflow-y: auto;
+}
+
+div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-panel-body-noheader {
+	border: none;
 }
 
 /* GeoNetwork Message */

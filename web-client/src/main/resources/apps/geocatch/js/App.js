@@ -229,6 +229,7 @@ GeoNetwork.app = function() {
                 }, {
                     region : 'west',
                     id : 'west',
+                    margins : '0 0 0 0',
                     split : true,
                     minWidth : 300,
                     width : 300,
@@ -237,8 +238,6 @@ GeoNetwork.app = function() {
                     collapsible : true,
                     hideCollapseTool : true,
                     collapseMode : 'mini',
-                    margins : margins,
-                    // layout : 's',
                     forceLayout : true,
                     layoutConfig : {
                         animate : true

@@ -530,6 +530,9 @@ GeoNetwork.searchApp = function() {
             return new GeoNetwork.SearchFormPanel({
                 id : 'advanced-search-options-content-form',
                 labelWidth : 70,
+                resetBt : null,
+                searchBt : null,
+                forcelayout : true,
                 bodyStyle : 'padding:15px',
                 style : {
                     display : 'none'

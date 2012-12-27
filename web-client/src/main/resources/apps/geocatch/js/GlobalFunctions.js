@@ -19,28 +19,28 @@
 
 // The following functions are for the advanced search hiding and showing
 function hide(id) {
-    if(id.el){
+    if (id.el) {
         id = id.el;
     }
-    
-    if(id.id){
+
+    if (id.id) {
         id = id.id;
     }
-    
+
     if (Ext.get(id)) {
         Ext.get(id).setVisibilityMode(Ext.Element.DISPLAY);
         Ext.get(id).hide();
     }
 }
 function show(id) {
-    if(id.el){
+    if (id.el) {
         id = id.el;
     }
-    
-    if(id.id){
+
+    if (id.id) {
         id = id.id;
     }
-    
+
     if (Ext.get(id)) {
         Ext.get(id).setVisibilityMode(Ext.Element.DISPLAY);
         Ext.get(id).show();
@@ -195,6 +195,7 @@ function showAdvancedSearch() {
     show('hide-advanced');
     hide(Ext.getCmp('simple-search-options-content-form'));
     show(Ext.getCmp('advanced-search-options-content-form'));
+    Ext.getCmp("vp").doLayout();
 }
 
 function hideAdvancedSearch() {
@@ -202,23 +203,6 @@ function hideAdvancedSearch() {
     hide('hide-advanced');
     hide(Ext.getCmp('advanced-search-options-content-form'));
     show(Ext.getCmp('simple-search-options-content-form'));
-}
-function toggleMoreAdvancedOptions() {
-
-    if (Ext.get("where_adv_search").isDisplayed()
-            && Ext.get("what_adv_search").isDisplayed()
-            && Ext.get("when_adv_search").isDisplayed()
-            && Ext.get("inspire_adv_search").isDisplayed()) {
-        hide('where_adv_search');
-        hide('what_adv_search');
-        hide('when_adv_search');
-        hide('inspire_adv_search');
-    } else {
-        show('where_adv_search');
-        show('what_adv_search');
-        show('when_adv_search');
-        show('inspire_adv_search');
-    }
 }
 
 /**
