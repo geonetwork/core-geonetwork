@@ -134,9 +134,7 @@ GeoNetwork.Geocatch.Templates.TITLE =
             <tpl if="selected==\'true\'">checked="true"</tpl>\
             class="selector" \
             onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>\
-        <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;"\
-                    onmouseover="geocat.highlightMapAndDiv(\'{uuid}\', this)"\
-                    onmouseout="geocat.highlightMapAndDiv(null, this)">{title}</a>\
+        <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
         <span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span>\
     </h1>';
 

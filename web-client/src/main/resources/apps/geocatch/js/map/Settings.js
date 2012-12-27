@@ -170,27 +170,6 @@ geocat.wmts = new OpenLayers.Layer.WMTS({
             2.5, 2, 1.5, 1, 0.5, 0.25 ]
 });
 
-geocat.highlightMapAndDiv = function(id, div) {
-
-    if (id != geocat.prevHighlighted) {
-        var features = geocat.contours;
-        Ext.each(geocat.contours, function(feature) {
-            if (feature.attributes.id == id) {
-                feature.style = geocat.highlightStyle;
-                geocat.vectorLayer.drawFeature(feature);
-
-            } else if (feature.style != geocat.defaultStyle) {
-                feature.style = geocat.defaultStyle;
-                geocat.vectorLayer.drawFeature(feature);
-            }
-        });
-        div.style.background = geocat.highlightStyleColor;
-        geocat.prevHighlighted = id;
-    }
-    if (id == null)
-        div.style.background = geocat.defaultStyleColor;
-}
-
 GeoNetwork.map.BACKGROUND_LAYERS = [ geocat.selectionHighlightLayer,
         geocat.wmts, geocat.vectorLayer ];
 

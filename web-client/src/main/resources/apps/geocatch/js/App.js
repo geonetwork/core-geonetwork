@@ -272,7 +272,8 @@ GeoNetwork.app = function() {
                     id : 'center-container',
                     contentEl : 'search-results',
                     border : false,
-                    autoHeight : true,
+                    autoScroll : true,
+                    height:'100%',
                     margins : '0 0 0 0',
                     layout : 'fit'
                 },
