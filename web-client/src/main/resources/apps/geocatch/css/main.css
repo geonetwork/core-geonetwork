@@ -120,6 +120,7 @@ body {
 #lang-form div {
 	display: inline;
 	padding-right: 7px;
+	float: right;
 }
 
 #lang-form div div form {
@@ -251,18 +252,16 @@ div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-pa
 	border: none;
 }
 
-
 #resultsPanel .md-action-menu a {
-    color: transparent;
-    background-image: url("../images/metadata-menu.png");
-    background-repeat: no-repeat;
-    visibility: visible;
-    padding-left: 15px;
-    background-position-y: 12px;
-    padding-top: 13px;
-    width: 15px;
+	color: transparent;
+	background-image: url("../images/metadata-menu.png");
+	background-repeat: no-repeat;
+	visibility: visible;
+	padding-left: 15px;
+	background-position-y: 12px;
+	padding-top: 13px;
+	width: 15px;
 }
-
 
 /* GeoNetwork Message */
 .alert {
