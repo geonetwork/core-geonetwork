@@ -333,26 +333,27 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Template icon is based on template key lower-cased.
      */
     createTemplateMenu: function(){
-        var tpls = this.metadataResultsView.getTemplates();
-        var data = [];
-        var t;
-        for (t in tpls) {
-            if (tpls.hasOwnProperty(t)) {
-                var tg = new Ext.Button({
-                    text: '',
-                    enableToggle: true,
-                    toggleGroup: 'tpl',
-                    id: t,
-                    iconCls: 'mn-view-' + t.toLowerCase(),
-                    toggleHandler: this.clickTemplateMenu,
-                    scope: this.metadataResultsView,
-                    pressed: (t === 'FULL' ? true : false)
-                });
-                data.push(tg);
-            }
-        }
+//        var tpls = this.metadataResultsView.getTemplates();
+//        var data = [];
+//        var t;
+//        for (t in tpls) {
+//            if (tpls.hasOwnProperty(t)) {
+//                var tg = new Ext.Button({
+//                    text: '',
+//                    enableToggle: true,
+//                    toggleGroup: 'tpl',
+//                    id: t,
+//                    iconCls: 'mn-view-' + t.toLowerCase(),
+//                    toggleHandler: this.clickTemplateMenu,
+//                    scope: this.metadataResultsView,
+//                    pressed: (t === 'FULL' ? true : false)
+//                });
+//                data.push(tg);
+//            }
+//        }
         
-        return [data, '|'];
+//        return [data, '|'];
+        return [];
     },
     /** private: method[createOtherActionMenu] 
      *

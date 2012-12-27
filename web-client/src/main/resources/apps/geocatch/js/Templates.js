@@ -135,7 +135,7 @@ GeoNetwork.Geocatch.Templates.TITLE =
             class="selector" \
             onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>\
         <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
-        <span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span>\
+        <span class="md-action-menu"> - <a rel="mdMenu">&nbsp;</a></span>\
     </h1>';
 
 

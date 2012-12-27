@@ -251,6 +251,19 @@ div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-pa
 	border: none;
 }
 
+
+#resultsPanel .md-action-menu a {
+    color: transparent;
+    background-image: url("../images/metadata-menu.png");
+    background-repeat: no-repeat;
+    visibility: visible;
+    padding-left: 15px;
+    background-position-y: 12px;
+    padding-top: 13px;
+    width: 15px;
+}
+
+
 /* GeoNetwork Message */
 .alert {
 	position: absolute;
