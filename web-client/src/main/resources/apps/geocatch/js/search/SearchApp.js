@@ -1023,7 +1023,7 @@ GeoNetwork.searchApp = function() {
                 mode = values.whereType;
             }
 
-            if (mode != 'polygon' && geocat.selectionFeature) {
+            if (mode != 'polygon') {
                 geocat.vectorLayer.destroyFeatures();
                 geocat.selectionFeature = null;
 
