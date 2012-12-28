@@ -387,11 +387,12 @@ GeoNetwork.searchApp = function() {
                         items : [
                                 {
                                     xtype : "radiogroup",
+                                    name: 'G_whereType',
                                     hideLabel : true,
                                     vertical : true,
                                     columns : 1,
                                     defaults : {
-                                        name : "whereType",
+                                        name : "G_whereType",
                                         boxLabel : "",
                                         itemCls : "compressedFormItem"
                                     },
@@ -1027,7 +1028,9 @@ GeoNetwork.searchApp = function() {
                 geocat.vectorLayer.destroyFeatures();
                 geocat.selectionFeature = null;
 
-                this.drawControl.deactivate();
+                if (this.drawControl) {
+                    this.drawControl.deactivate();
+                }
             }
 
             if (mode == 'gg25') {
@@ -1084,7 +1087,7 @@ GeoNetwork.searchApp = function() {
             } else if (mode == 'bbox') {
                 selLayer.setVisibility(false);
                 geocat.selectionFeature = new OpenLayers.Feature.Vector(
-                        geocat.map.getExtent().toGeometry(), {},
+                        app.mapApp.getMap().getExtent().toGeometry(), {},
                         geocat.selectionStyle);
                 geocat.vectorLayer.addFeatures(geocat.selectionFeature);
 

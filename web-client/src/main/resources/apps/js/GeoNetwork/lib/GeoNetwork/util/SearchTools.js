@@ -354,6 +354,13 @@ GeoNetwork.util.SearchTools = {
             }
         } else if (type == 'N') { // Numeric
             filters.push(name + "=" + parseInt(value));
+        } else if (type == 'G') { // Geographic
+            if (geocat.vectorLayer && geocat.vectorLayer.features[0])
+                filters
+                        .push("geometry"
+                                + "="
+                                + encodeURIComponent(geocat.vectorLayer.features[0].geometry
+                                        .toString()));
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
             var subField = value.match("^([^/]+)/(.*)$");
