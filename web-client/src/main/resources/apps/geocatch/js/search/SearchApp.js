@@ -30,6 +30,7 @@ GeoNetwork.searchApp = function() {
         simpleSearchForm : undefined,
         advSearchForm : undefined,
         switcher : undefined,
+        drawControl : undefined,
         init : function() {
 
             this.simpleSearchForm = this.generateSimpleSearchForm();
@@ -449,7 +450,8 @@ GeoNetwork.searchApp = function() {
                                     id : "drawPolygon",
                                     border : false,
                                     hidden : true,
-                                    html : '<span id="drawPolygonSpan"><a href="javascript:geocat.drawWherePolygon()">'
+                                    html : '<span id="drawPolygonSpan">'
+                                            + '<a href="javascript:app.searchApp.drawWherePolygon()">'
                                             + OpenLayers
                                                     .i18n("startNewPolygon")
                                             + "</a></span>"
@@ -683,32 +685,31 @@ GeoNetwork.searchApp = function() {
                         d.setVisible(false);
                         e.setVisible(false);
                         // FIXME there is no geocat.map
-                        geocat.map.events.register("moveend", null,
+                        app.mapApp.getMap().events.register("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "gg25":
                         d.setVisible(true);
                         e.setVisible(false);
                         // FIXME there is no geocat.map
-                        geocat.map.events.unregister("moveend", null,
+                        app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "polygon":
                         d.setVisible(false);
                         e.setVisible(true);
                         // FIXME there is no geocat.map
-                        geocat.map.events.unregister("moveend", null,
+                        app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         if (geocat.selectionFeature) {
                             geocat.vectorLayer
                                     .destroyFeatures(geocat.selectionFeature);
                             geocat.selectionFeature = null
                         }
-                        geocat.drawWherePolygon();
+                        app.searchApp.drawWherePolygon();
                         break
                     }
-                    geocat.highlightGeographicFilter(null, a);
-                    geocat.fixLayout()
+                    app.searchApp.highlightGeographicFilter(null, a);
                 }
             }
         },
@@ -999,6 +1000,109 @@ GeoNetwork.searchApp = function() {
                     });
         },
 
+        drawWherePolygon : function() {
+            geocat.drawFeature.activate();
+            if (geocat.selectionFeature) {
+                geocat.vectorLayer.destroyFeatures(geocat.selectionFeature);
+                geocat.selectionFeature = null;
+            }
+            var span = Ext.get("drawPolygonSpan");
+            Ext.DomHelper.overwrite(span, '<span id="drawPolygonSpan">'
+                    + OpenLayers.i18n('startNewPolygonHelp') + '</span>');
+        },
+
+        /**
+         * Update the hightlight layer to show the geographic filters.
+         */
+        highlightGeographicFilter : function(event, mode) {
+            var selLayer = geocat.selectionHighlightLayer;
+            var values = GeoNetwork.util.SearchTools
+                    .getFormValues(this.advSearchForm);
+
+            if (mode == null) {
+                mode = values.whereType;
+            }
+
+            if (mode != 'polygon' && geocat.selectionFeature) {
+                geocat.vectorLayer.destroyFeatures();
+                geocat.selectionFeature = null;
+
+                this.drawControl.deactivate();
+            }
+
+            if (mode == 'gg25') {
+                var ids = null;
+                var layer = null;
+                var layerFilter = null;
+                if (values.gemeinden) {
+                    ids = values.gemeinden;
+                    layer = 'chtopo:gemeindenBB';
+                    layerFilter = "OBJECTVAL";
+                } else if (values.kantone) {
+                    ids = values.kantone;
+                    layer = 'chtopo:kantoneBB';
+                    layerFilter = "KANTONSNR";
+                } else if (values.country) {
+                    ids = values.country;
+                    layer = 'chtopo:countries';
+                    layerFilter = "LAND";
+                }
+                if (ids) {
+                    ids = ids.split(",");
+
+                    var wmsFilter = new OpenLayers.Filter.Logical({
+                        type : OpenLayers.Filter.Logical.OR,
+                        filters : []
+                    });
+                    for ( var i = 0; i < ids.length; ++i) {
+                        var id = ids[i];
+                        if (id) {
+                            wmsFilter.filters
+                                    .push(new OpenLayers.Filter.Comparison(
+                                            {
+                                                type : OpenLayers.Filter.Comparison.EQUAL_TO,
+                                                property : layerFilter,
+                                                value : id
+                                            }));
+                        }
+                    }
+
+                    selLayer.params.LAYERS = layer;
+                    selLayer.params.FILTER = new OpenLayers.Format.XML()
+                            .write(new OpenLayers.Format.Filter()
+                                    .write(wmsFilter));
+                    if (selLayer.getVisibility()) {
+                        selLayer.redraw();
+                    } else {
+                        selLayer.setVisibility(true);
+                    }
+
+                } else {
+                    selLayer.setVisibility(false);
+                }
+
+            } else if (mode == 'bbox') {
+                selLayer.setVisibility(false);
+                geocat.selectionFeature = new OpenLayers.Feature.Vector(
+                        geocat.map.getExtent().toGeometry(), {},
+                        geocat.selectionStyle);
+                geocat.vectorLayer.addFeatures(geocat.selectionFeature);
+
+            } else if (mode == 'polygon') {
+                selLayer.setVisibility(false);
+
+                if (!this.drawControl) {
+                    this.drawControl = new OpenLayers.Control.DrawFeature(
+                            geocat.vectorLayer, OpenLayers.Handler.Polygon);
+                    app.mapApp.getMap().addControl(this.drawControl);
+                }
+
+                this.drawControl.activate();
+
+            } else {
+                selLayer.setVisibility(false);
+            }
+        },
         /**
          * api:method[getCountryStore]
          * 
