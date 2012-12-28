@@ -323,7 +323,8 @@ GeoNetwork.util.SearchTools = {
                 filters.push(name + "=" + 'on');
             }
         } else {
-            alert("Cannot parse " + type);
+            console.log("Cannot parse " + type + " on field " 
+                    + name + ": '" + value + "'");
         }
     },
     

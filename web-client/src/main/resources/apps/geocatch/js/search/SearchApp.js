@@ -183,15 +183,15 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
                 anchor : '-10',
-                name : "T_AnyText"
+                name : "E_any"
             }, {
                 fieldLabel : OpenLayers.i18n("rtitle"),
-                name : "T_title",
+                name : "E_title",
                 anchor : '-10',
                 id : "TitleField"
             }, {
                 fieldLabel : OpenLayers.i18n("abstract"),
-                name : "T_abstract",
+                name : "E_abstract",
                 anchor : '-10',
                 id : "AbstractField"
             }, new Ext.ux.form.SuperBoxSelect({
@@ -229,11 +229,11 @@ GeoNetwork.searchApp = function() {
             }), {
                 fieldLabel : OpenLayers.i18n("contact"),
                 anchor : '-10',
-                name : "T_creator"
+                name : "E_creator"
             }, {
                 fieldLabel : OpenLayers.i18n("organisationName"),
                 anchor : '-10',
-                name : "T_orgName"
+                name : "E_orgName"
             } ];
 
             f = f.concat([
