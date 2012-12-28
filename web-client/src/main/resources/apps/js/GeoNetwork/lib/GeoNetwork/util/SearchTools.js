@@ -355,12 +355,20 @@ GeoNetwork.util.SearchTools = {
         } else if (type == 'N') { // Numeric
             filters.push(name + "=" + parseInt(value));
         } else if (type == 'G') { // Geographic
-            if (geocat.vectorLayer && geocat.vectorLayer.features[0])
-                filters
-                        .push("geometry"
-                                + "="
-                                + encodeURIComponent(geocat.vectorLayer.features[0].geometry
-                                        .toString()));
+            if (geocat.vectorLayer && geocat.vectorLayer.features[0]) {
+                var geometry = geocat.vectorLayer.features[0].geometry;
+                var proj = new OpenLayers.Projection("EPSG:4326");
+                Ext.each(geocat.vectorLayer.features, function(feature) {
+                    geometry = feature.geometry.transform(app.mapApp.getMap()
+                            .getProjection(), proj);
+                    filters.push("geometry" + "="
+                            + encodeURIComponent(geometry.toString()));
+                });
+                filters.push("relation"
+                        + "="
+                        + encodeURIComponent(Ext.get("boundingRelation")
+                                .getValue()));
+            }
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
             var subField = value.match("^([^/]+)/(.*)$");

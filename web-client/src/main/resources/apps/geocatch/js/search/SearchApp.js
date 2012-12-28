@@ -387,7 +387,7 @@ GeoNetwork.searchApp = function() {
                         items : [
                                 {
                                     xtype : "radiogroup",
-                                    name: 'G_whereType',
+                                    name : 'G_whereType',
                                     hideLabel : true,
                                     vertical : true,
                                     columns : 1,
@@ -461,15 +461,15 @@ GeoNetwork.searchApp = function() {
                                     xtype : "combo",
                                     store : [
                                             [
-                                                    OpenLayers.Filter.Spatial.WITHIN,
+                                                    "within",
                                                     OpenLayers
                                                             .i18n("withinGeo") ],
                                             [
-                                                    OpenLayers.Filter.Spatial.INTERSECTS,
+                                                    "intersection",
                                                     OpenLayers
                                                             .i18n("intersectGeo") ],
                                             [
-                                                    OpenLayers.Filter.Spatial.CONTAINS,
+                                                    "encloses",
                                                     OpenLayers
                                                             .i18n("containsGeo") ] ],
                                     hideTrigger : true,
@@ -480,7 +480,8 @@ GeoNetwork.searchApp = function() {
                                     selectOnFocus : true,
                                     fieldLabel : OpenLayers.i18n("type"),
                                     name : "boundingRelation",
-                                    value : OpenLayers.Filter.Spatial.WITHIN
+                                    id : "boundingRelation",
+                                    value : "within"
                                 } ],
                         listeners : {
                             expand : function() {
@@ -1309,15 +1310,14 @@ GeoNetwork.searchApp = function() {
             var search = new Ext.ux.form.SuperBoxSelect(opts);
 
             var refreshTheContour = function(combo) {
-                var records = combo.getRecords();
+                var records = combo.usedRecords.items;
 
                 if (records.length == 0)
                     return;
 
                 var format = new OpenLayers.Format.WKT();
                 var bbox = null;
-                for ( var i = 0; i < records.length; ++i) {
-                    var record = records[i];
+                Ext.each(records, function(record) {
                     if (record.get("BOUNDING")) {
                         var feature = format.read(record.get("BOUNDING"));
                         if (bbox) {
@@ -1326,7 +1326,7 @@ GeoNetwork.searchApp = function() {
                             bbox = feature.geometry.getBounds();
                         }
                     }
-                }
+                });
                 try {
                     if (bbox)
                         app.mapApp.getMap().zoomToExtent(bbox);
