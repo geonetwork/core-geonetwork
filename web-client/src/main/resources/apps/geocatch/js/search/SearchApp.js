@@ -43,6 +43,17 @@ GeoNetwork.searchApp = function() {
             this.createResultsPanel(null);
         },
 
+        fireSearch : function() {
+
+            var searchForm = Ext.getCmp('advanced-search-options-content-form');
+
+            if (!searchForm.isVisible()) {
+                searchForm = Ext.getCmp('simple-search-options-content-form');
+            }
+
+            searchForm.fireEvent('search');
+        },
+
         /***********************************************************************
          * api:method[generateSwitcher]
          * 
@@ -52,10 +63,10 @@ GeoNetwork.searchApp = function() {
 
             return new Ext.Panel(
                     {
-                        height: 60,
-                        region: 'south',
+                        height : 60,
+                        region : 'south',
                         html : '<div style="display:block;text-align:center;">'
-                                + '<input type="button" onclick="Ext.getCmp(\'advanced-search-options-content-form\').fireEvent(\'search\');"'
+                                + '<input type="button" onclick="app.searchApp.fireSearch()"'
                                 + ' id="search-submit" class="form-submit" value="'
                                 + OpenLayers.i18n('Search')
                                 + '"></input></div>'
@@ -91,10 +102,10 @@ GeoNetwork.searchApp = function() {
                     // Updating the hidden search field in the
                     // search form which is going to be submitted
                     change : function() {
-                        Ext.getCmp('E_trueany').setValue(this.getValue());
+                        Ext.getCmp('anyField').setValue(this.getValue());
                     },
                     keyup : function() {
-                        Ext.getCmp('E_trueany').setValue(this.getValue());
+                        Ext.getCmp('anyField').setValue(this.getValue());
                     }
                 }
             })
@@ -138,14 +149,14 @@ GeoNetwork.searchApp = function() {
                             any.setValue('');
                         }
                     }
+                    
+                    Ext.get("results-main").dom.style.display = 'none';
 
                     catalogue.startRecord = 1; // Reset start record
                     searching = true;
-
                     catalogue.search('simple-search-options-content-form',
                             app.searchApp.loadResults, null,
                             catalogue.startRecord, true);
-                    showSearch();
                 },
                 listeners : {
                     onreset : function() {
@@ -156,7 +167,7 @@ GeoNetwork.searchApp = function() {
                             title : catalogue.getInfo().name
                         });
                     }
-                },
+                },                
                 forceLayout : true,
                 items : formItems
             });
