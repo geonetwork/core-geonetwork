@@ -149,7 +149,7 @@ GeoNetwork.searchApp = function() {
                             any.setValue('');
                         }
                     }
-                    
+
                     Ext.get("results-main").dom.style.display = 'none';
 
                     catalogue.startRecord = 1; // Reset start record
@@ -167,7 +167,7 @@ GeoNetwork.searchApp = function() {
                             title : catalogue.getInfo().name
                         });
                     }
-                },                
+                },
                 forceLayout : true,
                 items : formItems
             });
@@ -183,15 +183,15 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
                 anchor : '-10',
-                name : "E_any"
+                name : "T_AnyText"
             }, {
                 fieldLabel : OpenLayers.i18n("rtitle"),
-                name : "E_title",
+                name : "T_title",
                 anchor : '-10',
                 id : "TitleField"
             }, {
                 fieldLabel : OpenLayers.i18n("abstract"),
-                name : "E_abstract",
+                name : "T_abstract",
                 anchor : '-10',
                 id : "AbstractField"
             }, new Ext.ux.form.SuperBoxSelect({
@@ -229,11 +229,11 @@ GeoNetwork.searchApp = function() {
             }), {
                 fieldLabel : OpenLayers.i18n("contact"),
                 anchor : '-10',
-                name : "E_creator"
+                name : "T_creator"
             }, {
                 fieldLabel : OpenLayers.i18n("organisationName"),
                 anchor : '-10',
-                name : "E_orgName"
+                name : "T_orgName"
             } ];
 
             f = f.concat([
@@ -473,6 +473,7 @@ GeoNetwork.searchApp = function() {
                                     forceSelection : true,
                                     editable : false,
                                     triggerAction : "all",
+                                    anchor : '-10',
                                     selectOnFocus : true,
                                     fieldLabel : OpenLayers.i18n("type"),
                                     name : "boundingRelation",
@@ -505,14 +506,14 @@ GeoNetwork.searchApp = function() {
                     format : "d/m/Y",
                     anchor : '-10',
                     postfix : "T00:00:00",
-                    name : ">=_TempExtent_end"
+                    name : "E_extTo"
                 }, {
                     xtype : "datefield",
                     fieldLabel : OpenLayers.i18n("to"),
                     format : "d/m/Y",
                     postfix : "T23:59:59",
                     anchor : '-10',
-                    name : "<=_TempExtent_begin"
+                    name : "E_extFrom"
                 } ]
             });
             d.push({
