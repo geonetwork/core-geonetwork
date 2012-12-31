@@ -208,7 +208,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
-        this.updateCategoriesAction = new Ext.menu.Item({
+        /*this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
             handler: function(){
@@ -216,7 +216,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this,
             hidden: hide
-        });
+        });*/
         this.updatePrivilegesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updatePrivileges'),
             id: 'updatePrivilegesAction',
@@ -247,12 +247,12 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+        this.selectionActions.push(this.deleteAction, this.ownerAction, //this.updateCategoriesAction, 
                 this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
-        this.actionMenu.addItem(this.updateCategoriesAction);
+        //this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
         this.actionMenu.addItem(this.updateStatusAction);
         this.actionMenu.addItem(this.updateVersionAction);
@@ -333,26 +333,27 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Template icon is based on template key lower-cased.
      */
     createTemplateMenu: function(){
-        var tpls = this.metadataResultsView.getTemplates();
-        var data = [];
-        var t;
-        for (t in tpls) {
-            if (tpls.hasOwnProperty(t)) {
-                var tg = new Ext.Button({
-                    text: '',
-                    enableToggle: true,
-                    toggleGroup: 'tpl',
-                    id: t,
-                    iconCls: 'mn-view-' + t.toLowerCase(),
-                    toggleHandler: this.clickTemplateMenu,
-                    scope: this.metadataResultsView,
-                    pressed: (t === 'FULL' ? true : false)
-                });
-                data.push(tg);
-            }
-        }
+//        var tpls = this.metadataResultsView.getTemplates();
+//        var data = [];
+//        var t;
+//        for (t in tpls) {
+//            if (tpls.hasOwnProperty(t)) {
+//                var tg = new Ext.Button({
+//                    text: '',
+//                    enableToggle: true,
+//                    toggleGroup: 'tpl',
+//                    id: t,
+//                    iconCls: 'mn-view-' + t.toLowerCase(),
+//                    toggleHandler: this.clickTemplateMenu,
+//                    scope: this.metadataResultsView,
+//                    pressed: (t === 'FULL' ? true : false)
+//                });
+//                data.push(tg);
+//            }
+//        }
         
-        return [data, '|'];
+//        return [data, '|'];
+        return [];
     },
     /** private: method[createOtherActionMenu] 
      *
@@ -510,7 +511,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
+        var editingActions = [this.deleteAction, //this.updateCategoriesAction, 
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],

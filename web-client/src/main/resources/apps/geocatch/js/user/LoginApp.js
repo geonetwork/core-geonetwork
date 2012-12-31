@@ -54,6 +54,8 @@ GeoNetwork.loginApp = function() {
 
                 hide("login-form");
                 show("logout-div");
+                
+                show("adminMenu");
             });
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);
@@ -69,6 +71,8 @@ GeoNetwork.loginApp = function() {
                 }
                 hide("logout-div");
                 show("login-form");
+                
+                hide("adminMenu");
             });
 
             // Refresh login form if needed

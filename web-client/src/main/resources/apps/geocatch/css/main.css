@@ -11,10 +11,6 @@ body {
 	min-width: 900px;
 }
 
-form {
-	display: inline;
-}
-
 #container {
 	min-height: 100%;
 	position: relative;
@@ -22,7 +18,7 @@ form {
 
 #main {
 	padding: 3px;
-	padding-bottom: 40px; /* height of the footer */
+	padding-bottom: 40px; /*height of the footer*/
 }
 
 #header header {
@@ -54,6 +50,10 @@ form {
 	display: none;
 }
 
+#simple-search-options-content,#search-form-fieldset {
+	width: 100%;
+}
+
 .arrow {
 	background-image: url('../images/arrow.gif');
 	background-repeat: no-repeat;
@@ -62,8 +62,7 @@ form {
 	font-size: 11px !important;
 }
 
-
-#bread-crumb-div, #facets-panel-div {
+#bread-crumb-div,#facets-panel-div {
 	padding: 5px;
 }
 
@@ -87,7 +86,7 @@ form {
 	background: #01669E;
 }
 
-#nav a.selected {
+#nav a.banner-active {
 	background: #FFFFFF;
 	color: #01669E;
 }
@@ -121,6 +120,7 @@ form {
 #lang-form div {
 	display: inline;
 	padding-right: 7px;
+	float: right;
 }
 
 #lang-form div div form {
@@ -154,7 +154,7 @@ form {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	width: 50%;
+	min-width: 750px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
 }
@@ -163,9 +163,8 @@ form {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	width: 80%;
+	min-width: 650px;
 	background-color: #CCCCCC;
-	width: 80%;
 	font-size: 0.6em;
 }
 
@@ -232,24 +231,38 @@ input[type="button"] {
 	padding-right: 13px;
 }
 
-#search-switcher {
-	text-align: center;
-}
-
 #search-submit {
-	padding: 5px;
-}
-
-#search-submit-container {
-	background-color: #DFE8F6; 
 	padding: 5px;
 }
 
 #show-advanced,#hide-advanced {
 	font-size: 12px;
-	margin-top:5px;
-	margin-bottom:5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
+	display: block;
 }
+
+#search-container>div>div.x-panel-body {
+	overflow-y: auto;
+}
+
+div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-panel-body-noheader
+	{
+	border: none;
+}
+
+#resultsPanel .md-action-menu a {
+	color: transparent;
+	background-image: url("../images/metadata-menu.png");
+	background-repeat: no-repeat;
+	visibility: visible;
+	padding-left: 15px;
+	background-position-y: 12px;
+	padding-top: 13px;
+	width: 15px;
+}
+
 /* GeoNetwork Message */
 .alert {
 	position: absolute;
@@ -325,15 +338,6 @@ div.facets ul ul {
 	font-size: 85%;
 }
 
-.facet-count {
-	color: #71C0DD;
-	padding-left: 3px;
-}
-
-div.facets * a {
-	text-decoration: none;
-}
-
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	color: #E26F02;
 }
@@ -344,6 +348,17 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	background-repeat: no-repeat;
 	padding: 0 0 3px 7px;
 	margin-left: 5px;
+	color: #064377;
+}
+
+/* Result View */
+#resultsPanel .x-toolbar {
+	background: white;
+	border-bottom: 1px solid gray;
+}
+
+#resultsPanel {
+	min-width: 100%;
 }
 
 /* Icon based on protocol prefix in related resource table */

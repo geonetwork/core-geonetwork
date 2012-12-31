@@ -285,7 +285,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
                 "Stadt Zürich" ],
         [ "_source/7ea582d4-9ddf-422e-b28f-29760a4c0147",
                 "_geocat.ch direct partners" ] 
-    ]
+    ],
+    'showAdvancedOptions' : 'Show Advanced Options',
+    'hideAdvancedOptions' : 'Hide Advanced Options'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);

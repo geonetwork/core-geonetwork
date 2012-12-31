@@ -146,7 +146,7 @@
                     Ext.get("loading").hide();
 
                     Ext.get("header").show();
-                    Ext.get("search").show();
+                    <!-- Ext.get("search").show(); -->
                     Ext.get("search-results").show();
                     Ext.get("search-filter").show();            
                     Ext.get("search-switcher").show();         
@@ -198,7 +198,7 @@
                                 </li>
                                 <li>
                                     <xsl:choose>
-                                        <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
+                                        <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='geocatui' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
                                             <a class="banner-active" href="geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
                                         </xsl:when>
                                         <xsl:otherwise>
@@ -298,23 +298,6 @@
                     <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
                 </div>
             </div>
-                
-            <div id="search" style="display:none;">
-                <fieldset id="search-form-fieldset">
-                    <legend id="legend-search">
-                        <xsl:value-of select="/root/gui/strings/search" />
-                    </legend>
-                    
-                     <div id="simple-search-options-content"></div>
-
-                    <div id="advanced-search-options">
-                        <div id="advanced-search-options-content"></div>
-                    </div>
-                    
-                  
-                </fieldset>
-
-            </div>
 
             <div id="search-switcher" style="display:none;">
                     <div  id="search-submit-container">
@@ -325,13 +308,7 @@
                             select="/root/gui/strings/search" /></xsl:attribute>
                     </input>
                     </div>
-                    <div style="clear: both; display: hidden"></div>
-                    <a id="show-advanced" href="javascript:showAdvancedSearch()">
-                        <xsl:value-of select="/root/gui/strings/advancedOptions.show" />
-                    </a>
-                    <a id="hide-advanced" href="javascript:hideAdvancedSearch()" style="display:none">
-                        <xsl:value-of select="/root/gui/strings/advancedOptions.hide" />
-                    </a>
+                    
             </div>    
             <div id="search-results" style="display:none; height: 100%">
                 <div id="results-main">
@@ -381,6 +358,10 @@
             </div>
 
             <div id="map-div"></div>
+            
+            <script type="text/javascript">
+                GeoNetwork_URL = '<xsl:value-of select="$baseUrl" />';
+            </script>"
 
             <xsl:choose>
                 <xsl:when test="/root/request/debug">

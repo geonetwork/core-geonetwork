@@ -38,7 +38,9 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'Login.error.message': 'Login failed. Check your username and password.',
 
     'kantone': 'Canton(s)',
-    'any2': 'Any'
+    'any2': 'Any',
+    'showAdvancedOptions' : 'Ricerca avanzata',
+    'hideAdvancedOptions' : 'Nascondere opzioni avanzati'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);

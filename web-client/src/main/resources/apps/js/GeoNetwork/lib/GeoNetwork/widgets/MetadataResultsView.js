@@ -242,6 +242,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             fn: function(dv, idx, node, e){
                 var i, j;
                 
+                if(this.maps.length == 0){
+                    this.addMap(app.mapApp.getMap());
+                }
+                
                 if (this.maps.length !== 0) {
                     var record = this.getStore().getAt(idx);
                     var uuid = record.get('uuid');

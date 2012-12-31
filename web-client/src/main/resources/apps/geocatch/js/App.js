@@ -61,43 +61,61 @@ GeoNetwork.app = function() {
      * 
      */
     var createLanguageSwitcher = function(lang) {
-        return new Ext.form.FormPanel({
-            renderTo : 'lang-form',
-            width : 400,
-            border : false,
-            layout : 'anchor',
-            hidden : GeoNetwork.Util.locales.length === 1 ? true : false,
-            items : [ new Ext.form.ComboBox({
-                mode : 'local',
-                triggerAction : 'all',
-                height : '100%',
-                store : new Ext.data.ArrayStore({
-                    idIndex : 2,
-                    fields : [ 'id', 'name', 'id2' ],
-                    data : GeoNetwork.Util.locales
-                }),
-                valueField : 'id2',
-                displayField : 'name',
-                value : lang,
-                listeners : {
-                    select : function(cb, record, idx) {
 
-                        var lang = /srv\/([a-z]{3})\/geocat/
-                                .exec(window.location.href);
-
-                        if (lang === null) {
-                            window.location.pathname = window.location.pathname
-                                    .replace('/srv/geocat', '/srv/'
-                                            + cb.getValue() + '/geocat');
-                        } else {
-                            window.location.pathname = window.location.pathname
-                                    .replace(lang[1], cb.getValue());
-                        }
-
-                    }
+        var res = lang;
+        Ext.each(GeoNetwork.Util.locales, function(locale) {
+            Ext.each(locale, function(l) {
+                if (lang === l) {
+                    res = locale[1];
                 }
-            }) ]
+            });
         });
+
+        return new Ext.form.FormPanel(
+                {
+                    renderTo : 'lang-form',
+                    width : 400,
+                    border : false,
+                    layout : 'anchor',
+                    hidden : GeoNetwork.Util.locales.length === 1 ? true
+                            : false,
+                    items : [ new Ext.form.ComboBox(
+                            {
+                                mode : 'local',
+                                triggerAction : 'all',
+                                height : '100%',
+                                store : new Ext.data.ArrayStore({
+                                    idIndex : 2,
+                                    fields : [ 'id', 'name', 'id2' ],
+                                    data : GeoNetwork.Util.locales
+                                }),
+                                valueField : 'id2',
+                                displayField : 'name',
+                                value : res,
+                                listeners : {
+                                    select : function(cb, record, idx) {
+
+                                        var lang = /srv\/([a-z]{3})/
+                                                .exec(window.location.href);
+
+                                        if (lang === null) {
+                                            window.location.pathname = window.location.pathname
+                                                    .replace(
+                                                            '/srv/geocat',
+                                                            '/srv/'
+                                                                    + cb
+                                                                            .getValue()
+                                                                    + '/geocat');
+                                        } else {
+                                            window.location.pathname = window.location.pathname
+                                                    .replace(lang[1], cb
+                                                            .getValue());
+                                        }
+
+                                    }
+                                }
+                            }) ]
+                });
     };
 
     // public space:
@@ -115,7 +133,7 @@ GeoNetwork.app = function() {
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
 
-            var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
+            var lang = OpenLayers.Lang.getCode();
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(
                         urlParameters.extent[0], urlParameters.extent[1],
@@ -172,6 +190,11 @@ GeoNetwork.app = function() {
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
 
+            app.mapApp = new GeoNetwork.mapApp();
+            app.mapApp.init();
+
+            catalogue.resultsView.addMap(app.mapApp.getMap());
+
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
 
@@ -184,75 +207,88 @@ GeoNetwork.app = function() {
 
         initializeAppLayout : function() {
 
-            app.mapApp = new GeoNetwork.mapApp();
-            app.mapApp.init();
+            var margins = '35 0 0 0';
 
-            // Application layout
+            var formpanel = {
+                id : 'search-metacontainer',
+                region : 'center',
+                bodyStyle : 'padding:15px',
+                border : false,
+                layout: 'border',
+                forceLayout : true,
+                items : [
+                        {
+                            id : 'search-container',
+                            region : 'center',
+                            labelWidth : 70,
+                            bodyStyle : 'padding:15px',
+                            border : false,
+                            forceLayout : true,
+                            padding : 5,
+                            items : [ app.searchApp.simpleSearchForm,
+                                    app.searchApp.advSearchForm ]
+                        }, app.searchApp.switcher ]
+            };
+
+            var mappanel = // Map panel
+            {
+                region : 'south',
+                contentEl : 'map-div',
+                id : 'map-container',
+                border : false,
+                height : 250,
+                bodyStyle : 'background-color: #cccccc'
+            };
+
             this.viewport = new Ext.Viewport({
                 layout : 'border',
-                layoutConfig : {
-                    minWidth : 1080
+                id : 'vp',
+                listeners : {
+                    render : function() {
+                    }
                 },
-                items : [
-                // Header
+                items : [// Header
                 {
                     region : 'north',
+                    id : 'north',
                     contentEl : 'header',
                     border : false,
                     margins : '0 0 0 0',
                     autoHeight : true
-                },
-                // Search/map
-                {
+                }, {
                     region : 'west',
-                    border : false,
+                    id : 'west',
+                    margins : '0 0 0 0',
                     split : true,
                     minWidth : 300,
-                    maxWidth : 400,
                     width : 300,
-                    margins : '0 0 0 0',
-                    border : false,
-                    layout : 'border',
-                    items : [
-                    // Search panel
-                    {
-                        region : 'center',
-                        layout : 'border',
-                        items : [ {
-                            region : 'center',
-                            contentEl : 'search',
-                            border : false
-                        }, {
-                            region : 'south',
-                            id : 'searchSwitch',
-                            border : false,
-                            contentEl : 'search-switcher'
-                        } ]
-
+                    maxWidth : 400,
+                    autoScroll : true,
+                    collapsible : true,
+                    hideCollapseTool : true,
+                    collapseMode : 'mini',
+                    forceLayout : true,
+                    layoutConfig : {
+                        animate : true
                     },
-                    // Map panel
-                    {
-                        region : 'south',
-                        contentEl : 'map-div',
-                        border : false,
-                        height : 250,
-                        border : false,
-                        bodyStyle : 'background-color: #cccccc'
-                    } ]
+                    layout : 'border',
+                    items : [ formpanel, mappanel ]
 
                 },
                 // Search results
                 {
                     region : 'center',
+                    id : 'center-container',
                     contentEl : 'search-results',
                     border : false,
-                    autoHeight : true,
+                    autoScroll : true,
+                    height : '100%',
                     margins : '0 0 0 0',
                     layout : 'fit'
                 },
                 // Filter panel
                 {
-                    id: 'facets-container',
+                    id : 'facets-container',
                     region : 'east',
                     contentEl : 'search-filter',
                     split : true,
@@ -265,11 +301,7 @@ GeoNetwork.app = function() {
                     minWidth : 100,
                     maxWidth : 500,
                     height : '100%'
-                } ],
-                listeners : {
-                    render : function(e) {
-                    }
-                }
+                } ]
             });
         },
 
@@ -290,10 +322,10 @@ GeoNetwork.app = function() {
 
 Ext.onReady(function() {
     // Language handling
-    var lang = /srv\/([a-z]{3})\/search/.exec(location.href);
+    var lang = /srv\/([a-z]{3})/.exec(location.href);
 
     if (lang === null) {
-        lang = "eng";
+        lang = GeoNetwork.Util.defaultLocale;
     }
 
     var url = /(.*)\/srv/.exec(location.href)[1];

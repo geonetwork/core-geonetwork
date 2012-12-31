@@ -1575,8 +1575,8 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
     },
     onStoreLoad : function(store, records, options){
         //accomodating for bug in Ext 3.0.0 where options.params are empty
-        var q = options.params[this.queryParam] || store.baseParams[this.queryParam] || "",
-            isValuesQuery = options.params[this.queryValuesIndicator] || store.baseParams[this.queryValuesIndicator];
+        var q = (options.params && (options.params[this.queryParam] || store.baseParams[this.queryParam])) || "";
+        var isValuesQuery = (options.params && options.params[this.queryValuesIndicator]) || store.baseParams[this.queryValuesIndicator];
 
         if(this.removeValuesFromStore){
             this.store.each(function(record) {
