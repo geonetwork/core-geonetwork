@@ -833,7 +833,7 @@
               <maxIdleTime>10000</maxIdleTime>
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
-            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
               <!-- Note: If another server needs to communicate with this one with
                     https then it needs the environment variables set as follows:
                     -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password

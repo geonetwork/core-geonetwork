@@ -23,6 +23,13 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
@@ -32,20 +39,13 @@ import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
-import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * This class is responsible of reading and writing xml on the database. 
@@ -56,6 +56,28 @@ public abstract class XmlSerializer {
 	private static final List<Namespace> XML_SELECT_NAMESPACE = Arrays.asList(Geonet.Namespaces.GCO);
 	protected SettingManager sm;
 
+	public static class ThreadLocalConfiguration {
+	    private boolean forceHideWithheld = false;
+
+        public boolean isForceHideWithheld() {
+            return forceHideWithheld;
+        }
+        public void setForceHideWithheld(boolean forceHideWithheld) {
+            this.forceHideWithheld = forceHideWithheld;
+        }
+	}
+
+	private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
+	public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
+	    ThreadLocalConfiguration config = configThreadLocal.get();
+	    if(config == null && setIfNotPresent) {
+	        config = new ThreadLocalConfiguration();
+	        configThreadLocal.set(config);
+	    }
+	    
+	    return config;
+	}
+	
     /**
      *
      * @param sMan
@@ -118,8 +140,8 @@ public abstract class XmlSerializer {
 			}
 		}
 		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
-		if (hideWithheldElements) {
-			List<?> nodes = Xml.selectNodes(metadata, "*//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
+			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
 			for (Object object : nodes) {
 				if (object instanceof Element) {
 					Element element = (Element) object;
