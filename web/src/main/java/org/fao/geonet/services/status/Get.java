@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -70,7 +71,7 @@ public class Get implements Service
 		int iLocalId = Integer.parseInt(id);
 		
 		if (!dataMan.existsMetadata(dbms, iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new MetadataNotFoundEx("Metadata not found --> " + id);
 
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata status

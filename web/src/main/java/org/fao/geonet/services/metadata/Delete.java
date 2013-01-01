@@ -34,6 +34,7 @@ import jeeves.utils.BinaryFile;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
@@ -79,7 +80,7 @@ public class Delete implements Service
 		MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
 		if (info == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new MetadataNotFoundEx("Metadata not found --> " + id);
 
 		if (!accessMan.canEdit(context, id))
 			throw new OperationNotAllowedEx();

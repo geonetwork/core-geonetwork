@@ -48,6 +48,8 @@
 	        uri="schema/gml/gml.xsd"/>
 	<system systemId="http://schemas.opengis.org/gml/3.1.1/base/gml.xsd" 
 	        uri="schema/gml/gml.xsd"/>
+	<system systemId="http://www.opengis.net/gml/gml.xsd" 
+	        uri="schema/gml/gml.xsd"/>
 
 	<!-- xlinks -->
 

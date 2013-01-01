@@ -34,6 +34,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
@@ -74,7 +75,7 @@ public class UpdateStatus implements Service {
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
 		if (!dataMan.existsMetadata(dbms, iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new MetadataNotFoundEx("Metadata not found --> " + id);
 
 		//--- only allow the owner of the record to set its status
 		if (!am.isOwner(context, id)) {

@@ -626,6 +626,7 @@
 
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -719,14 +720,14 @@
 
 		<service name="xml.password.emaillink">
 			<class name=".services.password.SendLink" />
-			<error sheet="error-xml.xsl"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.password.change">
 			<class name=".services.password.Change" />
-			<error sheet="error-xml.xsl"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -750,6 +751,13 @@
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
 			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.user.get">
+			<class name=".services.user.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -783,9 +791,23 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.user.update">
+			<class name=".services.user.Update" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="user.remove">
 			<class name=".services.user.Remove" />
 			<output forward="user.list" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.user.remove">
+			<class name=".services.user.Remove" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -808,6 +830,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.user.pwupdate">
+			<class name=".services.user.PwUpdate" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="user.infoedit">
 			<class name=".services.user.Get" />
 
@@ -825,6 +854,13 @@
 			<output sheet="info.xsl">
 				<xml name="info" file="xml/info-changed.xml" />
 			</output>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.user.infoupdate">
+			<class name=".services.user.InfoUpdate" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -867,9 +903,23 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.group.get">
+			<class name=".services.group.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="group.update">
 			<class name=".services.group.Update" />
 			<output forward="group.list" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.group.create.update">
+			<class name=".services.group.Update" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -881,8 +931,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.group.remove">
+			<class name=".services.group.Remove" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="xml.group.update">
 			<class name=".services.group.XmlUpdate" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -907,9 +965,23 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.category.get">
+			<class name=".services.category.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="category.update">
 			<class name=".services.category.Update" />
 			<output forward="category.list" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.category.create.update">
+			<class name=".services.category.Update" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -921,8 +993,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.category.remove">
+			<class name=".services.category.Remove" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="xml.category.update">
 			<class name=".services.category.XmlUpdate" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1004,6 +1084,7 @@
 
 		<service name="xml.config.get">
 			<class name=".services.config.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1055,12 +1136,14 @@
 
 		<service name="xml.operation.update">
 			<class name=".services.operation.Update" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.region.update">
 			<class name=".services.region.Update" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1077,6 +1160,7 @@
 
 		<service name="xml.schema.info">
 			<class name=".services.schema.Info" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1092,6 +1176,7 @@
 
 		<service name="xml.file.disclaimer">
 			<class name=".services.feedback.AddLimitations" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1180,12 +1265,14 @@
 
 		<service name="xml.user.login">
 			<class name=".services.login.Login" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.user.logout">
 			<class name=".services.login.Logout" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1195,7 +1282,7 @@
 
 			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
 
-			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
+			<error id="search-error" sheet="xml-error.xsl" statusCode="500"/>
 		</service>
 
 		<service name="q">
@@ -1208,18 +1295,21 @@
 				<param name="skipPopularity" value="y" />
 				<param name="skipInfo" value="y" />
 			</class>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.info">
 			<class name=".services.main.Info" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.forward">
 			<class name=".services.main.Forward" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1227,30 +1317,21 @@
 
 		<service name="xml.user.list">
 			<class name=".services.user.List" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.usergroups.list">
 			<class name=".services.user.UserGroups" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.group.list">
 			<class name=".services.group.List" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.insert">
-			<class name=".services.metadata.Insert" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.delete">
-			<class name=".services.metadata.Delete" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1402,26 +1483,6 @@
 			<output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- relation services -->
-
-		<service name="xml.relation.get">
-			<class name=".services.relations.Get" />
-
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="sources" class=".guiservices.util.Sources" />
-			</output>
-		</service>
-
-		<service name="xml.relation.insert">
-			<class name=".services.relations.Insert" />
-		</service>
-
-		<service name="xml.relation.delete">
-			<class name=".services.relations.Remove" />
-		</service>
-
-
 		<service name="crs.search">
 			<class name=".services.crs.Search" />
 		</service>
@@ -1445,6 +1506,7 @@
 	<!-- ====================================================================== -->
 
 	<include>config-metadata.xml</include>
+	<include>config-xml-metadata-services.xml</include>
 	<include>config-metadata-experimental.xml</include>
 	<include>config-subtemplate.xml</include>
 	<include>config-thesaurus.xml</include>

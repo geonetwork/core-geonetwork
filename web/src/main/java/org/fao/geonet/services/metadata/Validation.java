@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2012 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,37 +24,46 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 //=============================================================================
 
-/** Adds a metadata to the subversion repository.
+/** Validates a metadata record supplied as a parameter
   */
 
-public class Version implements Service
+public class Validation implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	//--------------------------------------------------------------------------
+	//---
+	//--- Init
+	//---
+	//--------------------------------------------------------------------------
+
+    private String stylePath;
+
+	public void init(String appPath, ServiceConfig params) throws Exception
+    {
+        this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -65,34 +74,31 @@ public class Version implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
-		UserSession   session   = context.getUserSession();
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		
-		//-----------------------------------------------------------------------
-		//--- check access
+		DataManager dataMan = gc.getDataManager();
 
-		Element md = dataMan.getMetadataNoInfo(context, id);
+		String data       = Util.getParam(params, Params.DATA);
+		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
-		if (md == null)
-			throw new MetadataNotFoundEx("Metadata not found --> " + id);
+		//--- add the DTD to the input xml to perform validation
+		Element xml = Xml.loadString(data, false);
 
-		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+    //--- apply a stylesheet transformation if requested
+    if (!style.equals("_none_")) xml = Xml.transform(xml, stylePath +"/"+ style);
 
-		//-----------------------------------------------------------------------
-		//--- set metadata into the subversion repo
+    String schema = dataMan.autodetectSchema(xml);
 
-		dataMan.versionMetadata(context, id, md);
+		dataMan.validateMetadata(schema, xml, context);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+		// Return success response
+		Element response = new Element(Jeeves.Elem.RESPONSE);
+		response.addContent(new Element("valid").setText("y"));
+		response.addContent(new Element(Params.SCHEMA).setText(schema));
+		return response;
+	};
 
-		return elResp;
-	}
 }
 
 //=============================================================================
+
 

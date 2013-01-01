@@ -10,11 +10,15 @@
 
 		<!-- Group maintenance services -->
 		<allow service="group.remove"/>
+		<allow service="xml.group.remove"/>
 		<allow service="group.update"/>
+		<allow service="xml.group.create.update"/>
 
 		<!-- Category maintenance services -->
 		<allow service="category.remove"/>
+		<allow service="xml.category.remove"/>
 		<allow service="category.update"/>
+		<allow service="xml.category.create.update"/>
 
 		<!-- Notification maintenance services -->
 		<allow service="notifications.list"/>
@@ -153,11 +157,14 @@
 
 		<!-- User maintenance services -->
 		<allow service="user.get"/>
+		<allow service="xml.user.get"/>
 		<allow service="user.resetpw"/>
 		<allow service="user.edit"/>
 		<allow service="user.list"/>
 		<allow service="user.remove"/>
+		<allow service="xml.user.remove"/>
 		<allow service="user.update"/>
+		<allow service="xml.user.update"/>
 
 		<!-- Transfer ownership services -->
 		<allow service="transfer.ownership"/>
@@ -167,10 +174,12 @@
 
 		<!-- Batch New Owner services -->
 		<allow service="metadata.batch.newowner"/>
+		<allow service="xml.metadata.batch.newowner"/>
 		<allow service="metadata.batch.newowner.form"/>
 		<allow service="xml.usergroups.list"/>
 		
 		<allow service="metadata.batch.processing"/>
+		<allow service="xml.metadata.batch.processing"/>
 
         <!-- Allow a user to specify a XSL -->
         <allow service="metadata.formatter.register"/>
@@ -194,21 +203,27 @@
 		<!-- Allow to see the list of groups the user is member of -->
 		<allow service="group.list"/>
 		<allow service="group.get"/>
+		<allow service="xml.group.get"/>
 
 		<!-- These are the metadata categories forms -->
 		<allow service="metadata.category"/>
+		<allow service="xml.metadata.category"/>
 		<allow service="metadata.category.form"/>
 		<allow service="category.list"/>
 		<allow service="category.get"/>
+		<allow service="xml.category.get"/>
 		<allow service="metadata.batch.category.form"/>
 		<allow service="metadata.batch.update.categories"/>
+		<allow service="xml.metadata.batch.update.categories"/>
 
 		<!-- These are the metadata status forms -->
 		<allow service="metadata.status"/>
+		<allow service="xml.metadata.status"/>
 		<allow service="metadata.status.form"/>
 		<allow service="xml.metadata.status.set"/>
 		<allow service="metadata.batch.status.form"/>
 		<allow service="metadata.batch.update.status"/>
+		<allow service="xml.metadata.batch.update.status"/>
 
 		<!-- Allow to add a metadata record -->
 		<allow service="metadata.add"/>
@@ -216,18 +231,23 @@
 
 		<!-- These are the metadata privileges forms -->
 		<allow service="metadata.admin"/>
+		<allow service="xml.metadata.privileges"/>
 		<allow service="metadata.admin.form"/>
 		<allow service="metadata.batch.admin.form"/>
 		<allow service="metadata.batch.update.privileges"/>
+		<allow service="xml.metadata.batch.update.privileges"/>
 
 		<!-- Allow to version a metadata record -->
 		<allow service="metadata.version"/>
+		<allow service="xml.metadata.version"/>
 		<allow service="metadata.batch.version"/>
+		<allow service="xml.metadata.batch.version"/>
 
 		<!-- Allow to delete a metadata record -->
 		<allow service="metadata.delete"/>
         <allow service="metadata.quiet.delete"/>
 		<allow service="metadata.batch.delete"/>
+		<allow service="xml.metadata.batch.delete"/>
 
 		<allow service="metadata.duplicate.form"/>
 		<allow service="metadata.create.form"/>
@@ -246,6 +266,7 @@
 		<allow service="metadata.elem.up"/>
 		<allow service="metadata.attr.delete"/>
 		<allow service="metadata.update"/>
+		<allow service="xml.metadata.update"/>
 	  <allow service="metadata.update.new"/>
 		<allow service="metadata.update.finish"/>
 		<allow service="metadata.update.forget"/>
@@ -253,6 +274,7 @@
 		<allow service="metadata.update.forgetandfinish"/>
 		<allow service="metadata.batch.children.form"/>
 		<allow service="metadata.batch.update.children"/>
+		<allow service="xml.metadata.batch.update.children"/>
 		<allow service="metadata.validate"/>
 	  <allow service="metadata.suggestion"/>
 		<allow service="xml.metadata.validate"/>
@@ -261,6 +283,7 @@
 		<allow service="xml.metadata.processing"/>
 		<allow service="metadata.batch.extract.subtemplates.form"/>
 		<allow service="metadata.batch.extract.subtemplates"/>
+		<allow service="xml.metadata.batch.extract.subtemplates"/>
 
         <!-- Allow to retrieve user owned metadata -->
         <allow service="xml.user.metadata"/>
@@ -317,8 +340,10 @@
 		<!-- Allow the user to change it's password -->
 		<allow service="user.pwedit"/>
 		<allow service="user.pwupdate"/>
+		<allow service="xml.user.pwupdate"/>
 		<allow service="user.infoedit"/>
 		<allow service="user.infoupdate"/>
+		<allow service="xml.user.infoupdate"/>
 
 	</profile>
 
@@ -381,6 +406,7 @@
 
 		<!-- Select metadata -->
 		<allow service="metadata.select"/>
+		<allow service="xml.metadata.select"/>
 		<allow service="selection.search"/>
 		<allow service="pdf.selection.search"/>
 		<allow service="pdf.present"/>
@@ -477,6 +503,9 @@
 		<!-- Rating services -->
 		<allow service="xml.metadata.rate"/>
 		
+		<!-- Validation service -->
+		<allow service="xml.metadata.validation"/>
+
 		<!-- Thesaurus services -->
 	 	<allow service="keywords.select"/>
 	 	<allow service="keywords.editsearch"/>

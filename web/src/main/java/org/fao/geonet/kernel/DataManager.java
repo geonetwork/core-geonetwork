@@ -47,6 +47,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.domain.CustomElementSet;
@@ -1537,8 +1538,8 @@ public class DataManager {
      * @throws Exception
      */
 	public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
-	    Element md = getMetadata(srvContext, id, false, false, false);
-		md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+	  Element md = getMetadata(srvContext, id, false, false, false);
+		if (md != null) md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 		return md;
 	}
 
@@ -2755,6 +2756,7 @@ public class DataManager {
 		// --- get parent metadata in read/only mode
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element parent = getMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
+		if (parent == null) throw new MetadataNotFoundEx("Could not find metadata parent record --> "+parentId);
 
 		Element env = new Element("update");
 		env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -2777,6 +2779,13 @@ public class DataManager {
 			}
 
             Element child = getMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes);
+			if (child == null) {
+				untreatedChildSet.add(childId);
+			  if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+					Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
+					      + childId + ") because it doesn't exist.");
+				continue;
+			}
 
 			String childSchema = child.getChild(Edit.RootChild.INFO,
 					Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
