@@ -368,7 +368,7 @@ GeoNetwork.searchApp = function() {
                 var i = g && g.get("name") == "LI";
                 this.getKantoneCombo().combo.setDisabled(i);
                 this.getGemeindenCombo().combo.setDisabled(i);
-                highlightGeographicFilter()
+                app.searchApp.highlightGeographicFilter()
             }, this);
             d
                     .push({
@@ -1195,7 +1195,7 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
-                name : 'kantone',
+                name : 'N_kantone',
                 triggerAction : 'all',
                 minChars : 1,
                 anchor : '-10'
