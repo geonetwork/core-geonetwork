@@ -52,7 +52,6 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     }
     function getGroupLogoUuid(v, record) {
         
-        console.log(record.geonet_info.source[0]);
         if (record.groupLogoUuid && record.groupLogoUuid[0]) {
             return record.groupLogoUuid[0].value + ".png";
         } else if (record.geonet_info && record.geonet_info.source
