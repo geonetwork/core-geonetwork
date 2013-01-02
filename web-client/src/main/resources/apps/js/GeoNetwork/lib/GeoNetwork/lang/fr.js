@@ -225,7 +225,7 @@ GeoNetwork.Lang.fr = {
     'linkAResource-dataset': 'Associer une métadonnée de donnée',
     'linkAResource-service': 'Associer une métadonnée de service',
     'linkAResource-sibling': 'Associer une ressource à la métadonnée',
-    'linkAResource-onlinesrc': 'Assoccier une ressource en ligne à la métadonnée',
+    'linkAResource-onlinesrc': 'Associer une ressource en ligne à la métadonnée',
     'uploadAnImage': 'Image à envoyer',
     'setAURL': 'URL de l\'image',
     'dataset': 'Jeu de données',
