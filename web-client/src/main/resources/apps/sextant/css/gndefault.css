@@ -334,6 +334,26 @@ table.related * a:hover,
 .importmd {
   background-image : url(../images/default/page_white_put.png) !important;
 }
+.txtBold {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  background-position : -36px 0px !important;
+}
+.txtUnderline {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  background-position : -324px 0px !important;
+}
+.txtList {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  background-position : -306px 0px !important;
+}
+.txtItalic {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  background-position : -108px 0px !important;
+}
+.txtHyperlink {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  background-position : -344px 0px !important;
+}
 .repository {
   background-image : url(../images/default/database_yellow.png) !important;
   background-repeat : no-repeat;

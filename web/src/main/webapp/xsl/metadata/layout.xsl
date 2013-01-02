@@ -1342,14 +1342,8 @@
             <xsl:with-param name="id" select="$id"/>
           </xsl:call-template>
         </xsl:if>
-	 	<xsl:if test="$allowMarkup = 'true' and /root/gui/env/wysiwyg/enable = 'true'">
-		    <span class="buttons">
-		    	<a onclick="wysiwigEditors.panelInstance('_{gco:CharacterString/geonet:element/@ref}')" class="wysiwyg small"> <span>&#160;</span></a>
-	    	</span>
-		</xsl:if>
       </th>
       <td>
-
         <xsl:choose>
           <xsl:when test="$edit">
             <xsl:copy-of select="$text"/>
@@ -1863,6 +1857,11 @@
     <xsl:param name="no_name" select="false()"/>
     <xsl:param name="tabindex"/>
         
+        
+    <xsl:variable name="allowMarkup">
+      <xsl:apply-templates mode="permitMarkup" select="../."/>
+    </xsl:variable>
+    
     <xsl:variable name="edit" select="xs:boolean($edit)"/>
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
@@ -2047,7 +2046,14 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
-        <textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
+        
+        <!-- Only support markup syntax on textarea -->
+        <xsl:variable name="cssClasses">
+          <xsl:value-of select="$class"/><xsl:text> </xsl:text>
+          <xsl:if test="$allowMarkup = 'true' and /root/gui/env/wysiwyg/enable = 'true'">markup</xsl:if>
+        </xsl:variable>
+        
+        <textarea class="md {$cssClasses}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
           <xsl:if test="$isXLinked">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>

@@ -548,6 +548,7 @@ GeoNetwork.Lang.fr = {
     'linklabel-image/png': 'Images',
     'linklabel-': 'Liens',
     'associationType': 'Type d\'association',
-    'initiativeType': 'Type d\'initiative'
+    'initiativeType': 'Type d\'initiative',
+    'enterLink': 'URL du lien : '
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

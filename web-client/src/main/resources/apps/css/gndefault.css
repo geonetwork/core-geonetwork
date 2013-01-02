@@ -325,6 +325,27 @@ table.related * a:hover,
 .processMetadata {
   background-image : url(../images/default/table_gear.png) !important;
 }
+.txtBold {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  backgroundPosition : -18px 0px;
+}
+.txtUnderline {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  backgroundPosition : -36px 0px;
+}
+.txtList {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  backgroundPosition : -18px 0px;
+}
+.txtItalic {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  backgroundPosition : -18px 0px;
+}
+.txtHyperlink {
+  background-image : url(../images/default/textstyleicons.gif) !important;
+  backgroundPosition : -18px 0px;
+}
+
 .repository {
   background-image : url(../images/default/database_yellow.png) !important;
   background-repeat : no-repeat;

@@ -546,7 +546,8 @@ GeoNetwork.Lang.en = {
     'linklabel-image/png': 'Image link',
     'linklabel-': 'Link',
     'associationType': 'Association type',
-    'initiativeType': 'Initiative type'
+    'initiativeType': 'Initiative type',
+    'enterLink': 'Please enter the link URL: '
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

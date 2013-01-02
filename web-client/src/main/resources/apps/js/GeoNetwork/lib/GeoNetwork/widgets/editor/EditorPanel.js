@@ -1033,6 +1033,106 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
         this.updateViewMenu();
+        
+        this.initMarkup();
+    },
+    initMarkup: function () {
+        var self = this;
+        
+        var markupTextarea = Ext.query('textarea.markup', this.body.dom);
+        var syntax = {
+                bold: "${before}'''${text}'''${after}",
+                italic: "${before}''${text}''${after}",
+                underline: '${before}<u>${text}</u>${after}',
+                ul: '${before}* ${text}${after}',
+                hyperlink: '${before}[${link} ${text}]${after}'
+        };
+        Ext.each(markupTextarea, function(item, index, allItems){
+            var ta = Ext.get(item);
+            var tb = new Ext.Button({
+                iconCls: 'txtBold',
+                listeners: {
+                    click: function(c, pressed){
+                        this.formatMarkupText (item, syntax.bold, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+            });
+            tb = new Ext.Button({
+                iconCls: 'txtItalic',
+                listeners: {
+                    click: function(c, pressed){
+                        this.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+            });
+            tb = new Ext.Button({
+                iconCls: 'txtUnderline',
+                listeners: {
+                    click: function(c, pressed){
+                        this.formatMarkupText (item, syntax.underline, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+            });
+            tb = new Ext.Button({
+                iconCls: 'txtList',
+                listeners: {
+                    click: function(c, pressed){
+                        this.formatMarkupText (item, syntax.ul, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+              });
+
+            tb = new Ext.Button({
+                iconCls: 'txtHyperlink',
+                listeners: {
+                    click: function(c, pressed){
+                        var selection = item.value.substring(item.selectionStart, item.selectionEnd);
+                        Ext.MessageBox.prompt('Link', OpenLayers.i18n('enterLink'), function (btn, text) {
+                            self.formatMarkupText (item, syntax.hyperlink, {text: selection, link: text});
+                        });
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+              });
+        });
+    },
+    /**
+     * Format selected textarea content according to the syntax
+     */
+    formatMarkupText: function (item, syntaxForm, obj) {
+        // There is always a text element which is the current 
+        // selection, forget empty selection or space
+        if (obj.text === "" || obj.text === " ") {
+            return;
+        }
+        if (item.setSelectionRange) {
+            Ext.applyIf(obj, {
+                before: item.value.substring(0, item.selectionStart), 
+                after: item.value.substring(item.selectionEnd, item.value.length)
+            });
+            item.value = OpenLayers.String.format(syntaxForm, obj);
+        }
+        else {
+            // IE
+            selectedText = document.selection.createRange().text; 
+            if (selectedText != "") {
+                Ext.applyIf(obj, {
+                    before: '', 
+                    after: ''
+                });
+                document.selection.createRange().text = OpenLayers.String.format(syntax.bold, obj); 
+            }
+        }
     },
     /** private: method[validateMetadataField]
      * 
