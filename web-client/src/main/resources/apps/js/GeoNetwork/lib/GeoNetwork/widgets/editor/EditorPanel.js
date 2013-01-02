@@ -759,7 +759,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Save current editing session and close the editor.
      */
     finish: function(){
-        this.saveWysiwygEditors();
         this.loadUrl('metadata.update.finish', undefined, this.closeCallback);
     },
     /** api: method[save]
@@ -767,18 +766,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Save current editing session.
      */
     save: function(){
-        this.saveWysiwygEditors();
         this.loadUrl('metadata.update.new', undefined, this.loadCallback);
-    },
-    saveWysiwygEditors: function() {
-        if(nicEditors) {
-          // if the wysiwyg editor is installed copy all html to the textarea before uploading
-          Ext.each(nicEditors.editors, function(el){
-            Ext.each(el.nicInstances, function(instance){
-              instance.saveContent();
-            });
-          });
-        }
     },
     callAction: function(action){
         this.loadUrl(action, undefined, this.loadCallback);
