@@ -208,7 +208,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.add(this.viewRDFAction);
         
         this.printAction = new Ext.Action({
                 text: OpenLayers.i18n('printSel'),
@@ -267,6 +266,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.viewAction);
         this.add(this.zoomToAction);
         this.add(this.viewXMLAction);
+        this.add(this.viewRDFAction);
         this.add(this.printAction);
         this.add(this.getMEFAction);
         
