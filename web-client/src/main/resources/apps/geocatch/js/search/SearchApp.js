@@ -1501,14 +1501,16 @@ GeoNetwork.searchApp = function() {
                 Ext
                         .getCmp('nextBt')
                         .setDisabled(
-                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord +parseInt(Ext.getCmp(
+                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('nextBt_up')) {
                 Ext
                         .getCmp('nextBt_up')
                         .setDisabled(
-                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord + parseInt(Ext.getCmp(
+                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('E_sortBy')) {

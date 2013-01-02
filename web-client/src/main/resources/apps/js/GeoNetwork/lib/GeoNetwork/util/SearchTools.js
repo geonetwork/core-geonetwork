@@ -279,8 +279,10 @@ GeoNetwork.util.SearchTools = {
      * returned.
      */
     addFiltersFromPropertyMap : function(values, filters, startRecord) {
-        var defaultSimilarity = ".8", key, similarity = values.E_similarity, hits = values.E_hitsperpage;
-
+        var defaultSimilarity = ".8", key, similarity = values.E_similarity;
+        var hits = Ext.get("E_hitsperpage").getValue();
+         
+        
         // Add the similarity if defined
         if (similarity !== undefined) {
             defaultSimilarity = values.E_similarity;
@@ -294,6 +296,8 @@ GeoNetwork.util.SearchTools = {
         var to = parseInt(startRecord, 10) + parseInt(hits, 10) - 1;
         GeoNetwork.util.SearchTools.addFilter(filters, 'E_from', startRecord);
         GeoNetwork.util.SearchTools.addFilter(filters, 'E_to', to);
+        GeoNetwork.util.SearchTools.addFilter(filters, 'E_sortBy', 
+                Ext.getCmp("sortByToolBar").getValue());
 
         // Add all other criteria
         for (key in values) {
