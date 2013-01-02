@@ -1702,7 +1702,7 @@ public class SearchManager {
                         Geonet.SearchResult.Relation.INTERSECTION);
                 if(geom.size() == 1) {
                     Geometry g =  geom.iterator().next();
-                    SpatialFilter sf = _types.get(relation).newInstance(query, numHits, g, new SpatialIndexAccessor());
+                    SpatialFilter sf = _types.get(relation.toLowerCase()).newInstance(query, numHits, g, new SpatialIndexAccessor());
                     return sf;
                 } else {
                     Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());

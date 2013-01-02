@@ -366,7 +366,7 @@ GeoNetwork.util.SearchTools = {
                 });
                 filters.push("relation"
                         + "="
-                        + encodeURIComponent(Ext.get("boundingRelation")
+                        + encodeURIComponent(Ext.getCmp("boundingRelation")
                                 .getValue()));
             }
         } else if (type == 'V') { // field name specified in the value,

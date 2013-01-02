@@ -1161,11 +1161,11 @@ GeoNetwork.searchApp = function() {
                 id : 0,
                 fields : [ 'id', 'name' ],
                 data : [
-                        [ OpenLayers.Filter.Spatial.WITHIN,
+                        [ "within",
                                 OpenLayers.i18n('withinGeo') ],
-                        [ OpenLayers.Filter.Spatial.INTERSECTS,
+                        [ "intersects",
                                 OpenLayers.i18n('intersectGeo') ],
-                        [ OpenLayers.Filter.Spatial.CONTAINS,
+                        [ "crosses",
                                 OpenLayers.i18n('containsGeo') ] ]
             });
         },
