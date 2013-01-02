@@ -145,7 +145,12 @@ attached it to the metadata for data.
 							gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn[@uuidref!=$uuidref]|
 							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:operatesOn[@uuidref!=$uuidref]"/>
 
-							<!-- Handle operatesOn -->
+							<!-- Handle operatesOn 
+							
+							// TODO : it looks like the dataset identifier and not the 
+							// metadata UUID should be set in the operatesOn element of 
+							// the service metadata record.
+							-->
 							<srv:operatesOn uuidref="{$uuidref}"
 								xlink:href="{$siteUrl}/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
 

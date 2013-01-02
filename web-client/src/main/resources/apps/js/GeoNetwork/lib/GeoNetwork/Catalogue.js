@@ -270,6 +270,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
         this.services = {
             rootUrl: serviceUrl,
+            proxy: this.URL + '/proxy',
             csw: serviceUrl + 'csw',
             xmlSearch: serviceUrl + 'xml.search',
             mdSelect: serviceUrl + 'metadata.select',

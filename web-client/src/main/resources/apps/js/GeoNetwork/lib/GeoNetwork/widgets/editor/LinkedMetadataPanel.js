@@ -120,6 +120,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         var window, config = {
                 type: type,
                 editor: this.editor,
+                // Try to retrieve current service URL if the current metadata is a service
+                // The URL is stored in a hidden form of the editor
+                mdServiceUrl: Ext.getDom('serviceUrl') && Ext.getDom('serviceUrl').value,
                 catalogue: this.catalogue,
                 metadataUuid: this.metadataUuid,
                 metadataId: this.metadataId,

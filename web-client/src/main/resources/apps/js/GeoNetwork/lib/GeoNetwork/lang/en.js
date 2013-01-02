@@ -366,6 +366,7 @@ GeoNetwork.Lang.en = {
     'linkedMetadataSelectionWindowTitle': "Related metadata selection",
     'NotOwnerError': "You don't have privileges to update this related record.",
     'ServiceUpdateError': "Error during service metadata update",
+    'ServiceUpdateSuccess': "Service metadata updated",
     'associateService': "Link service metadata",
     'associateDataset': "Link dataset metadata",
     'logoSelectionWindow': "Choose a logo",

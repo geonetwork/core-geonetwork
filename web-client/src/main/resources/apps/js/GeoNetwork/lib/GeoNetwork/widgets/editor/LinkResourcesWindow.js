@@ -111,14 +111,23 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     processMap: {
         parent: 'parentIdentifier-update',
         fcats: 'update-attachFeatureCatalogue',
-        service: 'update-srv-attachDataset',
+        service: 'update-onlineSrc',
         dataset: 'update-srv-attachDataset',
         sibling: 'sibling-add',
         onlinesrc: 'onlinesrc-add',
         thumbnail: 'thumbnail-from-url-add'
     },
+    /**
+     * The URL of the currently selected metadata
+     */
     serviceUrl: undefined,
+    /**
+     * The URL of the current metadata in editing.
+     * Define only if the metadata is a metadata of service.
+     */
+    mdServiceUrl: undefined,
     serviceProtocol: undefined,
+    canEditTarget: false,
     catalogue: undefined,
     metadataUuid: undefined,
     metadataId: undefined,
@@ -126,6 +135,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     idField: undefined,
     versionField: undefined,
     mdStore: undefined,
+    getCapabilitiesCombo: null,
     /**
      * Only used if multiple metadata selection form is provided.
      */
@@ -256,34 +266,28 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             items.push([associationType, initiativeType]);
         }
     },
+    /**
+     * Create a form to set the layer name. It could be a simple text
+     * or selected from the service GetCapabilities information.
+     * 
+     * Only WMS service are supported.
+     * 
+     * TODO : Add other service type support.
+     */
     getFormFieldForService: function (items) {
-        // TODO : when the current record is a service provide the URL to init the capabiities
+        var self = this;
+        
         if (this.type === 'service' || this.type === 'dataset') {
             this.capabilitiesStore = new GeoExt.data.WMSCapabilitiesStore({
-                url: this.serviceUrl,
+                url: (this.type === 'dataset' ? this.mdServiceUrl : this.serviceUrl),
                 id: 'capabilitiesStore',
-                // FIXME
                 proxy: new Ext.data.HttpProxy({
-                    url: this.serviceUrl,
+                    url: catalogue.services.proxy,
                     method: 'GET'
                 }),
                 listeners: {
                     exception: function (proxy, type, action, options, res, arg) {
                         Ext.MessageBox.alert(OpenLayers.i18n("error"));
-                    },
-                    beforeload: function () {
-                        // Update store URL according to selected service.
-//                        if (this.mode === 'attachService') {
-//                            var selected = Ext.getCmp('linkedMetadataGrid').getSelectionModel().getSelections();
-//                            if (selected === undefined || selected[0].data.uri === '') {
-//                                Ext.MessageBox.alert(OpenLayers.i18n("noServiceURLError"));
-//                            }
-//                            this.capabilitiesStore.baseParams.url = selected[0].data.uri + 
-//                                        "?&SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.1.1";
-//                        } else 
-                        if (this.type === 'service') {
-                            this.capabilitiesStore.baseParams.url = this.serviceUrl;
-                        }
                     },
                     loadexception: function(){
                         Ext.MessageBox.alert(OpenLayers.i18n("GetCapabilitiesDocumentError") + this.capabilitiesStore.baseParams.url);
@@ -291,21 +295,18 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     scope: this
                 }
             });
-            var combo = {
-                xtype: 'combo',
-                id: 'getCapabilitiesLayerNameCombo',
+            this.getCapabilitiesCombo = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('getCapabilitiesLayer'),
                 store: this.capabilitiesStore,
                 valueField: 'name',
                 displayField: 'title',
                 triggerAction: 'all',
-                //disabled: (serviceUrl==null?true:false),
                 listeners: {
                     select: function(combo, record, index){
                         Ext.getCmp('getCapabilitiesLayerName').setValue(combo.getValue());
                     }
                 }
-            };
+            });
             var layerName = {
                 xtype: 'textfield',
                 id: 'getCapabilitiesLayerName',
@@ -320,7 +321,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }
             };
             
-            items.push([combo, layerName]);
+            items.push([this.getCapabilitiesCombo, layerName]);
         }
     },
     /**
@@ -715,9 +716,32 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 this.selectedMd = r.data.uuid;
                 this.serviceUrl = r.data.serviceUrl;
                 this.serviceProtocol = r.data.serviceProtocol;
-                
+                this.canEditTarget = r.data.edit === 'true';
                 // FIXME : only the first metadata link is selected
                 this.selectedLink = r.data.links;
+                
+                var url;
+                // If linking a service, the combo needs to be updated
+                // every time user select a new record in the results list.
+                // Disable the getCapabilities combo
+                if (this.type === 'service') {
+                    url = this.serviceUrl;
+                    this.getCapabilitiesCombo.setDisabled(url === undefined);
+                } else if (this.type === 'dataset'){
+                    url = this.mdServiceUrl;
+                }
+                
+                // Reload the capabilities
+                if (url !== undefined) {
+                    if (url.indexOf('GetCapabilities') === -1) {
+                        url += (url.indexOf("?") === -1 ? "?" : "") + "&SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.1.1";
+                    }
+                    this.capabilitiesStore.baseParams.url = url;
+                    this.capabilitiesStore.reload({params: {url: url}});
+                } else {
+                    this.capabilitiesStore.removeAll();
+                }
+                
             } else {
                 this.selectedMd = undefined;
             }
@@ -779,15 +803,81 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     runProcess: function () {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
-        var targetMetadataUuid = this.metadataUuid;
-        var parameters = "";
+        var targetMetadataUuid = this.metadataUuid, parameters = "";
+        this.layerName = Ext.getCmp('getCapabilitiesLayerName').getValue();
+        
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
             parameters += "&parentUuid=" + this.selectedMd;
         } else if (this.type === 'fcats') {
             // Define the target feature catalogue to use
             parameters += "&uuidref=" + this.selectedMd;
-        } else if (this.type === 'service' || this.type === 'dataset') {
+            
+        } else if (this.type === 'service') {
+            // Add a link from the current record to the target service if privileges
+            if (this.canEditTarget) {
+                // Current dataset is a dataset metadata record.
+                // 1. Update service (if current user has privileges), using XHR request
+                var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
+                                            "?uuid=" + this.selectedMd + 
+                                            "&process=update-srv-attachDataset" + 
+                                            "&uuidref=" + targetMetadataUuid +
+                                            "&scopedName=" + this.layerName;
+                // TODO : it looks like the dataset identifier and not the 
+                // metadata UUID should be set in the operatesOn element of 
+                // the service metadata record.
+                
+                Ext.Ajax.request({
+                    url: serviceUpdateUrl,
+                    method: 'GET',
+                    success: function (result, request) {
+                        // TODO : use a autohide message instead of a blocking popup
+                        Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateSuccess"));
+                    },
+                    failure: function (result, request) {
+                        Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
+                    }
+                });
+            } else {
+                // TODO : add a warning
+            }
+            // And 
+            // Add a link in the distribution section of the dataset record
+            parameters += "&uuidref=" + this.selectedMd;
+            parameters += "&scopedName=" + this.layerName;
+            parameters += "&desc=" + this.layerName;
+            parameters += "&url=" + this.serviceUrl;
+            parameters += "&protocol=" + this.serviceProtocol;
+        } else if (this.type === 'dataset') {
+            // Current dataset is a service metadata record.
+            // 1. Update dataset (if current user has privileges), using XHR request
+            if (this.canEditTarget) {
+                var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
+                                            "?uuid=" + this.selectedMd + 
+                                            "&process=update-onlineSrc" + 
+                                            "&desc=" + this.layerName + 
+                                            "&url=" + this.serviceUrl + 
+                                            "&uuidref=" + targetMetadataUuid +
+                                            "&scopedName=" + this.layerName;
+                // TODO : it looks like the dataset identifier and not the 
+                // metadata UUID should be set in the operatesOn element of 
+                // the service metadata record.
+                
+                Ext.Ajax.request({
+                    url: serviceUpdateUrl,
+                    method: 'GET',
+                    success: function (result, request) {
+                        // TODO : use a autohide message instead of a blocking popup
+                        Ext.MessageBox.alert(OpenLayers.i18n("DatasetUpdateSuccess"));
+                    },
+                    failure: function (result, request) {
+                        Ext.MessageBox.alert(OpenLayers.i18n("DatasetUpdateError"));
+                    }
+                });
+            } else {
+                // TODO : add a warning
+            }
+            
             // Add a link from the current record to the target service
             // And 
             // Add a link in the distribution section of the dataset record

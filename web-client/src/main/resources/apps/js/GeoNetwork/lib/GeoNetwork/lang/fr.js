@@ -365,6 +365,7 @@ GeoNetwork.Lang.fr = {
     'linkedMetadataSelectionWindowTitle': "Sélection des métadonnées associées",
     'NotOwnerError': "Vous n'avez pas les privilèges pour mettre à jour la métadonnée associée.",
     'ServiceUpdateError': "Erreur lors de la mise à jour de la métadonnée.",
+    'ServiceUpdateSuccess': "Métadonnée de service mise à jour",
     'associateService': "Associer une métadonnée de service",
     'associateDataset': "Associer une métadonnée de données",
     'logoSelectionWindow': "Sélectionner un logo",
