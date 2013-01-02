@@ -181,7 +181,6 @@
         <label>Hours of service</label>
         <description>Time period (including time zone) when individuals can contact the organization
             or individual</description>
-        <label>Hours of Service</label>
     </element>
     
 	<element name="gmd:measureDescription" id="102.0" context="gmd:DQ_NonQuantitativeAttributeAccuracy">
@@ -231,17 +230,6 @@
         <description>Telephone numbers at which the organization or individual may be
             contacted</description>
     </element>
-    <element name="gmd:phone" id="407.0">
-        <label>Phone</label>
-        <description>Telephone numbers at which the organization or individual may be
-            contacted</description>
-    </element>
-    <element name="gmd:phone" id="526.0">
-        <label>Phone</label>
-        <description>Telephone numbers at which the organization or individual may be
-            contacted</description>
-    </element>
-    
     <element name="gmd:pointInPixel" id="167.0">
         <label>Position of value in the cell</label>
         <description>Point in a pixel corresponding to the Earth location of the pixel</description>
