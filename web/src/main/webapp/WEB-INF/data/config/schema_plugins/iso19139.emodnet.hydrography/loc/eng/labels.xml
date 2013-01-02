@@ -125,8 +125,6 @@
     <element name="gmd:EX_Extent" id="334.0">
         <label>Extent</label>
         <description>Information about spatial, vertical, and temporal extent</description>
-        <label>Extent</label>
-        <description>Information about horizonal, vertical, and temporal extent</description>
     </element>
     
     <element name="gmd:MD_Distributor" id="279.0">
@@ -135,14 +133,12 @@
     </element>
     
     <element name="gmd:MD_MetadataExtensionInformation" id="303.0">
-        <description>Information describing metadata extensions</description>
         <label>Metadata Extension Information</label>
         <description>Information describing metadata extensions</description>
     </element>
     <element name="gmd:MD_PortrayalCatalogueReference" id="268.0">
         <label>Portrayal catalogue reference</label>
         <description>Information identifying the portrayal catalogue used</description>
-        <label>Portrayal Catalogue Reference</label>
     </element>
     
     <element name="gmd:MD_ScopeDescription" id="149.0">
@@ -168,7 +164,6 @@
     <element name="gmd:classificationSystem" id="76.0">
         <label>Classification system</label>
         <description>Name of the classification system</description>
-        <label>Classification System</label>
     </element>
 
     <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
