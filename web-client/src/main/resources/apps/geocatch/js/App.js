@@ -213,8 +213,10 @@ GeoNetwork.app = function() {
                 id : 'search-metacontainer',
                 region : 'center',
                 bodyStyle : 'padding:15px',
-                border : false,
-                layout: 'border',
+                border : true,
+                split : true,
+                minHeight : 170,
+                layout : 'border',
                 forceLayout : true,
                 items : [
                         {
@@ -235,9 +237,20 @@ GeoNetwork.app = function() {
                 region : 'south',
                 contentEl : 'map-div',
                 id : 'map-container',
-                border : false,
+                border : true,
+                minHeight : 250,
+                split : true,
                 height : 250,
-                bodyStyle : 'background-color: #cccccc'
+                maxHeight : 500,
+                bodyStyle : 'background-color: #cccccc',
+                listeners : {
+                    resize : function() {
+                        var map = app.mapApp.getMap();
+                        var size = Ext.get("map-container").getSize();
+                        Ext.get(map.div).setSize(size.width, size.height);
+                        map.updateSize();
+                    }
+                }
             };
 
             this.viewport = new Ext.Viewport({
@@ -264,9 +277,6 @@ GeoNetwork.app = function() {
                     width : 300,
                     maxWidth : 400,
                     autoScroll : true,
-                    collapsible : true,
-                    hideCollapseTool : true,
-                    collapseMode : 'mini',
                     forceLayout : true,
                     layoutConfig : {
                         animate : true
