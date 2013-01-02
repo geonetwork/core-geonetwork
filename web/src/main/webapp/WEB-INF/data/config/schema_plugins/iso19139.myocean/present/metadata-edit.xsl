@@ -1162,13 +1162,13 @@
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
 												<br/>
 												<label for="_{$id}_s_month">
-													<select id="_{$id}_s">
-														<option value="">+</option>
+													<select id="_{$id}_s" onchange="updateSlidingWindow('_{$id}');">
+														<option value="">+ (after processing time)</option>
 														<option value="-">
 															<xsl:if test="$start-negative">
 																<xsl:attribute name="selected">selected</xsl:attribute>
 															</xsl:if>
-															-</option>
+															- (before processing time)</option>
 													</select>
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
@@ -1200,13 +1200,13 @@
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
 												<br/>
 												<label for="_{$id}_e_month">
-													<select id="_{$id}_e">
-														<option value="">+</option>
+													<select id="_{$id}_e" onchange="updateSlidingWindow('_{$id}');">
+														<option value="">+ (after processing time)</option>
 														<option value="-">
 															<xsl:if test="$end-negative">
 																<xsl:attribute name="selected">selected</xsl:attribute>
 															</xsl:if>
-															-</option>
+															- (before processing time)</option>
 													</select>
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
