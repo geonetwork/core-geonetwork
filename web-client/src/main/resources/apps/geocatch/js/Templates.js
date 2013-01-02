@@ -139,6 +139,9 @@ GeoNetwork.Geocatch.Templates.TITLE =
     </h1>';
 
 
+GeoNetwork.Geocatch.Templates.LOGO = 
+    '<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></div>';
+
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
         '<ul style="padding-left: 10px">',
           '<tpl for=".">',
@@ -146,7 +149,7 @@ GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
                     '<table>\
                         <tr>',
                             '<td class="left">',
-                                GeoNetwork.Templates.LOGO,
+                                GeoNetwork.Geocatch.Templates.LOGO,
                             '</td>',
                             '<td id="{uuid}">',
                                 GeoNetwork.Geocatch.Templates.TITLE,
