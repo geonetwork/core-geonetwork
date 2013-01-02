@@ -1149,6 +1149,8 @@
 											<xsl:variable name="value" select="gco:CharacterString"/>
 											<xsl:variable name="start" select="replace(substring-before($value, '#'), 'P','')"/>
 											<xsl:variable name="end" select="replace(substring-after($value, '#'), 'P','')"/>
+											<xsl:variable name="start-negative" select="starts-with($start, '-')"/>
+											<xsl:variable name="end-negative" select="starts-with($end, '-')"/>
 											
 											<input class="md" type="hidden"
 												name="_{$id}" 
@@ -1160,17 +1162,27 @@
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
 												<br/>
 												<label for="_{$id}_s_month">
+													<select id="_{$id}_s">
+														<option value="">+</option>
+														<option value="-">
+															<xsl:if test="$start-negative">
+																<xsl:attribute name="selected">selected</xsl:attribute>
+															</xsl:if>
+															-</option>
+													</select>
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_s_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before($start, 'M')}" size="5"/>
+													value="{if ($start-negative) 
+														then substring-before(substring-after($start, '-'), 'M')
+														else substring-before($start, 'M')}" size="5"/>
 												<label for="_{$id}_s_month">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_s_day" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
@@ -1178,7 +1190,7 @@
 												<label for="_{$id}_s_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_s_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
@@ -1188,17 +1200,27 @@
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
 												<br/>
 												<label for="_{$id}_e_month">
+													<select id="_{$id}_e">
+														<option value="">+</option>
+														<option value="-">
+															<xsl:if test="$end-negative">
+																<xsl:attribute name="selected">selected</xsl:attribute>
+															</xsl:if>
+															-</option>
+													</select>
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_e_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before($end, 'M')}" size="5"/>
+													value="{if ($end-negative) 
+													then substring-before(substring-after($end, '-'), 'M')
+													else substring-before($end, 'M')}" size="5"/>
 												<label for="_{$id}_e_month">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_e_day" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
@@ -1206,7 +1228,7 @@
 												<label for="_{$id}_e_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
-												<input type="number" class="md small" 
+												<input type="number" min="0" class="md small" 
 													id="_{$id}_e_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"

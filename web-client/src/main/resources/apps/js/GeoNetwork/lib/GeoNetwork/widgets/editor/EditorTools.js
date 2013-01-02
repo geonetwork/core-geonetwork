@@ -1020,20 +1020,22 @@ function updateChildren(div, url, onFailureMsg) {
  * TODO : check if syntax is correct
  */
 function updateSlidingWindow(targetElementId) {
+    var s_sign = document.getElementById(targetElementId + "_s").value;
     var s_month = document.getElementById(targetElementId + "_s_month").value;
     var s_day = document.getElementById(targetElementId + "_s_day").value;
     var s_hour = document.getElementById(targetElementId + "_s_hour").value;
+    var e_sign = document.getElementById(targetElementId + "_e").value;
     var e_month = document.getElementById(targetElementId + "_e_month").value;
     var e_day = document.getElementById(targetElementId + "_e_day").value;
     var e_hour = document.getElementById(targetElementId + "_e_hour").value;
     
     document.getElementById(targetElementId).value = 
-        "P" + 
+        s_sign + "P" + 
         (s_month === "" ? "0" : s_month) + "M" +
         (s_day === "" ? "0" : s_day) + "D" +
         (s_hour === "" ? "0" : s_hour) + "H" +
         "#" + 
-        "P" + 
+        e_sign + "P" + 
         (e_month === "" ? "0" : e_month) + "M" +
         (e_day === "" ? "0" : e_day) + "D" +
         (e_hour === "" ? "0" : e_hour) + "H";
