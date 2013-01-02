@@ -180,7 +180,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         } else if (type === 'sibling') {
             parameters += "&uuidref=" + uuid;
         } else if (type === 'onlinesrc') {
-            parameters += "&url=" + id;
+            parameters += "&url=" + encodeURIComponent(id);
         }
         
         
