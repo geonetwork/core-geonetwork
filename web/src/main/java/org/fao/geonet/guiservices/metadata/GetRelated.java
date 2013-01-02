@@ -285,7 +285,7 @@ public class GetRelated implements Service {
             if ("children".equals(type))
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             else if ("services".equals(type))
-                parameters.addContent(new Element("c").setText(uuid));
+                parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecat".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
