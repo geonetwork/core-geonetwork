@@ -47,10 +47,13 @@
         
     <!-- Metadata schema operations -->
 		<allow service="metadata.schema.add"/>
+		<allow service="xml.metadata.schema.add"/>
 		<allow service="metadata.schema.add.form"/>
 		<allow service="metadata.schema.update"/>
+		<allow service="xml.metadata.schema.update"/>
 		<allow service="metadata.schema.update.form"/>
 		<allow service="metadata.schema.delete"/>
+		<allow service="xml.metadata.schema.delete"/>
 		<allow service="metadata.schema.delete.form"/>
 
 		<!-- Edit the context sensitive help -->
