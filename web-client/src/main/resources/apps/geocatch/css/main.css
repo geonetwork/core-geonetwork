@@ -217,6 +217,17 @@ body {
 	border: 0;
 }
 
+#search-container .x-superboxselect-input,#search-container input[type="text"]
+	{
+	margin: 0;
+	padding: 0;
+}
+
+#search-container .x-superboxselect ul {
+    padding: 2;	
+    margin: 1;
+}
+
 input[type="button"] {
 	font: normal 11px tahoma, verdana, helvetica;
 	padding-left: 13px;
