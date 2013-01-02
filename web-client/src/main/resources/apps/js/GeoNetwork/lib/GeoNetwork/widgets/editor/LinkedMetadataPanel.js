@@ -81,10 +81,11 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         this.reload();
     },
     /** private: method[clear] 
-     *  Remove all related metadata from the store
+     *  Remove all related metadata from the store and clean the panel content.
      */
     clear: function () {
         this.store.removeAll();
+        this.update('<div></div>');
     },
     reload: function (e, id, schema, version) {
         this.metadataId = id || this.metadataId;
@@ -116,24 +117,23 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         return uuidList;
     },
     addRelation: function (type) {
-        var window = new GeoNetwork.editor.LinkResourcesWindow({
-            type: type,
-            editor: this.editor,
-            catalogue: this.catalogue,
-            metadataUuid: this.metadataUuid,
-            metadataId: this.metadataId,
-            versionId: this.versionId,
-            metadataSchema: this.metadataSchema,
-            onlinesrc: {
-                // FIXME : hardcoded configuration for myocean metadata
-                // where only metadata online source could be used
-                linkADocument: this.metadataSchema !== 'iso19139.myocean',
-                linkAMetadata: this.metadataSchema === 'iso19139.myocean'
-            },
-            getThumbnail: this.catalogue.services.mdGetThumbnail,
-            setThumbnail: this.catalogue.services.mdSetThumbnail,
-            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
-        });
+        var window, config = {
+                type: type,
+                editor: this.editor,
+                catalogue: this.catalogue,
+                metadataUuid: this.metadataUuid,
+                metadataId: this.metadataId,
+                versionId: this.versionId,
+                metadataSchema: this.metadataSchema,
+                getThumbnail: this.catalogue.services.mdGetThumbnail,
+                setThumbnail: this.catalogue.services.mdSetThumbnail,
+                unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
+            };
+        if (this.metadataSchema === 'iso19139.myocean') {
+            window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);
+        } else {
+            window = new GeoNetwork.editor.LinkResourcesWindow(config);
+        }
         window.show();
     },
     removeThumbnail: function (thumbnailType) {
@@ -162,8 +162,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         // which is the case when using a URL
         if (type === 'thumbnail') {
             if (id.indexOf('resources.get') !== -1) {
-                // title is thumbnail desc and id is its URL
-                this.removeThumbnail(type);
+                // uuid contains type of thumbnail
+                this.removeThumbnail(uuid);
                 return;
             } else {
                 parameters += "&thumbnail_url=" + id;
@@ -224,7 +224,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             }
         }];
         this.tpl = new Ext.XTemplate(
-            '<ul>',
+            '<ul class="gn-relation-{type}">',
             '<tpl for=".">',
               '<tpl for="data">',
                 '<tpl if="type === \'thumbnail\'">',
@@ -279,6 +279,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 html += '<h2>' + OpenLayers.i18n(type) + '<span class="button" id="' + id + '"></span>' + 
                     '</h2>';
                 var mds = store.query('type', type);
+                mds.items.type = type;
                 html += this.tpl.apply(mds.items);
             }, this);
             this.update('<div>' + html + '</div>');
@@ -288,7 +289,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             Ext.each(buttons, function (button) {
                 var bt, id = button.getAttribute('id');
                 var info = id.split(panel.sep);
-//                console.log(info);
+                
                 if (info[0] === 'add') {
                     
                     // Provide update children action when editing the parent

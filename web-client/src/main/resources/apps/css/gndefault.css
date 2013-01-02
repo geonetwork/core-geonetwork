@@ -565,6 +565,31 @@ dl.xml * dd {
     margin-left: 3px;
 }
 
+ul.gn-relation-thumbnail {
+    overflow: hidden;
+}
+
+.gn-relation-thumbnail li {
+    list-style-type: none;
+    float: left;
+    width: 50%;
+    max-width: 120px;
+    height: 100px;
+    text-align: center;
+    position: relative;
+}
+.gn-relation-thumbnail li span {
+    position: absolute;
+    bottom: 0px;
+    right: 2px;
+}
+.gn-relation-thumbnail li .lightBox {
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    height: 18px;
+}
+
 .debug {
     display: none;
 }
