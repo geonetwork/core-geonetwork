@@ -44,6 +44,26 @@
                <param name="filter" value="+spatialRepresentationType:vector"/>
            </class>
         </service>
-        
+        <service name="csw-keyword-inspire">
+           <class name=".services.main.CswDiscoveryDispatcher" >
+               <param name="filter" value="+keyword:inspire"/>
+           </class>
+        </service>
+        <service name="csw-group-fribourg-boundaries">
+           <class name=".services.main.CswDiscoveryDispatcher" >
+               <param name="filter" value="+_groupOwner:3 +topicCat:boundaries"/>
+           </class>
+        </service>
+        <service name="csw-group-fribourg">
+           <class name=".services.main.CswDiscoveryDispatcher" >
+               <param name="filter" value="+_groupOwner:3"/>
+           </class>
+        </service>
+
+        <service name="csw-area-fribourg">
+           <class name=".services.main.CswDiscoveryDispatcher" >
+               <param name="filter" value="+northBL:47.01 +southBL:46.44 +eastBL:7.375 +westBL:6.795"/>
+           </class>
+        </service>
     </services>
 </geonet>

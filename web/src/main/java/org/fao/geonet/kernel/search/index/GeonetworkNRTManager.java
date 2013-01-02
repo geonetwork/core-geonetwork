@@ -80,7 +80,7 @@ class GeonetworkNRTManager {
             searcher = actualManager.acquire();
             version = lifetimeManager.record(searcher);
         } else {
-        	version = versionToken;
+            version = versionToken;
         }
         return Pair.read(version, searcher);
     }

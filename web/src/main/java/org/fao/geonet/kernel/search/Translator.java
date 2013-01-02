@@ -23,65 +23,69 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.concurrent.Callable;
 
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+
+import jeeves.JeevesCacheManager;
 import jeeves.resources.dbms.Dbms;
-
-import org.jdom.JDOMException;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Takes a key and looks up a translation for that key.
  * 
  * @author jesse
  */
-public abstract class Translator
-{
-    
-    public static Translator PASS_THROUGH = new Translator(){
-        public String translate(String key){ return key; }
-    };
-    
-    public abstract String translate(String key);
-    
-    
-    private final static Map<String, Translator> cache = Collections.synchronizedMap(new HashMap<String, Translator>()); 
+public abstract class Translator implements Serializable {
 
-    public static synchronized Translator createTranslator(String translatorString, String schemaDir, String langCode, Dbms dbms) throws IOException, JDOMException
-    {
-        if( translatorString == null || translatorString.length()==0){
-            return Translator.PASS_THROUGH;
+    private static final long serialVersionUID = 1L;
+    public static Translator NULL_TRANSLATOR = new Translator() {
+        private static final long serialVersionUID = 1L;
+        public String translate(String key) {
+            return null;
+        }
+    };
+
+    public abstract String translate(String key);
+
+    public static Translator createTranslator(String translatorString, final ServiceContext context, final String langCode)
+            throws Exception {
+        if (translatorString == null || translatorString.length() == 0) {
+            return Translator.NULL_TRANSLATOR;
         }
         String key = translatorString + langCode;
-        synchronized (cache) {
-            if(cache.containsKey(key)) {
-                return cache.get(key);
-            }
-        }
 
-        String[] parts = translatorString.split(":",2);
-        if( parts.length!=2 ){
-            throw new AssertionError("the 'translation' element of the config-summary.xml must be of the form nameOfTranslator:TranslatorParam");
+        String[] parts = translatorString.split(":", 2);
+        if (parts.length != 2) {
+            throw new AssertionError(
+                    "the 'translation' element of the config-summary.xml must be of the form nameOfTranslator:TranslatorParam");
         }
         String type = parts[0];
-        String param = parts[1];
+        final String param = parts[1];
+
+        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         Translator translator;
-        if( type.equals("codelist") ){
-            translator = new CodeListTranslator(schemaDir, langCode, param);
-        } else if( dbms != null && type.equals("db") ){
-            // do not cache
-            return new DbDescTranslator(dbms, langCode, param);
+        if (type.equals("codelist")) {
+                return new CodeListTranslator(gc.getSchemamanager(), langCode, param);
+        } else if (type.equals("db")) {
+            translator = JeevesCacheManager.findInTenSecondCache(key, new Callable<Translator>() {
+                public Translator call() {
+                    try {
+                        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                        return new DbDescTranslator(dbms, langCode, param);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
         } else {
-            throw new AssertionError(type+" is not a recognized type of translator");
+            throw new AssertionError(type + " is not a recognized type of translator");
         }
-        
-        synchronized (cache) {
-            cache.put(key, translator);
-            return translator;
-        }
+
+        return translator;
     }
 
 }

@@ -127,7 +127,7 @@
 	<cannotRetrieveGroup js="true">Gruplar elde edilemiyor</cannotRetrieveGroup>
 	<selectNewOwner js="true">Yeni sahibi olacak kullanıcıyı seçiniz</selectNewOwner>
 	<selectOwnerGroup js="true">Seçilen kullanıcının ait olacağı grubu seçiniz</selectOwnerGroup>
-	<selectOneFile js="true">İndirmek için en az bir dosya seçmelisiniz!</selectOneFile>
+	<selectOneFileDownload js="true">İndirmek için en az bir dosya seçmelisiniz!</selectOneFileDownload>
 	<checkEmail js="true">Lütfen doğru bir eposta adresi giriniz</checkEmail>
 	<addName js="true">Lütfen bir isim ya da kurum ismi giriniz</addName>
 	<noComment js="true">Yorum yok</noComment>
@@ -150,7 +150,7 @@
 	<errorSaveFailed js="true">Hata: Form kaydedilemedi</errorSaveFailed>
 	<errorOnAction js="true">Hata: Eylem gerçekleştirilemedi </errorOnAction>
 	<errorChangeProtocol js="true">Bir dosya yüklenmiş olabilir. Bu dosyayı kaldırana kadar protokolü değiştiremezsiniz</errorChangeProtocol>
-	<selectOneFile js="true">Yükle ye basmadan önce bir dosya ismi girin ya da da gözat a basın!</selectOneFile>
+	<selectOneFileUpload js="true">Yükle ye basmadan önce bir dosya ismi girin ya da da gözat a basın!</selectOneFileUpload>
 	<uploadFailed js="true">Hata: Yükleme yapılamadı! - gelen hata kodu</uploadFailed>
 	<uploadSetFileNameFailed js="true">Hata: Yükleme başarılı fakat dosya adı oluşturulamadı!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Sunucudan araç ipucları (tooltip) yüklenemedi</cannotGetTooltip>

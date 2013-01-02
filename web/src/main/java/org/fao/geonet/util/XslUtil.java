@@ -730,15 +730,19 @@ public final class XslUtil {
     }
 
     public static String writeXml(NodeInfo doc) throws Exception {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // Prepare the output file
-        Result result = new StreamResult(out);
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			// Prepare the output file
+			Result result = new StreamResult(out);
 
-        // Write the DOM document to the file
-        Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			// Write the DOM document to the file
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 
-        xformer.transform(doc, result);
-        return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "");
+			xformer.transform(doc, result);
+			return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "");
+		} catch (Exception e) {
+    		return doc.getStringValue();
+    	}
     }
 
 

@@ -23,41 +23,37 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
-import org.fao.geonet.util.LangUtils;
-import org.jdom.Element;
-import org.jdom.JDOMException;
+import jeeves.JeevesCacheManager;
 
+import org.fao.geonet.kernel.SchemaManager;
 
 /**
  * Translates code list keys into a language
+ * 
  * @author jesse
  */
-public class CodeListTranslator extends Translator
-{
-    private final List<Element> _codeList;
-    public CodeListTranslator(String schemaDir, String langCode, String codeListName) throws IOException, JDOMException
-    {
-        _codeList = LangUtils.loadCodeListFile(schemaDir, langCode, codeListName);
+public class CodeListTranslator extends Translator {
+    private static final long serialVersionUID = 1L;
+    private Map<String, String> _codeList;
+
+    public CodeListTranslator(final SchemaManager schemaManager, final String langCode, final String codeListName) throws Exception {
+        _codeList = JeevesCacheManager.findInEternalCache(CodeListCacheLoader.cacheKey(langCode, codeListName), new CodeListCacheLoader(
+                langCode, codeListName, schemaManager));
     }
 
-    public String translate(String key)
-    {
-        if( _codeList==null ){
+    public String translate(String key) {
+        if (_codeList == null) {
             return key;
         }
 
-        for (Element entry : _codeList) {
-            // Case insensitive match because most of Lucene
-            // fields are processed by StandardAnalyzer (which turn terms to lowercase).
-            if(entry.getChildText("code").toLowerCase().equals(key.toLowerCase())){
-                return entry.getChildText("label");
-            }
+        String value = _codeList.get(key);
+        if(value != null) {
+            return value;
+        } else {
+            return null;
         }
-
-        return key;
     }
 
 }

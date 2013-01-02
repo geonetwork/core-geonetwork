@@ -268,6 +268,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         var data = {
             facet : node.nodeName,
             node : node.getAttribute('name'),
+            label : node.getAttribute('label'),
             count : node.getAttribute('count')
         };
         // Only display a facet if it's not part of current filter
@@ -278,7 +279,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                  r = new this.facetsStore.recordType(data, recId); 
             this.facetsStore.add(r);
             return "<li class='" + (visible ? '' : 'facet-more') + "' style='" + (visible ? '' : 'display:none;') + "'><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
-                    data.node + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
+                    (data.label != null ? data.label : data.node) + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
         }
         return '';
     },
@@ -324,6 +325,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             id: id, 
             facet: r.get('facet'), 
             value: r.get('node'), 
+            label: r.get('label'),
             bcid: 'bc_' + id, 
             fieldid: 'field_' + id
         };
@@ -359,7 +361,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                     id: data.id + '#' + i++,
                     altText : item.get('node'),
                     checked: item.get('node') === r.get('node') ? true : false,
-                    text: item.get('node'),
+                    text: (item.get('label') != null ? item.get('label') : item.get('node')),
                     handler: function (b, e) {
                         this.switchFacet(b);
                     },
@@ -368,7 +370,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             });
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
-                text: data.value,
+                text: (data.label != null ? data.label : data.node),
                 menu: scrollMenu
             }));
             this.breadcrumb.doLayout();
@@ -383,7 +385,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *  and triggering the search again.
      */
     switchFacet: function (elem) {
-        var elemId = elem.getId(), filterKey = elemId.split('#')[0], newValue = elem.text;
+        var elemId = elem.getId(), filterKey = elemId.split('#')[0], newValue = elem.altText;
         
         // Search in current filter
         var filter = this.currentFilterStore.query('id', filterKey).get(0);

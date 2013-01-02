@@ -240,7 +240,7 @@ function get_cookie ( cookie_name )
 		}
 
 		if (!selected) {
-			alert(translate("selectOneFile"));
+			alert(translate("selectOneFileDownload"));
 			return;
 		}
 
