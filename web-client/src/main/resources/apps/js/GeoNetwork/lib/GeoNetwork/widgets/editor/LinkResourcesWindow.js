@@ -130,6 +130,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     idField: undefined,
     versionField: undefined,
     mdStore: undefined,
+    mdSelectedStore: undefined,
     selectedMd: undefined,
     associationType: undefined,
     initiativeType: undefined,
@@ -465,6 +466,93 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         return this.uploadForm;
     },
     /**
+     * Custom for MyOcean to allow multiple selection
+     */
+    generateMultipleMetadataSelector: function (cancelBt) {
+        
+        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
+        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
+        var tplDescription = function (value, p, record) {
+            var links = "";
+            if (self.type === 'service') {
+                Ext.each(record.data.links, function (link) {
+                    // FIXME: restrict
+                    if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
+                        links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
+                        // FIXME : when service contains multiple URL 
+                        record.data.serviceUrl = link.href;
+                        record.data.serviceProtocol = link.protocol;
+                    }
+                });
+            } else if (record.data.links && self.type === 'onlinesrc') {
+                Ext.each(record.data.links, function (link) {
+                    // FIXME: restrict
+                    links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
+                });
+            }
+            return String.format(
+                    '<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div><ul>{2}</ul>',
+                    record.data.title, record.data['abstract'], links);
+        };
+        var tpl = new Ext.XTemplate(
+                '<tpl for=".">',
+                    // TODO : add keyword definiton ?
+                    '<div class="ux-mselect-item">{title}</div>',
+                '</tpl>'
+            );
+
+        var cmp = [];
+        this.getHiddenFormInput(cmp);
+        cmp.push(this.getSearchInput());
+        
+        var itemSelector = new Ext.ux.ItemSelector({
+            dataFields: ["title"],
+            //toData: [],
+            toStore: this.mdSelectedStore,
+            msWidth: 320,
+            msHeight: 260,
+            valueField: "value",
+            hideLabel: true,
+            toSortField: undefined,
+            fromTpl: tpl,
+            toTpl: tpl,
+            toLegend: OpenLayers.i18n('Selected'),
+            fromLegend: OpenLayers.i18n('Found'),
+            fromStore: this.mdStore,
+            fromAllowTrash: false,
+            fromAllowDup: true,
+            toAllowDup: false,
+            drawUpIcon: false,
+            drawDownIcon: false,
+            drawTopIcon: false,
+            drawBotIcon: false,
+            imagePath: '../../apps/js/ext-ux/images',
+            toTBar: [{
+                // control to clear all select keywwords and refresh the XML.
+                text: OpenLayers.i18n('clear'),
+                handler: function () {
+                    var i = itemSelector;
+                    itemSelector.reset.call(i);
+                },
+                scope: this
+            }]
+        });
+        cmp.push(itemSelector);
+        
+        this.formPanel = new Ext.form.FormPanel({
+            items: [cmp],
+            buttons: [{
+                text: OpenLayers.i18n('link'),
+                iconCls: 'linkIcon',
+                scope: this,
+                handler: function () {
+                    this.runProcess();
+                }
+            }, cancelBt]
+        });
+        return this.formPanel;
+    },
+    /**
      * A metadata search form with a grid
      * to select a record to link.
      */
@@ -475,7 +563,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
         // Create grid with template list
         var checkboxSM = new Ext.grid.CheckboxSelectionModel({
-            singleSelect: this.singleSelect,
+            singleSelect: self.type === 'onlinesrc' ? false : this.singleSelect,
             header: ''
         });
         
@@ -736,6 +824,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     layout: 'fit',
                     items: this.generateMetadataSearchForm(cancelBt)
                 });
+                items.push({
+                    title: OpenLayers.i18n('linkAMetadata'),
+                    layout: 'fit',
+                    items: this.generateMultipleMetadataSelector(cancelBt)
+                });
             }
             if (this.onlinesrc.linkADocument === true) {
                 items.push({
@@ -789,12 +882,18 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                             "&associationType=" + this.associationType;
         } else if (this.type === 'onlinesrc') {
             // Combine all links
-            parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
-            if (this.selectedLink.href) {
-                parameters += "&url=" + this.selectedLink.href + 
-                    "&desc=" + this.selectedLink.title + 
-                    "&protocol=" + this.selectedLink.protocol + 
-                    "&name=" + this.selectedLink.name;
+            if (this.mdSelectedStore.getCount() > 0) {
+                this.mdSelectedStore.each(function (record) {
+                    parameters += "&extra_metadata_uuid=" + record.get('uuid');
+                });
+            } else {
+                parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
+                if (this.selectedLink.href) {
+                    parameters += "&url=" + this.selectedLink.href + 
+                        "&desc=" + this.selectedLink.title + 
+                        "&protocol=" + this.selectedLink.protocol + 
+                        "&name=" + this.selectedLink.name;
+                }
             }
         }
         var action = this.catalogue.services.mdProcessing + 
