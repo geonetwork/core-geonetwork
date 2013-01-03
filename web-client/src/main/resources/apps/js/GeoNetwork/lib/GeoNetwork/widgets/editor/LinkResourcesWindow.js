@@ -890,11 +890,20 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             parameters += "&thumbnail_url=" + this.serviceUrl;
             // TODO : set name and description
         } else if (this.type === 'sibling') {
-            parameters += "&uuidref=" + this.selectedMd + 
+         // Combine all links if multiple selection is available
+            if (this.mdSelectedStore && this.mdSelectedStore.getCount() > 0) {
+                var uuids = [];
+                this.mdSelectedStore.each(function (record) {
+                    uuids.push(record.get('uuid'));
+                });
+                parameters += "&uuids=" + uuids.join(',');
+            } 
+            parameters += "&uuidref=" + (this.selectedMd ? this.selectedMd : "") + 
                             "&initiativeType=" + this.initiativeType + 
                             "&associationType=" + this.associationType;
+            
         } else if (this.type === 'onlinesrc') {
-            // Combine all links
+            // Combine all links if multiple selection is available
             if (this.mdSelectedStore && this.mdSelectedStore.getCount() > 0) {
                 this.mdSelectedStore.each(function (record) {
                     parameters += "&extra_metadata_uuid=" + record.get('uuid');
@@ -965,6 +974,8 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
             this.add(this.generateThumbnailForm(cancelBt));
         } else if (this.type === 'onlinesrc') {
             this.add(this.generateMultipleMetadataSelector(cancelBt));
+        } else if (this.type === 'sibling') {
+            this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
         } else {
             
             this.add(this.generateMetadataSearchForm(cancelBt));
@@ -973,6 +984,71 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
             //this.catalogue.search({E_template: 'n'}, null, null, 1, true, this.mdStore, null);
         }
     },
+    getMultipleMetadataSelectorForSibling: function (cancelBt) {
+
+        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
+        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
+        
+        var tpl = new Ext.XTemplate(
+                '<tpl for=".">',
+                    // TODO : add keyword definiton ?
+                    '<div class="ux-mselect-item">{title}</div>',
+                '</tpl>'
+            );
+        
+        var cmp = [];
+        this.getHiddenFormInput(cmp);
+        this.getFormFieldForSibling(cmp);
+
+        cmp.push(this.getSearchInput());
+        
+        var itemSelector = new Ext.ux.ItemSelector({
+            dataFields: ["title"],
+            //toData: [],
+            toStore: this.mdSelectedStore,
+            msWidth: 320,
+            msHeight: 260,
+            valueField: "value",
+            hideLabel: true,
+            toSortField: undefined,
+            fromTpl: tpl,
+            toTpl: tpl,
+            toLegend: OpenLayers.i18n('Selected'),
+            fromLegend: OpenLayers.i18n('Found'),
+            fromStore: this.mdStore,
+            fromAllowTrash: false,
+            fromAllowDup: true,
+            toAllowDup: false,
+            drawUpIcon: false,
+            drawDownIcon: false,
+            drawTopIcon: false,
+            drawBotIcon: false,
+            imagePath: '../../apps/js/ext-ux/images',
+            toTBar: [{
+                // control to clear all select keywwords and refresh the XML.
+                text: OpenLayers.i18n('clear'),
+                handler: function () {
+                    var i = itemSelector;
+                    itemSelector.reset.call(i);
+                },
+                scope: this
+            }]
+        });
+        cmp.push(itemSelector);
+        
+        this.formPanel = new Ext.form.FormPanel({
+            items: cmp,
+            buttons: [{
+                text: OpenLayers.i18n('link'),
+                iconCls: 'linkIcon',
+                scope: this,
+                handler: function () {
+                    this.runProcess();
+                }
+            }, cancelBt]
+        });
+        return this.formPanel;
+    },
     /**
      * Custom for MyOcean to allow multiple selection
      */
@@ -980,28 +1056,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         
         this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
         this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
-        var tplDescription = function (value, p, record) {
-            var links = "";
-            if (self.type === 'service') {
-                Ext.each(record.data.links, function (link) {
-                    // FIXME: restrict
-                    if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
-                        links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
-                        // FIXME : when service contains multiple URL 
-                        record.data.serviceUrl = link.href;
-                        record.data.serviceProtocol = link.protocol;
-                    }
-                });
-            } else if (record.data.links && self.type === 'onlinesrc') {
-                Ext.each(record.data.links, function (link) {
-                    // FIXME: restrict
-                    links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
-                });
-            }
-            return String.format(
-                    '<span class="tplTitle">{0}</span><div class="tplDesc">{1}</div><ul>{2}</ul>',
-                    record.data.title, record.data['abstract'], links);
-        };
+        
         var tpl = new Ext.XTemplate(
                 '<tpl for=".">',
                     // TODO : add keyword definiton ?
