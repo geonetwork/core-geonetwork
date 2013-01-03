@@ -1,5 +1,7 @@
 package org.fao.geonet.services.region.geocat;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -52,6 +54,15 @@ public class GeocatRegionsDAO extends RegionsDAO {
 			return null;
 		}
 
+	}
+
+	@Override
+	public Collection<String> getRegionCategoryIds(ServiceContext context) {
+		LinkedList<String> ids = new LinkedList<String>();
+		for (DatastoreMappers mapper : DatastoreMappers.values()) {
+			ids.add(mapper.mapper.categoryId());
+		}
+		return ids;
 	}
 
 }

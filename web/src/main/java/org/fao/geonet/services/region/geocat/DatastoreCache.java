@@ -14,6 +14,7 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
 
 public class DatastoreCache {
@@ -26,16 +27,17 @@ public class DatastoreCache {
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 
 		DataStore postgis = (DataStore) context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE);
-		SimpleFeatureSource kantonBB = postgis.getFeatureSource(sourceTypeName);
+		SimpleFeatureSource cachedSchema = postgis.getFeatureSource(sourceTypeName);
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 		for (String att : propNames) {
-			AttributeDescriptor descriptor = kantonBB.getSchema().getDescriptor(att);
+			AttributeDescriptor descriptor = cachedSchema.getSchema().getDescriptor(att);
 			builder.add(descriptor);
 		}
 		builder.setName(cacheTypeName);
+		builder.setCRS(cachedSchema.getSchema().getCoordinateReferenceSystem());
 		cache.createSchema(builder.buildFeatureType());
 		SimpleFeatureStore featureStore = (SimpleFeatureStore) cache.getFeatureSource(cacheTypeName);
-		SimpleFeatureCollection features = kantonBB.getFeatures(new Query(sourceTypeName, Filter.INCLUDE, propNames));
+		SimpleFeatureCollection features = cachedSchema.getFeatures(new Query(sourceTypeName, Filter.INCLUDE, propNames));
 		featureStore.addFeatures(features);
 		return featureStore;
 	}

@@ -22,7 +22,7 @@ public class GeocatRegionsRequest extends Request {
 	Set<String> labels = new HashSet<String>();
 	Set<String> categoryIds = new HashSet<String>();
 	Multimap<DatastoreMapper, Filter> ids = HashMultimap.create();
-	private int maxRecords = -1;
+	private int maxRecords = Integer.MAX_VALUE;
 	private boolean all = true;
 	private final MapperState state;
 

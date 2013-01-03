@@ -67,7 +67,7 @@ public abstract class DatastoreMapper {
 	private Query createQuery(MapperState state, boolean simplified, int maxRegions, Filter filter, boolean inLatLong) {
 		Query query = new Query(getBackingDatastoreName(simplified, inLatLong), filter);
 		query.setMaxFeatures(maxRegions);
-		query.setPropertyNames(propNames(simplified, false));
+		query.setPropertyNames(propNames(simplified, true));
 		return query;
 	}
 
