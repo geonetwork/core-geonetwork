@@ -562,10 +562,10 @@ public class CatalogSearcher {
             Attribute attribute = regionEl.getAttribute("id", FindRegionFilterElements.namespace);
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
-            String[] regionIds = attribute.getValue().split("\\s*,\\s*");
+            String[] regionIds = attribute.getValue().substring("region:".length()).split("\\s*,\\s*");
 
             for (String regionId : regionIds) {
-                Geometry geometry = regionDAO.getGeom(context, regionId.split(":",2)[1], false, Region.WGS84);
+                Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
                 geoms.add(geometry);
                 if (unionedGeom == null) {
                     unionedGeom = geometry;
