@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.arcsde;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Xml;
@@ -198,16 +197,13 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					result.badFormat++;
 				}
 				else {
-
-                    // validate it here if requested
-                    if (params.validate) {
-                        if(!dataMan.validate(iso19139))  {
-                            System.out.println("Ignoring invalid metadata with uuid " + uuid);
-                            result.doesNotValidate++;
-                            continue;
-                        }
-                    }
-
+					try {
+						params.validate.validate(dataMan, context, iso19139);
+					} catch (Exception e) {
+						System.out.println("Ignoring invalid metadata with uuid " + uuid);
+						result.doesNotValidate++;
+						continue; // skip this one
+					}
 					//
 					// add / update the metadata from this harvesting result
 					//

@@ -128,7 +128,7 @@ this.getDataCommon = function()
 	
 		//--- content		
 		IMPORTXSLT   : $F(prefix+'.importxslt'),
-		VALIDATE     : $(prefix+'.validate').checked
+		VALIDATE     : $(prefix+'.validate').value
 	}
 	}
 	else {
@@ -148,7 +148,7 @@ this.getDataCommon = function()
 
 			//--- content		
 			IMPORTXSLT   : $F(prefix+'.importxslt'),
-			VALIDATE     : $(prefix+'.validate').checked
+			VALIDATE     : $(prefix+'.validate').value
 		}
 	}
 	

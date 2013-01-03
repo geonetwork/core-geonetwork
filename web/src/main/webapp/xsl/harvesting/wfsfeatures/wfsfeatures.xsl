@@ -176,7 +176,13 @@
 
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
-				<td class="padded"><input id="wfsfeatures.validate" type="checkbox" value=""/></td>
+				<td class="padded">
+					<select id="wfsfeatures.validate" class="content" name="validate" size="1">
+						<option value="NOVALIDATION" selected="selected"><xsl:value-of select="/root/gui/harvesting/noValidation"/></option>
+						<option value="XSDVALIDATION"><xsl:value-of select="/root/gui/harvesting/xsdValidation"/></option>
+						<option value="SCHEMATRONVALIDATION"><xsl:value-of select="/root/gui/harvesting/schematronValidation"/></option>
+					</select>
+				</td>
 			</tr>
 		</table>
 	</div>

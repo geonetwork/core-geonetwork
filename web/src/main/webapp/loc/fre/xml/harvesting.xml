@@ -210,6 +210,9 @@
 	<source>Source</source>
 	<criteria>Critères</criteria>
 	<validate>Valider</validate>
+	<noValidation>Aucune Validation</noValidation>
+	<xsdValidation>Validation Xsd</xsdValidation>
+	<schematronValidation>Validation Xsd et Schematron</schematronValidation>
 	<recurse>Récursif</recurse>
 	<nodelete>Conserver les fichiers</nodelete>
 	<server>Serveur</server>

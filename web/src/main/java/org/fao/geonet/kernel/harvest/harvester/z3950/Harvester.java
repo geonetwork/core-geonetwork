@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -331,7 +332,7 @@ class Harvester {
 				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
 
 				// validate it here if requested
-				if (params.validate) {
+				if (!params.validate.equals(HarvestValidationEnum.NOVALIDATION)) {
 					Document docVal;
 					if (!transformIt && (doc.getDocType() != null)) {
 						docVal = new Document(md, (DocType)doc.getDocType().detach());

@@ -35,6 +35,7 @@ import jeeves.utils.QuartzSchedulerUtils;
 import jeeves.utils.Util;
 
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.quartz.JobDetail;
@@ -83,7 +84,17 @@ public abstract class AbstractParams
 		getTrigger();
 
 		importXslt = Util.getParam(content, "importxslt", "none");
-		validate = Util.getParam(content, "validate", false);
+		
+		String valid = Util.getParam(content, "validate");
+		if("true".equals(valid)) {
+			validate = HarvestValidationEnum.XSDVALIDATION;
+		}
+		else if("false".equals(valid)) {
+			validate = HarvestValidationEnum.NOVALIDATION;
+		}
+		else {
+			validate  = HarvestValidationEnum.valueOf(Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.name()));
+		}
 
 		addPrivileges(node.getChild("privileges"));
 		addCategories(node.getChild("categories"));
@@ -115,7 +126,7 @@ public abstract class AbstractParams
 		getTrigger();
 		
 		importXslt = Util.getParam(content, "importxslt", importXslt);
-		validate = Util.getParam(content, "validate", validate);
+		validate = HarvestValidationEnum.valueOf(Util.getParam(content, "validate", validate.name()));
 
 		if (privil != null)
 			addPrivileges(privil);
@@ -295,7 +306,7 @@ public abstract class AbstractParams
 	String  every;
 	public boolean oneRunOnly;
 
-	public boolean validate;
+	public HarvestValidationEnum validate;
 	public String importXslt;
 
 	public Element node;

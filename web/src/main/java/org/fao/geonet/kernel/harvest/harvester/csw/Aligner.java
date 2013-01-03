@@ -415,15 +415,15 @@ public class Aligner
 			}
 			// end issue #133730
 
-            // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(response))  {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
-                    result.doesNotValidate++;
-                    return null;
-                }
-            }
-            return response;
+			//validate it here if requested
+			try {
+				params.validate.validate(dataMan, context, response);
+			} catch (Exception e) {
+				log.info("Ignoring invalid metadata with uuid " + uuid);
+				result.doesNotValidate++;
+				return null;
+			}
+			return response;
 		}
 		catch(Exception e)
 		{

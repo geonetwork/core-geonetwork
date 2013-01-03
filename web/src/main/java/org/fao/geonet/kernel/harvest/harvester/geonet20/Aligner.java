@@ -359,14 +359,14 @@ public class Aligner
 			if (info != null)
 				info.detach();
 
-            // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(md))  {
-                    log.info("Ignoring invalid metadata");
-                    result.doesNotValidate++;
-                    return null;
-                }
-            }
+			// validate it here if requested
+	        try {
+				params.validate.validate(dataMan, context, md);
+			} catch (Exception e) {
+				log.info("Ignoring invalid metadata");
+				result.doesNotValidate++;
+				return null;
+			}
 			return md;
 		}
 		catch(Exception e)

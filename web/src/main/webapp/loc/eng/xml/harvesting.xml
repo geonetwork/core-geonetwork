@@ -210,6 +210,9 @@
 	<source>Source</source>
 	<criteria>Criteria</criteria>
 	<validate>Validate</validate>
+	<noValidation>No Validation</noValidation>
+	<xsdValidation>Xsd Validation</xsdValidation>
+	<schematronValidation>Xsd and Schematron Validation</schematronValidation>
 	<recurse>Recurse</recurse>
 	<nodelete>Keep local if deleted at source</nodelete>
 	<server>Server</server>	

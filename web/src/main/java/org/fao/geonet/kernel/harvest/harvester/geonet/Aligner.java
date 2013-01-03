@@ -303,14 +303,13 @@ public class Aligner
         if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
         // validate it here if requested
-        if (params.validate) {
-            if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
-                result.doesNotValidate++;
-                return null;
-            }
-        }
-
+        try {
+			params.validate.validate(dataMan, context, md);
+		} catch (Exception e) {
+			System.out.println("Ignoring invalid metadata");
+			result.doesNotValidate++;
+			return null;
+		}
         md = processMetadata(ri, md);
         
         // insert metadata
@@ -580,13 +579,14 @@ public class Aligner
 		String date = localUuids.getChangeDate(ri.uuid);
 
         // validate it here if requested
-        if (params.validate) {
-            if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
-                result.doesNotValidate++;
-                return;
-            }
-        }
+		// validate it here if requested
+        try {
+			params.validate.validate(dataMan, context, md);
+		} catch (Exception e) {
+			System.out.println("Ignoring invalid metadata");
+			result.doesNotValidate++;
+			return;
+		}
 
 		if (!ri.isMoreRecentThan(date))
 		{
