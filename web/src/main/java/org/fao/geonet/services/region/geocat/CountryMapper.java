@@ -35,15 +35,15 @@ public class CountryMapper extends DatastoreMapper {
 	public String[] propNames(boolean simplified, boolean includeGeom) {
 		if(simplified) {
 			if(includeGeom) {
-				return new String[]{COUNTRY_ID, COUNTRY_NAME, COUNTRY_DESC, THE_GEOM};
+				return new String[]{COUNTRY_ID, COUNTRY_NAME, COUNTRY_DESC, SEARCH, THE_GEOM};
 			} else {
-				return new String[]{COUNTRY_ID, COUNTRY_NAME, COUNTRY_DESC};
+				return new String[]{COUNTRY_ID, COUNTRY_NAME, COUNTRY_DESC, SEARCH};
 			}
 		} else {
 			if(includeGeom) {
-				return new String[]{COUNTRY_ID, COUNTRY_NAME, THE_GEOM};
+				return new String[]{COUNTRY_ID, COUNTRY_NAME, SEARCH, THE_GEOM};
 			} else {
-				return new String[]{COUNTRY_ID, COUNTRY_NAME};
+				return new String[]{COUNTRY_ID, COUNTRY_NAME, SEARCH};
 			}
 		}
 	}

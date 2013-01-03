@@ -1,5 +1,7 @@
 package org.fao.geonet.services.region.geocat;
 
+
+import static org.fao.geonet.services.region.geocat.DatastoreMapper.SEARCH;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,7 +20,6 @@ import com.google.common.collect.Multimap;
 
 public class GeocatRegionsRequest extends Request {
 
-	private static final String SEARCH = "SEARCH";
 	Set<String> labels = new HashSet<String>();
 	Set<String> categoryIds = new HashSet<String>();
 	Multimap<DatastoreMapper, Filter> ids = HashMultimap.create();
@@ -67,7 +68,7 @@ public class GeocatRegionsRequest extends Request {
 				categoryIds.add(mapper.mapper.categoryId());
 			}
 		}
-		if(!categoryIds.isEmpty()) {
+		if(!categoryIds.isEmpty() && labels.isEmpty()) {
 			for (DatastoreMappers mapper : DatastoreMappers.values()) {
 				if(categoryIds.contains(mapper.mapper.categoryId())) {
 					mapper.mapper.loadRegions(state, results, maxRecords, Filter.INCLUDE);
@@ -92,7 +93,7 @@ public class GeocatRegionsRequest extends Request {
 			Filter filter = state.filterFactory.or(filters);
 
 			for (DatastoreMappers mapper : DatastoreMappers.values()) {
-				if(categoryIds.contains(mapper.mapper.categoryId())) {
+				if(categoryIds.isEmpty() || categoryIds.contains(mapper.mapper.categoryId())) {
 					mapper.mapper.loadRegions(state, results, maxRecords, filter);
 				}
 			}

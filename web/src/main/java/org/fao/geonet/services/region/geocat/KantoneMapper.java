@@ -11,8 +11,8 @@ public class KantoneMapper extends DatastoreMapper {
 	private static final String KANTONE_NAME = "NAME";
 	private static final String KANTONE_ID = "KANTONSNR";
 	private static final String[] PROPS_WITH_GEOM = new String[] {
-		KANTONE_ID, KANTONE_NAME, THE_GEOM };
-	private static final String[] PROPS_WITHOUT_GEOM = new String[] { KANTONE_ID, KANTONE_NAME };
+		KANTONE_ID, KANTONE_NAME, THE_GEOM, SEARCH };
+	private static final String[] PROPS_WITHOUT_GEOM = new String[] { KANTONE_ID, KANTONE_NAME, SEARCH };
 	private static final String CATEGORY_ID = "kantone";
 	private static final String PREFIX = CATEGORY_ID + ":";
 	private static final String CH1903_BACKING_DS = "kantoneBB";

@@ -22,6 +22,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public abstract class DatastoreMapper {
 
 	protected static final String THE_GEOM = "the_geom";
+	public static final String SEARCH = "SEARCH";
 
 	public static final String SIMPLIFIED_ATT = "simplified";
 	
