@@ -302,7 +302,8 @@
              http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
             -->
 			<xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
-				<xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+				<xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|
+												gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
 				<xsl:if test="$code != ''">
 					<xsl:variable name="associationType" select="gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
 					<xsl:variable name="initiativeType" select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
