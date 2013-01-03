@@ -94,7 +94,7 @@
 		<gco:CharacterString><xsl:call-template name="normalizeLang"><xsl:with-param name="lang" select="string(.)"/></xsl:call-template></gco:CharacterString>
 	</xsl:template>
 
-	<xsl:template priority="5" match="gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode">
+	<xsl:template priority="5" match="(che:legislationInformation/che:CHE_MD_Legislation/che:language | gmd:locale/gmd:PT_Locale)/gmd:languageCode/gmd:LanguageCode">
 		<xsl:variable name="lang"><xsl:call-template name="normalizeLang"><xsl:with-param name="lang" select="@codeListValue"/></xsl:call-template></xsl:variable>
 		<gmd:LanguageCode codeList="{@codeList}" codeListValue="{$lang}"> </gmd:LanguageCode>
 	</xsl:template>

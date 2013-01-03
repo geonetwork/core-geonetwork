@@ -16,6 +16,10 @@ UPDATE Settings SET value='1.1.0' WHERE name='version';
 UPDATE Settings SET value='geocat' WHERE name='subVersion';
 UPDATE Settings SET value='prefer_locale' where name='only';
 
+INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
+INSERT INTO Settings VALUES (957,956,'enable','false');
+INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
+
 INSERT INTO settings VALUES ( 3, 1, 'wmtTimestamp', '20120809');
 
 UPDATE settings SET value='0 0 1 * * ?' where name = 'every';
