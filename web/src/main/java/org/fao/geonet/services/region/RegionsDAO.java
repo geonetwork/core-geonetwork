@@ -14,7 +14,17 @@ import com.vividsolutions.jts.geom.Geometry;
 public abstract class RegionsDAO {
     private boolean cacheAllRegionsInMemory = true;
     private WeakReference<CachedRequest> allRegions = new WeakReference<CachedRequest>(null);
-    
+
+    /**
+     * Look up all the ids of all the categories available.
+     * 
+     * This should be an inexpensive operation and will typically 
+     * be cached for performance.
+     * 
+     * @return all the ids of all the categories available
+     */
+    public abstract Collection<String> getRegionCategoryIds(ServiceContext context);
+
     /**
      * Create an object for constructing a search request to find regions
      */
