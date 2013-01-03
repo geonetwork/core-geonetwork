@@ -23,7 +23,7 @@
 				<xsl:when test="//keyword[thesaurus/key = $currentThesaurus]">
 					<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
 						<gmd:featureTypes>
-							<gco:LocalName><xsl:value-of select="value"/></gco:LocalName>
+							<gco:LocalName codeSpace="{uri}"><xsl:value-of select="value"/></gco:LocalName>
 						</gmd:featureTypes>
 					</xsl:for-each>
 				</xsl:when>

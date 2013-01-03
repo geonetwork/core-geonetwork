@@ -281,7 +281,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         var cb = function (response) {
                             self.loadingKeywordStore.loadData(response.responseXML, true);
                         };
-
+                        
                         // Get initial keyword in the data view and select them
                         Ext.each(self.initialKeyword, function (initKeyword) {
                             dv.select(self.keywordStore.find('value', initKeyword), true);
