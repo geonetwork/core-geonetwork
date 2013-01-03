@@ -298,6 +298,6 @@
 	
 	
   <repository>
-    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
+    <thesaurus>http://raw.github.com/geonetwork/util-repository/master/thesaurus.xml</thesaurus>
   </repository>
 </config>
