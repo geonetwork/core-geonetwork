@@ -804,7 +804,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
         var targetMetadataUuid = this.metadataUuid, parameters = "";
-        this.layerName = Ext.getCmp('getCapabilitiesLayerName').getValue();
+        this.layerName = Ext.getCmp('getCapabilitiesLayerName') && Ext.getCmp('getCapabilitiesLayerName').getValue();
         
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
