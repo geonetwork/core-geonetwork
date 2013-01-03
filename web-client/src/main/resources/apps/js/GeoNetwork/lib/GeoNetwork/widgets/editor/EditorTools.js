@@ -1021,13 +1021,13 @@ function updateChildren(div, url, onFailureMsg) {
  */
 function updateSlidingWindow(targetElementId) {
     var s_sign = document.getElementById(targetElementId + "_s").value;
-    var s_month = document.getElementById(targetElementId + "_s_month").value;
-    var s_day = document.getElementById(targetElementId + "_s_day").value;
-    var s_hour = document.getElementById(targetElementId + "_s_hour").value;
+    var s_month = getAndResetNegativeValue(targetElementId + "_s_month");
+    var s_day = getAndResetNegativeValue(targetElementId + "_s_day");
+    var s_hour = getAndResetNegativeValue(targetElementId + "_s_hour");
     var e_sign = document.getElementById(targetElementId + "_e").value;
-    var e_month = document.getElementById(targetElementId + "_e_month").value;
-    var e_day = document.getElementById(targetElementId + "_e_day").value;
-    var e_hour = document.getElementById(targetElementId + "_e_hour").value;
+    var e_month = getAndResetNegativeValue(targetElementId + "_e_month");
+    var e_day = getAndResetNegativeValue(targetElementId + "_e_day");
+    var e_hour = getAndResetNegativeValue(targetElementId + "_e_hour");
     
     document.getElementById(targetElementId).value = 
         s_sign + "P" + 
@@ -1039,6 +1039,18 @@ function updateSlidingWindow(targetElementId) {
         (e_month === "" ? "0" : e_month) + "M" +
         (e_day === "" ? "0" : e_day) + "D" +
         (e_hour === "" ? "0" : e_hour) + "H";
+}
+/**
+ * HTML number field even if set with min value = 0
+ * does not reset negative value.
+ */
+function getAndResetNegativeValue (field) {
+    var result = document.getElementById(field).value;
+    if (result < 0) {
+        document.getElementById(field).value = Math.abs(result);
+        result = 0;
+    }
+    return result
 }
 
 function indeterminatePositionCheck(checked, ref, indeterminatePositionId) {
