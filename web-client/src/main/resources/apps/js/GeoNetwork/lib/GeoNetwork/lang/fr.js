@@ -545,6 +545,7 @@ GeoNetwork.Lang.fr = {
     'to-iso19139-keyword-as-xlink': 'Mode XLink',
     'to-iso19139-keyword-with-anchor': 'Mode Anchor',
     'linklabel-application/vnd.ogc.wms_xml': 'Visualiser',
+    'linklabel-application/pdf': 'PDF',
     'linklabel-OGC:WMS': 'Visualiser',
     'linklabel-application/vnd.google-earth.kml+xml': 'KML',
     'linklabel-application/zip': 'Télécharger',
