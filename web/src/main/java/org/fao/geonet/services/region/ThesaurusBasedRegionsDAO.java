@@ -1,5 +1,6 @@
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +19,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
-
     
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
@@ -69,5 +69,11 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         
         return geometry;
     }
+
+	@Override
+	public Collection<String> getRegionCategoryIds(ServiceContext context) {
+		
+		return null;
+	}
 
 }

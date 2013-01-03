@@ -626,6 +626,10 @@
 			<class name=".services.region.List" />
 		</service>
 
+		<service name="xml.regions.category.list">
+			<class name=".services.region.ListCategories" />
+		</service>
+
 		<service name="region.getmap.png">
 			<class name=".services.region.GetMap" >
 				 <param name="format" value="png"/>
