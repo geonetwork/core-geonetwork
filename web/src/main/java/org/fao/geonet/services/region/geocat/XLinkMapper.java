@@ -24,7 +24,7 @@ public class XLinkMapper extends DatastoreMapper {
 	
 	@Override
 	public boolean accepts(String regionId) {
-		return regionId.startsWith(BASE_PREFIX+prefix);
+		return regionId.startsWith(prefix);
 	}
 
 	@Override
