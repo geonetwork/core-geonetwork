@@ -1031,7 +1031,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         var syntax = {
                 bold: "${before}'''${text}'''${after}",
                 italic: "${before}''${text}''${after}",
-                underline: '${before}<u>${text}</u>${after}',
                 ul: '${before}* ${text}${after}',
                 hyperlink: '${before}[${link} ${text}]${after}'
         };
@@ -1053,16 +1052,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 listeners: {
                     click: function(c, pressed){
                         this.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                    },
-                    scope: self
-                },
-                renderTo: ta.parent()
-            });
-            tb = new Ext.Button({
-                iconCls: 'txtUnderline',
-                listeners: {
-                    click: function(c, pressed){
-                        this.formatMarkupText (item, syntax.underline, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
                     },
                     scope: self
                 },
