@@ -79,6 +79,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     sortByCombo: undefined,
     
+    hitsPerPage: undefined,
+    
     mdSelectionInfo: 'md-selection-info',
     
     selectionActions: [],
@@ -120,6 +122,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     initComponent: function(){
         var cmp = [];
         cmp.push(this.createSelectionToolBar());
+        cmp.push(OpenLayers.i18n('hitsPerPage'), this.getHitsPerPage());
         
         cmp.push(['->']);
         
@@ -177,6 +180,30 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         });
         
         return this.sortByCombo;
+    },
+    getHitsPerPage: function(config){
+        
+        var hitsPerPage = config ||
+            [['10'], ['20'], ['50'], ['100']]
+        
+        this.hitsPerPage = new Ext.form.ComboBox({
+            id: 'E_hitsperpage',
+            name: 'E_hitsperpage',
+            mode: 'local',
+            width: 60,
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('hitsPerPage'),
+            value: hitsPerPage[0],
+            store: new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id'],
+                data: hitsPerPage
+            }),
+            valueField: 'id',
+            displayField: 'id'
+        });
+        
+        return this.hitsPerPage;
     },
     clickTemplateMenu: function(item, pressed){
         if (pressed) {

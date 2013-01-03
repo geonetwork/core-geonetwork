@@ -22,49 +22,34 @@
  */
 Ext.namespace('GeoNetwork.data');
 
-/** api: (define) 
- *  module = GeoNetwork.data
- *  class = MetadataResultsStore
+/**
+ * api: (define) module = GeoNetwork.data class = MetadataResultsStore
  */
-/** api: constructor 
- *  .. class:: GeoNetwork.data.MetadataResultsStore()
- *
- *   A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
- *   for GeoNetwork results.
- *
- *   Depends on ``OpenLayers.Format.GeoNetworkRecords``.
- *
- *   Fields available are:
- *
- *   * id : The metadata internal identifier
- *   * uuid : The metadata unique identifier
- *   * schema : The schema (eg. dublin-code, iso19139)
- *   * title
- *   * abstract
- *   * subject  ``Array()``
- *   * thumbnail
- *   * links    ``Array()``
- *   * contacts ``Array()``
- *   * uri  Not used
- *   * isharvested
- *   * source
- *   * rating
- *   * popularity
- *   * download
- *   * ownername
- *   * valid : The validation status
- *   * valid_details : The validation information for each level of validation
- *   * edit
- *   * bbox ``Array()``
- *
- *   FIXME : this is not a constructor, it's a function.
- *   Is that good enough ? Comment also applied to other Stores
- *
- *   TODO : handle multiple thumbnail ?
+/**
+ * api: constructor .. class:: GeoNetwork.data.MetadataResultsStore()
+ * 
+ * A pre-configured `Ext.data.JsonStore
+ * <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_ for GeoNetwork
+ * results.
+ * 
+ * Depends on ``OpenLayers.Format.GeoNetworkRecords``.
+ * 
+ * Fields available are:
+ *  * id : The metadata internal identifier * uuid : The metadata unique
+ * identifier * schema : The schema (eg. dublin-code, iso19139) * title *
+ * abstract * subject ``Array()`` * thumbnail * links ``Array()`` * contacts
+ * ``Array()`` * uri Not used * isharvested * source * rating * popularity *
+ * download * ownername * valid : The validation status * valid_details : The
+ * validation information for each level of validation * edit * bbox ``Array()``
+ * 
+ * FIXME : this is not a constructor, it's a function. Is that good enough ?
+ * Comment also applied to other Stores
+ * 
+ * TODO : handle multiple thumbnail ?
  */
-GeoNetwork.data.MetadataResultsStore = function(){
+GeoNetwork.data.MetadataResultsStore = function() {
 
-    function getTitle(v, record){
+    function getTitle(v, record) {
         if (record.title && record.title[0]) {
             return record.title[0].value;
         } else if (record.defaultTitle && record.defaultTitle[0]) {
@@ -73,26 +58,39 @@ GeoNetwork.data.MetadataResultsStore = function(){
             return '';
         }
     }
-    function getValidationInfo(v, record){
+    function getGroupLogoUuid(v, record) {
+        
+        console.log(record.geonet_info.source[0]);
+        if (record.groupLogoUuid && record.groupLogoUuid[0]) {
+            return record.groupLogoUuid[0].value + ".png";
+        } else if (record.geonet_info && record.geonet_info.source
+                && record.geonet_info.source[0]) {
+            return record.geonet_info.source[0].value + ".gif";
+        } else {
+            return '';
+        }
+    }
+
+    function getValidationInfo(v, record) {
         var i, validity = [], validInfo;
         if (record.geonet_info && record.geonet_info.valid_details) {
             validInfo = record.geonet_info.valid_details;
             for (i = 0; i < validInfo.length; i++) {
                 validity.push({
-                            valid: validInfo.status[i].value,
-                            type: validInfo.type[i].value,
-                            ratio: validInfo.ratio[i].value
-                        });
+                    valid : validInfo.status[i].value,
+                    type : validInfo.type[i].value,
+                    ratio : validInfo.ratio[i].value
+                });
             }
         }
         return validity;
     }
-    
-    function getThumbnails(v, record){
+
+    function getThumbnails(v, record) {
         var i;
         var uri = '';
         var currentUri;
-        
+
         if (record.image) {
             for (i = 0; i < record.image.length; i++) {
                 currentUri = record.image[i].value;
@@ -104,244 +102,248 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }
         return uri;
     }
-    
-    
-    function getContact(v, record){
+
+    function getContact(v, record) {
         var i, contact = [], el, name;
-        
+
         if (record.responsibleParty) {
             for (i = 0; i < record.responsibleParty.length; i++) {
                 el = record.responsibleParty[i];
-                
-                name = (record.responsibleParty.organisationName && record.responsibleParty.organisationName[i] ? 
-                            record.responsibleParty.organisationName[i].value : '');
+
+                name = (record.responsibleParty.organisationName
+                        && record.responsibleParty.organisationName[i] ? record.responsibleParty.organisationName[i].value
+                        : '');
                 contact.push({
-                            applies: el.appliesTo,
-                            logo: el.logo,
-                            role: el.role,
-                            name: name
-                        });
+                    applies : el.appliesTo,
+                    logo : el.logo,
+                    role : el.role,
+                    name : name
+                });
             }
         }
         return contact;
     }
-    
-    function getLinks(v, record){
+
+    function getLinks(v, record) {
         if (record.link) {
             return record.link;
         }
         return [];
     }
-    
+
     /**
-     * Some convert function to face empty geonet_info parameters
-     * BUG in GeoNetwork when retrieving iso19115 record through CSW
+     * Some convert function to face empty geonet_info parameters BUG in
+     * GeoNetwork when retrieving iso19115 record through CSW
      */
-    function getSource(v, record){
+    function getSource(v, record) {
         if (record.geonet_info && record.geonet_info.source) {
             return record.geonet_info.source[0].value;
         } else {
             return '';
         }
     }
-    
-    function getPopularity(v, record){
+
+    function getPopularity(v, record) {
         if (record.geonet_info && record.geonet_info.popularity) {
             return record.geonet_info.popularity[0].value;
         } else {
             return '';
         }
     }
-    
-    function getRating(v, record){
+
+    function getRating(v, record) {
         if (record.geonet_info && record.geonet_info.rating) {
             return record.geonet_info.rating[0].value;
         } else {
             return '';
         }
     }
-    
-    function getDownload(v, record){
+
+    function getDownload(v, record) {
         if (record.geonet_info && record.geonet_info.download) {
             return record.geonet_info.download[0].value;
         } else {
             return '';
         }
     }
-    
-    function getOwnerName(v, record){
+
+    function getOwnerName(v, record) {
         if (record.geonet_info && record.geonet_info.ownername) {
             return record.geonet_info.ownername[0].value;
         } else {
             return '';
         }
     }
-    
-    function getIsHarvested(v, record){
+
+    function getIsHarvested(v, record) {
         if (record.geonet_info && record.geonet_info.isHarvested) {
             return record.geonet_info.isHarvested[0].value;
         } else {
             return '';
         }
     }
-    function getHarvesterType(v, record){
-        if (record.geonet_info && record.geonet_info.harvestInfo && record.geonet_info.harvestInfo.type) {
+    function getHarvesterType(v, record) {
+        if (record.geonet_info && record.geonet_info.harvestInfo
+                && record.geonet_info.harvestInfo.type) {
             return record.geonet_info.harvestInfo.type[0].value;
         } else {
             return '';
         }
     }
-    function getCategory(v, record){
+    function getCategory(v, record) {
         if (record.geonet_info && record.geonet_info.category) {
             return record.geonet_info.category;
         } else {
             return '';
         }
     }
-    function getChangeDate(v, record){
+    function getChangeDate(v, record) {
         if (record.geonet_info && record.geonet_info.changeDate) {
             return record.geonet_info.changeDate[0].value;
         } else {
             return '';
         }
     }
-    function getCreateDate(v, record){
+    function getCreateDate(v, record) {
         if (record.geonet_info && record.geonet_info.createDate) {
             return record.geonet_info.createDate[0].value;
         } else {
             return '';
         }
     }
-    function getSelected(v, record){
+    function getSelected(v, record) {
         if (record.geonet_info && record.geonet_info.selected) {
             return record.geonet_info.selected[0].value;
         } else {
             return '';
         }
     }
-    function getAbstract(v, record){
+    function getAbstract(v, record) {
         if (record['abstract']) {
             return record['abstract'][0].value;
         } else {
             return '';
         }
     }
-    function getType(v, record){
+    function getType(v, record) {
         if (record['type']) {
             return record['type'][0].value;
         } else {
             return '';
         }
     }
-    function getEdit(v, record){
+    function getEdit(v, record) {
         if (record.geonet_info && record.geonet_info.edit) {
             return record.geonet_info.edit[0].value;
         } else {
             return 'false';
         }
     }
-    function getDisplayOrder(v, record){
+    function getDisplayOrder(v, record) {
         if (record.geonet_info && record.geonet_info.displayOrder) {
             return record.geonet_info.displayOrder[0].value;
         } else {
             return 0;
         }
     }
-    
+
     return new Ext.data.JsonStore({
-        totalProperty: 'summary.count',
-        root: 'records',
-        fast: 'false',
-        service: 'xml.search',
-        fields: [{
-            name: 'title',
-            convert: getTitle
+        totalProperty : 'summary.count',
+        root : 'records',
+        fast : 'false',
+        service : 'xml.search',
+        fields : [ {
+            name : 'title',
+            convert : getTitle
         }, {
-            name: 'abstract',
-            convert: getAbstract
+            name : 'abstract',
+            convert : getAbstract
         }, {
-            name: 'type',
-            convert: getType
+            name : 'type',
+            convert : getType
         }, {
-            name: 'subject',
-            mapping: 'keyword',
-            defaultValue: ''
+            name : 'groupLogoUuid',
+            convert : getGroupLogoUuid
         }, {
-            name: 'uuid',
-            mapping: 'geonet_info.uuid[0].value',
-            defaultValue: ''
+            name : 'subject',
+            mapping : 'keyword',
+            defaultValue : ''
         }, {
-            name: 'id',
-            mapping: 'geonet_info.id[0].value',
-            defaultValue: ''
+            name : 'uuid',
+            mapping : 'geonet_info.uuid[0].value',
+            defaultValue : ''
         }, {
-            name: 'schema',
-            mapping: 'geonet_info.schema[0].value',
-            defaultValue: ''
+            name : 'id',
+            mapping : 'geonet_info.id[0].value',
+            defaultValue : ''
         }, {
-            name: 'contact',
-            convert: getContact
+            name : 'schema',
+            mapping : 'geonet_info.schema[0].value',
+            defaultValue : ''
         }, {
-            name: 'thumbnail',
-            convert: getThumbnails
+            name : 'contact',
+            convert : getContact
         }, {
-            name: 'links',
-            convert: getLinks
+            name : 'thumbnail',
+            convert : getThumbnails
         }, {
-            name: 'uri',
-            mapping: 'uri',
-            defaultValue: ''
+            name : 'links',
+            convert : getLinks
         }, {
-            name: 'isharvested',
-            convert: getIsHarvested
+            name : 'uri',
+            mapping : 'uri',
+            defaultValue : ''
         }, {
-            name: 'harvestertype',
-            convert: getHarvesterType
+            name : 'isharvested',
+            convert : getIsHarvested
         }, {
-            name: 'createdate',
-            convert: getCreateDate
+            name : 'harvestertype',
+            convert : getHarvesterType
         }, {
-            name: 'changedate',
-            convert: getChangeDate
+            name : 'createdate',
+            convert : getCreateDate
         }, {
-            name: 'selected',
-            convert: getSelected
+            name : 'changedate',
+            convert : getChangeDate
         }, {
-            name: 'source',
-            convert: getSource
+            name : 'selected',
+            convert : getSelected
         }, {
-            name: 'category',
-            convert: getCategory
+            name : 'source',
+            convert : getSource
         }, {
-            name: 'rating',
-            convert: getRating
+            name : 'category',
+            convert : getCategory
         }, {
-            name: 'popularity',
-            convert: getPopularity
+            name : 'rating',
+            convert : getRating
         }, {
-            name: 'download',
-            convert: getDownload
+            name : 'popularity',
+            convert : getPopularity
         }, {
-            name: 'ownername',
-            convert: getOwnerName
+            name : 'download',
+            convert : getDownload
         }, {
-            name: 'edit',
-            convert: getEdit
+            name : 'ownername',
+            convert : getOwnerName
         }, {
-            name: 'bbox',
-            mapping: 'BoundingBox',
-            defaultValue: ''
+            name : 'edit',
+            convert : getEdit
         }, {
-            name: 'displayOrder',
-            convert: getDisplayOrder,
-            sortType: 'asInt'
+            name : 'bbox',
+            mapping : 'BoundingBox',
+            defaultValue : ''
         }, {
-            name: 'valid',
-            mapping: 'geonet_info.valid[0].value',
-            defaultValue: '-1'
+            name : 'displayOrder',
+            convert : getDisplayOrder,
+            sortType : 'asInt'
         }, {
-            name: 'valid_details',
-            convert: getValidationInfo
-        }]
+            name : 'valid',
+            mapping : 'geonet_info.valid[0].value',
+            defaultValue : '-1'
+        }, {
+            name : 'valid_details',
+            convert : getValidationInfo
+        } ]
     });
 };

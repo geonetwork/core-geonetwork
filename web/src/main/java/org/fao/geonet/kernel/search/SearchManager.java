@@ -1701,7 +1701,9 @@ public class SearchManager {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
                 if(geom.size() == 1) {
-                    return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
+                    Geometry g =  geom.iterator().next();
+                    SpatialFilter sf = _types.get(relation.toLowerCase()).newInstance(query, numHits, g, new SpatialIndexAccessor());
+                    return sf;
                 } else {
                     Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
                     Envelope bounds = null;

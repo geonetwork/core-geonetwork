@@ -66,7 +66,7 @@ GeoNetwork.searchApp = function() {
                     {
                         height : 60,
                         region : 'south',
-                        html : '<div style="display:block;text-align:center;">'
+                        html : '<div style="padding:2;display:block;text-align:center;background-color: #DFE8F6;">'
                                 + '<input type="button" onclick="app.searchApp.fireSearch()"'
                                 + ' id="search-submit" class="form-submit" value="'
                                 + OpenLayers.i18n('Search')
@@ -368,7 +368,7 @@ GeoNetwork.searchApp = function() {
                 var i = g && g.get("name") == "LI";
                 this.getKantoneCombo().combo.setDisabled(i);
                 this.getGemeindenCombo().combo.setDisabled(i);
-                highlightGeographicFilter()
+                app.searchApp.highlightGeographicFilter()
             }, this);
             d
                     .push({
@@ -1161,11 +1161,11 @@ GeoNetwork.searchApp = function() {
                 id : 0,
                 fields : [ 'id', 'name' ],
                 data : [
-                        [ OpenLayers.Filter.Spatial.WITHIN,
+                        [ "within",
                                 OpenLayers.i18n('withinGeo') ],
-                        [ OpenLayers.Filter.Spatial.INTERSECTS,
+                        [ "intersects",
                                 OpenLayers.i18n('intersectGeo') ],
-                        [ OpenLayers.Filter.Spatial.CONTAINS,
+                        [ "crosses",
                                 OpenLayers.i18n('containsGeo') ] ]
             });
         },
@@ -1195,7 +1195,7 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
-                name : 'kantone',
+                name : 'N_kantone',
                 triggerAction : 'all',
                 minChars : 1,
                 anchor : '-10'
@@ -1501,14 +1501,16 @@ GeoNetwork.searchApp = function() {
                 Ext
                         .getCmp('nextBt')
                         .setDisabled(
-                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord +parseInt(Ext.getCmp(
+                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('nextBt_up')) {
                 Ext
                         .getCmp('nextBt_up')
                         .setDisabled(
-                                catalogue.startRecord + 10 > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord + parseInt(Ext.getCmp(
+                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('E_sortBy')) {

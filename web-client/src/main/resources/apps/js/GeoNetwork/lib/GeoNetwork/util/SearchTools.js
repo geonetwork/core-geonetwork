@@ -279,7 +279,8 @@ GeoNetwork.util.SearchTools = {
      * returned.
      */
     addFiltersFromPropertyMap : function(values, filters, startRecord) {
-        var defaultSimilarity = ".8", key, similarity = values.E_similarity, hits = values.E_hitsperpage;
+        var defaultSimilarity = ".8", key, similarity = values.E_similarity;
+        var hits = Ext.get("E_hitsperpage").getValue();
 
         // Add the similarity if defined
         if (similarity !== undefined) {
@@ -294,6 +295,12 @@ GeoNetwork.util.SearchTools = {
         var to = parseInt(startRecord, 10) + parseInt(hits, 10) - 1;
         GeoNetwork.util.SearchTools.addFilter(filters, 'E_from', startRecord);
         GeoNetwork.util.SearchTools.addFilter(filters, 'E_to', to);
+
+        var sortBy = Ext.getCmp("sortByToolBar").getValue().split("#");
+
+        GeoNetwork.util.SearchTools.addFilter(filters, 'E_sortBy', sortBy[0]);
+        GeoNetwork.util.SearchTools
+                .addFilter(filters, 'E_sortOrder', sortBy[1]);
 
         // Add all other criteria
         for (key in values) {
@@ -366,7 +373,7 @@ GeoNetwork.util.SearchTools = {
                 });
                 filters.push("relation"
                         + "="
-                        + encodeURIComponent(Ext.get("boundingRelation")
+                        + encodeURIComponent(Ext.getCmp("boundingRelation")
                                 .getValue()));
             }
         } else if (type == 'V') { // field name specified in the value,
