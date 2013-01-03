@@ -148,6 +148,7 @@
 				<Field name="credit" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 			
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="*/gmd:EX_Extent">
@@ -280,6 +281,44 @@
 				<xsl:for-each select="//gmd:useLimitation/gco:CharacterString">
 					<Field name="conditionApplyingToAccessAndUse" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
+			</xsl:for-each>
+			
+			
+			<!-- Index aggregation info and provides option to query by type of association
+				and type of initiative
+			
+			Aggregation info is indexed by adding the following fields to the index:
+			 * agg_use: boolean
+			 * agg_with_association: {$associationType}
+			 * agg_{$associationType}: {$code}
+			 * agg_{$associationType}_with_initiative: {$initiativeType}
+			 * agg_{$associationType}_{$initiativeType}: {$code}
+			 
+			Sample queries:
+			 * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
+			 * Search for records having a crossReference with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference of type "study" with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference of type "study": 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
+			 * Search for records having a "crossReference" : 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
+			-->
+			<xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
+				<xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|
+												gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+				<xsl:if test="$code != ''">
+					<xsl:variable name="associationType" select="gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
+					<xsl:variable name="initiativeType" select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
+					<Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
+					<Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
+					<Field name="agg_{$associationType}" string="{$code}" store="false" index="true"/>
+					<Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
+					<Field name="agg_use" string="true" store="false" index="true"/>
+				</xsl:if>
 			</xsl:for-each>
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
