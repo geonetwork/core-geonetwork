@@ -831,14 +831,14 @@ public class LuceneSearcher extends MetaSearcher {
 	private Collection<Geometry> getGeometry(ServiceContext context, Element request) throws Exception {
         String geomWKT = Util.getParam(request, Geonet.SearchResult.GEOMETRY, null);
         final String prefix = "region:";
-        if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase("region:")) {
+        if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
             boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION,null));
             RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
             for (String regionId : regionIds) {
-                Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
+                Geometry geom = dao.getGeom(context, regionId.split(":",2)[1], false, Region.WGS84);
                 if(isWithinFilter) {
                     geoms.add(geom);
                 }

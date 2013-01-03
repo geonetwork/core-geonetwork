@@ -565,7 +565,7 @@ public class CatalogSearcher {
             String[] regionIds = attribute.getValue().split("\\s*,\\s*");
 
             for (String regionId : regionIds) {
-                Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
+                Geometry geometry = regionDAO.getGeom(context, regionId.split(":",2)[1], false, Region.WGS84);
                 geoms.add(geometry);
                 if (unionedGeom == null) {
                     unionedGeom = geometry;
