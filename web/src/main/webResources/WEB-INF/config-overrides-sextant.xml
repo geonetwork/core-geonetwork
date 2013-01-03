@@ -79,24 +79,44 @@
   <!-- Add custom CSW service -->
   <file name=".*/WEB-INF/config-csw-servers.xml">
     <addXML xpath="services">
-      <service name="csw-inspire">
+      <service name="csw-Netmar">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+inspirerelated:on"/>
+          <param name="filter" value="+_groupPublished:Netmar"/>
         </class>
       </service>
-      <service name="csw-HUMBOLDT">
+      <service name="csw-Netmar_Cedre">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:HUMBOLDT"/>
+          <param name="filter" value="+_groupPublished:Netmar_Cedre"/>
         </class>
       </service>
-      <service name="csw-NATURA2000">
+      <service name="csw-GEOCATALOGUE">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:NATURA2000"/>
+          <param name="filter" value="+_groupPublished:GEOCATALOGUE"/>
         </class>
       </service>
-      <service name="csw-GRANULATS">
+      <service name="csw-EMODNET_Chemistry">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:GRANULATS"/>
+          <param name="filter" value="+_groupPublished:EMODNET_Chemistry"/>
+        </class>
+      </service>
+      <service name="csw-EMODNET_HYDROGRAPHY_CPRD">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:EMODNET_HYDROGRAPHY_CPRD"/>
+        </class>
+      </service>
+      <service name="csw-EMODNET_HYDROGRAPHY_PRODUCT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:EMODNET_HYDROGRAPHY_PRODUCT"/>
+        </class>
+      </service>
+      <service name="csw-GEO_SEAS_CPRD">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:GEO_SEAS_CPRD"/>
+        </class>
+      </service>
+      <service name="csw-GEO_SEAS_PRODUCT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:GEO_SEAS_PRODUCT"/>
         </class>
       </service>
       <service name="csw-SINPMER">
@@ -104,39 +124,19 @@
           <param name="filter" value="+_groupPublished:SINPMER"/>
         </class>
       </service>
-      <service name="csw-PHOTOS_ANCIENNES">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
-        </class>
-      </service>
-      <service name="csw-REBENT">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:REBENT"/>
-        </class>
-      </service>
-      <service name="csw-CATALOGUE">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:CATALOGUE"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-CORE-PRODUCTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:MYOCEAN-CORE-PRODUCTS"/>
-        </class>
-      </service>
     </addXML>
   </file>
   <file name=".*/WEB-INF/user-profiles.xml">
     <addXML xpath="profile[@name='Guest']">
-      <allow service="csw-inspire"/>
-      <allow service="csw-HUMBOLDT"/>
-      <allow service="csw-NATURA2000"/>
-      <allow service="csw-GRANULATS"/>
+      <allow service="csw-Netmar"/>
+      <allow service="csw-Netmar_Cedre"/>
+      <allow service="csw-GEOCATALOGUE"/>
+      <allow service="csw-EMODNET_Chemistry"/>
+      <allow service="csw-EMODNET_HYDROGRAPHY_CPRD"/>
+      <allow service="csw-EMODNET_HYDROGRAPHY_PRODUCT"/>
+      <allow service="csw-GEO_SEAS_CPRD"/>
+      <allow service="csw-GEO_SEAS_PRODUCT"/>
       <allow service="csw-SINPMER"/>
-      <allow service="csw-PHOTOS_ANCIENNES"/>
-      <allow service="csw-REBENT"/>
-      <allow service="csw-CATALOGUE"/>
-      <allow service="csw-MYOCEAN-CORE-PRODUCTS"/>
     </addXML>
   </file>
 
