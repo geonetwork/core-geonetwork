@@ -60,14 +60,22 @@ public class CharacterStringToLocalisedTest {
 				"<gmd:locale> <gmd:PT_Locale id=\"FR\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"fra\">French</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
 				"<gmd:locale> <gmd:PT_Locale id=\"IT\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"ita\">Italian</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
 				"<gmd:locale> <gmd:PT_Locale id=\"EN\"> <gmd:languageCode> <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"eng\">English</gmd:LanguageCode> </gmd:languageCode> <gmd:characterEncoding> <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode> </gmd:characterEncoding> </gmd:PT_Locale> </gmd:locale>" +
+				"<che:legislationInformation><che:CHE_MD_Legislation gco:isoType=\"gmd:MD_Legislation\">"+
+				"<che:language><gmd:LanguageCode codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode\" codeListValue=\"deu\" /></che:language>"+
+				"<che:language><gmd:LanguageCode codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode\" codeListValue=\"fra\" /></che:language>"+
+				"</che:CHE_MD_Legislation></che:legislationInformation>"+
 				"</che:CHE_MD_Metadata>", false);
 		Element transformed = Xml.transform(testData, pathToXsl);
 		findAndAssert(transformed, new Count(1, new Finder("language/CharacterString", new EqualText("ger"))));
 		findAndAssert(transformed, new Count(4, new Finder("locale/PT_Locale/languageCode")));
-		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "ger")));
-		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "fre")));
-		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "ita")));
-		findAndAssert(transformed, new Count(1, new Attribute("LanguageCode","codeListValue", "eng")));
+		findAndAssert(transformed, new Count(1, new Finder("locale/PT_Locale/languageCode/LanguageCode", new EqualAttribute("codeListValue", "ger"))));
+		findAndAssert(transformed, new Count(1, new Finder("locale/PT_Locale/languageCode/LanguageCode", new EqualAttribute("codeListValue", "fre"))));
+		findAndAssert(transformed, new Count(1, new Finder("locale/PT_Locale/languageCode/LanguageCode", new EqualAttribute("codeListValue", "ita"))));
+		findAndAssert(transformed, new Count(1, new Finder("locale/PT_Locale/languageCode/LanguageCode", new EqualAttribute("codeListValue", "eng"))));
+		
+		findAndAssert(transformed, new Count(1, new Finder("legislationInformation/CHE_MD_Legislation/language/LanguageCode", new EqualAttribute("codeListValue", "ger"))));
+		findAndAssert(transformed, new Count(1, new Finder("legislationInformation/CHE_MD_Legislation/language/LanguageCode", new EqualAttribute("codeListValue", "fre"))));
+		
 	}
     private void findAndAssert(Element transformed, Requirement finder) {
 		assertTrue(finder+" did not find a match in: \n"+Xml.getString(transformed), finder.eval(transformed));
