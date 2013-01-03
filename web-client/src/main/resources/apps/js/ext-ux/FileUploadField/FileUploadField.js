@@ -88,6 +88,10 @@ Ext.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
             this.setValue(v);
             this.fireEvent('fileselected', this, v);
         }, this);
+        
+        this.el.on('click', function() {
+            this.fileInput.dom.click();
+        }, this);
     },
     
     // private
