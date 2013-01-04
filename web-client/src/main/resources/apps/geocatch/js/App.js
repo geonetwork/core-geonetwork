@@ -256,10 +256,6 @@ GeoNetwork.app = function() {
             this.viewport = new Ext.Viewport({
                 layout : 'border',
                 id : 'vp',
-                listeners : {
-                    render : function() {
-                    }
-                },
                 items : [// Header
                 {
                     region : 'north',
@@ -363,13 +359,7 @@ Ext.onReady(function() {
 
     // Register events where the search should be triggered
     var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterLogin' ];
-    Ext.each(events, function(e) {
-        catalogue.on(e, function() {
-            // var e = Ext.getCmp('advanced-search-options-content-form');
-            // e.getEl().fadeIn();
-            // e.fireEvent('search');
-        });
-    });
 
     app.viewport.doLayout();
+
 });

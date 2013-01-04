@@ -698,21 +698,18 @@ GeoNetwork.searchApp = function() {
                     case "bbox":
                         d.setVisible(false);
                         e.setVisible(false);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.register("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "gg25":
                         d.setVisible(true);
                         e.setVisible(false);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "polygon":
                         d.setVisible(false);
                         e.setVisible(true);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         if (geocat.selectionFeature) {
