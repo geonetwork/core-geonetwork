@@ -52,6 +52,7 @@ public class KeywordSearchParamsBuilder {
         if(keyword != null) {
             KeywordSearchType searchType = KeywordSearchType.parseString(Util.getParam(params, XmlParams.pTypeSearch, KeywordSearchType.MATCH.name()));
             parsedParams.keyword(keyword, searchType, true);
+            parsedParams.uri(keyword);
         }
         
         String uri = Util.getParam(params, XmlParams.pUri, null);
