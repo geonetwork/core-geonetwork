@@ -59,10 +59,10 @@ GeoNetwork.loginApp = function() {
 
                 // Show some advanced search options
                 show(Ext.getCmp("formatCombo").el.parent().parent().parent()
-                        .parent().parent().parent());
-                show(Ext.getCmp("basicgeodataid").el.parent().parent());
-                show(Ext.getCmp("isTemplate").el.parent().parent().parent());
-                show(Ext.getCmp("isValid").el.parent().parent().parent());
+                        .parent().parent().parent(), true);
+                show(Ext.getCmp("basicgeodataid").el.parent().parent(), true);
+                show(Ext.getCmp("isTemplate").el.parent().parent().parent(), true);
+                show(Ext.getCmp("isValid").el.parent().parent().parent(), true);
             });
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);

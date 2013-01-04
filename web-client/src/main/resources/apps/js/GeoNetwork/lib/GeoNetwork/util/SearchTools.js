@@ -307,7 +307,8 @@ GeoNetwork.util.SearchTools = {
             if (values.hasOwnProperty(key)) {
                 var value = values[key];
                 if (value !== "" && key !== 'E_similarity') {
-                    GeoNetwork.util.SearchTools.addFilter(filters, key, value);
+                    GeoNetwork.util.SearchTools.addFilter(filters, key, value,
+                            values);
                 }
             }
         }
@@ -317,18 +318,18 @@ GeoNetwork.util.SearchTools = {
      * private: method[addFilter]
      * 
      */
-    addFilter : function(filters, key, value) {
+    addFilter : function(filters, key, value, values) {
         var field = key.match("^(\\[?)([^_]+)_(.*)$"), i, or = [];
         if (field) {
             var list = field[3].split('|');
             for (i = 0; i < list.length; ++i) {
                 GeoNetwork.util.SearchTools.addFilterImpl(filters, field[2],
-                        list[i], value);
+                        list[i], value, undefined, values);
             }
         }
     },
 
-    addFilterImpl : function(filters, type, name, value, defaultSimilarity) {
+    addFilterImpl : function(filters, type, name, value, defaultSimilarity, values) {
         if (type == 'S') { // starts with
             filters.push(name + "=" + encodeURIComponent(value + "*"));
         } else if (type == 'C') { // contains
@@ -362,7 +363,39 @@ GeoNetwork.util.SearchTools = {
         } else if (type == 'N') { // Numeric
             filters.push(name + "=" + parseInt(value));
         } else if (type == 'G') { // Geographic
-            if (geocat.vectorLayer && geocat.vectorLayer.features[0]) {
+            if (value === "gg25" || value[0] ==="gg25") {
+                var geom = undefined;
+                if (values.gemeinden) {
+                    Ext.each(values.gemeinden.split(","), function(k) {
+                        if (!geom) {
+                            geom = "region:gemeinden:" + k;
+                        } else {
+                            geom = geom + ",gemeinden:" + k;
+                        }
+                    });
+                } else if (values.kantone) {
+                    Ext.each(values.kantone.split(","), function(k) {
+                        if (!geom) {
+                            geom = "region:kantone:" + k;
+                        } else {
+                            geom = geom + ",kantone:" + k;
+                        }
+                    });
+                } else if (values.country) {
+                    Ext.each(values.country.split(","), function(k) {
+                        if (!geom) {
+                            geom = "region:country:" + k;
+                        } else {
+                            geom = geom + ",country:" + k;
+                        }
+                    });
+                }
+
+                if (geom) {
+                    filters.push("geometry=" + geom);
+                }
+            } else if (value !== "none" && geocat.vectorLayer
+                    && geocat.vectorLayer.features[0]) {
                 var geometry = geocat.vectorLayer.features[0].geometry;
                 var proj = new OpenLayers.Projection("EPSG:4326");
                 Ext.each(geocat.vectorLayer.features, function(feature) {
@@ -371,11 +404,11 @@ GeoNetwork.util.SearchTools = {
                     filters.push("geometry" + "="
                             + encodeURIComponent(geometry.toString()));
                 });
-                filters.push("relation"
-                        + "="
-                        + encodeURIComponent(Ext.getCmp("boundingRelation")
-                                .getValue()));
             }
+            filters.push("relation"
+                    + "="
+                    + encodeURIComponent(Ext.getCmp("boundingRelation")
+                            .getValue()));
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
             var subField = value.match("^([^/]+)/(.*)$");

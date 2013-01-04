@@ -130,7 +130,13 @@ GeoNetwork.searchApp = function() {
 
             var fieldKantone = this.getKantoneCombo().combo;
 
-            formItems.push([ fieldAny, fieldType, fieldKantone ]);
+            var hidden = new Ext.form.TextField({
+                name : 'G_hidden',
+                hidden : true,
+                value : "gg25"
+            });
+
+            formItems.push([ fieldAny, fieldType, fieldKantone, hidden ]);
 
             return new GeoNetwork.SearchFormPanel({
                 id : 'simple-search-options-content-form',
@@ -282,8 +288,7 @@ GeoNetwork.searchApp = function() {
             f.push({
                 xtype : "hidden",
                 name : "E_similarity",
-            // FIXME
-            // value : searchTools.DEFAULT_SIMILARITY
+                value : GeoNetwork.util.SearchTools.DEFAULT_SIMILARITY
             });
             var d = [ {
                 xtype : "fieldset",
@@ -347,6 +352,7 @@ GeoNetwork.searchApp = function() {
             });
             var b = new Ext.form.ComboBox({
                 fieldLabel : OpenLayers.i18n("country"),
+                id : "country",
                 name : "country",
                 store : this.createCountryStore(),
                 mode : "local",
@@ -577,7 +583,7 @@ GeoNetwork.searchApp = function() {
                             catalogue.startRecord, true);
                 },
                 listeners : {
-                    
+
                     onreset : function() {
                         if (Ext.getCmp('facets-panel')) {
                             Ext.getCmp('facets-panel').reset();
@@ -690,21 +696,18 @@ GeoNetwork.searchApp = function() {
                     case "bbox":
                         d.setVisible(false);
                         e.setVisible(false);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.register("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "gg25":
                         d.setVisible(true);
                         e.setVisible(false);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         break;
                     case "polygon":
                         d.setVisible(false);
                         e.setVisible(true);
-                        // FIXME there is no geocat.map
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
                         if (geocat.selectionFeature) {
@@ -1011,7 +1014,29 @@ GeoNetwork.searchApp = function() {
         },
 
         drawWherePolygon : function() {
-            geocat.drawFeature.activate();
+
+            if (!this.drawControl) {
+                this.drawControl = new OpenLayers.Control.DrawFeature(
+                        geocat.vectorLayer, OpenLayers.Handler.Polygon);
+
+                var featureAdded = function(f) {
+                    app.searchApp.drawControl.deactivate();
+
+                    var span = Ext.get("drawPolygonSpan");
+                    Ext.DomHelper.overwrite(span, '<span id="drawPolygonSpan">'
+                            + '<a href="' + 'javascript:app.searchApp.'
+                            + 'updateWhereForm(\'polygon\')(true, true)">'
+                            + OpenLayers.i18n('deletePolygonHelp')
+                            + '</a></span>');
+
+                };
+                this.drawControl.events.on({
+                    'featureadded' : featureAdded
+                });
+                app.mapApp.getMap().addControl(this.drawControl);
+            }
+            this.drawControl.activate();
+            geocat.vectorLayer.removeAllFeatures();
             if (geocat.selectionFeature) {
                 geocat.vectorLayer.destroyFeatures(geocat.selectionFeature);
                 geocat.selectionFeature = null;
@@ -1103,12 +1128,6 @@ GeoNetwork.searchApp = function() {
             } else if (mode == 'polygon') {
                 selLayer.setVisibility(false);
 
-                if (!this.drawControl) {
-                    this.drawControl = new OpenLayers.Control.DrawFeature(
-                            geocat.vectorLayer, OpenLayers.Handler.Polygon);
-                    app.mapApp.getMap().addControl(this.drawControl);
-                }
-
                 this.drawControl.activate();
 
             } else {
@@ -1184,7 +1203,6 @@ GeoNetwork.searchApp = function() {
          */
         getKantoneCombo : function(createNew) {
 
-            // FIXME parameter is not being used
             var id = 'kantoneComboBox';
 
             if (Ext.getCmp(id)) {
@@ -1199,7 +1217,7 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
-                name : 'N_kantone',
+                name : 'kantone',
                 triggerAction : 'all',
                 minChars : 1,
                 anchor : '-10'
@@ -1315,22 +1333,51 @@ GeoNetwork.searchApp = function() {
 
             var refreshTheContour = function(combo) {
                 var records = combo.usedRecords.items;
+                geocat.vectorLayer.removeAllFeatures();
 
                 if (records.length == 0)
                     return;
 
                 var format = new OpenLayers.Format.WKT();
                 var bbox = null;
-                Ext.each(records, function(record) {
-                    if (record.get("BOUNDING")) {
-                        var feature = format.read(record.get("BOUNDING"));
-                        if (bbox) {
-                            bbox.extend(feature.geometry.getBounds());
-                        } else {
-                            bbox = feature.geometry.getBounds();
-                        }
-                    }
-                });
+
+                Ext.each(records,
+                        function(record) {
+
+                            var id = record.get("KANTONSNR");
+
+                            if (record.id.indexOf("gemeinden") === 0) {
+                                id = record.get("OBJECTVAL");
+                            }
+
+                            Ext.Ajax
+                                    .request({
+                                        url : "region.geom.wkt?id="
+                                                + opts.name
+                                                + ":"
+                                                + id
+                                                + "&srs="
+                                                + app.mapApp.getMap()
+                                                        .getProjection(),
+                                        success : function(r) {
+                                            feature = format
+                                                    .read(r.responseText);
+                                            geocat.vectorLayer
+                                                    .addFeatures([ feature ]);
+                                        }
+                                    });
+
+                            if (record.get("BOUNDING")) {
+                                var feature = format.read(record
+                                        .get("BOUNDING"));
+                                if (bbox) {
+                                    bbox.extend(feature.geometry.getBounds());
+                                } else {
+                                    bbox = feature.geometry.getBounds();
+                                }
+                            }
+
+                        });
                 try {
                     if (bbox)
                         app.mapApp.getMap().zoomToExtent(bbox);
@@ -1338,6 +1385,7 @@ GeoNetwork.searchApp = function() {
                 }
             };
             search.on('change', refreshTheContour);
+            search.on('removeitem', refreshTheContour);
 
             return {
                 combo : search,
