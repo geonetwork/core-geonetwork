@@ -838,7 +838,7 @@ public class LuceneSearcher extends MetaSearcher {
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
             for (String regionId : regionIds) {
-                Geometry geom = dao.getGeom(context, regionId.split(":",2)[1], false, Region.WGS84);
+                Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
                 if(isWithinFilter) {
                     geoms.add(geom);
                 }
