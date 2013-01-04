@@ -352,12 +352,14 @@ public class KeywordBean {
      * @return
      */
 	public String getNameSpaceCode() {
-	      if(code == null) {
-	            return "#";
-	        } else if (code.contains("#"))
-			return code.split("#")[0] + "#";
-		else
+		if (code == null) {
 			return "#";
+		} else if (code.contains("#")) {
+			String[] parts = code.split("#",2);
+			return parts[0] + "#";
+		} else {
+			return "#";
+		}
 	}
 
 	public KeywordBean setUriCode(String code) {
