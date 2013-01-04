@@ -63,11 +63,11 @@ default:
 var geocat = {
     defaultStyleColor : "#FFFFFF",
     defaultStyle : {
-        fillColor : "#0000FF",
-        fillOpacity : 0,
-        strokeColor : "#000000",
+        fillColor : "#FFFF00",
+        fillOpacity : 0.1,
+        strokeColor : "#FFFF00",
         strokeOpacity : 1,
-        strokeWidth : 1,
+        strokeWidth : 2,
         pointRadius : 4,
         pointerEvents : "visiblePainted"
     },

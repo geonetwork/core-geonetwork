@@ -1341,28 +1341,43 @@ GeoNetwork.searchApp = function() {
                 var format = new OpenLayers.Format.WKT();
                 var bbox = null;
 
-                Ext.each(records, function(record) {
+                Ext.each(records,
+                        function(record) {
 
-                    Ext.Ajax.request({
-                        url : "region.geom.wkt?id=" + opts.name + ":"
-                                + record.data.KANTONSNR + "&srs="
-                                + app.mapApp.getMap().getProjection(),
-                        success : function(r) {
-                            feature = format.read(r.responseText);
-                            geocat.vectorLayer.addFeatures([ feature ]);
-                        }
-                    });
+                            var id = record.get("KANTONSNR");
 
-                    if (record.get("BOUNDING")) {
-                        var feature = format.read(record.get("BOUNDING"));
-                        if (bbox) {
-                            bbox.extend(feature.geometry.getBounds());
-                        } else {
-                            bbox = feature.geometry.getBounds();
-                        }
-                    }
+                            if (record.id.indexOf("gemeinden") === 0) {
+                                id = record.get("OBJECTVAL");
+                            }
 
-                });
+                            Ext.Ajax
+                                    .request({
+                                        url : "region.geom.wkt?id="
+                                                + opts.name
+                                                + ":"
+                                                + id
+                                                + "&srs="
+                                                + app.mapApp.getMap()
+                                                        .getProjection(),
+                                        success : function(r) {
+                                            feature = format
+                                                    .read(r.responseText);
+                                            geocat.vectorLayer
+                                                    .addFeatures([ feature ]);
+                                        }
+                                    });
+
+                            if (record.get("BOUNDING")) {
+                                var feature = format.read(record
+                                        .get("BOUNDING"));
+                                if (bbox) {
+                                    bbox.extend(feature.geometry.getBounds());
+                                } else {
+                                    bbox = feature.geometry.getBounds();
+                                }
+                            }
+
+                        });
                 try {
                     if (bbox)
                         app.mapApp.getMap().zoomToExtent(bbox);

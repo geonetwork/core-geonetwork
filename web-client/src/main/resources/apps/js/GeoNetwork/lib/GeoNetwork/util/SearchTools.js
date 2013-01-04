@@ -404,11 +404,11 @@ GeoNetwork.util.SearchTools = {
                     filters.push("geometry" + "="
                             + encodeURIComponent(geometry.toString()));
                 });
-                filters.push("relation"
-                        + "="
-                        + encodeURIComponent(Ext.getCmp("boundingRelation")
-                                .getValue()));
             }
+            filters.push("relation"
+                    + "="
+                    + encodeURIComponent(Ext.getCmp("boundingRelation")
+                            .getValue()));
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
             var subField = value.match("^([^/]+)/(.*)$");
