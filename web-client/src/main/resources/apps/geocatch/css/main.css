@@ -278,6 +278,10 @@ div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-pa
 	width: 15px;
 }
 
+#drawPolygonSpan {
+	font-size: 12px;
+}
+
 /* GeoNetwork Message */
 .alert {
 	position: absolute;

@@ -39,7 +39,10 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'kantone': 'Canton(s)',
 	'any2': 'Tous',
     'showAdvancedOptions' : 'Recherche avancée',
-    'hideAdvancedOptions' : 'Recherche simple'
+    'hideAdvancedOptions' : 'Recherche simple',
+    
+    'startNewPolygonHelp' : 'Dessiner un polygone (Double clique pour terminer)',
+    'deletePolygonHelp' : 'Dessiner un nouveau polygone',
 
 };
 

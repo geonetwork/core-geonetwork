@@ -64,6 +64,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
     'source': 'Source?',
     'catalog': 'Catalogue(s)',
 
+    'startNewPolygonHelp' : 'Start new polygon (Doubleclick to finish)',
+    'deletePolygonHelp' : 'Delete or Start new polygon',
+    
     'sortByTypes' : [
         [ "changeDate", "Aktualisierung Metadaten" ],
         [ "popularity", "Popularität" ],

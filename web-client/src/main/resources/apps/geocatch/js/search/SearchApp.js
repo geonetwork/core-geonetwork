@@ -129,13 +129,12 @@ GeoNetwork.searchApp = function() {
             });
 
             var fieldKantone = this.getKantoneCombo().combo;
-            
 
             var hidden = new Ext.form.TextField({
-                                  name: 'G_hidden',
-                                  hidden:true,
-                                  value: "gg25"
-                              });
+                name : 'G_hidden',
+                hidden : true,
+                value : "gg25"
+            });
 
             formItems.push([ fieldAny, fieldType, fieldKantone, hidden ]);
 
@@ -585,7 +584,7 @@ GeoNetwork.searchApp = function() {
                             catalogue.startRecord, true);
                 },
                 listeners : {
-                    
+
                     onreset : function() {
                         if (Ext.getCmp('facets-panel')) {
                             Ext.getCmp('facets-panel').reset();
@@ -1016,7 +1015,29 @@ GeoNetwork.searchApp = function() {
         },
 
         drawWherePolygon : function() {
-            geocat.drawFeature.activate();
+
+            if (!this.drawControl) {
+                this.drawControl = new OpenLayers.Control.DrawFeature(
+                        geocat.vectorLayer, OpenLayers.Handler.Polygon);
+
+                var featureAdded = function(f) {
+                    app.searchApp.drawControl.deactivate();
+
+                    var span = Ext.get("drawPolygonSpan");
+                    Ext.DomHelper.overwrite(span, '<span id="drawPolygonSpan">'
+                            + '<a href="' + 'javascript:app.searchApp.'
+                            + 'updateWhereForm(\'polygon\')(true, true)">'
+                            + OpenLayers.i18n('deletePolygonHelp')
+                            + '</a></span>');
+
+                };
+                this.drawControl.events.on({
+                    'featureadded' : featureAdded
+                });
+                app.mapApp.getMap().addControl(this.drawControl);
+            }
+            this.drawControl.activate();
+            geocat.vectorLayer.removeAllFeatures();
             if (geocat.selectionFeature) {
                 geocat.vectorLayer.destroyFeatures(geocat.selectionFeature);
                 geocat.selectionFeature = null;
@@ -1107,12 +1128,6 @@ GeoNetwork.searchApp = function() {
 
             } else if (mode == 'polygon') {
                 selLayer.setVisibility(false);
-
-                if (!this.drawControl) {
-                    this.drawControl = new OpenLayers.Control.DrawFeature(
-                            geocat.vectorLayer, OpenLayers.Handler.Polygon);
-                    app.mapApp.getMap().addControl(this.drawControl);
-                }
 
                 this.drawControl.activate();
 
