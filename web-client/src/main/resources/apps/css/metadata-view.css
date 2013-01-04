@@ -54,6 +54,8 @@ table.related * li {
   float : left;
   width : 200px;
   line-height : initial !important;
+  word-wrap: break-word;
+  padding: 2px;
 }
 
 .md-view * a {

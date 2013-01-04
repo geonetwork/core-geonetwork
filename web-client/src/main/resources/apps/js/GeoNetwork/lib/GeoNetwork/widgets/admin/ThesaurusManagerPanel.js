@@ -39,6 +39,7 @@ Ext.namespace('GeoNetwork.admin');
  */
 GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
+        feed: null,
         autoWidth : true,
         layout : 'border',
         maxResults: 50,
@@ -895,7 +896,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 displayField:   'title',
                 valueField:     'link',
                 submitValue:    false,
-                store:          new GeoNetwork.data.ThesaurusFeedStore(),
+                store:          new GeoNetwork.data.ThesaurusFeedStore(this.feed),
                 listeners: {
                     scope: this,
                     select: function(cmb, record, index) {

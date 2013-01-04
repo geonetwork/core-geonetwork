@@ -105,7 +105,7 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints|gmd:aggregationInfo">
+              gmd:metadataConstraints|gmd:aggregationInfo|gmd:report/*|gmd:result/*">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
@@ -2139,6 +2139,14 @@
     <xsl:call-template name="complexElementGui">
       <xsl:with-param name="title" select="/root/gui/strings/metadata"/>
       <xsl:with-param name="validationLink" select="$validationLink"/>
+
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+            <xsl:with-param name="name" select="name(.)"/>
+            <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      
       <xsl:with-param name="edit" select="true()"/>
       <xsl:with-param name="content">
     

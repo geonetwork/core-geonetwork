@@ -76,10 +76,10 @@
 	
 	<site>Site</site>
 
-	<category>Category</category>
+	<category>Catégorie</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
-	<wxstype>Type of OGC webservice</wxstype>
+	<wxstype>Type de service OGC</wxstype>
     <wxstypes>
         <type value="WMS1.0.0">OGC Web Map Service (WMS) Version 1.0.0</type>
         <type value="WMS1.1.1">OGC Web Map Service (WMS) Version 1.1.1 - preferred</type>
@@ -95,7 +95,7 @@
     
     <wxslang>Langue des métadonnées</wxslang>
     <wxsImp>Type d'import</wxsImp>
-    <wxsOutputSchema>Target schema</wxsOutputSchema>
+    <wxsOutputSchema>Standard cible</wxsOutputSchema>
     <wxs119Only>Par défaut, le moteur de moissonage génére uniquement les métadonnées de service<br/> au format ISO19119.</wxs119Only>
     <wxs139>Créer les métadonnées pour les couches diffusées par le service.</wxs139>
     <wxs139Layer>Utiliser l'attribut MetadataURL pour les métadonnées de données.</wxs139Layer>
@@ -136,28 +136,28 @@
 	<retrieve>Récupérer</retrieve>
 	<warn>Vous pouvez récupérer ces informations seulement après avoir saisie la section de description du site</warn>
 	
-	<content>Harvested Content</content>
-	<importxslt>Apply this XSLT to harvested records</importxslt>
+	<content>Contenu récupéré</content>
+	<importxslt>Appliquer une transformation XSL aux fiches récupérées</importxslt>
 
-    <at>Run at</at>
-    <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-    <interval>Will run again every</interval>
-    <hourintervals>
-        <hour label="Each hour">1</hour>
-        <hour label="3 hours">3</hour>
-        <hour label="6 hours">6</hour>
-        <hour label="12 hours">12</hour>
-        <hour label="N/A">undefined</hour>
-    </hourintervals>
-    <dayofweek>
-        <day label="Monday">MON</day>
-        <day label="Tuesday">TUE</day>
-        <day label="Wednesday">WED</day>
-        <day label="Thursday">THU</day>
-        <day label="Friday">FRI</day>
-        <day label="Saturday">SAT</day>
-        <day label="Sunday">SUN</day>
-    </dayofweek>
+	<at>Lancer à</at>
+	<atSpec>( heure : minute eg. 23:15 )</atSpec>
+	<interval>puis toutes les </interval>
+	<hourintervals>
+		<hour label="heures">1</hour>
+		<hour label="3 heures">3</hour>
+		<hour label="6 heures">6</hour>
+		<hour label="12 heures">12</hour>
+		<hour label="N/A">undefined</hour>
+	</hourintervals>
+	<dayofweek>
+		<day label="Lundi">MON</day>
+		<day label="Mardi">TUE</day>
+		<day label="Mercredi">WED</day>
+		<day label="Jeudi">THU</day>
+		<day label="Vendredi">FRI</day>
+		<day label="Samedi">SAT</day>
+		<day label="Dimanche">SUN</day>
+	</dayofweek>
     <hours>
         <hour label="0">0</hour>
         <hour label="1">1</hour>
@@ -196,8 +196,8 @@
 	<oneRun>Une seule exécution</oneRun>
 	<createGroups>Créer les groupes</createGroups>
 	<createCateg>Créer les catégories</createCateg>
-	<active>Active</active>
-	<inactive>Inactive</inactive>
+	<active>Actif</active>
+	<inactive>Inactif</inactive>
 	<retrieveSources>Obtenir les sources</retrieveSources>
 	<retrieveGroups>Obtenir les groupes</retrieveGroups>
 	<retrieveInfo>Obtenir des info</retrieveInfo>
@@ -206,13 +206,13 @@
 	<validate>Valider</validate>
 	<recurse>Récursif</recurse>
 	<nodelete>Conserver les fichiers</nodelete>
-	<server>Server</server>
+	<server>Serveur</server>
 	<database>Base de données</database>
 	<privileges>Privilèges</privileges>
 	<categories>Categories</categories>
 	<url>URL</url>
 	<capabUrl>Capabilities URL</capabUrl>
-	<icon>Icon</icon>
+	<icon>Icône</icon>
 	<group>Groupe</group>
 	<groups>Groupes</groups>
 	<remoteGroup>Groupe distant</remoteGroup>
@@ -230,7 +230,7 @@
 	<until>Jusqu'à</until>
 	<set>Ensemble</set>
 	<prefix>Préfixe</prefix>
-	<stylesheet>Stylesheet</stylesheet>
+	<stylesheet>Feuille de transformation (XSL)</stylesheet>
 	
 	<!-- Buttons -->
 	

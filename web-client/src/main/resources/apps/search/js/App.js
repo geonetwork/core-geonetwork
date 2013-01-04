@@ -287,7 +287,6 @@ GeoNetwork.app = function () {
 
         var inspire = new Ext.form.FieldSet({
             title: OpenLayers.i18n('inspireSearchOptions'),
-            autoWidth: true,
             hidden: hideInspirePanel,
             collapsible: true,
             collapsed: true,
@@ -301,12 +300,11 @@ GeoNetwork.app = function () {
         var adv = new Ext.form.FieldSet({
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
-            autoWidth: true,
             collapsible: true,
             collapsed: urlParameters.advanced !== undefined ? false : true,
             defaultType: 'checkbox',
             defaults: {
-                width: 160
+                anchor: '100%'
             },
             items: advancedCriteria
         });
@@ -358,7 +356,7 @@ GeoNetwork.app = function () {
             },
             padding: 5,
             defaults: {
-                width : 180
+                anchor: '100%'
             },
             listeners: {
                 onreset: function () {

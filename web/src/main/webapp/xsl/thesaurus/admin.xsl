@@ -51,6 +51,7 @@
 
 				var manager = new GeoNetwork.admin.ThesaurusManagerPanel({
 					catalogue: catalogue,
+					feed: '<xsl:value-of select="/root/gui/config/repository/thesaurus"/>',
 					renderTo: 'manager',
 					autoWidth : true,
 					layout : 'border',

@@ -24,7 +24,7 @@
  <!-- Widget client with sliding panel interface (metadata records open in a window) -->
  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="" createParameter="#create" stateId="s"/>-->
  <!-- As above but with extra parameters set: custom extent in debug mode in french --> 
- <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create" stateId="s"/>-->
+ <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fre" createParameter="#create" stateId="s"/>-->
  
  <!-- Comment out languages to hide them
  from language selector. -->
@@ -129,7 +129,7 @@
     the number of requests you may make per day will be limited and 
     the API will be shut off completely on December 1, 2011".
   -->
- <editor-google-translate>1</editor-google-translate>
+ <editor-google-translate>0</editor-google-translate>
  
  
  <!-- Metadata relation information
@@ -298,6 +298,6 @@
 	
 	
   <repository>
-    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
+    <thesaurus>http://raw.github.com/geonetwork/util-repository/master/thesaurus.xml</thesaurus>
   </repository>
 </config>
