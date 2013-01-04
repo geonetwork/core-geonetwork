@@ -911,10 +911,11 @@ function validateMetadataFields() {
 				// matched with GUI language in order to edit by default
 				// element
 				// in GUI language. If none, default language is selected.
-				for (i = 0; i < input.options.length; i++)
-					if (input.options[i].getAttribute("code")
-							.toLowerCase() == Env.lang)
+				for (i = 0; i < input.options.length; i++) {
+					if (input.options[i].getAttribute("code") == Env.shortLang) {
 						input.options[i].selected = true;
+					}
+				}
 				
 				enableLocalInput(input, false);
 			});

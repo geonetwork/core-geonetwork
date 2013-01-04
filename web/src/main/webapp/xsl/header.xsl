@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:java="java:org.fao.geonet.util.XslUtil" 
+	exclude-result-prefixes="#all">
 
 	<xsl:include href="geo/utils.xsl"/>
 
@@ -35,6 +36,7 @@
 			Env.locUrl    = "<xsl:value-of select="/root/gui/locUrl"/>";
 			Env.url       = "<xsl:value-of select="/root/gui/url"/>";
 			Env.lang      = "<xsl:value-of select="/root/gui/language"/>";
+			Env.shortLang = "<xsl:value-of select="upper-case(java:twoCharLangCode(/root/gui/language))"/>";
 			Env.proxy     = "<xsl:value-of select="/root/gui/config/proxy-url"/>";
 
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";

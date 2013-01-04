@@ -1122,3 +1122,8 @@ li.blue-content a {
 .ext-gecko .x-form-text {
 	padding: 2px 0px 0px 0px !important;
 }
+
+
+select.lang_selector {
+	max-width: 100px;
+}
