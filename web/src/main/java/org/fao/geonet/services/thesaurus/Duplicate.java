@@ -34,7 +34,7 @@ public class Duplicate implements Service {
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusName);
         KeywordsSearcher ks = new KeywordsSearcher(thesaurusManager);
         
-        KeywordBean bean = ks.searchById(uuid, thesaurusName, "*");
+        KeywordBean bean = ks.searchById(uuid, thesaurusName, "eng", "fre", "ger", "ita");
         if(bean == null) {
             return new Element("uuid").setText(uuid);
         }
