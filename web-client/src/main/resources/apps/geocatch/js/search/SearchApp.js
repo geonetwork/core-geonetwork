@@ -288,8 +288,7 @@ GeoNetwork.searchApp = function() {
             f.push({
                 xtype : "hidden",
                 name : "E_similarity",
-            // FIXME
-            // value : searchTools.DEFAULT_SIMILARITY
+                value : GeoNetwork.util.SearchTools.DEFAULT_SIMILARITY
             });
             var d = [ {
                 xtype : "fieldset",
@@ -1204,7 +1203,6 @@ GeoNetwork.searchApp = function() {
          */
         getKantoneCombo : function(createNew) {
 
-            // FIXME parameter is not being used
             var id = 'kantoneComboBox';
 
             if (Ext.getCmp(id)) {
@@ -1335,13 +1333,26 @@ GeoNetwork.searchApp = function() {
 
             var refreshTheContour = function(combo) {
                 var records = combo.usedRecords.items;
+                geocat.vectorLayer.removeAllFeatures();
 
                 if (records.length == 0)
                     return;
 
                 var format = new OpenLayers.Format.WKT();
                 var bbox = null;
+
                 Ext.each(records, function(record) {
+
+                    Ext.Ajax.request({
+                        url : "region.geom.wkt?id=" + opts.name + ":"
+                                + record.data.KANTONSNR + "&srs="
+                                + app.mapApp.getMap().getProjection(),
+                        success : function(r) {
+                            feature = format.read(r.responseText);
+                            geocat.vectorLayer.addFeatures([ feature ]);
+                        }
+                    });
+
                     if (record.get("BOUNDING")) {
                         var feature = format.read(record.get("BOUNDING"));
                         if (bbox) {
@@ -1350,6 +1361,7 @@ GeoNetwork.searchApp = function() {
                             bbox = feature.geometry.getBounds();
                         }
                     }
+
                 });
                 try {
                     if (bbox)
@@ -1358,6 +1370,7 @@ GeoNetwork.searchApp = function() {
                 }
             };
             search.on('change', refreshTheContour);
+            search.on('removeitem', refreshTheContour);
 
             return {
                 combo : search,
