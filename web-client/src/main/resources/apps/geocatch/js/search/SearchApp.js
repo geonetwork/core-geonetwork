@@ -129,8 +129,15 @@ GeoNetwork.searchApp = function() {
             });
 
             var fieldKantone = this.getKantoneCombo().combo;
+            
 
-            formItems.push([ fieldAny, fieldType, fieldKantone ]);
+            var hidden = new Ext.form.TextField({
+                                  name: 'G_hidden',
+                                  hidden:true,
+                                  value: "gg25"
+                              });
+
+            formItems.push([ fieldAny, fieldType, fieldKantone, hidden ]);
 
             return new GeoNetwork.SearchFormPanel({
                 id : 'simple-search-options-content-form',
@@ -347,6 +354,7 @@ GeoNetwork.searchApp = function() {
             });
             var b = new Ext.form.ComboBox({
                 fieldLabel : OpenLayers.i18n("country"),
+                id : "country",
                 name : "country",
                 store : this.createCountryStore(),
                 mode : "local",
@@ -1199,7 +1207,7 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n('kantone'),
                 displayField : 'KUERZEL',
                 valueField : 'KANTONSNR',
-                name : 'N_kantone',
+                name : 'kantone',
                 triggerAction : 'all',
                 minChars : 1,
                 anchor : '-10'
