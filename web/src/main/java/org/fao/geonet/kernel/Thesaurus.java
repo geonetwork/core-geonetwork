@@ -66,7 +66,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
-	private static final String DEFAULT_THESAURUS_NAMESPACE = Geonet.Namespaces.GEONET.getURI()+"#";
+	private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
 
 	private String fname;
 
