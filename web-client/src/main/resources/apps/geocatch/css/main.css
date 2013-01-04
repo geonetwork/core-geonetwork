@@ -224,8 +224,12 @@ body {
 }
 
 #search-container .x-superboxselect ul {
-    padding: 2;	
-    margin: 1;
+	padding: 2;
+	margin: 1;
+}
+
+#search-container .x-form-field-wrap .x-superboxselect + .x-form-trigger.x-form-arrow-trigger {
+    display: none;
 }
 
 input[type="button"] {

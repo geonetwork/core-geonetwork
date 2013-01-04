@@ -54,8 +54,15 @@ GeoNetwork.loginApp = function() {
 
                 hide("login-form");
                 show("logout-div");
-                
+
                 show("adminMenu");
+
+                // Show some advanced search options
+                show(Ext.getCmp("formatCombo").el.parent().parent().parent()
+                        .parent().parent().parent());
+                show(Ext.getCmp("basicgeodataid").el.parent().parent());
+                show(Ext.getCmp("isTemplate").el.parent().parent().parent());
+                show(Ext.getCmp("isValid").el.parent().parent().parent());
             });
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);
@@ -71,8 +78,15 @@ GeoNetwork.loginApp = function() {
                 }
                 hide("logout-div");
                 show("login-form");
-                
+
                 hide("adminMenu");
+
+                // Hide some advanced search options
+                hide(Ext.getCmp("formatCombo").el.parent().parent().parent()
+                        .parent().parent().parent());
+                hide(Ext.getCmp("basicgeodataid").el.parent().parent());
+                hide(Ext.getCmp("isTemplate").el.parent().parent().parent());
+                hide(Ext.getCmp("isValid").el.parent().parent().parent());
             });
 
             // Refresh login form if needed

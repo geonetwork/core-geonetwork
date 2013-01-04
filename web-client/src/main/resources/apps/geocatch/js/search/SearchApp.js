@@ -240,6 +240,7 @@ GeoNetwork.searchApp = function() {
             f = f.concat([
                     {
                         xtype : "combo",
+                        id : "isTemplate",
                         fieldLabel : OpenLayers.i18n("template"),
                         anchor : "-10",
                         name : "E__isTemplate",
@@ -258,6 +259,7 @@ GeoNetwork.searchApp = function() {
                     }, {
                         fieldLabel : OpenLayers.i18n("identifier"),
                         anchor : '-10',
+                        id : "basicgeodataid",
                         name : "S_basicgeodataid",
                         hidden : !catalogue.isIdentified()
                     }, new Ext.ux.form.SuperBoxSelect({
@@ -304,6 +306,7 @@ GeoNetwork.searchApp = function() {
                         xtype : "combo",
                         fieldLabel : OpenLayers.i18n("valid"),
                         anchor : '-10',
+                        id : "isValid",
                         name : "E__valid",
                         store : [ [ "", OpenLayers.i18n("any") ],
                                 [ "1", OpenLayers.i18n("yes") ],
@@ -574,6 +577,7 @@ GeoNetwork.searchApp = function() {
                             catalogue.startRecord, true);
                 },
                 listeners : {
+                    
                     onreset : function() {
                         if (Ext.getCmp('facets-panel')) {
                             Ext.getCmp('facets-panel').reset();
@@ -709,7 +713,11 @@ GeoNetwork.searchApp = function() {
                             geocat.selectionFeature = null
                         }
                         app.searchApp.drawWherePolygon();
-                        break
+                        break;
+                    default:
+                        d.setVisible(false);
+                        e.setVisible(false);
+                        break;
                     }
                     app.searchApp.highlightGeographicFilter(null, a);
                 }
@@ -1160,13 +1168,9 @@ GeoNetwork.searchApp = function() {
             return new Ext.data.ArrayStore({
                 id : 0,
                 fields : [ 'id', 'name' ],
-                data : [
-                        [ "within",
-                                OpenLayers.i18n('withinGeo') ],
-                        [ "intersects",
-                                OpenLayers.i18n('intersectGeo') ],
-                        [ "crosses",
-                                OpenLayers.i18n('containsGeo') ] ]
+                data : [ [ "within", OpenLayers.i18n('withinGeo') ],
+                        [ "intersects", OpenLayers.i18n('intersectGeo') ],
+                        [ "crosses", OpenLayers.i18n('containsGeo') ] ]
             });
         },
 
@@ -1501,16 +1505,18 @@ GeoNetwork.searchApp = function() {
                 Ext
                         .getCmp('nextBt')
                         .setDisabled(
-                                catalogue.startRecord +parseInt(Ext.getCmp(
-                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord
+                                        + parseInt(Ext.getCmp('E_hitsperpage')
+                                                .getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('nextBt_up')) {
                 Ext
                         .getCmp('nextBt_up')
                         .setDisabled(
-                                catalogue.startRecord + parseInt(Ext.getCmp(
-                                'E_hitsperpage').getValue(), 10) > catalogue.metadataStore.totalLength);
+                                catalogue.startRecord
+                                        + parseInt(Ext.getCmp('E_hitsperpage')
+                                                .getValue(), 10) > catalogue.metadataStore.totalLength);
             }
 
             if (Ext.getCmp('E_sortBy')) {

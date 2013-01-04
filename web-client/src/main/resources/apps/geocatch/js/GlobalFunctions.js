@@ -44,6 +44,16 @@ function show(id) {
     if (Ext.get(id)) {
         Ext.get(id).setVisibilityMode(Ext.Element.DISPLAY);
         Ext.get(id).show();
+
+        Ext.get(id).dom.className = Ext.get(id).dom.className.replace(
+                "x-input-hidden", "");
+
+        Ext.get(id).dom.className = Ext.get(id).dom.className.replace(
+                "x-hide-display", "");
+
+        Ext.each(Ext.get(id).dom.children, function(child) {
+            show(child);
+        });
     }
 }
 
@@ -196,6 +206,21 @@ function showAdvancedSearch() {
     hide(Ext.getCmp('simple-search-options-content-form'));
     show(Ext.getCmp('advanced-search-options-content-form'));
     Ext.getCmp("vp").doLayout();
+
+    if(!catalogue.identifiedUser){
+        // Hide some advanced search options
+        hide(Ext.getCmp("formatCombo").el.parent().parent().parent()
+                .parent().parent().parent());
+        hide(Ext.getCmp("basicgeodataid").el.parent().parent());
+        hide(Ext.getCmp("isTemplate").el.parent().parent().parent());
+        hide(Ext.getCmp("isValid").el.parent().parent().parent());
+    } else {
+        show(Ext.getCmp("formatCombo").el.parent().parent().parent()
+                .parent().parent().parent());
+        show(Ext.getCmp("basicgeodataid").el.parent().parent());
+        show(Ext.getCmp("isTemplate").el.parent().parent().parent());
+        show(Ext.getCmp("isValid").el.parent().parent().parent());
+    }
 }
 
 function hideAdvancedSearch() {
