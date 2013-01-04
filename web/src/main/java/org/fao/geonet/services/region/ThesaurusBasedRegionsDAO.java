@@ -6,20 +6,37 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 
+import jeeves.JeevesCacheManager;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.rdf.QueryBuilder;
+import org.fao.geonet.kernel.rdf.ResultInterpreter;
+import org.fao.geonet.kernel.rdf.Selectors;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.openrdf.model.Value;
+import org.openrdf.sesame.query.QueryResultsTable;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     
+    private static final ResultInterpreter<String> CATEGORY_ID_READER = new ResultInterpreter<String>() {
+        
+        @Override
+        public String createFromRow(Thesaurus thesaurus, QueryResultsTable resultTable, int rowIndex) {
+            Value value = resultTable.getValue(rowIndex, 0);
+            return value.toString();
+        }
+    };
+    private static final String CATEGORY_ID_CACHE_KEY = "CATEGORY_ID_CACHE_KEY";
+
     private final Set<String> localesToLoad;
     private WeakHashMap<String, Map<String, String>> categoryIdMap = new WeakHashMap<String, Map<String, String>>();
     private GeometryFactory factory = new GeometryFactory();
@@ -71,9 +88,18 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     }
 
 	@Override
-	public Collection<String> getRegionCategoryIds(ServiceContext context) {
-		
-		return null;
+	public Collection<String> getRegionCategoryIds(final ServiceContext context) throws Exception{
+	    return JeevesCacheManager.findInTenSecondCache(CATEGORY_ID_CACHE_KEY, new Callable<Collection<String>>(){
+
+            @Override
+            public Collection<String> call() throws Exception {
+                QueryBuilder<String> queryBuilder = QueryBuilder.builder().interpreter(CATEGORY_ID_READER);
+                queryBuilder.distinct(true);
+                queryBuilder.select(Selectors.BROADER, true);
+                return queryBuilder.build().execute(getThesaurus(context));
+            }
+	        
+	    });
 	}
 
 }

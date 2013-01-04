@@ -548,6 +548,7 @@ GeoNetwork.Lang.nl = {
     'to-iso19139-keyword-as-xlink': 'Linked mode',
     'to-iso19139-keyword-with-anchor': 'Anchor mode',
     'linklabel-application/vnd.ogc.wms_xml': 'Add to map',
+    'linklabel-application/pdf': 'PDF',
     'linklabel-OGC:WMS': 'Add to map',
     'linklabel-OGC:WFS': 'WFS link',
     'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',

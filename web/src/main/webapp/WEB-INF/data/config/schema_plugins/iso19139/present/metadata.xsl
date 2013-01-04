@@ -2129,6 +2129,14 @@
 		<xsl:call-template name="complexElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/metadata"/>
 			<xsl:with-param name="validationLink" select="$validationLink"/>
+
+			<xsl:with-param name="helpLink">
+			  <xsl:call-template name="getHelpLink">
+			      <xsl:with-param name="name" select="name(.)"/>
+			      <xsl:with-param name="schema" select="$schema"/>
+			  </xsl:call-template>
+			</xsl:with-param>
+
 			<xsl:with-param name="edit" select="true()"/>
 			<xsl:with-param name="content">
 

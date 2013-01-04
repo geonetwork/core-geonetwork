@@ -23,7 +23,7 @@ public abstract class RegionsDAO {
      * 
      * @return all the ids of all the categories available
      */
-    public abstract Collection<String> getRegionCategoryIds(ServiceContext context);
+    public abstract Collection<String> getRegionCategoryIds(ServiceContext context) throws Exception;
 
     /**
      * Create an object for constructing a search request to find regions

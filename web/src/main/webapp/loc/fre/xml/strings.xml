@@ -1006,7 +1006,7 @@ Votre équipe geocat.ch</msg>
 	<poweredBy>Fonctionne avec </poweredBy>
 	<previous>&lt;&lt;</previous>
 	<privileges>Privilèges</privileges>
-	<profile>Profile</profile>
+	<profile>Profil</profile>
 	<profileChoice value="Administrator">Administrateur</profileChoice>
 	<profileChoice value="Editor">Editeur</profileChoice>
 	<profileChoice value="RegisteredUser">Invité</profileChoice>

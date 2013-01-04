@@ -54,6 +54,15 @@ public class ThesaurusBasedRegionsDAOTest {
     }
 
     private XmlCacheManager cacheManager = new XmlCacheManager();
+    
+    @Test
+    public void testListCategories() throws Exception {
+        ThesaurusBasedRegionsDAO dao = createDAO();
+        Collection<String> ids = dao.getRegionCategoryIds(dummyContext());
+        assertTrue(ids.contains("http://geonetwork-opensource.org/regions#country"));
+        assertTrue(ids.contains("http://geonetwork-opensource.org/regions#continent"));
+        assertTrue(ids.contains("http://geonetwork-opensource.org/regions#ocean"));
+    }
 
     @Test
     public void testCreateSearchRequest() throws Exception {
