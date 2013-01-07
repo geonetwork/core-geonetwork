@@ -1287,7 +1287,7 @@
     -->
     
     <!-- Single quote are escaped inside keyword. -->
-    <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+    <xsl:variable name="listOfKeywords" select="concat('''', replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', ''''), '''')"/>
     
     <!-- Get current transformation mode based on XML fragement analysis -->
     <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
@@ -1303,28 +1303,15 @@
       then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
       else '''to-iso19139-keyword'''"/>
     
-    <!-- Create custom widget: 
-      * '' for item selector, 
-      * 'combo' for simple combo, 
-      * 'list' for selection list, 
-      * 'multiplelist' for multiple selection list
-      
+    <!-- 
       TODO : retrieve from schema configuration per thesaurus
      <xsl:variable name="widgetMode" select="if (contains(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1], 'inspire')) then 'multiplelist' else ''"/>
       -->
     <xsl:variable name="widgetMode" select="''"/>
     
-    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
-    identifier should be defined in the citation identifier. By default, GeoNetwork
-    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
-    gco:CharacterString. 
-    
-    TODO : Add lenient detection on thesaurus title.
-    -->
     <xsl:variable name="thesaurusId" select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])"/>
-    
     
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
@@ -1342,20 +1329,49 @@
   
   
   <xsl:template name="snippet-editor">
+    <!-- 
+    The gmd:keyword section identifier in the metadocument (in geonet:element/@ref)
+    -->
     <xsl:param name="elementRef"/>
+    <!-- Create custom widget: 
+      * '' for item selector, 
+      * 'combo' for simple combo, 
+      * 'list' for selection list, 
+      * 'multiplelist' for multiple selection list
+      -->
     <xsl:param name="widgetMode" select="''"/>
-    <xsl:param name="thesaurusId"/>
-    <xsl:param name="listOfKeywords"/>
-    <xsl:param name="listOfTransformations"/>
-    <xsl:param name="transformation"/>
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    identifier should be defined in the citation identifier. By default, GeoNetwork
+    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
+    gco:CharacterString. 
     
+    TODO : Add lenient detection on thesaurus title from thesaurus list in the current XML document
+    -->
+    <xsl:param name="thesaurusId"/>
+    <!-- 
+    Use the keyword label or uri to identified the keyword.
+    uri identification requires the URI to be in the XML fragment(eg. using gmx:Anchor)
+    -->
+    <xsl:param name="identificationMode" required="no"/>
+    <!-- 
+      List of keywords or uri according to identificationMode 
+    -->
+    <xsl:param name="listOfKeywords"/>
+    <!-- 
+    List of transformations. Default to 'to-iso19139-keyword' -->
+    <xsl:param name="listOfTransformations" select="'to-iso19139-keyword'"/>
+    <!-- 
+    Current transformation
+    -->
+    <xsl:param name="transformation"/>
+
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
       config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
-      }',keywords: ['{$listOfKeywords
-      }'], transformations: [{$listOfTransformations
+      }',keywords: [{$listOfKeywords
+      }], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
-      }'}}"/>
+      }', identificationMode: '{$identificationMode}'}}"/>
     
     <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>

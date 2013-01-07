@@ -132,7 +132,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /** api: config[initialKeyword] 
          *  ``Array`` A list of initial keywords
          */
-        initialKeyword: []
+        initialKeyword: [],
+        /** api: config[identificationMode] 
+         *  ``String`` Identify keyword by their label (default) or uri (requires to use gmx:Anchor in the metadata).
+         */
+        identificationMode: 'label'
     },
     initialKeywordLoaded: false,
     /** private: property[thesaurusIdentifier] 
@@ -284,7 +288,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         
                         // Get initial keyword in the data view and select them
                         Ext.each(self.initialKeyword, function (initKeyword) {
-                            dv.select(self.keywordStore.find('value', initKeyword), true);
+                            var filter = (self.identificationMode === 'uri' ? 'uri' : 'value');
+                            dv.select(self.keywordStore.find(filter, initKeyword), true);
                             self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
                         });
                     });
@@ -626,6 +631,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         this.loadingKeywordStore.each(function (record) {
                             records.push(record);
                         });
+                        
                         this.selectedKeywordStore.add(records);
                         this.loadingKeywordStore.removeAll();
                         
@@ -646,17 +652,26 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         if (value === "") {
             return;
         }
+        
+        var params = {
+            pNewSearch: true,
+            pTypeSearch: 2, // Exact match
+            pMode: 'searchBox',
+            pUri: value,
+            pThesauri: thesaurus
+        };
+        
+        if (this.identificationMode === 'uri') {
+            params.pUri = value;
+        } else {
+            params.pKeyword = value;
+        }
+        
         // Call transformation service
         Ext.Ajax.request({
             url: this.catalogue.services.searchKeyword,
-            method: 'POST', 
-            params: {
-                pNewSearch: true,
-                pTypeSearch: 2, // Exact match
-                pMode: 'searchBox',
-                pKeyword: value,
-                pThesauri: thesaurus
-            },
+            method: 'GET', 
+            params: params,
             scope: this,
 //            async: false,
             success: cb || function (response) {
@@ -744,6 +759,7 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                     initialKeyword: jsonConfig.keywords,
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
+                    identificationMode: jsonConfig.identificationMode,
                     xmlField: id + '_xml',
                     renderTo: id + '_panel'
                 });
