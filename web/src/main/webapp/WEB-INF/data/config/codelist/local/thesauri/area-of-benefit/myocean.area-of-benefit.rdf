@@ -5,18 +5,18 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:exslt="http://exslt.org/common"
     xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#">
     <skos:ConceptScheme rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#">
-        <dc:title>MyOcean area of benefit</dc:title>
+        <dc:title>Area of benefit</dc:title>
         <dc:description>Origin of data among coastal-marine-environment or remote-sensing observation or numerical
             models.</dc:description>
         <dcterms:issued>2009-09-09</dcterms:issued>
         <dcterms:modified>2009-09-09</dcterms:modified>
     </skos:ConceptScheme>
     <!-- TODO : FR translation -->
-    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#maritime-safety">
-        <skos:prefLabel xml:lang="en">maritime-safety</skos:prefLabel>
-        <skos:definition xml:lang="en">Maritime safety</skos:definition>
-        <skos:prefLabel xml:lang="fr">maritime-safety</skos:prefLabel>
-        <skos:definition xml:lang="fr">Maritime safety</skos:definition>
+    <skos:Concept rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#marine-safety">
+        <skos:prefLabel xml:lang="en">marine-safety</skos:prefLabel>
+        <skos:definition xml:lang="en">Marine safety</skos:definition>
+        <skos:prefLabel xml:lang="fr">marine-safety</skos:prefLabel>
+        <skos:definition xml:lang="fr">Marine safety</skos:definition>
     </skos:Concept>
     <skos:Concept
         rdf:about="http://purl.org/myocean/ontology/vocabulary/area-of-benefit#marine-resources">
