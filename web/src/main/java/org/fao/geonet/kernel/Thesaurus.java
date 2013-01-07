@@ -61,6 +61,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
+	private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
+
 	private String fname;
 
 	private String type;
@@ -74,8 +76,10 @@ public class Thesaurus {
     private String title;
 
     private String date;
+    
+    private String defaultNamespace;
 
-		private String version;
+	private String version;
 
     private String downloadUrl;
 
@@ -267,6 +271,10 @@ public class Thesaurus {
         String namespaceGml = "http://www.opengis.net/gml#";
         String namespace = keyword.getNameSpaceCode();
 
+        if(namespace.equals("#")) {
+        	namespace = this.defaultNamespace;
+        }
+        
         // Create subject
         URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
 
@@ -571,16 +579,29 @@ public class Thesaurus {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
-            theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+            Namespace rdfNamespace = Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+			theNSs.add(rdfNamespace);
             theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
             theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
+            this.defaultNamespace = null;
             Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title", theNSs);
             if (title != null) {
                 this.title = title.getValue();
+                this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
             } else {
                 this.title = defaultTitle;
+            }
+            
+            try {
+            	new java.net.URI(this.defaultNamespace);
+            } catch (Exception e) {
+            	this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
+            }
+            
+            if(!this.defaultNamespace.endsWith("#")) {
+            	this.defaultNamespace += "#";
             }
 
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
@@ -754,5 +775,8 @@ public class Thesaurus {
 			AdminListener listener = new DummyAdminListener();
 			repository.clear(listener);
 		}
+        public String getDefaultNamespace() {
+            return this.defaultNamespace;
+        }
 
 }
