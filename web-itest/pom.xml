@@ -32,6 +32,8 @@
             TextResponse -->
     <logLevel>Error,Warning</logLevel>
     <jettyPort>8010</jettyPort>
+    <jettySslPort>8011</jettySslPort>
+    <jetty.stop.port>8012</jetty.stop.port>
     <testServer>localhost:${jettyPort}</testServer>
     <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     <webspecsDir>${basedir}/webspecs</webspecsDir>
@@ -94,6 +96,21 @@
             <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
               <port>${jettyPort}</port>
               <maxIdleTime>60000</maxIdleTime>
+              <requestHeaderSize>20000</requestHeaderSize>
+            </connector>
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+              <!-- Note: If another server needs to communicate with this one with
+                    https then it needs the environment variables set as follows:
+                    -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
+                    -->
+              <port>${jettySslPort}</port>
+              <keystore>${project.basedir}/../web/keystore.jks</keystore>
+              <password>password</password>
+              <keyPassword>password</keyPassword>
+              <truststore>${project.basedir}/../web/keystore.jks</truststore>
+              <trustPassword>password</trustPassword>
+              <maxIdleTime>60000</maxIdleTime>
+              <requestHeaderSize>20000</requestHeaderSize>
             </connector>
           </connectors>
           <webApp>${geonetworkWar}/geonetwork-main.war</webApp>
@@ -101,7 +118,7 @@
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>
           <stopKey>GEONETWORK_ITEST_STOP</stopKey>
-          <stopPort>8011</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
         <executions>
           <execution>
