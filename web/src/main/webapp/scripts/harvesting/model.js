@@ -104,9 +104,9 @@ function startNodes_OK(xmlRes)
 
 //=====================================================================================
 
-function cloneNode(idList, callBack)
+function cloneNode(id, callBack)
 {
-	var request= ker.createRequest('id', idList);
+	var request= ker.createRequest('id', id);
 	
 	this.cloneNodeCB = callBack;
 	ker.send('xml.harvesting.clone', request, ker.wrap(this, cloneNode_OK));

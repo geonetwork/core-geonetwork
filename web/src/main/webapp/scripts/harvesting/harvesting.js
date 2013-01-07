@@ -256,18 +256,7 @@ function run_OK(idList)
 
 function clone(id)
 {
-	var idList = view.getIdList();
-	
-	if (idList.length == 0) {
-		alert(loader.getText('pleaseSelect'));
-		return;
-	}
-	if (idList.length  > 1) {
-		alert(loader.getText('onlyOnePlease'));
-		return;
-	}
-
-	model.cloneNode(idList, ker.wrap(this, cloneCB));
+	model.cloneNode(id, ker.wrap(this, cloneCB));
 }
 
 //=====================================================================================

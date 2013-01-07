@@ -32,10 +32,6 @@
 		<button class="content" onclick="harvesting.remove()">
 			<xsl:value-of select="/root/gui/harvesting/remove"/>
 		</button>
-		&#160;
-		<button class="content" onclick="harvesting.clone()">
-			<xsl:value-of select="/root/gui/harvesting/clone"/>
-		</button>
 
 		<p/>
 
