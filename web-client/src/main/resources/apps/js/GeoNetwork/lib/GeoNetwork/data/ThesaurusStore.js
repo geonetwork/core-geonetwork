@@ -44,6 +44,8 @@ GeoNetwork.data.ThesaurusStore = function(config){
         name: 'id',
         mapping: 'key'
     }, {
+        name: 'defaultNamespace',
+    }, {
         name: 'type'
     }, {
         name: 'activated'
@@ -58,7 +60,7 @@ GeoNetwork.data.ThesaurusStore = function(config){
             field: 'title',
             direction: 'ASC'
         },
-        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated'],
+        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated', 'defaultNamespace'],
         listeners: config.listeners
     });
     
