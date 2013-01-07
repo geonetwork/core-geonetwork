@@ -1032,6 +1032,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 bold: "${before}'''${text}'''${after}",
                 italic: "${before}''${text}''${after}",
                 ul: '${before}* ${text}${after}',
+                ol: '${before}# ${text}${after}',
                 hyperlink: '${before}[${link} ${text}]${after}'
         };
         Ext.each(markupTextarea, function(item, index, allItems){
@@ -1067,7 +1068,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 },
                 renderTo: ta.parent()
               });
-
+            tb = new Ext.Button({
+                iconCls: 'txtOrderedList',
+                listeners: {
+                    click: function(c, pressed){
+                        this.formatMarkupText (item, syntax.ol, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    },
+                    scope: self
+                },
+                renderTo: ta.parent()
+              });
             tb = new Ext.Button({
                 iconCls: 'txtHyperlink',
                 listeners: {

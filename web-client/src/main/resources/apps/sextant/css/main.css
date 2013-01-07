@@ -706,3 +706,17 @@ font-size: 30px;
 	padding: 0;
 	padding-bottom: 2px;
 }
+.viewmd-panel ol, .result-list ol {
+    list-style: decimal !important;
+    padding-left: 20px;
+}
+.viewmd-panel ul, .result-list ul {
+    list-style: circle !important;
+    padding-left: 20px;
+}
+
+.viewmd-panel ol li, .result-list ol li,
+.viewmd-panel ul li, .result-list ul li {
+    float: none !important;
+    overflow: visible !important;
+}
