@@ -135,6 +135,7 @@
               <truststore>${project.basedir}/../web/keystore.jks</truststore>
               <trustPassword>password</trustPassword>
               <maxIdleTime>60000</maxIdleTime>
+              <requestHeaderSize>20000</requestHeaderSize>
             </connector>
           </connectors>
           <webApp>${geonetworkWar}/geonetwork-main.war</webApp>
