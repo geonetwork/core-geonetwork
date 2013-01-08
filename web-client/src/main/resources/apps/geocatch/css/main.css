@@ -493,3 +493,8 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	background-repeat: no-repeat;
 	padding-left: 15px;
 }
+
+/* Fix ExtJs menu margin, otherwise the normalize.css adds too much margin to this component */
+ul.x-menu-list {
+    margin: 0px;
+}
