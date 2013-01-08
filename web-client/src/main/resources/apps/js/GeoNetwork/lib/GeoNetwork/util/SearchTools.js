@@ -329,7 +329,8 @@ GeoNetwork.util.SearchTools = {
         }
     },
 
-    addFilterImpl : function(filters, type, name, value, defaultSimilarity, values) {
+    addFilterImpl : function(filters, type, name, value, defaultSimilarity,
+            values) {
         if (type == 'S') { // starts with
             filters.push(name + "=" + encodeURIComponent(value + "*"));
         } else if (type == 'C') { // contains
@@ -363,32 +364,14 @@ GeoNetwork.util.SearchTools = {
         } else if (type == 'N') { // Numeric
             filters.push(name + "=" + parseInt(value));
         } else if (type == 'G') { // Geographic
-            if (value === "gg25" || value[0] ==="gg25") {
+            if (value === "gg25" || value[0] === "gg25") {
                 var geom = undefined;
                 if (values.gemeinden) {
-                    Ext.each(values.gemeinden.split(","), function(k) {
-                        if (!geom) {
-                            geom = "region:gemeinden:" + k;
-                        } else {
-                            geom = geom + ",gemeinden:" + k;
-                        }
-                    });
+                    geom = "region:" + values.gemeinden;
                 } else if (values.kantone) {
-                    Ext.each(values.kantone.split(","), function(k) {
-                        if (!geom) {
-                            geom = "region:kantone:" + k;
-                        } else {
-                            geom = geom + ",kantone:" + k;
-                        }
-                    });
+                    geom = "region:" + values.kantone;
                 } else if (values.country) {
-                    Ext.each(values.country.split(","), function(k) {
-                        if (!geom) {
-                            geom = "region:country:" + k;
-                        } else {
-                            geom = geom + ",country:" + k;
-                        }
-                    });
+                    geom = "region:" + values.country;
                 }
 
                 if (geom) {
