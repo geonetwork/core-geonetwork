@@ -50,7 +50,7 @@ cat.list = function() {
 			'</td>',
 			'<td id="{uuid}" class="content">',
 			cat.Templates.TITLE,
-			'<p class="abstract">{[Ext.util.Format.ellipsis(values.abstract, 350)]}</p>', 
+			'<p class="abstract">{[Ext.util.Format.ellipsis(Ext.util.Format.stripTags(values.abstract), 350, true)]}</p>', 
 			'<div class="md-contact">',
 			'<tpl if="credit!=\'\'">',
 			'<span>',

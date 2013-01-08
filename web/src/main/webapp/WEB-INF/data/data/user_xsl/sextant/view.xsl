@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+	version="2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
+	xmlns:java="java:org.fao.geonet.util.XslUtil"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
@@ -42,8 +43,11 @@
 									</xsl:call-template>
 									</h6>
 									<p><div class="result-metadata-modal-content">
-									<xsl:apply-templates mode="iso19139" 
-										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword" />
+									<xsl:value-of 
+										select="string-join(/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+										gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+										gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor, ', ')" />
+										
 									</div></p>
 								</div>		
 								<h5>Description</h5>
@@ -117,18 +121,6 @@
 		</div>
 	</xsl:template>
 	
-	<!-- Key words -->
-	<xsl:template mode="iso19139" match="gmd:keyword"
-		priority="3">
-		<xsl:choose>
-			<xsl:when test="position()!=last()">
-				<xsl:value-of select="concat(gco:CharacterString, ', ')" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="gco:CharacterString" />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
 	
 	<!--  Abstract & Statement : Display Title and <p> with text -->
 	<xsl:template mode="iso19139" match="gmd:abstract|gmd:statement|gmd:supplementalInformation"
@@ -145,7 +137,26 @@
 			<div class="result-metadata-modal-resume">
 				<h6><xsl:value-of select="$title" /></h6>
 				<div class="result-metadata-modal-content">
-					<p><xsl:value-of select="gco:CharacterString" />
+					<p>
+						
+						<!--
+					            Can't get env from formatter - in Sextant wiki is activated 
+					        <xsl:variable name="markupType" select="/root/gui/env/wiki/markup"/>
+					        <xsl:variable name="wysiwygEnabled" select="/root/gui/env/wysiwyg/enable"/>-->
+						
+						<xsl:variable name="markupType" select="'org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage'"/>
+						<xsl:variable name="wysiwygEnabled" select="true()"/>
+						<xsl:variable name="allowMarkup" select="true()"/>
+						
+						<xsl:choose>
+							<xsl:when test="($markupType != 'none' or $wysiwygEnabled = true()) and $allowMarkup = true()">
+								<xsl:copy-of select="java:parseWikiText(., string(gco:CharacterString), string($markupType))"></xsl:copy-of>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="gco:CharacterString" />
+							</xsl:otherwise>
+						</xsl:choose>
+						
 					</p></div>
 			</div>
 		</xsl:if>
@@ -228,13 +239,13 @@
 	<xsl:template name="getTitle">
 		<xsl:param name="name" />
 		<xsl:variable name="title"
-			select="string($label/labels/element[@name=$name]/label)" />
+			select="string($label/labels/element[@name=$name and not(@context)]/label)" />
 		<xsl:choose>
 			<xsl:when test="normalize-space($title)">
 				<xsl:value-of select="$title" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="string($labelIso/labels/element[@name=$name]/label)" />
+				<xsl:value-of select="string($labelIso/labels/element[@name=$name and not(@context)]/label)" />
 			</xsl:otherwise>
 		</xsl:choose>
 
