@@ -125,7 +125,51 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         cmp.push(OpenLayers.i18n('hitsPerPage'), this.getHitsPerPage());
         
         cmp.push(['->']);
-        
+
+        var previousAction = new Ext.Action(
+            {
+                id : 'previousBt_up',
+                text : '&lt;&lt;',
+                handler : function() {
+                    catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    if (from > 0) {
+                        catalogue.startRecord = from;
+                        catalogue
+                            .search(
+                                'advanced-search-options-content-form',
+                                app.searchApp.loadResults,
+                                null,
+                                catalogue.startRecord,
+                                true);
+                    }
+                },
+                scope : this
+            });
+
+        cmp.push(previousAction, '|');
+
+
+        var nextAction = new Ext.Action({
+            id : 'nextBt_up',
+            text : '&gt;&gt;',
+            handler : function() {
+                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                catalogue.search(
+                    'advanced-search-options-content-form',
+                    app.searchApp.loadResults, null,
+                    catalogue.startRecord, true);
+            },
+            scope : this
+        });
+
+        cmp.push(nextAction, '|');
+
+        cmp.push({
+            xtype : 'tbtext',
+            text : '',
+            id : 'info_up'
+        }, '|');
+
         var sortOption = this.getSortByCombo();
         cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
         
@@ -155,6 +199,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             id: 'sortByToolBar',
             triggerAction: 'all',
             value: 'relevance',
+            editable: false,
             width: 130,
             store: GeoNetwork.util.SearchFormTools.getSortByStore(),
             valueField: 'id',
@@ -182,7 +227,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         return this.sortByCombo;
     },
     getHitsPerPage: function(config){
-        
+        var tb = this;
+
         var hitsPerPage = config ||
             [['10'], ['20'], ['50'], ['100']]
         
@@ -191,6 +237,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             name: 'E_hitsperpage',
             mode: 'local',
             width: 60,
+            editable: false,
             triggerAction: 'all',
             fieldLabel: OpenLayers.i18n('hitsPerPage'),
             value: hitsPerPage[0],
@@ -200,7 +247,17 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 data: hitsPerPage
             }),
             valueField: 'id',
-            displayField: 'id'
+            displayField: 'id',
+            listeners: {
+                select: function(cb, record, idx){
+                    if (this.searchFormCmp) {
+                        this.searchFormCmp.fireEvent('search');
+                    } else if (this.searchBtCmp) {
+                        this.searchBtCmp.fireEvent('click');
+                    }
+                },
+                scope: tb
+            }
         });
         
         return this.hitsPerPage;

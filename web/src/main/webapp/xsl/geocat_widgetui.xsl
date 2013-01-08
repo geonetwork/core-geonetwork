@@ -5,8 +5,10 @@
                 xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet java">
 
     <xsl:include href="banner.xsl"/>
+    <xsl:include href="utils.xsl"/>
+    <xsl:include href="metadata.xsl"/>
 
-    <xsl:output omit-xml-declaration="no" method="html"
+    <xsl:output omit-xml-declaration="yes" method="html"
                 doctype-public="html" indent="yes" encoding="UTF-8" />
 
 
@@ -324,8 +326,9 @@
                                 <xsl:apply-templates mode="brief" select="."/>
                             </xsl:variable>
                             <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-                            <a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
-                                Metadata popular record <xsl:value-of select="position()" /> <xsl:value-of select="$metadata/title"/>
+
+                            <a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
+                                <xsl:value-of select="$metadata/title"/>
                                 <br/>
                             </a>
                         </xsl:for-each>
@@ -340,8 +343,8 @@
 									<xsl:apply-templates mode="brief" select="."/>
 								</xsl:variable>
 								<xsl:variable name="metadata" select="$md/*[1]"/>
-								<a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');" title="{$metadata/title}">
-									Metadata recent record <xsl:value-of select="position()" /><xsl:value-of select="$metadata/title"/>
+								<a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
+                                    <xsl:value-of select="$metadata/title"/>
 									<br/>
 								</a>
 							</xsl:for-each>

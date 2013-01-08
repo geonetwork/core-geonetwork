@@ -66,13 +66,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
 
     'startNewPolygonHelp' : 'Start new polygon (Doubleclick to finish)',
     'deletePolygonHelp' : 'Delete or Start new polygon',
-    
-    'sortByTypes' : [
-        [ "changeDate", "Aktualisierung Metadaten" ],
-        [ "popularity", "Popularität" ],
-        [ "relevance", "Relevanz" ], [ "title", "Title" ] 
-    ],
-	
+
+    'changeDate': 'Metadata revision',
+
 	'outputTypes' : [ [ "full", "Komplett" ],
         [ "text", "Nur Text" ] 
     ],	

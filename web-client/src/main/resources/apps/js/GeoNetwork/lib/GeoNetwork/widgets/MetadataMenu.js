@@ -243,7 +243,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         
         /* Rating menu */
-        if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
+        // Swisstopo: Disable rating
+        if ((Ext.ux.RatingItem) && (false)) { // Check required widget are loaded before displaying context menu
             // If more actions are placed in context menu, this needs improvements.
             this.ratingWidget = new Ext.ux.RatingItem(null, {
                 canReset: false,
