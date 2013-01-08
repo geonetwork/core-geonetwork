@@ -286,8 +286,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete: serviceUrl + 'metadata.delete',
             mdPrint: serviceUrl + 'pdf',
-            //mdEdit : serviceUrl + 'metadata.edit',
-            mdEdit: serviceUrl + 'edit',
+            //SwissTopo: use classic md editor
+            mdEdit : serviceUrl + 'metadata.edit',
+            //mdEdit: serviceUrl + 'edit',
             mdCreate: serviceUrl + 'metadata.create.new',
             mdUpdate: serviceUrl + 'metadata.update.new',
             mdProcessingXml: serviceUrl + 'xml.metadata.processing',
