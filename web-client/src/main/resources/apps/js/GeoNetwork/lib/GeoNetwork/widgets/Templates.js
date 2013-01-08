@@ -196,7 +196,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                 '</td>',
                 '<td id="{uuid}">',
                     GeoNetwork.Templates.TITLE,
-                    '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters
+                    '<p class="abstract">{[Ext.util.Format.ellipsis(Ext.util.Format.stripTags(values.abstract), 350, true)]}</p>',    // FIXME : 250 as parameters
                     '<tpl if="subject">',
                         '<p class="subject"><tpl for="subject">',
                             '{value}{[xindex==xcount?"":", "]}',
