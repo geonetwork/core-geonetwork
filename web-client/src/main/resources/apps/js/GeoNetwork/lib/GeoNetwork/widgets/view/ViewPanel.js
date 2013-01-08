@@ -468,6 +468,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             },
+            bodyStyle: 'padding: 5px',
             border: false,
             frame: false,
             autoScroll: true

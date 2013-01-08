@@ -547,8 +547,53 @@ be use for custom styling in view mode */
 }
 
 /* Styles for classic metadata view (custom for Swisstopo) */
-.embedded h1, .embedded a, .embedded fieldset .metadata-block, .embedded th.md, .embedded td.padded  {
-    font-size: 0.8em;
+.embedded a, .embedded fieldset .metadata-block, .embedded th.md, .embedded td.padded  {
+    font-size: 0.7em;
+}
+
+.embedded h1 {
+    font-size: 1em;
+}
+
+ .embedded fieldset.metadata-block * fieldset {
+    border-color: #266397;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+    margin-top: 12px;
+    padding: 2px;
+}
+
+.embedded fieldset.metadata-block {
+    border-right: 3px solid #266397;
+    border-top: 3px solid #266397;
+    border-width: 3px 3px 0 0;
+    margin-top: 30px;
+    padding: 0;
+}
+
+.embedded fieldset.metadata-block legend {
+    font-size: large;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.embedded fieldset.metadata-block * legend {
+    font-size: medium;
+    text-transform: none;
+}
+
+.embedded fieldset.metadata-block * fieldset * legend {
+    font-size: small;
+    text-transform: none;
+}
+
+.embedded .metadata-block a {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.embedded legend {
+    font-weight: bold;
 }
 
 .downBt {
