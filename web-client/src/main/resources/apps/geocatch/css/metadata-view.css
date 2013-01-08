@@ -229,6 +229,7 @@ Display hyperlink as text next to element
 }*/
 
 .md-view * p.abstract {
+    font-size : 85%;
 }
 .md-view * p.subject {
   font-size : 80%;

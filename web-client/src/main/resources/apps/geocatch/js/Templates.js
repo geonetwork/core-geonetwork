@@ -122,7 +122,7 @@ GeoNetwork.Geocatch.Templates.RELATIONS =
     </div>';
 
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
-    '<p class="abstract">{[values.abstract.substring(0, 350)]} (...)</p>';
+    '<p class="abstract"><i>' + OpenLayers.i18n('abstract') + ': </i>{[values.abstract.substring(0, 350)]} (...)</p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
     '<div class="md-links" id="md-links-{id}"></div>';
