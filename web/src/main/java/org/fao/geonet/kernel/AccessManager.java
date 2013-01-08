@@ -465,36 +465,37 @@ public class AccessManager {
     }
 
     /**
-     * Check if current user as edit privilege based on its profile.
+     * Check if current user can edit the metadata according
+     * to the groups where the metadata is editable.
      *
      * @param context
      * @param id	The metadata internal identifier
      * @return
      * @throws Exception
      */
-	public boolean hasEditPermission(ServiceContext context, String id) throws Exception {
-		UserSession us = context.getUserSession();
-		if (!us.isAuthenticated())
-			return false;
-		
-		//--- check if the user is an editor and has edit rights over the metadata record
-		String isEditorQuery = "SELECT ug.groupId FROM UserGroups ug, OperationAllowed oa " +
-								"WHERE ug.groupId = oa.groupId AND operationId = ? AND " + 
-								"userId = ? AND profile = ? AND metadataId = ?";
-		
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		Element isEditorRes = dbms.select(isEditorQuery, 
-								Integer.parseInt(OPER_EDITING), 
-								Integer.parseInt(us.getUserId()), 
-								Geonet.Profile.EDITOR, 
-								Integer.parseInt(id));
-	
-		if (isEditorRes.getChildren().size() != 0) {
-			return true;
-		}
-		return false;
-	}
+    public boolean hasEditPermission(ServiceContext context, String id) throws Exception {
+        UserSession us = context.getUserSession();
+        if (!us.isAuthenticated())
+            return false;
+        
+        //--- check if the user is an editor and has edit rights over the metadata record
+        String isEditorQuery = "SELECT ug.groupId FROM UserGroups ug, OperationAllowed oa " +
+                                "WHERE ug.groupId = oa.groupId AND operationId = ? AND " + 
+                                "userId = ? AND profile = ? AND metadataId = ?";
+        
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        
+        Element isEditorRes = dbms.select(isEditorQuery, 
+                                Integer.parseInt(OPER_EDITING), 
+                                Integer.parseInt(us.getUserId()), 
+                                Geonet.Profile.EDITOR, 
+                                Integer.parseInt(id));
+        
+        if (isEditorRes.getChildren().size() != 0) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * TODO javadoc.
