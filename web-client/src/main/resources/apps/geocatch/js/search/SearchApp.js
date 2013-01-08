@@ -66,7 +66,8 @@ GeoNetwork.searchApp = function() {
                     {
                         height : 60,
                         region : 'south',
-                        html : '<div style="padding:2;display:block;text-align:center;background-color: #DFE8F6;">'
+                        border : false,
+                        html : '<div style="padding:8px; display:block;text-align:center;background-color: #DFE8F6;">'
                                 + '<input type="button" onclick="app.searchApp.fireSearch()"'
                                 + ' id="search-submit" class="form-submit" value="'
                                 + OpenLayers.i18n('Search')

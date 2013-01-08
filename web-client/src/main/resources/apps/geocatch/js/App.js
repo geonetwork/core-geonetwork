@@ -274,6 +274,7 @@ GeoNetwork.app = function() {
                     maxWidth : 400,
                     autoScroll : true,
                     forceLayout : true,
+                    border: false,
                     layoutConfig : {
                         animate : true
                     },

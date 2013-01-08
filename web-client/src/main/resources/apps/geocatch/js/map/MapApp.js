@@ -101,7 +101,7 @@ GeoNetwork.mapApp = function() {
             map : map2,
             toggleGroup : 'nav',
             iconCls : 'zoomin',
-            tooltip : OpenLayers.i18n("zoom in"),
+            tooltip : OpenLayers.i18n("zoom in")
         }), new GeoExt.Action({
             control : new OpenLayers.Control.ZoomBox({
                 out : true
@@ -109,13 +109,13 @@ GeoNetwork.mapApp = function() {
             toggleGroup : 'nav',
             iconCls : 'zoomout',
             map : map2,
-            tooltip : OpenLayers.i18n("zoom out"),
+            tooltip : OpenLayers.i18n("zoom out")
         }), "|", new GeoExt.Action({
             control : new OpenLayers.Control.Navigation(),
             map : map2,
             toggleGroup : 'nav',
             iconCls : 'pan',
-            tooltip : OpenLayers.i18n("navigate"),
+            tooltip : OpenLayers.i18n("navigate")
         }) ];
 
         var panel2 = new GeoExt.MapPanel({
@@ -123,6 +123,7 @@ GeoNetwork.mapApp = function() {
             map : map2,
             width : 400,
             id : 'map',
+            border: false,
             renderTo : 'map-div',
             tbar : toolbarItems
         });
@@ -1409,7 +1410,7 @@ GeoNetwork.mapApp = function() {
          * Given a URL, return the list of associated layers (WMS)
          * 
          * @param url
-         * @returns
+         * @returns list of associated layers
          */
         getCapabilitiesWMS : function(url) {
             var layers = [];
@@ -1438,7 +1439,7 @@ GeoNetwork.mapApp = function() {
          * Given a URL, return the list of associated layers (WMS)
          * 
          * @param url
-         * @returns
+         * @returns list of associated layers
          */
         getCapabilitiesWFS : function(url) {
             var layers = [];
