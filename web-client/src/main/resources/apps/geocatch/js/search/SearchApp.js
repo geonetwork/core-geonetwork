@@ -129,7 +129,7 @@ GeoNetwork.searchApp = function() {
                 anchor : '-10',
             });
 
-            var fieldKantone = this.getKantoneCombo().combo;
+            var fieldKantone = this.getKantoneCombo(true).combo;
 
             var hidden = new Ext.form.TextField({
                 name : 'G_hidden',
@@ -351,35 +351,43 @@ GeoNetwork.searchApp = function() {
                 },
                 items : c
             });
-            var b = new Ext.form.ComboBox({
-                fieldLabel : OpenLayers.i18n("country"),
+            var b = this.createSearchWFS("country", {
                 id : "country",
-                name : "country",
-                store : this.createCountryStore(),
-                mode : "local",
-                displayField : "name",
-                valueField : "value",
+                fieldLabel : OpenLayers.i18n("country"),
+                searchField : "LABEL",
+                displayField : "LABEL",
+                valueField : "ID",
+                listWidth : 200,
                 emptyText : OpenLayers.i18n("any"),
-                forceSelection : true,
+                name : "country",
+                loadingText : "Searching...",
                 triggerAction : "all",
-                selectOnFocus : true,
-                anchor : '-10',
+                minChars : 1,
+                anchor : "-10"
             });
             var a = this.getKantoneCombo(true);
             var e = this.getGemeindenCombo(true);
-            b.on("select", function(h, g) {
-                this.getKantoneCombo().combo.setValue("");
-                delete this.getKantoneCombo().combo.lastQuery;
+            var onchangeCountry = function(h, g) {
+                Ext.each(this.getKantoneCombo(), function(k) {
+                    Ext.getCmp(k.id).setValue("");
+                    delete Ext.getCmp(k.id).lastQuery;
+                });
+
                 this.getGemeindenCombo().combo.setValue("");
                 delete this.getGemeindenCombo().combo.lastQuery;
-                if (g && g.get("bbox")) {
-                    app.mapApp.getMap().zoomToExtent(g.get("bbox"))
-                }
-                var i = g && g.get("name") == "LI";
-                this.getKantoneCombo().combo.setDisabled(i);
+
+                var i = Ext.getCmp("country").getValue() === "country:1";
+
+                Ext.each(Ext.query("*[id^=kantoneComboBox]", Ext
+                        .get("advanced-search-options-content-form").dom),
+                        function(k) {
+                            Ext.getCmp(k.id).setDisabled(i);
+                        });
                 this.getGemeindenCombo().combo.setDisabled(i);
                 app.searchApp.highlightGeographicFilter()
-            }, this);
+            };
+            b.combo.on("change", onchangeCountry, this);
+            b.combo.on("removeItem", onchangeCountry, this);
             d
                     .push({
                         xtype : "fieldset",
@@ -454,7 +462,7 @@ GeoNetwork.searchApp = function() {
                                     layoutConfig : {
                                         labelSeparator : ""
                                     },
-                                    items : [ b, a.combo, e.combo ]
+                                    items : [ b.combo, a.combo, e.combo ]
                                 },
                                 {
                                     xtype : "panel",
@@ -727,122 +735,122 @@ GeoNetwork.searchApp = function() {
                 }
             }
         },
-        createSearchWFS : function(n, m, k, g, a, d) {
-            var h = [];
-            var j = "";
-            for ( var e = 0; e < g.length; ++e) {
-                var b = g[e];
-                if (d != undefined && d[b] != undefined) {
-                    h.push({
-                        name : b,
-                        mapping : b,
-                        convert : d[b]
-                    })
-                } else {
-                    h.push({
-                        name : b,
-                        mapping : b
-                    })
-                }
-                j += "    <ogc:PropertyName>" + m + ":" + b
-                        + "</ogc:PropertyName>"
-            }
-            var l = Ext.data.Record.create(h);
-            var f = new Ext.data.XmlReader({
-                record : k,
-                id : "@fid"
-            }, l);
-            var c;
-            if (n) {
-                c = new Ext.data.Store({
-                    reader : f,
-                    sortInfo : {
-                        field : a.displayField,
-                        direction : "ASC"
-                    }
-                });
-                searchTools.readWFS(geocat.geoserverUrl + "/wfs", m, k, g,
-                        null, {
-                            success : function(i) {
-                                c.loadData(i.responseXML);
-                                c.add(new l({}))
-                            }
-                        })
-            } else {
-                c = new Ext.data.Store({
-                    reader : f,
-                    sortInfo : {
-                        field : a.displayField,
-                        direction : "ASC"
-                    },
-                    load : function(i) {
-                        i = i || {};
-                        if (this.fireEvent("beforeload", this, i) !== false) {
-                            this.storeOptions(i);
-                            var r = this.baseParams[p.queryParam];
-                            var q = new OpenLayers.Filter.Comparison({
-                                type : OpenLayers.Filter.Comparison.LIKE,
-                                property : a.searchField || a.displayField,
-                                value : r.toLowerCase() + ".*"
-                            });
-                            if (a.updateFilter) {
-                                q = a.updateFilter.call(p, q)
-                            }
-                            searchTools.readWFS(geocat.geoserverUrl + "/wfs",
-                                    m, k, g, q, {
-                                        success : function(s) {
-                                            c.loadData(s.responseXML);
-                                            c.add(new l({}))
-                                        }
-                                    });
-                            return true
-                        } else {
-                            return false
-                        }
-                    }
+
+        /**
+         * Deprecated name. It uses new swisstopo APi for geographic instances
+         */
+        createSearchWFS : function(type, config) {
+
+            var lang = /srv\/([a-z]{3})/.exec(window.location.href)[1];
+
+            var c = new Ext.data.Store({
+                id : config.id + "store",
+                fields : [ "ID", "LABEL", "BOUNDING" ],
+                sortInfo : {
+                    id : "ID",
+                    field : "LABEL",
+                    value : "ID",
+                    direction : "ASC"
+                },
+                reader : new Ext.data.JsonReader({
+                    idProperty : 'ID',
+                    fields : [ "ID", "LABEL", "BOUNDING" ]
                 })
-            }
-            OpenLayers.Util.applyDefaults(a, {
+            });
+
+            Ext.Ajax
+                    .request({
+                        url : "xml.regions.list?categoryId=" + type,
+                        success : function(r) {
+                            var data = [];
+
+                            if (!r.responseXML.childNodes) {
+                                console.log(r);
+                            }
+
+                            var children = r.responseXML.childNodes[0].childNodes;
+                            Ext
+                                    .each(
+                                            children,
+                                            function(e) {
+                                                if (e.hasChildNodes()) {
+
+                                                    var label_ = Ext.DomQuery
+                                                            .select(lang, e)[0].textContent;
+
+                                                    if (label_
+                                                            && label_.length > 0) {
+
+                                                        var bbox = "POLYGON ("
+                                                                + Ext.DomQuery
+                                                                        .select(
+                                                                                "north",
+                                                                                e)[0].textContent
+                                                                + " "
+                                                                + Ext.DomQuery
+                                                                        .select(
+                                                                                "east",
+                                                                                e)[0].textContent
+                                                                + ", "
+                                                                + Ext.DomQuery
+                                                                        .select(
+                                                                                "south",
+                                                                                e)[0].textContent
+                                                                + " "
+                                                                + Ext.DomQuery
+                                                                        .select(
+                                                                                "west",
+                                                                                e)[0].textContent
+                                                                + ")";
+                                                        data
+                                                                .push({
+                                                                    "ID" : e
+                                                                            .getAttribute("id"),
+                                                                    "LABEL" : label_,
+                                                                    "BOUNDING" : bbox
+                                                                });
+                                                    }
+                                                }
+                                            });
+
+                            c.loadData(data);
+                        }
+                    });
+            OpenLayers.Util.applyDefaults(config, {
                 store : c,
-                loadingText : "Searching...",
-                mode : n ? "local" : "remote",
+                loadingText : OpenLayers.i18n("Searching..."),
+                mode : "local",
                 hideTrigger : false,
                 typeAhead : true,
                 anchor : "-10",
                 selectOnFocus : true
             });
-            var p = new Ext.ux.form.SuperBoxSelect(a);
+            var p = new Ext.ux.form.SuperBoxSelect(config);
             var o = function(w) {
-                var r = w.getRecords();
-                if (r.length == 0) {
-                    return;
-                }
-                var v = new OpenLayers.Format.WKT();
-                var x = null;
-                for ( var t = 0; t < r.length; ++t) {
-                    var q = r[t];
-                    if (q.get("BOUNDING")) {
-                        var s = v.read(q.get("BOUNDING"));
-                        if (x) {
-                            x.extend(s.geometry.getBounds())
-                        } else {
-                            x = s.geometry.getBounds()
+                geocat.vectorLayer.removeAllFeatures();
+                var format = new OpenLayers.Format.WKT();
+
+                Ext.each(w.usedRecords.items, function(q) {
+                    Ext.Ajax.request({
+                        url : "region.geom.wkt?id=" + q.get("ID") + "&srs="
+                                + app.mapApp.getMap().getProjection(),
+                        success : function(r) {
+                            feature = format.read(r.responseText);
+                            geocat.vectorLayer.addFeatures([ feature ]);
+
+                            app.mapApp.getMap().zoomToExtent(
+                                    geocat.vectorLayer.getDataExtent());
                         }
-                    }
-                }
-                try {
-                    if (x) {
-                        app.mapApp.getMap().zoomToExtent(x)
-                    }
-                } catch (u) {
-                }
+                    });
+                });
             };
             p.on("change", o);
+            p.on("removeitem", o);
             return {
                 combo : p,
                 store : c,
                 refreshContour : function() {
-                    o(p)
+                    o(this.combo);
                 }
             }
         },
@@ -855,96 +863,20 @@ GeoNetwork.searchApp = function() {
             if (this.gemeindenCombo) {
                 return this.gemeindenCombo
             }
-            this.gemeindenCombo = this
-                    .createSearchWFS(
-                            false,
-                            "chtopo",
-                            "gemeindenBB",
-                            [ "GEMNAME_L", "GEMNAME", "OBJECTVAL", "KANTONSNR",
-                                    "BOUNDING" ],
-                            {
-                                id : "gemeindenComboBox",
-                                fieldLabel : OpenLayers.i18n("city"),
-                                searchField : "GEMNAME_L",
-                                displayField : "GEMNAME",
-                                valueField : "OBJECTVAL",
-                                listWidth : 200,
-                                name : "gemeinden",
-                                loadingText : "Searching...",
-                                triggerAction : "all",
-                                minChars : 1,
-                                anchor : "-10",
-                                updateFilter : function(d) {
-                                    if (this.kantonFilter) {
-                                        var b = new OpenLayers.Filter.Logical(
-                                                {
-                                                    type : OpenLayers.Filter.Logical.OR,
-                                                    filters : []
-                                                });
-                                        for ( var c = 0; c < this.kantonFilter.length; ++c) {
-                                            b.filters
-                                                    .push(new OpenLayers.Filter.Comparison(
-                                                            {
-                                                                type : OpenLayers.Filter.Comparison.EQUAL_TO,
-                                                                property : "KANTONSNR",
-                                                                value : this.kantonFilter[c]
-                                                                        .get("KANTONSNR")
-                                                            }))
-                                        }
-                                        return new OpenLayers.Filter.Logical(
-                                                {
-                                                    type : OpenLayers.Filter.Logical.AND,
-                                                    filters : [ d, b ]
-                                                })
-                                    } else {
-                                        return d
-                                    }
-                                }
-                            }, {
-                                GEMNAME : function(n, g) {
-                                    if (!n) {
-                                        return ""
-                                    }
-                                    var j = n.indexOf('"');
-                                    var o = n.lastIndexOf('"');
-                                    var l = n.indexOf("<");
-                                    var d = n.lastIndexOf(">");
-                                    if (l > -1) {
-                                        var k = "<data>"
-                                                + n.substring(l, d + 1)
-                                                + "</data>";
-                                        var f = searchTools.loadXMLString(k);
-                                        var i = geocat.language.substring(0, 2)
-                                                .toUpperCase();
-                                        var m = Ext.DomQuery.selectValue(
-                                                "//DE", f, n);
-                                        var b = Ext.DomQuery.selectValue(
-                                                "//EN", f, m);
-                                        var h = Ext.DomQuery.selectValue(
-                                                "//FR", f, b);
-                                        var e = Ext.DomQuery.selectValue(
-                                                "//IT", f, h);
-                                        var c = Ext.DomQuery.selectValue("//"
-                                                + i, f, e);
-                                        return c
-                                    } else {
-                                        if (j > -1) {
-                                            return n.substring(j, o + 1)
-                                        } else {
-                                            return n
-                                        }
-                                    }
-                                }
-                            });
-            this.gemeindenCombo.combo.on("change", function(c) {
-                if (c.getRecords().length == 0) {
-                    var b = this.getKantoneCombo().combo.getValue();
-                    if (b) {
-                        this.getKantoneCombo().refreshContour()
-                    }
-                }
-                highlightGeographicFilter()
-            }, this);
+            this.gemeindenCombo = this.createSearchWFS("gemeinden", {
+                id : "gemeindenComboBox",
+                fieldLabel : OpenLayers.i18n("city"),
+                searchField : "LABEL",
+                displayField : "LABEL",
+                valueField : "ID",
+                listWidth : 200,
+                name : "gemeinden",
+                loadingText : "Searching...",
+                triggerAction : "all",
+                minChars : 1,
+                anchor : "-10"
+            });
+
             return this.gemeindenCombo
         },
         /**
@@ -1212,191 +1144,22 @@ GeoNetwork.searchApp = function() {
                 id = id + n;
             }
 
-            return this.createSearchWFS(false, 'chtopo', 'kantoneBB', [
-                    'KUERZEL', 'KANTONSNR', 'BOUNDING' ], {
-                id : id,
-                fieldLabel : OpenLayers.i18n('kantone'),
-                displayField : 'KUERZEL',
-                valueField : 'KANTONSNR',
-                name : 'kantone',
-                triggerAction : 'all',
-                minChars : 1,
-                anchor : '-10'
-            });
-        },
-
-        createSearchWFS : function(local, ns, type, fields, opts, conversions) {
-            var recordFields = [];
-            var properties = "";
-            for ( var i = 0; i < fields.length; ++i) {
-                var name = fields[i];
-                if (conversions != undefined && conversions[name] != undefined) {
-                    recordFields.push({
-                        name : name,
-                        mapping : name,
-                        convert : conversions[name]
-                    });
-                } else {
-                    recordFields.push({
-                        name : name,
-                        mapping : name
-                    });
-                }
-                properties += '    <ogc:PropertyName>' + ns + ':' + name
-                        + '</ogc:PropertyName>';
-            }
-
-            var Record = Ext.data.Record.create(recordFields);
-
-            var reader = new Ext.data.XmlReader({
-                record : type,
-                id : '@fid'
-            }, Record);
-
-            var ds;
-            if (local) {
-                ds = new Ext.data.Store({
-                    reader : reader,
-                    sortInfo : {
-                        field : opts.displayField,
-                        direction : "ASC"
-                    }
+            if (createNew) {
+                return this.createSearchWFS('kantone', {
+                    id : id,
+                    fieldLabel : OpenLayers.i18n('kantone'),
+                    displayField : 'LABEL',
+                    valueField : 'ID',
+                    sortField : 'LABEL',
+                    name : 'kantone',
+                    triggerAction : 'all',
+                    minChars : 1,
+                    anchor : '-10'
                 });
-
-                app.searchApp.readWFS(
-                        GeoNetwork.Settings.GeoserverUrl + "/wfs", ns, type,
-                        fields, null, {
-                            success : function(response) {
-                                ds.loadData(response.responseXML);
-                                ds.add(new Record({}));
-                            }
-                        });
             } else {
-                ds = new Ext.data.Store(
-                        {
-                            reader : reader,
-                            sortInfo : {
-                                field : opts.displayField,
-                                direction : "ASC"
-                            },
-                            load : function(options) {
-                                options = options || {};
-                                if (this.fireEvent("beforeload", this, options) !== false) {
-                                    this.storeOptions(options);
-                                    var query = this.baseParams[search.queryParam];
-                                    var filter = new OpenLayers.Filter.Comparison(
-                                            {
-                                                type : OpenLayers.Filter.Comparison.LIKE,
-                                                property : opts.searchField
-                                                        || opts.displayField,
-                                                value : query.toLowerCase()
-                                                        + ".*"
-                                            });
-                                    if (opts.updateFilter) {
-                                        filter = opts.updateFilter.call(search,
-                                                filter);
-                                    }
-
-                                    app.searchApp
-                                            .readWFS(
-                                                    GeoNetwork.Settings.GeoserverUrl
-                                                            + "/wfs",
-                                                    ns,
-                                                    type,
-                                                    fields,
-                                                    filter,
-                                                    {
-                                                        success : function(
-                                                                response) {
-                                                            ds
-                                                                    .loadData(response.responseXML);
-                                                            ds.add(new Record(
-                                                                    {}));
-                                                        }
-                                                    });
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            }
-                        });
+                return Ext.query("*[id^=kantoneComboBox]");
             }
-            OpenLayers.Util.applyDefaults(opts, {
-                store : ds,
-                loadingText : 'Searching...',
-                mode : local ? 'local' : 'remote',
-                hideTrigger : false,
-                typeAhead : true,
-                anchor : '-10',
-                selectOnFocus : true
-            });
-            var search = new Ext.ux.form.SuperBoxSelect(opts);
-
-            var refreshTheContour = function(combo) {
-                var records = combo.usedRecords.items;
-                geocat.vectorLayer.removeAllFeatures();
-
-                if (records.length == 0)
-                    return;
-
-                var format = new OpenLayers.Format.WKT();
-                var bbox = null;
-
-                Ext.each(records,
-                        function(record) {
-
-                            var id = record.get("KANTONSNR");
-
-                            if (record.id.indexOf("gemeinden") === 0) {
-                                id = record.get("OBJECTVAL");
-                            }
-
-                            Ext.Ajax
-                                    .request({
-                                        url : "region.geom.wkt?id="
-                                                + opts.name
-                                                + ":"
-                                                + id
-                                                + "&srs="
-                                                + app.mapApp.getMap()
-                                                        .getProjection(),
-                                        success : function(r) {
-                                            feature = format
-                                                    .read(r.responseText);
-                                            geocat.vectorLayer
-                                                    .addFeatures([ feature ]);
-                                        }
-                                    });
-
-                            if (record.get("BOUNDING")) {
-                                var feature = format.read(record
-                                        .get("BOUNDING"));
-                                if (bbox) {
-                                    bbox.extend(feature.geometry.getBounds());
-                                } else {
-                                    bbox = feature.geometry.getBounds();
-                                }
-                            }
-
-                        });
-                try {
-                    if (bbox)
-                        app.mapApp.getMap().zoomToExtent(bbox);
-                } catch (e) {
-                }
-            };
-            search.on('change', refreshTheContour);
-            search.on('removeitem', refreshTheContour);
-
-            return {
-                combo : search,
-                store : ds,
-                refreshContour : function() {
-                    refreshTheContour(search);
-                }
-            };
         },
-
         readWFS : function(url, ns, type, properties, filter, queryOpts) {
             var queryPrefix = '<?xml version="1.0" ?>\n'
                     + '<wfs:GetFeature service="WFS" version="1.0.0"\n'
