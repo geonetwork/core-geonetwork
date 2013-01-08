@@ -327,10 +327,9 @@
                             </xsl:variable>
                             <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 
-                            <a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
+                            <div><a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
                                 <xsl:value-of select="$metadata/title"/>
-                                <br/>
-                            </a>
+                            </a></div>
                         </xsl:for-each>
                         </div>
                     </fieldset>
@@ -343,10 +342,9 @@
 									<xsl:apply-templates mode="brief" select="."/>
 								</xsl:variable>
 								<xsl:variable name="metadata" select="$md/*[1]"/>
-								<a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
+								<div><a class="arrow" href="javascript:catalogue.metadataShow('{geonet:info/uuid}');" title="{$metadata/title}">
                                     <xsl:value-of select="$metadata/title"/>
-									<br/>
-								</a>
+								</a></div>
 							</xsl:for-each>
                         </div>
                     </fieldset>

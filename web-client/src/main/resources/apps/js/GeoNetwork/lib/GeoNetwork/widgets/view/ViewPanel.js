@@ -279,6 +279,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         this.updateToolbar(menu);
     },
     updateToolbar: function(modes){
+        if (!this.viewMenu) return;
+
         var i, m;
         this.viewMenu.removeAll();
         for (i = 0; i < modes.length; i++) {
@@ -460,7 +462,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         this.add(new Ext.Panel({
             autoLoad: {
-                url: this.serviceUrl + '&currTab=' + this.currTab,
+                url: this.serviceUrl + '&currTab=' + this.currTab  + '&geocat',
                 callback: function() {
                     this.fireEvent('aftermetadataload', this);
                 },

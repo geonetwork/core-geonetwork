@@ -37,7 +37,7 @@ Ext.namespace('GeoNetwork.view');
 GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
     defaultConfig: {
         layout: 'fit',
-        width: 700,
+        width: 900,
         height: 740,
         border: false,
         /** api: config[lang] 

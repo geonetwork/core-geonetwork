@@ -545,3 +545,18 @@ be use for custom styling in view mode */
 .gmlduration + * input {
     float: none !important;
 }
+
+/* Styles for classic metadata view (custom for Swisstopo) */
+.embedded h1, .embedded a, .embedded fieldset .metadata-block, .embedded th.md, .embedded td.padded  {
+    font-size: 0.8em;
+}
+
+.downBt {
+    background-image: url(../../images/default/bullet_arrow_down.png);
+}
+.Bt {
+    float: left;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
