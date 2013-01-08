@@ -352,13 +352,14 @@ div.facets>ul>li {
 
 div.facets ul ul {
 	margin-left: 5px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	margin-top: 5px;
 	font-size: 85%;
 }
 
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	color: #E26F02;
+    font-size: 12px;
 }
 
 .facet-link {
