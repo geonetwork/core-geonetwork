@@ -67,12 +67,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
     'startNewPolygonHelp' : 'Bitte zeichnen Sie ein Polygon (mit Doppelklick beenden)',
     'deletePolygonHelp' : 'Polygon löschen oder ein neues zeichnen',
 
-
-    'sortByTypes' : [
-        [ "changeDate", "Aktualisierung Metadaten" ],
-        [ "popularity", "Popularität" ],
-        [ "relevance", "Relevanz" ], [ "title", "Title" ] 
-    ],
+    'changeDate': 'Aktualisierung Metadaten',
 	
 	'outputTypes' : [ [ "full", "Komplett" ],
         [ "text", "Nur Text" ] 
