@@ -88,6 +88,20 @@
             </table>
         </div>
         <div align="left" style="{$style}">
+            <table>
+                <tr>
+                    <td class="padded">
+                        <input id="requestedLanguage.sorted" class="content" type="checkbox"/>
+                    </td>
+                    <td class="padded">
+                        <label for="requestedLanguage.sorted">
+                            <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div align="left" style="{$style}">
         	<label for="requestedLanguage.only">
                 <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
             </label>
