@@ -465,10 +465,10 @@ public class AccessManager {
     }
 
     /**
-     * TODO javadoc.
+     * Check if current user as edit privilege based on its profile.
      *
      * @param context
-     * @param id
+     * @param id	The metadata internal identifier
      * @return
      * @throws Exception
      */
@@ -477,14 +477,21 @@ public class AccessManager {
 		if (!us.isAuthenticated())
 			return false;
 		
-		
 		//--- check if the user is an editor and has edit rights over the metadata record
-		String isEditorQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+		String isEditorQuery = "SELECT ug.groupId FROM UserGroups ug, OperationAllowed oa " +
+								"WHERE ug.groupId = oa.groupId AND operationId = ? AND " + 
+								"userId = ? AND profile = ? AND metadataId = ?";
+		
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		Element isEditorRes = dbms.select(isEditorQuery, Integer.parseInt(us.getUserId()), Geonet.Profile.EDITOR);
+		
+		Element isEditorRes = dbms.select(isEditorQuery, 
+								Integer.parseInt(OPER_EDITING), 
+								Integer.parseInt(us.getUserId()), 
+								Geonet.Profile.EDITOR, 
+								Integer.parseInt(id));
+	
 		if (isEditorRes.getChildren().size() != 0) {
-			Set<String> hsOper = getOperations(context, id, context.getIpAddress());
-			if (hsOper.contains(OPER_EDITING)) return true;
+			return true;
 		}
 		return false;
 	}
