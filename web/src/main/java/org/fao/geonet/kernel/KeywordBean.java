@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Content;
@@ -30,8 +29,6 @@ import org.jdom.Element;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
-
-import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.httpclient.URIException;
@@ -65,98 +62,6 @@ public class KeywordBean {
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
 	/**
-	 * TODO javadoc.
-	 *
-	 * @param id
-	 * @param value
-	 * @param definition
-	 * @param code
-	 * @param coordEast
-	 * @param coordWest
-	 * @param coordSouth
-	 * @param coordNorth
-	 * @param thesaurus
-	 * @param selected
-	 * @param lang
-	 * @param thesaurusTitle
-	 * @param thesaurusDate
-	 * @deprecated use the setters to construct the bean.  it is a fluent API so can do new KeywordBean().setCode("..").setValue("123","eng")
-	 */
-	public KeywordBean(int id, String value, String definition, String code, 
-	        String coordEast, String coordWest, 
-	        String coordSouth, String coordNorth, 
-	        String thesaurus, boolean selected, String lang, 
-	        String thesaurusTitle, String thesaurusDate, String downloadUrl, 
-					String keywordUrl) {
-	    this(id,value,definition,code,coordEast, coordWest, coordSouth, coordNorth, thesaurus,
-	            selected, lang, thesaurusTitle, thesaurusDate, downloadUrl, keywordUrl, null);
-	}
-	
-	/**
-     * TODO javadoc.
-     *
-	 * @param id
-	 * @param value
-	 * @param definition
-	 * @param code
-	 * @param coordEast
-	 * @param coordWest
-	 * @param coordSouth
-	 * @param coordNorth
-	 * @param thesaurus
-	 * @param selected
-   * @param lang
-   * @param thesaurusTitle
-   * @param thesaurusDate
-	 * @param downloadUrl
-	 * @param keywordUrl
-	 */
-	public KeywordBean(int id, String value, String definition, String code, 
-				String coordEast, String coordWest, 
-				String coordSouth, String coordNorth, 
-				String thesaurus, boolean selected, String lang, 
-				String thesaurusTitle, String thesaurusDate, String downloadUrl,
-				String keywordUrl, IsoLanguagesMapper isoLangMapper) {
-		super();
-		this.isoLanguageMapper = isoLangMapper;
-		this.id = id;
-        defaultLang = lang;
-		setValue(value, lang);
-		setDefinition(definition,lang);
-		this.code = code;
-		this.coordEast = coordEast;
-		this.coordWest = coordWest;
-		this.coordSouth = coordSouth;
-		this.coordNorth = coordNorth;
-		this.thesaurusKey = thesaurus;
-		this.selected = selected;
-        this.thesaurusTitle = thesaurusTitle;
-        this.thesaurusDate = thesaurusDate;
-		this.downloadUrl = downloadUrl;
-		this.keywordUrl = keywordUrl;
-	}
-
-	/**
-     * TODO javadoc.
-     *
-	 * @param value
-	 * @param definition
-	 * @param thesaurus
-	 * @param selected
-	 * @param downloadUrl
-	 * @param keywordUrl
-	 */
-	public KeywordBean(String value, String definition, boolean selected, String downloadUrl, String keywordUrl) {
-		super();
-		defaultLang = calculationDefaultLang();
-        setValue(value, defaultLang);
-        setDefinition(definition, defaultLang);
-		this.selected = selected;
-		this.downloadUrl = downloadUrl;
-		this.keywordUrl = keywordUrl;
-	}
-
-	/**
 	 * Create keyword bean with the default IsoLanguageMapper
 	 */
     public KeywordBean() {
@@ -165,18 +70,6 @@ public class KeywordBean {
     
     public KeywordBean(IsoLanguagesMapper isoLangMapper) {
         this.isoLanguageMapper = isoLangMapper;
-    }
-
-    private String calculationDefaultLang() {
-	    String lang;
-	    if(defaultLang != null) {
-            lang = defaultLang;
-	    } else if (ServiceContext.get() != null) {
-	        lang = to3CharLang(ServiceContext.get().getLanguage());
-	    } else {
-	        lang = Geonet.DEFAULT_LANGUAGE;
-	    }
-        return lang;
     }
 
 	public KeywordBean setThesaurusInfo(Thesaurus thesaurus) {
@@ -351,12 +244,14 @@ public class KeywordBean {
      * @return
      */
 	public String getNameSpaceCode() {
-	      if(code == null) {
-	            return "#";
-	        } else if (code.contains("#"))
-			return code.split("#")[0] + "#";
-		else
+		if (code == null) {
 			return "#";
+		} else if (code.contains("#")) {
+			String[] parts = code.split("#",2);
+			return parts[0] + "#";
+		} else {
+			return "#";
+		}
 	}
 
 	public KeywordBean setUriCode(String code) {

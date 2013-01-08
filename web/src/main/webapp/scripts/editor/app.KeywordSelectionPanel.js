@@ -8,7 +8,7 @@ app.keyword = {};
 
 var Keyword = Ext.data.Record.create([
   {name: 'value'},
-  {name: 'thesaurus'},
+  {name: 'thesaurus', mapping:"thesaurus/key"},
   {name: 'uri'}
 ]);
 
