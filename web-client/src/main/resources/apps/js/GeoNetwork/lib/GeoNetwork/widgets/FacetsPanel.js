@@ -370,7 +370,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             });
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
-                text: (data.label != null ? data.label : data.node),
+                text: (data.label != null ? data.label : data.value),
                 menu: scrollMenu
             }));
             this.breadcrumb.doLayout();
