@@ -125,7 +125,51 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         cmp.push(OpenLayers.i18n('hitsPerPage'), this.getHitsPerPage());
         
         cmp.push(['->']);
-        
+
+        var previousAction = new Ext.Action(
+            {
+                id : 'previousBt_up',
+                text : '&lt;&lt;',
+                handler : function() {
+                    catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    if (from > 0) {
+                        catalogue.startRecord = from;
+                        catalogue
+                            .search(
+                                'advanced-search-options-content-form',
+                                app.searchApp.loadResults,
+                                null,
+                                catalogue.startRecord,
+                                true);
+                    }
+                },
+                scope : this
+            });
+
+        cmp.push(previousAction, '|');
+
+
+        var nextAction = new Ext.Action({
+            id : 'nextBt_up',
+            text : '&gt;&gt;',
+            handler : function() {
+                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                catalogue.search(
+                    'advanced-search-options-content-form',
+                    app.searchApp.loadResults, null,
+                    catalogue.startRecord, true);
+            },
+            scope : this
+        });
+
+        cmp.push(nextAction, '|');
+
+        cmp.push({
+            xtype : 'tbtext',
+            text : '',
+            id : 'info_up'
+        }, '|');
+
         var sortOption = this.getSortByCombo();
         cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
         
