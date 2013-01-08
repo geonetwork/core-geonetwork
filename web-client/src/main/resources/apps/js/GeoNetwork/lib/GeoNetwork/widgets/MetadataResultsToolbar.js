@@ -235,7 +235,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
-        /*this.updateCategoriesAction = new Ext.menu.Item({
+        this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
             handler: function(){
@@ -243,7 +243,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this,
             hidden: hide
-        });*/
+        });
         this.updatePrivilegesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updatePrivileges'),
             id: 'updatePrivilegesAction',
@@ -254,7 +254,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        this.updateStatusAction = new Ext.menu.Item({
+        /*this.updateStatusAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateStatus'),
             id: 'updateStatusAction',
             iconCls : 'statusIcon',
@@ -273,16 +273,16 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this,
             hidden: hide
-        });
-        this.selectionActions.push(this.deleteAction, this.ownerAction, //this.updateCategoriesAction, 
-                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
+        });*/
+        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction,
+                this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
-        //this.actionMenu.addItem(this.updateCategoriesAction);
+        this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
-        this.actionMenu.addItem(this.updateStatusAction);
-        this.actionMenu.addItem(this.updateVersionAction);
+        //this.actionMenu.addItem(this.updateStatusAction);
+        //this.actionMenu.addItem(this.updateVersionAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -390,13 +390,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         /* Export action
          */
-        var csvExportAction = new Ext.Action({
+        /*var csvExportAction = new Ext.Action({
             text: OpenLayers.i18n('exportCsv'),
             handler: function(){
                 this.catalogue.csvExport();
             },
             scope: this
-        });
+        });*/
         
         var mefExportAction = new Ext.Action({
             text: OpenLayers.i18n('exportZip'),
@@ -431,12 +431,12 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 scope: this
             });
             
-        this.selectionActions.push(mefExportAction, csvExportAction, printAction);
+        this.selectionActions.push(mefExportAction, printAction); //,csvExportAction
         
         this.actionMenu.add(
             '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>',
             mefExportAction, 
-            csvExportAction, 
+            //csvExportAction,
             printAction // ,{
         // text : 'Display selection only'
         // }
@@ -538,7 +538,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        var editingActions = [this.deleteAction, //this.updateCategoriesAction, 
+        var editingActions = [this.deleteAction, this.updateCategoriesAction,
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],

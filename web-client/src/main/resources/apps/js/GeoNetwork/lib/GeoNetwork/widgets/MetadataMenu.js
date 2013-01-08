@@ -130,7 +130,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.statusAction = new Ext.Action({
+        /*this.statusAction = new Ext.Action({
             text: OpenLayers.i18n('status'),
             tooltip: OpenLayers.i18n('statusTT'),
             iconCls : 'statusIcon',
@@ -139,9 +139,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.catalogue.metadataStatus(id);
             },
             scope: this
-        });
+        });*/
         // TODO : enable only if SVN manager is on.
-        this.versioningAction = new Ext.Action({
+        /*this.versioningAction = new Ext.Action({
             text: OpenLayers.i18n('versioning'),
             tooltip: OpenLayers.i18n('versioningTT'),
             iconCls : 'versioningIcon',
@@ -150,7 +150,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.catalogue.metadataVersioning(id);
             },
             scope: this
-        });
+        });*/
         this.categoryAction = new Ext.Action({
             text: OpenLayers.i18n('categories'),
             //iconCls : 'md-mn-copy',
@@ -164,7 +164,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.categoryAction] //this.statusAction, this.versioningAction,
             }
         });
         this.add(this.otherActions);
@@ -302,8 +302,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* Actions status depend on records */
         this.editAction.setDisabled(!isEditable);
         this.adminAction.setDisabled(!isEditable && !isHarvested);
-        this.statusAction.setDisabled(!isEditable && !isHarvested);
-        this.versioningAction.setDisabled(!isEditable && !isHarvested);
+        //this.statusAction.setDisabled(!isEditable && !isHarvested);
+        //this.versioningAction.setDisabled(!isEditable && !isHarvested);
         this.categoryAction.setDisabled(!isEditable && !isHarvested);
         this.deleteAction.setDisabled(!isEditable && !isHarvested);
         
