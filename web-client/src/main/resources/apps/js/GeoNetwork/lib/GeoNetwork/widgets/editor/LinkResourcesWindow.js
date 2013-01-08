@@ -54,6 +54,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         uploadDocument: false,
         metadataSchema: 'iso19139',
         protocolForServices: ['application/vnd.ogc.wms_xml', 'application/vnd.ogc.wfs_xml'],
+        /**
+         * URL parameter separator mainly used
+         * when multiple metadata record could be selected 
+         * with extra descriptor (eg. initiative type and association 
+         * type for a sibling.
+         */
+        separator: '%23',
         hiddenParameters: {
             service: [{
                 name: 'E_type',
@@ -208,7 +215,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     getFormFieldForSibling: function (items) {
         if (this.type === 'sibling') {
 
-            var associationType = new Ext.form.ComboBox({
+            var associationTypeCb = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('associationType'),
                 store: this.getAssociationTypeStore(),
                 valueField: 'code',
@@ -223,17 +230,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }
             });
             
-            associationType.getStore().on('load', function () {
-                var code = associationType.getStore().getAt(0).get('code');
-                this.associationType = code;
-                associationType.setValue(code);
+            associationTypeCb.getStore().on('load', function () {
+                this.associationType = associationTypeCb.getStore().getAt(0);
+                associationTypeCb.setValue(this.associationType.get('code'));
                 // Hide the combo if only one value available
-                if (associationType.getStore().getCount() === 1) {
-                    associationType.setVisible(false);
+                if (associationTypeCb.getStore().getCount() === 1) {
+                    associationTypeCb.setVisible(false);
                 }
             }, this);
             
-            var initiativeType = new Ext.form.ComboBox({
+            var initiativeTypeCb = new Ext.form.ComboBox({
                 fieldLabel: OpenLayers.i18n('initiativeType'),
                 store: this.getInitiativeTypeStore(),
                 valueField: 'code',
@@ -242,28 +248,28 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 triggerAction: 'all',
                 listeners: {
                     select: function (combo, record, index) {
-                        this.initiativeType = combo.getValue();
+                        this.initiativeType = record;
+                        
                         var allValues = this.hiddenParametersValues.sibling[this.metadataSchema];
-                        var paramsValue = allValues && allValues[this.initiativeType];
-//                        this.formPanel.getForm().reset();
+                        
+                        var paramsValue = allValues && allValues[this.initiativeType.get('code')];
                         if (paramsValue) {
                             this.formPanel.getForm().setValues(paramsValue);
                             // Refresh search after form filter update
                             this.doSearch();
                         }
-                        
                     },
                     scope: this
                 }
             });
-            initiativeType.getStore().on('add', function () {
-                var code = initiativeType.getStore().getAt(0).get('code');
-                this.initiativeType = code;
-                initiativeType.setValue(code);
-                initiativeType.fireEvent('select', initiativeType);
+            initiativeTypeCb.getStore().on('add', function () {
+                var record = initiativeTypeCb.getStore().getAt(0);
+                this.initiativeType = record;
+                initiativeTypeCb.setValue(record.get('code'));
+                initiativeTypeCb.fireEvent('select', initiativeTypeCb, this.initiativeType);
             }, this);
             
-            items.push([associationType, initiativeType]);
+            items.push([associationTypeCb, initiativeTypeCb]);
         }
     },
     /**
@@ -638,7 +644,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         return this.uploadForm;
     },
-
     /**
      * A metadata search form with a grid
      * to select a record to link (deprecated).
@@ -774,6 +779,89 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         return this.formPanel;
     },
+    getMultipleMetadataSelectorForSibling: function (cancelBt) {
+        var self = this;
+        
+        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
+        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
+        
+        var fromTpl = new Ext.XTemplate(
+                '<tpl for=".">',
+                    // TODO : add keyword definiton ?
+                    '<div class="ux-mselect-item">{title}</div>',
+                '</tpl>'
+            ), toTpl = new Ext.XTemplate(
+                '<tpl for=".">',
+                    // TODO : add keyword definiton ?
+                    '<div class="ux-mselect-item">{title} ({associationTypeLabel} > {initiativeTypeLabel})</div>',
+                '</tpl>'
+            );
+        
+        var cmp = [];
+        this.getHiddenFormInput(cmp);
+        this.getFormFieldForSibling(cmp);
+
+        cmp.push(this.getSearchInput());
+        
+        var itemSelector = new Ext.ux.ItemSelector({
+            dataFields: ["title"],
+            //toData: [],
+            toStore: this.mdSelectedStore,
+            msWidth: 300,
+            msHeight: 260,
+            valueField: "value",
+            hideLabel: true,
+            toSortField: undefined,
+            fromTpl: fromTpl,
+            toTpl: toTpl,
+            toLegend: OpenLayers.i18n('Selected'),
+            fromLegend: OpenLayers.i18n('Found'),
+            fromStore: this.mdStore,
+            fromAllowTrash: false,
+            fromAllowDup: true,
+            toAllowDup: false,
+            drawUpIcon: false,
+            drawDownIcon: false,
+            drawTopIcon: false,
+            drawBotIcon: false,
+            imagePath: '../../apps/js/ext-ux/images',
+            toTBar: [{
+                // control to clear all select keywwords and refresh the XML.
+                text: OpenLayers.i18n('clear'),
+                handler: function () {
+                    var i = itemSelector;
+                    itemSelector.reset.call(i);
+                },
+                scope: this
+            }],
+        });
+        
+        // Add the initiativeType and associationType info to
+        // the added record.
+        this.mdSelectedStore.on('add', function (store, records, index) {
+            Ext.each(records, function (record) {
+                record.data.initiativeType = self.initiativeType.get('code');
+                record.data.associationType = self.associationType.get('code');
+                record.data.initiativeTypeLabel = self.initiativeType.get('label');
+                record.data.associationTypeLabel = self.associationType.get('label');
+            });
+        });
+        
+        cmp.push(itemSelector);
+        
+        this.formPanel = new Ext.form.FormPanel({
+            items: cmp,
+            buttons: [{
+                text: OpenLayers.i18n('link'),
+                iconCls: 'linkIcon',
+                scope: this,
+                handler: function () {
+                    this.runProcess();
+                }
+            }, cancelBt]
+        });
+        return this.formPanel;
+    },
     /**
      * According to the type of resource to link build the
      * form to populate process parameters.
@@ -794,6 +882,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             this.add(this.generateThumbnailForm(cancelBt));
         } else if (this.type === 'onlinesrc') {
             this.add(this.generateDocumentUploadForm(cancelBt));
+        } else if (this.type === 'sibling') {
+            this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
         } else {
             
             this.add(this.generateMetadataSearchForm(cancelBt));
@@ -892,15 +982,17 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         } else if (this.type === 'sibling') {
          // Combine all links if multiple selection is available
             if (this.mdSelectedStore && this.mdSelectedStore.getCount() > 0) {
-                var uuids = [];
+                var uuids = [], sep = this.separator;
                 this.mdSelectedStore.each(function (record) {
-                    uuids.push(record.get('uuid'));
+                    uuids.push(record.get('uuid') + 
+                            sep + record.get('associationType') + 
+                            sep + record.get('initiativeType'));
                 });
                 parameters += "&uuids=" + uuids.join(',');
             } 
             parameters += "&uuidref=" + (this.selectedMd ? this.selectedMd : "") + 
-                            "&initiativeType=" + this.initiativeType + 
-                            "&associationType=" + this.associationType;
+                            "&initiativeType=" + this.initiativeType.get('code') + 
+                            "&associationType=" + this.associationType.get('code');
             
         } else if (this.type === 'onlinesrc') {
             // Combine all links if multiple selection is available
@@ -984,71 +1076,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
             //this.catalogue.search({E_template: 'n'}, null, null, 1, true, this.mdStore, null);
         }
     },
-    getMultipleMetadataSelectorForSibling: function (cancelBt) {
-
-        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
-        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
-        
-        var tpl = new Ext.XTemplate(
-                '<tpl for=".">',
-                    // TODO : add keyword definiton ?
-                    '<div class="ux-mselect-item">{title}</div>',
-                '</tpl>'
-            );
-        
-        var cmp = [];
-        this.getHiddenFormInput(cmp);
-        this.getFormFieldForSibling(cmp);
-
-        cmp.push(this.getSearchInput());
-        
-        var itemSelector = new Ext.ux.ItemSelector({
-            dataFields: ["title"],
-            //toData: [],
-            toStore: this.mdSelectedStore,
-            msWidth: 320,
-            msHeight: 260,
-            valueField: "value",
-            hideLabel: true,
-            toSortField: undefined,
-            fromTpl: tpl,
-            toTpl: tpl,
-            toLegend: OpenLayers.i18n('Selected'),
-            fromLegend: OpenLayers.i18n('Found'),
-            fromStore: this.mdStore,
-            fromAllowTrash: false,
-            fromAllowDup: true,
-            toAllowDup: false,
-            drawUpIcon: false,
-            drawDownIcon: false,
-            drawTopIcon: false,
-            drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
-            toTBar: [{
-                // control to clear all select keywwords and refresh the XML.
-                text: OpenLayers.i18n('clear'),
-                handler: function () {
-                    var i = itemSelector;
-                    itemSelector.reset.call(i);
-                },
-                scope: this
-            }]
-        });
-        cmp.push(itemSelector);
-        
-        this.formPanel = new Ext.form.FormPanel({
-            items: cmp,
-            buttons: [{
-                text: OpenLayers.i18n('link'),
-                iconCls: 'linkIcon',
-                scope: this,
-                handler: function () {
-                    this.runProcess();
-                }
-            }, cancelBt]
-        });
-        return this.formPanel;
-    },
+    
     /**
      * Custom for MyOcean to allow multiple selection
      */

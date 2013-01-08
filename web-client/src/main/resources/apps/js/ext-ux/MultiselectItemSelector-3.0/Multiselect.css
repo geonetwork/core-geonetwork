@@ -9,7 +9,7 @@
     font:normal 10px tahoma, arial, helvetica, sans-serif;
     padding:2px;
     border:1px solid #fff;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     cursor:pointer;
 }
 .ux-mselect-selected{
