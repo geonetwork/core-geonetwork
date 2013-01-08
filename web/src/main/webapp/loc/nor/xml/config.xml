@@ -32,7 +32,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Søkeresultater i forespurte språket sortert på toppen</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorer forespurte språket i søket</requestedlanguageignored>
 
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>

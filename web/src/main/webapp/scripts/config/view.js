@@ -201,8 +201,9 @@ ConfigView.prototype.setData = function(data)
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
 
-    $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
-    $('requestedLanguage.only').value = data['REQUESTED_LANGUAGE_ONLY'];
+  $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
+  $('requestedLanguage.only').value = data['REQUESTED_LANGUAGE_ONLY'];
+  $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
 
 	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
 
@@ -328,8 +329,9 @@ ConfigView.prototype.getData = function()
 
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
 
-        AUTODETECT_ENABLE : $('autodetect.enable').checked,
-        REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').value,
+    AUTODETECT_ENABLE : $('autodetect.enable').checked,
+    REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').value,
+    REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
 
 		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	

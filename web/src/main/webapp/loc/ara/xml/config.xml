@@ -25,7 +25,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>نتائج البحث في اللغة المطلوبة على أعلى مرتبة</requestedlanguagesorted>
-    <requestedlanguageignored>تجاهل اللغة المطلوبة في البحث</requestedlanguageignored>
 
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>

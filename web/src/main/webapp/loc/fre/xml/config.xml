@@ -50,7 +50,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Résultats de la recherche dans la langue demandée triés sur le dessus</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorer la langue demandée à la recherche</requestedlanguageignored>
 
 	<server>Serveur</server>
 	<host>Hôte</host>
