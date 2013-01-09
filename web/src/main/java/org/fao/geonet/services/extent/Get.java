@@ -231,8 +231,17 @@ public class Get implements Service
         }
 
         final FilterFactory2 filterFactory2 = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+        Class<?> idBinding = featureType.getFeatureSource().getSchema().getDescriptor(featureType.idColumn).getType().getBinding();
+        String finalId = id;
+        try {
+	        if(id.contains(".") && Short.class.isAssignableFrom(idBinding) || Integer.class.isAssignableFrom(idBinding) || Long.class.isAssignableFrom(idBinding)) {
+	        	finalId = id.substring(0, id.indexOf('.'));
+	        }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
         final Filter filter = filterFactory2.equals(filterFactory2.property(featureType.idColumn), filterFactory2
-                .literal(id));
+        		.literal(finalId));
 
         final Query q = featureType.createQuery(filter,properties);
 
@@ -296,8 +305,9 @@ public class Get implements Service
     private Element resolve(Format format, String id, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
             Query q, FeatureType featureType, Source wfs, String extentTypeCode, CoordinateReferenceSystem crs, int coordDigits) throws Exception, Exception
     {
-        final FeatureIterator<SimpleFeature> features = featureSource.getFeatures(q).features();
+        FeatureIterator<SimpleFeature> features = null;
         try {
+        	features = featureSource.getFeatures(q).features();
             if (features.hasNext()) {
                 final SimpleFeature feature = features.next();
 
@@ -306,7 +316,9 @@ public class Get implements Service
                 return ExtentHelper.error("no features founds with ID=" + id);
             }
         } finally {
-            features.close();
+        	if (features != null) {
+        		features.close();
+        	}
         }
     }
 
