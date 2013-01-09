@@ -103,14 +103,13 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         Ext.applyIf(this, this.defaultConfig);
         
         this.tools = [{
-            id: 'newwindow',
-            qtip: OpenLayers.i18n('newWindow'),
-            handler: function(e, toolEl, panel, tc){
-                window.open(GeoNetwork.Util.getBaseUrl(location.href) + "?uuid=" + this.metadataUuid);
-                this.hide();
-            },
+			id: 'maximize',
+			qtip: OpenLayers.i18n('maximize'),
+			handler: function(){
+				this.toggleMaximize();
+			},
             scope: this
-        }];
+		}];
         
         GeoNetwork.view.ViewWindow.superclass.initComponent.call(this);
         this.setTitle(this.record ? this.record.get('title') : '');
