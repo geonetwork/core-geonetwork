@@ -1138,21 +1138,16 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         			app.isLoggedIn();
         		}
         	}, 500);
-        } else {
+        } else {            
 			OpenLayers.Request.POST({
 			    url: this.services.login,
 			    data: OpenLayers.Util.getParameterString({username: username,password: password}),
 			    headers: {
 			        "Content-Type": "application/x-www-form-urlencoded"
 			    },
-	            success: function(response){
-	            	app.isLoggedIn();  // will get the user information and trigger after login event
-	            },
-	            failure: function(response){
-	                app.identifiedUser = undefined;
-	                app.onAfterBadLogin();
-	                // TODO : Get Exception from GeoNetwork
-	            }
+	            success: this.isLoggedIn,
+	            failure: this.isLoggedIn,
+	            scope: this
 	        });
         }
     },

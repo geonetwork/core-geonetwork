@@ -21,8 +21,9 @@
 				language = request.getHeader(found);
 			}
 			%>
-			var userLang = '<%= language %>'
-			var referer = window.location.pathname
+			var userLang = '<%= language %>';
+			
+			var referer = window.location.pathname;
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 
@@ -30,8 +31,9 @@
 			if(!userLang) {
 				userLang = "eng";
 			} 
-			
-			userLang = userLang.split('-')[0].toLowerCase();
+
+            userLang = userLang.split('-')[0].toLowerCase();
+            userLang = userLang.split(',')[0].toLowerCase();
 			if (userLang.match("^en")) {
 				userLang = "eng";
 			}
@@ -45,7 +47,7 @@
 				userLang = "ita";
 			}
 	
-		  	window.location="<%= baseURL %>/srv/"+userLang+"/service-not-allowed?referer="+referer;
+		  	//window.location="<%= baseURL %>/srv/"+userLang+"/service-not-allowed?referer="+referer;
 		}
 		</script>
 	</head>

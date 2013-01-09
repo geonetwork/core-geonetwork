@@ -20,9 +20,13 @@
 				language = request.getHeader(found);
 			}
 			%>
-			var userLang = "<%= language %>"
+			var userLang = "<%= language %>";
 			if(userLang == null || userLang.length == 0)
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage; 
+			
+
+            userLang = userLang.split('-')[0].toLowerCase();
+            userLang = userLang.split(',')[0].toLowerCase();
 			
 			if(userLang.match("^en") == "en") userLang = "eng"
 			else if(userLang.match("^fr") == "fr") userLang = "fre"

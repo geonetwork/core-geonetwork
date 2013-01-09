@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache,no-store">
-		<!-- <link rel="stylesheet" type="text/css" href="geonetwork.css"> -->
+		<link rel="stylesheet" type="text/css" href="geonetwork.css">
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
