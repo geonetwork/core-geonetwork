@@ -122,7 +122,9 @@ GeoNetwork.Geocatch.Templates.RELATIONS =
     </div>';
 
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
-    '<p class="abstract"><i>' + OpenLayers.i18n('abstract') + ': </i>{[values.abstract.substring(0, 350)]} (...)</p>';
+    '<p class="abstract"><i>' + OpenLayers.i18n('abstract') + ': </i>{[values.abstract.substring(0, 350)]} (...)\
+     <tpl if="revisiondate!=\'\'"><br/>(<i>' + OpenLayers.i18n('modified') + ': </i>{revisiondate})</tpl>\
+     </p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
     '<div class="md-links" id="md-links-{id}"></div>';
@@ -140,7 +142,10 @@ GeoNetwork.Geocatch.Templates.TITLE =
 
 
 GeoNetwork.Geocatch.Templates.LOGO = 
-    '<div class="md-logo"><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></div>';
+    '<div class="md-logo" xmlns="http://www.w3.org/1999/html"> \
+        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
+        <tpl if="groupWebsite==\'\'"><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
+    </div>';
 
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
         '<ul style="padding-left: 10px">',

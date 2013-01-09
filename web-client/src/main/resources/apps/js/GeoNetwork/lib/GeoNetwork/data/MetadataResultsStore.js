@@ -71,6 +71,14 @@ GeoNetwork.data.MetadataResultsStore = function() {
         }
     }
 
+    function getGroupWebsite(v, record) {
+        if (record.geonet_info && record.geonet_info.groupWebsite) {
+            return record.geonet_info.groupWebsite[0].value;
+        } else {
+            return '';
+        }
+    }
+
     function getValidationInfo(v, record) {
         var i, validity = [], validInfo;
         if (record.geonet_info && record.geonet_info.valid_details) {
@@ -211,6 +219,13 @@ GeoNetwork.data.MetadataResultsStore = function() {
             return '';
         }
     }
+    function getRevisionDate(v, record) {
+        if (record['revisionDate'] && record['revisionDate'][0]) {
+            return record['revisionDate'][0].value;
+        } else {
+            return '';
+        }
+    }
     function getSelected(v, record) {
         if (record.geonet_info && record.geonet_info.selected) {
             return record.geonet_info.selected[0].value;
@@ -265,6 +280,9 @@ GeoNetwork.data.MetadataResultsStore = function() {
             name : 'groupLogoUuid',
             convert : getGroupLogoUuid
         }, {
+            name : 'groupWebsite',
+            convert : getGroupWebsite
+        }, {
             name : 'subject',
             mapping : 'keyword',
             defaultValue : ''
@@ -305,6 +323,9 @@ GeoNetwork.data.MetadataResultsStore = function() {
         }, {
             name : 'changedate',
             convert : getChangeDate
+        }, {
+            name : 'revisiondate',
+            convert : getRevisionDate
         }, {
             name : 'selected',
             convert : getSelected
