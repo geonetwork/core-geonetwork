@@ -174,15 +174,20 @@
                         <nav id="navTop">
                             <ul id="top-navigation">
                                 <li>
-                                    <a href="https://pdokloket.nl/nl/producten/nationaal-georegister">
-                                        Page d'accueil
+                                    <a href="http://www.geocat.ch/geonetwork/srv/{/root/gui/language}/geocat">
+                                        <xsl:value-of select="/root/gui/strings/nav/home" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="selected" href="javascript:showBrowse();">
-                                        Vue d'ensemble
+                                    <a class="selected" href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/tools/sitemap.html">
+                                        <xsl:value-of select="/root/gui/strings/nav/overview" />
                                     </a>
                                 </li>
+                                <xsl:if test="string(/root/gui/config/serverStage) != 'production'">
+                                <li>
+                                    <a onclick="javascript:alert('You are not on the production server.  You are using the \'{/root/gui/config/serverStage}\' server.  http://www.geocat.ch is the production/real server')" class="banner"><xsl:value-of select="/root/gui/config/serverStage"/></a>
+                                </li>
+                                </xsl:if>
                             </ul>
                         </nav>
                         <div id="lang-form"></div>
@@ -301,20 +306,10 @@
                 </div>
             </div>
 
-            <div id="search-switcher" style="display:none;">
-                    <div  id="search-submit-container">
-                    <input type="button"
-                        onclick="Ext.getCmp('advanced-search-options-content-form').fireEvent('search');"
-                        id="search-submit" class="form-submit">
-                        <xsl:attribute name="value"><xsl:value-of
-                            select="/root/gui/strings/search" /></xsl:attribute>
-                    </input>
-                    </div>
-                    
-            </div>    
             <div id="search-results" style="display:none; height: 100%">
                 <div id="results-main">
-                    <h2>SEARCH FOR GEODATA AND GEOSERVICES</h2>
+                    <h2><xsl:value-of
+                            select="/root/gui/strings/mainpageTitle" /></h2>
                     <img src="{/root/gui/url}/images/geocatII-web.jpg" alt="Geocat cat" width="100px"/>
 
                     <fieldset id="mostPopular">

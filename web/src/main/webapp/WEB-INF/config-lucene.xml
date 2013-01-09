@@ -130,6 +130,8 @@
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
       <field name="groupLogoUuid" tagName="groupLogoUuid"/>
+      <field name="groupWebsite" tagName="groupWebsite"/>
+      <field name="revisionDate" tagName="revisionDate"/>
     </dumpFields>
   </search>
 
