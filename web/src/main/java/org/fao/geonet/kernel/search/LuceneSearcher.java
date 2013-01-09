@@ -41,6 +41,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -96,7 +97,9 @@ import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.UnAuthorizedException;
+import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.search.LuceneConfig.Facet;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
@@ -316,6 +319,8 @@ public class LuceneSearcher extends MetaSearcher {
 							addElement(info, Edit.Info.Elem.SCORE, score.toString());
 						}
 						response.addContent(md);
+						
+						addGeocatElements(srvContext, md, id, gc);
 					}
 				}
 			} else {
@@ -324,6 +329,51 @@ public class LuceneSearcher extends MetaSearcher {
 		}
 
 		return response;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addGeocatElements(ServiceContext context, Element md,
+			String id, GeonetContext gc) throws Exception {
+		GetRelated serviceSearcher = new GetRelated();
+		serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
+		Element idElem = new Element(Params.ID).setText(id);
+		String uuid = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
+				.getChildText(Params.UUID);
+		Element uuidElem = new Element(Params.UUID).setText(uuid);
+		Element typeElem = new Element("type").setText("service");
+		Element searchRequestParams = new Element(Jeeves.Elem.REQUEST).addContent(
+				new Element(Edit.RootChild.INFO, Edit.NAMESPACE)
+						.addContent(idElem).addContent(uuidElem))
+				.addContent(typeElem);
+		Element relatedServicesResponse = serviceSearcher.exec(
+				searchRequestParams, context);
+
+		List<Element> relatedServices = (List<Element>) Xml.selectNodes(relatedServicesResponse, "services/response/metadata");
+		for (Element service : relatedServices) {
+			Element serviceEl = new Element("service");
+			addEl(service, serviceEl, "_title");
+			addEl(service, serviceEl, "defaultTitle");
+			addEl(service, serviceEl, "serviceType");
+			List<Element> wmsuri = new LinkedList<Element>(service.getChildren("wmsuri"));
+			for (Element element : wmsuri) {
+				if(element.getText().startsWith(uuid+"###")) {
+					element.detach();
+					serviceEl.addContent(element);
+				}
+			}
+			md.addContent(serviceEl);
+		}
+	}
+
+	private void addEl(Element service, Element serviceEl, String nodeName) {
+		@SuppressWarnings("unchecked")
+		List<Element> children = service.getChildren(nodeName);
+		List<Element> el = new LinkedList<Element>(children);
+		for (Element element : el) {
+			element.detach();
+			serviceEl.addContent(element);
+			
+		}
 	}
 
 	/**

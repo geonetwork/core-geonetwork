@@ -234,8 +234,8 @@ public class Get implements Service
         Class<?> idBinding = featureType.getFeatureSource().getSchema().getDescriptor(featureType.idColumn).getType().getBinding();
         String finalId = id;
         try {
-	        if(id.contains(".") && Short.class.isAssignableFrom(idBinding) || Integer.class.isAssignableFrom(idBinding) || Long.class.isAssignableFrom(idBinding)) {
-	        	finalId = id.substring(0, id.indexOf('.'));
+	        if(id.contains(".") && (Short.class.isAssignableFrom(idBinding) || Integer.class.isAssignableFrom(idBinding) || Long.class.isAssignableFrom(idBinding))) {
+        		finalId = id.substring(0, id.indexOf('.'));
 	        }
         } catch (Exception e) {
         	e.printStackTrace();
