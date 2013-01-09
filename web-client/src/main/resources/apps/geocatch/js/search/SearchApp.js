@@ -244,6 +244,18 @@ GeoNetwork.searchApp = function() {
                 name : "T_orgName"
             } ];
 
+            // Hidden fields (for links from the admin)
+            f = f.concat([ {
+                xtype : "hidden",
+                name : "E_owner"
+            }, {
+                xtype : "hidden",
+                name : "E_siteId"
+            }, {
+                xtype : "hidden",
+                name : "E__isHarvested"
+            } ]);
+
             f = f.concat([
                     {
                         xtype : "combo",
@@ -284,7 +296,7 @@ GeoNetwork.searchApp = function() {
                         selectOnFocus : true,
                         anchor : '-10',
                         hidden : !catalogue.isIdentified()
-                    }) ])
+                    }) ]);
 
             f.push({
                 xtype : "hidden",

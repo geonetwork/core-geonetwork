@@ -274,7 +274,7 @@ GeoNetwork.app = function() {
                     maxWidth : 400,
                     autoScroll : true,
                     forceLayout : true,
-                    border: false,
+                    border : false,
                     layoutConfig : {
                         animate : true
                     },
@@ -362,5 +362,64 @@ Ext.onReady(function() {
     var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterLogin' ];
 
     app.viewport.doLayout();
+
+    // Do we have a search on the parameter url?
+
+    if (OpenLayers.Util.getParameters().hasOwnProperty("s_search")) {
+
+        // E__owner
+        if (OpenLayers.Util.getParameters().hasOwnProperty("_E__owner")) {
+            Ext.each(Ext.query("input[name=E_owner]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        OpenLayers.Util.getParameters()._E__owner);
+            });
+        }
+
+        // _E_siteId
+        if (OpenLayers.Util.getParameters().hasOwnProperty("_E_siteId")) {
+            Ext.each(Ext.query("input[name=E_siteId]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        OpenLayers.Util.getParameters()._E_siteId);
+            });
+        }
+
+        // _E__isHarvested=y
+        if (OpenLayers.Util.getParameters().hasOwnProperty("_E__isHarvested")) {
+            Ext.each(Ext.query("input[name=E__isHarvested]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        OpenLayers.Util.getParameters()._E__isHarvested);
+            });
+        }
+
+        // _E_template=y
+        if (OpenLayers.Util.getParameters().hasOwnProperty("_E_template")) {
+            Ext.each(Ext.query("input[name=E__isTemplate]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        OpenLayers.Util.getParameters()._E_template);
+            });
+        }
+
+        // dateFrom
+        if (OpenLayers.Util.getParameters().hasOwnProperty("dateFrom")) {
+            Ext.each(Ext.query("input[name=E_extFrom]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        new Date(OpenLayers.Util.getParameters().dateFrom + " 00:00:00"));
+            });
+        }
+
+        // dateTo
+        if (OpenLayers.Util.getParameters().hasOwnProperty("dateTo")) {
+            Ext.each(Ext.query("input[name=E_extTo]"), function(input) {
+                Ext.getCmp(input.id).setValue(
+                        new Date(OpenLayers.Util.getParameters().dateTo));
+            });
+        }
+
+        showAdvancedSearch();
+
+        Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
+        Ext.getCmp('advanced-search-options-content-form').getForm().reset();
+
+    }
 
 });
