@@ -419,7 +419,10 @@ Ext.onReady(function() {
 
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
         Ext.getCmp('advanced-search-options-content-form').getForm().reset();
-
+    }
+    
+    if(OpenLayers.Util.getParameters().hasOwnProperty("uuid")){
+        catalogue.metadataShow(OpenLayers.Util.getParameters().uuid, true);
     }
 
 });
