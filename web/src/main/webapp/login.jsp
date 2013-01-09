@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache,no-store">
-		<link rel="stylesheet" type="text/css" href="geonetwork.css">
+		<!-- <link rel="stylesheet" type="text/css" href="geonetwork.css"> -->
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
@@ -20,7 +20,7 @@
 				language = request.getHeader(found);
 			}
 			%>
-			var userLang = "<%= language %>"
+			var userLang = "<%= language %>";
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 
@@ -28,8 +28,9 @@
 			if(!userLang) {
 				userLang = "eng";
 			} 
-			
-			userLang = userLang.split('-')[0].toLowerCase();
+
+            userLang = userLang.split('-')[0].toLowerCase();
+            userLang = userLang.split(',')[0].toLowerCase();
 			if (userLang.match("^en")) {
 				userLang = "eng";
 			}
@@ -42,6 +43,7 @@
 			if (userLang.match("^it")) {
 				userLang = "ita";
 			}
+			
 	
 		  	window.location="srv/"+userLang+"/login.form"+window.location.search;
 		}
