@@ -142,6 +142,17 @@
 
             
             <script>
+                /**
+                * Geocat specific stuff
+                */
+                function permlink(url) {
+                    Ext.MessageBox.show({
+                        title: '<xsl:value-of select="/root/gui/strings/permlink"/>',
+                        msg: '<a href="'+url+'" target="_newtab">'+url+'</a>',
+                        animEl: 'mb7'
+                    });
+                }
+
                 Ext.onReady(function() {
                     GeoNetwork.Settings.GeoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
                 
