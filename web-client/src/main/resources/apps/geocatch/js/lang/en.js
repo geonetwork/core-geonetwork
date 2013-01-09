@@ -69,6 +69,8 @@ GeoNetwork.GeoCatCh.Lang.en = {
 
     'changeDate': 'Metadata revision',
 
+    'refineSearch': 'Refine search',
+
 	'outputTypes' : [ [ "full", "Komplett" ],
         [ "text", "Nur Text" ] 
     ],	

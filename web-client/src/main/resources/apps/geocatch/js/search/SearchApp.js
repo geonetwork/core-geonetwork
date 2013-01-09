@@ -90,7 +90,7 @@ GeoNetwork.searchApp = function() {
             var formItems = [];
 
             var fieldAny = new GeoNetwork.form.OpenSearchSuggestionTextField({
-                fieldLabel : 'Text search',
+                fieldLabel : OpenLayers.i18n('searchText'),
                 hideLabel : false,
                 id : 'E_any',
                 // TODO: Check why if not set explicit width takes size much
@@ -142,8 +142,8 @@ GeoNetwork.searchApp = function() {
             return new GeoNetwork.SearchFormPanel({
                 id : 'simple-search-options-content-form',
                 autoHeight : true,
-                labelWidth : 70,
-                bodyStyle : 'padding:15px',
+                labelWidth : 100,
+                bodyStyle : 'padding:5px',
                 region : 'north',
                 border : false,
                 resetBt : null,
@@ -577,11 +577,11 @@ GeoNetwork.searchApp = function() {
             });
             return new GeoNetwork.SearchFormPanel({
                 id : 'advanced-search-options-content-form',
-                labelWidth : 70,
+                labelWidth : 100,
                 resetBt : null,
                 searchBt : null,
                 forcelayout : true,
-                bodyStyle : 'padding:15px',
+                bodyStyle : 'padding:5px',
                 style : {
                     display : 'none'
                 },

@@ -39,36 +39,41 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'kantone': 'Kanton(e)',
 	'any2': 'Alle',
 
-    'what': 'What?',
-    'searchText': 'Text search',
-    'rtitle': 'Title',
-    'Abstract': 'Abstract',
-    'Keyword': 'Keyword(s)',
-    'theme': 'Topic(s)',
-    'contact': 'Contact',
+    'what': 'Was?',
+    'searchText': 'Alle Felder',
+    'rtitle': 'Titel',
+    'Abstract': 'Zusammenfassung',
+    'Keyword': 'Schlüsselwort',
+    'theme': 'Thema',
+    'contact': 'Nachname',
     'organisationName': 'Organisation',
 
-    'template': 'Template',
-    'identifier': 'Identifier',
+    'template': 'Vorlage',
+    'identifier': 'Geobasisdaten-ID',
     'formatTxt': 'Format',
-    'toEdit': 'To edit',
-    'toPublish': 'To publish',
+    'toEdit': 'In Bearbeitung',
+    'toPublish': 'Zu publizieren',
 
-    'where': 'Where?',
-    'wherenone': 'Everywhere',
-    'bbox': 'BBOX',
-    'adminUnit': 'Administrative unit',
-    'drawOnMap': 'Draw on map',
-    'when': 'When?',
+    'where': 'Wo?',
+    'wherenone': 'Überall',
+    'bbox': 'Im aktuellen Kartenausschnitt',
+    'adminUnit': 'Administrative Einheit',
+    'drawOnMap': 'Auf der Karte zeichnen',
+    'when': 'Wann?',
+    'from': 'Von',
+    'to': 'Nach',
 
-    'source': 'Source?',
-    'catalog': 'Catalogue(s)',
+    'source': 'Herkunft?',
+    'catalog': ' Katalog(e)',
 
     'startNewPolygonHelp' : 'Bitte zeichnen Sie ein Polygon (mit Doppelklick beenden)',
     'deletePolygonHelp' : 'Polygon löschen oder ein neues zeichnen',
 
     'changeDate': 'Aktualisierung Metadaten',
-	
+
+    'Search': 'Suche',
+    'refineSearch': 'Suche verfeinern',
+
 	'outputTypes' : [ [ "full", "Komplett" ],
         [ "text", "Nur Text" ] 
     ],	
@@ -79,7 +84,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
     ],
 
 	'topicCat' : [
-        [ '', '- All -' ],
+        [ '', '- Alle -' ],
         [ "farming", "Landwirtschaft" ],
         [ "biota", "Biologie" ],
         [ "boundaries", "Grenzen" ],
