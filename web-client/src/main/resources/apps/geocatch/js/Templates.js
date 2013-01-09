@@ -137,6 +137,8 @@ GeoNetwork.Geocatch.Templates.TITLE =
             class="selector" \
             onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>\
         <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
+        <tpl if="type==\'dataset\'"><img src="{[catalogue.URL]}/images/dataset.gif" title="dataset" alt="dataset"/></tpl>\
+        <tpl if="type==\'service\'"><img src="{[catalogue.URL]}/images/service.gif" title="service" alt="service"/></tpl>\
         <span class="md-action-menu"> - <a rel="mdMenu">&nbsp;</a></span>\
     </h1>';
 
