@@ -70,11 +70,7 @@ attached it to the metadata for data.
                                         select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
                                     
                                     
-                                    <!-- Add all online source from the target metadata to the
-                                    current one -->
-                                    <xsl:if test="//extra">
-                                      <xsl:apply-templates mode="onlinecopy" select="//extra//gmd:onLine"/>
-                                    </xsl:if>
+                                    
                                     
                                     <xsl:if test="$url">
                                         <gmd:onLine>
@@ -144,11 +140,19 @@ attached it to the metadata for data.
             gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty
             [gmd:contactInfo/gmd:CI_Contact/
             gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email]) = 0">
+            
             <gmd:distributor>
                 <gmd:MD_Distributor>
                     <gmd:distributorContact>
                         <xsl:copy-of select="*"/>
                     </gmd:distributorContact>
+                    <gmd:distributorTransferOptions>
+                        <gmd:MD_DigitalTransferOptions>
+                            <!-- Add all online source from the target metadata to the
+                                    current one -->
+                            <xsl:apply-templates mode="onlinecopy" select="../../../../../gmd:distributionInfo//gmd:onLine"/>
+                        </gmd:MD_DigitalTransferOptions>
+                    </gmd:distributorTransferOptions>
                 </gmd:MD_Distributor>
             </gmd:distributor>
         </xsl:if>
