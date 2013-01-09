@@ -899,18 +899,23 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('id', id));
             }
+            var uuid = record ? record.get('uuid') : undefined;
             
-            var win = new GeoNetwork.view.ViewWindow({
-                serviceUrl: url,
-                currTab: GeoNetwork.defaultViewMode || 'simple',
-                catalogue: this,
-                maximized: maximized || false,
-                record: record,
-                metadataUuid: record ? record.get('uuid') : undefined,
-                resultsView: this.resultsView
-                });
-            win.show(this.resultsView);
-            win.alignTo(Ext.getBody(), 'r-r');
+            if (this.metadataShowFn) {
+                this.metadataShowFn(uuid, record, url, maximized, width, height);
+            } else {
+                var win = new GeoNetwork.view.ViewWindow({
+                    serviceUrl: url,
+                    currTab: GeoNetwork.defaultViewMode || 'simple',
+                    catalogue: this,
+                    maximized: maximized || false,
+                    record: record,
+                    metadataUuid: uuid,
+                    resultsView: this.resultsView
+                    });
+                win.show(this.resultsView);
+                win.alignTo(Ext.getBody(), 'r-r');
+            }
         }
     },
     /** api: method[metadataXMLShow]

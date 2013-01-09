@@ -358,6 +358,9 @@ table.related * a:hover,
   background-image : url(../images/default/textstyleicons.gif) !important;
   background-position : -162px 0px !important;
 }
+.txtPreview {
+  background-image : url(../images/default/page_white.png) !important;
+}
 .repository {
   background-image : url(../images/default/database_yellow.png) !important;
   background-repeat : no-repeat;

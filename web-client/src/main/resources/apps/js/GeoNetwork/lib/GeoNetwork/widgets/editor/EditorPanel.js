@@ -1042,55 +1042,68 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 // Wiki helper initialization
                 var tb = new Ext.Button({
                     iconCls: 'txtBold',
+                    tooltip: OpenLayers.i18n('Bold'),
                     listeners: {
                         click: function(c, pressed){
-                            this.formatMarkupText (item, syntax.bold, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                            
-                        },
-                        scope: self
+                            self.formatMarkupText (item, syntax.bold, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        }
                     },
                     renderTo: ta.parent()
                 });
                 tb = new Ext.Button({
                     iconCls: 'txtItalic',
+                    tooltip: OpenLayers.i18n('Italic'),
                     listeners: {
                         click: function(c, pressed){
-                            this.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                        },
-                        scope: self
+                            self.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        }
                     },
                     renderTo: ta.parent()
                 });
                 tb = new Ext.Button({
                     iconCls: 'txtList',
+                    tooltip: OpenLayers.i18n('List'),
                     listeners: {
                         click: function(c, pressed){
-                            this.formatMarkupText (item, syntax.ul, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                        },
-                        scope: self
+                            self.formatMarkupText (item, syntax.ul, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        }
                     },
                     renderTo: ta.parent()
                   });
                 tb = new Ext.Button({
                     iconCls: 'txtOrderedList',
+                    tooltip: OpenLayers.i18n('Ordered list'),
                     listeners: {
                         click: function(c, pressed){
-                            this.formatMarkupText (item, syntax.ol, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                        },
-                        scope: self
+                            self.formatMarkupText (item, syntax.ol, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        }
                     },
                     renderTo: ta.parent()
                   });
                 tb = new Ext.Button({
                     iconCls: 'txtHyperlink',
+                    tooltip: OpenLayers.i18n('Hyperlink'),
                     listeners: {
                         click: function(c, pressed){
                             var selection = item.value.substring(item.selectionStart, item.selectionEnd);
                             Ext.MessageBox.prompt('Link', OpenLayers.i18n('enterLink'), function (btn, text) {
                                 self.formatMarkupText (item, syntax.hyperlink, {text: selection, link: text});
                             });
-                        },
-                        scope: self
+                        }
+                    },
+                    renderTo: ta.parent()
+                  });
+                
+                tb = new Ext.Button({
+                    iconCls: 'txtPreview',
+                    tooltip: OpenLayers.i18n('Preview'),
+                    listeners: {
+                        click: function(c, pressed){
+                            self.save();
+                            setTimeout(function () {
+                                catalogue.metadataShowById(self.metadataId);
+                            },1000);
+                        }
                     },
                     renderTo: ta.parent()
                   });
