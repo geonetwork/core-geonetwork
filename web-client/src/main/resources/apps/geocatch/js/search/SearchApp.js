@@ -31,6 +31,7 @@ GeoNetwork.searchApp = function() {
         advSearchForm : undefined,
         switcher : undefined,
         drawControl : undefined,
+
         init : function() {
 
             this.simpleSearchForm = this.generateSimpleSearchForm();
@@ -187,6 +188,7 @@ GeoNetwork.searchApp = function() {
          * Creates advanced search form
          */
         generateAdvancedSearchForm : function() {
+        
             var f = [ {
                 fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
@@ -218,14 +220,11 @@ GeoNetwork.searchApp = function() {
                 fieldLabel : OpenLayers.i18n("theme"),
                 name : "[E1.0_topicCat",
                 id : "topicCat",
-                store : new Ext.data.SimpleStore({
-                    data : OpenLayers.i18n("topicCat"),
-                    fields : [ "name", "label" ],
-                    sortInfo : {
-                        field : "label",
-                        direction : "ASC"
-                    }
-                }),
+                store: new Ext.data.SimpleStore({
+					data: GeoNetwork.Settings.Stores['topicCat'],
+					fields: ["name", "label"],
+					sortInfo: { field: "label", direction: "ASC" }
+				}),
                 mode : "local",
                 displayField : "label",
                 valueField : "name",
@@ -285,7 +284,11 @@ GeoNetwork.searchApp = function() {
                         id : "formatCombo",
                         fieldLabel : OpenLayers.i18n("formatTxt"),
                         name : "E1.0_format",
-                        store : OpenLayers.i18n("formats"),
+                        store: new Ext.data.SimpleStore({
+							data: GeoNetwork.Settings.Stores['formats'],
+							fields: ["name", "label"],
+							sortInfo: { field: "label", direction: "ASC" }
+						}),
                         mode : "local",
                         displayField : "label",
                         valueField : "name",
@@ -564,10 +567,10 @@ GeoNetwork.searchApp = function() {
                 items : [ new Ext.ux.form.SuperBoxSelect({
                     fieldLabel : OpenLayers.i18n("catalog"),
                     name : "[V_",
-                    store : OpenLayers.i18n("sources_groups"),
-                    mode : "local",
-                    displayField : "label",
-                    valueField : "name",
+                    store : GeoNetwork.Settings.Stores['sources_groups'],
+                    displayField: 'label',
+                	valueField: 'name',
+                    mode : "local",                   
                     typeAhead : true,
                     forceSelection : true,
                     triggerAction : "all",

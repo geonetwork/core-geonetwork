@@ -145,6 +145,13 @@
                 Ext.onReady(function() {
                     GeoNetwork.Settings.GeoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
                 
+                	GeoNetwork.Settings.Stores = {
+                        'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+                        'sources_groups': [<xsl:apply-templates select="/root/gui/groups/record" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates><xsl:if
+                            test="count(/root/gui/groups/record) > 0 and count(/root/gui/sources/record) > 0">,</xsl:if><xsl:apply-templates select="/root/gui/sources/record[not(./siteid = preceding::record/siteid)]" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates>],
+                        'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+                    };
+                    
                     Ext.get("loading").hide();
 
                     Ext.get("header").show();
@@ -504,4 +511,19 @@
         </body>
     </html>
     </xsl:template>
+
+    <xsl:template match="*" mode="js-translations-combo-suite">
+        ,["<xsl:value-of select="@value"/><xsl:value-of select="@id"/>", "<xsl:value-of select="."/>"]</xsl:template>
+
+    <xsl:template match="*" mode="js-translations-combo">
+        <xsl:if test="position()>1">,</xsl:if>["<xsl:value-of select="@value"/><xsl:value-of select="@id"/>", "<xsl:value-of select="."/>"]</xsl:template>
+
+    <xsl:template match="entry" mode="js-translations-topicCat">
+        ,["<xsl:value-of select="code"/>", "<xsl:value-of select="label"/>"]</xsl:template>
+
+    <xsl:template match="record" mode="js-translations-sources-groups"><xsl:if test="position()>1">,</xsl:if><xsl:choose><xsl:when test="siteid">["_source/<xsl:value-of select="siteid"/>", "<xsl:value-of select="name"/>"</xsl:when><xsl:otherwise>["_groupOwner/<xsl:value-of select="id"/>", "<xsl:value-of select="label/*[name()=/root/gui/language]"/>"</xsl:otherwise></xsl:choose>]</xsl:template>
+
+    <xsl:template match="record" mode="js-translations-formats">
+        ,["<xsl:value-of select="name"/><xsl:if test="version != '-'">_<xsl:value-of select="version"/></xsl:if>", "<xsl:value-of select="name"/> (<xsl:value-of select="version"/>)"]</xsl:template>
+
 </xsl:stylesheet>
