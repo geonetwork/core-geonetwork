@@ -151,7 +151,6 @@
                     <!-- Ext.get("search").show(); -->
                     Ext.get("search-results").show();
                     Ext.get("search-filter").show();            
-                    Ext.get("search-switcher").show();         
                 });
             </script>
 
