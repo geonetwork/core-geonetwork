@@ -1037,60 +1037,64 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         };
         Ext.each(markupTextarea, function(item, index, allItems){
             var ta = Ext.get(item);
-            var tb = new Ext.Button({
-                iconCls: 'txtBold',
-                listeners: {
-                    click: function(c, pressed){
-                        this.formatMarkupText (item, syntax.bold, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
-                        
+            
+            if (ta.parent().dom.childNodes.length === 1) {
+                // Wiki helper initialization
+                var tb = new Ext.Button({
+                    iconCls: 'txtBold',
+                    listeners: {
+                        click: function(c, pressed){
+                            this.formatMarkupText (item, syntax.bold, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                            
+                        },
+                        scope: self
                     },
-                    scope: self
-                },
-                renderTo: ta.parent()
-            });
-            tb = new Ext.Button({
-                iconCls: 'txtItalic',
-                listeners: {
-                    click: function(c, pressed){
-                        this.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    renderTo: ta.parent()
+                });
+                tb = new Ext.Button({
+                    iconCls: 'txtItalic',
+                    listeners: {
+                        click: function(c, pressed){
+                            this.formatMarkupText (item, syntax.italic, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        },
+                        scope: self
                     },
-                    scope: self
-                },
-                renderTo: ta.parent()
-            });
-            tb = new Ext.Button({
-                iconCls: 'txtList',
-                listeners: {
-                    click: function(c, pressed){
-                        this.formatMarkupText (item, syntax.ul, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    renderTo: ta.parent()
+                });
+                tb = new Ext.Button({
+                    iconCls: 'txtList',
+                    listeners: {
+                        click: function(c, pressed){
+                            this.formatMarkupText (item, syntax.ul, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        },
+                        scope: self
                     },
-                    scope: self
-                },
-                renderTo: ta.parent()
-              });
-            tb = new Ext.Button({
-                iconCls: 'txtOrderedList',
-                listeners: {
-                    click: function(c, pressed){
-                        this.formatMarkupText (item, syntax.ol, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                    renderTo: ta.parent()
+                  });
+                tb = new Ext.Button({
+                    iconCls: 'txtOrderedList',
+                    listeners: {
+                        click: function(c, pressed){
+                            this.formatMarkupText (item, syntax.ol, {text: item.value.substring(item.selectionStart, item.selectionEnd)});
+                        },
+                        scope: self
                     },
-                    scope: self
-                },
-                renderTo: ta.parent()
-              });
-            tb = new Ext.Button({
-                iconCls: 'txtHyperlink',
-                listeners: {
-                    click: function(c, pressed){
-                        var selection = item.value.substring(item.selectionStart, item.selectionEnd);
-                        Ext.MessageBox.prompt('Link', OpenLayers.i18n('enterLink'), function (btn, text) {
-                            self.formatMarkupText (item, syntax.hyperlink, {text: selection, link: text});
-                        });
+                    renderTo: ta.parent()
+                  });
+                tb = new Ext.Button({
+                    iconCls: 'txtHyperlink',
+                    listeners: {
+                        click: function(c, pressed){
+                            var selection = item.value.substring(item.selectionStart, item.selectionEnd);
+                            Ext.MessageBox.prompt('Link', OpenLayers.i18n('enterLink'), function (btn, text) {
+                                self.formatMarkupText (item, syntax.hyperlink, {text: selection, link: text});
+                            });
+                        },
+                        scope: self
                     },
-                    scope: self
-                },
-                renderTo: ta.parent()
-              });
+                    renderTo: ta.parent()
+                  });
+            }
         });
     },
     /**
