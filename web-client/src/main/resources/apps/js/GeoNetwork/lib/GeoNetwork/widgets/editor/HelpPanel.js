@@ -66,7 +66,7 @@ GeoNetwork.editor.HelpPanel = Ext.extend(Ext.Panel, {
             if(cb) {
             	cb();
             } else {
-            	panel.update(panel.cache[id] + sectionTip + markup);
+                panel && panel.update(panel.cache[id] + sectionTip + markup);
             }        	
         }
     },
