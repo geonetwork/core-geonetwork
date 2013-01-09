@@ -64,7 +64,7 @@ GeoNetwork.searchApp = function() {
 
             return new Ext.Panel(
                     {
-                        height : 60,
+                        height : 66,
                         region : 'south',
                         border : false,
                         html : '<div style="padding:8px; display:block;text-align:center;background-color: #DFE8F6;">'
