@@ -618,7 +618,7 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
-                (!StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
+                (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }
