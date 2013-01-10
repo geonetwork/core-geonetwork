@@ -51,7 +51,7 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }
     }
     function getGroupLogoUuid(v, record) {
-        
+
         if (record.groupLogoUuid && record.groupLogoUuid[0]) {
             return record.groupLogoUuid[0].value + ".png";
         } else if (record.geonet_info && record.geonet_info.source
@@ -136,17 +136,19 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
 
     function getLinks(v, record) {
         var links = [];
-        if (record.link) {
-            for (i = 0; i < record.link.length; i++) {
-                var tokens = record.link[i].value.split(separator);
-                links.push({
-                    name : tokens[0],
-                    title : tokens[1],
-                    href : tokens[2],
-                    protocol : tokens[3],
-                    type : tokens[4]
+        if (record.service) {
+            Ext.each(record.service, function(service) {
+                Ext.each(record.service.url, function(url) {
+                    links.push({
+                        name : url.name,
+                        title : url.name,
+                        href : url.url,
+                        protocol : "OGC_WMS",
+                        type : "OGC_WMS",
+                        uuid : url.uuid
+                    });
                 });
-            }
+            });
         }
         return links;
     }

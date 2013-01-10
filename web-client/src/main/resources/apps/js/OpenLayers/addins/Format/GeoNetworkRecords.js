@@ -86,13 +86,56 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
 				}
 				this.readChildNodes(node, obj.summary);
 			},
-			"metadata" : function(node, obj) {
-				var record = {
-					type : "metadata"
-				};
-				this.readChildNodes(node, record);
-				obj.records.push(record);
-			},
+            "metadata" : function(node, obj) {
+                var record = {
+                    type : "metadata"
+                };
+                this.readChildNodes(node, record);
+                obj.records.push(record);
+            },
+            "wmsuri" : function(node, obj) {
+                
+                var tokens = node.textContent.split("###");
+                var record = {
+                    childuuid : tokens[0],
+                    name: tokens[1],
+                    url : tokens[2]
+                };
+                
+                if(!obj.service){
+                    obj.service = {
+                            url : new Array()
+                    };
+                }
+                obj.service.url.push(record);
+            },
+            "service" : function(node, obj) {
+                
+                var title = node.getElementsByTagName("defaultTitle")[0].textContent;
+                
+                if(node.getElementsByTagName("_title").length > 0){
+                    title = node.getElementsByTagName("_title")[0].textContent;
+                }
+                
+                var record = { 
+                        url : new Array()
+                };
+                if(obj.service){
+                    record = obj.service;
+                }
+                record.type = "service";
+                record.title = title;
+                record.protocol = node.getElementsByTagName("serviceType")[0].textContent;
+                record.type = node.getElementsByTagName("serviceType")[0].textContent;
+                
+                    
+                Ext.each(node.getElementsByTagName("wmsuri"), 
+                        function(c){
+                    this.readNode(c, obj);
+                    }, this);
+
+                obj.service = record;
+            },
 			"geoBox" : function(node, obj) {
 				// LowerCorner = "min_x min_y"
 				// UpperCorner = "max_x max_y"
