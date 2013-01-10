@@ -107,8 +107,12 @@ GeoNetwork.searchApp = function() {
                     change : function() {
                         Ext.getCmp('anyField').setValue(this.getValue());
                     },
-                    keyup : function() {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
                         Ext.getCmp('anyField').setValue(this.getValue());
+
                     }
                 }
             })
@@ -128,6 +132,13 @@ GeoNetwork.searchApp = function() {
                 triggerAction : 'all',
                 selectOnFocus : true,
                 anchor : '-10',
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             });
 
             var fieldKantone = this.getKantoneCombo(true).combo;
@@ -188,22 +199,46 @@ GeoNetwork.searchApp = function() {
          * Creates advanced search form
          */
         generateAdvancedSearchForm : function() {
-        
+
             var f = [ {
                 fieldLabel : OpenLayers.i18n("searchText"),
                 id : "anyField",
+                enableKeyEvents : true,
                 anchor : '-10',
-                name : "T_AnyText"
+                name : "T_AnyText",
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             }, {
                 fieldLabel : OpenLayers.i18n("rtitle"),
                 name : "T_title",
                 anchor : '-10',
-                id : "TitleField"
+                id : "TitleField",
+                enableKeyEvents : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             }, {
                 fieldLabel : OpenLayers.i18n("abstract"),
                 name : "T_abstract",
                 anchor : '-10',
-                id : "AbstractField"
+                id : "AbstractField",
+                enableKeyEvents : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             }, new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("keyword"),
                 id : "keywordsCombo",
@@ -215,16 +250,19 @@ GeoNetwork.searchApp = function() {
                 forceSelection : false,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : '-10',
+                anchor : '-10'
             }), new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("theme"),
                 name : "[E1.0_topicCat",
                 id : "topicCat",
-                store: new Ext.data.SimpleStore({
-					data: GeoNetwork.Settings.Stores['topicCat'],
-					fields: ["name", "label"],
-					sortInfo: { field: "label", direction: "ASC" }
-				}),
+                store : new Ext.data.SimpleStore({
+                    data : GeoNetwork.Settings.Stores['topicCat'],
+                    fields : [ "name", "label" ],
+                    sortInfo : {
+                        field : "label",
+                        direction : "ASC"
+                    }
+                }),
                 mode : "local",
                 displayField : "label",
                 valueField : "name",
@@ -232,15 +270,31 @@ GeoNetwork.searchApp = function() {
                 forceSelection : true,
                 triggerAction : "all",
                 selectOnFocus : true,
-                anchor : '-10',
+                anchor : '-10'
             }), {
                 fieldLabel : OpenLayers.i18n("contact"),
                 anchor : '-10',
-                name : "T_creator"
+                name : "T_creator",
+                enableKeyEvents : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             }, {
                 fieldLabel : OpenLayers.i18n("organisationName"),
                 anchor : '-10',
-                name : "T_orgName"
+                name : "T_orgName",
+                enableKeyEvents : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             } ];
 
             // Hidden fields (for links from the admin)
@@ -279,16 +333,27 @@ GeoNetwork.searchApp = function() {
                         anchor : '-10',
                         id : "basicgeodataid",
                         name : "S_basicgeodataid",
+                        enableKeyEvents : true,
+                        listeners : {
+                            keyup : function(e, a) {
+                                if (a.ENTER == a.keyCode) {
+                                    app.searchApp.fireSearch();
+                                }
+                            }
+                        },
                         hidden : !catalogue.isIdentified()
                     }, new Ext.ux.form.SuperBoxSelect({
                         id : "formatCombo",
                         fieldLabel : OpenLayers.i18n("formatTxt"),
                         name : "E1.0_format",
-                        store: new Ext.data.SimpleStore({
-							data: GeoNetwork.Settings.Stores['formats'],
-							fields: ["name", "label"],
-							sortInfo: { field: "label", direction: "ASC" }
-						}),
+                        store : new Ext.data.SimpleStore({
+                            data : GeoNetwork.Settings.Stores['formats'],
+                            fields : [ "name", "label" ],
+                            sortInfo : {
+                                field : "label",
+                                direction : "ASC"
+                            }
+                        }),
                         mode : "local",
                         displayField : "label",
                         valueField : "name",
@@ -543,14 +608,30 @@ GeoNetwork.searchApp = function() {
                     format : "d/m/Y",
                     anchor : '-10',
                     postfix : "T00:00:00",
-                    name : "E_extTo"
+                    enableKeyEvents : true,
+                    name : "E_extTo",
+                    listeners : {
+                        keyup : function(e, a) {
+                            if (a.ENTER == a.keyCode) {
+                                app.searchApp.fireSearch();
+                            }
+                        }
+                    }
                 }, {
                     xtype : "datefield",
                     fieldLabel : OpenLayers.i18n("to"),
                     format : "d/m/Y",
                     postfix : "T23:59:59",
+                    enableKeyEvents : true,
                     anchor : '-10',
-                    name : "E_extFrom"
+                    name : "E_extFrom",
+                    listeners : {
+                        keyup : function(e, a) {
+                            if (a.ENTER == a.keyCode) {
+                                app.searchApp.fireSearch();
+                            }
+                        }
+                    }
                 } ]
             });
             d.push({
@@ -564,13 +645,21 @@ GeoNetwork.searchApp = function() {
                 layoutConfig : {
                     labelSeparator : ""
                 },
+                enableKeyEvents : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                },
                 items : [ new Ext.ux.form.SuperBoxSelect({
                     fieldLabel : OpenLayers.i18n("catalog"),
                     name : "[V_",
                     store : GeoNetwork.Settings.Stores['sources_groups'],
-                    displayField: 'label',
-                	valueField: 'name',
-                    mode : "local",                   
+                    displayField : 'label',
+                    valueField : 'name',
+                    mode : "local",
                     typeAhead : true,
                     forceSelection : true,
                     triggerAction : "all",
@@ -838,7 +927,14 @@ GeoNetwork.searchApp = function() {
                 hideTrigger : false,
                 typeAhead : true,
                 anchor : "-10",
-                selectOnFocus : true
+                selectOnFocus : true,
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
             });
             var p = new Ext.ux.form.SuperBoxSelect(config);
             var o = function(w) {
