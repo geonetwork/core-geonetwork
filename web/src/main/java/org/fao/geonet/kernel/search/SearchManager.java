@@ -956,7 +956,7 @@ public class SearchManager {
      * @throws Exception
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
-        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader();
+        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
         GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         
 		try {
@@ -997,7 +997,7 @@ public class SearchManager {
      * @throws Exception
      */
 	public Map<String,String> getDocsChangeDate() throws Exception {
-        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader();
+        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
         GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 		try {
 
@@ -1035,7 +1035,7 @@ public class SearchManager {
 	 */
     public Vector<String> getTerms(String fld) throws Exception {
         Vector<String> terms = new Vector<String>();
-        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader();
+        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
         try {
             TermsEnum enu = reader.terms(fld).iterator(null);
@@ -1071,7 +1071,7 @@ public class SearchManager {
 	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
 	                                            int threshold) throws Exception {
         List<TermFrequency> termList = new ArrayList<TermFrequency>();
-        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader();
+        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
         SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
         TermsEnum termEnum = atomicReader.terms(fieldName).iterator(null);
@@ -1269,12 +1269,12 @@ public class SearchManager {
 		}
 	}
 
-    public IndexAndTaxonomy getIndexReader(long versionToken) throws IOException {
-        return _indexReader.aquire(versionToken);
+    public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
+        return _indexReader.aquire(preferedLang, versionToken);
     }
-    public IndexAndTaxonomy getNewIndexReader() throws IOException, InterruptedException {
+    public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
-       return getIndexReader(-1L);
+       return getIndexReader(preferedLang, -1L);
     }
 	public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
 	    _indexReader.release(reader.indexReader);
@@ -1301,7 +1301,7 @@ public class SearchManager {
             _indexReader = new LuceneIndexReaderFactory(_tracker);
             _indexWriter = new LuceneIndexWriterFactory(_tracker);
             try {
-                _indexReader.aquire(-1);
+                _indexReader.aquire(null, -1);
             } catch (Throwable e) {
                 badIndex1 = true;
                 Log.error(Geonet.INDEX_ENGINE,

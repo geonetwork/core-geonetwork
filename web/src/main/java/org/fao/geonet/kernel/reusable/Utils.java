@@ -224,7 +224,7 @@ public final class Utils {
 
         SearchManager searchManager = gc.getSearchmanager();
 
-        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(-1);
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         IndexSearcher searcher = new IndexSearcher(reader);
 

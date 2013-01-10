@@ -35,7 +35,7 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(-1);
+                IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(null, -1);
 				GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 IndexSearcher searcher = new IndexSearcher(reader);
 

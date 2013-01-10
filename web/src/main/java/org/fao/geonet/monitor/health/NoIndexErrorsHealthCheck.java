@@ -31,7 +31,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader();
+                IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
                 GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
                     TermQuery indexError = new TermQuery(new Term("_indexingError", "1"));
