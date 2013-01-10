@@ -142,7 +142,7 @@ GeoNetwork.mapApp = function() {
         var panel2 = new GeoExt.MapPanel({
             height : 250,
             map : map2,
-            width : 400,
+//            width : 400,
             id : 'map',
             border : false,
             renderTo : 'map-div',
