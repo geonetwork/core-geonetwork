@@ -95,7 +95,16 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
             },
             "wmsuri" : function(node, obj) {
                 
-                var tokens = node.textContent.split("###");
+                
+                
+                var tokens = [];
+                
+                if(node.textContent){
+                    tokens = node.textContent.split("###");
+                } else
+                {
+                    tokens = node.text.split("###");
+                }
                 var record = {
                     childuuid : tokens[0],
                     name: tokens[1],
@@ -114,8 +123,15 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
                 
                 var title = node.getElementsByTagName("defaultTitle")[0].textContent;
                 
+                if(!title){
+                    node.getElementsByTagName("defaultTitle")[0].text;
+                }
+                
                 if(node.getElementsByTagName("_title").length > 0){
                     title = node.getElementsByTagName("_title")[0].textContent;
+                    if(!title){
+                        title = node.getElementsByTagName("_title")[0].text;
+                    }
                 }
                 
                 var record = { 
@@ -127,7 +143,13 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
                 record.type = "service";
                 record.title = title;
                 record.protocol = node.getElementsByTagName("serviceType")[0].textContent;
+                if(!record.protocol) {
+                    node.getElementsByTagName("serviceType")[0].text;
+                }
                 record.type = node.getElementsByTagName("serviceType")[0].textContent;
+                if(!record.type){
+                    record.type = node.getElementsByTagName("serviceType")[0].text;
+                }
 
                 obj.service = record;
                     
