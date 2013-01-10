@@ -58,10 +58,11 @@
         <executions>
           <execution>
             <!-- 
-                This phase does not belong to the default lifecycle for a jar/war packaging.
-                It has to be run explicitely as mvn command argument for generating obfuscated js. 
+                minified files need to be generated before resource
+                phase so they are copied to target folder.  If not in target folder
+                then they will not be copied to jar.
              -->
-            <phase>initialize</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>compress</goal>
             </goals>
@@ -78,6 +79,7 @@
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>
+          <encoding>UTF-8</encoding>
           <nomunge>true</nomunge>
           <jswarn>${minify.verbose}</jswarn>
           <excludes>
@@ -87,9 +89,27 @@
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
             <exclude>**/ext-4.0-pr1/**/*.js</exclude>
-            <exclude>**/*.css</exclude>
-          </excludes>
+<!--            <exclude>**/*.css</exclude>
+-->          </excludes>
           <aggregations>
+            <aggregation>
+              <output>src/main/resources/apps/css/geonetwork.css</output>
+              <includes>
+                <include>${project.build.directory}/classes/apps/css/gndefault.css</include>
+                <include>${project.build.directory}/classes/apps/css/gnmapdefault.css</include>
+                <include>${project.build.directory}/classes/apps/css/gnmetadatadefault.css</include>
+              </includes>
+            </aggregation>
+           <aggregation>
+              <output>src/main/resources/apps/js/ext-ux/css/ext-ux.css</output>
+              <includes>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/Rating/rating.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/SuperBoxSelect/superboxselect.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/LightBox/lightbox.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css</include>
+                <include>${project.build.directory}/classes/apps/js/ext-ux/FileUploadField/file-upload.css</include>
+              </includes>
+            </aggregation>
             <aggregation>
               <output>src/main/resources/apps/js/GeoNetwork-mini-nomap.js</output>
               <includes>
@@ -138,6 +158,11 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_0_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WKT.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OGCExceptionReport.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Geometry.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control.js</include>
@@ -173,6 +198,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/ZoomToMaxExtent.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Style.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Filter.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Filter/Function.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Filter/FeatureId.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Filter/Logical.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Filter/Comparison.js</include>
@@ -196,11 +222,13 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Size.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/BaseTypes/Pixel.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/en.js</include>
-                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/ca.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/de.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/en.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/es.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/nl.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/pl.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Drag.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Box.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/ZoomBox.js</include>
@@ -211,6 +239,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/Grid.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/WMS.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/XYZ.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/OSM.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Renderer/SVG.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/TileCache.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Button.js</include>
@@ -336,6 +365,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/TagCloudView.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/Templates.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryTree.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js</include>
                 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js</include>
@@ -427,6 +457,30 @@
                 <include>${project.build.directory}/classes/apps/tabsearch/js/App.js</include>
               </includes>
             </aggregation>
+            
+            <aggregation>
+              <output>src/main/resources/apps/sextant/js/sextant-mini.js</output>
+              <includes>
+                <include>../../js/GeoNetwork-mini.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.map/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/en.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.edit.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ipc.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.list.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.MetadataResultsView.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ViewPanel.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ViewWindow.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.what.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.when.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.where.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.who.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/Shortcuts.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.main.js</include>
+              </includes>
+            </aggregation>
+
 
            <!-- <aggregation>
               <output>${geonetwork.webapp.dir}/apps/search/css/style.css</output>

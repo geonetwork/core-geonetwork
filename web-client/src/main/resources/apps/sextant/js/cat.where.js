@@ -51,7 +51,8 @@ cat.where = function() {
 				projection : GeoNetwork.map.PROJECTION,
 				maxExtent : GeoNetwork.map.EXTENT,
 				restrictedExtent : GeoNetwork.map.EXTENT,
-				controls : []
+				controls : [],
+				theme: null
 			};
 
 			return new Ext.Panel({
