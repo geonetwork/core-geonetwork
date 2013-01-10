@@ -57,9 +57,20 @@
                     <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
                 </xsl:call-template>
             </xsl:variable>
+
             <!-- not tokenized title for sorting -->
             <Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
             <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
+
+            <xsl:variable name="_defaultAbstract">
+                <xsl:call-template name="defaultAbstract">
+                    <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
+
+
             <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
             <xsl:call-template name="hasLinkageURL" />
         </Document>
@@ -143,8 +154,8 @@
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
-			
-			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
+
+            <xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
 				<Field name="statusProgressCode" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 

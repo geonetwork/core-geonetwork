@@ -149,7 +149,7 @@ public class DetectOld implements Service
 
         DuplicateFilter filter = new DuplicateFilter(query.getField());
 
-        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(-1);
+        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         IndexSearcher searcher = new IndexSearcher(reader);
 

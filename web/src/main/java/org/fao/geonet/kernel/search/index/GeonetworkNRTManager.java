@@ -22,7 +22,7 @@ class GeonetworkNRTManager {
 
     private NRTManagerReopenThread reopenThread;
     private NRTManager actualManager;
-    private String language;
+    String language;
     private SearcherLifetimeManager lifetimeManager = new SearcherLifetimeManager();
     private Map<Long, Long> versionMapping = new HashMap<Long, Long>();
     // taxonomyTracker is here so that we can commit it and refresh reader when 

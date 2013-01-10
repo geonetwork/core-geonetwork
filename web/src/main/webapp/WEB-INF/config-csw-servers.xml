@@ -62,7 +62,7 @@
 
         <service name="csw-area-fribourg">
            <class name=".services.main.CswDiscoveryDispatcher" >
-               <param name="filter" value="+northBL:47.01 +southBL:46.44 +eastBL:7.375 +westBL:6.795"/>
+               <param name="filter" value="+northBL:[46.44 TO 90.0] +southBL:[-90.0 TO 47.01] +eastBL:[6.795 TO 180.0] +westBL:[-180.0 TO 7.375]"/>
            </class>
         </service>
     </services>

@@ -158,7 +158,16 @@
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <xsl:variable name="_defaultAbstract">
+                <xsl:call-template name="defaultAbstract">
+                    <xsl:with-param name="isoDocLangId" select="$isoDocLangId" />
+                </xsl:call-template>
+            </xsl:variable>
+
+            <Field name="_defaultAbstract" string="{string($_defaultAbstract)}"
+                   store="true" index="true" token="false" />
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="*/gmd:EX_Extent">
 				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>

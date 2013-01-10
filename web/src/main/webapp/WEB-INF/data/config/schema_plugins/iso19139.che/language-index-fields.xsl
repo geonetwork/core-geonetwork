@@ -82,7 +82,17 @@
 					</xsl:otherwise>
 	
 				</xsl:choose>
-				<xsl:apply-templates
+
+                <xsl:variable name="_defaultAbstract">
+                    <xsl:call-template name="defaultAbstract">
+                        <xsl:with-param name="isoDocLangId" select="$isoDocLangId" />
+                    </xsl:call-template>
+                </xsl:variable>
+
+                <Field name="_defaultAbstract" string="{string($_defaultAbstract)}"
+                       store="true" index="true" token="false" />
+
+                <xsl:apply-templates
 					select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"
 					mode="metadata">
 					<xsl:with-param name="langId" select="$poundLangId" />
@@ -165,8 +175,8 @@
     		<xsl:for-each select="gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
-			
-			<xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
+
+            <xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
 				<Field name="statusProgressCode" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
