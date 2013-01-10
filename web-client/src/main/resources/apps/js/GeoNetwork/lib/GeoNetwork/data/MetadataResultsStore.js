@@ -253,9 +253,11 @@ GeoNetwork.data.MetadataResultsStore = function(){
             return '';
         }
     }
-    function getAbstract(v, record){
-        if (record['abstract']) {
+    function getAbstract(v, record) {
+        if (record['abstract'] && record['abstract'][0]) {
             return record['abstract'][0].value;
+        } else if (record['defaultAbstract'] && record['defaultAbstract'][0]) {
+            return record['defaultAbstract'][0].value;
         } else {
             return '';
         }
