@@ -111,6 +111,7 @@
       <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>
       <field name="abstract" tagName="abstract"/>
+      <field name="_defaultAbstract" tagName="defaultAbstract"/>
       <field name="keyword" tagName="keyword"/>
       <field name="parentUuid" tagName="parentId"/>
       <field name="type" tagName="type"/>
