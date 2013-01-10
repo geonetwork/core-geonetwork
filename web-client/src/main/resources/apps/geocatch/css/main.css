@@ -395,6 +395,8 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	min-width: 100%;
 }
 
+
+
 /* Icon based on protocol prefix in related resource table */
 .WWWLINK {
 	background-image: url(../../images/default/link.png);
@@ -409,8 +411,11 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 }
 
 .OGCWFS {
-	background-image: url(../../images/default/map/server_vector.png);
+    background-image: url(../../images/default/map/server_vector.png);
 }
+
+.removeLayers {
+    background-image: url(../../../images/removeLayers.png);}
 
 /* Other icons */
 .md-mn-reset {

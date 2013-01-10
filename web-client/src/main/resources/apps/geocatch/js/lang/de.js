@@ -75,7 +75,9 @@ GeoNetwork.GeoCatCh.Lang.de = {
     'refineSearch': 'Suche verfeinern',
 
     'showAdvancedOptions' : 'Erweiterte Suche',
-    'hideAdvancedOptions' : 'Einfache Suche'
+    'hideAdvancedOptions' : 'Einfache Suche',
+    
+    'removeLayers' : 'Entfernen Sie alle Schichten und zurücksetzen Karte'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);

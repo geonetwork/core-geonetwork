@@ -79,7 +79,9 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'changeDate': 'Metadata revision',
 
     'Search': 'Rechercher',
-    'refineSearch': 'Preciséz votre recherche'
+    'refineSearch': 'Preciséz votre recherche',
+    
+    'removeLayers' : 'Enlever toutes les couches et de réinitialiser la carte'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.GeoCatCh.Lang.fr);

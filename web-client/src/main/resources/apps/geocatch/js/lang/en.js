@@ -72,7 +72,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
     'refineSearch': 'Refine search',
 
     'showAdvancedOptions' : 'Show Advanced Options',
-    'hideAdvancedOptions' : 'Hide Advanced Options'
+    'hideAdvancedOptions' : 'Hide Advanced Options',
+    
+    'removeLayers' : 'Remove all layers and reset map'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);

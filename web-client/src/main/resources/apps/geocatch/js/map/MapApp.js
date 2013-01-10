@@ -116,6 +116,27 @@ GeoNetwork.mapApp = function() {
             toggleGroup : 'nav',
             iconCls : 'pan',
             tooltip : OpenLayers.i18n("navigate")
+        }), "|", new GeoExt.Action({
+            control : new OpenLayers.Control.Button({
+                trigger : function(e) {
+                    var toRemove = new Array();
+
+                    var type = "OpenLayers.Layer.WMS";
+
+                    Ext.each(this.map.layers, function(l) {
+                        if (l.id.indexOf(type) === 0 && !l.isBaseLayer) {
+                            toRemove.push(l);
+                        }
+                    });
+
+                    Ext.each(toRemove, function(layer) {
+                        this.map.removeLayer(layer);
+                    });
+                }
+            }),
+            map : map2,
+            iconCls : 'removeLayers',
+            tooltip : OpenLayers.i18n("removeLayers")
         }) ];
 
         var panel2 = new GeoExt.MapPanel({
@@ -123,7 +144,7 @@ GeoNetwork.mapApp = function() {
             map : map2,
             width : 400,
             id : 'map',
-            border: false,
+            border : false,
             renderTo : 'map-div',
             tbar : toolbarItems
         });

@@ -73,7 +73,9 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'changeDate': 'Metadata revision',
 
     'Search': 'Ricerca',
-    'refineSearch': 'Affinare la ricerca'
+    'refineSearch': 'Affinare la ricerca',
+    
+    'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);
