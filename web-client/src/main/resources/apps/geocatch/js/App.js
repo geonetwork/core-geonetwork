@@ -299,7 +299,7 @@ GeoNetwork.app = function() {
                     region : 'east',
                     contentEl : 'search-filter',
                     split : true,
-                    title :  OpenLayers.i18n("refineSearch"),
+                    title : OpenLayers.i18n("refineSearch"),
                     collapsible : true,
                     layout : 'fit',
                     autoScroll : true,
@@ -334,9 +334,16 @@ Ext.onReady(function() {
     if (lang === null) {
         lang = GeoNetwork.Util.defaultLocale;
     }
+    if (Ext.isArray(lang)) {
+        if (lang.length > 1) {
+            lang = lang[1];
+        } else {
+            lang = lang[0];
+        }
+    }
 
     var url = /(.*)\/srv/.exec(location.href)[1];
-    GeoNetwork.Util.setLang(lang && lang[1], url + '/apps');
+    GeoNetwork.Util.setLang(lang, url + '/apps');
 
     if (Ext.isIE6) {
         Ext.get(Ext.query("html")[0]).addClass("lt-ie9 lt-ie8 lt-ie7");
@@ -403,7 +410,8 @@ Ext.onReady(function() {
         if (OpenLayers.Util.getParameters().hasOwnProperty("dateFrom")) {
             Ext.each(Ext.query("input[name=E_extFrom]"), function(input) {
                 Ext.getCmp(input.id).setValue(
-                        new Date(OpenLayers.Util.getParameters().dateFrom + " 00:00:00"));
+                        new Date(OpenLayers.Util.getParameters().dateFrom
+                                + " 00:00:00"));
             });
         }
 
@@ -420,8 +428,8 @@ Ext.onReady(function() {
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
         Ext.getCmp('advanced-search-options-content-form').getForm().reset();
     }
-    
-    if(OpenLayers.Util.getParameters().hasOwnProperty("uuid")){
+
+    if (OpenLayers.Util.getParameters().hasOwnProperty("uuid")) {
         catalogue.metadataShow(OpenLayers.Util.getParameters().uuid, true);
     }
 

@@ -264,7 +264,18 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             this.URL = this.SERVERURL + 'geonetwork';
         }
         
-        this.LANG = (this.lang ? this.lang : this.DEFAULT_LANG);
+        this.LANG = /srv\/([a-z]{3})/.exec(location.href);
+
+        if (this.LANG === null) {
+            this.LANG = GeoNetwork.Util.defaultLocale;
+        }    
+        if (Ext.isArray(this.LANG)) {
+            if (this.LANG.length > 1) {
+                this.LANG = this.LANG[1];
+            } else {
+                this.LANG = this.LANG[0];
+            }
+        }
         
         // Register GeoNetwork services URL
         var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
