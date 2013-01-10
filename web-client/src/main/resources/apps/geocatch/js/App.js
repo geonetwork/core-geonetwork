@@ -270,7 +270,7 @@ GeoNetwork.app = function() {
                     margins : '0 0 0 0',
                     split : true,
                     minWidth : 350,
-                    width : 350,
+                    width : 450,
                     maxWidth : 450,
                     autoScroll : true,
                     forceLayout : true,

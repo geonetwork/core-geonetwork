@@ -54,6 +54,11 @@ GeoNetwork.searchApp = function() {
             }
 
             searchForm.fireEvent('search');
+            
+            
+            //Maximize Search Results Panel
+            Ext.getCmp("west").setWidth(Ext.getCmp("west").minWidth);
+            Ext.getCmp("vp").doLayout();
         },
 
         /***********************************************************************
