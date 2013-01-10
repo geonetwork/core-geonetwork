@@ -752,6 +752,11 @@ cat.app = function() {
 								    search();
 								}
 							}
+							if(catalogue.launchSearchAtStart) {
+								if (searching === true) {
+									searchForm.fireEvent('search');
+								}
+							}
 							fitHeightToBody(o);
 							
 							var loadDiv = Ext.get('loading');
