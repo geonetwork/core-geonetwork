@@ -1376,8 +1376,8 @@ public class DataManager {
      * @throws Exception hmm
      */
 	public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
-		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-		gc.getThreadPool().runTask(new IncreasePopularityTask(srvContext, id));
+//		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+//		gc.getThreadPool().runTask(new IncreasePopularityTask(srvContext, id));
 	}
 
     /**
