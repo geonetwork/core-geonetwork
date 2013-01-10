@@ -184,7 +184,7 @@ public class LuceneSearcher extends MetaSearcher {
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		_language = determineLanguage(srvContext, request, _sm.get_settingInfo());
-		_indexAndTaxonomy = _sm.getNewIndexReader();
+		_indexAndTaxonomy = _sm.getNewIndexReader(_language);
 
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
@@ -1569,7 +1569,7 @@ public class LuceneSearcher extends MetaSearcher {
         if (context != null) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             searchmanager = gc.getSearchmanager();
-            indexAndTaxonomy = searchmanager.getNewIndexReader();
+            indexAndTaxonomy = searchmanager.getNewIndexReader(priorityLang);
             reader = indexAndTaxonomy.indexReader;
         } else {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");

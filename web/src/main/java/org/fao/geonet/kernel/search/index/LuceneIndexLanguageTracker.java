@@ -108,11 +108,11 @@ public class LuceneIndexLanguageTracker {
         return locale;
     }
     
-    synchronized IndexAndTaxonomy aquire(long versionToken) throws IOException {
+    synchronized IndexAndTaxonomy aquire(String preferedLang, long versionToken) throws IOException {
         long finalVersion = versionToken;
         Map<Pair<Long, IndexSearcher>, GeonetworkNRTManager> searchers = new HashMap<Pair<Long, IndexSearcher>, GeonetworkNRTManager>((int) (searchManagers.size() * 1.5));
         IndexReader[] readers = new IndexReader[searchManagers.size()];
-        int i = 0;
+        int i = 1;
         boolean tokenExpired = false;
         for (GeonetworkNRTManager manager: searchManagers.values()) {
             if (!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
@@ -120,10 +120,14 @@ public class LuceneIndexLanguageTracker {
             }
             Pair<Long, IndexSearcher> indexSearcher = manager.acquire(versionToken);
             tokenExpired = tokenExpired || indexSearcher.one() != versionToken;
-            
-            readers[i] = indexSearcher.two().getIndexReader();
+
+            if((preferedLang != null && preferedLang.equalsIgnoreCase(manager.language)) || i >= readers.length) {
+                readers[0] = indexSearcher.two().getIndexReader();
+            } else {
+                readers[i] = indexSearcher.two().getIndexReader();
+                i++;
+            }
             searchers.put(indexSearcher, manager);
-            i++;
         }
         
         if(tokenExpired) {
