@@ -444,7 +444,7 @@ public class ServiceManager
 
 				//---------------------------------------------------------------------
 				//--- handle forward
-
+                disableSearchLoggingForThisThread();
 				OutputPage outPage = srvInfo.findOutputPage(response);
 				String forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
 
@@ -955,6 +955,47 @@ public class ServiceManager
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
 	public ProfileManager getProfileManager() { return profilMan; }
+	
+	
+	// GEOCAT
+	
+
+        private static InheritableThreadLocal<Boolean> theadLocalFlag = new InheritableThreadLocal<Boolean>();
+
+        /**
+         * Check if the thread local for this thread has been set to 
+         * disable search logging
+         * 
+         * @return true if logging should continue
+         */
+        public static boolean searchLoggingEnabled() {
+                Boolean enabled  = theadLocalFlag.get();
+                return enabled == null || enabled;
+        }
+
+        /**
+         * Disable search logging until re-enabled.  A thead local is used
+         * so the logging is only disabled for the current thread and not the entire system
+         *
+         * This method should be used in a try{ } finally { } block so that
+         * logging is correctly enabled after block ends
+         * 
+         * @return
+         */
+        public static boolean disableSearchLoggingForThisThread() {
+                Boolean enabled  = theadLocalFlag.get();
+                return enabled == null || enabled;
+        }
+        
+        /**
+         * Enabled logging again for this thread
+         */
+        public static boolean enableSearchLoggingForThisThread() {
+                Boolean enabled  = theadLocalFlag.get();
+                return enabled == null || enabled;
+        }
+        
+        // END GEOCAT
 }
 
 //=============================================================================

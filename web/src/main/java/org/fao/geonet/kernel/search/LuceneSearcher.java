@@ -53,6 +53,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -207,7 +208,7 @@ public class LuceneSearcher extends MetaSearcher {
 		updateSearchRange(request);
 		
 		SettingInfo si = new SettingInfo(srvContext);
-		if (si.isSearchStatsEnabled()) {
+		if (si.isSearchStatsEnabled() && ServiceManager.searchLoggingEnabled()) {
 			if (_sm.getLogAsynch()) {
 				// Run asynch
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -333,37 +334,40 @@ public class LuceneSearcher extends MetaSearcher {
 
 	@SuppressWarnings("unchecked")
 	private void addGeocatElements(ServiceContext context, Element md,
-			String id, GeonetContext gc) throws Exception {
-		GetRelated serviceSearcher = new GetRelated();
-		serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
-		Element idElem = new Element(Params.ID).setText(id);
-		String uuid = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
-				.getChildText(Params.UUID);
-		Element uuidElem = new Element(Params.UUID).setText(uuid);
-		Element typeElem = new Element("type").setText("service");
-		Element searchRequestParams = new Element(Jeeves.Elem.REQUEST).addContent(
-				new Element(Edit.RootChild.INFO, Edit.NAMESPACE)
-						.addContent(idElem).addContent(uuidElem))
-				.addContent(typeElem);
-		Element relatedServicesResponse = serviceSearcher.exec(
-				searchRequestParams, context);
+	        String id, GeonetContext gc) throws Exception {
+        try {
+            ServiceManager.disableSearchLoggingForThisThread();
+            GetRelated serviceSearcher = new GetRelated();
+            serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
+            Element idElem = new Element(Params.ID).setText(id);
+            String uuid = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID);
+            Element uuidElem = new Element(Params.UUID).setText(uuid);
+            Element typeElem = new Element("type").setText("service");
+            Element searchRequestParams = new Element(Jeeves.Elem.REQUEST).addContent(
+                    new Element(Edit.RootChild.INFO, Edit.NAMESPACE).addContent(idElem).addContent(uuidElem))
+                    .addContent(typeElem);
+            Element relatedServicesResponse = serviceSearcher.exec(searchRequestParams, context);
 
-		List<Element> relatedServices = (List<Element>) Xml.selectNodes(relatedServicesResponse, "services/response/metadata");
-		for (Element service : relatedServices) {
-			Element serviceEl = new Element("service");
-			addEl(service, serviceEl, "_title");
-			addEl(service, serviceEl, "defaultTitle");
-			addEl(service, serviceEl, "serviceType");
-			List<Element> wmsuri = new LinkedList<Element>(service.getChildren("wmsuri"));
-			for (Element element : wmsuri) {
-				if(element.getText().startsWith(uuid+"###")) {
-					element.detach();
-					serviceEl.addContent(element);
-				}
-			}
-			md.addContent(serviceEl);
-		}
-	}
+            List<Element> relatedServices = (List<Element>) Xml.selectNodes(relatedServicesResponse,
+                    "services/response/metadata");
+            for (Element service : relatedServices) {
+                Element serviceEl = new Element("service");
+                addEl(service, serviceEl, "_title");
+                addEl(service, serviceEl, "defaultTitle");
+                addEl(service, serviceEl, "serviceType");
+                List<Element> wmsuri = new LinkedList<Element>(service.getChildren("wmsuri"));
+                for (Element element : wmsuri) {
+                    if (element.getText().startsWith(uuid + "###")) {
+                        element.detach();
+                        serviceEl.addContent(element);
+                    }
+                }
+                md.addContent(serviceEl);
+            }
+        } finally {
+            ServiceManager.enableSearchLoggingForThisThread();
+        }
+    }
 
 	private void addEl(Element service, Element serviceEl, String nodeName) {
 		@SuppressWarnings("unchecked")
@@ -1808,46 +1812,4 @@ public class LuceneSearcher extends MetaSearcher {
             Log.debug(Geonet.SEARCH_ENGINE, "Escaped: "+result.toString());
      return result.toString();
   }
-    /**
-     * Task to launch a new thread for search logging.
-     *
-     * Other idea: Another approach could be to use JMS, to send an
-		 * asynchronous message with search info in order to log them.
-     *
-     * @author francois
-     */
-    class SearchLoggerTask implements Runnable {
-        private ServiceContext srvContext;
-        boolean logSpatialObject;
-        String luceneTermsToExclude;
-		Query query;
-		int numHits;
-		Sort sort;
-		String geomWKT;
-		String value;
-
-
-        public SearchLoggerTask(ServiceContext srvContext,
-				boolean logSpatialObject, String luceneTermsToExclude,
-				Query query, int numHits, Sort sort, String geomWKT,
-				String value) {
-        			this.srvContext = srvContext;
-        			this.logSpatialObject = logSpatialObject;
-        			this.luceneTermsToExclude = luceneTermsToExclude;
-        			this.query = query;
-        			this.numHits = numHits;
-        			this.sort = sort;
-        			this.geomWKT = geomWKT;
-        			this.value = value;
-    	}
-
-		public void run() {
-            try {
-            	SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
-        		searchLogger.logSearch(query, numHits, sort, geomWKT, value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

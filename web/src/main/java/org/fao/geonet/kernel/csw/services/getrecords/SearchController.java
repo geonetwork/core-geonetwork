@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -47,6 +48,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.SearchLoggerTask;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
@@ -621,18 +623,23 @@ public class SearchController {
             // output.
             // Append list of service to the current metadata record.
             // Process related service to retrieve coupledResources.
-            GetRelated serviceSearcher = new GetRelated();
-            serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
-            Element idElem = new Element(Params.ID).setText(id);
-            Element uuidElem = new Element(Params.UUID)
-                    .setText(res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID));
-            Element typeElem = new Element("type").setText("service");
-            Element relatedServices = serviceSearcher.exec(
-                    new Element(Jeeves.Elem.REQUEST).addContent(
-                            new Element(Edit.RootChild.INFO, Edit.NAMESPACE).addContent(idElem).addContent(uuidElem)).addContent(typeElem),
-                    context);
-
-            res.addContent(relatedServices);
+        	try {
+        		ServiceManager.disableSearchLoggingForThisThread();
+	            GetRelated serviceSearcher = new GetRelated();
+	            serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
+	            Element idElem = new Element(Params.ID).setText(id);
+	            Element uuidElem = new Element(Params.UUID)
+	                    .setText(res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID));
+	            Element typeElem = new Element("type").setText("service");
+	            Element relatedServices = serviceSearcher.exec(
+	                    new Element(Jeeves.Elem.REQUEST).addContent(
+	                            new Element(Edit.RootChild.INFO, Edit.NAMESPACE).addContent(idElem).addContent(uuidElem)).addContent(typeElem),
+	                    context);
+	
+	            res.addContent(relatedServices);
+        	} finally {
+        	    ServiceManager.enableSearchLoggingForThisThread();
+        	}
         } else {
             // PMT c2c previous geocat backport, was:
             // throw new
