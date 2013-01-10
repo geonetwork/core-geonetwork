@@ -99,7 +99,8 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
                 var record = {
                     childuuid : tokens[0],
                     name: tokens[1],
-                    url : tokens[2]
+                    url : tokens[2],
+                    type: "OGC:WMS"
                 };
                 
                 if(!obj.service){
@@ -127,14 +128,14 @@ OpenLayers.Format.GeoNetworkRecords = OpenLayers.Class(OpenLayers.Format.XML, {
                 record.title = title;
                 record.protocol = node.getElementsByTagName("serviceType")[0].textContent;
                 record.type = node.getElementsByTagName("serviceType")[0].textContent;
-                
+
+                obj.service = record;
                     
                 Ext.each(node.getElementsByTagName("wmsuri"), 
                         function(c){
                     this.readNode(c, obj);
                     }, this);
 
-                obj.service = record;
             },
 			"geoBox" : function(node, obj) {
 				// LowerCorner = "min_x min_y"

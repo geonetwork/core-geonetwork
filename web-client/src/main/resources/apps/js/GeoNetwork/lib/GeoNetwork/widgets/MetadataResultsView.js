@@ -593,9 +593,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                     linkButton.push({
                                         text: record.get('title') || record.get('name'),
                                         handler: function (b, e) {
-                                            // FIXME : ref to app
-                                            app.switchMode('1', true);
-                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
+                                            app.mapApp.addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
                                         }
                                     });
                                 }

@@ -143,8 +143,8 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
                         name : url.name,
                         title : url.name,
                         href : url.url,
-                        protocol : "OGC_WMS",
-                        type : "OGC_WMS",
+                        protocol : url.type,
+                        type : url.type,
                         uuid : url.uuid
                     });
                 });
