@@ -309,6 +309,25 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             return 0;
         }
     }
+    function isService(v, record) {
+        if (record.type) {
+            for (i = 0; i < record.type.length; i++) {
+                if (record.type[i].value == 'service') return true;
+            }
+        }
+
+        return false;
+    }
+    function isDataset(v, record) {
+        if (record.type) {
+            for (i = 0; i < record.type.length; i++) {
+                if (record.type[i].value == 'dataset') return true;
+            }
+        }
+
+        return false;
+    }
+
 
     return new Ext.data.JsonStore({
         totalProperty : 'summary.count',
@@ -324,6 +343,12 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }, {
             name : 'type',
             convert : getType
+        }, {
+            name : 'isservice',
+            convert : isService
+        }, {
+            name : 'isdataset',
+            convert : isDataset
         }, {
             name : 'groupLogoUuid',
             convert : getGroupLogoUuid

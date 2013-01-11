@@ -75,7 +75,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'Search': 'Ricerca',
     'refineSearch': 'Affinare la ricerca',
     
-    'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa'
+    'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa',
+    'linklabel-OGC:WMS': ''
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);
