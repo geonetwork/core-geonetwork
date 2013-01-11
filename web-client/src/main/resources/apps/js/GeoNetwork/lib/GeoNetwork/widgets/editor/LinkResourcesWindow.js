@@ -224,7 +224,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 mode: 'local',
                 listeners: {
                     select: function (combo, record, index) {
-                        this.associationType = combo.getValue();
+                        this.associationType = record;
                     },
                     scope: this
                 }
