@@ -165,7 +165,8 @@
         <xsl:param name="targetPolygon"/>
         <xsl:param name="watchedBbox"/>
         <xsl:param name="eltRef"/>
-
+		<xsl:choose>
+			<xsl:when test="$edit = 'true'">
         <xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
 		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
@@ -184,6 +185,12 @@
             mode="{$mode}">
             <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="normalize-space($coords)"/></div>
         </div>
+	        </xsl:when>
+	        <xsl:otherwise>
+	        	<xsl:variable name="background">http%3A%2F%2Fwms.geo.admin.ch%2F%3FSERVICE%3DWMS%26REQUEST%3DGetMap%26VERSION%3D1.1.0%26LAYERS%3Dch.swisstopo.pixelkarte-farbe-pk1000.noscale%26STYLES%3Ddefault%26SRS%3DEPSG%3A4326%26BBOX%3D%7Bminx%7D%2C%7Bminy%7D%2C%7Bmaxx%7D%2C%7Bmaxy%7D%26WIDTH%3D%7Bwidth%7D%26HEIGHT%3D%7Bheight%7D%26FORMAT%3Dimage%2Fpng</xsl:variable>
+	        	<img src="{/root/gui/locService}/region.getmap.png?width=500&amp;geom={$coords}&amp;background={$background}"><p style="display:none;">needed so this shows</p></img>
+	        </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 	<!-- show metadata export icons eg. in search results or metadata viewer -->

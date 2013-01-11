@@ -107,6 +107,7 @@
 			    <sec:intercept-url pattern="/srv/.*/shared.user.list!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/metadata.print!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/csw.pdf!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/csw.csv!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/geocat.keywords.list!?.*" access="permitAll"></sec:intercept-url>

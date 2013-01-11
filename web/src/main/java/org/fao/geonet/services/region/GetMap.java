@@ -197,7 +197,7 @@ public class GetMap implements Service {
         int width, height;
         if(widthString != null) {
             width = Integer.parseInt(widthString);
-            height = (int) Math.round(bboxOfImage.getWidth()/bboxOfImage.getHeight()/width);
+            height = (int) Math.round(bboxOfImage.getHeight()/bboxOfImage.getWidth()*width);
         } else {
             height = Integer.parseInt(heightString);
             width = (int) Math.round(bboxOfImage.getWidth()/bboxOfImage.getHeight()*height);

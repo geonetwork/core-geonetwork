@@ -41,7 +41,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDF implements Service {
 	
-	private final String TMP_PDF_FILE = "Document";
+    private final String TMP_PDF_FILE = "Document";
 	
     public Element exec(Element metadata, ServiceContext context) throws Exception {
         

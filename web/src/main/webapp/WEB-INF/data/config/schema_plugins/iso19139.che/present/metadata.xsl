@@ -1807,7 +1807,9 @@ priority="40">
     <xsl:with-param name="schema" select="$schema" />
     <xsl:with-param name="edit" select="$edit" />
     <xsl:with-param name="content">
+    	<xsl:if test="$edit='true'">
         <input type="hidden" id="_X{$targetId}" name="_X{$targetId}" value="{string($geometry)}"/>
+        </xsl:if>
         <td class="padded" align="center" style="width:100%;">
             <xsl:variable name="geom" select="util:gmlToWKT($geometry)"/>
             <xsl:call-template name="showMap">
