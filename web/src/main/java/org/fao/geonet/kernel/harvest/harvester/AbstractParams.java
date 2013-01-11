@@ -31,9 +31,11 @@ import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
+import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
 import jeeves.utils.Util;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -66,11 +68,17 @@ public abstract class AbstractParams
 		Element site    = node.getChild("site");
 		Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
-
+		
+		
 		Element account = (site == null) ? null : site.getChild("account");
 
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
+		
+		owner = node.getAttributeValue("owner");
+		if (owner == null) {
+			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+		}
 
 		useAccount = Util.getParam(account, "use",      false);
 		username   = Util.getParam(account, "username", "");
@@ -105,6 +113,11 @@ public abstract class AbstractParams
 
 		name       = Util.getParam(site, "name", name);
 
+		owner = node.getAttributeValue("owner");
+		if (owner == null) {
+			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+		}
+		
 		useAccount = Util.getParam(account, "use",      useAccount);
 		username   = Util.getParam(account, "username", username);
 		password   = Util.getParam(account, "password", password);
@@ -141,7 +154,7 @@ public abstract class AbstractParams
 	{
 		copy.name       = name;
 		copy.uuid       = uuid;
-
+		copy.owner      = owner;
 		copy.useAccount = useAccount;
 		copy.username   = username;
 		copy.password   = password;
@@ -287,7 +300,7 @@ public abstract class AbstractParams
 
 	public String  name;
 	public String  uuid;
-
+	public String owner;
 	public boolean useAccount;
 	public String  username;
 	public String  password;
