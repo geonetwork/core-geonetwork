@@ -85,16 +85,7 @@ public abstract class AbstractParams
 
 		importXslt = Util.getParam(content, "importxslt", "none");
 		
-		String valid = Util.getParam(content, "validate");
-		if("true".equals(valid)) {
-			validate = HarvestValidationEnum.XSDVALIDATION;
-		}
-		else if("false".equals(valid)) {
-			validate = HarvestValidationEnum.NOVALIDATION;
-		}
-		else {
-			validate  = HarvestValidationEnum.valueOf(Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.name()));
-		}
+		validate = HarvestValidationEnum.lookup(Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		addPrivileges(node.getChild("privileges"));
 		addCategories(node.getChild("categories"));
@@ -126,7 +117,8 @@ public abstract class AbstractParams
 		getTrigger();
 		
 		importXslt = Util.getParam(content, "importxslt", importXslt);
-		validate = HarvestValidationEnum.valueOf(Util.getParam(content, "validate", validate.name()));
+		
+		validate = HarvestValidationEnum.lookup(Util.getParam(content, "validate", validate.name()));
 
 		if (privil != null)
 			addPrivileges(privil);

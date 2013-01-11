@@ -43,4 +43,23 @@ public enum HarvestValidationEnum {
 	};
 	
 	public abstract void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception;
+	
+	public static HarvestValidationEnum lookup(final String name) {
+		if("true".equals(name)) {
+			return HarvestValidationEnum.XSDVALIDATION;
+		}
+		if("false".equals(name)) {
+			return HarvestValidationEnum.NOVALIDATION;
+		}
+		if(HarvestValidationEnum.NOVALIDATION.name().equals(name)) {
+			return HarvestValidationEnum.NOVALIDATION;
+		}
+		if(HarvestValidationEnum.XSDVALIDATION.name().equals(name)) {
+			return HarvestValidationEnum.XSDVALIDATION;
+		}
+		if(HarvestValidationEnum.SCHEMATRONVALIDATION.name().equals(name)) {
+			return HarvestValidationEnum.SCHEMATRONVALIDATION;
+		}
+		return HarvestValidationEnum.NOVALIDATION;
+	}
 }
