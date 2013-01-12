@@ -16,6 +16,7 @@
 
 		<service name="xml.harvesting.get">
 			<class name=".services.harvesting.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -23,6 +24,7 @@
 		<service name="xml.harvesting.add">
 			<class name=".services.harvesting.Add" />
 			<class name=".services.harvesting.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -30,6 +32,7 @@
 		<service name="xml.harvesting.update">
 			<class name=".services.harvesting.Update" />
 			<class name=".services.harvesting.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -37,30 +40,35 @@
 		<service name="xml.harvesting.clone">
 			<class name=".services.harvesting.CreateClone" />
 			<class name=".services.harvesting.Get" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.harvesting.remove">
 			<class name=".services.harvesting.Remove" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.harvesting.start">
 			<class name=".services.harvesting.Start" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.harvesting.stop">
 			<class name=".services.harvesting.Stop" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.harvesting.run">
 			<class name=".services.harvesting.Run" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 
@@ -68,6 +76,21 @@
 
 		<service name="xml.harvesting.info">
 			<class name=".services.harvesting.Info" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.history">
+			<class name=".services.harvesting.History" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.history.delete">
+			<class name=".services.harvesting.HistoryDelete" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

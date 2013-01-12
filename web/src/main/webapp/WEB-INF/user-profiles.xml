@@ -81,7 +81,9 @@
 
 		<allow service="harvesting.history.full" />
 		<allow service="harvesting.history" />
+		<allow service="xml.harvesting.history" />
 		<allow service="harvesting.history.delete" />
+		<allow service="xml.harvesting.history.delete" />
 
 		<!-- Thesaurus facilities -->
 		<allow service="thesaurus.admin"/>
