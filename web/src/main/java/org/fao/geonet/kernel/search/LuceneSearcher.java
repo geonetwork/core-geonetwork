@@ -321,7 +321,7 @@ public class LuceneSearcher extends MetaSearcher {
 						}
 						response.addContent(md);
 						
-						addGeocatElements(srvContext, md, id, gc);
+						//addGeocatElements(srvContext, md, id, gc);
 					}
 				}
 			} else {
