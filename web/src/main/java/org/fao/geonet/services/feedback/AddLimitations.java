@@ -85,6 +85,7 @@ public class AddLimitations implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
+		if (id == null) throw new MetadataNotFoundEx("Parameters do not contain a valid uuid/id "+Xml.getString(params));
 
 		String access   = Util.getParam(params, Params.ACCESS);
 
@@ -93,7 +94,7 @@ public class AddLimitations implements Service
 		//--- get metadata info
 		MdInfo info = dm.getMetadataInfo(dbms, id);
 		if (info == null) 
-       throw new IllegalArgumentException("Metadata not found --> " + id);	
+       throw new MetadataNotFoundEx("Metadata not found --> " + id);	
 
 		//--- start building response
 	 	Element response = new Element("response");
