@@ -2020,12 +2020,12 @@ priority="40">
         </xsl:choose>
     </xsl:variable>
 
-
-    <input id="ch03_{$eltRef}" type="radio" name="proj_{$eltRef}" value="ch03" checked="checked" />
-    <label for="ch03_{$eltRef}">CH03</label>
-    <input id="wgs84_{$eltRef}" type="radio" name="proj_{$eltRef}" value="wgs84" />
-    <label for="wgs84_{$eltRef}">WGS84</label>
-
+    <xsl:if test="util:allowScripting() = 'true'">
+	    <input id="ch03_{$eltRef}" type="radio" name="proj_{$eltRef}" value="ch03" checked="checked" />
+	    <label for="ch03_{$eltRef}">CH03</label>
+	    <input id="wgs84_{$eltRef}" type="radio" name="proj_{$eltRef}" value="wgs84" />
+	    <label for="wgs84_{$eltRef}">WGS84</label>
+	</xsl:if>
     <table style="width:100%">
         <tr>
             <td />
@@ -2150,7 +2150,11 @@ priority="40">
                     <xsl:with-param name="input_type" select="'hidden'" />
                 </xsl:call-template>
             </xsl:when>
+        	<xsl:when test="util:allowScripting() = false()">
+                <div class="md"><xsl:value-of select="text()"/></div>
+        	</xsl:when>
             <xsl:otherwise>
+ 	            <xsl:value-of select="util:allowScripting() = false()"></xsl:value-of>
                 <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"/>
                 <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}" readonly="readonly"/>
             </xsl:otherwise>

@@ -273,7 +273,9 @@ public class ConfigurationOverrides {
                 if (match instanceof Element) {
                     Element element = (Element) match;
                     debug("Adding xml to " + XPath.getXPath(element));
-                    element.addContent(newXml);
+                    for (Content content : newXml) {
+                        element.addContent((Content) content.clone());
+                    }
                 } else {
                     throw new IllegalArgumentException("the xpath of an Add XML overrides must select elements only");
                 }

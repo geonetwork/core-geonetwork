@@ -128,6 +128,10 @@ public class GetMap implements Service {
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
         if (background != null) {
 
+            if(background.equals("geocat")) {
+                background = "http://wms.geo.admin.ch/?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.0&LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&STYLES=default&SRS=EPSG:4326&BBOX={minx},{miny},{maxx},{maxy}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png";
+            }
+            
             String minx = Double.toString(bboxOfImage.getMinX());
             String maxx = Double.toString(bboxOfImage.getMaxX());
             String miny = Double.toString(bboxOfImage.getMinY());

@@ -30,6 +30,9 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -48,7 +51,7 @@ public class PDF implements Service {
     	Element htmlDoc = metadata.getChild("html");
         XMLOutputter printer = new XMLOutputter();
         String htmlContent = printer.outputString(htmlDoc);
-        
+        XslUtil.setNoScript();
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 
@@ -57,7 +60,9 @@ public class PDF implements Service {
         
         try {
 	        ITextRenderer renderer = new ITextRenderer();
-	        renderer.setDocumentFromString(htmlContent);
+                String siteUrl = new SettingInfo(context).getSiteUrl();
+                renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
+	        renderer.setDocumentFromString(htmlContent, siteUrl);
 	        renderer.layout();
 	        renderer.createPDF(os);
         }

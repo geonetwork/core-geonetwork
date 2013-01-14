@@ -474,7 +474,7 @@
 	    <service name="metadata.print">
 			<class name=".services.metadata.PDF"/>
 
-			<output file="true" contentType="application/pdf" />
+			<output sheet="" file="true" contentType="application/pdf" />
 
 			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
 				<xml name="error" file="xml/metadata-show-error.xml" />
@@ -485,6 +485,7 @@
 			<class name=".services.metadata.Show">
 				<param name="addRefs" value="y" />
 				<param name="cache" value="n" />
+				<param name="keepXLinks" value="y" />
 			</class>
 
 			<output sheet="metadata-show-xml.xsl" contentType="text/xml; charset=UTF-8">

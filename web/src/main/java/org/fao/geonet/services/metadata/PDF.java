@@ -12,15 +12,17 @@ import jeeves.utils.BinaryFile;
 
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.metadata.format.ImageReplacedElementFactory;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 public class PDF implements Service {
 
-    private static final String TMP_PDF_FILE = "Metadata";
+    private static final String TMP_PDF_FILE = "Metadata-";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -37,7 +39,7 @@ public class PDF implements Service {
         }
 
         Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
-        
+        XslUtil.setNoScript();
         LocalServiceRequest request = LocalServiceRequest.create("metadata.show.xml", params);
         request.setLanguage(context.getLanguage());
         request.setDebug(false);
@@ -48,12 +50,14 @@ public class PDF implements Service {
         File tempDir = (File) context.getServlet().getServletContext().
                        getAttribute( "javax.servlet.context.tempdir" );
 
-        File tempFile = File.createTempFile(TMP_PDF_FILE, ".pdf", tempDir);
+        File tempFile = File.createTempFile(TMP_PDF_FILE+id+"_", ".pdf", tempDir);
         OutputStream os = new FileOutputStream(tempFile);
         
         try {
                 ITextRenderer renderer = new ITextRenderer();
-                renderer.setDocumentFromString(htmlContent, context.getBaseUrl());
+                String siteUrl = new SettingInfo(context).getSiteUrl();
+                renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
+                renderer.setDocumentFromString(htmlContent, siteUrl);
                 renderer.layout();
                 renderer.createPDF(os);
         }

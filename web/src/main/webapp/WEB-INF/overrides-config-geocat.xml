@@ -78,6 +78,14 @@
         	<schedule name="unpublish-invalid-metadata" when="0 0 1 ? * MON-FRI" class=".kernel.UnpublishInvalidMetadataJob" />
         	<schedule name="archive-all-metadata" when="0 0 3 ? * MON-FRI *" class=".geocat.ArchiveAllMetadataJob" />
         </addXml>
+        <addXml xpath="*//class[name='.services.metadata.Show']">
+        	<param name="keepXLinks" value="y"/>
+        </addXml>
+    </file>
+    <file name=".*/WEB-INF/config-metadata.xml">
+        <addXml xpath="services/service/class[@name='.services.metadata.Show']">
+        	<param name="keepXLinks" value="y"/>
+        </addXml>
     </file>
     <file name=".*/WEB-INF/config-monitoring.xml">
         <addXml xpath="monitors[1]">
