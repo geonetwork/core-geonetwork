@@ -127,12 +127,19 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
 //        }
         if (!this.extractorWindow) {
             var options = {
-                    projection: GeoNetwork.map.PROJECTION,
-                    theme: null,
-                    maxExtent: GeoNetwork.map.EXTENT
+                    maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
+                    projection : GeoNetwork.map.MAP_OPTIONS.projection,
+                    resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
+                    restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
+                        .clone(),
+                    theme: null
                 };
             var map = new OpenLayers.Map(options);
-            map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
+
+            Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
+                map2.addLayer(layer);
+            });
+            
             this.extractorPanel = new GeoNetwork.WxSExtractor({
                 url: url,
                 version: version || '1.1.0', 
