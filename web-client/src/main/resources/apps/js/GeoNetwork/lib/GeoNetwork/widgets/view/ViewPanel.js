@@ -336,6 +336,9 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         // Create map panel for extent visualization
         this.catalogue.extentMap.initMapDiv();
+        Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
+            noscript.previousSibling.innerHTML = noscript.innerText;
+          });
         
         // Related metadata are only displayed in view mode with no tabs
         if (this.currTab === 'view-simple' || this.currTab === 'inspire' || this.currTab === 'simple') {
