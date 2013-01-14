@@ -49,7 +49,7 @@ GeoNetwork.searchApp = function() {
             // FIXME how many results should I load to
             // get all important facets?
             Ext.Ajax.request({
-                url : catalogue.URL + "/" + catalogue.LANG
+                url : catalogue.URL + "/srv/" + catalogue.LANG
                         + "/q?fast=index&from=1&to=30&sortBy=relevance",
                 success : function(response) {
                     Ext.getCmp('facets-panel').refresh(response);
