@@ -319,7 +319,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      */
     addFacet: function (recordId) {
         var r = this.facetsStore.getById(recordId),
-            form = this.searchForm, id = 'facet_' + this.counter ++;
+            form = app.searchApp.getSearchForm(), id = 'facet_' + this.counter ++;
         
         var data = {
             id: id, 
@@ -375,7 +375,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             }));
             this.breadcrumb.doLayout();
         }
-        this.searchForm.fireEvent('search');
+        app.searchApp.getSearchForm().fireEvent('search');
     },
     /** private: method[switchFacet]
      *  :param elem: ``String`` the key of the facet to be removed
@@ -400,7 +400,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         // Update switcher label
         switcher.setText(newValue);
         
-        this.searchForm.fireEvent('search');
+        app.searchApp.getSearchForm().fireEvent('search');
     },
     
     /** private: method[removeFacet]
@@ -418,14 +418,14 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             switcher = Ext.getCmp(filter.get('bcid'));
         
         // Remove search form reference
-        this.searchForm.remove(field);
+        app.searchApp.getSearchForm().remove(field);
         // Remove breadcrumb reference
         this.breadcrumb && this.breadcrumb.remove(switcher);
         
         this.currentFilterStore.remove(filter);
         
         if (!silent) {
-            this.searchForm.fireEvent('search');
+            app.searchApp.getSearchForm().fireEvent('search');
         }
     },
     /** public: method[reset]

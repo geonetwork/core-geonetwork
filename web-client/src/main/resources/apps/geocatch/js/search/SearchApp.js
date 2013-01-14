@@ -45,18 +45,23 @@ GeoNetwork.searchApp = function() {
             this.createResultsPanel(null);
         },
 
-        fireSearch : function() {
-
+        getSearchForm : function() {
             var searchForm = Ext.getCmp('advanced-search-options-content-form');
 
             if (!searchForm.isVisible()) {
                 searchForm = Ext.getCmp('simple-search-options-content-form');
             }
 
+            return searchForm;
+        },
+
+        fireSearch : function() {
+
+            var searchForm = this.getSearchForm();
+
             searchForm.fireEvent('search');
-            
-            
-            //Maximize Search Results Panel
+
+            // Maximize Search Results Panel
             Ext.getCmp("west").setWidth(Ext.getCmp("west").minWidth);
             Ext.getCmp("vp").doLayout();
         },
