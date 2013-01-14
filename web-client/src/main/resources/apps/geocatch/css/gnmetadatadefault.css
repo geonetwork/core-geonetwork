@@ -547,12 +547,28 @@ be use for custom styling in view mode */
 }
 
 /* Styles for classic metadata view (custom for Swisstopo) */
-.embedded a, .embedded fieldset .metadata-block, .embedded th.md, .embedded td.padded  {
-    font-size: 0.7em;
+.embedded a, .embedded fieldset .metadata-block, .embedded th.md, .embedded td.padded, .embedded label {
+    font-size: 12px;
+}
+
+.embedded div .relatedElements {
+  border: 1px solid #000000;
+  font-size: 11px;
+  padding: 2px;
+}
+
+.embedded div .relatedElements ul {
+  padding: 0px;
+}
+
+.embedded div .relatedElements h3 {
+  font-size: 11px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .embedded h1 {
-    font-size: 1em;
+    font-size: 12px;
 }
 
  .embedded fieldset.metadata-block * fieldset {
