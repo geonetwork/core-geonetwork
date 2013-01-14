@@ -372,8 +372,6 @@ Ext.onReady(function() {
     // Register events where the search should be triggered
     var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterLogin' ];
 
-    app.viewport.doLayout();
-
     // Do we have a search on the parameter url?
 
     if (OpenLayers.Util.getParameters().hasOwnProperty("s_search")) {
@@ -436,5 +434,7 @@ Ext.onReady(function() {
     if (OpenLayers.Util.getParameters().hasOwnProperty("uuid")) {
         catalogue.metadataShow(OpenLayers.Util.getParameters().uuid, true);
     }
+
+    app.viewport.doLayout();
 
 });
