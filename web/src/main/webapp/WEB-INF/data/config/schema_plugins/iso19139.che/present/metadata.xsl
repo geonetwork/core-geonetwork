@@ -2151,10 +2151,9 @@ priority="40">
                 </xsl:call-template>
             </xsl:when>
         	<xsl:when test="util:allowScripting() = false()">
-                <div class="md"><xsl:value-of select="text()"/></div>
+                <div class="md"><xsl:value-of select="substring-before(text(), '.')"/>.<xsl:value-of select="substring(substring-after(text(), '.'),0,4)"/></div>
         	</xsl:when>
             <xsl:otherwise>
- 	            <xsl:value-of select="util:allowScripting() = false()"></xsl:value-of>
                 <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"/>
                 <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}" readonly="readonly"/>
             </xsl:otherwise>

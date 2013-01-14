@@ -211,16 +211,16 @@
 	        		</xsl:choose>
         		</xsl:variable>
         		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
-	        	<span class="extentMap"></span>
 	        	<xsl:choose>
 		        	<xsl:when test="java:allowScripting() = 'true'">
+			        	<span><img src="{/root/gui/url}/images/spinner.gif"></img></span>
 			        	<noscript class="extentMap">
 			        		<img src="{$url}&amp;width=500" ><p style="display:none;">needed so this shows</p></img>
 			        	</noscript>
 		        	</xsl:when>
 		        	<xsl:otherwise>
 		        		<p style="display:none;">needed so this shows</p>
-		        		<img style="display: block;margin-left: auto;margin-right: auto; text-align: center" src="{$url}&amp;width=400" ></img>
+		        		<img style="display: block;margin-left: auto;margin-right: auto; text-align: center" src="{$url}&amp;width=580" ></img>
 		        	</xsl:otherwise>
 	        	</xsl:choose>
 	        </xsl:otherwise>
