@@ -103,3 +103,5 @@ UPDATE countries_search SET "SEARCH"="countries"."SEARCH" from "countries" WHERE
 alter table gemeinden_search add column "SEARCH" varchar(254);
 UPDATE gemeinden_search SET "SEARCH"="gemeindenBB"."SEARCH" from "gemeindenBB" WHERE gemeinden_search."OBJECTVAL"="gemeindenBB"."OBJECTVAL";
 
+-- propably not necessary but doesn't hurt
+UPDATE geometry_columns SET srid=4326 where f_table_name='kantone_search' or f_table_name='gemeinden_search' or f_table_name='countries_search';

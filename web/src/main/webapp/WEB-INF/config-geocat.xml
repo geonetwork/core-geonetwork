@@ -472,12 +472,23 @@
 	    </service>
 	    
 	    <service name="metadata.print">
+			<class name=".services.metadata.PDF"/>
+
+			<output sheet="" file="true" contentType="application/pdf" />
+
+			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+				<xml name="error" file="xml/metadata-show-error.xml" />
+			</error>
+	    </service>
+
+		<service name="metadata.show.xml">
 			<class name=".services.metadata.Show">
 				<param name="addRefs" value="y" />
-				<param name="cache" value="y" />
+				<param name="cache" value="n" />
+				<param name="keepXLinks" value="y" />
 			</class>
 
-			<output sheet="metadata-print.xsl">
+			<output sheet="metadata-show-xml.xsl" contentType="text/xml; charset=UTF-8">
 				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
 				<call name="position" class=".guiservices.util.GetPositionMD"/>
 				<call name="relation" class =".guiservices.metadata.GetRelated"/>
@@ -486,11 +497,11 @@
 				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
 			</output>
 
-			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
 				<xml name="error" file="xml/metadata-show-error.xml" />
 			</error>
-	    </service>
-
+		</service>
+		
         <!-- Service to export a CSW query in a pdf document.
         To be used with no outputSchema (ie. default ogc) to return
         search result in a pdf. Replace existing pdf.search service. -->

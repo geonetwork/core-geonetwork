@@ -25,6 +25,7 @@ package jeeves.server.dispatchers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -767,7 +768,14 @@ public class ServiceManager
 				else
 				{
 
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    req.beginStream(outPage.getContentType(), cache);
+				    
+					OutputStream baos;
+					if(preSheets.isEmpty()) {
+					    baos = req.getOutputStream();
+					} else {
+					    baos = new ByteArrayOutputStream();
+					}
 
 					try
 					{
@@ -785,9 +793,9 @@ public class ServiceManager
                             timerContext.stop();
                         }
 						//--- then we set the content-type and output the result
-
-						req.beginStream(outPage.getContentType(), cache);
-						req.getOutputStream().write(baos.toByteArray());
+                                            if(!preSheets.isEmpty()) {
+                                                req.getOutputStream().write(((ByteArrayOutputStream) baos).toByteArray());
+                                            }
 						req.endStream();
 					}
 					catch(Exception e)

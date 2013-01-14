@@ -11,7 +11,7 @@
 	<ContactSelectionTitle js="true">Kontaktauswahl</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
-	<refine.titles js="true">Title</refine.titles>
+	<refine.titles js="true">Titel</refine.titles>
 	<refine.keyword js="true">Schlüsselwörter</refine.keyword>
 	<refine.resolution js="true">Räumliche Auflösung</refine.resolution>
 	<refine.category js="true">Thematik</refine.category>

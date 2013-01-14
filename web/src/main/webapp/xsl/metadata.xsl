@@ -2190,7 +2190,6 @@
             </xsl:choose>
           </xsl:variable>
           
-          
           <xsl:variable name="geom" >
             <xsl:value-of select="concat('Polygon((', $wValue, ' ', $sValue,',',$eValue,' ',$sValue,',',$eValue,' ',$nValue,',',$wValue,' ',$nValue,',',$wValue,' ',$sValue, '))')"/>
           </xsl:variable>
