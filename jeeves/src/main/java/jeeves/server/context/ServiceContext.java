@@ -192,55 +192,65 @@ public class ServiceContext extends BasicContext
         return servlet;
     }
 
-	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
-			public ResourceManager getResourceManager() {
-				return new ResourceManager(getMonitorManager(), getProviderManager()) {
-					@Override
-					public synchronized void abort() throws Exception {
-					}
-					@Override
-					public synchronized void close() throws Exception {
-					}
-					@Override
-					public synchronized void close(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					public synchronized void abort(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					protected void openMetrics(Object resource) {
-					}
-					@Override
-					protected void closeMetrics(Object resource) {
-					}
-				};
-			}
-		};
-		
-		UserSession session = userSession;
-		if(userSession == null) {
-			session = new UserSession();
-		} 
-		
-		try {
-		servlet.getEngine().getServiceManager().dispatch(request,session,context);
-		} catch (Exception e) {
-			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
-			throw new ServiceExecutionFailedException(request.getService(),e);
-		} finally {
-			// set old context back as thread local
-			setAsThreadLocal();
-		}
-		try {
-			return request.getResult();
-		} catch (Exception e) {
-			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml from service:"+request.getService()+"\n"+ request.getResultString());
-			throw new ServiceExecutionFailedException(request.getService(),e);
-		}
-	}
+    public void executeOnly(LocalServiceRequest request) throws Exception {
+        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(),
+                getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(),
+                getProfileManager(), htContexts) {
+            public ResourceManager getResourceManager() {
+                return new ResourceManager(getMonitorManager(), getProviderManager()) {
+                    @Override
+                    public synchronized void abort() throws Exception {
+                    }
+
+                    @Override
+                    public synchronized void close() throws Exception {
+                    }
+
+                    @Override
+                    public synchronized void close(String name, Object resource) throws Exception {
+                    }
+
+                    @Override
+                    public synchronized void abort(String name, Object resource) throws Exception {
+                    }
+
+                    @Override
+                    protected void openMetrics(Object resource) {
+                    }
+
+                    @Override
+                    protected void closeMetrics(Object resource) {
+                    }
+                };
+            }
+        };
+
+        UserSession session = userSession;
+        if (userSession == null) {
+            session = new UserSession();
+        }
+
+        try {
+            servlet.getEngine().getServiceManager().dispatch(request, session, context);
+        } catch (Exception e) {
+            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
+            throw new ServiceExecutionFailedException(request.getService(), e);
+        } finally {
+            // set old context back as thread local
+            setAsThreadLocal();
+        }
+    }
+
+    public Element execute(LocalServiceRequest request) throws Exception {
+        executeOnly(request);
+        try {
+            return request.getResult();
+        } catch (Exception e) {
+            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml from service:" + request.getService() + "\n"
+                    + request.getResultString());
+            throw new ServiceExecutionFailedException(request.getService(), e);
+        }
+    }
 
     public XmlCacheManager getXmlCacheManager() {
         return this.xmlCacheManager;

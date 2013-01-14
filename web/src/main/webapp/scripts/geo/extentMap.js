@@ -88,6 +88,9 @@ var extentMap = {
         if (Ext) {
             viewers = Ext.DomQuery.select('.extentViewer');
             idFunc = Ext.id;
+            Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
+              noscript.parentElement.innerHTML = noscript.innerText;
+            });
         } else {
             viewers = $$('.extentViewer');
             idFunc = identify();

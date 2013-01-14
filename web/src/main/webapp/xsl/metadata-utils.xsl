@@ -3,6 +3,7 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	extension-element-prefixes="saxon"
 	xmlns:exslt="http://exslt.org/common" 
 	xmlns:java="java:org.fao.geonet.util.XslUtil"
@@ -165,7 +166,8 @@
         <xsl:param name="targetPolygon"/>
         <xsl:param name="watchedBbox"/>
         <xsl:param name="eltRef"/>
-
+		<xsl:choose>
+			<xsl:when test="$edit = 'true'">
         <xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
 		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
@@ -184,6 +186,45 @@
             mode="{$mode}">
             <div style="display:none;" id="coords_{$eltRef}"><xsl:value-of select="normalize-space($coords)"/></div>
         </div>
+	        </xsl:when>
+	        <xsl:otherwise>
+	        	<xsl:variable name="background">geocat</xsl:variable>
+	        	<xsl:variable name="xlink" select="ancestor::gmd:extent/@xlink:href"/>
+	        	<xsl:variable name="geom">
+	        		<xsl:choose>
+		        		<xsl:when test="not(name(.) = 'gmd:EX_GeographicBoundingBox') and $xlink">
+		        			<xsl:variable name="startId" select="substring-after($xlink, 'id=')"/>
+		        			<xsl:variable name="id" select="substring-before($startId, '&amp;')"/>
+		        			<xsl:variable name="startCategory" select="substring-after($xlink, 'typename=')"/>
+		        			<xsl:variable name="categoryId" select="substring-after(substring-before($startCategory, '&amp;'), ':')"/>
+		        			<xsl:variable name="category">
+		        				<xsl:choose>
+		        					<xsl:when test="$categoryId = 'kantoneBB'">kantone</xsl:when>
+		        					<xsl:when test="$categoryId = 'gemeindenBB'">gemeinden</xsl:when>
+		        					<xsl:otherwise><xsl:value-of select="$categoryId"/></xsl:otherwise>
+		        				</xsl:choose>
+		        			</xsl:variable>
+		        			
+		        			<xsl:text>id=</xsl:text><xsl:value-of select="$category"/><xsl:text>:</xsl:text><xsl:value-of select="$id"/>
+		        		</xsl:when>
+		        		<xsl:otherwise>geom=<xsl:value-of select="$coords"/></xsl:otherwise>
+	        		</xsl:choose>
+        		</xsl:variable>
+        		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
+	        	<span class="extentMap"></span>
+	        	<xsl:choose>
+		        	<xsl:when test="java:allowScripting() = 'true'">
+			        	<noscript class="extentMap">
+			        		<img src="{$url}&amp;width=500" ><p style="display:none;">needed so this shows</p></img>
+			        	</noscript>
+		        	</xsl:when>
+		        	<xsl:otherwise>
+		        		<p style="display:none;">needed so this shows</p>
+		        		<img style="display: block;margin-left: auto;margin-right: auto; text-align: center" src="{$url}&amp;width=400" ></img>
+		        	</xsl:otherwise>
+	        	</xsl:choose>
+	        </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 	<!-- show metadata export icons eg. in search results or metadata viewer -->

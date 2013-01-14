@@ -480,6 +480,9 @@ var searchTools = {
         if (Ext) {
             viewers = Ext.DomQuery.select('.extentViewer');
             idFunc = Ext.id;
+            Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
+              noscript.previousSibling.innerHTML = noscript.innerText;
+            });
         } else {
             viewers = $$('.extentViewer');
             idFunc = identify();
