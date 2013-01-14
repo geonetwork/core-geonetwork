@@ -46,17 +46,20 @@ GeoNetwork.searchApp = function() {
 
             // Show initial facets filter
             app.searchApp.generateFacetedSearchPanel();
-            
-            //FIXME how many results should I load to get all important facets?
-            Ext.Ajax.request({
-                url : GeoNetwork.Util.getBaseUrl(document.location.href)
-                        + "../q?fast=index&from=1&to=30&sortBy=relevance",
-                success : function(response) {
-                    Ext.getCmp('facets-panel').refresh(response);
-                },
-                disableCaching : false
 
-            });
+            setTimeout(function() {// FIXME how many results should I load to
+                                    // get all important facets?
+                Ext.Ajax.request({
+                    url : GeoNetwork.Util.getBaseUrl(document.location.href)
+                            + "../q?fast=index&from=1&to=30&sortBy=relevance",
+                    success : function(response) {
+                        Ext.getCmp('facets-panel').refresh(response);
+                    },
+                    disableCaching : false
+
+                });
+            }, 2000);
+            //Timeout because sometimes on IE we are too fast
 
         },
 
@@ -1539,16 +1542,14 @@ GeoNetwork.searchApp = function() {
                 }
             });
 
-            var facetsPanel = new GeoNetwork.FacetsPanel(
-                    {
-                        id : 'facets-panel',
-                        renderTo : 'facets-panel-div',
-                        // renderTo: 'search-filter',
-                        breadcrumb : breadcrumb,
-                        maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
-                        facetListConfig : GeoNetwork.Settings.facetListConfig
-                                || []
-                    });
+            var facetsPanel = new GeoNetwork.FacetsPanel({
+                id : 'facets-panel',
+                renderTo : 'facets-panel-div',
+                // renderTo: 'search-filter',
+                breadcrumb : breadcrumb,
+                maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
+                facetListConfig : GeoNetwork.Settings.facetListConfig || []
+            });
         }
     };
 
