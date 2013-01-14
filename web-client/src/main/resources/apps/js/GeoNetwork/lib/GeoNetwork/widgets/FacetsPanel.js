@@ -359,6 +359,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 scrollMenu.add({
                     group: data.id + '#',
                     id: data.id + '#' + i++,
+                    facetType : data.facet,
                     altText : item.get('node'),
                     checked: item.get('node') === r.get('node') ? true : false,
                     text: (item.get('label') != null ? item.get('label') : item.get('node')),
@@ -368,9 +369,13 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                     scope: panel
                 });
             });
+            
+            var text = OpenLayers.i18n(data.facet) + ": " 
+                + (data.label != null ? data.label : data.value);
+            
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
-                text: (data.label != null ? data.label : data.value),
+                text: text,
                 menu: scrollMenu
             }));
             this.breadcrumb.doLayout();
@@ -398,7 +403,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         // Update value of search field
         field.setValue(newValue);
         // Update switcher label
-        switcher.setText(newValue);
+        switcher.setText(OpenLayers.i18n(elem.facetType) 
+                + ": " + newValue);
         
         app.searchApp.getSearchForm().fireEvent('search');
     },
