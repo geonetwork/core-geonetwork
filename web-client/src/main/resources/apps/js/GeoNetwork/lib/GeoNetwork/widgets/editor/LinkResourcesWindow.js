@@ -580,23 +580,23 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
 //            }, 
               {
                 xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('url'),
+                fieldLabel: OpenLayers.i18n('URL'),
                 name: 'href',
                 value: ''
             }, {
                 xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('name'),
+                fieldLabel: OpenLayers.i18n('Name'),
                 name: 'name',
                 value: ''
             }, {
                 xtype: 'textarea',
-                fieldLabel: OpenLayers.i18n('desc'),
+                fieldLabel: OpenLayers.i18n('Description'),
                 name: 'title',
                 value: ''
             }, {
                 // TODO : should be a combo
                 xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('protocol'),
+                fieldLabel: OpenLayers.i18n('Protocol'),
                 name: 'protocol',
                 value: ''
             }],
