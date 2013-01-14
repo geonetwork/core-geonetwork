@@ -43,6 +43,21 @@ GeoNetwork.searchApp = function() {
             hideAdvancedSearch();
 
             this.createResultsPanel(null);
+
+            // Show initial facets filter
+            app.searchApp.generateFacetedSearchPanel();
+            
+            //FIXME how many results should I load to get all important facets?
+            Ext.Ajax.request({
+                url : GeoNetwork.Util.getBaseUrl(document.location.href)
+                        + "../q?fast=index&from=1&to=30&sortBy=relevance",
+                success : function(response) {
+                    Ext.getCmp('facets-panel').refresh(response);
+                },
+                disableCaching : false
+
+            });
+
         },
 
         getSearchForm : function() {
@@ -1419,10 +1434,6 @@ GeoNetwork.searchApp = function() {
             // Ext.state.Manager.getProvider().updateLastSearch(query);
             // Show "List results" panel
             var facetPanel = Ext.getCmp('facets-panel');
-            // Init facet panel on first search
-            if (!facetPanel) {
-                app.searchApp.generateFacetedSearchPanel();
-            }
             Ext.getCmp('facets-panel').refresh(response);
 
             if (Ext.getCmp('previousBt')) {
