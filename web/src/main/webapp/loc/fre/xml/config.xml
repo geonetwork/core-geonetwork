@@ -37,8 +37,8 @@
 	<server>Serveur</server>
 	<host>Hôte</host>
 	<port>Port</port>
-	<securePort>Secure Port</securePort>
-    <protocol>Preferred Protocol</protocol>
+	<securePort>Port sécurisé</securePort>
+    <protocol>Protocole préféré</protocol>
 
 	<searchStats>Statistique sur les recherches</searchStats>
 
@@ -55,10 +55,10 @@
 
 	<indexoptimizer>Optimisation de l'index Lucene</indexoptimizer>
 		<at>Lancer à </at>
-		<atSpec>( heure : minute eg. 23:15 )</atSpec>
+		<atSpec>(heure : minute eg. 23:15)</atSpec>
 		<interval>Sera relancé tous les </interval>
 		<hourintervals>
-			<hour label="1 heure (non recommandé)">1</hour>
+			<hour label="heures (non recommandé)">1</hour>
 			<hour label="3 heures">3</hour>
 			<hour label="6 heures">6</hour>
 			<hour label="12 heures">12</hour>

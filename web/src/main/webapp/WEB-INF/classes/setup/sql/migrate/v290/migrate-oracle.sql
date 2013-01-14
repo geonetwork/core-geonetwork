@@ -1,1 +1,0 @@
-ALTER TABLE Users MODIFY COLUMN password varchar(120) not null;

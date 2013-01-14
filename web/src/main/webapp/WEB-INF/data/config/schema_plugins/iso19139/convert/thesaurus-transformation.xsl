@@ -14,16 +14,16 @@
 	
 	
 	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
-		for each keywords pointing to the concept URI-->
+        for each keywords pointing to the concept URI-->
 	<xsl:template name="to-iso19139-keyword-with-anchor">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
 	
-
+	
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
-	will be resolved by XLink resolver. -->
+    will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withXlink" select="true()"/>
@@ -32,23 +32,23 @@
 	
 	
 	<!-- Convert a concept to an ISO19139 keywords.
-	If no keyword is provided, only thesaurus section is adaded.
-	-->
+    If no keyword is provided, only thesaurus section is adaded.
+    -->
 	<xsl:template name="to-iso19139-keyword">
 		<xsl:param name="withAnchor" select="false()"/>
 		<xsl:param name="withXlink" select="false()"/>
 		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
-		It's recommended to use it in order to have the thesaurus widget inline editor
-		which use the thesaurus identifier for initialization. -->
+        It's recommended to use it in order to have the thesaurus widget inline editor
+        which use the thesaurus identifier for initialization. -->
 		<xsl:param name="withThesaurusAnchor" select="true()"/>
-
+		
 		<gmd:MD_Keywords>
 			<xsl:choose>
 				<xsl:when test="$withXlink">
 					<xsl:variable name="multiple" select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
 					<xsl:attribute name="xlink:href"
 						select="concat($serviceUrl, '/xml.keyword.get?thesaurus=', thesaurus/key, 
-						'&amp;id=', replace(/root/request/id, '#', '%23'), '&amp;multiple=', $multiple)"/>
+						'&amp;amp;id=', replace(/root/request/id, '#', '%23'), '&amp;amp;multiple=', $multiple)"/>
 					<xsl:attribute name="xlink:show">replace</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>

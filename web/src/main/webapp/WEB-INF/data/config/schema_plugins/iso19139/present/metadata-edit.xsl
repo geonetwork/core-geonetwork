@@ -106,7 +106,7 @@
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints|gmd:aggregationInfo">
+              gmd:metadataConstraints|gmd:aggregationInfo|gmd:report/*|gmd:result/*">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
@@ -1291,9 +1291,9 @@
     
     <!-- Get current transformation mode based on XML fragement analysis -->
     <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
-                                                else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
-                                                else 'to-iso19139-keyword'"/>
-
+      else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+      else 'to-iso19139-keyword'"/>
+    
     <!-- Define the list of transformation mode available.
     -->
     <xsl:variable name="parentName" select="name(..)"/>
@@ -1324,6 +1324,7 @@
       <xsl:with-param name="listOfTransformations" select="$listOfTransformations"/>
       <xsl:with-param name="transformation" select="$transformation"/>
     </xsl:call-template>
+
     
   </xsl:template>
   
@@ -1386,6 +1387,7 @@
   </xsl:template>
   
   
+  
   <!-- ============================================================================= -->
   <!-- descriptiveKeywords -->
   <!-- ============================================================================= -->
@@ -1401,13 +1403,17 @@
           <xsl:with-param name="edit"    select="$edit"/>
           <xsl:with-param name="content">
             
+            <xsl:variable name="thesaurusName" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
+            <xsl:variable name="thesaurusCode" select="if (gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+            
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor. 
               TODO : check that the thesaurus is available in the catalogue to not 
               to try to initialize a widget with a non existing thesaurus. -->
-              <xsl:when test="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
-                gmd:identifier/gmd:MD_Identifier/gmd:code">
+              <xsl:when test="$thesaurusCode != ''">
                 <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
                   <xsl:with-param name="edit" select="$edit"/>
                   <xsl:with-param name="schema" select="$schema"/>
@@ -2168,6 +2174,14 @@
     <xsl:call-template name="complexElementGui">
       <xsl:with-param name="title" select="/root/gui/strings/metadata"/>
       <xsl:with-param name="validationLink" select="$validationLink"/>
+
+      <xsl:with-param name="helpLink">
+        <xsl:call-template name="getHelpLink">
+            <xsl:with-param name="name" select="name(.)"/>
+            <xsl:with-param name="schema" select="$schema"/>
+        </xsl:call-template>
+      </xsl:with-param>
+      
       <xsl:with-param name="edit" select="true()"/>
       <xsl:with-param name="content">
     
@@ -2783,6 +2797,14 @@
               <xsl:with-param name="schema" select="$schema"/>
             </xsl:call-template>
           </xsl:with-param>
+
+          <xsl:with-param name="helpLink">
+              <xsl:call-template name="getHelpLink">
+                  <xsl:with-param name="name" select="name(.)"/>
+                  <xsl:with-param name="schema" select="$schema"/>
+              </xsl:call-template>
+          </xsl:with-param>
+                
           <xsl:with-param name="text">
             <xsl:variable name="value" select="string(gco:CharacterString)"/>
             <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>

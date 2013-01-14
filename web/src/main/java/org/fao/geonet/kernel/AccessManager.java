@@ -469,7 +469,7 @@ public class AccessManager {
      * to the groups where the metadata is editable.
      *
      * @param context
-     * @param id	The metadata internal identifier
+     * @param id    The metadata internal identifier
      * @return
      * @throws Exception
      */

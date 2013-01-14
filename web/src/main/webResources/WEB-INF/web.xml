@@ -25,7 +25,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config-security.xml</param-value>
+		<param-value>/WEB-INF/config-security.xml,classpath:mapfish-spring-application-context.xml,classpath:*-mapfish-spring-application-context-override.xml</param-value>
 	</context-param>
     <listener>
         <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
@@ -160,6 +160,11 @@
     <filter-mapping>
         <filter-name>resources</filter-name>
         <url-pattern>/images/harvesting/*</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>resources</filter-name>
+        <url-pattern>/xml/schemas/*</url-pattern>
     </filter-mapping>
     
     <filter-mapping>

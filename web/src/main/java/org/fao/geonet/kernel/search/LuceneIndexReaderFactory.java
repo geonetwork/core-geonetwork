@@ -14,6 +14,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import jeeves.utils.Log;
+
+import org.apache.lucene.facet.taxonomy.InconsistentTaxonomyException;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.store.FSDirectory;
@@ -29,11 +34,12 @@ import org.fao.geonet.constants.Geonet;
  */
 
 public class LuceneIndexReaderFactory {
-
     private static final long LOCK_WAIT_TIME = 15;
     private static final TimeUnit WAIT_UNIT = TimeUnit.SECONDS;
     private Map<String/* locale */, IndexReader> subReaders = new HashMap<String, IndexReader>();
+    private volatile TaxonomyReader currentTaxoReader;
     private File luceneDir;
+    private File taxoDir;
     private final Lock lock = new ReentrantLock();
     // ===========================================================================
     // Constructor
@@ -42,8 +48,13 @@ public class LuceneIndexReaderFactory {
         this.luceneDir = dir;
     }
 
+  public LuceneIndexReaderFactory(File dir, File taxoDir) throws IOException {
+      this.luceneDir = dir;
+      this.taxoDir = taxoDir;
+  }
     // ===========================================================================
     // Public interface methods
+
 
     /**
      * Get {@linkplain MultiReader}. If
@@ -76,26 +87,50 @@ public class LuceneIndexReaderFactory {
                          Log.debug(Geonet.LUCENE_TRACKING, "opening lucene reader "+id);
                     }
                 }
-                @Override
-                public synchronized void decRef() throws IOException {
-                    super.decRef();
-                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
-                        if(getRefCount() > 0) {
-                            Log.debug(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id+", new ref count is "+getRefCount());
-                        } else {
-                            Log.debug(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)");
-                        }
-                        if(getRefCount() > 0) {
-                            Log.trace(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id, new DecrementingReaderTracking());
-                        } else {
-                            Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
-                        }
-                    }
-                }
+//                @Override
+//                public synchronized void decRef() throws IOException {
+//                    super.decRef();
+//                    if(Log.isDebugEnabled(Geonet.LUCENE_TRACKING)) {
+//                        if(getRefCount() > 0) {
+//                            Log.debug(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id+", new ref count is "+getRefCount());
+//                        } else {
+//                            Log.debug(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)");
+//                        }
+//                        if(getRefCount() > 0) {
+//                            Log.trace(Geonet.LUCENE_TRACKING, "decrementing lucene reader "+id, new DecrementingReaderTracking());
+//                        } else {
+//                            Log.trace(Geonet.LUCENE_TRACKING, "closed lucene reader "+id+" (ref count is 0)", new CloseReaderTracking());
+//                        }
+//                    }
+//                }
             };
         } finally {
             lock.unlock();
         }
+    }
+    
+    /**
+     * Refresh and return the current taxonomy reader.
+     * 
+     * @return
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public TaxonomyReader getTaxonomyReader() {
+        if (currentTaxoReader == null) {
+            try {
+                currentTaxoReader = new DirectoryTaxonomyReader(
+                        FSDirectory.open(taxoDir));
+            } catch (CorruptIndexException e) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Taxonomy index is corrupted. Error is " + e.getMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Failed to open taxonomy reader from directory " 
+                    + taxoDir.getPath() + ". Error is " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return currentTaxoReader;
     }
 
     public void releaseReader( IndexReader reader ) throws InterruptedException, IOException {
@@ -158,7 +193,8 @@ public class LuceneIndexReaderFactory {
 
     private void maybeReopen() throws InterruptedException, IOException {
         Set<String> indices = listIndices();
-
+        boolean reopened = false;
+        
         if(indices.isEmpty()) throw new AssertionError("No lucene indices exist.  Need to regenerate");
 
         for( String indexDirName : indices ) {
@@ -169,6 +205,7 @@ public class LuceneIndexReaderFactory {
                 subReaders.put(indexDirName, reader);
             } else {
                 final IndexReader newReader = reader.reopen();
+                reopened = true;
                 if (newReader != reader) {
                     if(reader.getRefCount() > 0) {
                         reader.decRef();    // it will be closed when refCount is 0 - this could
@@ -179,6 +216,17 @@ public class LuceneIndexReaderFactory {
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                         Log.debug(Geonet.SEARCH_ENGINE, "Thread " + Thread.currentThread().getId() + ": reopened IndexReader");
                 }
+            }
+        }
+        
+        // After a reopen() on the IndexReader, refresh() the TaxonomyReader. 
+        // No search should be performed on the new IndexReader until refresh() has finished.
+        if (reopened) {
+            try {
+                getTaxonomyReader().refresh();
+            } catch (InconsistentTaxonomyException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     }

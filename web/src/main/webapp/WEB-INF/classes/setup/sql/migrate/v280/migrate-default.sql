@@ -29,6 +29,12 @@ INSERT INTO Settings VALUES (953,952,'only','false');
 INSERT INTO Settings VALUES (954,952,'sorted','true');
 INSERT INTO Settings VALUES (955,952,'ignored','false');
 
+-- add hidden metadata elements
+
+INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
+INSERT INTO Settings VALUES (957,956,'enable','false');
+INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
+
 -- delete indexlanguages settings
 -- Remove third level settings
 DELETE FROM Settings WHERE id = 802;

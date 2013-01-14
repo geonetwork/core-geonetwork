@@ -33,6 +33,7 @@
       <class name=".services.metadata.GetEditableData"/>
 
       <output sheet="metadata/edit/edit.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
         <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>

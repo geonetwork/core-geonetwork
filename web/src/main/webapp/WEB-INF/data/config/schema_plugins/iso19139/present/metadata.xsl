@@ -90,7 +90,7 @@
 	<xsl:template mode="iso19139" priority="199" match="*[@gco:nilReason='missing' and geonet:element and count(*)=1]"/>
 
 	<xsl:template mode="iso19139" priority="199" match="*[geonet:element and count(*)=1 and text()='']"/>
-
+	
 	<!-- ===================================================================== -->
 	<!-- these elements should be boxed -->
 	<!-- ===================================================================== -->
@@ -615,7 +615,7 @@
 			<xsl:with-param name="delButton" select="normalize-space(gmx:FileName)!=''"/>
 			<xsl:with-param name="setButton" select="normalize-space(gmx:FileName)=''"/>
 			<xsl:with-param name="visible" select="false()"/>
-			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
+			<xsl:with-param name="action" select="concat('startFileUpload(', /root/*/geonet:info/id, ', ', $apos, gmx:FileName/geonet:element/@ref, $apos, ');')"/>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -2106,6 +2106,14 @@
 		<xsl:call-template name="complexElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/metadata"/>
 			<xsl:with-param name="validationLink" select="$validationLink"/>
+
+			<xsl:with-param name="helpLink">
+			  <xsl:call-template name="getHelpLink">
+			      <xsl:with-param name="name" select="name(.)"/>
+			      <xsl:with-param name="schema" select="$schema"/>
+			  </xsl:call-template>
+			</xsl:with-param>
+
 			<xsl:with-param name="edit" select="true()"/>
 			<xsl:with-param name="content">
 
@@ -2986,6 +2994,13 @@
 							<xsl:with-param name="schema" select="$schema"/>
 						</xsl:call-template>
 					</xsl:with-param>
+
+					<xsl:with-param name="helpLink">
+		                <xsl:call-template name="getHelpLink">
+		                    <xsl:with-param name="name" select="name(.)"/>
+		                    <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		            </xsl:with-param>
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
@@ -3035,7 +3050,7 @@
 					<xsl:with-param name="edit" select="$edit"/>
 					<xsl:with-param name="title" select="/root/gui/strings/file"/>
 					<xsl:with-param name="text">
-						<button class="content" onclick="startFileUpload({/root/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/geonet:info/id}, '{$ref}');" type="button">
+						<button class="content" onclick="startFileUpload({/root/*/geonet:info/id}, '{$ref}');" type="button">
 							<xsl:value-of select="/root/gui/strings/insertFileMode"/>
 						</button>
 					</xsl:with-param>
@@ -4217,7 +4232,12 @@
 										</xsl:for-each>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString">
+										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale=$mainLangId]">
+											<option value="_{geonet:element/@ref}" code="{substring-after(@locale, '#')}">
+												<xsl:value-of select="@language" />
+											</option>
+										</xsl:for-each>
+										<xsl:for-each select="$ptFreeTextTree//gmd:LocalisedCharacterString[@locale!=$mainLangId]">
 											<option value="_{geonet:element/@ref}" code="{substring-after(@locale, '#')}">
 												<xsl:value-of select="@language" />
 											</option>

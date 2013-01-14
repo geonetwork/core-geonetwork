@@ -30,9 +30,11 @@ import javax.servlet.http.HttpSession;
 import jeeves.guiservices.session.JeevesUser;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 //=============================================================================
 
@@ -69,7 +71,7 @@ public class UserSession
 	/**
 	 * @param sHttpSession the sHttpSession to set
 	 */
-	public void setsHtṯpSession(HttpSession sHttpSession) {
+	public void setsHttpSession(HttpSession sHttpSession) {
 		this.sHttpSession = sHttpSession;
 	}
 
@@ -111,7 +113,15 @@ public class UserSession
     }
 
 	//--------------------------------------------------------------------------
-
+    
+    public void loginAs(JeevesUser user) {
+        SecurityContextImpl secContext = new SecurityContextImpl();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user, null);
+        secContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(secContext);
+    }
+    
 	public boolean isAuthenticated() {
 		return !(auth() instanceof AnonymousAuthenticationToken);
 	}

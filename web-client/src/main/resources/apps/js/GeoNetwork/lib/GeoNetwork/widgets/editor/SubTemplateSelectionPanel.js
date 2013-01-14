@@ -52,6 +52,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     metadataSchema: undefined,
     subTplTypeField: undefined,
     /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
+    /**
      * Property: itemSelector
      */
     addAsXLink: false,
@@ -305,7 +310,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../js/ext-ux/images', // FIXME
+            imagePath: this.imagePath,
             toTBar: [{
                 text: OpenLayers.i18n('clear'),
                 handler: function(){
@@ -345,7 +350,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         this.SubTemplateSelected = [];
         this.codeListValue = '';
         this.subTemplateCount = 0;
-        
+
         var codelistValue = Ext.getCmp('codeList').getValue();
         
         if (this.codeListConfig[this.elementName] && this.codeListConfig[this.elementName].xpath && codelistValue !== "") {

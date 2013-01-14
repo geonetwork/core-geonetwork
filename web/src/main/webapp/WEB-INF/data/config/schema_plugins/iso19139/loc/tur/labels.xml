@@ -2508,4 +2508,30 @@
         <label>Source URL</label>
         <description>URL of the document.</description>
     </element>
+  	<!-- ==================================================== -->
+    <element name="hidden-elements">
+        <label>Hidden Elements</label>
+        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+    </element>
+    <!-- ==================================================== -->
+    <element name="gmx:name"> 
+        <label>Name</label> 
+        <description>Feature catalogue name</description> 
+    </element> 
+    <element name="gmx:scope"> 
+        <label>Scope</label> 
+        <description>Scope definition</description> 
+    </element> 
+    <element name="gmx:versionNumber"> 
+        <label>Version</label> 
+        <description>Catalogue version</description> 
+    </element> 
+    <element name="gmx:versionDate"> 
+        <label>Date</label> 
+        <description>Catalogue date</description> 
+    </element> 
+    <element name="gmx:fieldOfApplication"> 
+        <label>Field of application</label> 
+        <description>Field of application</description> 
+    </element> 
 </labels>

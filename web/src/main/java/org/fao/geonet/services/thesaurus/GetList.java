@@ -114,6 +114,10 @@ public class GetList implements Service {
             String url = currentTh.getDownloadUrl();
             elUrl.addContent(url);
             
+            Element elDefaultURI = new Element("defaultNamespace");
+            String defaultURI = currentTh.getDefaultNamespace();
+            elDefaultURI.addContent(defaultURI);
+            
 	        
 			Element elActivated= new Element("activated");
 			String activated = "y";
@@ -131,6 +135,7 @@ public class GetList implements Service {
 			elLoop.addContent(elTitle);
             elLoop.addContent(elDate);
             elLoop.addContent(elUrl);
+            elLoop.addContent(elDefaultURI);
 			elLoop.addContent(elType);
 			elLoop.addContent(elActivated);
 			

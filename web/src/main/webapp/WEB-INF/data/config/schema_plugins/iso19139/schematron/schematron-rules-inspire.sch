@@ -57,6 +57,7 @@ USA.
 	<sch:title xmlns="http://www.w3.org/2001/XMLSchema">INSPIRE metadata implementing rule validation</sch:title>
 	<sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
 	<sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
+    <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
 	<sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>
 	<sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
@@ -269,7 +270,7 @@ USA.
 			<sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
 			<sch:let name="keyword" 
 				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
-						gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
+				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
 			<sch:assert test="$inspire-theme-found > 0">
@@ -306,7 +307,7 @@ USA.
 			
 			<sch:let name="keyword" 
 				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
-						gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
+                gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
 			<sch:assert test="$inspire-theme-found > 0">
@@ -502,7 +503,8 @@ USA.
 			</sch:assert>
 
 			<!-- cardinality of accessconstraints is [1..n] -->
-			<sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints/*/text())"/>
+			<sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints[*/@codeListValue != ''])"/>
+			<sch:let name="accessConstraints_found" value="$accessConstraints_count > 0"/>
 			
 			<!-- If the value of accessConstraints is otherRestrictions
 				there shall be instances of otherConstraints expressing
@@ -528,11 +530,11 @@ USA.
 			<sch:let name="otherConstraintInfo" 
 				value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
 
-			<sch:assert test="accessConstraints_count">
+			<sch:assert test="$accessConstraints_found">
 				<sch:value-of select="$loc/strings/alert.M45.ca/div"/>
 			</sch:assert>
-			<sch:report test="accessConstraints_count">
-				<sch:value-of select="$loc/strings/report.M45.ca/div"/>
+			<sch:report test="$accessConstraints_found">
+				<sch:value-of select="$accessConstraints_count"/> <sch:value-of select="$loc/strings/report.M45.ca/div"/>
 			</sch:report>
 			<sch:assert test="not($accessConstraints)">
 				<sch:value-of select="$loc/strings/alert.M45.or/div"/>

@@ -899,23 +899,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('id', id));
             }
-            var uuid = record ? record.get('uuid') : undefined;
-            
-            if (this.metadataShowFn) {
-                this.metadataShowFn(uuid, record, url, maximized, width, height);
-            } else {
-                var win = new GeoNetwork.view.ViewWindow({
-                    serviceUrl: url,
-                    currTab: GeoNetwork.defaultViewMode || 'simple',
-                    catalogue: this,
-                    maximized: maximized || false,
-                    record: record,
-                    metadataUuid: uuid,
-                    resultsView: this.resultsView
-                    });
-                win.show(this.resultsView);
-                win.alignTo(Ext.getBody(), 'r-r');
-            }
+            this.metadataShow(record ? record.get('uuid') : undefined, maximized, width, height);
         }
     },
     /** api: method[metadataXMLShow]
@@ -1200,6 +1184,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 	        var app = this;
 	        OpenLayers.Request.GET({
 	            url: this.services.logout,
+	            async: false,  // logout does not seem to work when it is asynchronous request
 	            success: function(response){
 	                app.identifiedUser = undefined;
 	                app.onAfterLogout();

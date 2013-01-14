@@ -169,10 +169,9 @@ public class Aligner
         //
         //  insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, Integer.parseInt(params.owner), group, remoteUuid,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 

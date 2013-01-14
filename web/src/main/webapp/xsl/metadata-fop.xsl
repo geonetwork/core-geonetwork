@@ -216,7 +216,7 @@
         </fo:table-row>
         <fo:table-row border-bottom-style="solid" border-right-style="solid"
           border-left-style="solid" border-bottom-color="{$background-color}"
-          border-right-color="{$background-color}" border-left-color="{$background-color}" 
+          border-right-color="{$background-color}" border-left-color="{$background-color}"
           keep-with-previous.within-page="always"
           page-break-inside="avoid">
           <fo:table-cell number-columns-spanned="2">

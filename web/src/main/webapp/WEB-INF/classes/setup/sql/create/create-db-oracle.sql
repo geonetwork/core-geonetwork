@@ -273,7 +273,7 @@ CREATE TABLE Metadata
     owner        int            not null,
     doctype      varchar2(255),
     groupOwner   int            default null,
-    harvestUri   varchar2(255)   default null,
+    harvestUri   varchar2(512)   default null,
     rating       int            default 0 not null,
     popularity   int            default 0 not null,
     displayorder int,

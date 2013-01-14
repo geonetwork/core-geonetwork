@@ -26,6 +26,7 @@ package jeeves.utils;
 import jeeves.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -437,16 +438,33 @@ public final class Xml
         if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
             // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
             try {
-                if (!(new File(new URI(s.getSystemId())).exists())) {
-                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
-                     }
-                     s.setSystemId(blankXSLFile);
-                 }
-             } catch (URISyntaxException e) {
-                 e.printStackTrace();
-             }
-         }
+                if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+                    Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
+                }
+                File f;
+                if (SystemUtils.IS_OS_WINDOWS) {
+                    String path = s.getSystemId();
+                    // fxp
+                    path = path.replaceAll("file:\\/", "");
+                    // heikki
+                    path = path.replaceAll("file:", "");
+
+                    f = new File(path);
+                }
+                else {
+                    f = new File(new URI(s.getSystemId()));
+                }
+                if (!(f.exists())) {
+                    if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+                        Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
+                    }
+                    s.setSystemId(blankXSLFile);
+                }
+            }
+            catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
          
          if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
              Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());

@@ -310,7 +310,7 @@
 	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>
 	<selectNewOwner js="true">Selectionner l'utilisateur qui sera le nouvel auteur</selectNewOwner>
 	<selectOwnerGroup js="true">Selectionner le groupe auquel l'utilisateur appartient</selectOwnerGroup>
-	<selectOneFile js="true">Vous devriez choisir un fichier à télécharger !</selectOneFile>
+	<selectOneFileDownload js="true">Vous devriez choisir un fichier à télécharger !</selectOneFileDownload>
 	<checkEmail js="true">Saisissez une adresse email valide</checkEmail>
 	<addName js="true">Saisissez un nom et une organisation</addName>
 	<noComment js="true">Aucun commentaire</noComment>
@@ -333,7 +333,7 @@
 	<errorSaveFailed js="true">Erreur : Impossible de sauver le formulaire </errorSaveFailed>
 	<errorOnAction js="true">Erreur : Impossible de réaliser l'action </errorOnAction>
 	<errorChangeProtocol js="true">Un fichier a dû être envoyé. Vous ne pouvez pas modifier le protocole à moins de le supprimer.</errorChangeProtocol>
-	<selectOneFile js="true">Chercher ou saisir un nom de fichier avant l'envoi !</selectOneFile>
+	<selectOneFileUpload js="true">Chercher ou saisir un nom de fichier avant l'envoi !</selectOneFileUpload>
 	<uploadFailed js="true">Erreur : Echec de l'envoi ! - Info : </uploadFailed>
 	<uploadSetFileNameFailed js="true">Erreur : Fichier envoyé mais impossible de définir le nom du fichier !</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Pas d'information disponible.</cannotGetTooltip>
@@ -591,6 +591,7 @@
 	<login>Connecter</login>
 	<loginCardTitle>Connexion / identification</loginCardTitle>
 	<loginwarning>Nécessaire uniquement pour l'administration du site</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Déconnecter</logout>
 	<logoutDes>Se déconnecter</logoutDes>
 	<longitude>Longitude (entre -180 et 180) en degrés</longitude>
@@ -704,7 +705,7 @@
 	<poweredBy>Fonctionne avec </poweredBy>
 	<previous>&lt;&lt;</previous>
 	<privileges>Privilèges</privileges>
-	<profile>Profile</profile>
+	<profile>Profil</profile>
 	<profileChoice value="Administrator">Administrateur</profileChoice>
 	<profileChoice value="Editor">Editeur</profileChoice>
 	<profileChoice value="RegisteredUser">Invité</profileChoice>

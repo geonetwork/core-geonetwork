@@ -631,7 +631,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         this.loadingKeywordStore.each(function (record) {
                             records.push(record);
                         });
-                        
                         this.selectedKeywordStore.add(records);
                         this.loadingKeywordStore.removeAll();
                         

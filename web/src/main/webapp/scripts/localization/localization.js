@@ -30,6 +30,8 @@ function Localiz()
 		Event.observe('entity.type', 'change', ker.wrap(this, this.entityTypeChange));
 		Event.observe('entity.list', 'change', ker.wrap(this, this.entityListChange));
 		
+		Event.observe('lang.destin', 'change', ker.wrap(this, this.saveIfDirty));
+		
 		this.strLoader = new XMLLoader(Env.locUrl +'/xml/localization.xml');		
 		this.view      = new View (this.strLoader);
 		this.model     = new Model(this.strLoader);
@@ -76,8 +78,11 @@ Localiz.prototype.refresh_OK = function(data)
 
 //=====================================================================================
 
-Localiz.prototype.save = function()
+Localiz.prototype.saveIfDirty = function()
 {
+	if (!this.view.dirty)
+		return;
+
 	if (this.view.getSelectedIndex() == -1)
 		return;
 	
@@ -87,9 +92,31 @@ Localiz.prototype.save = function()
 	var data = 
 	{
 		ID   : this.view.getSelectedID(),
-		LANG : this.view.getTargetLanguage(),
+		LANG : this.view.getPrevLang(),
 		TEXT : this.view.getTargetText(),
 		TYPE : this.view.getEntityType()
+	};
+	
+	this.view.updateTargetText();
+	this.model.update(data, ker.wrap(this,function(){}));
+}
+
+//=====================================================================================
+
+Localiz.prototype.save = function()
+{
+	if (this.view.getSelectedIndex() == -1)
+		return;
+	
+	if (!this.view.isDataValid())
+		return;
+	
+	var data = 
+	{
+			ID   : this.view.getSelectedID(),
+			LANG : this.view.getTargetLanguage(),
+			TEXT : this.view.getTargetText(),
+			TYPE : this.view.getEntityType()
 	};
 	
 	this.model.update(data, ker.wrap(this, this.save_OK));
@@ -100,7 +127,7 @@ Localiz.prototype.save = function()
 Localiz.prototype.save_OK = function()
 {
 	//--- save is ok. Now store the new text into cache
-	
+
 	var type  = this.view.getEntityType();
 	var data  = this.cache[type];
 	var index = this.view.getSelectedIndex();	
@@ -124,6 +151,8 @@ Localiz.prototype.save_OK = function()
 
 Localiz.prototype.entityTypeChange = function(e)
 {
+	this.saveIfDirty();
+	
 	var type = this.view.getEntityType();
 	var data = this.cache[type];
 	
@@ -142,6 +171,7 @@ Localiz.prototype.entityTypeChange = function(e)
 
 Localiz.prototype.entityListChange = function(e)
 {
+	this.saveIfDirty();
 	var type = this.view.getEntityType();
 	var data = this.cache[type];
 	var index= this.view.getSelectedIndex();	

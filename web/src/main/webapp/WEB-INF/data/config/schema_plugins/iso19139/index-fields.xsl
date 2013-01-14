@@ -94,6 +94,8 @@
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date">
 					<Field name="revisionDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
+					<Field name="createDateMonth" string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 8)}" store="true" index="true"/>
+					<Field name="createDateYear" string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 5)}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
 						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					</xsl:if>
@@ -101,6 +103,8 @@
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']/gmd:date">
 					<Field name="createDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
+					<Field name="createDateMonth" string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 8)}" store="true" index="true"/>
+					<Field name="createDateYear" string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 5)}" store="true" index="true"/>
 					<xsl:if test="$useDateAsTemporalExtent">
 						<Field name="tempExtentBegin" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}" store="true" index="true"/>
 					</xsl:if>
@@ -143,6 +147,7 @@
 			<xsl:for-each select="gmd:credit/gco:CharacterString">
 				<Field name="credit" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
+			
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
@@ -278,29 +283,30 @@
 				</xsl:for-each>
 			</xsl:for-each>
 			
+			
 			<!-- Index aggregation info and provides option to query by type of association
-                and type of initiative
-            
-            Aggregation info is indexed by adding the following fields to the index:
-             * agg_use: boolean
-             * agg_with_association: {$associationType}
-             * agg_{$associationType}: {$code}
-             * agg_{$associationType}_with_initiative: {$initiativeType}
-             * agg_{$associationType}_{$initiativeType}: {$code}
-             
-            Sample queries:
-             * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
-             * Search for records having a crossReference with another record: 
-             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-             * Search for records having a crossReference with another record: 
-             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-             * Search for records having a crossReference of type "study" with another record: 
-             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-             * Search for records having a crossReference of type "study": 
-             http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
-             * Search for records having a "crossReference" : 
-             http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
-            -->
+				and type of initiative
+			
+			Aggregation info is indexed by adding the following fields to the index:
+			 * agg_use: boolean
+			 * agg_with_association: {$associationType}
+			 * agg_{$associationType}: {$code}
+			 * agg_{$associationType}_with_initiative: {$initiativeType}
+			 * agg_{$associationType}_{$initiativeType}: {$code}
+			 
+			Sample queries:
+			 * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
+			 * Search for records having a crossReference with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference of type "study" with another record: 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+			 * Search for records having a crossReference of type "study": 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
+			 * Search for records having a "crossReference" : 
+			 http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
+			-->
 			<xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
 				<xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|
 												gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>

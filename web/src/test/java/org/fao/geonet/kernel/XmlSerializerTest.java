@@ -1,14 +1,17 @@
 package org.fao.geonet.kernel;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -20,15 +23,15 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.junit.Test;
-import org.springframework.security.cas.authentication.CasAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class XmlSerializerTest {
 	
@@ -67,15 +70,15 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id)
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id)
+		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
-			return super.internalSelect(dbms, table, id);
+			return super.internalSelect(dbms, table, id, isIndexingTask);
 		}
 
 	}
@@ -125,7 +128,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
@@ -170,15 +173,16 @@ public class XmlSerializerTest {
 			} else {
 				profile = editorProfile;
 			}
+			SecurityContextImpl secContext = new SecurityContextImpl();
 			JeevesUser user = new JeevesUser(profileManager);
-			user.setProfile(profile);
 			user.setId(userId);
-			CasAuthenticationToken authentication = mock(CasAuthenticationToken.class);
-			when(authentication.getPrincipal()).thenReturn(user);
-			when(authentication.getUserDetails()).thenReturn(user);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			user.setUsername("username");
+			user.setProfile(profile);
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
+            secContext.setAuthentication(authentication);
+			SecurityContextHolder.setContext(secContext);
 		} else {
-			SecurityContextHolder.getContext().setAuthentication(null);
+		    SecurityContextHolder.clearContext();
 		}
 		when(context.getUserSession()).thenReturn(userSession);
 
@@ -206,7 +210,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

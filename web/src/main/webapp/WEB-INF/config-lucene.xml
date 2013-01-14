@@ -95,6 +95,8 @@
       <field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
       <field name="serviceType" tagName="serviceType"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="_indexingError" tagName="idxError"/>
+      <field name="_indexingErrorMsg" tagName="idxMsg"/>
     </dumpFields>
   </search>
 
