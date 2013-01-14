@@ -122,7 +122,6 @@ GeoNetwork.app = function() {
     return {
         mapApp : null,
         searchApp : null,
-        breadcrumb : null,
 
         /**
          * Initializes cookies, connections, url, etc,...
@@ -197,12 +196,6 @@ GeoNetwork.app = function() {
 
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
-
-            // createLatestUpdate();
-
-            this.breadcrumb = GeoNetwork.BreadCrumb();
-            this.breadcrumb.setCurrent(this.breadcrumb.defaultSteps[0]);
-
         },
 
         initializeAppLayout : function() {

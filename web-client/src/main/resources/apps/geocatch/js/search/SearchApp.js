@@ -1542,8 +1542,6 @@ GeoNetwork.searchApp = function() {
                         id : 'facets-panel',
                         renderTo : 'facets-panel-div',
                         // renderTo: 'search-filter',
-                        searchForm : Ext
-                                .getCmp('advanced-search-options-content-form'),
                         breadcrumb : breadcrumb,
                         maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
                         facetListConfig : GeoNetwork.Settings.facetListConfig
