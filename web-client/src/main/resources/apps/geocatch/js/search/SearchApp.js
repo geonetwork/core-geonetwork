@@ -890,6 +890,7 @@ GeoNetwork.searchApp = function() {
             Ext.Ajax
                     .request({
                         url : "xml.regions.list?categoryId=" + type,
+                        disableCaching : false,
                         success : function(r) {
                             var data = [];
 
@@ -976,7 +977,8 @@ GeoNetwork.searchApp = function() {
 
                             app.mapApp.getMap().zoomToExtent(
                                     geocat.vectorLayer.getDataExtent());
-                        }
+                        },
+                        disableCaching : false
                     });
                 });
             };
