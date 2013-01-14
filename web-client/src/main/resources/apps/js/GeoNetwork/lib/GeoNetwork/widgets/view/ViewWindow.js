@@ -136,6 +136,12 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
                 el.getWidth() > Ext.getBody().getWidth() ? Ext.getBody().getWidth() : el.getWidth(),
                 el.getHeight() > Ext.getBody().getHeight() ? Ext.getBody().getHeight() : el.getHeight()); 
         });
+
+        this.on('afterrender', function(e) {
+            Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
+                noscript.previousSibling.innerHTML = noscript.innerText;
+              });
+        });
     }
 });
 
