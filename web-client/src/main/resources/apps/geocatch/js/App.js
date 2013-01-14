@@ -249,6 +249,7 @@ GeoNetwork.app = function() {
             this.viewport = new Ext.Viewport({
                 layout : 'border',
                 id : 'vp',
+                forceLayout : true,
                 items : [// Header
                 {
                     region : 'north',
@@ -435,6 +436,10 @@ Ext.onReady(function() {
         catalogue.metadataShow(OpenLayers.Util.getParameters().uuid, true);
     }
 
+    console.log("Antes del layout");
+    console.log(app.viewport);
     app.viewport.doLayout();
+    console.log("despues del layout");
+    console.log(app.viewport);
 
 });
