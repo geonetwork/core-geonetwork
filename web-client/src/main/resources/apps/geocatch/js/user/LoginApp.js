@@ -36,34 +36,48 @@ GeoNetwork.loginApp = function() {
 
             // Store user info in cookie to be displayed if user reload the page
             // Register events to set cookie values
-            catalogue.on('afterLogin', function(e) {
-                cookie.set('user', catalogue.identifiedUser);
-                hide("logout-div");
-                var user = catalogue.identifiedUser;
-                if (Ext.isIE) {
-                    Ext.get("username").dom.innerText = "";
-                    Ext.get("password").dom.innerText = "";
-                    Ext.get("username_label").dom.innerText = user.username;
-                    Ext.get("name_label").dom.innerText = ":" + user.surname;
-                } else {
-                    Ext.get("username").update("");
-                    Ext.get("password").update("");
-                    Ext.get("username_label").update(user.username);
-                    Ext.get("name_label").update(" " + user.surname + " ");
-                }
+            catalogue
+                    .on(
+                            'afterLogin',
+                            function(e) {
+                                cookie.set('user', catalogue.identifiedUser);
+                                hide("logout-div");
+                                var user = catalogue.identifiedUser;
+                                if (Ext.isIE) {
+                                    Ext.get("username").dom.innerText = "";
+                                    Ext.get("password").dom.innerText = "";
+                                    Ext.get("username_label").dom.innerText = user.username;
+                                    Ext.get("name_label").dom.innerText = ":"
+                                            + user.surname;
+                                    Ext.get("profile_label").dom.innerText = "("
+                                            + user.role + ")";
+                                } else {
+                                    Ext.get("username").update("");
+                                    Ext.get("password").update("");
+                                    Ext.get("username_label").update(
+                                            user.username);
+                                    Ext.get("name_label").update(
+                                            " " + user.surname + " ");
+                                    Ext.get("profile_label").update(
+                                            "(" + user.role + ")");
+                                }
 
-                hide("login-form");
-                show("logout-div");
+                                hide("login-form");
+                                show("logout-div");
 
-                show("adminMenu");
+                                show("adminMenu");
 
-                // Show some advanced search options
-                show(Ext.getCmp("formatCombo").el.parent().parent().parent()
-                        .parent().parent().parent(), true);
-                show(Ext.getCmp("basicgeodataid").el.parent().parent(), true);
-                show(Ext.getCmp("isTemplate").el.parent().parent().parent(), true);
-                show(Ext.getCmp("isValid").el.parent().parent().parent(), true);
-            });
+                                // Show some advanced search options
+                                show(Ext.getCmp("formatCombo").el.parent()
+                                        .parent().parent().parent().parent()
+                                        .parent(), true);
+                                show(Ext.getCmp("basicgeodataid").el.parent()
+                                        .parent(), true);
+                                show(Ext.getCmp("isTemplate").el.parent()
+                                        .parent().parent(), true);
+                                show(Ext.getCmp("isValid").el.parent().parent()
+                                        .parent(), true);
+                            });
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);
                 if (Ext.isIE) {
