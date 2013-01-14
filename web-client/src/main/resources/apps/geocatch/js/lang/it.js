@@ -76,7 +76,16 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'refineSearch': 'Affinare la ricerca',
     
     'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa',
-    'linklabel-OGC:WMS': ''
+    'linklabel-OGC:WMS': '',
+    'createDateYear' : 'anni',
+    'createDateYears' : 'aAnno',
+    'denominator' : 'risoluzione spaziale',
+    'denominators' : 'Risoluzione spaziale',
+    'orgName' : 'organizzazione',
+    'orgNames' : 'Organizzazioni',
+    'serviceTypes' : 'Tipi di servizio',
+    'facetMore' : '+ Mostra di più',
+    'facetLess' : '- Mostra meno'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);
