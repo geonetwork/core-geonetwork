@@ -89,10 +89,10 @@
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
             <exclude>**/ext-4.0-pr1/**/*.js</exclude>
-<!--            <exclude>**/*.css</exclude>
--->          </excludes>
+            <exclude>**/*.css</exclude>
+          </excludes>
           <aggregations>
-            <aggregation>
+<!--            <aggregation>
               <output>src/main/resources/apps/css/geonetwork.css</output>
               <includes>
                 <include>${project.build.directory}/classes/apps/css/gndefault.css</include>
@@ -110,7 +110,7 @@
                 <include>${project.build.directory}/classes/apps/js/ext-ux/FileUploadField/file-upload.css</include>
               </includes>
             </aggregation>
-            <aggregation>
+    -->        <aggregation>
               <output>src/main/resources/apps/js/GeoNetwork-mini-nomap.js</output>
               <includes>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js</include>
