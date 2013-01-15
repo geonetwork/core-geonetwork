@@ -364,7 +364,7 @@
             
             <script type="text/javascript">
                 GeoNetwork_URL = '<xsl:value-of select="$baseUrl" />';
-            </script>"
+            </script>
 
             <xsl:choose>
                 <xsl:when test="/root/request/debug">
