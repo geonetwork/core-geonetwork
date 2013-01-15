@@ -2154,8 +2154,8 @@ priority="40">
                 <div class="md"><xsl:value-of select="substring-before(text(), '.')"/>.<xsl:value-of select="substring(substring-after(text(), '.'),0,4)"/></div>
         	</xsl:when>
             <xsl:otherwise>
-                <input class="md" type="text" id="{$eltRef}" value="{text()}" readonly="readonly"/>
-                <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{text()}" readonly="readonly"/>
+                <input class="md" type="text" id="{$eltRef}" value="{substring-before(text(), '.')}.{substring(substring-after(text(), '.'),0,4)}" readonly="readonly"/>
+                <input class="md" type="hidden" id="_{$eltRef}" name="_{$eltRef}" value="{substring-before(text(), '.')}.{substring(substring-after(text(), '.'),0,4)}" readonly="readonly"/>
             </xsl:otherwise>
         </xsl:choose>
 
