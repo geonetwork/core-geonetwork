@@ -562,7 +562,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     store.sort('type');
                     
                     
-                    var linkButton = [], label = null, currentType = null, bt,
+                    var linkButton = [], kmlButton = [], label = null, currentType = null, bt,
                          allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
                          hasDownloadAction = false;
 
@@ -580,7 +580,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 if (linkButton.length !== 0) {
                                     view.addLinkMenu(linkButton, label, currentType, el);
                                 }
+                                if (kmlButton.length !== 0) {
+                                    view.addLinkMenu(kmlButton, '', 'application/vnd.google-earth.kml+xml', el);
+                                }
                                 linkButton = [];
+                                kmlButton = [];
                                 currentType = record.get('type');
                                 label = OpenLayers.i18n('linklabel-' + currentType);
                                 if (currentType === 'application/x-compressed') {
@@ -598,6 +602,13 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                         handler: function (b, e) {
                                             app.mapApp.addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
                                         }
+                                    });
+
+                                    // Swisstopo: KML links are created from wmslinks
+                                    var kmlLink =  catalogue.URL + '/srv/' + catalogue.LANG + "/google.kml?uuid=" + uuid + "&layers=" + record.get('href');
+                                    kmlButton.push({
+                                        text: (record.get('title') || record.get('name')),
+                                        href: kmlLink
                                     });
                                 }
                             } else {
@@ -624,6 +635,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     // Add the latest button
                     if ((linkButton !== null) && (linkButton.length > 0)) {
                         view.addLinkMenu(linkButton, label, currentType, el);
+                    }
+
+                    if ((kmlButton !== null) && (kmlButton.length > 0)) {
+                        view.addLinkMenu(kmlButton, '', 'application/vnd.google-earth.kml+xml', el);
                     }
                     
                     // Add the download all button
