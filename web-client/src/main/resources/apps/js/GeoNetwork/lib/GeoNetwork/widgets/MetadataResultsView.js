@@ -565,7 +565,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     var linkButton = [], label = null, currentType = null, bt,
                          allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
                          hasDownloadAction = false;
-                    
+
+                    // Swisstopo custom: Display links if available in results, don't check dynamic info
+                    allowDynamic = true;
+
                     store.each(function (record) {
                         
                         // Avoid empty URL
