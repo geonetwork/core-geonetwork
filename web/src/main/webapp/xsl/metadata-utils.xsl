@@ -182,7 +182,7 @@
 		<xsl:variable name="url" select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService)"/>
 													
     <xsl:for-each select="/root/gui/schemalist/name[text()=$schema]/conversions/converter">
-			<xsl:variable name="serviceName" select="@name"/>
+			<xsl:variable name="serviceName" select="concat('',@name)"/>
       <xsl:if test="java:isAccessibleService($serviceName)">
 				<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid,'&amp;styleSheet=',@xslt)"/>
 				<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>
