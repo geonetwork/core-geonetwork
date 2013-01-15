@@ -214,7 +214,7 @@
 	        	<xsl:choose>
 		        	<xsl:when test="java:allowScripting() = 'true'">
 			        	<span><img src="{/root/gui/url}/images/spinner.gif"></img></span>
-			        	<noscript class="extentMap">
+			        	<noscript id="ns_{$eltRef}" class="extentMap">
 			        		<img src="{$url}&amp;width=500" ><p style="display:none;">needed so this shows</p></img>
 			        	</noscript>
 		        	</xsl:when>

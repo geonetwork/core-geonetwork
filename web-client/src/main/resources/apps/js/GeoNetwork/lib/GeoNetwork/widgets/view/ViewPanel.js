@@ -338,6 +338,40 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         this.catalogue.extentMap.initMapDiv();
         Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
             noscript.previousSibling.innerHTML = noscript.innerText;
+            var ref = noscript.id.split("_")[1];
+            var chinput = Ext.get("ch03_"+ref);
+            var wgsinput = Ext.get("wgs84_"+ref);
+            var nativeCoordsEl = Ext.get("native_"+ref);
+            var cheInputs, wgsInputs;
+            if (chinput && nativeCoordsEl) {
+              var nativeCoords = nativeCoordsEl ? nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5) : undefined;
+              wgsInputs = chinput.parent().query('input[type=hidden]');
+              cheInputs = chinput.parent().query('input[type=text]');
+              var setCHE = function () {
+                Ext.each(cheInputs, function (input, index) {
+                  input.value = nativeCoords[index].split('.')[0];
+                });
+              };
+              setCHE();
+              chinput.on('click', setCHE);
+            } else if(chinput) {
+              chinput.hide();
+            }
+
+            if (wgsinput && nativeCoordsEl) {
+              if (!wgsInputs) {
+                wgsInputs = wgsinput.parent().query('input[type=hidden]');
+                cheInputs = wgsinput.parent().query('input[type=text]');
+              }
+              var setWGS = function () {
+                Ext.each(cheInputs, function (input, index) {
+                  input.value = wgsInputs[index].value;
+                });
+              };
+              wgsinput.on('click', setWGS);
+            } else if (wgsinput) {
+              wgsinput.hide();
+            }
           });
         
         // Related metadata are only displayed in view mode with no tabs
