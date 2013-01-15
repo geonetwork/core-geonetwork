@@ -353,6 +353,7 @@
             </xsl:for-each>
             <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/che:LocalisedURL">
                 <Field name="linkage" string="{string(.)}" store="true" index="true" token="false"/>
+                <Field name="link" string="{string(.)}" store="true" index="true" token="false"/>
             </xsl:for-each>
         </xsl:for-each>
 
