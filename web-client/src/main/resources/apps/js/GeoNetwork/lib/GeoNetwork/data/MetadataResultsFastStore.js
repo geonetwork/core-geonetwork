@@ -150,6 +150,18 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
                 });
             });
         }
+        if (record.link) {
+            Ext.each(record.link, function(link) {
+                var values = link.value.split("|");
+                links.push({
+                    name : values[0] || values[1],
+                    title : values[0] || values[1],
+                    href : values[2],
+                    protocol : values[4],
+                    type : values[3]
+                });
+            });
+        }
         return links;
     }
 
@@ -312,7 +324,8 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     function isService(v, record) {
         if (record.type) {
             for (i = 0; i < record.type.length; i++) {
-                if (record.type[i].value == 'service') return true;
+                if (record.type[i].value == 'service')
+                    return true;
             }
         }
 
@@ -321,13 +334,13 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     function isDataset(v, record) {
         if (record.type) {
             for (i = 0; i < record.type.length; i++) {
-                if (record.type[i].value == 'dataset') return true;
+                if (record.type[i].value == 'dataset')
+                    return true;
             }
         }
 
         return false;
     }
-
 
     return new Ext.data.JsonStore({
         totalProperty : 'summary.count',
