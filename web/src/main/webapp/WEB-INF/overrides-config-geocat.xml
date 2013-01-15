@@ -139,6 +139,9 @@
     	<addXml xpath="*//service[@name='metadata.show.embedded']/output">
 			<preSheet sheet="metadata-order-complex-elements.xsl"/>
     	</addXml>
+    	<replaceXml xpath="*//service[@name = 'pdf']">
+			<output forward="metadata.print" />
+    	</replaceXml>
     </file>
     <file name=".*WEB-INF/config-lucene.xml">
     	<addXml xpath="search/dumpFields">
