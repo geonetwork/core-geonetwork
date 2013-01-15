@@ -208,7 +208,7 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
 			<xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
-				<Field name="orgName" string="{string(.)}" store="false" index="true"/>
+				<Field name="orgName" string="{string(.)}" store="true" index="true"/>
 				
 				<xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
 				<xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
