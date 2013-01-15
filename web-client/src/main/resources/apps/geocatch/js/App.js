@@ -436,10 +436,6 @@ Ext.onReady(function() {
         catalogue.metadataShow(OpenLayers.Util.getParameters().uuid, true);
     }
 
-    console.log("Antes del layout");
-    console.log(app.viewport);
     app.viewport.doLayout();
-    console.log("despues del layout");
-    console.log(app.viewport);
 
 });
