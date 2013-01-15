@@ -1116,7 +1116,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     login: function(username, password){
         var app = this, user;
         if (this.casEnabled) {
-            if(this.URL.indexOf('https') >= 0) {
                 var framePanel = new Ext.Panel({
                    hidden: true,
                    renderTo: 'casLogin-frame-win',
@@ -1139,34 +1138,37 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                                        app.onAfterBadLogin();
                                    }
                                    else  {
+                                	   
+                                	   try {
                                        
-                                       var iframe = document.getElementById('casLoginFrame');
-                                       var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-                                       
-                                       // Test if the CAS login form is in the iframe
-                                       if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
-                                           clearInterval (intervalID);
-                                           app.identifiedUser = undefined;
+                                           var iframe = document.getElementById('casLoginFrame');
+                                           var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                                           
+                                           // Test if the CAS login form is in the iframe
+                                           if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                                               clearInterval (intervalID);
+                                               app.identifiedUser = undefined;
+                                               app.onAfterBadLogin();
+                                           }
+                                           
+                                           // Test if the auth have been made
+                                           var connectedDiv = innerDoc.getElementById('content_container');
+                                           if(connectedDiv) {
+                                               clearInterval (intervalID);
+                                               app.isLoggedIn();
+                                           }
+                                	   }
+                                	   catch(err) {
+                                		   loginAttempts+=25;
+                                		   app.identifiedUser = undefined;
                                            app.onAfterBadLogin();
-                                       }
-                                       
-                                       // Test if the auth have been made
-                                       var connectedDiv = innerDoc.getElementById('content_container');
-                                       if(connectedDiv) {
-                                           clearInterval (intervalID);
-                                           app.isLoggedIn();
-                                       }
+                                	   }
                                    }
                                }, 200);
                            }
                        }
                    }
                 });
-            }
-            else {
-                app.identifiedUser = undefined;
-                app.launchSearchAtStart = true;
-            }
         } else {
 			OpenLayers.Request.POST({
 			    url: this.services.login,
