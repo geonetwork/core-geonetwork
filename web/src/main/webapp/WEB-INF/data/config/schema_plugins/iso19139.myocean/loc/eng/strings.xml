@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <myoceanTab>MyOcean view</myoceanTab>
@@ -7,11 +8,11 @@
     
     <!-- Section title -->
     <identification>Identification</identification>
-    <quicklookAndKeywords>Quicklooks and descriptive keywords</quicklookAndKeywords>
+    <quicklookAndKeywords>Descriptive keywords</quicklookAndKeywords>
     <spatioTemporalCoverage>Spatio-temporal extent</spatioTemporalCoverage>
     <processingOperation>Processing operations</processingOperation>
     <processingSchedule>Processing Schedule</processingSchedule>
-    <org>Organizations responsible for management and processing, point of contact</org>
+    <org>Organisations responsible for management and processing, point of contact</org>
     <metadataInfo>Metadata date stamps and versions</metadataInfo>
     <metadataInfoTitle>Product identification</metadataInfoTitle>
     <ancillaryInfo>Complementary information</ancillaryInfo>
@@ -43,6 +44,6 @@
     <refArea>MyOcean reference areas</refArea>
     <processingLevel>Processing level</processingLevel>
     
-    <orgAdd>Add organization</orgAdd>
+    <orgAdd>Add organisation</orgAdd>
     <orgCustodianAdd>Add product manager</orgCustodianAdd>
 </strings>
