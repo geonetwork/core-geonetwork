@@ -6,11 +6,13 @@
                                         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                                         xmlns:gmx="http://www.isotc211.org/2005/gmx"
                                         xmlns:che="http://www.geocat.ch/2008/che"
+										xmlns:geonet="http://www.fao.org/geonetwork"
                                         xmlns:xlink="http://www.w3.org/1999/xlink"
                                         xmlns:java="java:org.fao.geonet.util.XslUtil"
                                         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 
     <xsl:include href="../iso19139/convert/functions.xsl"/>
+	<xsl:include href="../../../xsl/utils-fn.xsl"/>
 
     <!-- This file defines what parts of the metadata are indexed by Lucene
          Searches can be conducted on indexes defined here. 
@@ -45,6 +47,7 @@
           <xsl:call-template name="langId19139"/>
     </xsl:variable>
 
+		<xsl:variable name="poundLangId" select="concat('#', upper-case(java:twoCharLangCode(normalize-space(string($isoLangId)))))" />
         <Document locale="{$isoLangId}">
             <xsl:apply-templates mode="xlinks"/>
             <xsl:apply-templates mode="broken-xlinks"/>
@@ -71,7 +74,9 @@
             <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
 
 
-            <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
+            <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
+					<xsl:with-param name="langId" select="$poundLangId" />
+            </xsl:apply-templates>
             <xsl:call-template name="hasLinkageURL" />
         </Document>
     </xsl:template>
@@ -79,6 +84,7 @@
 	<!-- ========================================================================================= -->
 
 	<xsl:template match="*" mode="metadata">
+		<xsl:param name="langId" />
 
 		<!-- === Data or Service Identification === -->		
 
@@ -329,31 +335,10 @@
 
             <!-- index online protocol -->
             
-            <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString">
-                <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
-                <xsl:variable name="linkage" select="../../gmd:linkage/gmd:URL" /> 
-
-                <!-- ignore empty downloads -->
-                <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
-                    <Field name="protocol" string="{string(.)}" store="true" index="true"/>
-                </xsl:if>  
-
-                <xsl:variable name="mimetype" select="../../gmd:name/gmx:MimeFileType/@type"/>
-                <xsl:if test="normalize-space($mimetype)!=''">
-                    <Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
-                </xsl:if>
-              
-              <xsl:if test="contains(., 'WWW:DOWNLOAD')">
-                <Field name="download" string="true" store="false" index="true"/>
-              </xsl:if>
-              
-              <xsl:if test="contains(., 'OGC:WMS')">
-                <Field name="dynamic" string="true" store="false" index="true"/>
-              </xsl:if>
-            </xsl:for-each>
-            <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/che:LocalisedURL">
-                <Field name="linkage" string="{string(.)}" store="true" index="true" token="false"/>
-                <Field name="link" string="{string(.)}" store="true" index="true" token="false"/>
+            <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:linkage !='']">
+                <xsl:apply-templates mode="linkage" select=".">
+					<xsl:with-param name="langId" select="$langId" />
+				</xsl:apply-templates>
             </xsl:for-each>
         </xsl:for-each>
 
@@ -392,6 +377,7 @@
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:if test="string-length($layerName) > 0 and string-length($serviceUrl) > 0">
+				<Field name="link" string="{concat('||', $serviceUrl, '|OGC:WMS-1.1.1-http-get-capabilities', '|application/xml')}" store="true" index="false"/>
 		    	<Field name="wms_uri" string="{$uuid}###{$layerName}###{$serviceUrl}" store="true" index="true" token="false"/>
 		    </xsl:if>
 		</xsl:for-each>
@@ -461,6 +447,53 @@
 
 		<xsl:apply-templates select="." mode="codeList"/>
 		
+	</xsl:template>
+
+	<!-- ========================================================================================= -->
+	<!-- codelist element, indexed, not stored nor tokenized -->
+	
+	<xsl:template match="*" mode="linkage">
+		<xsl:param name="langId" />
+
+		<xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+		<xsl:variable name="linkage" select="gmd:linkage/gmd:URL |
+			gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage/gmd:URL) and @locale=$langId] |
+			gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId]" />
+
+		<xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
+		<xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
+		<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
+		<xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage[1], $protocol, gmd:name/gmx:MimeFileType/@type)"/>
+		
+		<!-- ignore empty downloads -->
+		<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
+			<Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
+		</xsl:if>  
+
+		<xsl:if test="normalize-space($mimetype)!=''">
+			<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
+		</xsl:if>
+	  
+		<xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
+	    	<Field name="download" string="true" store="false" index="true"/>
+	  	</xsl:if>
+	  
+		<xsl:if test="contains($protocol, 'OGC:WMS')">
+	   	 	<Field name="dynamic" string="true" store="false" index="true"/>
+	  	</xsl:if>
+		<Field name="link" string="{concat($title, '|', $desc, '|', $linkage[1], '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
+		<Field name="linkage" string="{$linkage[1]}" store="true" index="true" token="false"/>
+		
+		<!-- Add KML link if WMS -->
+		<xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
+
+	    	<Field name="wms_uri" string="{/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true" token="false"/>
+
+			<!-- FIXME : relative path -->
+			<Field name="link" string="{concat($title, '|', $desc, '|', 
+				'../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title, 
+				'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>					
+		</xsl:if>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->
