@@ -6,8 +6,8 @@
 
 CREATE TABLE Relations
   (
-    id         int,
-    relatedId  int,
+    id         int not null,
+    relatedId  int not null,
 
     primary key(id,relatedId)
   );
@@ -16,7 +16,7 @@ CREATE TABLE Relations
 
 CREATE TABLE Categories
   (
-    id    int,
+    id    int            not null,
     name  varchar(255)   not null,
 
     primary key(id),
@@ -27,14 +27,14 @@ CREATE TABLE Categories
 
 CREATE TABLE CustomElementSet
   (
-    xpath  varchar(1000) not null
+    xpath  varchar(1000)  not null
   );
 
 -- ======================================================================
 
 CREATE TABLE Settings
   (
-    id        int,
+    id        int            not null,
     parentId  int,
     name      varchar(64)    not null,
     value     text,
@@ -48,10 +48,10 @@ CREATE TABLE Settings
 
 CREATE TABLE Languages
   (
-    id    varchar(5),
-    name  varchar(32)   not null,
-    isInspire char(1)     default 'n',
-    isDefault char(1)     default 'n',
+    id        varchar(5)   not null,
+    name      varchar(32)  not null,
+    isInspire char(1)      default 'n',
+    isDefault char(1)      default 'n',
 
     primary key(id)
   );
@@ -60,7 +60,7 @@ CREATE TABLE Languages
 
 CREATE TABLE Sources
   (
-    uuid     varchar(250),
+    uuid     varchar(250)   not null,
     name     varchar(250),
     isLocal  char(1)        default 'y',
 
@@ -71,8 +71,8 @@ CREATE TABLE Sources
 
 CREATE TABLE IsoLanguages
   (
-    id    int,
-    code  varchar(3)   not null,
+    id        int          not null,
+    code      varchar(3)   not null,
     shortcode varchar(2),
 
     primary key(id),
@@ -83,8 +83,8 @@ CREATE TABLE IsoLanguages
 
 CREATE TABLE IsoLanguagesDes
   (
-    idDes   int,
-    langId  varchar(5),
+    idDes   int           not null,
+    langId  varchar(5)    not null,
     label   varchar(96)   not null,
 
     primary key(idDes,langId),
@@ -97,7 +97,7 @@ CREATE TABLE IsoLanguagesDes
 
 CREATE TABLE Regions
   (
-    id     int,
+    id     int     not null,
     north  float   not null,
     south  float   not null,
     west   float   not null,
@@ -110,8 +110,8 @@ CREATE TABLE Regions
 
 CREATE TABLE RegionsDes
   (
-    idDes   int,
-    langId  varchar(5),
+    idDes   int           not null,
+    langId  varchar(5)    not null,
     label   varchar(96)   not null,
 
     primary key(idDes,langId),
@@ -124,12 +124,12 @@ CREATE TABLE RegionsDes
 
 CREATE TABLE Users
   (
-    id            int,
-    username      varchar(256)    not null,
-    password      varchar(120)    not null,
+    id            int           not null,
+    username      varchar(256)  not null,
+    password      varchar(120)  not null,
     surname       varchar(32),
     name          varchar(32),
-    profile       varchar(32)    not null,
+    profile       varchar(32)   not null,
     address       varchar(128),
     city          varchar(128),
     state         varchar(32),
@@ -138,7 +138,7 @@ CREATE TABLE Users
     email         varchar(128),
     organisation  varchar(128),
     kind          varchar(16),
-    security      varchar(128) default '',
+    security      varchar(128)  default '',
     authtype      varchar(32),
 
     primary key(id),
@@ -149,7 +149,7 @@ CREATE TABLE Users
 
 CREATE TABLE Operations
   (
-    id        int,
+    id        int           not null,
     name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
 
@@ -160,8 +160,8 @@ CREATE TABLE Operations
 
 CREATE TABLE OperationsDes
   (
-    idDes   int,
-    langId  varchar(5),
+    idDes   int           not null,
+    langId  varchar(5)    not null,
     label   varchar(96)   not null,
 
     primary key(idDes,langId),
@@ -174,7 +174,7 @@ CREATE TABLE OperationsDes
 
 CREATE TABLE Requests
   (
-    id             int,
+    id             int             not null,
     requestDate    varchar(30),
     ip             varchar(128),
     query          varchar(4000),
@@ -199,7 +199,7 @@ CREATE INDEX RequestsNDX4 ON Requests(lang);
 
 CREATE TABLE Params
   (
-    id          int,
+    id          int           not null,
     requestId   int,
     queryType   varchar(128),
     termField   varchar(128),
@@ -223,13 +223,13 @@ CREATE INDEX ParamsNDX4 ON Params(termText);
 
 CREATE TABLE HarvestHistory
   (
-    id             int not null,
+    id             int           not null,
     harvestDate    varchar(30),
     elapsedTime    int,
-		harvesterUuid  varchar(250),
-		harvesterName  varchar(128),
-		harvesterType  varchar(128),
-    deleted        char(1) default 'n' not null,
+    harvesterUuid  varchar(250),
+    harvesterName  varchar(128),
+    harvesterType  varchar(128),
+    deleted        char(1)       default 'n' not null,
     info           text,
     params         text,
 
@@ -243,7 +243,7 @@ CREATE INDEX HarvestHistoryNDX1 ON HarvestHistory(harvestDate);
 
 CREATE TABLE Groups
   (
-    id           int,
+    id           int            not null,
     name         varchar(32)    not null,
     description  varchar(255),
     email        varchar(32),
@@ -259,8 +259,8 @@ CREATE TABLE Groups
 
 CREATE TABLE GroupsDes
   (
-    idDes   int,
-    langId  varchar(5),
+    idDes   int           not null,
+    langId  varchar(5)    not null,
     label   varchar(96)   not null,
 
     primary key(idDes,langId),
@@ -273,9 +273,9 @@ CREATE TABLE GroupsDes
 
 CREATE TABLE UserGroups
   (
-    userId   int,
-    groupId  int,
-    profile varchar(32),
+    userId   int          not null,
+    groupId  int          not null,
+    profile  varchar(32)  not null,
 
     primary key(userId,groupId,profile),
 
@@ -287,8 +287,8 @@ CREATE TABLE UserGroups
 
 CREATE TABLE CategoriesDes
   (
-    idDes   int,
-    langId  varchar(5),
+    idDes   int            not null,
+    langId  varchar(5)     not null,
     label   varchar(255)   not null,
 
     primary key(idDes,langId),
@@ -301,7 +301,7 @@ CREATE TABLE CategoriesDes
 
 CREATE TABLE Metadata
   (
-    id           int,
+    id           int            not null,
     uuid         varchar(250)   not null,
     schemaId     varchar(32)    not null,
     isTemplate   char(1)        default 'n' not null,
@@ -319,7 +319,7 @@ CREATE TABLE Metadata
     harvestUri   varchar(512)   default null,
     rating       int            default 0 not null,
     popularity   int            default 0 not null,
-	displayorder int,
+    displayorder int,
 
     primary key(id),
     unique(uuid),
@@ -332,10 +332,12 @@ CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
+-- ======================================================================
+
 CREATE TABLE Validation
   (
-    metadataId   int,
-    valType      varchar(40),
+    metadataId   int          not null,
+    valType      varchar(40)  not null,
     status       int,
     tested       int,
     failed       int,
@@ -349,8 +351,8 @@ CREATE TABLE Validation
 
 CREATE TABLE MetadataCateg
   (
-    metadataId  int,
-    categoryId  int,
+    metadataId  int not null,
+    categoryId  int not null,
 
     primary key(metadataId,categoryId),
 
@@ -362,7 +364,7 @@ CREATE TABLE MetadataCateg
 
 CREATE TABLE StatusValues
   (
-    id        int not null,
+    id        int           not null,
     name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
     primary key(id)
@@ -372,8 +374,8 @@ CREATE TABLE StatusValues
 
 CREATE TABLE StatusValuesDes
   (
-    idDes   int not null,
-    langId  varchar(5) not null,
+    idDes   int           not null,
+    langId  varchar(5)    not null,
     label   varchar(96)   not null,
     primary key(idDes,langId)
   );
@@ -382,11 +384,11 @@ CREATE TABLE StatusValuesDes
 
 CREATE TABLE MetadataStatus
   (
-    metadataId  int not null,
-    statusId    int default 0 not null,
-    userId      int not null,
-    changeDate   varchar(30)    not null,
-    changeMessage   varchar(2048) not null,
+    metadataId      int            not null,
+    statusId        int            default 0 not null,
+    userId          int            not null,
+    changeDate      varchar(30)    not null,
+    changeMessage   varchar(2048)  not null,
     primary key(metadataId,statusId,userId,changeDate),
     foreign key(metadataId) references Metadata(id),
     foreign key(statusId)   references StatusValues(id),
@@ -397,9 +399,9 @@ CREATE TABLE MetadataStatus
 
 CREATE TABLE OperationAllowed
   (
-    groupId      int,
-    metadataId   int,
-    operationId  int,
+    groupId      int not null,
+    metadataId   int not null,
+    operationId  int not null,
 
     primary key(groupId,metadataId,operationId),
 
@@ -414,8 +416,8 @@ CREATE INDEX OperationAllowedNDX1 ON OperationAllowed(metadataId);
 
 CREATE TABLE MetadataRating
   (
-    metadataId  int,
-    ipAddress   varchar(32),
+    metadataId  int           not null,
+    ipAddress   varchar(32)   not null,
     rating      int           not null,
 
     primary key(metadataId,ipAddress),
@@ -427,12 +429,12 @@ CREATE TABLE MetadataRating
 
 CREATE TABLE MetadataNotifiers
   (
-    id         int,
+    id         int            not null,
     name       varchar(32)    not null,
     url        varchar(255)   not null,
     enabled    char(1)        default 'n' not null,
-    username       varchar(32),
-    password       varchar(32),
+    username   varchar(32),
+    password   varchar(32),
 
     primary key(id)
   );
@@ -441,8 +443,8 @@ CREATE TABLE MetadataNotifiers
 
 CREATE TABLE MetadataNotifications
   (
-    metadataId         int,
-    notifierId         int,
+    metadataId         int            not null,
+    notifierId         int            not null,
     notified           char(1)        default 'n' not null,
     metadataUuid       varchar(250)   not null,
     action             char(1)        not null,
@@ -457,7 +459,7 @@ CREATE TABLE MetadataNotifications
 
 CREATE TABLE CswServerCapabilitiesInfo
   (
-    idField   int,
+    idField   int           not null,
     langId    varchar(5)    not null,
     field     varchar(32)   not null,
     label     text,
@@ -471,7 +473,7 @@ CREATE TABLE CswServerCapabilitiesInfo
 
 CREATE TABLE Thesaurus
   (
-    id   varchar(250),
+    id           varchar(250)  not null,
     activated    varchar(1),
     primary key(id)
   );
