@@ -75,7 +75,7 @@ GeoNetwork.GeoCatCh.Lang.en = {
     'hideAdvancedOptions' : 'Hide Advanced Options',
     
     'removeLayers' : 'Remove all layers and reset map',
-    'linklabel-OGC:WMS': ''
+    'linklabel-OGC:WMS': ' '
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);

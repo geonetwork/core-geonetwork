@@ -78,7 +78,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
     'hideAdvancedOptions' : 'Einfache Suche',
     
     'removeLayers' : 'Entfernen Sie alle Schichten und zurücksetzen Karte',
-    'linklabel-OGC:WMS': ''
+    'linklabel-OGC:WMS': ' '
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);

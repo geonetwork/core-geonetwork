@@ -76,7 +76,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'refineSearch': 'Affinare la ricerca',
     
     'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa',
-    'linklabel-OGC:WMS': '',
+    'linklabel-OGC:WMS': ' ',
     'createDateYear' : 'anni',
     'createDateYears' : 'aAnno',
     'denominator' : 'risoluzione spaziale',
