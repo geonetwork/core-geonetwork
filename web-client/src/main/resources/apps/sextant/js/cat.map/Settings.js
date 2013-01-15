@@ -40,7 +40,7 @@ GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-a, -a, a, a);;
 
 GeoNetwork.map.BACKGROUND_LAYERS = [
     //new OpenLayers.Layer.WMS("Background layer", "http://vmap0.tiles.osgeo.org/wms/vmap0", {layers: 'basic', format: 'image/jpeg'}, {isBaseLayer: true})
-    new OpenLayers.Layer.OSM('OSM', 'http://tile.openstreetmap.org/${z}/${x}/${y}.png')
+    new OpenLayers.Layer.OSM('OSM', 'http://tile.openstreetmap.org/${z}/${x}/${y}.png', {wrapDateLine:false})
     //new OpenLayers.Layer.WMS("Background layer", "http://www2.demis.nl/mapserver/wms.asp?", {layers: 'Countries', format: 'image/jpeg'}, {isBaseLayer: true})
     ];
 

@@ -26,6 +26,8 @@ cat.lang.en = {
     ,"wmsPortlet": "Geoviewer"
     ,"downloadPortlet": "Basket"
     ,'chooseGroup': 'Select a catalog'
+    ,"thumbnail_not_available": "Thumbnail not available"
+    ,"click_to_zoom": "click to zoom to area"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

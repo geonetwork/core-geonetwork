@@ -240,6 +240,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/Grid.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/WMS.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/XYZ.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/OSM.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Renderer/SVG.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/TileCache.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Button.js</include>
@@ -368,6 +369,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/TagCloudView.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/Templates.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryTree.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</include>
                 
@@ -462,6 +464,30 @@
                 <include>${project.build.directory}/classes/apps/tabsearch/js/App.js</include>
               </includes>
             </aggregation>
+            
+            <aggregation>
+              <output>src/main/resources/apps/sextant/js/sextant-mini.js</output>
+              <includes>
+                <include>../../js/GeoNetwork-mini.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.map/Settings.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/en.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.edit.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ipc.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.list.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.MetadataResultsView.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ViewPanel.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.ViewWindow.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.what.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.when.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.where.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.who.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/Shortcuts.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.main.js</include>
+              </includes>
+            </aggregation>
+
 
            <!-- <aggregation>
               <output>${geonetwork.webapp.dir}/apps/search/css/style.css</output>

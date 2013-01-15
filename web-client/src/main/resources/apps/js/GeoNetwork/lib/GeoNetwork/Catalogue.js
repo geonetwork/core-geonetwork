@@ -235,6 +235,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  ``Object``  Information about the catalog retrieved from xml.info service
      */
     info: null,
+    /**
+     * true to launch a search after the viewport is rendered
+     */
+    launchSearchAtStart: false,
+    
     /** private: method[constructor]
      *  Initializes the catalogue connection configuration
      *  and service URL.
@@ -1118,9 +1123,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     login: function(username, password){
         var app = this, user;
-    	var intervalID;
-    	var loginAttempts = 0;
-    	var loginWindow;
         if (this.casEnabled) {
         	// TODO MERGE-GN
         	var framePanel = new Ext.Panel({

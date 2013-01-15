@@ -53,6 +53,11 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
     first: null,
     
     /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
+    /**
      * Property: itemSelector
      */
     itemSelector: null,

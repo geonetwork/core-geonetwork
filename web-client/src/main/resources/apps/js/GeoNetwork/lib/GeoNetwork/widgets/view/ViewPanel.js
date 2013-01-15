@@ -395,7 +395,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             if (classAtt) {
             	classes = classAtt.split(/\s+/);
             }
-            if (classes.contains("helplink")) {
+            if (classes.indexOf("helplink") >= 0) {
                 var section = e.up('FIELDSET');
             	this.loadHelp(id, section | e, -10, 500, 0);
             } else if (e.is('TH')) {

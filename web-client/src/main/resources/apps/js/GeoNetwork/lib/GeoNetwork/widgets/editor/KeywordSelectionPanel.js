@@ -49,6 +49,12 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
     }, {
         name: 'uri'
     }]),
+    
+    /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
     keywordStore: undefined,
     
     border: false,

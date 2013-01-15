@@ -147,7 +147,7 @@ public final class Util
 
 		value = value.toLowerCase();
 
-		if (value.equals("true") || value.equals("on") || value.equals("yes"))
+		if (value.equals("true") || value.equals("on") || value.equals("y") || value.equals("yes"))
 			return true;
 
 		if (value.equals("false") || value.equals("off") || value.equals("no"))

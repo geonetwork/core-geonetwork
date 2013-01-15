@@ -90,7 +90,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	else if(type=='download') {
     		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
     		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
-    			this.catalogue.services.csw + '?SERVICE=CSW&VERSION=2.0.2&outputSchema=csw:IsoRecord&REQUEST=GetRecordById&ID=' + this.getStore().getAt(this.curId).get("uuid");
+    			this.catalogue.services.mdXMLGet + '?uuid=' + this.getStore().getAt(this.curId).get("uuid");
     		Ext.query('a[id*=panierButton]')[0].onclick();
     		url=Ext.get(Ext.query('input[id*=configpanierurl]')[0]).getValue();
     	}
@@ -174,8 +174,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             }
         });
     },
-    
-    
+            
     /**
      * Called after the ListView is rendered
      * Check if there are some WMS or Download links. Display buttons if needed
@@ -193,7 +192,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	var adminMenu = Ext.DomQuery.jsSelect('div.md-action-menu', lis[i]);
         	
         	// Hide admin button (and sep)if not connected
-        	if(!isAdmin || records[i].get('isharvested') == 'y') {
+        	if(!isAdmin || records[i].get('isharvested') == 'y' || records[i].get('edit') === 'false') {
         		Ext.get(adminMenu).addClass('mdHiddenBtn');
         		Ext.get(adminMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}
@@ -257,17 +256,16 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         }
         
     },
-    
-	initComponent: function(){
-		
-		this.addListener('mouseenter', function(dv, idx, node, e){
+
+    initComponent : function() {
+
+        this.addListener('mouseenter', function(dv, idx, node,e) {
             this.linkMenuInit(idx, node, 'wms');
             this.linkMenuInit(idx, node, 'download');
         }, this);
-		
+
         cat.MetadataResultsView.superclass.initComponent.call(this);
-	}
-	
+    }
 });
 
 Ext.reg('cat_metadataresultsview', cat.MetadataResultsView);

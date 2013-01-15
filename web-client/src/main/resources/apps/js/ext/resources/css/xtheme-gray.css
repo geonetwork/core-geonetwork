@@ -886,11 +886,11 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 }
 
 .x-tree-lines .x-tree-elbow-end-plus{
-	background-image:url(../images/gray/tree/elbow-end-plus.gif);
+	background-image:url(../images/default/tree/elbow-end-plus.gif);
 }
 
 .x-tree-lines .x-tree-elbow-end-minus{
-	background-image:url(../images/gray/tree/elbow-end-minus.gif);
+	background-image:url(../images/default/tree/elbow-end-minus.gif);
 }
 
 .x-tree-lines .x-tree-elbow-line{

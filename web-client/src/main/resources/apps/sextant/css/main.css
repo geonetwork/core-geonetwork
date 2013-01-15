@@ -1,4 +1,4 @@
-.emodnet\.chemistry * legend, .emodnet\.hydrography * legend, .sextant * legend {
+.emodnet.chemistry * legend, .emodnet.hydrography * legend {
     background-color: #FFFF99;
     width: 100%;
     text-align: center;
@@ -201,7 +201,7 @@ table, tbody, tr, td, th {
 }
 .search_tree_noicon {
 	display : none;
-	background-image:url('ext/resources/images/default/s.gif') !important;
+	background-image:url('../../js/ext/resources/images/default/s.gif') !important;
 }
 .search_label .cat-root-node{
 	float: none !important;
@@ -497,6 +497,9 @@ div.md-action-menu span.list-icon {
 .result-list li.md-full tbody{
 	vertical-align:inherit;
 }
+.result-list li.md-full img.thumb-list-img {
+	cursor: pointer;	
+}
 div.no-icon-menu a.x-menu-item {
     padding-left: 3px;
 }
@@ -719,4 +722,28 @@ font-size: 30px;
 .viewmd-panel ul li, .result-list ul li {
     float: none !important;
     overflow: visible !important;
+}
+body.x-body-masked .x-window-plain .x-window-mc {
+	background-color: white;
+}
+.x-window-dlg button {
+	background-image: none !important;
+	background-color: transparent !important;
+}
+
+/* Position jumelles */
+.x-panel-tl .searchIcon, .x-window-tl .searchIcon {
+	background-position: 4px 4px;
+}
+.buttons a.findsub span, a.findsub.buttons span {
+	background-position: 4px -2px;
+}
+
+/* liferay input size */
+input[type="text"] {
+	padding: 0;
+}
+input[type="text"] {
+	padding: 1px 3px;
+	height:16px;
 }
