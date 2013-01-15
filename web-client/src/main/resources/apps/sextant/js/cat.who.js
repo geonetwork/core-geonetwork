@@ -21,31 +21,46 @@ cat.who = function() {
 			}
 			else {
 				groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-		            url: services.opensearchSuggest,
-		            rootId: 1,
-		            baseParams: {
-		                field: 'credit'
-		            }
-		        });
+	                url: services.opensearchSuggest,
+	                rootId: 1,
+	                baseParams: {
+	                    field: 'orgName'
+	                }
+	            });
 				mode='remote';
 			}
 			
+//	        var groupField = new Ext.ux.form.SuperBoxSelect({
+//	            hideLabel: false,
+//	            width: 230,
+//	            minChars: 0,
+//	            queryParam: 'q',
+//	            hideTrigger: false,
+//	            id: 'E_credit',
+//	            name: 'E_credit',
+//	            store: groupFieldStore,
+//	            valueField: 'value',
+//	            displayField: 'value',
+//	            mode:mode,
+//	            valueDelimiter: ' or ',
+//	            fieldLabel: OpenLayers.i18n('orgs')
+//	        });
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,
 	            minChars: 0,
 	            queryParam: 'q',
 	            hideTrigger: false,
-	            id: 'E_credit',
-	            name: 'E_credit',
+	            id: 'E_orgName',
+	            name: 'E_orgName',
 	            store: groupFieldStore,
 	            valueField: 'value',
 	            displayField: 'value',
-	            mode:mode,
 	            valueDelimiter: ' or ',
+//	            tpl: tpl,
 	            fieldLabel: OpenLayers.i18n('orgs')
 	        });
-				
+	        
 			return new Ext.Panel({
 			    title: OpenLayers.i18n('Who'),
 			    autoHeight: true,
