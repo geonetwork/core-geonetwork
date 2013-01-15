@@ -46,7 +46,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'searchText': 'Ricerca testuale',
     'rtitle': 'Titolo',
     'Abstract': 'Abstract',
-    'Keyword': 'Parola chiave',
+    'keyword': 'Parola chiave',
     'theme': 'Temi',
     'contact': 'Contatto',
     'organisationName': 'Organizzazione',
@@ -64,8 +64,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'drawOnMap': 'Disegna sulla carta',
     'when': 'When?',
 
-    'source': 'Source?',
-    'catalog': 'Catalogue(s)',
+    'source': 'Provenienza?',
+    'catalog': 'Catalogo',
 
     'startNewPolygonHelp' : 'Disegna un nuovo poligono (doppio clic per terminare)',
     'deletePolygonHelp' : 'Annulare o ricominciare un nuovo poligono',

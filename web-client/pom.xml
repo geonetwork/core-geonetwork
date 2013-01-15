@@ -323,6 +323,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/pl.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/it.js</include>
                 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Util.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Message.js</include>

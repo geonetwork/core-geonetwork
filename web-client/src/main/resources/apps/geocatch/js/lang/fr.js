@@ -50,7 +50,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'searchText': 'Recherche libre',
     'rtitle': 'Titre',
     'Abstract': 'Résumé',
-    'Keyword': 'Mot-clé',
+    'keyword': 'Mot-clé',
     'theme': 'Thématique',
     'contact': 'Nom de famille',
     'organisationName': 'Organisation',

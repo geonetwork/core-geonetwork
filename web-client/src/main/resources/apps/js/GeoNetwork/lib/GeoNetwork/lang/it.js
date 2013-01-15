@@ -19,7 +19,7 @@
 
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
-GeoNetwork.Lang.de = {
+GeoNetwork.Lang.it = {
 
         'createDateYear' : 'anni',
         'createDateYears' : 'aAnno',
@@ -29,7 +29,7 @@ GeoNetwork.Lang.de = {
         'orgNames' : 'Organizzazioni',
         'serviceTypes' : 'Tipi di servizio',
         'facetMore' : '+ Mostra di più',
-        'facetLess' : '- Mostra meno',
+        'facetLess' : '- Mostra meno'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);

@@ -25,7 +25,8 @@ GeoNetwork.Util.defaultLocale = 'eng';
 GeoNetwork.Util.locales = [
     ['fr', 'Français', 'fre'],
     ['en', 'English', 'eng'],
-    ['de', 'Deutsch', 'ger']
+    ['de', 'Deutsch', 'ger'],
+    ['it', 'Italiano', 'ita']
 ];
 GeoNetwork.searchDefault = {
     activeMapControlExtent: false

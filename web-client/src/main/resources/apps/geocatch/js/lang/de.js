@@ -43,7 +43,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
     'searchText': 'Alle Felder',
     'rtitle': 'Titel',
     'Abstract': 'Zusammenfassung',
-    'Keyword': 'Schlüsselwort',
+    'keyword': 'Schlüsselwort',
     'theme': 'Thema',
     'contact': 'Nachname',
     'organisationName': 'Organisation',
