@@ -619,7 +619,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         
                     });
                     // Add the latest button
-                    if (linkButton !== null) {
+                    if ((linkButton !== null) && (linkButton.length > 0)) {
                         view.addLinkMenu(linkButton, label, currentType, el);
                     }
                     
