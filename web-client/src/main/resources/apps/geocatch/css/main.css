@@ -55,16 +55,16 @@ body {
 }
 
 #latestChanges {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
-#mostPopular div, #latestChanges div {
-    margin-bottom: 8px;
+#mostPopular div,#latestChanges div {
+	margin-bottom: 8px;
 }
 
-#mostPopular legend, #latestChanges legend {
-    font-size: 0.8em;
-    font-weight: bold;
+#mostPopular legend,#latestChanges legend {
+	font-size: 0.8em;
+	font-weight: bold;
 }
 
 .arrow {
@@ -73,7 +73,7 @@ body {
 	padding: 0 0 3px 7px;
 	margin-left: 10px;
 	font-size: 12px !important;
-    color: #064377;
+	color: #064377;
 }
 
 #bread-crumb-div,#facets-panel-div {
@@ -242,8 +242,9 @@ body {
 	margin: 1;
 }
 
-#search-container .x-form-field-wrap .x-superboxselect + .x-form-trigger.x-form-arrow-trigger {
-    display: none;
+#search-container .x-form-field-wrap .x-superboxselect+.x-form-trigger.x-form-arrow-trigger
+	{
+	display: none;
 }
 
 input[type="button"] {
@@ -373,7 +374,7 @@ div.facets ul ul {
 
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	color: #E26F02;
-    font-size: 12px;
+	font-size: 12px;
 }
 
 .facet-link {
@@ -395,9 +396,12 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	min-width: 100%;
 }
 
-
-
 /* Icon based on protocol prefix in related resource table */
+.md-links .x-btn.x-btn-icon {
+	width: auto;
+	display: inline;
+}
+
 .WWWLINK {
 	background-image: url(../../images/default/link.png);
 }
@@ -411,11 +415,12 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 }
 
 .OGCWFS {
-    background-image: url(../../images/default/map/server_vector.png);
+	background-image: url(../../images/default/map/server_vector.png);
 }
 
 .removeLayers {
-    background-image: url(../../../images/removeLayers.png);}
+	background-image: url(../../../images/removeLayers.png);
+}
 
 /* Other icons */
 .md-mn-reset {
@@ -515,5 +520,5 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 
 /* Fix ExtJs menu margin, otherwise the normalize.css adds too much margin to this component */
 ul.x-menu-list {
-    margin: 0px;
+	margin: 0px;
 }

@@ -158,7 +158,7 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
                     title : values[0] || values[1],
                     href : values[2],
                     protocol : values[4],
-                    type : values[3]
+                    type : "WWWLINK"
                 });
             });
         }
