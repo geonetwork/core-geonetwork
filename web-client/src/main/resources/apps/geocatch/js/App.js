@@ -169,7 +169,7 @@ GeoNetwork.app = function() {
                     });
 
             catalogue.isLoggedIn();
-            
+
             // set a permalink provider which will be the main state provider.
             /*
              * Ext.state.Manager .setProvider(new
@@ -322,12 +322,6 @@ Ext.onReady(function() {
 
     GeoNetwork.Settings.Stores = geoNetworkStores;
 
-    Ext.get("loading").hide();
-
-    Ext.get("header").show();
-    Ext.get("search-results").show();
-    Ext.get("search-filter").show();
-
     // Language handling
     var lang = /srv\/([a-z]{3})/.exec(location.href);
 
@@ -432,5 +426,7 @@ Ext.onReady(function() {
     }
 
     app.viewport.doLayout();
+
+    Ext.getBody().unmask()
 
 });

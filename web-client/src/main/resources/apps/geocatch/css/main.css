@@ -26,6 +26,11 @@ body {
 	width: 100%;
 }
 
+body > .ext-el-mask{
+	background-color: white;
+	opacity: 1;
+}
+
 #header {
 	background-image: url('../images/header-background.jpg');
 	background-color: white;
