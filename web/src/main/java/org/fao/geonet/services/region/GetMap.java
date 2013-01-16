@@ -32,6 +32,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -44,8 +47,12 @@ import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 import org.jdom.Element;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.awt.ShapeWriter;
@@ -73,16 +80,24 @@ import com.vividsolutions.jts.geom.Geometry;
  *      
  */
 public class GetMap implements Service {
-    public static final String SRS_PARAM = "srs";
+    public static final String MAP_SRS_PARAM = "mapsrs";
+    public static final String GEOM_SRS_PARAM = "geomsrs";
     public static final String WIDTH_PARAM = "width";
     public static final String GEOM_PARAM = "geom";
     public static final String GEOM_TYPE_PARAM = "geomtype";
     public static final String HEIGHT_PARAM = "height";
     public static final String BACKGROUND_PARAM = "background";
     private String format;
+    private Map<String, String> namedBackgrounds = new HashMap<String, String>();
 
     public void init(String appPath, ServiceConfig params) throws Exception {
         this.format = params.getMandatoryValue("format");
+        List<Element> namedBackgrounds = params.getChildren("namedBackgrounds");
+        if(namedBackgrounds != null) {
+            for (Element element : namedBackgrounds) {
+                this.namedBackgrounds.put(element.getName(), element.getTextTrim());
+            }
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -94,12 +109,13 @@ public class GetMap implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         Util.toLowerCase(params);
         String id = params.getChildText(Params.ID);
-        String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
+        String srs = Util.getParam(params, MAP_SRS_PARAM, "EPSG:4326");
         String widthString = Util.getParamText(params, WIDTH_PARAM);
         String heightString = Util.getParamText(params, HEIGHT_PARAM);
         String background = Util.getParamText(params, BACKGROUND_PARAM);
         String geomParam = Util.getParamText(params, GEOM_PARAM);
         String geomType = Util.getParam(params, GEOM_TYPE_PARAM, GeomFormat.WKT.toString());
+        String geomSrs = Util.getParam(params, GEOM_SRS_PARAM, "EPSG:4326");
 
         if (id == null && geomParam == null) {
             throw new BadParameterEx(Params.ID, "Either "+GEOM_PARAM+" or "+Params.ID+" is required");
@@ -120,6 +136,12 @@ public class GetMap implements Service {
         } else {
             GeomFormat format = GeomFormat.find(geomType);
             geom = format.parse(geomParam);
+            if (!geomSrs.equals(srs)) {
+                CoordinateReferenceSystem mapCRS = decodeCRS(srs);
+                CoordinateReferenceSystem geomCRS = decodeCRS(geomSrs);
+                MathTransform transform = CRS.findMathTransform(geomCRS, mapCRS, true);
+                geom = JTS.transform(geom, transform);
+            }
         }
         BufferedImage image;
         Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
@@ -128,10 +150,10 @@ public class GetMap implements Service {
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
         if (background != null) {
 
-            if(background.equals("geocat")) {
-                background = "http://wms.geo.admin.ch/?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.0&LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&STYLES=default&SRS=EPSG:4326&BBOX={minx},{miny},{maxx},{maxy}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png";
+            if(this.namedBackgrounds.containsKey(background)) {
+                background = this.namedBackgrounds.get(background);
             }
-            
+
             String minx = Double.toString(bboxOfImage.getMinX());
             String maxx = Double.toString(bboxOfImage.getMaxX());
             String miny = Double.toString(bboxOfImage.getMinY());
@@ -184,6 +206,16 @@ public class GetMap implements Service {
         File tmpFile = File.createTempFile("GetMap", "."+format);
         ImageIO.write(image, format, tmpFile);
         return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
+    }
+
+    private CoordinateReferenceSystem decodeCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
+        CoordinateReferenceSystem mapCRS;
+        if (srs.equals("EPSG:4326")) {
+            mapCRS = Region.WGS84;
+        } else {
+            mapCRS = CRS.decode(srs, true);
+        }
+        return mapCRS;
     }
 
     private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {
