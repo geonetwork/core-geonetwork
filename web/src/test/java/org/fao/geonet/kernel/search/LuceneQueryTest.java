@@ -1488,7 +1488,8 @@ public class LuceneQueryTest extends TestCase {
 	/**
 	 * 'groupOwner' parameter with a single value (it should be ignored and not go into the query).
 	 */
-	public void testSingleGroupOwner() {
+    // Removed for Swisstopo: groupOwner is not removed from query (see comments in UserQueryInput)
+	/*public void testSingleGroupOwner() {
 		// create request object
 		JDOMFactory factory = new DefaultJDOMFactory();
 		Element request = factory.element("request");
@@ -1501,12 +1502,13 @@ public class LuceneQueryTest extends TestCase {
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
 		assertEquals("unexpected Lucene query", "+_isTemplate:n", query.toString());
-	}
+	}*/
 
 	/**
 	 * 'groupOwner' parameter with multiple values (it should be ignored and not go into the query).
 	 */
-	public void testMultipleGroupOwner() {
+    // Removed for Swisstopo: groupOwner is not removed from query (see comments in UserQueryInput)
+	/*public void testMultipleGroupOwner() {
 		// create request object
 		JDOMFactory factory = new DefaultJDOMFactory();
 		Element request = factory.element("request");
@@ -1522,7 +1524,7 @@ public class LuceneQueryTest extends TestCase {
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
 		assertEquals("unexpected Lucene query", "+_isTemplate:n", query.toString());
-	}
+	}*/
 
 	/**
 	 * 'editable' parameter true.

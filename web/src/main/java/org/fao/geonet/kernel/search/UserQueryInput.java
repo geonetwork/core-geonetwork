@@ -52,8 +52,10 @@ public class UserQueryInput {
             SearchParameter.OWNER, 
             SearchParameter.ISADMIN, 
             SearchParameter.ISREVIEWER, 
-            SearchParameter.ISUSERADMIN, 
-            LuceneIndexField.GROUP_OWNER);
+            SearchParameter.ISUSERADMIN);
+            // Removed for Swisstopo: LuceneQueryBuilder class manages about filtering by user permissions
+            // this field is fine to use in queries
+            //LuceneIndexField.GROUP_OWNER
 
     /**
      * Don't take into account those field in search (those field are not 
