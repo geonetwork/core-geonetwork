@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
-xmlns:gmx="http://www.isotc211.org/2005/gmx">
+<labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
+	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<!-- GMD namespace -->
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Metadata" id="1.0">
 		<label>Metatieto</label>
-		<description>Puurakenteen alkupiste, josta lähdetään liikkeelle dokumentoitaessa resurssin metatietoa.</description>
+		<description>Puurakenteen alkupiste, josta lähdetään liikkeelle
+			dokumentoitaessa resurssin metatietoa.</description>
 		<condition>Pakollinen.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileIdentifier" id="2.0" context="gmd:MD_Metadata">
 		<label>Tiedostotunniste</label>
-		<description>Kyseessä olevan metatietodokumentin yksikäsitteinen tiedostotunniste.</description>
+		<description>Kyseessä olevan metatietodokumentin yksikäsitteinen
+			tiedostotunniste.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:language" id="3.0" context="gmd:MD_Metadata">
@@ -30,8 +33,10 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:parentIdentifier" id="5.0" context="gmd:MD_Metadata">
 		<label>Ylemmän tason tiedostotunniste</label>
-		<description>Ylemmän tason metatietodokumentin tiedostotunniste, jonka osa ko. metatietoelementti on.</description>
-		<condition>Pakollinen, jos ylemmän tason metatietodokumentti on määritelty.</condition>
+		<description>Ylemmän tason metatietodokumentin tiedostotunniste, jonka
+			osa ko. metatietoelementti on.</description>
+		<condition>Pakollinen, jos ylemmän tason metatietodokumentti on
+			määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevel" id="6.0" context="gmd:MD_Metadata">
@@ -48,13 +53,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
 		<label>Metatiedosta vastaava taho</label>
-		<description>Metatiedosta vastuussa olevan osapuolen tunnistaminen ja yhteystiedot.</description>
+		<description>Metatiedosta vastuussa olevan osapuolen tunnistaminen ja
+			yhteystiedot.</description>
 		<condition>Pakollinen.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateStamp" id="9.0" context="gmd:MD_Metadata">
 		<label>Metatiedon päiväys</label>
-		<description>Metatiedon laatimisajankohta lasketaan automaattisesti tallennettaessa metatiedot.</description>
+		<description>Metatiedon laatimisajankohta lasketaan automaattisesti
+			tallennettaessa metatiedot.</description>
 		<condition>Pakollinen.</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -63,14 +70,16 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Metatietostandardin nimi (sisältäen profiilin nimen).</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:metadataStandardVersion" id="11.0" context="gmd:MD_Metadata">
+	<element name="gmd:metadataStandardVersion" id="11.0"
+		context="gmd:MD_Metadata">
 		<label>Metatietostandardin versio</label>
 		<description>Käytetyn metatietostandardin versio (profiilin versio).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataSetURI" id="11.1" context="gmd:MD_Metadata">
 		<label>URI</label>
-		<description>Metatiedon kohteena olevan tietoaineiston URI (Uniform Resource Identifier).</description>
+		<description>Metatiedon kohteena olevan tietoaineiston URI (Uniform
+			Resource Identifier).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:locale" id="11.2" context="gmd:MD_Metadata">
@@ -78,35 +87,41 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Vaihtoehtoinen kieli, jolla metatiedot myös tuotetaan.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:spatialRepresentationInfo" id="12.0" context="gmd:MD_Metadata">
+	<element name="gmd:spatialRepresentationInfo" id="12.0"
+		context="gmd:MD_Metadata">
 		<label>Sijaintitiedon esitystapatiedot</label>
 		<description>Tietoaineiston sijaintitiedon digitaalinen esitysmuoto.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:referenceSystemInfo" id="13.0" context="gmd:MD_Metadata">
 		<label>Vertausjärjestelmän tiedot</label>
-		<description>Tietoaineiston sijainti- tai aikatiedon vertausjärjestelmän kuvaus.</description>
+		<description>Tietoaineiston sijainti- tai aikatiedon
+			vertausjärjestelmän kuvaus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:referenceSystemInfo" id="13.0" context="gmd:MD_Metadata">
 		<label>Laajennetut metatiedot</label>
-		<description>Tietoa profiilissa käytettävistä standardia laajentavista metatietoelementeistä.</description>
+		<description>Tietoa profiilissa käytettävistä standardia laajentavista
+			metatietoelementeistä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:identificationInfo" id="15.0" context="gmd:MD_Metadata">
 		<label>Resurssin tunnistamistiedot</label>
-		<description>Tietoa resurssista (tietoaineisto tai palvelu), johon metatieto kohdistuu.</description>
+		<description>Tietoa resurssista (tietoaineisto tai palvelu), johon
+			metatieto kohdistuu.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contentInfo" id="16.0" context="gmd:MD_Metadata">
 		<label>Tietosisältö</label>
-		<description>Tietoa kohdeluettelosta sekä paikkatietojatkumon ominaispiirteiden kuvailu.</description>
+		<description>Tietoa kohdeluettelosta sekä paikkatietojatkumon
+			ominaispiirteiden kuvailu.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo" id="17.0" context="gmd:MD_Metadata">
 		<label>Jakelutiedot</label>
-		<description>Tietoa resurssin toimittajasta sekä toimitusvaihtoehdoista.</description>
+		<description>Tietoa resurssin toimittajasta sekä
+			toimitusvaihtoehdoista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataQualityInfo" id="18.0" context="gmd:MD_Metadata">
@@ -116,12 +131,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:portrayalCatalogueInfo" id="19.0" context="gmd:MD_Metadata">
 		<label>Esitystapaluettelon tiedot</label>
-		<description>Tietoa luettelosta, jossa määritellään resurssin esitystapaa koskevat säännöt.</description>
+		<description>Tietoa luettelosta, jossa määritellään resurssin
+			esitystapaa koskevat säännöt.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
 		<label>Metatiedon rajoitustiedot</label>
-		<description>Tietoa metatiedon saantia ja käyttöä koskevista rajoituksista.</description>
+		<description>Tietoa metatiedon saantia ja käyttöä koskevista
+			rajoituksista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationSchemaInfo" id="21.0" context="gmd:MD_Metadata">
@@ -131,12 +148,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:metadataMaintenance" id="22.0" context="gmd:MD_Metadata">
 		<label>Metatiedon ylläpitotiedot</label>
-		<description>Tietoa metatiedon päivitystiheydestä sekä päivityksen laajuudesta.</description>
+		<description>Tietoa metatiedon päivitystiheydestä sekä päivityksen
+			laajuudesta.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Identification" id="23.0">
 		<label>Tunnistamistiedot</label>
-		<description>Resurssin tai resurssien tunnistamiseen liittyvää tietoa (abstrakti luokka).</description>
+		<description>Resurssin tai resurssien tunnistamiseen liittyvää tietoa
+			(abstrakti luokka).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:citation" id="24.0" context="gmd:MD_DataIdentification">
@@ -172,42 +191,55 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Resurssin valmistumisen tila tai kehitysvaihe.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:pointOfContact" id="29.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:pointOfContact" id="29.0"
+		context="gmd:MD_DataIdentification">
 		<label>Resurssista vastaava taho</label>
-		<description>Resurssiin liittyvien henkilöiden ja organisaatioiden tunnistaminen ja yhteystiedot.</description>
+		<description>Resurssiin liittyvien henkilöiden ja organisaatioiden
+			tunnistaminen ja yhteystiedot.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:resourceMaintenance" id="30.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:resourceMaintenance" id="30.0"
+		context="gmd:MD_DataIdentification">
 		<label>Resurssin ylläpitotiedot</label>
-		<description>Tietoa resurssin päivitystiheydestä sekä päivityksen laajuudesta.</description>
+		<description>Tietoa resurssin päivitystiheydestä sekä päivityksen
+			laajuudesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:graphicOverview" id="31.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:graphicOverview" id="31.0"
+		context="gmd:MD_DataIdentification">
 		<label>Näytekuva</label>
 		<description>Resurssin graafinen esitys ja sen selite.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:resourceFormat" id="32.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:resourceFormat" id="32.0"
+		context="gmd:MD_DataIdentification">
 		<label>Resurssin formaatti</label>
 		<description>Tietoa resurssin formaatista.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:descriptiveKeywords" id="33.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:descriptiveKeywords" id="33.0"
+		context="gmd:MD_DataIdentification">
 		<label>Kuvailevat avainsanat</label>
-		<description>Tietoa avainsanoista, niiden tyypistä sekä lähteen viitetiedot.</description>
+		<description>Tietoa avainsanoista, niiden tyypistä sekä lähteen
+			viitetiedot.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:resourceSpecificUsage" id="34.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:resourceSpecificUsage" id="34.0"
+		context="gmd:MD_DataIdentification">
 		<label>Käyttökokemukset</label>
-		<description>Tietoa niistä sovelluksista, joissa resurssia käytetään tai on käytetty.</description>
+		<description>Tietoa niistä sovelluksista, joissa resurssia käytetään
+			tai on käytetty.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:resourceConstraints" id="35.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:resourceConstraints" id="35.0"
+		context="gmd:MD_DataIdentification">
 		<label>Resurssin rajoitustiedot</label>
-		<description>Tietoa resurssin saantia ja käyttöä koskevista rajoituksista.</description>
+		<description>Tietoa resurssin saantia ja käyttöä koskevista
+			rajoituksista.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:aggregationInfo" id="35.1" context="gmd:MD_DataIdentification">
+	<element name="gmd:aggregationInfo" id="35.1"
+		context="gmd:MD_DataIdentification">
 		<label>Aineistosarjan tiedot</label>
 		<description>Tietoa aineistosarjan koostamisesta.</description>
 	</element>
@@ -218,12 +250,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen, jos kuvataan tietoaineistoa.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:spatialRepresentationType" id="37.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:spatialRepresentationType" id="37.0"
+		context="gmd:MD_DataIdentification">
 		<label>Sijaintitiedon esitystapa</label>
 		<description>Paikkatiedon sijaintitiedon esittämistapa.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:spatialResolution" id="38.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:spatialResolution" id="38.0"
+		context="gmd:MD_DataIdentification">
 		<label>Sijaintitiedon erotuskyky</label>
 		<description>Tietoaineiston sijainnillinen yksityiskohtaisuus.</description>
 	</element>
@@ -240,30 +274,36 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen jos UTF-8 ei käytössä.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:topicCategory" id="41.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:topicCategory" id="41.0"
+		context="gmd:MD_DataIdentification">
 		<label>Aiheluokka</label>
 		<description>Tietoaineiston pääteema(t).</description>
 		<condition>Pakollinen, jos hierarkiataso on tietoaineisto.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:environmentDescription" id="44.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:environmentDescription" id="44.0"
+		context="gmd:MD_DataIdentification">
 		<label>Prosessointiympäristö</label>
-		<description>Tiedontuottajan prosessointiympäristön kuvailu (ohjelmisto, käyttöjärjestelmä, tiedoston nimi ja koko).</description>
+		<description>Tiedontuottajan prosessointiympäristön kuvailu
+			(ohjelmisto, käyttöjärjestelmä, tiedoston nimi ja koko).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
 		<label>Kattavuus</label>
-		<description>Tietoa tietoaineiston sijainnillisesta ja ajallisesta kattavuudesta.</description>
+		<description>Tietoa tietoaineiston sijainnillisesta ja ajallisesta
+			kattavuudesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:supplementalInformation" id="46.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:supplementalInformation" id="46.0"
+		context="gmd:MD_DataIdentification">
 		<label>Muuta informaatiota</label>
 		<description>Muuta tietoaineistoa kuvailevaa tietoa.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:SV_ServiceIdentification" id="47.0">
 		<label>SV_Palvelun tunnistamistiedot</label>
-		<description>Tietoa palvelun ominaisuuksista. Lisätietoa ISO 19119-standardista.</description>
+		<description>Tietoa palvelun ominaisuuksista. Lisätietoa ISO
+			19119-standardista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_BrowseGraphic" id="48.0">
@@ -296,18 +336,21 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:keyword" id="53.0" context="gmd:MD_Keywords">
 		<label>Avainsana</label>
-		<description>Aiheen sisältöä kuvaava yleisesti käytetty sana tai formaali sana tai sanonta.</description>
+		<description>Aiheen sisältöä kuvaava yleisesti käytetty sana tai
+			formaali sana tai sanonta.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:type" id="54.0" context="gmd:MD_Keywords">
 		<label>Tyyppi</label>
-		<description>Avainsanan tyyppi, jonka avulla samankaltaisia avainsanoja ryhmitellään keskenään.</description>
+		<description>Avainsanan tyyppi, jonka avulla samankaltaisia
+			avainsanoja ryhmitellään keskenään.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:thesaurusName" id="55.0" context="gmd:MD_Keywords">
 		<label>Asiasanaston viitetiedot</label>
-		<description>Rekisteröidyn asiasanaston (esim. YSA, GEMET) tai muun vastaavan lähteen viitetiedot.</description>
+		<description>Rekisteröidyn asiasanaston (esim. YSA, GEMET) tai muun
+			vastaavan lähteen viitetiedot.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RepresentativeFraction" id="56.0">
@@ -316,7 +359,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:denominator" id="57.0" context="gmd:MD_RepresentativeFraction">
+	<element name="gmd:denominator" id="57.0"
+		context="gmd:MD_RepresentativeFraction">
 		<label>Mittakaavan nimittäjä</label>
 		<description>Mittakaava murtoluvun nimittäjällä ilmaistuna.</description>
 		<condition>Pakollinen, jos näytetiheyttä ei kuvailtu.</condition>
@@ -345,13 +389,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Resolution" id="59.0">
 		<label>Resoluutio</label>
-		<description>Yksityiskohtaisuuden taso joko mittakaavalla tai näytetiheydellä ilmaistuna.</description>
+		<description>Yksityiskohtaisuuden taso joko mittakaavalla tai
+			näytetiheydellä ilmaistuna.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:equivalentScale" id="60.0" context="gmd:MD_Resolution">
 		<label>Mittakaava</label>
-		<description>Yksityiskohtaisuuden taso verrattavissa olevan karttatulosteen mittakaavana ilmaistuna.</description>
+		<description>Yksityiskohtaisuuden taso verrattavissa olevan
+			karttatulosteen mittakaavana ilmaistuna.</description>
 		<condition>Pakollinen, jos näytetiheyttä ei kuvailtu.</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -384,17 +430,21 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:usageDateTime" id="64.0" context="gmd:MD_Usage">
 		<label>Käyttöaika</label>
-		<description>Resurssin ja/tai resurssisarjan käytön ensimmäinen ajankohta tai ajanjakso.</description>
+		<description>Resurssin ja/tai resurssisarjan käytön ensimmäinen
+			ajankohta tai ajanjakso.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:userDeterminedLimitations" id="65.0" context="gmd:MD_Usage">
+	<element name="gmd:userDeterminedLimitations" id="65.0"
+		context="gmd:MD_Usage">
 		<label>Käytön rajoitukset</label>
-		<description>Käyttäjän määrittelemät sovellukset, joihin resurssi ja/tai resurssisarja ei ole sovelias.</description>
+		<description>Käyttäjän määrittelemät sovellukset, joihin resurssi
+			ja/tai resurssisarja ei ole sovelias.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userContactInfo" id="66.0" context="gmd:MD_Usage">
 		<label>Käyttäjien yhteystiedot</label>
-		<description>Resurssia käyttävien henkilöiden ja/tai organisaatioiden tunnistaminen ja yhteystiedot.</description>
+		<description>Resurssia käyttävien henkilöiden ja/tai organisaatioiden
+			tunnistaminen ja yhteystiedot.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -406,7 +456,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<element name="gmd:aggregateDataSetName" id="66.2">
 		<label>Koostetun aineiston nimi</label>
 		<description>Koostetun aineiston viitetiedot</description>
-		<condition>Pakollinen jos koostetun aineiston tunnistetta ei ole määritelty ja kyseessä on koostettu aineisto.</condition>
+		<condition>Pakollinen jos koostetun aineiston tunnistetta ei ole
+			määritelty ja kyseessä on koostettu aineisto.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:aggregateDataSetIdentifier" id="66.3">
@@ -432,59 +483,83 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation" id="68.0" context="gmd:MD_Constraints">
 		<label>Käyttöehdot</label>
-		<description>Resurssin tai metatiedon käyttökelpoisuuteen vaikuttavat rajoitukset.</description>
+		<description>Resurssin tai metatiedon käyttökelpoisuuteen vaikuttavat
+			rajoitukset.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints" id="69.0">
 		<label>Lailliset rajoitteet</label>
-		<description>Resurssin tai metatiedon saantia ja käyttöä koskevat rajoitteet ja lakiin perustuvat ehdot.</description>
+		<description>Resurssin tai metatiedon saantia ja käyttöä koskevat
+			rajoitteet ja lakiin perustuvat ehdot.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:accessConstraints" id="70.0" context="gmd:MD_LegalConstraints">
+	<element name="gmd:accessConstraints" id="70.0"
+		context="gmd:MD_LegalConstraints">
 		<label>Saantirajoitteet</label>
-		<description>Resurssin tai metatiedon saamiseen liittyvät rajoitteet, joilla varmistetaan tietosuoja tai aineettoman omaisuuden suoja, tai muita erityisiä rajoitteita.</description>
+		<description>Resurssin tai metatiedon saamiseen liittyvät rajoitteet,
+			joilla varmistetaan tietosuoja tai aineettoman omaisuuden suoja, tai
+			muita erityisiä rajoitteita.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useConstraints" id="71.0" context="gmd:MD_LegalConstraints">
 		<label>Käyttörajoitteet</label>
-		<description>Resurssin tai metatiedon käyttämiseen liittyvät rajoitteet, joilla varmistetaan tietosuoja tai aineettoman omaisuuden suoja, tai muita erityisiä käyttöön liittyviä rajoitteita tai varoituksia.</description>
+		<description>Resurssin tai metatiedon käyttämiseen liittyvät
+			rajoitteet, joilla varmistetaan tietosuoja tai aineettoman omaisuuden
+			suoja, tai muita erityisiä käyttöön liittyviä rajoitteita tai
+			varoituksia.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:otherConstraints" id="72.0" context="gmd:MD_LegalConstraints">
+	<element name="gmd:otherConstraints" id="72.0"
+		context="gmd:MD_LegalConstraints">
 		<label>Muut rajoitteet</label>
-		<description>Resurssin tai metatiedon saantia ja käyttöä koskevat rajoitteet tai lakiin perustuvat ehdot. Muut rajoitteet on yksi julkisen saatavuuden rajoitteita kuvaavista elementeistä. Jos saantirajoitteiden arvo on "muut rajoitteet", muut rajoitteet on pakollinen tieto. Jos muita rajoitteita ei ole, kirjataan muihin rajoitteisiin tieto "ei muita rajoitteita".</description>
-		<condition>Pakollinen, jos saanti- tai käyttörajoitteiden arvo on "muut rajoitteet".</condition>
+		<description>Resurssin tai metatiedon saantia ja käyttöä koskevat
+			rajoitteet tai lakiin perustuvat ehdot. Muut rajoitteet on yksi
+			julkisen saatavuuden rajoitteita kuvaavista elementeistä. Jos
+			saantirajoitteiden arvo on "muut rajoitteet", muut rajoitteet on
+			pakollinen tieto. Jos muita rajoitteita ei ole, kirjataan muihin
+			rajoitteisiin tieto "ei muita rajoitteita".</description>
+		<condition>Pakollinen, jos saanti- tai käyttörajoitteiden arvo on
+			"muut rajoitteet".</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_SecurityConstraints" id="73.0">
 		<label>Turvallisuusrajoitteet</label>
-		<description>Kansallista turvallisuutta tmv. koskevia rajoitteita resurssin tai metatiedon käsittelylle.</description>
+		<description>Kansallista turvallisuutta tmv. koskevia rajoitteita
+			resurssin tai metatiedon käsittelylle.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:classification" id="74.0" context="gmd:MD_SecurityConstraints">
+	<element name="gmd:classification" id="74.0"
+		context="gmd:MD_SecurityConstraints">
 		<label>Turvaluokittelu</label>
-		<description>Resurssin tai metatiedon käsittelyä koskeva turvaluokittelu. Turvaluokittelu on yksi julkisen saatavuuden rajoitteita kuvaavista elementeistä.</description>
+		<description>Resurssin tai metatiedon käsittelyä koskeva
+			turvaluokittelu. Turvaluokittelu on yksi julkisen saatavuuden
+			rajoitteita kuvaavista elementeistä.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:userNote" id="75.0" context="gmd:MD_SecurityConstraints">
 		<label>Selite</label>
-		<description>Lakiin tmv. rajoitteisiin perustuvat ehdot koskien resurssin tai metatiedon saantia tai käyttöä.</description>
+		<description>Lakiin tmv. rajoitteisiin perustuvat ehdot koskien
+			resurssin tai metatiedon saantia tai käyttöä.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:classificationSystem" id="76.0" context="gmd:MD_SecurityConstraints">
+	<element name="gmd:classificationSystem" id="76.0"
+		context="gmd:MD_SecurityConstraints">
 		<label>Luokittelujärjelmä</label>
 		<description>Luokittelujärjestelmän nimi</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:handlingDescription" id="77.0" context="gmd:MD_SecurityConstraints">
+	<element name="gmd:handlingDescription" id="77.0"
+		context="gmd:MD_SecurityConstraints">
 		<label>Käsittelyohjeet</label>
-		<description>Lisätietoa resurssin tai metatiedon käsittelyä koskevista rajoitteista.</description>
+		<description>Lisätietoa resurssin tai metatiedon käsittelyä koskevista
+			rajoitteista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_DataQuality" id="78.0">
 		<label>Laatutiedot</label>
-		<description>Laadun kuvaus sille osalle tietoaineistoa, joka määritellään laatukuvauksen laajuudeksi.</description>
+		<description>Laadun kuvaus sille osalle tietoaineistoa, joka
+			määritellään laatukuvauksen laajuudeksi.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:scope" id="79.0" context="gmd:DQ_DataQuality">
@@ -507,35 +582,44 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Lineage" id="82.0">
 		<label>Historiatiedot</label>
-		<description>Tietoaineiston tuotantoprosessit, lähtöaineistot tai maininta näiden tietojen puuttumisesta.</description>
+		<description>Tietoaineiston tuotantoprosessit, lähtöaineistot tai
+			maininta näiden tietojen puuttumisesta.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:statement" id="83.0" context="gmd:LI_Lineage">
 		<label>Kuvaus aineiston historiasta</label>
-		<description>Aineiston tuottajan tietämykseen perustuva kuvailu tietoaineiston historiatiedoista.</description>
-		<condition>Pakollinen, jos hierarkiataso on tietoaineisto tai tietoaineistosarja.</condition>
+		<description>Aineiston tuottajan tietämykseen perustuva kuvailu
+			tietoaineiston historiatiedoista.</description>
+		<condition>Pakollinen, jos hierarkiataso on tietoaineisto tai
+			tietoaineistosarja.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:processStep" id="84.0" context="gmd:LI_Lineage">
 		<label>Prosessointihistoria</label>
-		<description>Tietoa tietoaineistolle tuotannon tai ylläpidon yhteydessä tehdyistä toimenpiteistä.</description>
-		<condition>Pakollinen, jos selitystä tai alkuperätietoja ei ole kuvailtu.</condition>
+		<description>Tietoa tietoaineistolle tuotannon tai ylläpidon
+			yhteydessä tehdyistä toimenpiteistä.</description>
+		<condition>Pakollinen, jos selitystä tai alkuperätietoja ei ole
+			kuvailtu.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source" id="85.0" context="gmd:LI_Lineage">
 		<label>Alkuperätiedot</label>
-		<description>Tietoa mistä aineistosta kyseinen tietoaineisto on johdettu.</description>
-		<condition>Pakollinen, jos selitystä tai prosessointihistoriaa ei ole kuvailtu.</condition>
+		<description>Tietoa mistä aineistosta kyseinen tietoaineisto on
+			johdettu.</description>
+		<condition>Pakollinen, jos selitystä tai prosessointihistoriaa ei ole
+			kuvailtu.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_ProcessStep" id="86.0">
 		<label>Prosessointihistoria</label>
-		<description>Tietoa tietoaineistolle tuotannon ja ylläpidon yhteydessä tehdyistä toimenpiteistä.</description>
+		<description>Tietoa tietoaineistolle tuotannon ja ylläpidon yhteydessä
+			tehdyistä toimenpiteistä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:description" id="87.0" context="gmd:LI_ProcessStep">
 		<label>Kuvailu</label>
-		<description>Toimenpiteen kuvailu sisältäen siihen liittyvät parametrit ja toleranssit.</description>
+		<description>Toimenpiteen kuvailu sisältäen siihen liittyvät
+			parametrit ja toleranssit.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -546,17 +630,20 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime" id="89.0" context="gmd:LI_ProcessStep">
 		<label>Päivämäärä</label>
-		<description>Päivämäärä tai ajanjakso, jolloin toimenpide on suoritettu.</description>
+		<description>Päivämäärä tai ajanjakso, jolloin toimenpide on
+			suoritettu.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:processor" id="90.0" context="gmd:LI_ProcessStep">
 		<label>Prosessointiosapuolen yhteystiedot</label>
-		<description>Toimenpiteistä vastuussa olevan osapuolen tunnistaminen ja yhteystiedot.</description>
+		<description>Toimenpiteistä vastuussa olevan osapuolen tunnistaminen
+			ja yhteystiedot.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Source" id="92.0">
 		<label>Lähtöaineiston tiedot</label>
-		<description>Tietoa mistä aineistosta kyseinen tietoaineisto on johdettu.</description>
+		<description>Tietoa mistä aineistosta kyseinen tietoaineisto on
+			johdettu.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:description" id="93.0" context="gmd:LI_Source">
@@ -567,7 +654,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:scaleDenominator" id="94.0" context="gmd:LI_Source">
 		<label>Lähtöaineiston mittakaava</label>
-		<description>Lähtöaineiston mittakaava murtoluvun nimittäjällä ilmaistuna.</description>
+		<description>Lähtöaineiston mittakaava murtoluvun nimittäjällä
+			ilmaistuna.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceReferenceSystem" id="95.0" context="gmd:LI_Source">
@@ -603,7 +691,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:measureIdentification" id="101.0" context="gmd:DQ_Element">
 		<label>Laatumittarin tunniste</label>
-		<description>Koodi, jonka avulla rekisteröity laadun mittaamisen menettelytapa voidaan tunnistaa.</description>
+		<description>Koodi, jonka avulla rekisteröity laadun mittaamisen
+			menettelytapa voidaan tunnistaa.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:measureDescription" id="102.0" context="gmd:DQ_Element">
@@ -613,33 +702,40 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:evaluationMethodType" id="103.0" context="gmd:DQ_Element">
 		<label>Arviointimenetelmän tyyppi</label>
-		<description>Tietoaineiston laadun arvioinnissa käytetyn menetelmän tyyppi.</description>
+		<description>Tietoaineiston laadun arvioinnissa käytetyn menetelmän
+			tyyppi.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:evaluationMethodDescription" id="104.0" context="gmd:DQ_Element">
+	<element name="gmd:evaluationMethodDescription" id="104.0"
+		context="gmd:DQ_Element">
 		<label>Arviointimenetelmän kuvailu</label>
 		<description>Sovelletun arviointimenetelmän kuvailu.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:evaluationProcedure" id="105.0" context="gmd:DQ_Element">
 		<label>Arviointimenettelyn viitetiedot</label>
-		<description>Viitetiedot laadun arviointimenettelyä kuvaavaan dokumenttiin.</description>
+		<description>Viitetiedot laadun arviointimenettelyä kuvaavaan
+			dokumenttiin.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime" id="106.0" context="gmd:DQ_Element">
 		<label>Päivämäärä</label>
-		<description>Päivämäärä tai ajanjakso, jolloin laatumittaria on käytetty.</description>
+		<description>Päivämäärä tai ajanjakso, jolloin laatumittaria on
+			käytetty.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:result" id="107.0" context="gmd:DQ_Element">
 		<label>Laatutulos</label>
-		<description>Arvo tai arvojoukko, joka saadaan soveltamalla laatumittaria tai vertaamalla arvioituja tuloksia ennalta määrättyyn laatuvaatimustasoon.</description>
+		<description>Arvo tai arvojoukko, joka saadaan soveltamalla
+			laatumittaria tai vertaamalla arvioituja tuloksia ennalta määrättyyn
+			laatuvaatimustasoon.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_Completeness" id="108.0">
 		<label>Täydellisyys</label>
-		<description>Kohteiden, niiden ominaisuuksien tai yhteyksien olemassaolo tai puuttuminen.</description>
+		<description>Kohteiden, niiden ominaisuuksien tai yhteyksien
+			olemassaolo tai puuttuminen.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_CompletenessCommission" id="109.0">
@@ -654,7 +750,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_LogicalConsistency" id="111.0">
 		<label>Looginen eheys</label>
-		<description>Tietomallin, takenteiden, ominaisuuksien ja yhteyksien sääntöjenmukaisuus.</description>
+		<description>Tietomallin, takenteiden, ominaisuuksien ja yhteyksien
+			sääntöjenmukaisuus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ConceptualConsistency" id="112.0">
@@ -669,7 +766,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_FormatConsistency" id="114.0">
 		<label>Formaattieheys</label>
-		<description>Tietoaineiston tietojen rakenteen yhdenmukaisuus aineiston fyysiseen tietomalliin.</description>
+		<description>Tietoaineiston tietojen rakenteen yhdenmukaisuus
+			aineiston fyysiseen tietomalliin.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TopologicalConsistency" id="115.0">
@@ -684,27 +782,34 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
 		<label>Absoluuttinen sijaintitarkkuus</label>
-		<description>Ilmoitettujen ja todellisten (ovat tosia tai niiksi hyväksyttyjä) koordinaattiarvojen läheisyys.</description>
+		<description>Ilmoitettujen ja todellisten (ovat tosia tai niiksi
+			hyväksyttyjä) koordinaattiarvojen läheisyys.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_GriddedDataPositionalAccuracy" id="118.0">
 		<label>Rasteritiedon sijaintitarkkuus</label>
-		<description>Pikseleiden sijainnin läheisyys verrattuna pikseleiden kuvaamien kohteiden todelliseen tai sellaiseksi hyväksyttyyn sijaintiin.</description>
+		<description>Pikseleiden sijainnin läheisyys verrattuna pikseleiden
+			kuvaamien kohteiden todelliseen tai sellaiseksi hyväksyttyyn
+			sijaintiin.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_RelativeInternalPositionalAccuracy" id="119.0">
 		<label>Suhteellinen sijaintitarkkuus</label>
-		<description>Kohteiden suhteellisen sijainnin tarkkuus verrattuna kohteiden todelliseen suhteelliseen sijaintiin tai sellaiseksi hyväksyttyyn sijaintiin.</description>
+		<description>Kohteiden suhteellisen sijainnin tarkkuus verrattuna
+			kohteiden todelliseen suhteelliseen sijaintiin tai sellaiseksi
+			hyväksyttyyn sijaintiin.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TemporalAccuracy" id="120.0">
 		<label>Ajallinen tarkkuus</label>
-		<description>Kohteiden aikaan liittyvien ominaisuuksien ja yhteyksien tarkkuus.</description>
+		<description>Kohteiden aikaan liittyvien ominaisuuksien ja yhteyksien
+			tarkkuus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_AccuracyOfATimeMeasurement" id="121.0">
 		<label>Ajallisen mittauksen oikeellisuus</label>
-		<description>Ajallisen viittauksen oikeellisuus (raportoidaan ajan mittauksen virheenä).</description>
+		<description>Ajallisen viittauksen oikeellisuus (raportoidaan ajan
+			mittauksen virheenä).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_TemporalConsistency" id="122.0">
@@ -719,12 +824,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ThematicAccuracy" id="124.0">
 		<label>Temaattinen tarkkuus</label>
-		<description>Mitattavien ja kuvailevien ominaisuuksien tarkkuus sekä kohteiden ja niiden välisten yhteyksien luokittelun oikeellisuus.</description>
+		<description>Mitattavien ja kuvailevien ominaisuuksien tarkkuus sekä
+			kohteiden ja niiden välisten yhteyksien luokittelun oikeellisuus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ThematicClassificationCorrectness" id="125.0">
 		<label>Luokittelun oikeellisuus</label>
-		<description>Luokiteltujen kohteiden tai niiden ominaisuuksien vertaileminen kohdemaailmaan.</description>
+		<description>Luokiteltujen kohteiden tai niiden ominaisuuksien
+			vertaileminen kohdemaailmaan.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_NonQuantitativeAttributeAccuracy" id="126.0">
@@ -734,12 +841,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_QuantitativeAttributeAccuracy" id="127.0">
 		<label>Mitattavan ominaisuustiedon oikeellisuus</label>
-		<description>Mittausmenetelmällä todennettavan kohteen mitattavan ominaisuustiedon tarkkuus.</description>
+		<description>Mittausmenetelmällä todennettavan kohteen mitattavan
+			ominaisuustiedon tarkkuus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_Result" id="128.0">
 		<label>Laatutulos</label>
-		<description>Arvo tai arvojoukko, joka saadaan aikaan soveltamalla laatumittaria tai vertaamalla arvioituja tuloksia ennalta määrättyyn laatuvaatimustasoon.</description>
+		<description>Arvo tai arvojoukko, joka saadaan aikaan soveltamalla
+			laatumittaria tai vertaamalla arvioituja tuloksia ennalta määrättyyn
+			laatuvaatimustasoon.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_ConformanceResult" id="129.0">
@@ -749,30 +859,40 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:specification" id="130.0" context="gmd:DQ_ConformanceResult">
 		<label>Tietomäärittelyn viitetiedot</label>
-		<description>Viitetiedot tietotuotemäärittelyyn tai käyttäjävaatimukseen, jota vastaan laatua arvioidaan.</description>
+		<description>Viitetiedot tietotuotemäärittelyyn tai
+			käyttäjävaatimukseen, jota vastaan laatua arvioidaan.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:explanation" id="131.0" context="gmd:DQ_ConformanceResult">
 		<label>Selitys</label>
-		<description>Laatutuloksen merkityksen selittäminen laatuvaatimustason kannalta.</description>
+		<description>Laatutuloksen merkityksen selittäminen laatuvaatimustason
+			kannalta.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pass" id="132.0" context="gmd:DQ_ConformanceResult">
 		<label>Sääntöjenmukaisuusaste</label>
-		<description>Sääntöjenmukaisuusaste on Inspiren mukaan pakollinen elementti. Aineisto on sääntöjenmukainen eli tietotuotemäärittelyn viitetiedoissa määritellyn tietotuotemäärittelyn mukainen, jos siitä voidaan tuottaa kyseisen tietotuotemäärittelyn mukainen tietotuote. Palvelu on sääntöjenmukainen eli tietotuotemäärittelyn viitetiedoissa määritellyn tietotuotemäärittelyn mukainen, jos sen taustalla on tietotuotemäärittelyn mukainen tietotuote. </description>
+		<description>Sääntöjenmukaisuusaste on Inspiren mukaan pakollinen
+			elementti. Aineisto on sääntöjenmukainen eli tietotuotemäärittelyn
+			viitetiedoissa määritellyn tietotuotemäärittelyn mukainen, jos siitä
+			voidaan tuottaa kyseisen tietotuotemäärittelyn mukainen tietotuote.
+			Palvelu on sääntöjenmukainen eli tietotuotemäärittelyn viitetiedoissa
+			määritellyn tietotuotemäärittelyn mukainen, jos sen taustalla on
+			tietotuotemäärittelyn mukainen tietotuote. </description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_QuantitativeResult" id="133.0">
 		<label>Mitattu laatutulos</label>
-		<description>Arvo tai arvojoukko, joka saadaan käytettäessä laatumittaria.</description>
+		<description>Arvo tai arvojoukko, joka saadaan käytettäessä
+			laatumittaria.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:valueType" id="134.0" context="gmd:DQ_QuantitativeResult">
 		<label>Laatutuloksen tyyppi</label>
-		<description>Raportoidun laatutuloksen tietotyyppi, esim. kokonaisluku tai reaaliluku.</description>
+		<description>Raportoidun laatutuloksen tietotyyppi, esim. kokonaisluku
+			tai reaaliluku.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:valueUnit" id="135.0" context="gmd:DQ_QuantitativeResult">
@@ -781,20 +901,24 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:errorStatistic" id="136.0" context="gmd:DQ_QuantitativeResult">
+	<element name="gmd:errorStatistic" id="136.0"
+		context="gmd:DQ_QuantitativeResult">
 		<label>Tilastollinen menetelmä</label>
-		<description>Laatutuloksen arvon määrittämiseen käytetty tilastollinen menetelmä.</description>
+		<description>Laatutuloksen arvon määrittämiseen käytetty tilastollinen
+			menetelmä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
 		<label>Arvo</label>
-		<description>Arvo tai arvot, joka määräytyy käytetyn arviointimenelemän mukaan.</description>
+		<description>Arvo tai arvot, joka määräytyy käytetyn
+			arviointimenelemän mukaan.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:DQ_Scope" id="138.0">
 		<label>Laajuus</label>
-		<description>Laadun raportoinnin sijaintiin, ajalliseen ulottuvuuteen tai ominaisuuksiin perustuva laajuus.</description>
+		<description>Laadun raportoinnin sijaintiin, ajalliseen ulottuvuuteen
+			tai ominaisuuksiin perustuva laajuus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:level" id="139.0" context="gmd:DQ_Scope">
@@ -805,13 +929,16 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:extent" id="140.0" context="gmd:DQ_Scope">
 		<label>Raportoinnin kattavuus</label>
-		<description>Raportoinnin laajuus määriteltynä sijainnillisena tai ajallisena kattavuutena.</description>
+		<description>Raportoinnin laajuus määriteltynä sijainnillisena tai
+			ajallisena kattavuutena.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:levelDescription" id="141.0" context="gmd:DQ_Scope">
 		<label>Raportoinnin laajuuden kuvailu</label>
-		<description>Raportoinnin laajuuden hierarkiatason yksityiskohtainen kuvailu.</description>
-		<condition>Pakollinen, jos raportoinnin laajuus ei ole tietoaineisto tai tietoaineistosarja.</condition>
+		<description>Raportoinnin laajuuden hierarkiatason yksityiskohtainen
+			kuvailu.</description>
+		<condition>Pakollinen, jos raportoinnin laajuus ei ole tietoaineisto
+			tai tietoaineistosarja.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MaintenanceInformation" id="142.0">
@@ -819,46 +946,58 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Tietoa päivityksen laajuudesta ja päivitystiheydestä.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:maintenanceAndUpdateFrequency" id="143.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:maintenanceAndUpdateFrequency" id="143.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Ylläpidon tiheys</label>
-		<description>Resurssin valmistumisen jälkeen tapahtuvien muutosten ja lisäysten toistumistiheys.</description>
+		<description>Resurssin valmistumisen jälkeen tapahtuvien muutosten ja
+			lisäysten toistumistiheys.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:dateOfNextUpdate" id="144.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:dateOfNextUpdate" id="144.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Seuraava päivitys</label>
 		<description>Resurssin seuraava suunniteltu päivityksen ajankohta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:userDefinedMaintenanceFrequency" id="145.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:userDefinedMaintenanceFrequency" id="145.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Muu ylläpitotiheys</label>
-		<description>'Ylläpidon tiheys'-listan mukaistaa ylläpitotiheyttä täydentävä tieto.</description>
+		<description>'Ylläpidon tiheys'-listan mukaistaa ylläpitotiheyttä
+			täydentävä tieto.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:updateScope" id="146.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:updateScope" id="146.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Päivityksen laajuus</label>
-		<description>Se osa resurssia, jota ko. päivitystieto koskee (hierarkiataso).</description>
+		<description>Se osa resurssia, jota ko. päivitystieto koskee
+			(hierarkiataso).</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:updateScopeDescription" id="147.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:updateScopeDescription" id="147.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Laajuuden kuvailu</label>
 		<description>Kyseessä olevan resurssin hierarkiatason kuvailu.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:maintenanceNote" id="148.0" context="gmd:MD_MaintenanceInformation">
+	<element name="gmd:maintenanceNote" id="148.0"
+		context="gmd:MD_MaintenanceInformation">
 		<label>Erityispiirteet</label>
 		<description>Resurssin ylläpitoa koskevat erityispiirteet.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
 		<label>Ylläpitäjän yhteystiedot</label>
-		<description>Ylläpidosta vastaavan henkilön tai organisaation tunnistaminen ja yhteystiedot.</description>
+		<description>Ylläpidosta vastaavan henkilön tai organisaation
+			tunnistaminen ja yhteystiedot.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ScopeDescription" id="149.0">
 		<label>Laajuuden kuvailu</label>
 		<description>Tarkastelun alla olevan tiedon (hierarkiatason) kuvailu.</description>
-		<condition>Jokin seuraavista elementeistä on kuvailtava: ominaisuudet, kohdetyypit, kohteen ilmentymät, ominaisuuden ilmentymät, tietoaineisto tai muu laajuuden kuvailu.</condition>
+		<condition>Jokin seuraavista elementeistä on kuvailtava: ominaisuudet,
+			kohdetyypit, kohteen ilmentymät, ominaisuuden ilmentymät,
+			tietoaineisto tai muu laajuuden kuvailu.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributes" id="150.0" context="gmd:MD_ScopeDescription">
@@ -873,13 +1012,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen, jos muita laajuuden kuvailuja ei annettu.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:featureInstances" id="152.0" context="gmd:MD_ScopeDescription">
+	<element name="gmd:featureInstances" id="152.0"
+		context="gmd:MD_ScopeDescription">
 		<label>Kohteen ilmentymät</label>
 		<description>Kohteen ilmentymät, jotka ovat tarkastelun alla.</description>
 		<condition>Pakollinen, jos muita laajuuden kuvailuja ei annettu.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:attributeInstances" id="153.0" context="gmd:MD_ScopeDescription">
+	<element name="gmd:attributeInstances" id="153.0"
+		context="gmd:MD_ScopeDescription">
 		<label>Ominaisuuden ilmentymät</label>
 		<description>Ominaisuuden ilmentymät, jotka ovat tarkastelun alla.</description>
 		<condition>Pakollinen, jos muita laajuuden kuvailuja ei annettu.</condition>
@@ -893,7 +1034,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:other" id="155.0" context="gmd:MD_ScopeDescription">
 		<label>Jokin muu</label>
-		<description>Tarkastelun alla oleva muu tiedon luokka, joka ei kuulu muihin laadun kuvailun luokkiin.</description>
+		<description>Tarkastelun alla oleva muu tiedon luokka, joka ei kuulu
+			muihin laadun kuvailun luokkiin.</description>
 		<condition>Pakollinen, jos muita laajuuden kuvailuja ei annettu.</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -904,122 +1046,155 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GridSpatialRepresentation" id="157.0">
 		<label>Hilamuotoinen esitystapa</label>
-		<description>Kuvaus tietoaineiston hilamuotoisista sijaintiobjekteista.</description>
+		<description>Kuvaus tietoaineiston hilamuotoisista
+			sijaintiobjekteista.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:numberOfDimensions" id="158.0" context="gmd:MD_GridSpatialRepresentation">
+	<element name="gmd:numberOfDimensions" id="158.0"
+		context="gmd:MD_GridSpatialRepresentation">
 		<label>Ulottuvuuksien lukumäärä</label>
-		<description>Paikkaa ja aikaa koskevien akseleiden lukumäärä (kokonaisluku).</description>
+		<description>Paikkaa ja aikaa koskevien akseleiden lukumäärä
+			(kokonaisluku).</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:axisDimensionsProperties" id="159.0" context="gmd:MD_GridSpatialRepresentation">
+	<element name="gmd:axisDimensionsProperties" id="159.0"
+		context="gmd:MD_GridSpatialRepresentation">
 		<label>Akseleiden ominaisuudet</label>
-		<description>Tietoa paikkaa ja aikaa koskevien akseleiden ominaisuuksista.</description>
+		<description>Tietoa paikkaa ja aikaa koskevien akseleiden
+			ominaisuuksista.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:cellGeometry" id="160.0" context="gmd:MD_GridSpatialRepresentation">
+	<element name="gmd:cellGeometry" id="160.0"
+		context="gmd:MD_GridSpatialRepresentation">
 		<label>Solugeometria</label>
 		<description>Hilamuotoisen datan tunnistaminen pisteeksi tai soluksi.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:transformationParameterAvailability" id="161.0" context="gmd:MD_GridSpatialRepresentation">
+	<element name="gmd:transformationParameterAvailability" id="161.0"
+		context="gmd:MD_GridSpatialRepresentation">
 		<label>Muunnosparametrit</label>
-		<description>Toteamus, onko kuvakoordinaattien ja maantieteellisten ja tasokoordinaattien väliset muunnosparametrit saatavilla.</description>
+		<description>Toteamus, onko kuvakoordinaattien ja maantieteellisten ja
+			tasokoordinaattien väliset muunnosparametrit saatavilla.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Georectified" id="162.0">
 		<label>Oikaistu</label>
-		<description>Hila, jonka solut ovat säännöllisesti sijoittuneet määritellyn koordinaatiston suhteen. Yksittäiset solut voidaan paikantaa hilan ominaisuuksien perusteella.</description>
+		<description>Hila, jonka solut ovat säännöllisesti sijoittuneet
+			määritellyn koordinaatiston suhteen. Yksittäiset solut voidaan
+			paikantaa hilan ominaisuuksien perusteella.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:checkPointAvailability" id="163.0" context="gmd:MD_Georectified">
+	<element name="gmd:checkPointAvailability" id="163.0"
+		context="gmd:MD_Georectified">
 		<label>Tarkistuspisteiden saatavuus</label>
-		<description>Toteamus, onko oikaistun hilan tietojen tarkkuuden arvioimiseen tarvittavat tarkistuspisteet saatavilla.</description>
+		<description>Toteamus, onko oikaistun hilan tietojen tarkkuuden
+			arvioimiseen tarvittavat tarkistuspisteet saatavilla.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:checkPointDescription" id="164.0" context="gmd:MD_Georectified">
+	<element name="gmd:checkPointDescription" id="164.0"
+		context="gmd:MD_Georectified">
 		<label>Tarkistuspisteiden kuvailu</label>
-		<description>Tarkistuspisteiden kuvailu, joiden avulla voidaan arvioida oikaistun aineiston tarkkuus.</description>
+		<description>Tarkistuspisteiden kuvailu, joiden avulla voidaan
+			arvioida oikaistun aineiston tarkkuus.</description>
 		<condition>Pakollinen, jos tarkistuspisteet ovat saatavilla.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cornerPoints" id="165.0" context="gmd:MD_Georectified">
 		<label>Nurkkapisteet</label>
-		<description>Hilan nurkkapisteiden sijainti määritellyssä koordinaatistossa ja niiden hilakoordinaatit. Oikaistussa hilassa on neljä nurkkapistettä; vähintään kaksi vastakkaista nurkkapistettä on annettava. Ensimmäinen nurkkapiste vastaa hilan origoa.</description>
+		<description>Hilan nurkkapisteiden sijainti määritellyssä
+			koordinaatistossa ja niiden hilakoordinaatit. Oikaistussa hilassa on
+			neljä nurkkapistettä; vähintään kaksi vastakkaista nurkkapistettä on
+			annettava. Ensimmäinen nurkkapiste vastaa hilan origoa.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:centerPoint" id="166.0" context="gmd:MD_Georectified">
 		<label>Keskipiste</label>
-		<description>Hilan keksipisteen sijainti määritellyssä koordinaatistossa ja sen hilakoordinaatit.</description>
+		<description>Hilan keksipisteen sijainti määritellyssä
+			koordinaatistossa ja sen hilakoordinaatit.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pointInPixel" id="167.0" context="gmd:MD_Georectified">
 		<label>Pikselin maastopisteen sijainti</label>
-		<description>Pikselin piste, jolle sijainti koordinaatistossa ilmoitetaan.</description>
+		<description>Pikselin piste, jolle sijainti koordinaatistossa
+			ilmoitetaan.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:transformationDimensionDescription" id="168.0" context="gmd:MD_Georectified">
+	<element name="gmd:transformationDimensionDescription" id="168.0"
+		context="gmd:MD_Georectified">
 		<label>Muunnoksen kuvailu</label>
 		<description>Yleinen kuvailu muunnoksesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:transformationDimensionMapping" id="169.0" context="gmd:MD_Georectified">
+	<element name="gmd:transformationDimensionMapping" id="169.0"
+		context="gmd:MD_Georectified">
 		<label>Dimensioiden karttavastaavuus</label>
-		<description>Tieto, mitkä hilan akselit vastaavat (kartan) spatiaalisia akseleita.</description>
+		<description>Tieto, mitkä hilan akselit vastaavat (kartan)
+			spatiaalisia akseleita.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Georeferenceable" id="170.0">
 		<label>Paikannettavissa</label>
-		<description>Hila, jonka solut ovat sijoittuneet epäsäännöllisesti määritellyn koordinaatiston suhteen.</description>
+		<description>Hila, jonka solut ovat sijoittuneet epäsäännöllisesti
+			määritellyn koordinaatiston suhteen.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:controlPointAvailability" id="171.0" context="gmd:MD_Georeferenceable">
+	<element name="gmd:controlPointAvailability" id="171.0"
+		context="gmd:MD_Georeferenceable">
 		<label>Vertauspisteiden olemassaolo</label>
 		<description>Toteamus, onko vertauspisteitä olemassa.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:orientationParameterAvailability" id="172.0" context="gmd:MD_Georeferenceable">
+	<element name="gmd:orientationParameterAvailability" id="172.0"
+		context="gmd:MD_Georeferenceable">
 		<label>Orientaatioparametrien saatavuus</label>
 		<description>Toteamus, onko orientaatioparametrit saatavilla.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:orientationParameterDescription" id="173.0" context="gmd:MD_Georeferenceable">
+	<element name="gmd:orientationParameterDescription" id="173.0"
+		context="gmd:MD_Georeferenceable">
 		<label>Orientaatioparametrien kuvailu</label>
 		<description>Sensorin orientaatiota kuvaavien parametrien kuvailu.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:georeferencedParameters" id="174.0" context="gmd:MD_Georeferenceable">
+	<element name="gmd:georeferencedParameters" id="174.0"
+		context="gmd:MD_Georeferenceable">
 		<label>Georeferointiparametrit</label>
 		<description>Ehdot, jotka tukevat hilan tietojen georefereointia.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:parameterCitation" id="175.0" context="gmd:MD_Georeferenceable">
+	<element name="gmd:parameterCitation" id="175.0"
+		context="gmd:MD_Georeferenceable">
 		<label>Georeferointiparametrin alkuperätiedot</label>
 		<description>Georeferointiprametrejä kuvaavan lähteen viitetiedot.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_VectorSpatialRepresentation" id="176.0">
 		<label>Vektorimuotoinen esitystapa</label>
-		<description>Kuvaus tietoaineiston vektorimuotoisista sijaintiobjekteista.</description>
+		<description>Kuvaus tietoaineiston vektorimuotoisista
+			sijaintiobjekteista.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:topologyLevel" id="177.0" context="gmd:MD_VectorSpatialRepresentation">
+	<element name="gmd:topologyLevel" id="177.0"
+		context="gmd:MD_VectorSpatialRepresentation">
 		<label>Topologian taso</label>
-		<description>Sijaintiobjektien välisten sijaintisuhteiden kompleksisuuden astetta osoittava koodi.</description>
+		<description>Sijaintiobjektien välisten sijaintisuhteiden
+			kompleksisuuden astetta osoittava koodi.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:geometricObjects" id="178.0" context="gmd:MD_VectorSpatialRepresentation">
+	<element name="gmd:geometricObjects" id="178.0"
+		context="gmd:MD_VectorSpatialRepresentation">
 		<label>Geometriset objektit</label>
-		<description>Tietoa tietoaineiston geometriaa kuvaavista sijaintiobjekteista.</description>
+		<description>Tietoa tietoaineiston geometriaa kuvaavista
+			sijaintiobjekteista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Dimension" id="179.0">
@@ -1035,7 +1210,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:dimensionSize" id="181.0" context="gmd:MD_Dimension">
 		<label>Hila-alkioiden lukumäärä</label>
-		<description>Akselilla olevien elementtien eli hila-alkioiden lukumäärä.</description>
+		<description>Akselilla olevien elementtien eli hila-alkioiden
+			lukumäärä.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1049,15 +1225,19 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Geometristen objektien lukumäärä objektityypeittäin.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:geometricObjectType" id="184.0" context="gmd:MD_GeometricObjects">
+	<element name="gmd:geometricObjectType" id="184.0"
+		context="gmd:MD_GeometricObjects">
 		<label>Geometrisen objektin tyyppi</label>
-		<description>Tietoaineiston nolla-, yksi-, kaksi- tai kolmiulotteisen geometrisen objektityypin nimi.</description>
+		<description>Tietoaineiston nolla-, yksi-, kaksi- tai kolmiulotteisen
+			geometrisen objektityypin nimi.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:geometricObjectCount" id="185.0" context="gmd:MD_GeometricObjects">
+	<element name="gmd:geometricObjectCount" id="185.0"
+		context="gmd:MD_GeometricObjects">
 		<label>Geometristen objektien lukumäärä</label>
-		<description>Tietoaineistossa esiintyvien geometristen objektien lukumäärä ko. geometrisen objektin tyypille.</description>
+		<description>Tietoaineistossa esiintyvien geometristen objektien
+			lukumäärä ko. geometrisen objektin tyypille.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ReferenceSystem" id="186.0">
@@ -1082,7 +1262,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Identifier" id="205.0" context="gmd:identifier">
 		<label>Tunniste</label>
-		<description>Arvo, jolla yksilöidään tarkastelun alla oleva asia tai objekti.</description>
+		<description>Arvo, jolla yksilöidään tarkastelun alla oleva asia tai
+			objekti.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1091,15 +1272,17 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Tunnisteesta vastuussa olevan osapuolen viitetiedot.</description>
 	</element>
 	<!-- ==================================================== -->
-	
+
 	<element name="gmd:code" id="207.0" context="gmd:RS_Identifier">
 		<label>Unique resource identifier</label>
-		<description>Alphanumeric value identifying an instance in the namespace</description>
+		<description>Alphanumeric value identifying an instance in the
+			namespace</description>
 		<condition>mandatory</condition>
 	</element>
 	<element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
 		<label>Tunniste</label>
-		<description>Aakkosnumeerinen asian tunnistamiseen käytettävä nimiavaruuden arvo.</description>
+		<description>Aakkosnumeerinen asian tunnistamiseen käytettävä
+			nimiavaruuden arvo.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1111,7 +1294,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:codeSpace" id="208.1" context="gmd:RS_Identifier">
 		<label>Nimiavaruus</label>
-		<description>Nimiavaruudesta vastuussa olevan osapuolen nimi tai tunniste.</description>
+		<description>Nimiavaruudesta vastuussa olevan osapuolen nimi tai
+			tunniste.</description>
 		<helper>
 			<option value="FI">FI</option>
 		</helper>
@@ -1133,30 +1317,38 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:complianceCode" id="234.0" context="gmd:MD_FeatureCatalogueDescription">
+	<element name="gmd:complianceCode" id="234.0"
+		context="gmd:MD_FeatureCatalogueDescription">
 		<label>Standardinmukaisuus</label>
-		<description>Toteamus, onko kohdeluettelo ISO 19110-standardin mukainen.</description>
+		<description>Toteamus, onko kohdeluettelo ISO 19110-standardin
+			mukainen.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:language" id="235.0" context="gmd:MD_FeatureCatalogueDescription">
+	<element name="gmd:language" id="235.0"
+		context="gmd:MD_FeatureCatalogueDescription">
 		<label>Kieli</label>
 		<description>Kohdeluettelossa käytetty kieli.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:includedWithDataset" id="236.0" context="gmd:MD_FeatureCatalogueDescription">
+	<element name="gmd:includedWithDataset" id="236.0"
+		context="gmd:MD_FeatureCatalogueDescription">
 		<label>Kohdeluettelon mukanaolo</label>
 		<description>Toteamus, sisältyykö kohdeluettelo tietoaineistoon.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:featureTypes" id="237.0" context="gmd:MD_FeatureCatalogueDescription">
+	<element name="gmd:featureTypes" id="237.0"
+		context="gmd:MD_FeatureCatalogueDescription">
 		<label>Kohdetyypit</label>
-		<description>Kohdeluetteloon kohdetyyppien osajoukko, joka esiintyy tietoaineistossa.</description>
+		<description>Kohdeluetteloon kohdetyyppien osajoukko, joka esiintyy
+			tietoaineistossa.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:featureCatalogueCitation" id="238.0" context="gmd:MD_FeatureCatalogueDescription">
+	<element name="gmd:featureCatalogueCitation" id="238.0"
+		context="gmd:MD_FeatureCatalogueDescription">
 		<label>Kohdeluettelon viitetiedot</label>
-		<description>Yhden tai useamman (tietoaineiston ulkopuolisen) kohdeluettelon viitetiedot.</description>
+		<description>Yhden tai useamman (tietoaineiston ulkopuolisen)
+			kohdeluettelon viitetiedot.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1166,7 +1358,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:attributeDescription" id="240.0" context="gmd:MD_CoverageDescription">
+	<element name="gmd:attributeDescription" id="240.0"
+		context="gmd:MD_CoverageDescription">
 		<label>Ominaisuus</label>
 		<description>Ominaisuuden (muuttujan) kuvailu.</description>
 		<condition>Pakollinen</condition>
@@ -1188,59 +1381,79 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Tietoa kuvan käyttötarkoituksista.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:illuminationElevationAngle" id="244.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:illuminationElevationAngle" id="244.0"
+		context="gmd:MD_ImageDescription">
 		<label>Valaistuksen korkeuskulma</label>
-		<description>Valaistuksen korkeus mitataan asteina myötäpäivään kohteen tasosta maanpinnan luotiviivaan nähden. Skannatuissa kuvissa referenssipisteenä on kuvan keskipiste.</description>
+		<description>Valaistuksen korkeus mitataan asteina myötäpäivään
+			kohteen tasosta maanpinnan luotiviivaan nähden. Skannatuissa kuvissa
+			referenssipisteenä on kuvan keskipiste.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:illuminationAzimuthAngle" id="245.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:illuminationAzimuthAngle" id="245.0"
+		context="gmd:MD_ImageDescription">
 		<label>Valaistuksen suuntakulma</label>
-		<description>Valaistuksen suuntakulma mitataan asteina myötäpäivään kuvaushetkellä vallinneeseen todelliseen pohjoisakseliin nähden. Skannatuissa kuvissa referenssipisteenä on kuvan keskipiste.</description>
+		<description>Valaistuksen suuntakulma mitataan asteina myötäpäivään
+			kuvaushetkellä vallinneeseen todelliseen pohjoisakseliin nähden.
+			Skannatuissa kuvissa referenssipisteenä on kuvan keskipiste.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:imagingCondition" id="246.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:imagingCondition" id="246.0"
+		context="gmd:MD_ImageDescription">
 		<label>Kuvausolosuhteet</label>
 		<description>Kuvaan vaikuttaneet olosuhteet.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:imageQualityCode" id="247.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:imageQualityCode" id="247.0"
+		context="gmd:MD_ImageDescription">
 		<label>Kuvan laatu</label>
 		<description>Kuvan laadun määrittelevä koodi.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:cloudCoverPercentage" id="248.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:cloudCoverPercentage" id="248.0"
+		context="gmd:MD_ImageDescription">
 		<label>Pilvipeiton prosenttiosuus</label>
-		<description>Pilvien peittämä prosenttiosuus aineiston kattamasta alueesta.</description>
+		<description>Pilvien peittämä prosenttiosuus aineiston kattamasta
+			alueesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:processingLevelCode" id="249.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:processingLevelCode" id="249.0"
+		context="gmd:MD_ImageDescription">
 		<label>Prosessointitason koodi</label>
-		<description>Kuvan jakelijan koodi, joka määrittelee kuvaan kohdistettujen radiometristen ja geometristen korjausten tason.</description>
+		<description>Kuvan jakelijan koodi, joka määrittelee kuvaan
+			kohdistettujen radiometristen ja geometristen korjausten tason.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:compressionGenerationQuantity" id="250.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:compressionGenerationQuantity" id="250.0"
+		context="gmd:MD_ImageDescription">
 		<label>Tiivistysten määrä</label>
 		<description>Kuvaan kohdistettujen tiivistysoperaatioiden lukumäärä.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:triangulationIndicator" id="251.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:triangulationIndicator" id="251.0"
+		context="gmd:MD_ImageDescription">
 		<label>Kolmiointien suorittaminen</label>
 		<description>Tieto siitä, onko kuvalle suoritettu kolmiointeja.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:radiometricCalibrationDataAvailability" id="252.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:radiometricCalibrationDataAvailability" id="252.0"
+		context="gmd:MD_ImageDescription">
 		<label>Radiometristen kalibrointitietojen saatavuus</label>
-		<description>Tieto siitä, onko kuvan radiometriset kalibrointitiedot saatavilla.</description>
+		<description>Tieto siitä, onko kuvan radiometriset kalibrointitiedot
+			saatavilla.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:cameraCalibrationInformationAvailability" id="253.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:cameraCalibrationInformationAvailability"
+		id="253.0" context="gmd:MD_ImageDescription">
 		<label>Kameran kalibrointitietojen saatavuus</label>
-		<description>Tieto siitä, onko kuvaamisessa käytetyn kameran kalibrointitiedot saatavilla.</description>
+		<description>Tieto siitä, onko kuvaamisessa käytetyn kameran
+			kalibrointitiedot saatavilla.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:filmDistortionInformationAvailability" id="254.0" context="gmd:MD_ImageDescription">
+	<element name="gmd:filmDistortionInformationAvailability" id="254.0"
+		context="gmd:MD_ImageDescription">
 		<label>Filmin häiriötietojen saatavuus</label>
-		<description>Tieto siitä, onko filmissä esiintyvistä häiriötekijöistä tiedot saatavilla.</description>
+		<description>Tieto siitä, onko filmissä esiintyvistä häiriötekijöistä
+			tiedot saatavilla.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RangeDimension" id="256.0">
@@ -1248,9 +1461,11 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Tietoa siitä kunkin hvaintosolun dimension arvoalueesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:sequenceIdentifier" id="257.0" context="gmd:MD_RangeDimension">
+	<element name="gmd:sequenceIdentifier" id="257.0"
+		context="gmd:MD_RangeDimension">
 		<label>Aallonpituusalueet</label>
-		<description>Kokonaisluku, joka ilmaisee yksikäsitteisesti aallonpituusalueet, joilla sensori toimii.</description>
+		<description>Kokonaisluku, joka ilmaisee yksikäsitteisesti
+			aallonpituusalueet, joilla sensori toimii.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:descriptor" id="258.0" context="gmd:MD_RangeDimension">
@@ -1265,7 +1480,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:maxValue" id="260.0" context="gmd:MD_Band">
 		<label>Suurin aallonpituus</label>
-		<description>Suurin  aallonpituus, jolla sensori voi kerätä tietoa</description>
+		<description>Suurin aallonpituus, jolla sensori voi kerätä tietoa</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:minValue" id="261.0" context="gmd:MD_Band">
@@ -1298,7 +1513,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Esitystapaluettelon tunnistamiseen tarvittava tieto.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:portrayalCatalogueCitation" id="269.0" context="gmd:MD_PortrayalCatalogueReference">
+	<element name="gmd:portrayalCatalogueCitation" id="269.0"
+		context="gmd:MD_PortrayalCatalogueReference">
 		<label>Esitystapaluettelon viitetiedot</label>
 		<description>Esitystapaluettelon viitetiedot.</description>
 		<condition>Pakollinen</condition>
@@ -1306,7 +1522,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Distribution" id="270.0">
 		<label>Jakelutiedot</label>
-		<description>Tietoa resurssin toimittajasta sekä resurssin toimitusehdoista.</description>
+		<description>Tietoa resurssin toimittajasta sekä resurssin
+			toimitusehdoista.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1323,22 +1540,28 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:transferOptions" id="273.0" context="gmd:MD_Distribution">
 		<label>Toimitustavat</label>
-		<description>Tietoa mediasta ja teknisistä keinoista, miten resurssi on saatavissa toimittajalta.</description>
+		<description>Tietoa mediasta ja teknisistä keinoista, miten resurssi
+			on saatavissa toimittajalta.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_DigitalTransferOptions" id="274.0">
 		<label>Toimitustavat</label>
-		<description>Tietoa mediasta sekä teknisistä keinoista, miten resurssi on saatavissa toimittajalta.</description>
+		<description>Tietoa mediasta sekä teknisistä keinoista, miten resurssi
+			on saatavissa toimittajalta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:unitsOfDistribution" id="275.0" context="gmd:MD_DigitalTransferOptions">
+	<element name="gmd:unitsOfDistribution" id="275.0"
+		context="gmd:MD_DigitalTransferOptions">
 		<label>Jakeluosat</label>
-		<description>Osajoukot, joina tietoaineisto on saatavana, esim. tasot ja/tai maantieteelliset alueet.</description>
+		<description>Osajoukot, joina tietoaineisto on saatavana, esim. tasot
+			ja/tai maantieteelliset alueet.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:transferSize" id="276.0" context="gmd:MD_DigitalTransferOptions">
+	<element name="gmd:transferSize" id="276.0"
+		context="gmd:MD_DigitalTransferOptions">
 		<label>Siirtokoko</label>
-		<description>Arvioitu siirtokoko ennalta määritellyssä formaatissa (megatavuina).</description>
+		<description>Arvioitu siirtokoko ennalta määritellyssä formaatissa
+			(megatavuina).</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:onLine" id="277.0" context="gmd:MD_DigitalTransferOptions">
@@ -1363,20 +1586,25 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:distributionOrderProcess" id="281.0" context="gmd:MD_Distributor">
+	<element name="gmd:distributionOrderProcess" id="281.0"
+		context="gmd:MD_Distributor">
 		<label>Tilausprosessi</label>
-		<description>Tietoa ja ohjeita siitä, miten resurssi on saatavissa sekä maksuista.</description>
+		<description>Tietoa ja ohjeita siitä, miten resurssi on saatavissa
+			sekä maksuista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorFormat" id="282.0" context="gmd:MD_Distributor">
 		<label>Jakeluformaatti</label>
 		<description>Tietoa toimittajan käyttämästä jakeluformaatista.</description>
-		<condition>Pakollinen, jos ei tietoaineistokohtaista jakeluformaattia ole kuvattu.</condition>
+		<condition>Pakollinen, jos ei tietoaineistokohtaista jakeluformaattia
+			ole kuvattu.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:distributorTransferOptions" id="283.0" context="gmd:MD_Distributor">
+	<element name="gmd:distributorTransferOptions" id="283.0"
+		context="gmd:MD_Distributor">
 		<label>Toimitustapa</label>
-		<description>Tietoa mediasta sekä teknisistä keinoista, miten resurssi on saatavissa toimittajalta.</description>
+		<description>Tietoa mediasta sekä teknisistä keinoista, miten resurssi
+			on saatavissa toimittajalta.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Format" id="284.0">
@@ -1404,12 +1632,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:specification" id="288.0" context="gmd:MD_Format">
 		<label>Spesifikaatio</label>
-		<description>Jakeluformaattiin liittyvän profiilin tai tuotespesifikaation nimi.</description>
+		<description>Jakeluformaattiin liittyvän profiilin tai
+			tuotespesifikaation nimi.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:fileDecompressionTechnique" id="289.0" context="gmd:MD_Format">
+	<element name="gmd:fileDecompressionTechnique" id="289.0"
+		context="gmd:MD_Format">
 		<label>Tiedoston tiivistystekniikka</label>
-		<description>Suositeltavat algoritmit tai prosessit, joiden avulla tiedoston tiivistys voidaan avata.</description>
+		<description>Suositeltavat algoritmit tai prosessit, joiden avulla
+			tiedoston tiivistys voidaan avata.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:formatDistributor" id="290.0" context="gmd:MD_Format">
@@ -1456,7 +1687,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_StandardOrderProcess" id="298.0">
 		<label>Tilausprosessi</label>
-		<description>Tietoa ja ohjeita siitä, miten resurssi on saatavissa sekä maksuista.</description>
+		<description>Tietoa ja ohjeita siitä, miten resurssi on saatavissa
+			sekä maksuista.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1465,12 +1697,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Maksut ja ehdot resurssin saamiselle (myös rahayksiköt).</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:plannedAvailableDateTime" id="300.0" context="gmd:MD_StandardOrderProcess">
+	<element name="gmd:plannedAvailableDateTime" id="300.0"
+		context="gmd:MD_StandardOrderProcess">
 		<label>Toimitusajankohta</label>
 		<description>Päivämäärä ja kellonaika, jolloin resurssi on saatavissa.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:orderingInstructions" id="301.0" context="gmd:MD_StandardOrderProcess">
+	<element name="gmd:orderingInstructions" id="301.0"
+		context="gmd:MD_StandardOrderProcess">
 		<label>Tilausohjeet</label>
 		<description>Jakelijan antamat yleiset ohjeet, ehdot ja palvelut.</description>
 	</element>
@@ -1482,23 +1716,28 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MetadataExtensionInformation" id="303.0">
 		<label>Tietoa metatietostandardin laajentamisesta</label>
-		<description>Tietoa, joka kuvailee metatietostandardin laajentavat metatietoelementit.</description>
+		<description>Tietoa, joka kuvailee metatietostandardin laajentavat
+			metatietoelementit.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:extensionOnLineResource" id="304.0" context="gmd:MD_MetadataExtensionInformation">
+	<element name="gmd:extensionOnLineResource" id="304.0"
+		context="gmd:MD_MetadataExtensionInformation">
 		<label>Linkki laajennokseen</label>
-		<description>Tietoa online-lähteistä, joissa on yhteisöprofiilin nimi ja laajennetut metatietoelementit.</description>
+		<description>Tietoa online-lähteistä, joissa on yhteisöprofiilin nimi
+			ja laajennetut metatietoelementit.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:extendedElementInformation" id="305.0" context="gmd:MD_MetadataExtensionInformation">
+	<element name="gmd:extendedElementInformation" id="305.0"
+		context="gmd:MD_MetadataExtensionInformation">
 		<label>Lisätyt metatietoelementit</label>
 		<description>Tietoa uusista metatietoelementeistä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ExtendedElementInformation" id="306.0">
 		<label>Lisätyt metatietoelementit</label>
-		<description>Uusien metatietoelementtien, jotka eivät löydy ISO 19115-standardista, kuvaus.</description>
+		<description>Uusien metatietoelementtien, jotka eivät löydy ISO
+			19115-standardista, kuvaus.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name" id="307.0" context="gmd:MD_ExtendedElementInformation">
@@ -1507,62 +1746,77 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:shortName" id="308.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:shortName" id="308.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin lyhenne</label>
 		<description>XML- ja SGML-kieleen sopiva lisäelementin nimen lyhenne.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:domainCode" id="309.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:domainCode" id="309.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin arvoalueen koodi.</label>
-		<description>Kolminumeroinen koodi, joka kuvaa lisäelementin arvoaluetta.</description>
+		<description>Kolminumeroinen koodi, joka kuvaa lisäelementin
+			arvoaluetta.</description>
 		<condition>Pakollinen, jos tietotyyppi ei ole koodilistaelementti.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:definition" id="310.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:definition" id="310.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin määritelmä</label>
 		<description>Lisätyn metatietoelementin määritelmä.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:obligation" id="311.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:obligation" id="311.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin pakollisuus</label>
 		<description>Tieto siitä, onko lisäelementti pakollinen.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:condition" id="312.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:condition" id="312.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin ehdollisuus</label>
 		<description>Ehdot, joilla lisäelementti on pakollinen elementti.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:dataType" id="313.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:dataType" id="313.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin tietotyyppi</label>
-		<description>Koodiarvo, joka kertoo mitä tyyppi lisäelementin arvot ovat.</description>
+		<description>Koodiarvo, joka kertoo mitä tyyppi lisäelementin arvot
+			ovat.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:domainValue" id="315.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:domainValue" id="315.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin arvoväli</label>
 		<description>Lisäelementin mahdollisten arvojen arvoalue.</description>
-		<condition>Pakollinen, jos tietotyyppi ei ole luettelo (enumeration), koodilista tai koodilistaelementti.</condition>
+		<condition>Pakollinen, jos tietotyyppi ei ole luettelo (enumeration),
+			koodilista tai koodilistaelementti.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:parentEntity" id="316.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:parentEntity" id="316.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin isäelementti</label>
-		<description>Lista metatietoelementeistä, jonka alielementtinä lisättyä elementtiä voidaan käyttää.</description>
+		<description>Lista metatietoelementeistä, jonka alielementtinä
+			lisättyä elementtiä voidaan käyttää.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:rule" id="317.0" context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementtiin liittyvät elementit</label>
-		<description>Lista metatietoelementeistä, joihin lisäelementti voi liittyä.</description>
+		<description>Lista metatietoelementeistä, joihin lisäelementti voi
+			liittyä.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:rationale" id="318.0" context="gmd:MD_ExtendedElementInformation">
+	<element name="gmd:rationale" id="318.0"
+		context="gmd:MD_ExtendedElementInformation">
 		<label>Lisäelementin lisäyssyy</label>
-		<description>Syy  sille, että lisäelementti tarvitaan.</description>
+		<description>Syy sille, että lisäelementti tarvitaan.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:source" id="319.0" context="gmd:MD_MetadataExtensionInformation">
+	<element name="gmd:source" id="319.0"
+		context="gmd:MD_MetadataExtensionInformation">
 		<label>Lisäelementin tekijä</label>
 		<description>Lisäelementin luoneen henkilön tai organisaation nimi.</description>
 		<condition>Pakollinen</condition>
@@ -1574,40 +1828,49 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:name" id="321.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:name" id="321.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Sovellusskeeman viitetiedot</label>
 		<description>Sovellusskeeman nimi</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:schemaLanguage" id="322.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:schemaLanguage" id="322.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Skeeman kieli</label>
 		<description>Käytetty formaali skeemakieli (esim. UML)</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:constraintLanguage" id="323.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:constraintLanguage" id="323.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Rajauskieli</label>
-		<description>Sovellusskeemassa rajausten ilmaisemiseen käytetty formaali kieli (esim. CCL).</description>
+		<description>Sovellusskeemassa rajausten ilmaisemiseen käytetty
+			formaali kieli (esim. CCL).</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:schemaAscii" id="324.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:schemaAscii" id="324.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>ASCII-tiedosto</label>
 		<description>Sovellusskeema ASCII-tiedostona.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:graphicsFile" id="325.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:graphicsFile" id="325.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Grafiikkatiedosto</label>
 		<description>Sovellusskeema graafisessa muodossa.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:softwareDevelopmentFile" id="326.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:softwareDevelopmentFile" id="326.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Ohjelmistotiedosto</label>
-		<description>Sovellusskeema sen kehittämiseen käytetyn ohjelmiston tiedostona.</description>
+		<description>Sovellusskeema sen kehittämiseen käytetyn ohjelmiston
+			tiedostona.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:softwareDevelopmentFileFormat" id="327.0" context="gmd:MD_ApplicationSchemaInformation">
+	<element name="gmd:softwareDevelopmentFileFormat" id="327.0"
+		context="gmd:MD_ApplicationSchemaInformation">
 		<label>Ohjelmistotiedoston formaatti</label>
 		<description>Ohjelmistoriippuvaisen sovellusskeematiedoston formaatti.</description>
 	</element>
@@ -1620,26 +1883,31 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:description" id="335.0" context="gmd:EX_Extent">
 		<label>Kuvailu</label>
-		<description>Sijainnillinen ja ajallinen kattavuus sanallisesti ilmaistuna.</description>
-		<condition>Pakollinen, jos kattavuuteen liittyvää sijaintia, aikaa tai korkeutta ei määritelty.</condition>
+		<description>Sijainnillinen ja ajallinen kattavuus sanallisesti
+			ilmaistuna.</description>
+		<condition>Pakollinen, jos kattavuuteen liittyvää sijaintia, aikaa tai
+			korkeutta ei määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geographicElement" id="336.0" context="gmd:EX_Extent">
 		<label>Sijainti</label>
 		<description>Maantieteellisen kattavuuden ilmaiseminen.</description>
-		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, aikaa tai korkeutta ei määritelty.</condition>
+		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, aikaa tai
+			korkeutta ei määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:temporalElement" id="337.0" context="gmd:EX_Extent">
 		<label>Aika</label>
 		<description>Ajallisen kattavuuden ilmaiseminen.</description>
-		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, sijaintia tai korkeutta ei määritelty.</condition>
+		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, sijaintia
+			tai korkeutta ei määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalElement" id="338.0" context="gmd:EX_Extent">
 		<label>Korkeus</label>
 		<description>Aineiston korkeussuuntaisen kattavuuden ilmaiseminen.</description>
-		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, sijaintia tai aikaa ei määritelty.</condition>
+		<condition>Pakollinen, jos kattavuuteen liittyvää kuvailua, sijaintia
+			tai aikaa ei määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicExtent" id="339.0">
@@ -1649,46 +1917,55 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:extentTypeCode" id="340.0" context="gmd:EX_GeographicExtent">
 		<label>Kattavuuden tyyppi</label>
-		<description>Tieto siitä, kattaako sijaintia rajaava suorakaide alueen, jolta tieto on saatavilla, vai alueen, jolta tietoa ei ole</description>
+		<description>Tieto siitä, kattaako sijaintia rajaava suorakaide
+			alueen, jolta tieto on saatavilla, vai alueen, jolta tietoa ei ole</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_BoundingPolygon" id="341.0">
 		<label>Rajaava polygoni</label>
-		<description>Tietoaineiston rajaava polygoni, joka ilmaistaan suljettuna koordinaattijoukkona (x,y).</description>
+		<description>Tietoaineiston rajaava polygoni, joka ilmaistaan
+			suljettuna koordinaattijoukkona (x,y).</description>
 		<condition>Pakollinen.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:polygon" id="342.0" context="gmd:EX_BoundingPolygon">
 		<label>Polygoni</label>
-		<description>Rajaavan polygonin muodostavat koordinaattiparit (maantieteellisinä koordinaatteina).</description>
+		<description>Rajaavan polygonin muodostavat koordinaattiparit
+			(maantieteellisinä koordinaatteina).</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_GeographicBoundingBox" id="343.0">
 		<label>Sijaintia rajaava suorakaide</label>
-		<description>Tietoaineiston rajaus suorakaiteella ilmaistuna (likimääräinen sijainti). Koordinaatit annetaan kahden desimaalin tarkkuudella siinä koordinaatistossa, jossa aineisto on määritelty.</description>
+		<description>Tietoaineiston rajaus suorakaiteella ilmaistuna
+			(likimääräinen sijainti). Koordinaatit annetaan kahden desimaalin
+			tarkkuudella siinä koordinaatistossa, jossa aineisto on määritelty.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:westBoundLongitude" id="344.0" context="gmd:EX_GeographicBoundingBox">
+	<element name="gmd:westBoundLongitude" id="344.0"
+		context="gmd:EX_GeographicBoundingBox">
 		<label>Länsireuna</label>
 		<description>Tietoaineiston läntisin koordinaatti desimaaliasteina.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:eastBoundLongitude" id="345.0" context="gmd:EX_GeographicBoundingBox">
+	<element name="gmd:eastBoundLongitude" id="345.0"
+		context="gmd:EX_GeographicBoundingBox">
 		<label>Itäreuna</label>
 		<description>Tietoaineiston itäisin koordinaatti desimaaliasteina.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:southBoundLatitude" id="346.0" context="gmd:EX_GeographicBoundingBox">
+	<element name="gmd:southBoundLatitude" id="346.0"
+		context="gmd:EX_GeographicBoundingBox">
 		<label>Eteläreuna</label>
 		<description>Tietoaineiston eteläisin koordinaatti desimaaliasteina.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:northBoundLatitude" id="347.0" context="gmd:EX_GeographicBoundingBox">
+	<element name="gmd:northBoundLatitude" id="347.0"
+		context="gmd:EX_GeographicBoundingBox">
 		<label>Pohjoisreuna</label>
 		<description>Tietoaineiston pohjoisin koordinaatti desimaaliasteina.</description>
 		<condition>Pakollinen</condition>
@@ -1700,7 +1977,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:geographicIdentifier" id="349.0" context="gmd:EX_GeographicDescription">
+	<element name="gmd:geographicIdentifier" id="349.0"
+		context="gmd:EX_GeographicDescription">
 		<label>Tunniste</label>
 		<description>Alueellinen tunniste.</description>
 		<condition>Pakollinen</condition>
@@ -1713,18 +1991,22 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:extent" id="351.0" context="gmd:EX_TemporalExtent">
 		<label>Ajallinen kattavuus</label>
-		<description>Ajanjakso, jonka tietoaineiston sisältö kattaa (voi olla ajanhetki tai periodi).</description>
+		<description>Ajanjakso, jonka tietoaineiston sisältö kattaa (voi olla
+			ajanhetki tai periodi).</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:EX_SpatialTemporalExtent" id="352.0">
 		<label>Spatiotemporaalinen kattavuus</label>
-		<description>Kuvaus aineiston ajallisesta ja maantieteellisestä kattavuudesta.</description>
+		<description>Kuvaus aineiston ajallisesta ja maantieteellisestä
+			kattavuudesta.</description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:spatialExtent" id="353.0" context="gmd:EX_SpatialTemporalExtent">
+	<element name="gmd:spatialExtent" id="353.0"
+		context="gmd:EX_SpatialTemporalExtent">
 		<label>Maantieteellinen kattavuus</label>
-		<description>Spatiotemporaalisen kattavuuden kuvailussa maantieteellinen kattavuus.</description>
+		<description>Spatiotemporaalisen kattavuuden kuvailussa
+			maantieteellinen kattavuus.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1748,7 +2030,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:verticalCRS" id="358.0" context="gmd:EX_VerticalExtent">
 		<label>Korkeusjärjestelmä</label>
-		<description>Korkeusjärjestelmän tunnistaminen. Käytetty mittayksikkö käy ilmi järjestelmän tiedoista.</description>
+		<description>Korkeusjärjestelmän tunnistaminen. Käytetty mittayksikkö
+			käy ilmi järjestelmän tiedoista.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1771,7 +2054,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:date" id="362.0" context="gmd:CI_Citation">
 		<label>Päivämäärä</label>
-		<description>Resurssia koskeva päivämäärä, jonka tyyppi voi olla julkaisupäivä, luontipäivä tai viimeisin päivitysajankohta.</description>
+		<description>Resurssia koskeva päivämäärä, jonka tyyppi voi olla
+			julkaisupäivä, luontipäivä tai viimeisin päivitysajankohta.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -1802,7 +2086,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:series" id="369.0" context="gmd:CI_Citation">
 		<label>Sarja</label>
-		<description>Tietoa tietoaineistosarjasta tai tietoaineistokoosteesta, jonka osa ko. tietoaineisto on.</description>
+		<description>Tietoa tietoaineistosarjasta tai tietoaineistokoosteesta,
+			jonka osa ko. tietoaineisto on.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:otherCitationDetails" id="370.0" context="gmd:CI_Citation">
@@ -1827,26 +2112,31 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:CI_ResponsibleParty" id="374.0">
 		<label>Vastuutaho</label>
-		<description>Resurssiin liittyvien henkilöiden tai organisaatioiden tunnistaminen ja yhteystiedot.</description>
+		<description>Resurssiin liittyvien henkilöiden tai organisaatioiden
+			tunnistaminen ja yhteystiedot.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:individualName" id="375.0" context="gmd:CI_ResponsibleParty">
 		<label>Henkilön nimi</label>
 		<description>Vastuullisen henkilön nimi (sukunimi, etunimi).</description>
-		<condition>Pakollinen, jos organisaation nimeä ja tehtävänimikettä ei määritelty.</condition>
+		<condition>Pakollinen, jos organisaation nimeä ja tehtävänimikettä ei
+			määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:organisationName" id="376.0" context="gmd:CI_ResponsibleParty">
+	<element name="gmd:organisationName" id="376.0"
+		context="gmd:CI_ResponsibleParty">
 		<label>Organisaation nimi</label>
 		<description>Vastuullisen organisaation nimi.</description>
-		<condition>Pakollinen, jos henkilön nimeä ja tehtävänimikettä ei määritelty.</condition>
+		<condition>Pakollinen, jos henkilön nimeä ja tehtävänimikettä ei
+			määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:positionName" id="377.0" context="gmd:CI_ResponsibleParty">
 		<label>Tehtävänimike</label>
 		<description>Vastuullisen henkilön tehtävänimike.</description>
-		<condition>Pakollinen, jos henkilön ja organisaation nimeä ei määritelty.</condition>
+		<condition>Pakollinen, jos henkilön ja organisaation nimeä ei
+			määritelty.</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contactInfo" id="378.0" context="gmd:CI_ResponsibleParty">
@@ -1904,27 +2194,32 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:phone" id="388.0" context="gmd:CI_Contact">
 		<label>Teletiedot</label>
-		<description>Teletiedot vastuullisen henkilön tai organisaation tavoittamiseksi.</description>
+		<description>Teletiedot vastuullisen henkilön tai organisaation
+			tavoittamiseksi.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:address" id="389.0" context="gmd:CI_Contact">
 		<label>Osoitetiedot</label>
-		<description>Osoitetiedot vastuullisen henkilön tai organisaation tavoittamiseksi.</description>
+		<description>Osoitetiedot vastuullisen henkilön tai organisaation
+			tavoittamiseksi.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:onlineResource" id="390.0" context="gmd:CI_Contact">
 		<label>Verkko-osoite</label>
-		<description>Linkki lisätietoon aineistosta, palveluun, organisaation sivulle tai ladattavaan aineistoon.</description>
+		<description>Linkki lisätietoon aineistosta, palveluun, organisaation
+			sivulle tai ladattavaan aineistoon.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hoursOfService" id="391.0" context="gmd:CI_Contact">
 		<label>Palvelutunnit</label>
-		<description>Aika (sekä aikavyöhyke), jolloin henkilöön tai organisaatioon voidaan olla yhteydessä.</description>
+		<description>Aika (sekä aikavyöhyke), jolloin henkilöön tai
+			organisaatioon voidaan olla yhteydessä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contactInstructions" id="392.0" context="gmd:CI_Contact">
 		<label>Yhteydenoton ohjeet</label>
-		<description>Lisätietoja, miten tai milloin henkillön tai organisaatioon voidaan olla yhteydessä.</description>
+		<description>Lisätietoja, miten tai milloin henkillön tai
+			organisaatioon voidaan olla yhteydessä.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Date" id="393.0">
@@ -1953,16 +2248,74 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:linkage" id="397.0" context="gmd:CI_OnlineResource">
 		<label>Verkko-osoite</label>
-		<description>Linkki verkkosivulle esim. http://www.paikkatietohakemisto.fi/</description>
+		<description>Linkki verkkosivulle esim.
+			http://www.paikkatietohakemisto.fi/</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:protocol" id="398.0" context="gmd:CI_OnlineResource">
 		<label>Verkko-osoitteen protokolla</label>
-		<description>Protokolla, jota verkkosivulla käytetään. Jos linkki on ladattavaan tiedostoon, valitse FTP. Jos linkki on palveluun, valitse kyseisen palvelun tyyppi.</description>
+		<description>Protokolla, jota verkkosivulla käytetään. Jos linkki on
+			ladattavaan tiedostoon, valitse FTP. Jos linkki on palveluun, valitse
+			kyseisen palvelun tyyppi.</description>
+		<helper>
+			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File
+				(*.AXL)</option>
+			<option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
+			<option show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+			<option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
+			<option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
+			<option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
+			<option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
+			<option show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
+			<option show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+			<option show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+			<option show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
+			<option show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+			<option show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
+			<option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
+			<option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+			<option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver
+				1.1.0)</option>
+			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation
+				Service</option>
+			<option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
+			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
+			<option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+			<option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</option>
+			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
+			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver
+				1.1.1)</option>
+			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver
+				1.3.0)</option>
+			<option show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</option>
+			<option show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</option>
+			<option show="-" value="OGC:WNS">OGC-WNS Web Notification Service</option>
+			<option show="-" value="OGC:WPS">OGC-WPS Web Processing Service</option>
+			<option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
+			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver
+				1.0.0)</option>
+			<option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Ladattava tiedosto (FTP-protokolla)</option>
+			<option show="-" value="FILE:GEO">GIS file</option>
+			<option show="-" value="FILE:RASTER">GIS RASTER file</option>
+			<option show="-" value="DB:POSTGIS">PostGIS database table</option>
+			<option show="-" value="DB:ORACLE">ORACLE database table</option>
+			<option show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
+			<option show="y" value="RBNB:DATATURBINE">Data Turbine</option>
+			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">Ladattava tiedosto (HTTP-protokolla)</option>
+			<option show="y" value="WWW:LINK-1.0-http--ical">iCalendar (www-osoite)</option>
+			<option show="y" value="WWW:LINK-1.0-http--link">Oman organisaation www-osoite</option>
+			<option show="y" value="WWW:LINK-1.0-http--partners">Toisen osapuolen www-osoite</option>
+			<option show="y" value="WWW:LINK-1.0-http--related">Suhteellinen linkki (www-osoite)</option>
+			<option show="y" value="WWW:LINK-1.0-http--rss">RSS-syöte (www-osoite)</option>
+			<option show="y" value="WWW:LINK-1.0-http--samples">Näyteaineisto (www-osoite)</option>
+			<option show="-" value="UKST">Tuntematon palvelutyyppi</option>
+		</helper>
 	</element>
 	<!-- ==================================================== -->
-	<element name="gmd:applicationProfile" id="399.0" context="gmd:CI_OnlineResource">
+	<element name="gmd:applicationProfile" id="399.0"
+		context="gmd:CI_OnlineResource">
 		<label>Sovellusprofiili</label>
 		<description>Käytettävä sovellusprofiili.</description>
 	</element>
@@ -1984,13 +2337,15 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Series" id="403.0">
 		<label>Sarja</label>
-		<description>Tietoa tietoaineistosarjasta tai tietoaineistokoosteesta, jonka osa ko. tietoaineisto on.</description>
+		<description>Tietoa tietoaineistosarjasta tai tietoaineistokoosteesta,
+			jonka osa ko. tietoaineisto on.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name" id="404.0" context="gmd:CI_Series">
 		<label>Nimi</label>
-		<description>Tietoaineistosarjan tai tietoaineistokoosteen nimi, jonka osa ko. tietoaineisto on.</description>
+		<description>Tietoaineistosarjan tai tietoaineistokoosteen nimi, jonka
+			osa ko. tietoaineisto on.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:issueIdentification" id="405.0" context="gmd:CI_Series">
@@ -2005,7 +2360,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Telephone" id="407.0" context="">
 		<label>Teletiedot</label>
-		<description>Teletiedot vastuullisen henkilön tai organisaation tavoittamiseksi.</description>
+		<description>Teletiedot vastuullisen henkilön tai organisaation
+			tavoittamiseksi.</description>
 		<condition>Pakollinen</condition>
 	</element>
 	<!-- ==================================================== -->
@@ -2036,7 +2392,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:phone" id="526.0">
 		<label>Puhelinnumero</label>
-		<description>Teletiedot vastuullisen henkilön tai organisaation tavoittamiseksi.</description>
+		<description>Teletiedot vastuullisen henkilön tai organisaation
+			tavoittamiseksi.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:name" id="537.0" context="gmd:MD_CodeDomain">
@@ -2151,7 +2508,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:URL">
 		<label>Linkki aineistoon tai palveluun</label>
-		<description>Linkkiresurssiin (aineisto / aineistosarja / palvelu)  tai lisätietoon resurssista.</description>
+		<description>Linkkiresurssiin (aineisto / aineistosarja / palvelu) tai
+			lisätietoon resurssista.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_KeywordTypeCode">
@@ -2166,7 +2524,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_GeometricObjectTypeCode">
 		<label>Geometriatyyppi</label>
-		<description>Nolla-, yksi-, kaksi- tai kolmiulotteisten geometristen objektien nimi</description>
+		<description>Nolla-, yksi-, kaksi- tai kolmiulotteisten geometristen
+			objektien nimi</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ScopeCode">
@@ -2216,7 +2575,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_CellGeometryCode">
 		<label>Solun geometriaa kuvaava koodi</label>
-		<description>Hilamuotoisen tiedon osoittaminen joko pisteeksi tai alueeksi</description>
+		<description>Hilamuotoisen tiedon osoittaminen joko pisteeksi tai
+			alueeksi</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_ProgressCode">
@@ -2226,7 +2586,10 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_TopicCategoryCode">
 		<label>Tietoaineiston teemaa kuvaava koodi</label>
-		<description>Paikkatiedon ryhmittelyä ja hakua avustava paikkatiedon korkeatasoinen temaattinen luokittelu. Voidaan käyttää myös avainsanojen ryhmittelyyn. Esimerkit eivät ole täydellisiä ja ovat osittain päällekkäisiä. </description>
+		<description>Paikkatiedon ryhmittelyä ja hakua avustava paikkatiedon
+			korkeatasoinen temaattinen luokittelu. Voidaan käyttää myös
+			avainsanojen ryhmittelyyn. Esimerkit eivät ole täydellisiä ja ovat
+			osittain päällekkäisiä. </description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RestrictionCode">
@@ -2256,7 +2619,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MaintenanceFrequencyCode">
 		<label>Ylläpidon tiheyttä kuvaava koodi</label>
-		<description>Tietoon sen valmistumisen jälkeen kohdistuvien muutosten tiheys</description>
+		<description>Tietoon sen valmistumisen jälkeen kohdistuvien muutosten
+			tiheys</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_AssociationTypeCode">
@@ -2410,7 +2774,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-	<!-- === GMX namespace                                    -->
+	<!-- === GMX namespace -->
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
 	<element name="gmx:FileName">
@@ -2427,16 +2791,17 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-	<!-- === XLINK namespace                                  -->
+	<!-- === XLINK namespace -->
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
-		</element>
+	<element name="xlink:href">
+		<label>Link href</label>
+		<description>Supplies the data that allows an XLink application to
+			find a remote resource (or resource fragment) [W3C XLINK]</description>
+	</element>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-	<!-- === GCO namespace                                    -->
+	<!-- === GCO namespace -->
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
 	<element name="gco:Date" context="gmd:CI_Citation">
@@ -2451,12 +2816,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gco:DateTime" context="gmd:MD_Usage">
 		<label>Käyttöpäivämäärä ja -aika</label>
-		<description>Käyttöpäivämäärä ja -aika muodossa 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Käyttöpäivämäärä ja -aika muodossa 2007-09-12T15:00:00
+			(YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:DateTime" context="gmd:MD_StandardOrderProcess">
 		<label>Suunniteltu toimitusajankohta</label>
-		<description>Tilauksen suunniteltu toimitusajankohta  muodossa 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Tilauksen suunniteltu toimitusajankohta muodossa
+			2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:Record">
@@ -2526,24 +2893,27 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gco:Measure" context="gmd:EX_VerticalExtent">
 		<label>Mittayksikkö</label>
-		<description>Korkeudellisen kattavuuden määrityksessä käytetyt mittayksiköt, esim: metri.</description>
+		<description>Korkeudellisen kattavuuden määrityksessä käytetyt
+			mittayksiköt, esim: metri.</description>
 	</element>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
-	<!-- === GTS namespace                                    -->
+	<!-- === GTS namespace -->
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
 	<element name="gts:TM_PeriodDuration">
 		<label>Ajanjakson kesto</label>
 		<description>
-			Tämä tietotyyppi koskee aikaväliä eli intervallia, joka määritellään muodossa "PnYnMnDTnHnMnS", jos 
-			P=ajanjakso (period), 
-			nY=vuosien lukumäärä (number of years), 
-			nM=kuukausien lukumäärä (number of months), 
-			nD=päivien lukumäärä (number of days), 
-			T=aloitushetki (pakollinen, jos tuntien, minuuttien ja sekuntien määrä on määritelty), 
-			nH=tuntien lukumäärä (number of hours), 
-			nM=minuuttien lukumäärä (number of minutes) ja 
+			Tämä tietotyyppi koskee aikaväliä eli intervallia, joka
+			määritellään muodossa "PnYnMnDTnHnMnS", jos
+			P=ajanjakso (period),
+			nY=vuosien lukumäärä (number of years),
+			nM=kuukausien lukumäärä (number of months),
+			nD=päivien lukumäärä (number of days),
+			T=aloitushetki (pakollinen, jos tuntien, minuuttien ja sekuntien määrä on
+			määritelty),
+			nH=tuntien lukumäärä (number of hours),
+			nM=minuuttien lukumäärä (number of minutes) ja
 			nS=sekuntien lukumäärä (number of seconds).
 		</description>
 	</element>
@@ -2554,12 +2924,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gml:beginPosition">
 		<label>Alkupäivä</label>
-		<description>Päivämäärän muoto: 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Päivämäärän muoto: 2007-09-12T15:00:00
+			(YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:endPosition">
 		<label>Loppupäivä</label>
-		<description>Päivämäärän muoto: 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+		<description>Päivämäärän muoto: 2007-09-12T15:00:00
+			(YYYY-MM-DDTHH:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:relatedTime">
@@ -2574,23 +2946,31 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="gml:Polygon">
 		<label>Polygoni</label>
-		<description>Tasolla oleva pinta, joka määritellään koordinaattien avulla interpoloimalla.</description>
+		<description>Tasolla oleva pinta, joka määritellään koordinaattien
+			avulla interpoloimalla.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:Point">
 		<label>Piste</label>
-		<description>Pistemäinen kohde tasolla, joka määritellään yhtenä koordinaattiparina.</description>
+		<description>Pistemäinen kohde tasolla, joka määritellään yhtenä
+			koordinaattiparina.</description>
 		<example>74. -37.</example>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:LineString">
 		<label>Viiva</label>
-		<description>Viivamainen kohde tasolla, joka määritellään kahden tai useamman koordinaattiparin avulla. Koordinaattiparien väliset pisteet lasketaan lineaarisella interpoloinnilla.</description>
+		<description>Viivamainen kohde tasolla, joka määritellään kahden tai
+			useamman koordinaattiparin avulla. Koordinaattiparien väliset pisteet
+			lasketaan lineaarisella interpoloinnilla.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:LinearRing">
 		<label>Viivaympyrä</label>
-		<description>Vähintään neljän koordinaattiparin avulla määritelty viivamainen elementti, jonka ensimmäinen ja viimeinen koordinaattipari ovat yhtenevät ja siten viiva muodostaa ympyrän. Koordinaattiparien väliset pisteet lasketaan lineaarisella interpoloinnilla.</description>
+		<description>Vähintään neljän koordinaattiparin avulla määritelty
+			viivamainen elementti, jonka ensimmäinen ja viimeinen
+			koordinaattipari ovat yhtenevät ja siten viiva muodostaa ympyrän.
+			Koordinaattiparien väliset pisteet lasketaan lineaarisella
+			interpoloinnilla.</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gml:exterior">
@@ -2658,11 +3038,12 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 		<description>Käytetyn ellipsoidin tunniste</description>
 	</element>
 	<!-- ==================================================== -->
-	<!-- All XML attributes declared in the GML schema are defined without namespace, the only exception is the gml:id 
-		XML attribute. -->
+	<!-- All XML attributes declared in the GML schema are defined without namespace, 
+		the only exception is the gml:id XML attribute. -->
 	<element name="srsName">
 		<label>Koordinaattireferenssijärjestelmä</label>
-		<description>Name of the Spatial Reference System. By default set to geographic (epsg:4326)</description>
+		<description>Name of the Spatial Reference System. By default set to
+			geographic (epsg:4326)</description>
 		<example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
 	</element>
 	<!-- ==================================================== -->
@@ -2684,20 +3065,23 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 			<option value="Latauspalvelu">Latauspalvelu</option>
 			<option value="Muunnospalvelu">Muunnospalvelu</option>
 			<option value="Käynnistyspalvelu">Käynnistyspalvelu</option>
-			<option value="Muu palvelu">Muu palvelu</option> -->
+			<option value="Muu palvelu">Muu palvelu</option>
+			-->
 		</helper>
 	</element>
 	<element name="srv:serviceTypeVersion">
 		<label>Palvelutyypin versio</label>
-		<description/>
+		<description />
 	</element>
 	<element name="srv:accessProperties">
 		<label>Saatavuusehdot</label>
-		<description>Tietoa palvelun saatavuudesta (esim. hinnat, suunnitellut julkaisupäivät, tilausohjeet, toimitusaika)</description>
+		<description>Tietoa palvelun saatavuudesta (esim. hinnat, suunnitellut
+			julkaisupäivät, tilausohjeet, toimitusaika)</description>
 	</element>
 	<element name="srv:restrictions">
 		<label>Rajoitteet</label>
-		<description>Lailliset ja tietoturvaan liittyvät rajoitteet palvelun saatavuudessa ja jakelussa.</description>
+		<description>Lailliset ja tietoturvaan liittyvät rajoitteet palvelun
+			saatavuudessa ja jakelussa.</description>
 	</element>
 	<element name="srv:containsOperations">
 		<label>Sisältyvät operaatiot</label>
@@ -2721,15 +3105,18 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:DCPList">
 		<label>Lista hajautetuista alustoista</label>
-		<description>Lista erilaisista hajautetuista alustoista, joiden päällä operaatio on toteutettu.</description>
+		<description>Lista erilaisista hajautetuista alustoista, joiden päällä
+			operaatio on toteutettu.</description>
 	</element>
 	<element name="srv:operationDescription">
 		<label>Operaation kuvaus</label>
-		<description>Operaation käyttötarkoituksen ja lopputuloksen vapaamuotoinen kuvaus.</description>
+		<description>Operaation käyttötarkoituksen ja lopputuloksen
+			vapaamuotoinen kuvaus.</description>
 	</element>
 	<element name="srv:invocationName">
 		<label>Käynnistysnimi</label>
-		<description>Nimi, jota käytetään operaation käynnistämisessä kyseisellä alustalla.</description>
+		<description>Nimi, jota käytetään operaation käynnistämisessä
+			kyseisellä alustalla.</description>
 	</element>
 	<element name="srv:parameters">
 		<label>Parametrit</label>
@@ -2741,7 +3128,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:dependsOn">
 		<label>Operaation suorittamiseen vaadittavat muut operaatiot</label>
-		<description>Lista operaatioista, jotka tulee suorittaa ennen kyseisen operaation suorittamista.</description>
+		<description>Lista operaatioista, jotka tulee suorittaa ennen kyseisen
+			operaation suorittamista.</description>
 	</element>
 	<element name="srv:providerName">
 		<label>Palvelun tarjoaja</label>
@@ -2757,7 +3145,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:description">
 		<label>Operaatioketjun kuvaus</label>
-		<description>Kuvaus ketjuun liittyvistä palveluista ja lopputuloksesta.</description>
+		<description>Kuvaus ketjuun liittyvistä palveluista ja
+			lopputuloksesta.</description>
 	</element>
 	<element name="srv:name" context="srv:SV_OperationChainMetadata">
 		<label>Parametrin nimi</label>
@@ -2769,11 +3158,13 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:optionality">
 		<label>Pakollisuus</label>
-		<description>Tieto siitä, onko parametri pakollinen operaation suorittamiseksi.</description>
+		<description>Tieto siitä, onko parametri pakollinen operaation
+			suorittamiseksi.</description>
 	</element>
 	<element name="srv:repeatability">
 		<label>Kerrannaisuus</label>
-		<description>Tieto siitä, voidaanko parametrille antaa useita eri arvoja.</description>
+		<description>Tieto siitä, voidaanko parametrille antaa useita eri
+			arvoja.</description>
 	</element>
 	<element name="srv:coupledResource">
 		<label>Linkitetty resurssi</label>
@@ -2789,11 +3180,13 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:couplingType">
 		<label>Linkityksen tyyppi</label>
-		<description>Tieto siitä, miten toinen resurssi liittyy tähän palveluun.</description>
+		<description>Tieto siitä, miten toinen resurssi liittyy tähän
+			palveluun.</description>
 	</element>
 	<element name="srv:SV_CouplingType">
 		<label>Linkityksen tyyppi</label>
-		<description>Tieto siitä, miten toinen resurssi liittyy tähän palveluun.</description>
+		<description>Tieto siitä, miten toinen resurssi liittyy tähän
+			palveluun.</description>
 	</element>
 	<element name="srv:extent">
 		<label>Kattavuus</label>
@@ -2809,7 +3202,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:direction">
 		<label>Parametrin suunta</label>
-		<description>Tieto siitä, annetaanko parametri syötteenä vai onko se operaation lopputulos.</description>
+		<description>Tieto siitä, annetaanko parametri syötteenä vai onko se
+			operaation lopputulos.</description>
 	</element>
 	<element name="srv:valueType">
 		<label>Arvon tyyppi</label>
@@ -2817,7 +3211,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	</element>
 	<element name="srv:SV_ParameterDirection">
 		<label>Parametrin suunta</label>
-		<description>Tieto siitä, annetaanko parametri syötteenä vai onko se operaation lopputulos.</description>
+		<description>Tieto siitä, annetaanko parametri syötteenä vai onko se
+			operaation lopputulos.</description>
 	</element>
 	<!-- ==================================================== -->
 	<!-- ==================================================== -->
@@ -2826,7 +3221,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="years">
 		<label>Vuotta</label>
-		<description/>
+		<description />
 	</element>
 	<!-- ==================================================== -->
 	<element name="zone">
@@ -2836,12 +3231,14 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="InDirectReferenceSystem">
 		<label>Indirect projection system (for non geographical resources)</label>
-		<description>ReferenceSystem derived / specify that it is an indirect reference</description>
+		<description>ReferenceSystem derived / specify that it is an indirect
+			reference</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="DirectReferenceSystem">
 		<label>Direct projection system (for geographical resources)</label>
-		<description>ReferenceSystem derived / specify that it is a direct reference</description>
+		<description>ReferenceSystem derived / specify that it is a direct
+			reference</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="code">
@@ -2863,7 +3260,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<!-- ==================================================== -->
 	<element name="uom">
 		<label>Mittayksikkö</label>
-		<description/>
+		<description />
 		<helper>
 			<option value="mm">millimetriä</option>
 			<option value="cm">senttimetriä</option>
@@ -2871,7 +3268,7 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 			<option value="km">kilometriä</option>
 		</helper>
 	</element>
-	
+
 	<element name="gmx:Anchor">
 		<label>Anchor</label>
 		<description>Supports hyper-linking
@@ -2882,7 +3279,8 @@ xmlns:gmx="http://www.isotc211.org/2005/gmx">
 	<element name="xlink:href">
 		<label>URL</label>
 		<description>Supplies the data that allows an
-			XLink application to find a remote
+			XLink application to find
+			a remote
 			resource (or resource fragment)
 			[W3C XLINK]</description>
 	</element>
