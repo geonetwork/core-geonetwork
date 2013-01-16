@@ -24,8 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.SetBasedFieldSelector;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.DocIdSet;
@@ -33,6 +32,7 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.DocIdBitSet;
 
 import java.io.IOException;
@@ -50,8 +50,6 @@ import java.util.Set;
  */
 public class DuplicateDocFilter extends Filter {
 
-	private static final long serialVersionUID = -2575519355562280525L;
-
 	public Query getQuery() {
 		return _query;
 	}
@@ -62,59 +60,57 @@ public class DuplicateDocFilter extends Filter {
 
 	private Query _query;
 	final Set<String> hits = new HashSet<String>();
-	private FieldSelector _fieldSelector;
 	private int _maxResults;
+    private Set<String> _fieldsToLoad;
 
 	public DuplicateDocFilter(Query query, int maxResults) {
 		this._query = query;
 		this._maxResults = maxResults;
-		Set<String> fieldsToLoad = Collections.singleton("_id");
-		Set<String> lazyFieldstoLoad = Collections.emptySet();
-		_fieldSelector = new SetBasedFieldSelector(fieldsToLoad, lazyFieldstoLoad);
+		_fieldsToLoad = Collections.singleton("_id");
 	}
 
-	@Override
-	public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
-		final BitSet bits = new BitSet(reader.maxDoc());
+    @Override
+    public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+		final BitSet bits = new BitSet(context.reader().maxDoc());
 
-		new IndexSearcher(reader).search(_query, new Collector() {
+		new IndexSearcher(context.reader()).search(_query, new Collector() {
 
-			private int docBase;
-			private IndexReader reader;
+            private int docBase;
+            private IndexReader reader;
 
-			@Override
-			public void setScorer(Scorer scorer) throws IOException {
-			}
+            @Override
+            public void setScorer(Scorer scorer) throws IOException {
+            }
+            
+            @Override
+            public void setNextReader(AtomicReaderContext context) throws IOException {
+                this.docBase = context.docBase;
+                this.reader = context.reader();
+            }
+            
+            @Override
+            public void collect(int doc) throws IOException {
+                if (hits.size() <= _maxResults) {
+                    Document document;
+                    try {
+                        document = reader.document(docBase + doc, _fieldsToLoad);
+                        String id = document.get("_id");
 
-			@Override
-			public void collect(int doc) throws IOException {
-				if (hits.size() <= _maxResults) {
-					Document document;
-					try {
-						document = reader.document(docBase + doc, _fieldSelector);
-						String id = document.get("_id");
-
-						if (!hits.contains(id)) {
-							bits.set(docBase + doc);
-							hits.add(id);
-						}
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-
-			@Override
-			public void setNextReader(IndexReader reader, int docBase) throws IOException {
-				this.docBase = docBase;
-				this.reader = reader;
-			}
-
-			@Override
-			public boolean acceptsDocsOutOfOrder() {
-				return false;
-			}
-		});
+                        if (!hits.contains(id)) {
+                            bits.set(docBase + doc);
+                            hits.add(id);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            
+            @Override
+            public boolean acceptsDocsOutOfOrder() {
+                return false;
+            }
+        });
 
 		return new DocIdBitSet(bits);
 	}

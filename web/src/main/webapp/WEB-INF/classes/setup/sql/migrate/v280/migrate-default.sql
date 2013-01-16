@@ -25,9 +25,8 @@ INSERT INTO Settings VALUES (184,173,'fullName',NULL);
 INSERT INTO Settings VALUES (950,1,'autodetect',NULL);
 INSERT INTO Settings VALUES (951,950,'enable','true');
 INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
-INSERT INTO Settings VALUES (953,952,'only','false');
+INSERT INTO Settings VALUES (953,952,'only','prefer_locale');
 INSERT INTO Settings VALUES (954,952,'sorted','true');
-INSERT INTO Settings VALUES (955,952,'ignored','false');
 
 -- add hidden metadata elements
 

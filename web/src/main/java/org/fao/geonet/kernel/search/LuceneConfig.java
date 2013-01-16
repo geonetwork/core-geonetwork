@@ -35,10 +35,16 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ConfigurationOverrides;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
+
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
@@ -53,8 +59,8 @@ import org.jdom.JDOMException;
  * 
  */
 public class LuceneConfig {
-
-	private static final int ANALYZER_CLASS = 1;
+	public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
+    private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
 
@@ -104,6 +110,7 @@ public class LuceneConfig {
         private Facet.SortBy sortBy = Facet.SortBy.COUNT;
         private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
         private int max;
+        private String translator;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -114,6 +121,7 @@ public class LuceneConfig {
             name = summaryElement.getAttributeValue("name");
             plural = summaryElement.getAttributeValue("plural");
             indexKey = summaryElement.getAttributeValue("indexKey");
+            translator = summaryElement.getAttributeValue("translator");
             
             String maxString = summaryElement.getAttributeValue("max");
             if (maxString == null) {
@@ -186,6 +194,13 @@ public class LuceneConfig {
          */
         public int getMax() {
             return max;
+        }
+        public Translator getTranslator(ServiceContext context, String langCode) {
+            try {
+                return Translator.createTranslator(translator, context, langCode);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 	}
 
@@ -274,8 +289,13 @@ public class LuceneConfig {
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
 
-	private Version LUCENE_VERSION = Version.LUCENE_34;
-	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_34;
+	private long commitInterval = 30 * 1000;
+	private boolean useNRTManagerReopenThread = true;
+	private double nrtManagerReopenThreadMaxStaleSec = 5;
+	private double nrtManagerReopenThreadMinStaleSec = 0.1f;
+	
+	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
+	private Set<String> multilingualSortFields = new HashSet<String>();
 
 	
     /**
@@ -286,8 +306,8 @@ public class LuceneConfig {
 	 * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
-	    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) 
-	        Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
@@ -311,11 +331,14 @@ public class LuceneConfig {
 			if (version == null) {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
+					if (LUCENE_VERSION == null) {
+					    LUCENE_VERSION = Geonet.LUCENE_VERSION;
+					}
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
-									+ ". Set to default: " + DEFAULT_LUCENE_VERSION.toString());
-					LUCENE_VERSION = DEFAULT_LUCENE_VERSION;
+									+ ". Set to default: " + Geonet.LUCENE_VERSION.toString());
+					LUCENE_VERSION = Geonet.LUCENE_VERSION;
 				}
 			}
 
@@ -343,6 +366,43 @@ public class LuceneConfig {
 							"Invalid integer value for merge factor. Using default value.");
 					MergeFactor = DEFAULT_MERGEFACTOR;
 				}
+			}
+			
+			String cI = elem.getChildText("commitInterval");
+			if (cI != null) {
+			    try {
+			        commitInterval = Long.valueOf(cI);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid long value for commitInterval. Using default value.");
+			    }
+			}
+			String reopenThread = elem.getChildText(USE_NRT_MANAGER_REOPEN_THREAD);
+			if (reopenThread != null) {
+			    try {
+			        useNRTManagerReopenThread = Boolean.parseBoolean(reopenThread);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid boolean value for useNRTManagerReopenThread. Using default value.");
+			    }
+			}
+			String maxStaleNS = elem.getChildText("nrtManagerReopenThreadMaxStaleSec");
+			if (maxStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMaxStaleSec = Double.valueOf(maxStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMaxStaleSec. Using default value.");
+			    }
+			}
+			String minStaleNS = elem.getChildText("nrtManagerReopenThreadMinStaleSec");
+			if (minStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMinStaleSec = Double.valueOf(minStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMinStaleSec. Using default value.");
+			    }
 			}
 
 			// Tokenized fields
@@ -460,12 +520,16 @@ public class LuceneConfig {
 						Element e = (Element) o;
 						String name = e.getAttributeValue("name");
 						String tagName = e.getAttributeValue("tagName");
+						String multilingualSortField = e.getAttributeValue("multilingualSortField");
 						if (name == null || tagName == null) {
 							Log.warning(
 									Geonet.SEARCH_ENGINE,
 									"Field must have a name and an tagName attribute, check Lucene configuration file.");
 						} else {
 							dumpFields.put(name, tagName);
+							if (Boolean.parseBoolean(multilingualSortField)) {
+							    this.multilingualSortFields.add(name);
+							}
 						}
 					}
 				}				
@@ -485,7 +549,6 @@ public class LuceneConfig {
 			if (elem != null && elem.getText().equals("true")) {
 				setDocsScoredInOrder(true);
 			}
-
 		} catch (FileNotFoundException e) {
 			Log.error(
 					Geonet.SEARCH_ENGINE,
@@ -664,6 +727,15 @@ public class LuceneConfig {
 		}
 	}
 
+	/**
+	 * Get the fields that are used for sorting also may have translations.
+	 * 
+	 * See http://trac.osgeo.org/geonetwork/ticket/1112
+	 */
+	public Set<String> getMultilingualSortFields() {
+		return multilingualSortFields;
+	}
+	
 	/**
 	 * 
 	 * @return The list of tokenized fields which could not determined using
@@ -934,4 +1006,36 @@ public class LuceneConfig {
 	public void setTaxonomy(Map<String, Map<String,FacetConfig>> taxonomy) {
 		this.taxonomy = taxonomy;
 	}
+
+    public static String multilingualSortFieldName(String fieldName, String locale) {
+        return fieldName + "|" + locale;
+    }
+
+    /**
+     * How often to check if a commit is required
+     */
+    public long commitInterval() {
+        return this.commitInterval;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public boolean useNRTManagerReopenThread() {
+        return this.useNRTManagerReopenThread;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMaxStaleSec() {
+        return this.nrtManagerReopenThreadMaxStaleSec;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMinStaleSec() {
+        return this.nrtManagerReopenThreadMinStaleSec;
+    }
 }

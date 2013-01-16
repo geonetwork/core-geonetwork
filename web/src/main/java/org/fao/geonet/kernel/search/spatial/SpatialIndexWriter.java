@@ -23,14 +23,22 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.index.strtree.STRtree;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.logging.Level;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.DataStore;
@@ -39,10 +47,9 @@ import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
+import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
-import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTS;
@@ -61,17 +68,12 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.logging.Level;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.index.strtree.STRtree;
 
 /**
  * This class is responsible for extracting geographic information from metadata
@@ -96,7 +98,7 @@ public class SpatialIndexWriter implements FeatureListener
     private STRtree                                   _index;
     private static int                                _writes;
     private Map<String, String> errorMessage;
-    public Map getErrorMessage() {
+    public Map<String, String> getErrorMessage() {
 		return errorMessage;
 	}
 
@@ -157,17 +159,14 @@ public class SpatialIndexWriter implements FeatureListener
                     schemaDir, metadata, _parser, errorMessage);
 
             if (geometry != null) {
-                FeatureCollection<SimpleFeatureType, SimpleFeature> features = FeatureCollections.newCollection();
-                Object[] data;
+                MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
                 SimpleFeatureType schema = _featureStore.getSchema();
-				if(schema.getDescriptor(0) == schema.getGeometryDescriptor()){
-					data = new Object[] { geometry, id };
-                } else {
-                	data = new Object[] { id, geometry};
-                }
-                	
-                features.add(SimpleFeatureBuilder.build(schema, data,
-                        SimpleFeatureBuilder.createDefaultFeatureId()));
+                
+                SimpleFeature template = SimpleFeatureBuilder.template(schema,
+                        SimpleFeatureBuilder.createDefaultFeatureId());
+                template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
+                template.setAttribute(_IDS_ATTRIBUTE_NAME, id);
+                features.add(template);
 
                 List<FeatureId> ids = _featureStore.addFeatures(features);
                 for (FeatureId featureId : ids) {
@@ -383,8 +382,10 @@ public class SpatialIndexWriter implements FeatureListener
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn));
-                _index.insert(((Geometry) feature.getDefaultGeometry())
-                        .getEnvelopeInternal(), data);
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                if(defaultGeometry != null) {
+                    _index.insert(defaultGeometry.getEnvelopeInternal(), data);
+                }
             }
 
         } finally {
@@ -393,9 +394,6 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
 	private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
-        final String IDS_ATTRIBUTE_NAME = "id";
-        final String SPATIAL_INDEX_TYPENAME = "spatialindex";
-
         FeatureStore<SimpleFeatureType, SimpleFeature> featureSource = null;
 
         featureSource = findSpatialIndexStore(datastore);

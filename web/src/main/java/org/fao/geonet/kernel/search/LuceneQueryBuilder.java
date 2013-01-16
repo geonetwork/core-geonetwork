@@ -28,9 +28,10 @@ import jeeves.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -40,6 +41,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.util.automaton.LevenshteinAutomata;
 import org.fao.geonet.constants.Geonet;
 
 import java.util.HashMap;
@@ -290,7 +292,7 @@ public class LuceneQueryBuilder {
                             anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
                         }
                     }
-                    if (StringUtils.isNotEmpty(anyClause.toString())) {
+                    if (anyClause != null && StringUtils.isNotEmpty(anyClause.toString())) {
                         booleanQuery.add(anyClause);
                     }
                 }
@@ -567,13 +569,13 @@ public class LuceneQueryBuilder {
             TermRangeQuery temporalRangeQuery;
 
             // temporal extent start is within search extent
-            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
             BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
 
             // or temporal extent end is within search extent
-            temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
             temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
@@ -582,12 +584,12 @@ public class LuceneQueryBuilder {
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                temporalRangeQuery = new TermRangeQuery(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 
@@ -667,23 +669,51 @@ public class LuceneQueryBuilder {
             analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
         }
 
+        query = constructQueryFromAnalyzedString(string, luceneIndexField, similarity, query, analyzedString, _tokenizedFieldSet);
+        return query;
+    }
+
+    static Query constructQueryFromAnalyzedString(String string, String luceneIndexField, String similarity, Query query,
+            String analyzedString, Set<String> tokenizedFieldSet) {
         if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
             if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
-                // similarity is not set or is 1
-                if (similarity == null || similarity.equals("1")) {
-                    query = new TermQuery(new Term(luceneIndexField, analyzedString));
-                }
-                // similarity is not null and not 1
-                else {
-                    Float minimumSimilarity = Float.parseFloat(similarity);
-                    query = new FuzzyQuery(new Term(luceneIndexField, analyzedString), minimumSimilarity);
+                if (tokenizedFieldSet.contains(luceneIndexField) && analyzedString.contains(" ")) {
+                    // if analyzer creates spaces (by converting ignored
+                    // characters like -) then make boolean query
+                    String[] terms = analyzedString.split(" ");
+                    BooleanQuery booleanQuery = new BooleanQuery();
+                    query = booleanQuery;
+                    for (String term : terms) {
+                        booleanQuery.add(createFuzzyOrTermQuery(luceneIndexField, similarity, term), Occur.MUST);
+                    }
+                } else {
+                    query = createFuzzyOrTermQuery(luceneIndexField, similarity, analyzedString);
                 }
             }
             // wildcards
             else {
                 query = new WildcardQuery(new Term(luceneIndexField, analyzedString));
             }
+        }
+        return query;
+    }
+
+    private static Query createFuzzyOrTermQuery(String luceneIndexField, String similarity, String analyzedString) {
+        Query query = null;
+        if (similarity != null) {
+            Float minimumSimilarity = Float.parseFloat(similarity);
+            
+            if (minimumSimilarity < 1) {
+                int maxEdits = Math.min((int) ((1D-minimumSimilarity) * 10),  LevenshteinAutomata.MAXIMUM_SUPPORTED_DISTANCE);
+                query  = new FuzzyQuery(new Term(luceneIndexField, analyzedString), maxEdits);
+            } else if (minimumSimilarity > 1){
+                throw new IllegalArgumentException("similarity cannot be > 1.  The provided value was "+similarity);
+            }
+        }
+        
+        if (query == null) {
+            query = new TermQuery(new Term(luceneIndexField, analyzedString));
         }
         return query;
     }
@@ -1085,7 +1115,7 @@ public class LuceneQueryBuilder {
                     dateTo = dateTo + "T23:59:59";
                 }
             }
-            rangeQuery = new TermRangeQuery(luceneIndexField, dateFrom, dateTo, true, true);
+            rangeQuery = TermRangeQuery.newStringRange(luceneIndexField, dateFrom, dateTo, true, true);
             BooleanClause.Occur dateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause dateRangeClause = new BooleanClause(rangeQuery, dateOccur);
             query.add(dateRangeClause);
@@ -1263,8 +1293,8 @@ public class LuceneQueryBuilder {
      * @param langCode
      * @return
      */
-    static Query addLocaleTerm( Query query, String langCode, boolean requestedLanguageOnly ) {
-        if (langCode == null) {
+    static Query addLocaleTerm( Query query, String langCode, String requestedLanguageOnly ) {
+        if (langCode == null || requestedLanguageOnly == null) {
             return query;
         }
 
@@ -1277,12 +1307,14 @@ public class LuceneQueryBuilder {
             booleanQuery.add(query, BooleanClause.Occur.MUST);
         }
 
-        if(requestedLanguageOnly) {
-            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.MUST);
+        if(requestedLanguageOnly.startsWith("only_")) {
+            String fieldName = requestedLanguageOnly.substring("only".length());
+            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.MUST);
+        } else if(requestedLanguageOnly.startsWith("prefer")) {
+            String fieldName = requestedLanguageOnly.substring("prefer".length());
+            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.SHOULD);
         }
-        else {
-            booleanQuery.add(new TermQuery(new Term("_locale", langCode)), BooleanClause.Occur.SHOULD);
-        }
+
         return booleanQuery;
     }
 }

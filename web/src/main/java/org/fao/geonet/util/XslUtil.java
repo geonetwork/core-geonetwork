@@ -275,5 +275,20 @@ public final class XslUtil
         
         return "";
     }
+    
+	public static String threeCharLangCode(String langCode) {
+	    if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
+
+		if(langCode.length() == 3) return langCode;
+
+		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
+	}
+
+	public static boolean match(Object src, Object pattern) {
+		if (src == null || src.toString().trim().isEmpty()) {
+			return false;
+		}
+		return src.toString().matches(pattern.toString());
+	}
 
 }

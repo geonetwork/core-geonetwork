@@ -24,16 +24,19 @@
 package org.fao.geonet.kernel.search.spatial;
 
 import java.io.IOException;
-import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.AtomicReader;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.search.Collector;
+import org.apache.lucene.search.DocIdSet;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.util.Bits;
+import org.apache.lucene.util.OpenBitSet;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -58,7 +61,6 @@ import com.vividsolutions.jts.index.SpatialIndex;
 public class FullScanFilter extends SpatialFilter
 {
 
-    private static final long serialVersionUID = 1114543251684147194L;
     private Set<String>       _matches;
 
     public FullScanFilter(Query query, int numHits, Geometry geom,
@@ -73,29 +75,28 @@ public class FullScanFilter extends SpatialFilter
         super(query, numHits, bounds, sourceAccessor);
     }
 
-    public BitSet bits(final IndexReader reader) throws IOException
-    {
-        final BitSet bits = new BitSet(reader.maxDoc());
+    public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+        final OpenBitSet bits = new OpenBitSet(context.reader().maxDoc());
 
         final Set<String> matches = loadMatches();
 
-        new IndexSearcher(reader).search(_query, new Collector()
-        {
-						private int docBase;
+        new IndexSearcher(context.reader()).search(_query, new Collector() {
+            private int docBase;
+            private AtomicReader reader;
 
-						// ignore scorer
-						public void setScorer(Scorer scorer) {}
+            // ignore scorer
+            public void setScorer(Scorer scorer) {
+            }
 
-						// accept docs out of order (for a BitSet it doesn't matter)
-						public boolean acceptsDocsOutOfOrder() {
-							return true;
-						}
+            // accept docs out of order (for a BitSet it doesn't matter)
+            public boolean acceptsDocsOutOfOrder() {
+                return true;
+            }
 
-            public final void collect(int doc)
-            {
+            public final void collect(int doc) {
                 Document document;
                 try {
-                    document = reader.document(doc, _selector);
+                    document = reader.document(doc, _fieldsToLoad);
                     if (matches.contains(document.get("_id"))) {
                         bits.set(docBase + doc);
                     }
@@ -104,9 +105,11 @@ public class FullScanFilter extends SpatialFilter
                 }
             }
 
-						public void setNextReader(IndexReader reader, int docBase) {
-							this.docBase = docBase;
-						}
+            @Override
+            public void setNextReader(AtomicReaderContext context) throws IOException {
+                this.docBase = context.docBase;
+                this.reader = context.reader();
+            }
         });
         return bits;
     }

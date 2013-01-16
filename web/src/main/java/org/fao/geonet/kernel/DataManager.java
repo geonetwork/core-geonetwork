@@ -279,7 +279,7 @@ public class DataManager {
     public void indexInThreadPoolIfPossible(Dbms dbms, String id) throws Exception {
         if(ServiceContext.get() == null ) {
             boolean indexGroup = false;
-            indexMetadata(dbms, id, indexGroup);
+            indexMetadata(dbms, id);
         } else {
             indexInThreadPool(ServiceContext.get(), id, dbms);
         }
@@ -361,11 +361,10 @@ public class DataManager {
 
                     if (ids.size() > 1) {
                         // servlet up so safe to index all metadata that needs indexing
-                        startIndexGroup();
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadataGroup(dbms, ids.get(i).toString());
+                                    indexMetadata(dbms, ids.get(i).toString());
                                 }
                                 catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
@@ -373,11 +372,10 @@ public class DataManager {
                             }
                         }
                         finally {
-                            endIndexGroup();
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), false);
+                        indexMetadata(dbms, ids.get(0));
                     }
                 }
                 finally {
@@ -394,42 +392,13 @@ public class DataManager {
     }
 
     /**
-     *
-     * @throws Exception
-     */
-	public void startIndexGroup() throws Exception {
-		searchMan.startIndexGroup();
-	}
-
-    /**
-     *
-     * @throws Exception
-     */
-	public void endIndexGroup() throws Exception {
-		searchMan.endIndexGroup();
-	}
-
-    /**
-     *
-     * @param dbms
-     * @param id
-     * @throws Exception
-     */
-	public void indexMetadataGroup(Dbms dbms, String id) throws Exception {
-        if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Indexing record (" + id + ")"); //DEBUG
-		indexMetadata(dbms, id, true);
-	}
-
-    /**
      * TODO javadoc.
      *
      * @param dbms
      * @param id
-     * @param indexGroup
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean indexGroup) throws Exception {
+	public void indexMetadata(Dbms dbms, String id) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = new Integer(id);
@@ -569,12 +538,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            if (indexGroup) {
-                searchMan.indexGroup(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
-            }
-            else {
-                searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
-            }
+            searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
         }
 		catch (Exception x) {
 			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + id + " is corrupt/invalid - ignoring it. Error: " + x.getMessage());
@@ -1271,7 +1235,7 @@ public class DataManager {
 	public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception {
 		setHarvestedExt(dbms, id, harvestUuid);
         boolean indexGroup = false;
-        indexMetadata(dbms, Integer.toString(id), indexGroup);
+        indexMetadata(dbms, Integer.toString(id));
 	}
 
     /**
@@ -1761,7 +1725,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean indexGroup = false;
-                indexMetadata(dbms, id, indexGroup);
+                indexMetadata(dbms, id);
             }
 		}
 		return true;
@@ -2524,7 +2488,7 @@ public class DataManager {
 	public void setStatus(ServiceContext context, Dbms dbms, int id, int status, String changeDate, String changeMessage) throws Exception {
 		setStatusExt(context, dbms, id, status, changeDate, changeMessage);
     boolean indexGroup = false;
-    indexMetadata(dbms, Integer.toString(id), indexGroup);
+    indexMetadata(dbms, Integer.toString(id));
 	}
 
     /**
@@ -3368,7 +3332,7 @@ public class DataManager {
             String query = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
             dbms.execute(query, new Integer(id));
             boolean indexGroup = false;
-            indexMetadata(dbms, id, indexGroup);
+            indexMetadata(dbms, id);
         }
         catch (Exception e) {
             Log.warning(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());

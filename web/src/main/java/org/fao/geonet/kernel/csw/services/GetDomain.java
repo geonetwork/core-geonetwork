@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -38,16 +40,15 @@ import jeeves.utils.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.index.FieldInfos;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.SlowCompositeReaderWrapper;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.ReaderUtil;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -58,12 +59,14 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -189,7 +192,9 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager sm = gc.getSearchmanager();
 			
-			IndexReader reader = sm.getIndexReader(context.getLanguage());
+
+	        IndexAndTaxonomy indexAndTaxonomy= sm.getNewIndexReader(null);
+	        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 			try {
 				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
                 BooleanQuery query = null;
@@ -230,7 +235,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					FieldInfos fi = ReaderUtil.getMergedFieldInfos(reader);
+					FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
 					if (fi.fieldInfo(property) == null)
 						continue;
 					
@@ -244,19 +249,20 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					else	
 						listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
 
-					//List<String> fields = new ArrayList<String>();
-					//fields.add(property);
-					//fields.add("_isTemplate");
-					String fields[] = new String[] { property, "_isTemplate" };
-					MapFieldSelector selector = new MapFieldSelector(fields);
+					Set<String> fields = new HashSet<String>();
+					fields.add(property);
+					fields.add("_isTemplate");
+					
 	
 					// parse each document in the index
 					String[] fieldValues;
 					SortedSet<String> sortedValues = new TreeSet<String>();
 					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
-						Document doc = reader.document(hits.scoreDocs[j].doc, selector);
-						
+					    DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
+						reader.document(hits.scoreDocs[j].doc, selector);
+						Document doc = selector.getDocument();
+
 						// Skip templates and subTemplates
 						String[] isTemplate = doc.getValues("_isTemplate");
 						if (isTemplate[0] != null && !isTemplate[0].equals("n"))
@@ -289,7 +295,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					domainValuesList.add(domainValues);
 				}
 			} finally {
-				sm.releaseIndexReader(reader);
+				sm.releaseIndexReader(indexAndTaxonomy);
 			}
 		}
 		return domainValuesList;

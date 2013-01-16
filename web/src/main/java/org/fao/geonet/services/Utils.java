@@ -58,7 +58,38 @@ public class Utils {
 		return id;
 	}
 
-	/**
+	private static String lookupByFileId(Element params, GeonetContext gc) throws Exception {
+	    String fileId = Util.getParam(params, "fileIdentifier", null);
+	    if(fileId == null) {
+	        return null;
+	    }
+
+	    PhraseQuery query = new PhraseQuery();
+        query.add(new Term("fileId", fileId));
+
+        SearchManager searchManager = gc.getSearchmanager();
+
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
+		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
+        IndexSearcher searcher = new IndexSearcher(reader);
+
+        try {
+            TopDocs tdocs = searcher.search(query, 1);
+
+            if (tdocs.totalHits > 0) {
+
+                Set<String> id = Collections.singleton("_id");
+                Document element = reader.document(tdocs.scoreDocs[0].doc, id);
+                return element.get("_id");
+            }
+
+            return null;
+        } finally {
+            searchManager.releaseIndexReader(indexAndTaxonomy);
+        }
+    }
+
+    /**
 	 * Search for a UUID or an internal identifier parameter and return an
 	 * internal identifier using default UUID and identifier parameter names
 	 * (ie. uuid and id).

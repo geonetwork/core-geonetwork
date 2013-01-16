@@ -45,13 +45,13 @@ public class LuceneQueryInput extends UserQueryInput {
     private boolean isUserAdmin;
     private boolean isAdmin;
 
-    private boolean requestedLanguageOnly;
+    private String requestedLanguageOnly;
 
-    public boolean isRequestedLanguageOnly() {
+    public String isRequestedLanguageOnly() {
         return requestedLanguageOnly;
     }
 
-    public void setRequestedLanguageOnly(boolean requestedLanguageOnly) {
+    public void setRequestedLanguageOnly(String requestedLanguageOnly) {
         this.requestedLanguageOnly = requestedLanguageOnly;
     }
 

@@ -28,9 +28,13 @@
 
     <multilingual>configuració multilingüe</multilingual>
     <autoDetectEnable>Activa l'auto-detecció de llenguatge de sol·licitud de cerca</autoDetectEnable>
-    <requestedlanguageonly>Cercar només en l'idioma requerit</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
-    <requestedlanguageignored>Omet l'idioma sol·licitat en la recerca</requestedlanguageignored>
 
 	<oai>Proveïdor OAI</oai>
 		<datesearch>Datesearch</datesearch>

@@ -449,7 +449,7 @@ public abstract class AbstractHarvester
 			logger.info("Started harvesting from node : "+ nodeName);
 			
 			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
-			h.processWithFastIndexing();
+			h.process();
 			logger.info("Ended harvesting from node : "+ nodeName);
 
 			if (getParams().oneRunOnly)

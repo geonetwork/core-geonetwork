@@ -20,9 +20,13 @@
 
     <multilingual>Многоязычный настройки</multilingual>
     <autoDetectEnable>Включение автоматического обнаружения языка поискового запроса</autoDetectEnable>
-    <requestedlanguageonly>Искать только в запрашиваемом языке</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Результаты поиска в отсортированных просил язык на вершине</requestedlanguagesorted>
-    <requestedlanguageignored>Игнорировать просил язык в поиске</requestedlanguageignored>
 
 	<intranet>Локальная сеть</intranet>
 	<network>Адрес</network>

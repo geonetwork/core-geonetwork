@@ -73,8 +73,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 
    private SearchController _searchController;
 
-	public Transaction(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public Transaction(LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(luceneConfig);
     }
 
 
@@ -265,7 +265,7 @@ public class Transaction extends AbstractOperation implements CatalogService
         }
 
 
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		
 		fileIds.add( uuid );
 		

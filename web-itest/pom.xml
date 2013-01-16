@@ -86,6 +86,33 @@
           <stripVersion>true</stripVersion>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <id>compile-webspecs</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-Xmx1024M</argument>
+                <argument>-Xss10M</argument>
+                <argument>-XX:MaxPermSize=256m</argument>
+                <argument>-jar</argument>
+                <argument>sbt-launch.jar</argument>
+                <argument>geonetwork/test:compile</argument>
+              </arguments>              
+              <workingDirectory>${webspecsDir}</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- start jetty before integration tests and shut it down after -->
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -148,31 +175,29 @@
         <version>1.2.1</version>
         <executions>
           <execution>
-            <id>run-sbt-tests</id>
+            <id>run-webspecs</id>
             <phase>integration-test</phase>
             <goals>
               <goal>exec</goal>
             </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-Dfile.encoding=UTF8</argument>
+                <argument>-Dsbt.log.noformat=true</argument>
+                <argument>-Dwebspecs.config=${webspecsDir}/geonetwork/standard/src/test/resources/c2c/webspecs/geonetwork/defaultConfig.properties</argument>
+                <argument>-Dlogging_enabled=${logLevel}</argument>
+                <argument>-Dtest.server=${testServer}</argument>
+                <argument>-Dspecs2.junit.outDir=${project.build.directory}/surefire-reports</argument>
+                <argument>-jar</argument>
+                <argument>-XX:MaxPermSize=256m</argument>
+                <argument>sbt-launch.jar</argument>
+                <argument>geonetwork/test-only c2c.webspecs.suite.AllGeonetworkSpecs</argument>
+              </arguments>
+              <workingDirectory>${webspecsDir}</workingDirectory>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <executable>java</executable>
-          <arguments>
-            <argument>-Dfile.encoding=UTF8</argument>
-            <argument>-Dsbt.log.noformat=true</argument>
-            <argument>-Dwebspecs.config=${webspecsDir}/geonetwork/standard/src/test/resources/c2c/webspecs/geonetwork/defaultConfig.properties</argument>
-            <argument>-Dlogging_enabled=${logLevel}</argument>
-            <argument>-Dtest.server=${testServer}</argument>
-            <argument>-Dspecs2.junit.outDir=${project.build.directory}/surefire-reports</argument>
-            <argument>-Xmx1536M</argument>
-            <argument>-Xss10M</argument>
-            <argument>-XX:MaxPermSize=256m</argument>
-            <argument>-jar</argument>
-            <argument>sbt-launch.jar</argument>
-            <argument>geonetwork/test-only c2c.webspecs.suite.AllGeonetworkSpecs</argument>
-          </arguments>
-          <workingDirectory>${webspecsDir}</workingDirectory>
-        </configuration>
       </plugin>
       <!--      <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -1393,8 +1393,8 @@
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 
-		<service name="sequential.execution.set">
-			<class name=".services.config.SetSequentialExecution" />
+		<service name="system.properties.set">
+			<class name=".services.config.SetSystemProperties" />
 		</service>
 
 		<service name="isolanguages">
