@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
