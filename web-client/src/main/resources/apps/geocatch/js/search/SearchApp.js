@@ -51,7 +51,7 @@ GeoNetwork.searchApp = function() {
             Ext.Ajax.request({
                 url : catalogue.URL + "/srv/" + catalogue.LANG
                         + "/q?fast=index&from=1&to=30&sortBy=relevance&debug="
-                + (new Date()).getTime(),
+                        + (new Date()).getTime(),
                 success : function(response) {
                     Ext.getCmp('facets-panel').refresh(response);
                 },
@@ -895,11 +895,13 @@ GeoNetwork.searchApp = function() {
                         success : function(r) {
                             var data = [];
 
-                            if (!r.responseXML.childNodes) {
-                                console.log(r);
+                            var i = 0;
+
+                            if (Ext.isIE) {
+                                i++;
                             }
 
-                            var children = r.responseXML.childNodes[0].childNodes;
+                            var children = r.responseXML.childNodes[i].childNodes;
                             Ext
                                     .each(
                                             children,
@@ -907,32 +909,66 @@ GeoNetwork.searchApp = function() {
                                                 if (e.hasChildNodes()) {
 
                                                     var label_ = Ext.DomQuery
-                                                            .select(lang, e)[0].textContent;
+                                                            .select(lang, e)[0].textContent
+                                                            || Ext.DomQuery
+                                                                    .select(
+                                                                            lang,
+                                                                            e)[0].text;
 
                                                     if (label_
                                                             && label_.length > 0) {
 
-                                                        var bbox = "POLYGON ("
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "north",
-                                                                                e)[0].textContent
-                                                                + " "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "east",
-                                                                                e)[0].textContent
-                                                                + ", "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "south",
-                                                                                e)[0].textContent
-                                                                + " "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "west",
-                                                                                e)[0].textContent
-                                                                + ")";
+                                                        if (Ext.DomQuery
+                                                                .select(
+                                                                        "north",
+                                                                        e)[0].textContent) {
+
+                                                            var bbox = "POLYGON ("
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "north",
+                                                                                    e)[0].textContent
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "east",
+                                                                                    e)[0].textContent
+                                                                    + ", "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "south",
+                                                                                    e)[0].textContent
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "west",
+                                                                                    e)[0].textContent
+                                                                    + ")";
+                                                        } else {
+
+                                                            var bbox = "POLYGON ("
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "north",
+                                                                                    e)[0].text
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "east",
+                                                                                    e)[0].text
+                                                                    + ", "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "south",
+                                                                                    e)[0].text
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "west",
+                                                                                    e)[0].text
+                                                                    + ")";
+                                                        }
+
                                                         data
                                                                 .push({
                                                                     "ID" : e
