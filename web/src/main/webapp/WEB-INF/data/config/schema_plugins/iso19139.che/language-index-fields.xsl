@@ -401,7 +401,6 @@
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:if test="string-length($layerName) > 0 and string-length($serviceUrl) > 0">
-				<Field name="link" string="{concat('||', $serviceUrl, '|OGC:WMS-1.1.1-http-get-capabilities', '|application/xml')}" store="true" index="false"/>
 		    	<Field name="wms_uri" string="{$uuid}###{$layerName}###{$serviceUrl}" store="true" index="true" token="false"/>
 		    </xsl:if>
 		</xsl:for-each>
