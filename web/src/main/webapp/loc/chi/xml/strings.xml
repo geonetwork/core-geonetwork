@@ -710,46 +710,6 @@
 	<progressChoice value="planned">计划中</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS 地图服务配置文件 (*.AXL)</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS 网络要素服务</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS 网络影像地图服务</protocolChoice>
-	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML 服务 (ver 2.0)</protocolChoice>
-
-    <protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC-WMS地图服务(ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">下载文件 (FTP)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">下载文件</protocolChoice>
-	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">网站地址(URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
-    <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
 	<pubdate>出版日期</pubdate>
 	<publicationDate>出版日期</publicationDate>
 	<publisher>出版商</publisher>

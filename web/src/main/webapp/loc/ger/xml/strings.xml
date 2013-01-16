@@ -709,58 +709,6 @@
 	<progressChoice value="planned">geplant</progressChoice>
 	<progressChoice/>
 	<protocol>Protokoll</protocol>
-    <protocolChoice value="WWW:LINK-1.0-http--link">Webaddresse (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--samples">Beispielprodukt (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--related">Verwandter Link (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--partners">Partner Webaddresse (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--rss">RSS Newsfeed (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--download">Webadresse zum Download</protocolChoice>
-    <protocolChoice value="WWW:DOWNLOAD-1.0-http--download">Datei zum download</protocolChoice>
-    <protocolChoice value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</protocolChoice>
-    <protocolChoice value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</protocolChoice>
-    <protocolChoice value="OGC:WMTS-http-get-capabilities">OGC-WMTS Web Map Tile Service</protocolChoice>
-    <protocolChoice value="OGC:WMC-http-get-capabilities">OGC-WMC Web Map Context</protocolChoice>
-    <protocolChoice value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</protocolChoice>
-    <protocolChoice value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</protocolChoice>
-    <protocolChoice value="GLG:KML-2.0-http-get-map">Google Earth KML Service (2.0)</protocolChoice>
-    <protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei (*.AXL)</protocolChoice>
-    <protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-    <protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-  <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-  <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-  <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-  <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
-	  <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
-  <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-  <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
-  <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-  <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-  <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-  <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>	
 	<pubdate>Publikationsdatum</pubdate>
 	<publicationDate>Publikationsdatum</publicationDate>
 	<publisher>Herausgeber</publisher>
