@@ -70,15 +70,15 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id)
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id)
+		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
-			return super.internalSelect(dbms, table, id);
+			return super.internalSelect(dbms, table, id, isIndexingTask);
 		}
 
 	}
@@ -128,7 +128,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
@@ -210,7 +210,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

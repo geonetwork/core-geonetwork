@@ -54,13 +54,13 @@ public class XmlSerializerSvn extends XmlSerializer {
 
     /**
      * Retrieves the xml element whose id matches the given one. The element is read from the database as subversion may be busy with commit changes.
-     *
      * @param id
+     *
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
-		Element rec = super.internalSelect(dbms, table, id);
+	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
+		Element rec = super.internalSelect(dbms, table, id, isIndexingTask);
 		if (rec != null) return (Element) rec.detach();
 		else return null;
 	}
@@ -77,7 +77,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws Exception
      */
 	public Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id);
+		Element rec = internalSelect(dbms, table, id, false);
 		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
@@ -94,8 +94,8 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception {
-		return internalSelect(dbms, table, id);
+	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
+		return internalSelect(dbms, table, id, false);
 	}
 
     /**
@@ -148,7 +148,7 @@ public class XmlSerializerSvn extends XmlSerializer {
 	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws Exception {
 
 		// old XML comes from the database
-	  Element oldXml = super.internalSelect(dbms, "metadata", id);		
+	  Element oldXml = super.internalSelect(dbms, "metadata", id, false);		
 
 		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
 

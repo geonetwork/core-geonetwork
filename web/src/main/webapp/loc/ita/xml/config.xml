@@ -35,7 +35,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
 	<requestedlanguagesorted>Mostra per primi i risultati nella lingua della richiesta</requestedlanguagesorted>
-	<requestedlanguageignored>Ignora la lingua della richiesta nella ricerca</requestedlanguageignored>
 
 	<oai>Registro OAI</oai>
 	<datesearch>Ricerca per data</datesearch>

@@ -32,7 +32,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Suchergebnisse in gewünschte Sprache auf der Oberseite sortiert</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorieren gewünschten Sprache auf der Suche</requestedlanguageignored>
 
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>

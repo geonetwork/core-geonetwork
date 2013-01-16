@@ -505,4 +505,22 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         assertNull(searcher.getKeywordFromResultsById(100));
     }
 
+    @Test
+    public void testKeywordSearchUsingId() throws Exception {
+        KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
+        String keywordId = FOO_COM_NS+1;
+		Element params = new Element("params").
+        		addContent(new Element("pNewSearch").setText("true")).
+        		addContent(new Element("pTypeSearch").setText("1")).
+        		addContent(new Element("pThesauri").setText(thesaurusFoo.getKey())).
+        		addContent(new Element("pMode").setText("searchBox")).
+        		addContent(new Element("maxResults").setText("50")).
+        		addContent(new Element("pLanguage").setText("eng")).
+        		addContent(new Element("pKeyword").setText(keywordId));
+        searcher.search("fra", params);
+        
+        assertEquals(1, searcher.getResults().size());
+        assertEquals(keywordId, searcher.getResults().get(0).getUriCode());
+    }
+
 }

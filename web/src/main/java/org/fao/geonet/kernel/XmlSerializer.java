@@ -114,10 +114,11 @@ public abstract class XmlSerializer {
      * @param dbms
      * @param table
      * @param id
+     * @param isIndexingTask If true, then withheld elements are not removed.
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id) throws Exception {
+	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
 		Element select = dbms.select(query, new Integer(id));
 		Element record = select.getChild(Jeeves.Elem.RECORD);
@@ -128,41 +129,42 @@ public abstract class XmlSerializer {
 		String xmlData = record.getChildText("data");
 		Element metadata = Xml.loadString(xmlData, false);
 
-		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-		if(ServiceContext.get() != null) {
-			ServiceContext context = ServiceContext.get();
-			String ownerId = record.getChildText("owner");
-			UserSession userSession = context.getUserSession();
-			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
-			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
-			if(isAdmin || isOwner) {
-				hideWithheldElements = false;
-			}
+		if (!isIndexingTask) { 
+    		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+    		if(ServiceContext.get() != null) {
+    			ServiceContext context = ServiceContext.get();
+    			String ownerId = record.getChildText("owner");
+    			UserSession userSession = context.getUserSession();
+    			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
+    			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
+    			if(isAdmin || isOwner) {
+    				hideWithheldElements = false;
+    			}
+    		}
+    		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
+    		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
+    			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+    			for (Object object : nodes) {
+    				if (object instanceof Element) {
+    					Element element = (Element) object;
+    					
+    					if(keepMarkedElement) {
+    						element.removeContent();
+    						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
+    						@SuppressWarnings("unchecked")
+    						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+    						for (Attribute attribute : atts) {
+    							if(attribute != nilReason) {
+    								attribute.detach();
+    							}
+    						}
+    					} else {
+    						element.detach();
+    					}
+    				}
+    			}
+    		}
 		}
-		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
-		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
-			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
-			for (Object object : nodes) {
-				if (object instanceof Element) {
-					Element element = (Element) object;
-					
-					if(keepMarkedElement) {
-						element.removeContent();
-						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
-						@SuppressWarnings("unchecked")
-						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
-						for (Attribute attribute : atts) {
-							if(attribute != nilReason) {
-								attribute.detach();
-							}
-						}
-					} else {
-						element.detach();
-					}
-				}
-			}
-		}
-
 		return (Element) metadata.detach();
 	}
 
@@ -331,6 +333,6 @@ public abstract class XmlSerializer {
 	
 	public abstract Element select(Dbms dbms, String table, String id) 
 			 throws Exception;
-	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id) 
+	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) 
 			 throws Exception;
 } 

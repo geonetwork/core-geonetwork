@@ -179,7 +179,8 @@ public class CatalogSearcher {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            indexAndTaxonomy = sm.getIndexReader(_searchToken);
+            _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+            indexAndTaxonomy = sm.getIndexReader(_lang, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
             if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
@@ -223,7 +224,7 @@ public class CatalogSearcher {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
 
-        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(_searchToken);
+        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
 
         try {
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
@@ -432,7 +433,7 @@ public class CatalogSearcher {
                 Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
 
-		_lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+                _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
 		boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		
         Query data;

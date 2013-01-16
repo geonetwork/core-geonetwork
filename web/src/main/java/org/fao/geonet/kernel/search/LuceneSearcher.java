@@ -186,7 +186,7 @@ public class LuceneSearcher extends MetaSearcher {
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		_language = determineLanguage(srvContext, request, _sm.get_settingInfo());
-		_indexAndTaxonomy = _sm.getNewIndexReader();
+		_indexAndTaxonomy = _sm.getNewIndexReader(_language);
 
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
@@ -362,7 +362,8 @@ public class LuceneSearcher extends MetaSearcher {
 		// Search for all current session could search for
 		// Do a like query to limit the size of the results
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
-		elData.addContent(new Element("fast").addContent("index"));
+		elData.addContent(new Element("fast").addContent("index")).
+		    addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).addContent(Boolean.toString(false)));
 		// FIXME : need more work on LQB
 //		if (!searchValue.equals("")) {
 //			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
@@ -382,7 +383,7 @@ public class LuceneSearcher extends MetaSearcher {
 				}
 				Document doc;
 
-                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(searchField);
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(Collections.singleton(searchField));
 				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
 				doc = docVisitor.getDocument();
 
@@ -581,7 +582,7 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
-                (!StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
+                (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }
@@ -1595,7 +1596,7 @@ public class LuceneSearcher extends MetaSearcher {
         if (context != null) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             searchmanager = gc.getSearchmanager();
-            indexAndTaxonomy = searchmanager.getNewIndexReader();
+            indexAndTaxonomy = searchmanager.getNewIndexReader(priorityLang);
             reader = indexAndTaxonomy.indexReader;
         } else {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");

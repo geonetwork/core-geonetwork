@@ -103,7 +103,9 @@ USA.
 		<sch:title>$loc/strings/M9</sch:title>
 		<sch:rule context="//gmd:MD_LegalConstraints[gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']
 			|//*[@gco:isoType='gmd:MD_LegalConstraints' and gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue='otherRestrictions']">
-			<sch:let name="access" value="(not(gmd:otherConstraints) or not(string(gmd:otherConstraints/gco:CharacterString)) or gmd:otherConstraints/@gco:nilReason='missing')"/>
+			<sch:let name="access" value="not(gmd:otherConstraints) 
+				or count(gmd:otherConstraints[gco:CharacterString = '']) > 0 
+				or gmd:otherConstraints/@gco:nilReason='missing'"/>
 			<sch:assert
 				test="$access = false()"
 				>

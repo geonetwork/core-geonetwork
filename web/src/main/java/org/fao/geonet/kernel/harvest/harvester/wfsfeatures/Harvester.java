@@ -355,7 +355,8 @@ class Harvester
 		fragmentParams.templateId = params.templateId;
 		fragmentParams.url = params.url;
 		fragmentParams.uuid = params.uuid;
-	    return fragmentParams;
+		fragmentParams.owner = params.owner;
+		return fragmentParams;
     }
 
 	//---------------------------------------------------------------------------
