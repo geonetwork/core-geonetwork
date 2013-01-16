@@ -78,12 +78,15 @@
         	<schedule name="unpublish-invalid-metadata" when="0 0 1 ? * MON-FRI" class=".kernel.UnpublishInvalidMetadataJob" />
         	<schedule name="archive-all-metadata" when="0 0 3 ? * MON-FRI *" class=".geocat.ArchiveAllMetadataJob" />
         </addXml>
-        <addXml xpath="*//class[name='.services.metadata.Show']">
+        <addXml xpath="services/service/class[name='.services.metadata.Show']">
         	<param name="keepXLinks" value="y"/>
+        </addXml>
+        <addXml xpath="services/service/class[@name='.services.region.GetMap']/param[@name='namedBackgrounds']">
+        	<geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat>
         </addXml>
     </file>
     <file name=".*/WEB-INF/config-metadata.xml">
-        <addXml xpath="services/service/class[@name='.services.metadata.Show']">
+        <addXml xpath="services//class[@name='.services.metadata.Show']">
         	<param name="keepXLinks" value="y"/>
         </addXml>
     </file>
