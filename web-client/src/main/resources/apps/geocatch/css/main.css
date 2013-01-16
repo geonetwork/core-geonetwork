@@ -309,10 +309,15 @@ div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-pa
 	width: 350px;
 	z-index: 20000;
 	padding: 12px;
-	background-color: rgba(255, 240, 240, 0.2);
+	background-color: rgba(223, 232, 246, 0.7);
 	box-shadow: 10px 10px 5px #888888;
 	color: black;
 	border-radius: 5px;
+}
+
+.label-warning {
+	color: #01669E;
+	font-weight: bold;
 }
 
 /*******************************
