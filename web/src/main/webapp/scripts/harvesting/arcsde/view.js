@@ -48,7 +48,7 @@ function init()
 		{ id:'arcsde.port',     type:'integer',   minSize :1,  maxSize :10 },
 		{ id:'arcsde.username', type:'length',   minSize :1,  maxSize :500 },
 		{ id:'arcsde.password', type:'length',   minSize :1,  maxSize :500 },
-		{ id:'arcsde.database', type:'length',   minSize :1,  maxSize :500 },
+		{ id:'arcsde.database', type:'length',   minSize :1,  maxSize :500 }
 	]);
 
 }

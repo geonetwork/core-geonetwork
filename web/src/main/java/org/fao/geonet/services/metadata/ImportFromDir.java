@@ -23,15 +23,31 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import jeeves.exceptions.XSDValidationErrorEx;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
@@ -39,20 +55,6 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Element;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 // FIXME: this class could be moved to DataManager
 
@@ -171,8 +173,6 @@ public class ImportFromDir implements Service
                     ex.addContent(new Element("exception").setText(e.getMessage()));
 
                 }
-
-
 			response.addContent(ex);
 		}
 
@@ -192,6 +192,9 @@ public class ImportFromDir implements Service
 		private final String stylePath;
 		private final boolean failOnError;
 		private final ServiceContext context;
+		private final String userId;
+		private final String userName;
+		private final String userProfile;
 
 		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
 			this.files = files;
@@ -201,12 +204,26 @@ public class ImportFromDir implements Service
 			this.context = context;
 			this.stylePath = stylePath;
 			this.failOnError = failOnError;
+			this.userId = this.context.getUserSession().getUserId();
+			this.userName = this.context.getUserSession().getUsername();
+			this.userProfile = this.context.getUserSession().getProfile();
 		}
-
-
+		
+		private void login() {
+		    JeevesUser user = new JeevesUser(this.context.getProfileManager());
+		    user.setId(this.userId);
+		    user.setUsername(this.userName);
+		    user.setProfile(this.userProfile);
+		    UserSession session = new UserSession();
+		    session.loginAs(user);
+		    this.context.setUserSession(session);
+		}
+		
 		public List<Exception> call() throws Exception {
 			List<Exception> exceptions = new ArrayList<Exception>();
-
+			
+			login();
+			
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				try {
 					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
