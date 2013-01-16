@@ -486,6 +486,9 @@ var searchTools = {
               var chinput = Ext.get("ch03_"+ref);
               var wgsinput = Ext.get("wgs84_"+ref);
               var nativeCoordsEl = Ext.get("native_"+ref);
+              if(!nativeCoordsEl || !nativeCoordsEl.dom.innerText || nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5).length < 4)  {
+                nativeCoordsEl = undefined;
+              }
               var cheInputs, wgsInputs;
               if (chinput && nativeCoordsEl) {
                 var nativeCoords = nativeCoordsEl ? nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5) : undefined;
