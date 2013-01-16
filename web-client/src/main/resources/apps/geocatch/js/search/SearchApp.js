@@ -231,7 +231,7 @@ GeoNetwork.searchApp = function() {
                 id : "anyField",
                 enableKeyEvents : true,
                 anchor : '-10',
-                name : "T_AnyText",
+                name : "T_any",
                 listeners : {
                     keyup : function(e, a) {
                         if (a.ENTER == a.keyCode) {
