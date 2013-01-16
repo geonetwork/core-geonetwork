@@ -168,13 +168,8 @@ GeoNetwork.app = function() {
                      */
                     });
 
-            // reset the user from the cookie (this will be required to
-            // show admin fields in the search form)
-            var user = cookie.get('user');
-            if (user) {
-                catalogue.identifiedUser = user;
-            }
-
+            catalogue.isLoggedIn();
+            
             // set a permalink provider which will be the main state provider.
             /*
              * Ext.state.Manager .setProvider(new
