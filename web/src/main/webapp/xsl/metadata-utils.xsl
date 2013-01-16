@@ -213,10 +213,7 @@
         		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?mapsrs=EPSG:21781&amp;<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
 	        	<xsl:choose>
 		        	<xsl:when test="java:allowScripting() = 'true'">
-			        	<span><img src="{/root/gui/url}/images/spinner.gif"></img></span>
-			        	<noscript id="ns_{$eltRef}" class="extentMap">
-			        		<img src="{$url}&amp;width=500" ><p style="display:none;">needed so this shows</p></img>
-			        	</noscript>
+			        	<img id="{java:randomId()}" ref="ns_{$eltRef}" class="extentMap" src="{/root/gui/url}/images/spinner.gif" data="{$url}&amp;width=500"></img><span> <xsl:value-of select="/root/gui/strings/loading"/></span>
 		        	</xsl:when>
 		        	<xsl:otherwise>
 		        		<p style="display:none;">needed so this shows</p>
