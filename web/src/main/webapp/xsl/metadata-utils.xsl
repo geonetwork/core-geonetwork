@@ -207,10 +207,10 @@
 		        			
 		        			<xsl:text>id=</xsl:text><xsl:value-of select="$category"/><xsl:text>:</xsl:text><xsl:value-of select="$id"/>
 		        		</xsl:when>
-		        		<xsl:otherwise>geom=<xsl:value-of select="$coords"/></xsl:otherwise>
+		        		<xsl:otherwise>geom=<xsl:value-of select="$coords"/>&amp;geomsrs=EPSG:4326</xsl:otherwise>
 	        		</xsl:choose>
         		</xsl:variable>
-        		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
+        		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?mapsrs=EPSG:21781&amp;<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
 	        	<xsl:choose>
 		        	<xsl:when test="java:allowScripting() = 'true'">
 			        	<span><img src="{/root/gui/url}/images/spinner.gif"></img></span>
