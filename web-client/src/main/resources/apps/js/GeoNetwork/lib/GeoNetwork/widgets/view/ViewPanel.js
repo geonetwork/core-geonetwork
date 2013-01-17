@@ -336,9 +336,13 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         
         // Create map panel for extent visualization
         this.catalogue.extentMap.initMapDiv();
-        Ext.each(Ext.query("noscript.extentMap"), function (noscript) {
-            noscript.previousSibling.innerHTML = noscript.innerText;
-            var ref = noscript.id.split("_")[1];
+        Ext.each(Ext.query("img.extentMap"), function (img) {
+            var renderTo = img.nextElementSibling;
+            var url = img.getAttribute('data');
+            var innerHTML = '<img src="'+url+'" onload="Ext.get(\''+img.id+'\').remove()" />';
+            renderTo.innerHTML = innerHTML;
+
+            var ref = img.getAttribute('ref').split("_")[1];
             var chinput = Ext.get("ch03_"+ref);
             var wgsinput = Ext.get("wgs84_"+ref);
             var nativeCoordsEl = Ext.get("native_"+ref);
