@@ -147,7 +147,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.catalogue.on('afterLogin', this.updatePrivileges, this);
         this.catalogue.on('afterLogout', this.updatePrivileges, this);
         
-        this.updateSelectionInfo(this.catalogue, 0);
+        Ext.Ajax.request({
+ 		   url: this.catalogue.services.mdSelect,
+ 		   success: function(response, opts) {
+ 			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
+ 			  this.updateSelectionInfo(this.catalogue, numSelected);
+ 		  },
+ 		  scope:this
+ 		});
+        
     },
     getSortByCombo: function(){
         var tb = this;
