@@ -85,7 +85,9 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'orgNames' : 'Organizzazioni',
     'serviceTypes' : 'Tipi di servizio',
     'facetMore' : '+ Mostra di più',
-    'facetLess' : '- Mostra meno'
+    'facetLess' : '- Mostra meno',
+    'topicCat' : 'Categoria',
+    'topicCats' : 'Categoria'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);

@@ -23,10 +23,8 @@
 			<item name="orgName" plural="orgNames" indexKey="_orgName" max="15"/>
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
-			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
-			<item name="createDateYear" plural="createDateYears" indexKey="_createDate"
-				sortBy="value" sortOrder="desc" max="40"/>
-			<item name="category" plural="categories" indexKey="topicCat"
+			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>			
+			<item name="topicCat" plural="topicCats" indexKey="topicCat"
 				order="name" type="string" max="15"  translator="codelist:gmd:MD_TopicCategoryCode"/>
 			<item name="group" plural="groups"
             	indexKey="_groupOwnerName" order="freq" type="string" max="15" translator="db:Groups"/>	

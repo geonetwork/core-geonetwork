@@ -82,7 +82,11 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'refineSearch': 'Preciséz votre recherche',
     
     'removeLayers' : 'Enlever toutes les couches et de réinitialiser la carte',
-    'linklabel-OGC:WMS': ' '
+    'linklabel-OGC:WMS': ' ',
+    'topicCats' : 'Thématique',
+    'topicCat' : 'Thématique',
+	'denominators' : 'Résolution spatiale',
+	'denominator' : 'résolution spatiale'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.GeoCatCh.Lang.fr);
