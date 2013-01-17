@@ -50,7 +50,7 @@ GeoNetwork.searchApp = function() {
             // get all important facets?
             Ext.Ajax.request({
                 url : catalogue.URL + "/srv/" + catalogue.LANG
-                        + "/q?fast=index&from=1&to=30&sortBy=relevance&debug="
+                        + "/q?fast=index&from=1&to=30&sortBy=relevance&summaryOnly=1&ts="
                         + (new Date()).getTime(),
                 success : function(response) {
                     Ext.getCmp('facets-panel').refresh(response);

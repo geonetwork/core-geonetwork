@@ -83,6 +83,14 @@ public class UserQueryInput {
             "region", "from", "to", "hitsperpage" 
             );
 
+    /**
+     * Don't take into account those field in search. For now is used to be able to send timestamp value to avoid cache
+     * of Ajax requests and for the debug setting.
+     *
+     */
+    public static final List<String> IGNORE_FIELDS = Arrays.asList("ts", "debug");
+
+
     private String similarity;
     private String editable;
     private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();
@@ -136,6 +144,8 @@ public class UserQueryInput {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
+                        } else if (IGNORE_FIELDS.contains(nodeName)) {
+                            // Do nothing
                         } else {
                             // addValues(searchCriteria, nodeName, nodeValue);
                             // Rename search parameter to lucene index field
