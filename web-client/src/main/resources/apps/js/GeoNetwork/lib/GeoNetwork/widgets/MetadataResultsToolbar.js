@@ -79,6 +79,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     sortByCombo: undefined,
     
+    /**
+     * Array of additionnal other Actions
+     */
+    customOtherActions: undefined,
+    
     mdSelectionInfo: 'md-selection-info',
     
     selectionActions: [],
@@ -413,6 +418,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         // text : 'Display selection only'
         // }
         );
+        
+        if(this.customOtherActions) {
+        	this.actionMenu.add(this.customOtherActions);
+        }
         this.createMassiveActionMenu(!this.catalogue.isIdentified());
         this.createAdminMenu(!this.catalogue.isIdentified());
         
