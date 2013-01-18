@@ -111,14 +111,12 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param xml
      * @param changeDate
      * @param updateDateStamp
+     * @param context
      * @param userId
-		 * @param context
-     *
      * @throws SQLException
      */
-	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws SQLException {
-
-		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
+		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 	}
 
     /**

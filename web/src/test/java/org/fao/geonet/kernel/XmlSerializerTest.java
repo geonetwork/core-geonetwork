@@ -50,7 +50,7 @@ public class XmlSerializerTest {
 		@Override
 		public void update(Dbms dbms, String id, Element xml,
 				String changeDate, boolean updateDateStamp,
-				ServiceContext context) throws Exception {
+				String uuid, ServiceContext context) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 

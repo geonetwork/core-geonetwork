@@ -971,7 +971,9 @@ public class DataManager {
 	//--------------------------------------------------------------------------
 
     /**
-     *
+     * Extract UUID from the metadata record using the schema
+     * XSL for UUID extraction ({@link Geonet.File.EXTRACT_UUID})
+     * 
      * @param schema
      * @param md
      * @return
@@ -1705,8 +1707,14 @@ public class DataManager {
             String parentUuid = null;
 		    md = updateFixedInfo(schema, id, null, md, parentUuid, (updateDateStamp ? DataManager.UpdateDatestamp.yes : DataManager.UpdateDatestamp.no), dbms, context);
         }
+        
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
 		//--- write metadata to dbms
-        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, context);
+        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, uuid, context);
 
         String isTemplate = getMetadataTemplate(dbms, id);
         // Notifies the metadata change to metatada notifier service
@@ -2190,7 +2198,12 @@ public class DataManager {
 
 		md = Xml.transform(root, styleSheet);
         String changeDate = null;
-		xmlSerializer.update(dbms, id, md, changeDate, true, context);
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
+		xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
 
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id);
@@ -2861,7 +2874,7 @@ public class DataManager {
 			Element childForUpdate = new Element("root");
 			childForUpdate = Xml.transform(rootEl, styleSheet, params);
 			
-			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, srvContext);
+			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
 
             // Notifies the metadata change to metatada notifier service

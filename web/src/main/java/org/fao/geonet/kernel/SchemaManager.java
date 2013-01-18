@@ -929,7 +929,10 @@ public class SchemaManager {
 		}
 
 		Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
-
+		
+		mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
+		Log.debug(Geonet.SCHEMA_MANAGER,"  UUID is read/write mode: " + mds.isReadwriteUUID());
+		
 		putSchemaInfo(name,
 									idInfo.one(), // uuid of schema
 									idInfo.two(), // version of schema
@@ -1325,7 +1328,28 @@ public class SchemaManager {
 		}
 		return dependsList;
 	}
+	
+	/**
+	 * true if schema requires to synch the uuid column schema info
+	 * with the uuid in the metadata record (updated on editing or in UFO).
+	 * 
+	 * @param xmlIdFile
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean extractReadWriteUuid(String xmlIdFile) throws Exception {
+		Element root = Xml.loadFile(xmlIdFile);
 
+		String id = root.getChildText("readwriteUuid", GEONET_SCHEMA_NS);
+		if (id == null) {
+			return false;
+		} else {
+			if ("true".equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
      * Extract schema version and uuid info from identification file and compare specified name with name in
      * identification file.
