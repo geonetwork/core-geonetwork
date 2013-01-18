@@ -34,7 +34,7 @@
 				<gco:CharacterString>
 					<xsl:value-of select="myocean:buildIdentifier(substring-after(gmd:identificationInfo/*/
 						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:contactInfo/
-							gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
+						gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString
 							, '@'), /root/env/id)"/>
 				</gco:CharacterString>
 			</gmd:fileIdentifier>
