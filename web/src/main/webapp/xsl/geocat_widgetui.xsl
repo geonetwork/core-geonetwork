@@ -175,13 +175,13 @@
                              Google Chrome Frame</a> to better experience this site.</p> <![endif] -->
 
             <div id="header">
-                <div>
-                    <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float: right;"/>
+                <div style="height: 100px; overflow:hidden;">
                     <img src="/geonetwork/images/geocat_logo_li.gif" alt="geocat.ch logo"  />
+                    <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float:right;" />
                 </div>
 
                 <header class="wrapper clearfix">
-                    <div style="width: 100%; margin: 0 auto; background-color: #CCCCCC; border-bottom: 1px solid #FFFFFF;">
+                    <div class="header_middle">
                         <nav id="navTop">
                             <ul id="top-navigation">
                                 <li>
@@ -208,7 +208,7 @@
                     <xsl:variable name="user">
                         <xsl:value-of select="/root/response/user" />
                     </xsl:variable>
-                    <div style="width: 100%; margin: 0 auto; background-color: #CCCCCC; border-bottom: 1px solid #FFFFFF;">
+                    <div class="header_bottom">
                         <nav id="nav">
                             <ul id="main-navigation">
                                 <li>

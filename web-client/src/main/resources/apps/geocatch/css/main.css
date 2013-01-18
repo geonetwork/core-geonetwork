@@ -26,7 +26,7 @@ body {
 	width: 100%;
 }
 
-body > .ext-el-mask{
+body>.ext-el-mask {
 	background-color: white;
 	opacity: 1;
 }
@@ -173,18 +173,41 @@ body > .ext-el-mask{
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: 750px;
+	max-width: 700px;
+	min-width: 620px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
+	background-color: #CCCCCC;
+}
+
+.header_middle {
+	width: 100%;
+	height:22px;
+	margin: 0 auto;
+	background-color: #CCCCCC;
+	border-bottom: 1px solid #FFFFFF;
+	overflow: hidden;
+}
+
+.header_bottom {
+	width: 100%;
+	margin: 0 auto;
+	background-color: #CCCCCC;
+	border-bottom: 1px solid #FFFFFF;
+	height: 26px;
+	overflow: hidden;
+	scroll: none;
 }
 
 #navTop {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: 650px;
+	min-width: 200px;
 	background-color: #CCCCCC;
 	font-size: 0.6em;
+	overflow: hidden;
+	height: 22px;
 }
 
 /* Login form
