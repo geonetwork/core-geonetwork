@@ -116,15 +116,15 @@ GeoNetwork.Geocatch.Templates = Ext.extend(Ext.XTemplate, {
 });
 
 GeoNetwork.Geocatch.Templates.RELATIONS = 
-    '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '">\
+    '<div class="relation" title="{[ + OpenLayers.i18n("relateddatasets")]}">\
         <span></span>\
         <ul id="md-relation-{id}"></ul>\
     </div>';
 
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
-    '<p class="abstract"><i>' + OpenLayers.i18n('abstract') + ': </i>{[values.abstract.substring(0, 350)]} (...)\
-     <tpl if="revisiondate!=\'\'"><br/>(<i>' + OpenLayers.i18n('modified') + ': </i>{revisiondate})</tpl>\
-     </p>';
+    '<p class="abstract"><i>{[OpenLayers.i18n("abstract")]}: </i>{[values.abstract.substring(0, 350)]} (...)\
+//     <tpl if="changedate!=\'\'"><br/>(<i>{[OpenLayers.i18n("modified")]}: </i>{values.changedate})</tpl>\
+     {values}</p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
     '<div class="md-links" id="md-links-{id}"></div>';

@@ -115,7 +115,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
 
 
 GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +
-                                '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
+                                '<span class="md-action-menu"> - <a rel="mdMenu">{[OpenLayers.i18n("mdMenu")]}</a></span></h1>';
 GeoNetwork.Templates.RATING_TPL = '<tpl if="isharvested==\'n\' || harvestertype==\'geonetwork\'"><div class="rating">' +
                                            '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' + 
                                            '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' + 
@@ -218,22 +218,22 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                     '<span class="badge badge-',
                         '<tpl if="valid == \'1\'">success</tpl>',
                         '<tpl if="valid == \'0\'">error</tpl>',
-                        '" title="' + OpenLayers.i18n('validityInfo'),
+                        '" title="{[OpenLayers.i18n("validityInfo")',
                         '<tpl for="valid_details">',
                           '{values.type}: ',
-                            '<tpl if="values.valid == \'1\'">' + OpenLayers.i18n('valid')  + '</tpl>',
-                            '<tpl if="values.valid == \'0\'">' + OpenLayers.i18n('notValid')  + '</tpl>',
-                            '<tpl if="values.valid == \'-1\'">' + OpenLayers.i18n('notDetermined')  + '</tpl>',
+                            '<tpl if="values.valid == \'1\'">{[OpenLayers.i18n("valid")]}</tpl>',
+                            '<tpl if="values.valid == \'0\'">{[OpenLayers.i18n("notValid")]}</tpl>',
+                            '<tpl if="values.valid == \'-1\'">{[OpenLayers.i18n("notDetermined")]}</tpl>',
                             '<tpl if="values.ratio != \'\'"> ({values.ratio}) </tpl> - ',
                         '</tpl>',
                     '">&nbsp;</span>',
                 '</tpl>',
-                '</td><td class="icon" title="' + OpenLayers.i18n('metadataCategories') + '">',
+                '</td><td class="icon" title="{[OpenLayers.i18n("metadataCategories")]}">',
                 '<tpl for="category">',
                   '<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',
                 '</tpl>',
                 '</td></tr></table>',
-                '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '"><span></span><ul id="md-relation-{id}"></ul></div>',
+                '<div class="relation" title="{[OpenLayers.i18n("relateddatasets")]}"><span></span><ul id="md-relation-{id}"></ul></div>',
                 '<div class="md-contact">',
                   '<tpl for="contact">',
                       // metadata contact are not displayed.
@@ -245,7 +245,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                       '</tpl>',
                   '</tpl>',
                   '<tpl if="edit==\'true\' && isharvested!=\'y\'">',
-                      '<br/><span class="md-mn md-mn-user" title="' + OpenLayers.i18n('ownerName') + '">{ownername} - ' + OpenLayers.i18n('lastUpdate') + '{[values.changedate.split(\'T\')[0]]}</span>',
+                      '<br/><span class="md-mn md-mn-user" title="{[OpenLayers.i18n("ownerName")]}">{ownername} - {[OpenLayers.i18n("lastUpdate")]} {[values.changedate.split(\'T\')[0]]}</span>',
                   '</tpl>',
                 '</div>',
             '</li>',
