@@ -55,11 +55,41 @@ attached it to the metadata for data.
                         <gmd:MD_Distribution>
                             <xsl:copy-of
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-                            <xsl:copy-of
-                                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
                             
+                            <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor">
+                                <gmd:distributor>
+                                    <gmd:MD_Distributor>
+                                        <xsl:copy-of select="gmd:MD_Distributor/gmd:distributorContact"/>
+                                        <xsl:copy-of select="gmd:MD_Distributor/gmd:distributorTransferOptions"/>
+                                        
+                                        <xsl:variable name="email" select="normalize-space(gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/
+                                            gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress)"/>
+                                        
+                                        <!-- Add extra onlineSource in requested metadata where contact is matching
+                                        current distribution section in existing section-->
+                                        <xsl:for-each select="//extra/gmd:MD_Metadata[normalize-space(
+                                            gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+                                            gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
+                                            gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString) = $email
+                                            ]/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine">
+                                            
+                                            <gmd:distributorTransferOptions>
+                                                <gmd:MD_DigitalTransferOptions>
+                                                    <xsl:apply-templates mode="onlinecopy" select="."/>
+                                                </gmd:MD_DigitalTransferOptions>
+                                            </gmd:distributorTransferOptions>
+                                        </xsl:for-each>
+                                    </gmd:MD_Distributor>
+                                </gmd:distributor>
+                            </xsl:for-each>
+                            
+                            
+                            <!-- Copy non existing ressource attached to one responsible party  -->
                             <xsl:apply-templates mode="onlinecopy" select="//extra/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
                                 gmd:citedResponsibleParty"/>
+                            
+                            
+                            
                             <gmd:transferOptions>
                                 <gmd:MD_DigitalTransferOptions>
                                     <xsl:copy-of
@@ -140,7 +170,6 @@ attached it to the metadata for data.
             gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty
             [gmd:contactInfo/gmd:CI_Contact/
             gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email]) = 0">
-            
             <gmd:distributor>
                 <gmd:MD_Distributor>
                     <gmd:distributorContact>
@@ -159,56 +188,6 @@ attached it to the metadata for data.
     </xsl:template>
     
     
-    <!-- MOTU specific (https://forge.ifremer.fr/mantis/view.php?id=14241) -->
-    <xsl:template match="gmd:onLine[gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString='MYO:MOTU-SUB']" mode="onlinecopy" priority="2">
-        <xsl:copy>
-            <xsl:choose>
-                <xsl:when test="../../../../../gmd:fileIdentifier/gco:CharacterString">
-                    <xsl:attribute name="uuidref" select="../../../../../gmd:fileIdentifier/gco:CharacterString"/>
-                </xsl:when>
-                <xsl:when test="$extra_metadata_uuid">
-                    <xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
-                </xsl:when>
-            </xsl:choose>
-            <gmd:CI_OnlineResource>
-                <gmd:linkage>
-                    <gmd:URL>
-                        <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
-                            '&amp;action=productdownloadhome&amp;service=http%3A%2F%2Fpurl.org%2Fmyocean%2Fontology%2Fservice%2Fdatabase%23', 
-                             /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString,
-                            '-TDS')"/>
-                    </gmd:URL>
-                </gmd:linkage>
-                <xsl:copy-of select="gmd:protocol|gmd:name|gmd:description"/>
-            </gmd:CI_OnlineResource>
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="gmd:onLine[gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString='MYO:MOTU-DGF']" mode="onlinecopy" priority="2">
-        <xsl:copy>
-            <xsl:choose>
-                <xsl:when test="../../../../../gmd:fileIdentifier/gco:CharacterString">
-                    <xsl:attribute name="uuidref" select="../../../../../gmd:fileIdentifier/gco:CharacterString"/>
-                </xsl:when>
-                <xsl:when test="$extra_metadata_uuid">
-                    <xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
-                </xsl:when>
-            </xsl:choose>
-            <gmd:CI_OnlineResource>
-                <gmd:linkage>
-                    <gmd:URL>
-                        <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
-                            '&amp;action=productdownloadhome&amp;service=http%3A%2F%2Fpurl.org%2Fmyocean%2Fontology%2Fservice%2Fdatabase%23', 
-                            /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString,
-                            '-FILE')"/>
-                    </gmd:URL>
-                </gmd:linkage>
-                <xsl:copy-of select="gmd:protocol|gmd:name|gmd:description"/>
-            </gmd:CI_OnlineResource>
-        </xsl:copy>
-    </xsl:template>
-    
-    <!-- Copy for non MOTU -->
     <xsl:template match="gmd:onLine" mode="onlinecopy">
       <xsl:copy>
           <xsl:choose>
@@ -219,7 +198,14 @@ attached it to the metadata for data.
                   <xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
               </xsl:when>
           </xsl:choose>
-          <xsl:copy-of select="*"/>
+          <gmd:CI_OnlineResource>
+              <xsl:copy-of select="gmd:CI_OnlineResource/gmd:linkage|gmd:CI_OnlineResource/gmd:protocol|
+                  gmd:CI_OnlineResource/gmd:applicationProfile|gmd:CI_OnlineResource/gmd:name"/>
+              <gmd:description>
+                  <xsl:copy-of select="../../../../../gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/*"/>
+              </gmd:description>
+              <xsl:copy-of select="gmd:CI_OnlineResource/gmd:function"/>
+          </gmd:CI_OnlineResource>
       </xsl:copy>
     </xsl:template>
     
