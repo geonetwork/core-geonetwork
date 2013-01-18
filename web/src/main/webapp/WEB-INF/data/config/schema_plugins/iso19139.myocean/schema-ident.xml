@@ -12,4 +12,7 @@
 			</gmd:metadataStandardName>
 		</elements>
 	</autodetect>
+	<!-- After edits, db UUID is synchronized with the record.
+	If not, db UUID is set when inserting the record or harvested. -->
+	<readwriteUuid>true</readwriteUuid>
 </schema>
