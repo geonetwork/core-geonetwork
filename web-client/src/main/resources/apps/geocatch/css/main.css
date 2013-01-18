@@ -555,3 +555,6 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 ul.x-menu-list {
 	margin: 0px;
 }
+#search-container div.x-superboxselect ul {
+    margin: 0px
+}
