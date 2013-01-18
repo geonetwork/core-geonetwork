@@ -54,11 +54,14 @@ table.related * li {
   float : left;
   width : 200px;
   line-height : initial !important;
+  word-wrap: break-word;
+  padding: 2px;
 }
 
 .md-view * a {
   text-decoration : none;
   color : #0076A1;
+  cursor: pointer;
 }
 .md-view * a:hover {
   text-decoration : underline;
@@ -81,7 +84,6 @@ table.related * li {
 .md-view ul li {
   border-top : 1px solid transparent;
   color : #222222;
-  cursor : pointer;
   float : left;
   margin : 2px;
   overflow : hidden;
@@ -203,6 +205,24 @@ span.md-action-menu {
 .md-view * .md-links {
 }
 
+/**
+ * Format Ext button in the link area
+ */
+.md-links table {
+    float: left;
+    margin-right: 5px;
+}
+.md-links * .x-btn-tl, 
+.md-links * .x-btn-tr, 
+.md-links * .x-btn-tc, 
+.md-links * .x-btn-ml, 
+.md-links * .x-btn-mr, 
+.md-links * .x-btn-mc, 
+.md-links * .x-btn-bl, 
+.md-links * .x-btn-br, 
+.md-links * .x-btn-bc{
+    background: none;
+}
 /*
 Display hyperlink as text next to element
 .md-links a:hover:after {

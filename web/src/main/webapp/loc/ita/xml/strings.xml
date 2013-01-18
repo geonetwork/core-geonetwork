@@ -14,8 +14,10 @@
 	<rus>Русский</rus> <!-- Do not translate! -->
 	<spa>Español</spa> <!-- Do not translate! -->
 	<tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
 	
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
@@ -298,7 +300,7 @@
 	<cannotRetrieveGroup js="true">Non è stato possibile recuperare i gruppi</cannotRetrieveGroup>
 	<selectNewOwner js="true">Selezionare l'utente che sarà il nuovo proprietario</selectNewOwner>
 	<selectOwnerGroup js="true">Selezionare il gruppo a cui appartiene l'utente selezionato</selectOwnerGroup>
-	<selectOneFile js="true">Selezionare almeno un file da scaricare!</selectOneFile>
+	<selectOneFileDownload js="true">Selezionare almeno un file da scaricare!</selectOneFileDownload>
 	<checkEmail js="true">Inserire un indirizzo email corretto</checkEmail>
 	<addName js="true">Inserire un nome o un'organizzazione</addName>
 	<noComment js="true">Nessun commento</noComment>
@@ -321,7 +323,7 @@
 	<errorSaveFailed js="true">Errore: nono si può salvare la form</errorSaveFailed>
 	<errorOnAction js="true">Errore: non si può effettuare l'operazione</errorOnAction>
 	<errorChangeProtocol js="true">Potrebbe essere stato caricato un file. Rimuovere il file prima di cambiare il protocollo</errorChangeProtocol>
-	<selectOneFile js="true">Ricercare o inserire un nome di file prima di premere carica!</selectOneFile> 
+	<selectOneFileUpload js="true">Ricercare o inserire un nome di file prima di premere carica!</selectOneFileUpload>
 	<uploadFailed js="true">Errore: caricamento fallito! - ritorno </uploadFailed>
 	<uploadSetFileNameFailed js="true">Errore: il caricamento è avvenuto ma non è possibile impostare il nome del file!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Impossibile caricare il tooltip dal server</cannotGetTooltip>
@@ -582,6 +584,7 @@
 	<login>Login</login>
 	<loginCardTitle>Login / Accedi</loginCardTitle>
 	<loginwarning>Richiesto solamente per l'amministrazione del sito</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Logout</logout>
 	<logoutDes>Scollegamento</logoutDes>
 	<longitude>Longitudine (tra -180 e 180) in gradi</longitude>
@@ -713,52 +716,6 @@
 	<progressChoice value="planned">pianificato</progressChoice>
 	<progressChoice/>
 	<protocol>Protocollo</protocol>
-    <protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service: file di configurazione (*.AXL)</protocolChoice>
-    <protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-    <protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-    <protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>    
-    <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Service</protocolChoice>
-    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File scaricabile (FTP)</protocolChoice>
-    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File scaricabile (HTTP)</protocolChoice>
-    <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-    <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--link">Indirizzo web (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Indirizzo web di collaboratori (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--related">Risorsa correlata (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Feed RSS (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Prodotto d'esempio (URL)</protocolChoice>
-    <protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-    <protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-    <protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
-	<protocolChoice show="-" value="UKST">Tipo di servizio sconosciuto</protocolChoice>
 	<pubdate>Data di pubblicazione</pubdate>
 	<publicationDate>Data di pubblicazione</publicationDate>
 	<publisher>Redattore</publisher>
@@ -1389,4 +1346,6 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

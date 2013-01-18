@@ -8,12 +8,15 @@
 	<server>Servidor</server>
 	<host>Servidor</host>
 	<port>Port</port>
-    <protocol>Protocol</protocol>
+	<securePort>Secure Port</securePort>
+    <protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Xarxa</network>
 	<netmask>Màscara de xarxa</netmask>
 
+	<searchStats>Search Statistics</searchStats>
+	
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activa</enable>
 
@@ -25,9 +28,13 @@
 
     <multilingual>configuració multilingüe</multilingual>
     <autoDetectEnable>Activa l'auto-detecció de llenguatge de sol·licitud de cerca</autoDetectEnable>
-    <requestedlanguageonly>Cercar només en l'idioma requerit</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
-    <requestedlanguageignored>Omet l'idioma sol·licitat en la recerca</requestedlanguageignored>
 
 	<oai>Proveïdor OAI</oai>
 		<datesearch>Datesearch</datesearch>
@@ -110,7 +117,9 @@
     <autofixing>Correccions automàtiques</autofixing>
 
     <inspire>INSPIRE</inspire>
-    
+    <harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+	
 	<proxy>Proxy</proxy>
 	<use>Ús</use>
 	<username>Nom d'usuari</username>
@@ -127,24 +136,7 @@
 
 	<authentication>Autentificació</authentication>
 	
-	<loginuses>Usos de login</loginuses>
 	<otherlogins>Permetre a altres usuaris fer login des de</otherlogins>
-
-	<geonetworkdb>Autentificació GeoNetwork </geonetworkdb>
-		
-	<ldap>Autentificació LDAP </ldap>
-	<defProfile>Perfil per defecte </defProfile>
-    <uidAttr>Atribut Uid</uidAttr>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Usuaris</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Constrasenya</password>
-	<profile>Perfil</profile>
-    <group>Grup</group>
-    <defGroup>Grup per defecte</defGroup>
 
 	<shib>Autentificació Shibboleth</shib>
 	<path>Path</path>
@@ -237,6 +229,11 @@
 	<!-- tooltips -->
 
 	<tips>
+		<tip id="site.siteId">
+			Unique catalogue identifier.
+			After changing the site identifier, user should update the index and the logo
+			from the administration panel.
+		</tip>
 		<tip id="site.name">Usat per identificar la instal·lació.</tip>
 
 		<!-- server -->
@@ -390,6 +387,12 @@
 			If set, XLinks to metadata fragments in records will be resolved.
 		</tip>
 
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			If set, Statistics on searches will be collected and stored in the database.
+		</tip>
+		
         <!-- multilingual settings -->
         <tip id="autodetect.enable">
             Si s'estableix, el llenguatge de cerca es detecta automàticament. Fixeu-vos que això no funciona molt bé per als termes de cerca curts.
@@ -438,5 +441,7 @@
 	<db.maxactive>Maximum number of database connections:</db.maxactive>	
 	<db.statserror>Database statistics:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

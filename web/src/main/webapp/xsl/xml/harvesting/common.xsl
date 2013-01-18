@@ -14,7 +14,7 @@
 		<xsl:variable name="categ" select="children/categories/children"/>
 		<xsl:variable name="info"  select="children/info/children"/>
 		
-		<node id="{@id}" type="{value}">
+		<node id="{@id}" type="{value}" owner="{children/site/children/owner/value}">
 			<site>
 				<name><xsl:value-of select="$site/name/value" /></name>
 				<uuid><xsl:value-of select="$site/uuid/value" /></uuid>

@@ -308,7 +308,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     private void assertSearchUriSearch(KeywordsSearcher searcher) {
         assertEquals(1, searcher.getNbResults());
         KeywordBean word = searcher.getResults().get(0);
-        assertEquals(THESAURUS_KEYWORD_NS+30, word.getCode());
+        assertEquals(THESAURUS_KEYWORD_NS+30, word.getUriCode());
         assertEquals(thesaurus.getKey(), word.getThesaurusKey());
         assertEquals("fre", word.getDefaultLang());
         assertTrue(word.getValues().keySet().containsAll(Arrays.asList("fre","eng","chi")));
@@ -461,7 +461,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         for(int i = 0; i < 5; i++ ) {
             KeywordBean bean = searcher.getResults().get(i);
             if(i%2 == 0) {
-                ids.add(bean.getCode());
+                ids.add(bean.getUriCode());
             } else {
                 ids.add(""+bean.getId());
             }
@@ -500,9 +500,27 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             .maxResults(10);
         searcher.search(params.build());
         
-        assertEquals(2, searcher.getKeywordFromResults(2).getId());
-        assertNotNull(searcher.getKeywordFromResults(searcher.getResults().get(4).getCode()).getId());
-        assertNull(searcher.getKeywordFromResults(100));
+        assertEquals(2, searcher.getKeywordFromResultsById(2).getId());
+        assertNotNull(searcher.getKeywordFromResultsByUriCode(searcher.getResults().get(4).getUriCode()).getId());
+        assertNull(searcher.getKeywordFromResultsById(100));
+    }
+
+    @Test
+    public void testKeywordSearchUsingId() throws Exception {
+        KeywordsSearcher searcher = new KeywordsSearcher(isoLangMapper, thesaurusFinder);
+        String keywordId = FOO_COM_NS+1;
+		Element params = new Element("params").
+        		addContent(new Element("pNewSearch").setText("true")).
+        		addContent(new Element("pTypeSearch").setText("1")).
+        		addContent(new Element("pThesauri").setText(thesaurusFoo.getKey())).
+        		addContent(new Element("pMode").setText("searchBox")).
+        		addContent(new Element("maxResults").setText("50")).
+        		addContent(new Element("pLanguage").setText("eng")).
+        		addContent(new Element("pKeyword").setText(keywordId));
+        searcher.search("fra", params);
+        
+        assertEquals(1, searcher.getResults().size());
+        assertEquals(keywordId, searcher.getResults().get(0).getUriCode());
     }
 
 }

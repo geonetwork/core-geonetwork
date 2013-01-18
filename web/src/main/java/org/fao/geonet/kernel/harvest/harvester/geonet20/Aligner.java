@@ -96,46 +96,41 @@ public class Aligner
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		dataMan.startIndexGroup();
-		try {
-            for (Object aMdList : mdList) {
-                Element info = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
+        for (Object aMdList : mdList) {
+            Element info = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
 
-                String remoteId = info.getChildText("id");
-                String remoteUuid = info.getChildText("uuid");
-                String schema = info.getChildText("schema");
-                String changeDate = info.getChildText("changeDate");
+            String remoteId = info.getChildText("id");
+            String remoteUuid = info.getChildText("uuid");
+            String schema = info.getChildText("schema");
+            String changeDate = info.getChildText("changeDate");
 
-                this.result.totalMetadata++;
+            this.result.totalMetadata++;
 
-                if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
+            if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
 
-                if (!dataMan.existsSchema(schema)) {
-                    if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
-                    this.result.schemaSkipped++;
+            if (!dataMan.existsSchema(schema)) {
+                if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
+                this.result.schemaSkipped++;
+            }
+            else {
+                String id = dataMan.getMetadataId(dbms, remoteUuid);
+
+                if (id == null) {
+                    id = addMetadata(info);
                 }
                 else {
-                    String id = dataMan.getMetadataId(dbms, remoteUuid);
+                    updateMetadata(siteId, info, id);
+                }
 
-                    if (id == null) {
-                        id = addMetadata(info);
-                    }
-                    else {
-                        updateMetadata(siteId, info, id);
-                    }
+                dbms.commit();
 
-                    dbms.commit();
+                //--- maybe the metadata was unretrievable
 
-                    //--- maybe the metadata was unretrievable
-
-                    if (id != null) {
-                        dataMan.indexMetadataGroup(dbms, id);
-                    }
+                if (id != null) {
+                    dataMan.indexMetadata(dbms, id);
                 }
             }
-		} finally {
-			dataMan.endIndexGroup();
-		}
+        }
 
 		log.info("End of alignment for site-id="+ siteId);
 
@@ -169,10 +164,9 @@ public class Aligner
         //
         //  insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, userid, group, remoteUuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, Integer.parseInt(params.owner), group, remoteUuid,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 

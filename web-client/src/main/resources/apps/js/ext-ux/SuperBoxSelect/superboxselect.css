@@ -9,7 +9,7 @@
 .x-superboxselect-btn-expand {background: url(../images/expand.png) no-repeat scroll left 0px;}
 .x-superboxselect-btn-over {background-position: left -16px}
 .x-superboxselect-btn-hide {display:none;}
-.x-superboxselect li {float: left; margin: 1px 1px 2px 1px; padding: 0;line-height: 18px;}
+.x-superboxselect li {float: left; margin: 1px 1px 2px 1px; padding: 0;line-height: 18px; white-space: normal;}
 .x-superboxselect-stacked li {float: none !important;}
 .x-superboxselect-input input { border: none; outline: none; margin-top: 4px; margin-bottom: 4px;}
 body.ext-ie .x-superboxselect-input input {background: none; border: none; margin-top: 3px;}

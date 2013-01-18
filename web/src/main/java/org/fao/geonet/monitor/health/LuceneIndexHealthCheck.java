@@ -10,7 +10,9 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 
 /**
  * Checks to ensure that the database is accessible and readable
@@ -28,7 +30,9 @@ public class LuceneIndexHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                IndexReader reader = searchMan.getIndexReader(null);
+
+                IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
+                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
                     Query query = new MatchAllDocsQuery();
                     TopDocs hits = new IndexSearcher(reader).search(query, 1);
@@ -40,7 +44,7 @@ public class LuceneIndexHealthCheck implements HealthCheckFactory {
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
                 } finally {
-                    searchMan.releaseIndexReader(reader);
+                    searchMan.releaseIndexReader(indexAndTaxonomy);
                 }
             }
         };

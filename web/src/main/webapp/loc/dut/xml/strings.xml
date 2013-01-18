@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <ara>عربي</ara> <!-- Do not translate! -->
     <cat>Català</cat> <!-- Do not translate! -->
@@ -14,8 +14,10 @@
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
     <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
     
 	<warning>Warning</warning>
+	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Ongeacht welke taal</anyLanguage>
 	<nodata>Null</nodata>
 	<!-- new strings - 2.7 -->
@@ -299,7 +301,7 @@
 	<cannotRetrieveGroup js="true">Cannot retrieve groups</cannotRetrieveGroup>
 	<selectNewOwner js="true">Select the user who will be the new owner</selectNewOwner>
 	<selectOwnerGroup js="true">Select a group that the selected user belongs to</selectOwnerGroup>
-	<selectOneFile js="true">You'd better select at least one file to download!</selectOneFile>
+	<selectOneFileDownload js="true">You'd better select at least one file to download!</selectOneFileDownload>
 	<checkEmail js="true">Please fill correct email address</checkEmail>
 	<addName js="true">Please fill in a name or organization</addName>
 	<noComment js="true">No comment</noComment>
@@ -322,7 +324,7 @@
 	<errorSaveFailed js="true">Error: Could not save form</errorSaveFailed>
 	<errorOnAction js="true">Error: Could not do action </errorOnAction>
 	<errorChangeProtocol js="true">A file may have been uploaded. You cannot change the protocol until you remove that file</errorChangeProtocol>
-	<selectOneFile js="true">Browse for, or enter a file name before pressing upload!</selectOneFile>
+	<selectOneFileUpload js="true">Browse for, or enter a file name before pressing upload!</selectOneFileUpload>
 	<uploadFailed js="true">Error: Upload failed! - returned </uploadFailed>
 	<uploadSetFileNameFailed js="true">Error: Upload succeeded but unable to set filename!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Cannot get tooltips from server</cannotGetTooltip>
@@ -590,6 +592,7 @@
 	<login>Inloggen</login>
 	<loginCardTitle>Login / Aanmelden</loginCardTitle>
 	<loginwarning>Enkel nodig voor beheer van de site</loginwarning>
+	<loginfailure>Login failed.  Incorrect username or password</loginfailure>
 	<logout>Uitloggen</logout>
 	<logoutDes>Uitloggen</logoutDes>
 	<longitude>Lengte (tussen -180 and 180) in graden</longitude>
@@ -724,56 +727,6 @@
 	<progressChoice value="planned">gepland</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuratie Bestand (*.AXL)</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-	<protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Bestand ter download dmv FTP</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Bestand ter download</protocolChoice>
-	<protocolChoice show="-" value="DB:POSTGIS">PostGIS database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Webadres (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Partner webadres (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Gerelateerde link (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
-	<protocolChoice show="y" value="invoke">Invoke service</protocolChoice>
-	<protocolChoice show="y" value="discovery">Discovery service</protocolChoice>
-	<protocolChoice show="y" value="download">Download service</protocolChoice>
-	<protocolChoice show="y" value="other">Other service</protocolChoice> 
-	<protocolChoice show="y" value="transformation">Transformation service</protocolChoice>
-	<protocolChoice show="y" value="view">View service</protocolChoice>
-    <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
 	<pubdate>Publicatie Datum</pubdate>
 	<publicationDate>Publicatie datum</publicationDate>
 	<publisher>Publiceerder</publisher>
@@ -1402,4 +1355,6 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

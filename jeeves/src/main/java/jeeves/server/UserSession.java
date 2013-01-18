@@ -23,8 +23,18 @@
 
 package jeeves.server;
 
-import javax.servlet.http.HttpSession;
 import java.util.Hashtable;
+
+import javax.servlet.http.HttpSession;
+
+import jeeves.guiservices.session.JeevesUser;
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 //=============================================================================
 
@@ -35,12 +45,6 @@ public class UserSession
 {
 	private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
 
-	private String  sUserId;
-	private String  sUsername;
-	private String  sName;
-	private String  sSurname;
-	private String  sProfile;
-	private String  sEmailAddr;
 	private HttpSession sHttpSession;
 
 	//--------------------------------------------------------------------------
@@ -101,42 +105,100 @@ public class UserSession
      * Clears user session properties and authentication.
      */
     public void clear() {
-        authenticate(null, null, null, null, null, null);
-
-        htProperties = new Hashtable(10, .75f);
+        htProperties.clear();
+       	SecurityContextHolder.clearContext();
+       	if(sHttpSession != null) {
+       		sHttpSession.invalidate();
+       	}
     }
 
 	//--------------------------------------------------------------------------
-	/**
-     * Says that the user is authenticated and this id and profile must be used.
-	 */
-	public void authenticate(String userId, String username, String name, String surname, String profile, String emailAddr)
-	{
-		sUserId    = userId;
-		sUsername  = username;
-		sName      = name;
-		sSurname   = surname;
-		sProfile   = profile;
-		sEmailAddr = emailAddr;
+    
+    public void loginAs(JeevesUser user) {
+        SecurityContextImpl secContext = new SecurityContextImpl();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user, null);
+        secContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(secContext);
+    }
+    
+	public boolean isAuthenticated() {
+		return !(auth() instanceof AnonymousAuthenticationToken);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public boolean isAuthenticated()
-	{
-		return sUserId != null;
+	public String getUserId() { 
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getId();
+		}
+	}
+	public String getUsername() {
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getUsername();
+		}
+	}
+	public String getName() {
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getName();
+		}
+	}
+	public String getSurname() { 
+		Authentication auth = auth();
+		if (auth == null) {
+			return null;   
+		} else {
+			return auth.getName();
+		}
+	}
+	public String getProfile() {
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getProfile();
+		}
+	}
+	public String getEmailAddr() {
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
+			return null;   
+		} else {
+			return userDetails.getEmail();
+		}
 	}
 
-	//--------------------------------------------------------------------------
+	public int getUserIdAsInt()  { 
+		String id = getUserId();
+		return id == null? -1 : Integer.parseInt(getUserId()); }
+	
+	private SecurityContext secContext() { return SecurityContextHolder.getContext(); }
+	private Authentication auth() {
+		SecurityContext secContext = secContext();
+		if (secContext == null) {
+			return null;
+		} else {
+			Authentication authentication = secContext.getAuthentication();
+			return authentication;
+		}
+	}
+	public JeevesUser getPrincipal() {
+		Authentication auth = auth();
+		if (auth != null && auth.getPrincipal() instanceof JeevesUser) {
+			return (JeevesUser) auth.getPrincipal(); 
+		}
+		return null;
+	}
 
-	public String getUserId()    { return sUserId;   }
-	public String getUsername()  { return sUsername; }
-	public String getName()      { return sName;     }
-	public String getSurname()   { return sSurname;  }
-	public String getProfile()   { return sProfile;  }
-	public String getEmailAddr() { return sEmailAddr;  }
-
-	public int getUserIdAsInt()  { return Integer.parseInt(sUserId); }
 }
 
 //=============================================================================

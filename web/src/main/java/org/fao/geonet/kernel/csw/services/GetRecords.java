@@ -46,10 +46,13 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.xml.NamespaceUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
@@ -79,12 +82,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
 	private SearchController _searchController;
 
+    private LuceneConfig _luceneConfig;
+
     /**
      * @param summaryConfig
      * @param luceneConfig
      */
-	public GetRecords(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public GetRecords(LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(luceneConfig);
+    	this._luceneConfig = luceneConfig;
     }
 
     /**
@@ -515,29 +521,55 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @throws InvalidParameterValueEx if typeNames does not have one of the mandated values
      */
     private String checkTypenames(Element query) throws MissingParameterValueEx, InvalidParameterValueEx {
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "checking typenames in query:\n" + Xml.getString(query));
+        }
+        //
+        // get the prefix used for CSW namespace used in this input document
+        //
+        String cswPrefix = getPrefixForNamespace(query, Csw.NAMESPACE_CSW);
+        if(cswPrefix == null) {
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+                Log.debug(Geonet.CSW_SEARCH, "checktypenames: csw prefix not found, using " + Csw.NAMESPACE_CSW.getPrefix());
+            }
+            cswPrefix = Csw.NAMESPACE_CSW.getPrefix();
+        }
+        //
+        // get the prefix used for GMD namespace used in this input document
+        //
+        String gmdPrefix = getPrefixForNamespace(query, Csw.NAMESPACE_GMD);
+        if(gmdPrefix == null) {
+            if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+                Log.debug(Geonet.CSW_SEARCH, "checktypenames: gmd prefix not found, using " + Csw.NAMESPACE_GMD.getPrefix());
+            }
+            gmdPrefix = Csw.NAMESPACE_GMD.getPrefix();
+        }
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+            Log.debug(Geonet.CSW_SEARCH, "checktypenames: csw prefix set to " + cswPrefix + ", gmd prefix set to " + gmdPrefix);
+        }
+
         Attribute typeNames = query.getAttribute("typeNames", query.getNamespace());
         typeNames = query.getAttribute("typeNames");
         if(typeNames != null) {
             String typeNamesValue = typeNames.getValue();
             // empty typenames element
             if(StringUtils.isEmpty(typeNamesValue)) {
-                return "csw:Record";
+                return cswPrefix + ":Record";
             }
             // not empty: scan comma-separated string
             Scanner commaSeparator = new Scanner(typeNamesValue);
             commaSeparator.useDelimiter(",");
-            String result = "csw:Record";
+            String result = cswPrefix + ":Record";
             while(commaSeparator.hasNext()) {
                 String typeName = commaSeparator.next();
                 typeName = typeName.trim();
-                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                     Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
-                if(!(typeName.equals("csw:Record") || typeName.equals("gmd:MD_Metadata"))) {
+                }
+                if(!(typeName.equals(cswPrefix + ":Record") || typeName.equals(gmdPrefix + ":MD_Metadata"))) {
                 throw new InvalidParameterValueEx("typeNames", "invalid value");
             }
-                if(typeName.equals("gmd:MD_Metadata")) {
+                if(typeName.equals(gmdPrefix + ":MD_Metadata")) {
                     return typeName;
             }
         }
@@ -545,8 +577,26 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         }
         // missing typeNames element
         else {
-            return "csw:Record";
+            return cswPrefix + ":Record";
         }
+    }
+
+    /**
+     * Returns the prefix used in the scope of an element for a particular namespace, or null if the namespace is not in
+     * scope.
+     *
+     * @param element
+     * @param namespace
+     * @return
+     */
+    private String getPrefixForNamespace(Element element, Namespace namespace) {
+        List<Namespace> namespacesInScope = NamespaceUtils.getNamespacesInScope(element);
+        for(Namespace ns : namespacesInScope) {
+            if(ns.getURI().equals(namespace.getURI())) {
+                return ns.getPrefix();
+            }
+        }
+        return null;
     }
 
     /**
@@ -716,8 +766,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getSearchmanager();
+        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
+		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}
 
 

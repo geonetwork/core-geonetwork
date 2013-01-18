@@ -34,14 +34,17 @@ import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationAbortedEx;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -60,7 +63,6 @@ import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
-import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -172,7 +174,6 @@ public abstract class AbstractHarvester
 		error    = null;
 
 		//--- init harvester
-
 		doInit(node);
 
 		if (status == Status.ACTIVE) {
@@ -393,13 +394,32 @@ public abstract class AbstractHarvester
 			this.logger = logger;
 			this.rm = rm;
 		}
-
 		@Override
 		public void process() throws Exception {
 			doHarvest(logger, rm);
 		}
 	}
-
+	
+	/**
+	 * Create a session for the user who created the 
+	 * harvester. The owner identifier is added when 
+	 * the harvester config is created or updated
+	 * according to user session.
+	 */
+	private void login() {
+		JeevesUser user = new JeevesUser(this.context.getProfileManager());
+		
+		user.setId(getParams().owner);
+		// Harvester is only managed by Administrator
+		user.setProfile(Profile.ADMINISTRATOR);
+		
+		UserSession session = new UserSession();
+		session.loginAs(user);
+		this.context.setUserSession(session);
+		
+		this.context.setIpAddress(null);
+	}
+	
 	void harvest()
 	{
 	    running = true;
@@ -411,6 +431,8 @@ public abstract class AbstractHarvester
 		
 		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 
+		login();
+		
 		error = null;
 
 		String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
@@ -425,8 +447,9 @@ public abstract class AbstractHarvester
 			//--- proper harvesting
 
 			logger.info("Started harvesting from node : "+ nodeName);
+			
 			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
-			h.processWithFastIndexing();
+			h.process();
 			logger.info("Ended harvesting from node : "+ nodeName);
 
 			if (getParams().oneRunOnly)
@@ -546,7 +569,9 @@ public abstract class AbstractHarvester
 		settingMan.add(dbms, "id:"+infoId, "lastRun", "");
 
 		//--- store privileges and categories ------------------------
-
+		
+		settingMan.add(dbms, "id:"+siteId, "owner",     params.owner);
+		
 		storePrivileges(dbms, params, path);
 		storeCategories(dbms, params, path);
 

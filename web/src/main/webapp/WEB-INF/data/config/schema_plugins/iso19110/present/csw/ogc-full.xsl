@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="gco gfc">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="gco gfc gmx">
 
 	<xsl:param name="displayInfo"/>
 
@@ -18,7 +18,7 @@
 			</dc:identifier>
 
 			<!-- DataIdentification -->
-			<xsl:for-each select="gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString|gfc:typeName/gco:LocalName">
 				<dc:title>
 					<xsl:value-of select="."/>
 				</dc:title>
@@ -40,18 +40,18 @@
 				<dc:relation><xsl:value-of select="."/></dc:relation>
 				</xsl:for-each>-->
 
-			<xsl:for-each select="gfc:versionDate/gco:DateTime">
+			<xsl:for-each select="gmx:versionDate/gco:DateTime|gfc:versionDate/gco:DateTime">
 				<dct:modified>
 					<xsl:value-of select="."/>
 				</dct:modified>
 			</xsl:for-each>
 
-			<xsl:for-each select="gfc:scope">
+			<xsl:for-each select="gmx:scope|gfc:scope">
 				<dct:abstract>
 					<xsl:value-of select="gco:CharacterString"/>
 				</dct:abstract>
 			</xsl:for-each>
-			<xsl:for-each select="gfc:fieldOfApplication">
+			<xsl:for-each select="gmx:fieldOfApplication|gfc:fieldOfApplication">
 				<dct:abstract>
 					<xsl:value-of select="gco:CharacterString"/>
 				</dct:abstract>

@@ -190,10 +190,9 @@ public class Aligner
         //
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -205,7 +204,7 @@ public class Aligner
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
 	}
 
@@ -317,7 +316,7 @@ public class Aligner
 				addCategories(id);
 
 				dbms.commit();
-				dataMan.indexMetadataGroup(dbms, id);
+				dataMan.indexMetadata(dbms, id);
 				result.updatedMetadata++;
 			}
 		}

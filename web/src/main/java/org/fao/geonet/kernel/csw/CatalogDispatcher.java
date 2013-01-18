@@ -67,10 +67,10 @@ public class CatalogDispatcher
 		register(new DescribeRecord());
 		register(new GetCapabilities());
 		register(new GetDomain());
-		register(new GetRecordById(summaryConfig, luceneConfig));
-		register(new GetRecords(summaryConfig, luceneConfig));
+		register(new GetRecordById(luceneConfig));
+		register(new GetRecords(luceneConfig));
 		register(new Harvest());
-		register(new Transaction(summaryConfig, luceneConfig));
+		register(new Transaction(luceneConfig));
 	}
 
 	//---------------------------------------------------------------------------

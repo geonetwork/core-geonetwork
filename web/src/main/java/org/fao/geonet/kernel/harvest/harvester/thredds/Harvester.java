@@ -31,7 +31,7 @@ import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Harves
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -365,7 +366,7 @@ class Harvester
 	
 			//--- TODO: Add links to services provided by the thredds catalog - but 
 			//--- where do we do this in ISO19119?
-			saveMetadata(md, Util.scramble(params.url), params.url);
+			saveMetadata(md, Sha1Encoder.encodeString (params.url), params.url);
 			
 			harvestUris.add(params.url);
 			
@@ -441,10 +442,9 @@ class Harvester
 		//
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -455,7 +455,7 @@ class Harvester
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
 
         boolean indexGroup = false;
-        dataMan.indexMetadata(dbms, id, indexGroup);
+        dataMan.indexMetadata(dbms, id);
 		
 		dbms.commit();
 	}
@@ -724,7 +724,7 @@ class Harvester
 		String uuid = ds.getUniqueID();
 		
 		if (uuid == null) {
-			uuid = Util.scramble(ds.getCatalogUrl()); // md5 full dataset url
+			uuid = Sha1Encoder.encodeString (ds.getCatalogUrl()); // md5 full dataset url
 		} else {
 			uuid = StringUtil.allow(uuid, "_-.",'-');
 		}
@@ -1088,7 +1088,7 @@ class Harvester
 
             if(log.isDebugEnabled()) log.debug("Processing Thredds service: "+serv.toString());
 
-			String sUuid = Util.scramble(sUrl);
+			String sUuid = Sha1Encoder.encodeString (sUrl);
 			ts.uuid = sUuid;
 
 			//--- TODO: if service is WCS or WMS then pass the full service url to 
@@ -1399,6 +1399,7 @@ class Harvester
 		atomicParams.url = params.url;
 		atomicParams.uuid = params.uuid;
 		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
+		atomicParams.owner = params.owner;
 		return atomicParams;
 	}
 

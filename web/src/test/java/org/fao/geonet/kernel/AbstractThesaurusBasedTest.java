@@ -133,7 +133,7 @@ public abstract class AbstractThesaurusBasedTest {
         	}
             
         	String code = namespace+i;
-            KeywordBean keyword = new KeywordBean(isoLangMapper).setCode(code);
+            KeywordBean keyword = new KeywordBean(isoLangMapper).setUriCode(code);
             // 1/2 of elements will have bounds
             if(i % 2 == 0) {
                 keyword.setCoordEast(east)

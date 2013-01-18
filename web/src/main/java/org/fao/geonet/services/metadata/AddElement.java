@@ -29,10 +29,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import org.fao.geonet.GeonetContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -42,7 +42,7 @@ import org.jdom.Element;
 
 public class AddElement implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -53,9 +53,6 @@ public class AddElement implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
@@ -64,10 +61,30 @@ public class AddElement implements Service
 		String name  = Util.getParam(params, Params.NAME);
 		String child = params.getChildText(Params.CHILD);
 
-		// -- build the element to be added and return it
+		// -- build the element to be added
+		// -- Here we do mark the element that is added
+		// -- then we traverse up the tree to the root 
+		// -- clone from the root and return the clone
+		// -- this is done so that the style sheets have 
+		// -- access to important information like the
+		// -- document language and other locales
+		// -- this is important for multilingual editing
+		// -- 
+		// -- Note that the metadata-embedded.xsl stylesheet
+		// -- only applies the templating to the added element, not to 
+		// -- the entire metadata so performance should not be a big issue
 		Element elResp = new AjaxEditUtils(context).addElementEmbedded(dbms, session, id, ref, name, child);
-		return elResp;
+        EditLib.tagForDisplay(elResp);
+        Element md = (Element) findRoot(elResp).clone();
+        EditLib.removeDisplayTag(elResp);
+
+        return md;
 	}
+
+    private Element findRoot( Element element ) {
+        if(element.isRootElement() || element.getParentElement() == null) return element;
+        return findRoot(element.getParentElement());
+    }
 }
 
 //=============================================================================

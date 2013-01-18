@@ -52,6 +52,7 @@
 		<xsl:call-template name="z3950"/>
 		<xsl:call-template name="oai"/>
 		<xsl:call-template name="xlinkResolver"/>
+		<xsl:call-template name="hideWithheld"/>
 		<xsl:call-template name="searchStats"/>
         <xsl:call-template name="multilingual"/>
 		<xsl:call-template name="downloadservice"/>
@@ -87,35 +88,39 @@
             </table>
         </div>
         <div align="left" style="{$style}">
-            <input align="left" type="radio" id="requestedLanguage.only" value="only" name="requestedlanguage"/>
+            <table>
+                <tr>
+                    <td class="padded">
+                        <input id="requestedLanguage.sorted" class="content" type="checkbox"/>
+                    </td>
+                    <td class="padded">
+                        <label for="requestedLanguage.sorted">
+                            <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div align="left" style="{$style}">
         	<label for="requestedLanguage.only">
                 <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
             </label>
             <div align="left" style="{$style}">
+	            <select id="requestedLanguage.only">
+		             <option id="requestedLanguage.only.locale" value="off"><xsl:value-of select="/root/gui/config/requestedlanguage_offonly"/></option>
+		             <option id="requestedLanguage.only.locale" value="prefer_locale"><xsl:value-of select="/root/gui/config/requestedlanguageprefer_locale"/></option>
+		             <option id="requestedLanguage.only.locale" value="prefer_docLocale"><xsl:value-of select="/root/gui/config/requestedlanguageprefer_docLocale"/></option>
+		             <option id="requestedLanguage.only.locale" value="only_locale"><xsl:value-of select="/root/gui/config/requestedlanguage_localeonly"/></option>
+		             <option id="requestedLanguage.only.docLocale" value="only_docLocale"><xsl:value-of select="/root/gui/config/requestedlanguage_docLocaleonly"/></option>
+		         </select>
+	         </div>
+            <!-- <input align="left" type="radio" id="requestedLanguage.only" value="only" name="requestedlanguage"/>
+        	<label for="requestedLanguage.only">
+                <xsl:value-of select="/root/gui/config/requestedlanguageonly"/>
+            </label> -->
+            <div align="left" style="{$style}">
                 <span id="requestedlanguage_only.subpanel">
                     <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.only']"/>
-                </span>
-            </div>
-        </div>
-        <div align="left" style="{$style}">
-            <input align="left" type="radio" id="requestedLanguage.sorted" value="sorted" name="requestedlanguage"/>
-            <label for="requestedLanguage.sorted">
-                <xsl:value-of select="/root/gui/config/requestedlanguagesorted"/>
-            </label>
-            <div align="left" style="{$style}">
-                <span id="requestedlanguage_sorted.subpanel">
-                    <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.sorted']"/>
-                </span>
-            </div>
-        </div>
-        <div align="left" style="{$style}">
-            <input align="left" type="radio" id="requestedLanguage.ignored" value="ignored" name="requestedlanguage"/>
-            <label for="requestedLanguage.ignored">
-                <xsl:value-of select="/root/gui/config/requestedlanguageignored"/>
-            </label>
-            <div align="left" style="{$style}">
-                <span id="requestedlanguage_ignored.subpanel">
-                    <xsl:value-of select="/root/gui/config/tips/tip[id='requestedlanguage.ignored']"/>
                 </span>
             </div>
         </div>
@@ -144,6 +149,24 @@
 				<tr>
 					<td class="padded" width="{$width}"><label for="xlinkResolver.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
 					<td class="padded"><input id="xlinkResolver.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+	<xsl:template name="hideWithheld">
+		<h1 align="left"><xsl:value-of select="/root/gui/config/hidewithheldelements"/></h1>
+		<div align="left" style="{$style}">
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="hidewithheldelements.enable"><xsl:value-of select="/root/gui/config/enable"/></label></td>
+					<td class="padded"><input id="hidewithheldelements.enable" class="content" type="checkbox"/></td>
+				</tr>
+				<tr>
+					<td class="padded" width="{$width}"><label for="hidewithheldelements.keepMarkedElement"><xsl:value-of select="/root/gui/config/keepMarkedElement"/></label></td>
+					<td class="padded"><input id="hidewithheldelements.keepMarkedElement" class="content" type="checkbox"/></td>
 				</tr>
 			</table>
 		</div>
@@ -245,15 +268,12 @@
 	<xsl:template name="authentication">
 		<h1 align="left"><xsl:value-of select="/root/gui/config/authentication"/></h1>
 		<div align="left" style="{$style}">
-			<b><xsl:value-of select="concat(/root/gui/config/loginuses,': ')"/></b>
-			<div align="left" style="{$style}">
-				<input align="left" type="radio" id="geonetworkdb.use" name="authentication" value="default"/><label for="geonetworkdb.use"><xsl:value-of select="/root/gui/config/geonetworkdb"/></label>
-				<xsl:call-template name="geonetworkdb"/>
-			</div>
-			<div align="left" style="{$style}">
-				<input align="left" type="radio" id="ldap.use" name="authentication" value="ldap"/><label for="ldap.use"><xsl:value-of select="/root/gui/config/ldap"/></label>
-				<xsl:call-template name="ldap"/>
-			</div>
+			<table>
+				<tr>
+					<td class="padded" width="{$width}"><label for="userSelfRegistration.enable"><xsl:value-of select="concat(/root/gui/config/enable,' ',/root/gui/config/userSelfRegistration)"/></label></td>
+					<td><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
+				</tr>
+			</table>
 		</div>
 		
 		<div align="left" style="{$style}">
@@ -316,6 +336,10 @@
 				<tr>
 					<td class="padded"><xsl:value-of select="/root/gui/config/port"/></td>
 					<td class="padded"><input id="server.port" class="content" type="text" value="" size="30"/></td>
+				</tr>
+				<tr>
+					<td class="padded"><xsl:value-of select="/root/gui/config/securePort"/></td>
+					<td class="padded"><input id="server.secureport" class="content" type="text" value="" size="30"/></td>
 				</tr>
 			</table>
 		</div>
@@ -656,196 +680,6 @@
 				</tr>			
 			</table>
 		</div>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-	<!-- === Geonetwork DB panels === -->
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="geonetworkdb">
-		<div align="left" style="{$style}">
-			<table id="geonetworkdb.subpanel">
-				<tr>
-					<td class="padded" width="40%"><label for="userSelfRegistration.enable"><xsl:value-of select="concat(/root/gui/config/enable,' ',/root/gui/config/userSelfRegistration)"/></label></td>
-					<td class="padded"><input id="userSelfRegistration.enable" class="content" type="checkbox"/></td>
-				</tr>
-			</table>
-		</div>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	<!-- === LDAP panels === -->
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="ldap">
-		<div align="left" style="{$style}">
-			<table id="ldap.subpanel">
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/host"/></td>
-					<td class="padded"><input id="ldap.host" class="content" type="text" value="" size="20"/></td>
-				</tr>
-			
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/port"/></td>
-					<td class="padded"><input id="ldap.port" class="content" type="text" value="" size="20"/></td>
-				</tr>
-							
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/defProfile"/></td>
-					<td class="padded"><xsl:call-template name="ldapDefProfile"/></td>
-				</tr>
-
-                <tr>
-                    <td class="padded"><xsl:value-of select="/root/gui/config/defGroup"/></td>
-                    <td class="padded"><xsl:call-template name="ldapDefGroup"/></td>
-                </tr>
-
-                <tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/uidAttr"/></td>
-					<td class="padded"><input id="ldap.uidAttr" class="content" type="text" value="" size="20"/></td>
-				</tr>
-														
-				<!-- distinguished names -->
-							
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/distNames"/></td>
-					<td/>
-				</tr>
-				<tr>
-					<td/>
-					<td class="padded"><xsl:call-template name="ldapDistNames"/></td>
-				</tr>
-							
-				<!-- bind credentials -->
-							
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/bindInfo"/></td>
-					<td/>
-				</tr>
-				<tr>
-					<td/>
-					<td class="padded"><xsl:call-template name="ldapBindInfo"/></td>
-				</tr>
-							
-				<!-- user's attributes -->
-							
-				<tr>
-					<td class="padded"><xsl:value-of select="/root/gui/config/userAttribs"/></td>
-					<td/>
-				</tr>
-				<tr>
-					<td/>
-					<td class="padded"><xsl:call-template name="ldapUserAttribs"/></td>
-				</tr>
-			</table>
-		</div>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
-    <xsl:template name="ldapDefGroup">
-        <select class="content" size="1" name="group" id="ldap.defGroup">
-                <option value=""></option>
-                <xsl:for-each select="/root/gui/groups/record">
-                    <xsl:sort select="name"/>
-                    <option>
-                        <xsl:attribute name="value">
-                            <xsl:value-of select="id"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="name"/>
-                    </option>
-                </xsl:for-each>
-            </select>
-    </xsl:template>
-
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="ldapDefProfile">
-		<select class="content" size="1" name="profile" id="ldap.defProfile">
-			<!--option value="Administrator">
-				<xsl:value-of select="/root/gui/strings/Administrator"/>
-			</option-->
-		
-			<!--option value="UserAdmin">
-				<xsl:value-of select="/root/gui/strings/UserAdmin"/>
-			</option-->
-		
-			<option value="Reviewer">
-				<xsl:value-of select="/root/gui/strings/Reviewer"/>
-			</option>
-		
-			<option value="Editor">
-				<xsl:value-of select="/root/gui/strings/Editor"/>
-			</option>
-			
-			<option value="RegisteredUser">
-				<xsl:value-of select="/root/gui/strings/RegisteredUser"/>
-			</option>
-		</select>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="ldapDistNames">
-		<table>
-			<tr>
-				<td class="padded" width="60px"><xsl:value-of select="/root/gui/config/baseDN"/></td>
-				<td class="padded"><input id="ldap.baseDN" class="content" type="text" value="" size="20"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/usersDN"/></td>
-				<td class="padded"><input id="ldap.usersDN" class="content" type="text" value="" size="20"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><label for="ldap.subtree"><xsl:value-of select="/root/gui/config/subtree"/></label></td>
-				<td class="padded"><input id="ldap.subtree" class="content" type="checkbox" value="false" size="20"/></td>
-			</tr>
-		</table>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="ldapBindInfo">
-		<table>
-			<tr>
-				<td class="padded" width="60px"><label for="ldap.anonBind"><xsl:value-of select="/root/gui/config/anonBind"/></label></td>
-				<td class="padded"><input id="ldap.anonBind" class="content" type="checkbox"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded" width="60px"><label for="ldap.bindDN"><xsl:value-of select="/root/gui/config/bindDN"/></label></td>
-				<td class="padded"><input id="ldap.bindDN" class="content" type="text" value="" size="20"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded" width="60px"><label for="ldap.bindPW"><xsl:value-of select="/root/gui/config/bindPW"/></label></td>
-				<td class="padded"><input id="ldap.bindPW" class="content" type="password" value="" size="20"/></td>
-			</tr>
-		</table>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-	
-	<xsl:template name="ldapUserAttribs">
-		<table>
-			<tr>
-				<td class="padded" width="60px"><xsl:value-of select="/root/gui/config/name"/></td>
-				<td class="padded"><input id="ldap.nameAttr" class="content" type="text" value="" size="20"/></td>
-			</tr>
-			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/profile"/></td>
-				<td class="padded"><input id="ldap.profileAttr" class="content" type="text" value="" size="20"/></td>
-			</tr>
-
-            <tr>
-				<td class="padded"><xsl:value-of select="/root/gui/config/group"/></td>
-				<td class="padded"><input id="ldap.groupAttr" class="content" type="text" value="" size="20"/></td>
-			</tr>
-
-		</table>
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->

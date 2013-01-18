@@ -38,6 +38,8 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.sesame.admin.AdminListener;
+import org.openrdf.sesame.admin.DummyAdminListener;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.constants.QueryLanguage;
 import org.openrdf.sesame.query.MalformedQueryException;
@@ -59,6 +61,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
+	private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
+
 	private String fname;
 
 	private String type;
@@ -72,8 +76,10 @@ public class Thesaurus {
     private String title;
 
     private String date;
+    
+    private String defaultNamespace;
 
-		private String version;
+	private String version;
 
     private String downloadUrl;
 
@@ -195,11 +201,11 @@ public class Thesaurus {
 		// needs to have term/concept id tacked onto the end
 	}
 
-	public LocalRepository getRepository() {
+	public synchronized LocalRepository getRepository() {
 		return repository;
 	}
 
-	public Thesaurus setRepository(LocalRepository repository) {
+	public synchronized Thesaurus setRepository(LocalRepository repository) {
 		this.repository = repository;
 		return this;
 	}
@@ -214,7 +220,7 @@ public class Thesaurus {
      * @throws QueryEvaluationException
      * @throws AccessDeniedException
      */
-	public QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
+	public synchronized QueryResultsTable performRequest(String query) throws IOException, MalformedQueryException,
             QueryEvaluationException, AccessDeniedException {
         if(Log.isDebugEnabled(Geonet.THESAURUS))
             Log.debug(Geonet.THESAURUS, "Query : " + query);
@@ -255,7 +261,7 @@ public class Thesaurus {
 	 * @throws AccessDeniedException
 	 * @throws GraphException
 	 */
-    public URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
+    public synchronized URI addElement(KeywordBean keyword) throws IOException, AccessDeniedException, GraphException {
         Graph myGraph = new org.openrdf.model.impl.GraphImpl();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -265,6 +271,10 @@ public class Thesaurus {
         String namespaceGml = "http://www.opengis.net/gml#";
         String namespace = keyword.getNameSpaceCode();
 
+        if(namespace.equals("#")) {
+        	namespace = this.defaultNamespace;
+        }
+        
         // Create subject
         URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
 
@@ -324,7 +334,7 @@ public class Thesaurus {
      * @throws IOException
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
+    public synchronized Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
             QueryEvaluationException, IOException, AccessDeniedException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
@@ -339,7 +349,7 @@ public class Thesaurus {
      * @param code
      * @throws AccessDeniedException
      */
-    public Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
+    public synchronized Thesaurus removeElement(String namespace, String code) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
@@ -351,7 +361,11 @@ public class Thesaurus {
                 repository.getGraph().remove(node, null, null);
             }
         }
-        myGraph.remove(subject, null, null);
+        int removedItems = myGraph.remove(subject, null, null);
+        if(Log.isDebugEnabled(Geonet.THESAURUS)) {
+        	String msg = "Removed "+removedItems+" elements from thesaurus "+this.title+" with uri: "+subject;
+        	Log.debug(Geonet.THESAURUS, msg);
+        }
         return this;
     }
 
@@ -375,7 +389,7 @@ public class Thesaurus {
 	 * @throws QueryEvaluationException
 	 * @throws GraphException
 	 */
-	public URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
+	public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
 	        MalformedQueryException, QueryEvaluationException, GraphException {
 	    
         // Get thesaurus graph
@@ -496,7 +510,7 @@ public class Thesaurus {
      * @return
      * @throws AccessDeniedException
      */
-	public boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
+	public synchronized boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
 		boolean res = true;				
 		Graph myGraph = repository.getGraph();
 		ValueFactory myFactory = myGraph.getValueFactory();		
@@ -524,7 +538,7 @@ public class Thesaurus {
      * @throws AccessDeniedException
      * @throws IOException
      */
-	public Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+	public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
 		Graph myGraph = repository.getGraph();
 		
 		ValueFactory myFactory = myGraph.getValueFactory();
@@ -565,16 +579,29 @@ public class Thesaurus {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
-            theNSs.add(Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+            Namespace rdfNamespace = Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+			theNSs.add(rdfNamespace);
             theNSs.add(Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
             theNSs.add(Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/"));
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
+            this.defaultNamespace = null;
             Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title", theNSs);
             if (title != null) {
                 this.title = title.getValue();
+                this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
             } else {
                 this.title = defaultTitle;
+            }
+            
+            try {
+            	new java.net.URI(this.defaultNamespace);
+            } catch (Exception e) {
+            	this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
+            }
+            
+            if(!this.defaultNamespace.endsWith("#")) {
+            	this.defaultNamespace += "#";
             }
 
             Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
@@ -664,7 +691,7 @@ public class Thesaurus {
          * @param related the relation between the two keywords
          * @param relatedSubject
          */
-        public void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
+        public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
         MalformedQueryException, QueryEvaluationException, GraphException {
             
             Graph myGraph = repository.getGraph();      
@@ -689,7 +716,7 @@ public class Thesaurus {
                 AccessDeniedException {
 
             KeywordBean bean = new KeywordBean(getIsoLanguageMapper())
-                .setCode(code)
+                .setUriCode(code)
                 .setValue(prefLab, lang)
                 .setDefinition(note, lang);
             
@@ -703,7 +730,7 @@ public class Thesaurus {
                                String north, String lang) throws IOException, AccessDeniedException, GraphException {
             
             return addElement(new KeywordBean(getIsoLanguageMapper())
-                        .setCode(code)
+                        .setUriCode(code)
                         .setValue(prefLab, lang)
                         .setDefinition(note, lang)
                         .setCoordEast(east)
@@ -743,6 +770,13 @@ public class Thesaurus {
                 .setCoordWest(west);
             
             return updateElement(bean, true);
+        }
+		public synchronized void clear() throws IOException, AccessDeniedException {
+			AdminListener listener = new DummyAdminListener();
+			repository.clear(listener);
+		}
+        public String getDefaultNamespace() {
+            return this.defaultNamespace;
         }
 
 }

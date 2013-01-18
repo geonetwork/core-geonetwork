@@ -24,7 +24,7 @@
  <!-- Widget client with sliding panel interface (metadata records open in a window) -->
  <!--<client type="redirect" widget="true" url="../../apps/search/" parameters="" createParameter="#create" stateId="s"/>-->
  <!-- As above but with extra parameters set: custom extent in debug mode in french --> 
- <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fr" createParameter="#create" stateId="s"/>-->
+ <!--<client type="redirect" widget="true" url="../../apps/search/index_debug.html" parameters="extent=-5.1,41,9.7,51&amp;hl=fre" createParameter="#create" stateId="s"/>-->
  
  <!-- Comment out languages to hide them
  from language selector. -->
@@ -39,6 +39,7 @@
      <ger/>
      <ita/>
      <nor/>
+     <pol/>
      <por/>
      <rus/>
      <spa/>
@@ -128,7 +129,7 @@
     the number of requests you may make per day will be limited and 
     the API will be shut off completely on December 1, 2011".
   -->
- <editor-google-translate>1</editor-google-translate>
+ <editor-google-translate>0</editor-google-translate>
  
  
  <!-- Metadata relation information
@@ -160,15 +161,20 @@
 
  -->
  <metadata-tab>
+   <!--   In flat mode, define custom configuration for a view:
+     * ancestorException: define which non existing children of the exception must be displayed (eg. use spatialResolution 
+     in order to be able to add spatialResolution in this view mode. spatialResolution is a complex element which provide a 
+     selection)
+     * exception: define which non existing element must be displayed (eg. pointOfContact)
+     * flatException: define which element to not display using flat mode (eg. topicCategory will allow to remove
+     or add element of that type even in flat mode but the element will be boxed).
+    -->
   <simple flat="true"/>
   <advanced/><!-- This view should not be removed as this is the only view to be able
   to edit all elements defined in a schema. -->
   <iso/>
   <!-- This view display all INSPIRE recommended elements
-  in a view : 
-  * In flat mode, define which non existing children of the exception must be displayed (using ancestorException)
-  * or which non existing element must be displayed (using exception)
-  -->
+  in a view.  -->
   <inspire flat="true">
    	 <ancestorException for="EX_TemporalExtent,CI_Date,spatialResolution"/>
      <exception for="result,resourceConstraints,pointOfContact,hierarchyLevel,couplingType,operatesOn,distributionInfo,distributionFormat,onLine,identifier,language,characterSet,topicCategory,serviceType,descriptiveKeywords,extent,temporalElement,geographicElement,lineage"/>
@@ -292,6 +298,6 @@
 	
 	
   <repository>
-    <thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
+    <thesaurus>http://raw.github.com/geonetwork/util-repository/master/thesaurus.xml</thesaurus>
   </repository>
 </config>

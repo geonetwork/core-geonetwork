@@ -5,6 +5,7 @@
     xmlns:gfc="http://www.isotc211.org/2005/gfc"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gml="http://www.opengis.net/gml"
   	xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
@@ -25,7 +26,7 @@
 	
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:versionDate">
+	<xsl:template match="gmx:versionDate|gfc:versionDate">
         <xsl:choose>
             <xsl:when test="/root/env/changeDate">
                 <xsl:copy>
@@ -40,7 +41,7 @@
 
 	<!-- =================================================================-->
 	
-	<xsl:template match="gfc:characterSet">
+	<xsl:template match="gmx:characterSet|gfc:characterSet">
 	    <xsl:copy>
             <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="MD_CharacterSetCode" />
         </xsl:copy>
@@ -103,6 +104,19 @@
 			</xsl:attribute>
 			<xsl:value-of select="."/>
 		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template match="@gml:id">
+		<xsl:choose>
+			<xsl:when test="normalize-space(.)=''">
+				<xsl:attribute name="gml:id">
+					<xsl:value-of select="generate-id(.)"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>

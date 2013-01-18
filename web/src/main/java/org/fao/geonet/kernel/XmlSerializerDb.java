@@ -23,22 +23,14 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
+import java.sql.SQLException;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
-import org.jdom.Element;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
@@ -61,7 +53,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @throws Exception
      */
 	public Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id);
+		Element rec = internalSelect(dbms, table, id, false);
 		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
@@ -77,8 +69,8 @@ public class XmlSerializerDb extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id) throws Exception {
-		return internalSelect(dbms, table, id);
+	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
+		return internalSelect(dbms, table, id, isIndexingTask);
 	}
 
     /**

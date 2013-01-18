@@ -171,7 +171,7 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
                     '<tpl for="links">',
                     '<tpl if="values.type == \'application/vnd.ogc.wms_xml\'">',
                     // FIXME : ref to app
-                        '<a href="#" class="md-mn addLayer" title="{title}" alt="{title}" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
+                        '<a href="#" class="md-mn addLayer" title="{title}" alt="{title}" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{uuid}\']]);">&nbsp;</a>',
                     '</tpl>',
                     '</tpl>',
                 '</div>',
@@ -196,37 +196,13 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                 '</td>',
                 '<td id="{uuid}">',
                     GeoNetwork.Templates.TITLE,
-                    '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters
+                    '<p class="abstract">{[Ext.util.Format.ellipsis(Ext.util.Format.stripTags(values.abstract), 350, true)]}</p>',    // FIXME : 250 as parameters
                     '<tpl if="subject">',
                         '<p class="subject"><tpl for="subject">',
                             '{value}{[xindex==xcount?"":", "]}',
                         '</tpl></p>',
                     '</tpl>',
-                    '<div class="md-links">',
-                    // FIXME : this call require the catalogue to be named catalogue, static call ?
-                    // FIXME : ref to app
-                        '<tpl for="links">',
-                            '<tpl if="parent.dynamic==\'true\' && (values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\')">',
-                                '<a href="#" class="md-mn addLayer" title="' + OpenLayers.i18n('addToMap') + ' {title}" alt="Add layer to map" onclick="app.switchMode(\'1\', true);app.getIMap().addWMSLayer([[\'{[escape(values.title)]}\', \'{href}\', \'{name}\', \'{id}\']]);">&nbsp;</a>',
-                            '</tpl>',
-                            '<tpl if="parent.dynamic==\'true\' && values.type == \'application/vnd.google-earth.kml+xml\'">',
-                                '<a href="{href}" class="md-mn md-mn-kml" title="' + OpenLayers.i18n('viewKml') + ' {title}" alt="Open kml">&nbsp;</a>',
-                            '</tpl>',
-                            '<tpl if="parent.download==\'true\' && (values.type == \'application/zip\' || values.type == \'application/x-compressed\')">',
-                                '<a href="{href}" class="md-mn md-mn-zip" title="' + OpenLayers.i18n('downloadLink') + ' {title}" alt="Download">&nbsp;</a>',
-                            '</tpl>',
-                            '<tpl if="parent.download==\'true\' && values.protocol.indexOf(\'WWW:DOWNLOAD\')!=-1">',
-	                            '<a href="{href}" class="md-mn md-mn-zip" title="' + OpenLayers.i18n('downloadLink') + ' {title}" alt="Download">&nbsp;</a>',
-	                        '</tpl>',
-	                        '<tpl if="values.type == \'text/html\'">',
-                                '<a href="{href}" class="md-mn md-mn-www" title="' + OpenLayers.i18n('webLink') + ' {title}" alt="Web link" target="_blank">&nbsp;</a>',
-                            '</tpl>',
-                            // FIXME : no else ops, how to display other links ?
-                        //'|<a href="#" onclick="app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{id}\']]);">{type}</a>',
-                        '</tpl>',
-                        '<tpl if="this.hasDownloadLinks(values.links)">',//type == \'application/vnd.ogc.wms_xml\'">',
-                        '<a href="#" onclick="catalogue.metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="' + OpenLayers.i18n('prepareDownload') + '" alt="download">&nbsp;</a>',
-                        '</tpl>',
+                    '<div class="md-links" id="md-links-{id}">',
                     '</div>',
                 '</td><td class="thumb">',
                         GeoNetwork.Templates.RATING_TPL,
@@ -289,7 +265,9 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
 );
 
 GeoNetwork.Templates.Relation = {
+        // TODO : subType should be translated
         SHORT: ['<li class="{type}">',
-                   '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+                '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+                '<tpl if="subType!=\'\'"><span class="badge relation-type">{subType}</span></tpl>',
                  '</li>']
 };

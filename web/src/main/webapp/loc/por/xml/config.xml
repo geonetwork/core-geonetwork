@@ -8,7 +8,8 @@
 	<server>Servidor</server>
 	<host>Host</host>
 	<port>Port</port>
-    <protocol>Protocol</protocol>
+	<securePort>Secure Port</securePort>
+  <protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Rede</network>
@@ -24,9 +25,13 @@
 
     <multilingual>configurações multilingues</multilingual>
     <autoDetectEnable>Ativar auto-detecção de linguagem pedido da busca</autoDetectEnable>
-    <requestedlanguageonly>Procurar somente em idioma solicitado</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Resultados da busca em idioma solicitado classificados no topo</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorar idioma solicitado em busca</requestedlanguageignored>
 
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activar</enable>
@@ -132,43 +137,8 @@
 
 	<authentication>Autenticação</authentication>
 	
-	<loginuses>Login usa</loginuses>
 	<otherlogins>Permitir outros utilizadores de iniciar uma sessão de</otherlogins>
 
-	<geonetworkdb>Autenticação GeoNetwork</geonetworkdb>
-		
-	<ldap>Autenticação LDAP</ldap>
-	<defProfile>Perfil pré-definido</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Iniciar sessão</login>
-	<userDN>DN de utilizador</userDN>
-	<distNames>Nomes distintos</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Utilizadores</usersDN>
-	<userAttribs>Atributos dos utilizadores</userAttribs>
-	<password>Palavra-passe</password>
-	<profile>Perfil</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
-	<subtree>Search Subtree</subtree>
-	<bindInfo>LDAP Bind Credentials</bindInfo>
-	<anonBind>Anonymous Bind</anonBind>
-	<bindDN>Bind DN</bindDN>
-	<bindPW>Bind Password</bindPW>
-	
-	<tip id="ldap.anonBind">
-		If set, the server does not need a valid set of credentials to connect to LDAP.
-	</tip>
-	<tip id="ldap.bindDN">
-		A valid user to use on initial connection to LDAP.
-	</tip>
-	<tip id="ldap.bindPW">
-		Password to use for initial connection to LDAP.
-	</tip>
-	<tip id="ldap.subtree">
-		When set, searches for users in the entire subtree rooted at the location specified by the distinguished names.
-	</tip>
-	
 	<shib>Autenticação Shibboleth</shib>
 	<path>Caminho</path>
 	<attributes>Shibboleth alocação de atributos</attributes>
@@ -429,4 +399,6 @@
 	<db.maxactive>Maximum number of database connections:</db.maxactive>	
 	<db.statserror>Database statistics:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>

@@ -160,10 +160,10 @@ public class Aligner
 			{
 				String id = dataMan.getMetadataId(dbms, ri.uuid);
 
-				// look up value of localrating/enabled
+				// look up value of localrating/enable
 				GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				SettingManager settingManager = gc.getSettingManager();
-				boolean localRating = settingManager.getValueAsBool("system/localrating/enabled", false);
+				boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
 				
 				if (id == null)	{
 					addMetadata(ri, localRating);
@@ -228,7 +228,7 @@ public class Aligner
 
 				//--------------------------------------------------------------------
 				
-				public void handleMetadataFiles(File[] files, int index) throws Exception {}
+				public void handleMetadataFiles(File[] files, Element info, int index) throws Exception {}
 				
 				//--------------------------------------------------------------------
 
@@ -314,12 +314,11 @@ public class Aligner
         md = processMetadata(ri, md);
         
         // insert metadata
-        int userid = 1;
         String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
+        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, siteId,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -352,7 +351,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
 
 		return id;
@@ -529,7 +528,7 @@ public class Aligner
 
 					//-----------------------------------------------------------------
 					
-					public void handleMetadataFiles(File[] files, int index) throws Exception
+					public void handleMetadataFiles(File[] files, Element info, int index) throws Exception
 					{
 						//md[index] = mdata;
 					}
@@ -637,7 +636,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 	}
 
 	/**

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<title>Zarządzanie miniaturami</title>
+	<text type="small">Małe</text>
+	<text type="large">Duże</text>
+	<scale>Skaluje obraz</scale>
+	<create>Utwórz mały</create>
+	<scaleWidth>Skaluj szerokość</scaleWidth>
+	<scaleHeight>Skaluj wysokość</scaleHeight>
+	
+	<browse>Przeglądaj</browse>
+	<add>Dodaj</add>
+	<delete>Usuń</delete>	
+	<button>Powrót do edycji</button>
+</strings>

@@ -49,6 +49,15 @@ GeoNetwork.hideLoginLabels = true;
 // IndexOnly mode (xml.search with lucene only) - recommended
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 
+// List of facet to display. If none, the server configuration is use.
+GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
+                                       {name: 'types'},  
+                                       {name: 'serviceTypes'}, 
+                                       {name: 'denominators'}, 
+                                       {name: 'keywords'}, 
+                                       {name: 'createDateYears'}];
+GeoNetwork.Settings.facetMaxItems = 7;
+
 // Latest update info query
 GeoNetwork.Settings.latestQuery = "from=1&to=6&sortBy=changeDate&fast=index";
 GeoNetwork.Settings.latestTpl = GeoNetwork.Templates.THUMBNAIL;
@@ -65,7 +74,13 @@ GeoNetwork.Settings.results = {
         colormap: undefined,
         // Use a custom CSS rules
         //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
-        featurecolorCSS: undefined
+        featurecolorCSS: undefined,
+        // Look for relation for all records (true) or only series (default).
+        // Only for series is recommended to not trigger to much queries when
+        // displaying search results. It may be relevant to search for all
+        // if record related to a dataset using largerWorkCitation is used.
+        //loadRelationForAll: true
+        loadRelationForAll: undefined
 };
 GeoNetwork.MapModule = true;
 GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];

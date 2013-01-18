@@ -34,7 +34,7 @@ Ext.namespace('GeoNetwork.data');
  * 
  */
 GeoNetwork.data.ThesaurusFeedStore = function(feed){
-    var defaultFeed = 'http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml';
+    var defaultFeed = 'https://raw.github.com/geonetwork/util-repository/master/thesaurus.xml';
     var store = new Ext.data.XmlStore({
         autoDestroy: true,
         autoLoad: true,

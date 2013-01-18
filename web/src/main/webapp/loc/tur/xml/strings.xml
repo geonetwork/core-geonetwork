@@ -14,13 +14,15 @@
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
     <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
     
     <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
     <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
 	<!-- end new strings -->
-
+	
+	<isAdmin>Is administrator ?</isAdmin>
 	<createChild>Çocuk (child)oluştur</createChild>
 	<updateChildren>Çocuk (child) güncelle</updateChildren>
 	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>
@@ -125,7 +127,7 @@
 	<cannotRetrieveGroup js="true">Gruplar elde edilemiyor</cannotRetrieveGroup>
 	<selectNewOwner js="true">Yeni sahibi olacak kullanıcıyı seçiniz</selectNewOwner>
 	<selectOwnerGroup js="true">Seçilen kullanıcının ait olacağı grubu seçiniz</selectOwnerGroup>
-	<selectOneFile js="true">İndirmek için en az bir dosya seçmelisiniz!</selectOneFile>
+	<selectOneFileDownload js="true">İndirmek için en az bir dosya seçmelisiniz!</selectOneFileDownload>
 	<checkEmail js="true">Lütfen doğru bir eposta adresi giriniz</checkEmail>
 	<addName js="true">Lütfen bir isim ya da kurum ismi giriniz</addName>
 	<noComment js="true">Yorum yok</noComment>
@@ -148,7 +150,7 @@
 	<errorSaveFailed js="true">Hata: Form kaydedilemedi</errorSaveFailed>
 	<errorOnAction js="true">Hata: Eylem gerçekleştirilemedi </errorOnAction>
 	<errorChangeProtocol js="true">Bir dosya yüklenmiş olabilir. Bu dosyayı kaldırana kadar protokolü değiştiremezsiniz</errorChangeProtocol>
-	<selectOneFile js="true">Yükle ye basmadan önce bir dosya ismi girin ya da da gözat a basın!</selectOneFile>
+	<selectOneFileUpload js="true">Yükle ye basmadan önce bir dosya ismi girin ya da da gözat a basın!</selectOneFileUpload>
 	<uploadFailed js="true">Hata: Yükleme yapılamadı! - gelen hata kodu</uploadFailed>
 	<uploadSetFileNameFailed js="true">Hata: Yükleme başarılı fakat dosya adı oluşturulamadı!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Sunucudan araç ipucları (tooltip) yüklenemedi</cannotGetTooltip>
@@ -408,6 +410,7 @@
 	<login>Giriş</login>
 	<loginCardTitle>Giriş/ Üyelik</loginCardTitle>
 	<loginwarning>Sadece site yönetimi için gereklidir</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Çıkış</logout>
 	<logoutDes>Çıkış eylemini gerçekleştirir</logoutDes>
 	<longitude>Boylam derecesi (-180 ve 180 arasında) </longitude>
@@ -551,7 +554,7 @@
     <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Servisi</protocolChoice>
     <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Servisi</protocolChoice>
     <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Servisi (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
+    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
     <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Servisi</protocolChoice>
     <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Servisi (ver 1.1.1)</protocolChoice>
@@ -1076,6 +1079,9 @@
 	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
     <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
     <custom-elementset-add>Eleman Ekle</custom-elementset-add>
+  	<concealed>Concealed</concealed>
 
 
+	<monitor>Monitor</monitor>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

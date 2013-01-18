@@ -25,7 +25,15 @@
     </service>
 
     <service name="xml.keyword.get" type="xml">
+      <documentation>
+        transformation: Name of the template to use to return the keyword (eg. to-iso19139-with-anchor).
+        keywordOnly: Skip thesaurus citation section if defined (default no).
+        
+      </documentation>
       <class name=".services.thesaurus.GetKeywordById"/>
+      <output sheet="thesaurus/convert.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
     </service>
 
     <service name="xml.thesaurus.upload">
@@ -76,6 +84,9 @@
 
     <service name="thesaurus.activate" type="xml">
       <class name=".services.thesaurus.Activate"/>
+    </service>
+    <service name="thesaurus.clear" type="xml">
+      <class name=".services.thesaurus.Clear"/>
     </service>
 
   </services>

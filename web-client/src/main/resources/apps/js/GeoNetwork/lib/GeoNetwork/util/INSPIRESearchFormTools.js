@@ -39,7 +39,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
      *
      */
     getServiceTypeField : function (multi) {
-        var serviceTypes = [ [ 'discovery', OpenLayers.i18n('serviceType_discovery')  ], [ 'view', OpenLayers.i18n('serviceType_view')  ],
+        var serviceTypes = [ [ 'discovery', OpenLayers.i18n('serviceType_discovery')  ], 
+                             [ 'view', OpenLayers.i18n('serviceType_view')  ],
+                             [ 'download', OpenLayers.i18n('serviceType_download')  ],
                              [ 'transformation', OpenLayers.i18n('serviceType_transformation') ],
                              [ 'invoke', OpenLayers.i18n('serviceType_invoke') ],[ 'other', OpenLayers.i18n('serviceType_other') ] ];
 

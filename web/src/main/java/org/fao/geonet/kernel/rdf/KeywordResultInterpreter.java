@@ -41,7 +41,7 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
         KeywordBean keywordBean = new KeywordBean(thesaurus.getIsoLanguageMapper())
             .setThesaurusInfo(thesaurus)
             .setId(row)
-            .setCode(columnValue(resultsTable, columnNameMap, row, Selectors.ID.id))
+            .setUriCode(columnValue(resultsTable, columnNameMap, row, Selectors.ID.id))
             .setCoordEast(coordEast)
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)

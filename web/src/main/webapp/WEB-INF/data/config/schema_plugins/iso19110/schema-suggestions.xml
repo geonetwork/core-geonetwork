@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fields>
-    <field name="gfc:scope">
+    <field name="gmx:scope">
         <suggest name="gco:CharacterString"/>
         <suggest name="gmx:FileName"/>
-    </field> 
+    </field>
     <field name="gmx:FileName">
         <suggest name="src"/>
     </field> 
     
 	<field name="gfc:FC_FeatureCatalogue">
-		<suggest name="gfc:name"/>
-		<suggest name="gfc:scope"/>
-        <suggest name="gfc:fieldOfApplication"/>
-        <suggest name="gfc:versionNumber"/>
-        <suggest name="gfc:versionDate"/>
+		<suggest name="gmx:name"/>
+		<suggest name="gmx:scope"/>
+        <suggest name="gmx:fieldOfApplication"/>
+        <suggest name="gmx:versionNumber"/>
+        <suggest name="gmx:versionDate"/>
         <suggest name="gfc:functionalLanguage"/>
         <suggest name="gfc:producer"/>
 	</field>

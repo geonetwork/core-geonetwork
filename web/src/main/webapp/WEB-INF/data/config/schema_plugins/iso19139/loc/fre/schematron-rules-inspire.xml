@@ -64,6 +64,8 @@
         MD_Metadata.identificationInfo[1].MD_Identification.resourceConstraints)</h2></div></alert.M45.rc>
     <report.M45.ac><div>Limite d'accès public définie (accessConstraints) :</div></report.M45.ac>
     <report.M45.class><div>Limite d'accès public définie (classification) :</div></report.M45.class>
+    <alert.M45.ca><div>There shall be at least one instance of 'accessConstraints'</div></alert.M45.ca>	
+    <report.M45.ca><div>There shall be at least one instance of 'accessConstraints'</div></report.M45.ca>		
     <alert.M45.or><div>Les contraintes d'accès prennent la valeur 'autres restrictions' si 
         et seulement si le champ 'autres contraintes' est renseigné.</div></alert.M45.or>
     <report.M45.or><div>Limite d'accès public définie (otherConstraints) :</div></report.M45.or>

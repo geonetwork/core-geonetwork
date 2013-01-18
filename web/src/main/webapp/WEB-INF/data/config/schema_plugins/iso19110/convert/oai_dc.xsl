@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmx="http://www.isotc211.org/2005/gmx">
 
 	<!-- ============================================================================================ -->
 
@@ -20,7 +20,7 @@
 			</dc:date>
 
 
-			<xsl:for-each select="gfc:name/gco:CharacterString">
+			<xsl:for-each select="gmx:name/gco:CharacterString|gfc:name/gco:CharacterString">
 				<dc:title>
 					<xsl:value-of select="."/>
 				</dc:title>
@@ -36,7 +36,7 @@
 
 			<!-- description -->
 
-			<xsl:for-each select="gfc:scope/gco:CharacterString">
+			<xsl:for-each select="gmx:scope/gco:CharacterString|gfc:scope/gco:CharacterString">
 				<dc:description>
 					<xsl:value-of select="."/>
 				</dc:description>

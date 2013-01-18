@@ -303,7 +303,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 	}
 
 	
@@ -326,10 +326,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, source,
+        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, source,
                          isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -340,7 +339,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		addCategories(id, localCateg, dbms);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		return id;
 	}
 	

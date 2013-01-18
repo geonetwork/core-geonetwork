@@ -8,6 +8,8 @@
 	<server>Palvelin</server>
 	<host>Host-palvelin</host>
 	<port>Portti</port>
+	<securePort>Secure Portti</securePort>
+	<protocol>Preferred Protocol<protocol>
 	
 	<intranet>Intranet</intranet>
 	<network>Verkko</network>
@@ -32,9 +34,13 @@
 
     <multilingual>Monikielinen asetukset</multilingual>
     <autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
-    <requestedlanguageonly>Etsi vain pyydetystä kielestä</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
-    <requestedlanguageignored>Ohita pyydetyt kieli haku</requestedlanguageignored>
 		
 	<downloadservice>Latauspalvelu</downloadservice>
 	<leave>Käytä metatiedoissa olevaa linkkiä</leave>
@@ -119,44 +125,8 @@
 		
 	<authentication>Autentikointi</authentication>
 	
-	<loginuses>Kirjautuminen</loginuses>
 	<otherlogins>Salli muiden käyttäjien kirjautua</otherlogins>
 
-	<geonetworkdb>GeoNetwork-autentikointi</geonetworkdb>
-	
-	<metadataPrivs>Metadata privileges</metadataPrivs>
-	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
-	<ldap>LDAP</ldap>
-	<defProfile>Default profile</defProfile>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
-	<group>Group</group>
-	<defGroup>Default group</defGroup>
-	<subtree>Search Subtree</subtree>
-	<bindInfo>LDAP Bind Credentials</bindInfo>
-	<anonBind>Anonymous Bind</anonBind>
-	<bindDN>Bind DN</bindDN>
-	<bindPW>Bind Password</bindPW>
-	
-	<tip id="ldap.anonBind">
-		If set, the server does not need a valid set of credentials to connect to LDAP.
-	</tip>
-	<tip id="ldap.bindDN">
-		A valid user to use on initial connection to LDAP.
-	</tip>
-	<tip id="ldap.bindPW">
-		Password to use for initial connection to LDAP.
-	</tip>
-	<tip id="ldap.subtree">
-		When set, searches for users in the entire subtree rooted at the location specified by the distinguished names.
-	</tip>
-	
 	<shib>Shibboleth</shib>
 	<path>Osoite</path>
 	<attributes>Shibboleth-attribuuttien tunnistus</attributes>
@@ -340,6 +310,8 @@
 	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
 	<data.subversionPath>Subversion directory:</data.subversionPath>
 	<data.codeListDir>Thesaurus directory:</data.codeListDir>
+  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 	
 </strings>
 

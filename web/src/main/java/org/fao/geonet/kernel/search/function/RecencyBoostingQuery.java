@@ -23,11 +23,14 @@
 
 package org.fao.geonet.kernel.search.function;
 
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queries.CustomScoreProvider;
+import org.apache.lucene.queries.CustomScoreQuery;
 import org.apache.lucene.search.FieldCache;
+import org.apache.lucene.search.FieldCache.DocTerms;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.function.CustomScoreProvider;
-import org.apache.lucene.search.function.CustomScoreQuery;
+import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.util.ISODate;
 
 import java.io.IOException;
@@ -75,15 +78,17 @@ public class RecencyBoostingQuery extends CustomScoreQuery {
 	}
 
 	private class RecencyBooster extends CustomScoreProvider {
-		final String[] publishDay;
+		final DocTerms publishDay;
 
-		public RecencyBooster(IndexReader r) throws IOException {
+		public RecencyBooster(AtomicReaderContext r) throws IOException {
 			super(r);
-			publishDay = FieldCache.DEFAULT.getStrings(r, dayField);
+			publishDay = FieldCache.DEFAULT.getTerms(r.reader(), dayField);
 		}
 
 		public float customScore(int doc, float subQueryScore, float valSrcScore) {
-			ISODate d = new ISODate(publishDay[doc]);
+			BytesRef ret = new BytesRef();
+			publishDay.getTerm(doc, ret);
+            ISODate d = new ISODate(ret.utf8ToString());
 			long daysAgo = today.sub(d) / SEC_PER_DAY;
 			if (daysAgo < maxDaysAgo) {	// skip old document
 				float boost = (float) (multiplier * (maxDaysAgo - daysAgo) / maxDaysAgo);
@@ -94,7 +99,7 @@ public class RecencyBoostingQuery extends CustomScoreQuery {
 		}
 	}
 
-	public CustomScoreProvider getCustomScoreProvider(IndexReader r)
+	public CustomScoreProvider getCustomScoreProvider(AtomicReaderContext r)
 			throws IOException {
 		return new RecencyBooster(r);
 	}

@@ -43,3 +43,26 @@ jcs.region.SpatialFilterCache.elementattributes.IdleTime=1800
 jcs.region.SpatialFilterCache.elementattributes.IsSpool=true
 jcs.region.SpatialFilterCache.elementattributes.IsRemote=true
 jcs.region.SpatialFilterCache.elementattributes.IsLateral=true
+
+# JeevesCacheManager caches
+jcs.region.JeevesCacheManagerTenSeconds=DC
+jcs.region.JeevesCacheManagerTenSeconds.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.JeevesCacheManagerTenSeconds.cacheattributes.MaxObjects=10000
+jcs.region.JeevesCacheManagerTenSeconds.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsEternal=false
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.MaxLifeSeconds=10
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IdleTime=10
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsSpool=false
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsRemote=false
+jcs.region.JeevesCacheManagerTenSeconds.elementattributes.IsLateral=true
+
+jcs.region.JeevesCacheManagerETERNAL=DC
+jcs.region.JeevesCacheManagerETERNAL.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.JeevesCacheManagerETERNAL.cacheattributes.MaxObjects=1000
+jcs.region.JeevesCacheManagerETERNAL.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.JeevesCacheManagerETERNAL.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsEternal=true
+jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsSpool=false
+jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsRemote=false
+jcs.region.JeevesCacheManagerETERNAL.elementattributes.IsLateral=true

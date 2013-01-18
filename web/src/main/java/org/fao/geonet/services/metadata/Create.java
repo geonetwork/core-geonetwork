@@ -25,9 +25,11 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
@@ -61,6 +63,7 @@ public class Create implements Service
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String id = "";
 		String uuid = "";
+		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
 		
 		// does the request contain a UUID ?
 		try {
@@ -81,12 +84,24 @@ public class Create implements Service
 		}
 		
 		String groupOwner= Util.getParam(params, Params.GROUP);
-
+		
+		// TODO : Check user can create a metadata in that group
+		UserSession user = context.getUserSession();
+		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+			java.util.List list = dbms.select("SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?", 
+						Integer.valueOf(user.getUserId()),
+						Integer.valueOf(groupOwner)).getChildren();
+			System.out.println("Group found: " + list.size());
+			if (list.size() == 0) {
+				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
+			}
+		}
+		
 		//--- query the data manager
 
 		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
-												  (child.equals("n")?null:uuid), isTemplate);
+												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));

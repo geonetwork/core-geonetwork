@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+	<notfound>Metatietoja ei löydy.</notfound>
+	<notowner>Metatietoja ei voitu prosessoida, koska et ole niiden omistaja.</notowner>
+	<updated>Metatiedot prosessoitu.</updated>
+    <notProcessFound>Metateitoprosessia ei löydy metatietoskeemalle.</notProcessFound>
+</strings>

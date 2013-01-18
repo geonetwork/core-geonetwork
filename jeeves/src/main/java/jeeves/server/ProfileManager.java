@@ -23,20 +23,35 @@
 
 package jeeves.server;
 
-import jeeves.constants.Jeeves;
-import jeeves.constants.Profiles;
-import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Xml;
-import org.jdom.Attribute;
-import org.jdom.Element;
-
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.servlet.ServletContext;
+
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
+import jeeves.constants.Profiles;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.jdom.Element;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
 
@@ -49,6 +64,7 @@ public class ProfileManager
 	public static final String ADMIN = "Administrator";
 
 	private Hashtable<String, Element> htProfiles;
+	private JeevesApplicationContext applicationContext;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -131,8 +147,47 @@ public class ProfileManager
 		return elResult;
 	}
 
-	//--------------------------------------------------------------------------
-
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getLowestProfile(String[] profiles) {
+		String lowestProfile = null;
+		int numberOfProfilesExtended = getProfilesSet(ADMIN).size();
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() < numberOfProfilesExtended) {
+				lowestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return lowestProfile;
+	}
+	
+	/**
+	 * Return the highest profile in the list by checking the number
+	 * of extended profiles for each.
+	 * 
+	 * @param profiles The list of profiles to analyze
+	 * @return The highest profile in the list
+	 */
+	public String getHighestProfile(String[] profiles) {
+		String highestProfile = null;
+		int numberOfProfilesExtended = 0;
+		
+		for (String p : profiles) {
+			Set<String> currentProfileSet = getProfilesSet(p);
+			if (currentProfileSet.size() > numberOfProfilesExtended) {
+				highestProfile = p;
+				numberOfProfilesExtended = currentProfileSet.size();
+			}
+		}
+		return highestProfile;
+	}
 	public Set<String> getProfilesSet(String profile)
 	{
 		HashSet<String>   hs = new HashSet<String>();
@@ -148,6 +203,9 @@ public class ProfileManager
 			hs.add(profile);
 
 			Element elProfile = htProfiles.get(profile);
+			if (elProfile == null) {
+				return null;
+			}
 
 			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
 
@@ -164,59 +222,7 @@ public class ProfileManager
 	}
 
 	//--------------------------------------------------------------------------
-	/** Returns all services accessible by the given profile
-	  */
 
-	@SuppressWarnings("unchecked")
-	public Element getAccessibleServices(String profile)
-	{
-		HashSet<String>   hs = new HashSet<String>();
-		ArrayList<String> al = new ArrayList<String>();
-
-		al.add(profile);
-
-		while(!al.isEmpty())
-		{
-			profile = (String) al.get(0);
-			al.remove(0);
-
-			Element elProfile = (Element) htProfiles.get(profile);
-
-			//--- scan allow list
-
-			List<Element> allowList = elProfile.getChildren(Profiles.Elem.ALLOW);
-
-			for (Element elAllow : allowList) {
-				String  sService = elAllow.getAttributeValue(Profiles.Attr.SERVICE);
-				hs.add(sService);
-			}
-
-			//--- ops, no allow found. Try an ancestor (if any)
-
-			String extend = elProfile.getAttributeValue(Profiles.Attr.EXTENDS);
-
-			if (extend != null)
-			{
-				StringTokenizer st = new StringTokenizer(extend, ",");
-
-				while(st.hasMoreTokens())
-					al.add(st.nextToken().trim());
-			}
-		}
-
-		//--- build proper result
-
-		Element elRes = new Element(Jeeves.Elem.SERVICES);
-
-		for (String service : hs) {
-			elRes.addContent(new Element(Jeeves.Elem.SERVICE)
-					.setAttribute(new Attribute(Jeeves.Attr.NAME, service)));
-		}
-
-		return elRes;
-	}
-
-	//--------------------------------------------------------------------------
 	/** Returns true if the service is accessible from the given profile, resolving
 	  * any inheritance
 	  */
@@ -259,6 +265,78 @@ public class ProfileManager
 		}
 
 		return false;
+	}
+
+	public void setApplicationContext(JeevesApplicationContext jeevesAppContext) {
+		this.applicationContext = jeevesAppContext;
+	}
+
+	/** 
+	 * Check if bean is defined in the context
+	 * 
+	 * @param beanId id of the bean to look up
+	 */
+	public static boolean existsBean(String beanId) {
+		ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+		ServletContext servletContext = serviceContext.getServlet().getServletContext();
+		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		if(springContext == null) return true;
+		return springContext.containsBean(beanId);
+	}
+
+	/**
+	 * Optimistically check if user can access a given url.  If not possible to determine then
+	 * the methods will return true.  So only use to show url links, not check if a user has access
+	 * for certain.  Spring security should ensure that users cannot access restricted urls though.
+	 *  
+	 * @param serviceName the raw services name (main.home) or (admin) 
+	 * 
+	 * @return true if accessible or system is unable to determine because the current
+	 * 				thread does not have a ServiceContext in its thread local store
+	 */
+	public static boolean isAccessibleService(Object serviceName) {
+		ServiceContext serviceContext = ServiceContext.get();
+		if(serviceContext == null) return true;
+		ServletContext servletContext = serviceContext.getServlet().getServletContext();
+		WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(springContext == null || context == null) return true;
+		
+		Map<String, AbstractSecurityInterceptor> evals = springContext.getBeansOfType(AbstractSecurityInterceptor.class);
+		Authentication authentication = context.getAuthentication();
+		
+		FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
+		for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
+	    	if(securityInterceptor == null || context == null) return true;
+	    	
+
+	        Collection<ConfigAttribute> attrs = securityInterceptor.obtainSecurityMetadataSource().getAttributes(fi);
+
+	        if (attrs == null) {
+	            continue;
+	        }
+
+	        if (authentication == null) {
+	           continue;
+	        }
+
+	        try {
+	            securityInterceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
+	            return true;
+	        } catch (AccessDeniedException unauthorized) {
+	        	// ignore
+	        }
+		}
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.info(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
+        }
+
+		return false;
+	}
+
+	public static boolean isCasEnabled() {
+		return existsBean("casEntryPoint");
 	}
 }
 

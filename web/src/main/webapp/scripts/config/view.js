@@ -18,7 +18,9 @@ function ConfigView(strLoader)
 		
 		{ id:'server.host',   type:'length',   minSize :1,  maxSize :200 },
 		{ id:'server.host',   type:'hostname' },
-		{ id:'server.port',   type:'integer',  minValue:80, maxValue:65535 },
+		{ id:'server.port',   type:'integer',  minValue:80, maxValue:65535, empty:true },
+		{ id:'server.secureport',   type:'integer',  minValue:80, maxValue:65535, empty:true },
+		{ id:'server.secureport',   type:'oneof',  items: ['server.port']},
 		
 		{ id:'intranet.network', type:'ipaddress' },
 		{ id:'intranet.netmask', type:'ipaddress' },
@@ -53,16 +55,6 @@ function ConfigView(strLoader)
 
 		{ id:'removedMd.dir', type:'length', minSize :0,  maxSize :200 },
 		
-		{ id:'ldap.host',         type:'length',   minSize :0, maxSize :200 },
-		{ id:'ldap.host',         type:'hostname' },
-		{ id:'ldap.port',         type:'integer',  minValue:80, maxValue:65535, empty:true },		
-		{ id:'ldap.baseDN',       type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.usersDN',      type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.bindDN',       type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.bindPW',       type:'length',  minSize :1,  maxSize :200 },
-		{ id:'ldap.nameAttr',     type:'length',  minSize :1,  maxSize :200 },
-        { id:'ldap.uidAttr',      type:'length',  minSize :1,  maxSize :20 },
-
 		{ id:'shib.path',              type:'length',   minSize :0, maxSize :256 },
 		{ id:'shib.attrib.username',   type:'length',   minSize :0, maxSize :150 },
 		{ id:'shib.attrib.surname',    type:'length',   minSize :0, maxSize :150 },
@@ -79,10 +71,6 @@ function ConfigView(strLoader)
 
 	this.indexOptimizerShower = new Shower('indexoptimizer.enable', 'indexoptimizer.subpanel');
 	this.proxyShower = new Shower('proxy.use',    'proxy.subpanel');
-
-	var targetIds = ['ldap.subpanel', 'geonetworkdb.subpanel'];
-	this.ldapShower  = new RadioShower('ldap.use',     'ldap.subpanel', targetIds);
-	this.geonetworkdbShower  = new RadioShower('geonetworkdb.use',     'geonetworkdb.subpanel', targetIds);
 
 	this.shibShower  = new Shower('shib.use',     'shib.subpanel');
     this.inspireShower  = new Shower('inspire.enable',     'inspire.subpanel');
@@ -108,14 +96,19 @@ function ConfigView(strLoader)
         }
     });
 
-    Event.observe($('server.protocol'), 'change', function() {
-        if ($('server.protocol').value == 'https') {
-            $('server.port').value = '443';
+    var port = $('server.port');
+    var securePort = $('server.secureport');
+    var validatePorts = function() {
+        if(port.value === securePort.value) {
+        	port.addClassName("error");
+        	securePort.addClassName("error");
         } else {
-            $('server.port').value = '8080';
+        	port.removeClassName("error");
+        	securePort.removeClassName("error");        	
         }
-
-    });
+    }
+    Event.observe(port, 'keyup', validatePorts);
+    Event.observe(securePort, 'keyup', validatePorts);
 
     Event.observe($('metadata.enableSimpleView'), 'click', function() {
         if (!$('metadata.enableSimpleView').checked) {
@@ -190,6 +183,7 @@ ConfigView.prototype.setData = function(data)
     $('server.protocol').value = data['SERVER_PROTOCOL'];
 	$('server.host').value = data['SERVER_HOST'];
 	$('server.port').value = data['SERVER_PORT'];
+	$('server.secureport').value = data['SERVER_SECURE_PORT'];
 	
 	$('intranet.network').value = data['INTRANET_NETWORK'];
 	$('intranet.netmask').value = data['INTRANET_NETMASK'];
@@ -202,11 +196,12 @@ ConfigView.prototype.setData = function(data)
 	$('oai.tokentimeout').value   = data['OAI_TOKENTIMEOUT'];
 	
 	$('xlinkResolver.enable').checked = data['XLINKRESOLVER_ENABLE'] == 'true';
+	$('hidewithheldelements.enable').checked = data['HIDEWITHHELDELEMENTS_ENABLE'] == 'true';
+	$('hidewithheldelements.keepMarkedElement').checked = data['HIDEWITHHELDELEMENTS_keepMarkedElement'] == 'true';
 
-    $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
-    $('requestedLanguage.only').checked = data['REQUESTED_LANGUAGE_ONLY'] == 'true';
-    $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
-    $('requestedLanguage.ignored').checked = data['REQUESTED_LANGUAGE_IGNORED'] == 'true';
+  $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
+  $('requestedLanguage.only').value = data['REQUESTED_LANGUAGE_ONLY'];
+  $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
 
 	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
 
@@ -240,7 +235,7 @@ ConfigView.prototype.setData = function(data)
     $('metadata.enableXmlView').checked = data['METADATA_XML_VIEW'] == 'true';
     $('metadata.defaultView').value = data['METADATA_DEFAULT_VIEW'];
     
-    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'];
+    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'] == 'true';
     
     $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 
@@ -256,22 +251,6 @@ ConfigView.prototype.setData = function(data)
 	
 	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
 
-	$('ldap.use')       .checked = data['LDAP_USE'] == 'true';
-	$('ldap.host')        .value = data['LDAP_HOST'];
-	$('ldap.port')        .value = data['LDAP_PORT'];
-	$('ldap.defProfile')  .value = data['LDAP_DEF_PROFILE'];
-    $('ldap.uidAttr')     .value = data['LDAP_ATTR_UID'];
-	$('ldap.baseDN')      .value = data['LDAP_DN_BASE'];
-	$('ldap.usersDN')     .value = data['LDAP_DN_USERS'];
-	$('ldap.subtree')   .checked = data['LDAP_SUBTREE'] == 'true' ;
-	$('ldap.anonBind')  .checked = data['LDAP_ANON_BIND'] == 'true' ; 
-	$('ldap.bindDN')      .value = data['LDAP_DN_BIND'];
-	$('ldap.bindPW')      .value = data['LDAP_PW_BIND'];
-	$('ldap.nameAttr')    .value = data['LDAP_ATTR_NAME'];
-	$('ldap.profileAttr') .value = data['LDAP_ATTR_PROFILE'];
-	$('ldap.groupAttr') .value = data['LDAP_ATTR_GROUP'];
-    $('ldap.defGroup')  .value = data['LDAP_DEF_GROUP'];
-
 	$('shib.use')           .checked = data['SHIB_USE'] == 'true';
 	$('shib.path')            .value = data['SHIB_PATH'];
 	$('shib.attrib.username') .value = data['SHIB_ATTRIB_USERNAME'];
@@ -281,17 +260,13 @@ ConfigView.prototype.setData = function(data)
     $('shib.attrib.group')    .value = data['SHIB_ATTRIB_GROUP'];
     $('shib.defGroup')  .value = data['SHIB_DEF_GROUP'];
 
-	$('geonetworkdb.use').checked = data['LDAP_USE'] != 'true';
-
-	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true' && data['LDAP_USE'] != 'true';
+	$('userSelfRegistration.enable').checked = data['USERSELFREGISTRATION_ENABLE'] == 'true';
 
 	this.z3950Shower.update();
 	this.indexOptimizerShower.update();
 	this.proxyShower.update();
-	this.ldapShower.update();
 	this.shibShower.update();
-	this.geonetworkdbShower.update();
-    this.inspireShower.update();
+	this.inspireShower.update();
 
     if (!$('inspire.enable').checked) {
 	    $('metadata.enableInspireView').checked = false;
@@ -323,6 +298,7 @@ ConfigView.prototype.getData = function()
         SERVER_PROTOCOL : $('server.protocol').value,
 		SERVER_HOST : $('server.host').value,
 		SERVER_PORT : $('server.port').value,
+		SERVER_SECURE_PORT : $('server.secureport').value,
 		
 		INTRANET_NETWORK : $('intranet.network').value,
 		INTRANET_NETMASK : $('intranet.netmask').value,
@@ -335,11 +311,12 @@ ConfigView.prototype.getData = function()
 		OAI_CACHESIZE			: $('oai.cachesize')  .value,
 
 		XLINKRESOLVER_ENABLE : $('xlinkResolver.enable').checked,
+		HIDEWITHHELDELEMENTS_ENABLE : $('hidewithheldelements.enable').checked,
+		HIDEWITHHELDELEMENTS_keepMarkedElement : $('hidewithheldelements.keepMarkedElement').checked,
 
-        AUTODETECT_ENABLE : $('autodetect.enable').checked,
-        REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').checked,
-        REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
-        REQUESTED_LANGUAGE_IGNORED : $('requestedLanguage.ignored').checked,
+    AUTODETECT_ENABLE : $('autodetect.enable').checked,
+    REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').value,
+    REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
 
 		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	
@@ -388,22 +365,6 @@ ConfigView.prototype.getData = function()
 		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,
-		
-		LDAP_USE           : $('ldap.use').checked,
-		LDAP_HOST          : $F('ldap.host'),
-		LDAP_PORT          : $F('ldap.port'),
-		LDAP_DEF_PROFILE   : $F('ldap.defProfile'),
-        LDAP_ATTR_UID      : $F('ldap.uidAttr'),                
-		LDAP_DN_BASE       : $F('ldap.baseDN'),
-		LDAP_DN_USERS      : $F('ldap.usersDN'),
-		LDAP_SUBTREE       : $('ldap.subtree').checked,
-		LDAP_ANON_BIND     : $('ldap.anonBind').checked,
-		LDAP_DN_BIND       : $F('ldap.bindDN'),
-		LDAP_PW_BIND       : $F('ldap.bindPW'),
-		LDAP_ATTR_NAME     : $F('ldap.nameAttr'),
-		LDAP_ATTR_PROFILE  : $F('ldap.profileAttr'),
-        LDAP_ATTR_GROUP    : $F('ldap.groupAttr'),
-        LDAP_DEF_GROUP    : $F('ldap.defGroup'),
 
 		SHIB_USE              : $('shib.use').checked,
 		SHIB_PATH             : $('shib.path').value,
@@ -414,7 +375,7 @@ ConfigView.prototype.getData = function()
         SHIB_ATTRIB_GROUP     : $('shib.attrib.group').value,
         SHIB_DEF_GROUP    : $F('shib.defGroup'),
 
-		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked && $('geonetworkdb.use').checked
+		USERSELFREGISTRATION_ENABLE : $('userSelfRegistration.enable').checked
 
 	}
 	

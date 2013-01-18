@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.ISODate;
 import org.fao.oaipmh.exceptions.BadArgumentException;
@@ -46,7 +47,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class Importer {
@@ -105,13 +108,29 @@ public class Importer {
 				md.add(index, metadata);
 			}
 
-			public void handleMetadataFiles(File[] Files, int index)
+			public void handleMetadataFiles(File[] Files, Element info, int index)
 					throws Exception {
+								String infoSchema = "_none_";
+								if (info != null && info.getContentSize() != 0) {
+									Element general = info.getChild("general");
+									if (general != null && general.getContentSize() != 0) {
+										if (general.getChildText("schema") != null) {
+											infoSchema = general.getChildText("schema");
+										}
+									}
+								}
+
+                String lastUnknownMetadataFolderName=null;
                 if(Log.isDebugEnabled(Geonet.MEF))
                     Log.debug(Geonet.MEF, "Multiple metadata files");
 
+                if(Log.isDebugEnabled(Geonet.MEF))
+                	Log.debug(Geonet.MEF, "info.xml says schema should be "+infoSchema);
+
+
 				Element metadataValidForImport = null;
 
+								Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
@@ -123,41 +142,59 @@ public class Importer {
                                 continue;
                             }
 
-                            // If schema is preferred local node schema
-                            // load that file.
-                            if (metadataSchema.equals(preferredSchema)) {
-                                if(Log.isDebugEnabled(Geonet.MEF)) {
-                                    Log.debug(Geonet.MEF, "Found metadata file "
-                                        + file.getName()
-                                        + " with preferred schema ("
-                                        + preferredSchema + ").");
-                                }
-                                handleMetadata(metadata, index);
-                                return;
-                            }
-                            else {
-                                if(Log.isDebugEnabled(Geonet.MEF)) {
-                                    Log.debug(Geonet.MEF, "Found metadata file "
-                                        + file.getName() + " with known schema ("
-                                        + metadataSchema + ").");
-                                }
-                                metadataValidForImport = metadata;
-                            }
+														String currFile = "Found metadata file " + file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator + file.getName();
+														mdFiles.put(metadataSchema,Pair.read(currFile,metadata));
+
                         } catch (NoSchemaMatchesException e) {
+                            // Important folder name to identify metadata should be ../../
+                            lastUnknownMetadataFolderName=file.getParentFile().getParentFile().getName() + File.separator + file.getParentFile().getName() + File.separator;
+                            Log.debug(Geonet.MEF, "No schema match for "
+                                + lastUnknownMetadataFolderName + file.getName() 
+                                + ".");
                             continue;
                         }
                     }
                 }
 
-				// Import a valid metadata if not one found
-				// with preferred schema.
-				if (metadataValidForImport != null) {
-					Log
-							.debug(Geonet.MEF,
-									"Importing metadata with valide schema but not preferred one.");
-					handleMetadata(metadataValidForImport, index);
-                } else
-					throw new BadFormatEx("No valid metadata file found.");
+								if (mdFiles.size() == 0) {
+									throw new BadFormatEx("No valid metadata file found" + ((lastUnknownMetadataFolderName==null)?"":(" in " + lastUnknownMetadataFolderName)) + ".");
+								}
+
+                // 1st: Select metadata with schema in info file
+								Pair<String,Element> mdInform = mdFiles.get(infoSchema);
+								if (mdInform != null) {
+									if (Log.isDebugEnabled(Geonet.MEF)) {
+										Log.debug(Geonet.MEF, mdInform.one()
+											+ " with info.xml schema (" + infoSchema + ").");
+ 									}
+									metadataValidForImport = mdInform.two();
+									handleMetadata(metadataValidForImport, index);
+									return;
+								}
+
+								// 2nd: Select metadata with preferredSchema
+								mdInform = mdFiles.get(preferredSchema);
+                if (mdInform != null) {
+									if (Log.isDebugEnabled(Geonet.MEF)) {
+										Log.debug(Geonet.MEF, mdInform.one()
+											+ " with preferred schema (" + preferredSchema + ").");
+									}
+									metadataValidForImport = mdInform.two();
+									handleMetadata(metadataValidForImport, index);
+									return;
+								} 
+
+								// Lastly: Select the first metadata in the map
+								String metadataSchema = (String)mdFiles.keySet().toArray()[0];
+								mdInform = mdFiles.get(metadataSchema);
+								if (Log.isDebugEnabled(Geonet.MEF)) {
+									Log.debug(Geonet.MEF, mdInform.one()
+										+ " with known schema (" + metadataSchema + ").");
+								}
+                metadataValidForImport = mdInform.two();
+
+								// Import valid metadata
+								handleMetadata(metadataValidForImport, index);
 			}
 
 			// --------------------------------------------------------------------
@@ -191,9 +228,9 @@ public class Importer {
 				String changeDate = null;
 				String source;
 				String sourceName = null;
-				// Schema in info.xml is not used anymore.
-				// as we use autodetect schema to define
-				// metadata schema.
+				// Schema in info.xml is not used here anymore.
+				// It is used in handleMetadataFiles as the first option to pick a 
+				// metadata file from those in a metadata dir in a MEF2
 				// String schema = null;
 				String isTemplate;
 				String localId = null;
@@ -361,7 +398,7 @@ public class Importer {
 					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
 
 				if (indexGroup) {
-					dm.indexMetadataGroup(dbms, id.get(index));
+					dm.indexMetadata(dbms, id.get(index));
 				}
                 else {
                     dm.indexInThreadPool(context,id.get(index),dbms);

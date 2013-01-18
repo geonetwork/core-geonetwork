@@ -58,7 +58,7 @@ public class Utils {
 		return id;
 	}
 
-	/**
+    /**
 	 * Search for a UUID or an internal identifier parameter and return an
 	 * internal identifier using default UUID and identifier parameter names
 	 * (ie. uuid and id).

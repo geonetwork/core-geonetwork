@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <labels xmlns:gfc="http://www.isotc211.org/2005/gfc"
+    xmlns:gmx="http://www.isotc211.org/2005/gmx"
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd">
     
@@ -212,4 +213,25 @@
     <element name="gfc:valueMeasurementUnit">
         <label>Unitats de mesura del valor</label>
     </element>
+    <!-- ==================================================== -->
+    <element name="gmx:name"> 
+        <label>Name</label> 
+        <description>Feature catalogue name</description> 
+    </element> 
+    <element name="gmx:scope"> 
+        <label>Scope</label> 
+        <description>Scope definition</description> 
+    </element> 
+    <element name="gmx:versionNumber"> 
+        <label>Version</label> 
+        <description>Catalogue version</description> 
+    </element> 
+    <element name="gmx:versionDate"> 
+        <label>Date</label> 
+        <description>Catalogue date</description> 
+    </element> 
+    <element name="gmx:fieldOfApplication"> 
+        <label>Field of application</label> 
+        <description>Field of application</description> 
+    </element> 
 </labels>

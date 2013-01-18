@@ -19,10 +19,24 @@
 
 	<xsl:template mode="script" match="/" priority="2">
 
-		<script type="text/javascript" src="{$widgetPath}/js/ext/adapter/ext/ext-base.js"/>
-		<script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
 		<script type="text/javascript" src="{$widgetPath}/js/proj4js-compressed.js"/>
+		<script type="text/javascript" src="{$widgetPath}/js/ext/adapter/ext/ext-base.js"/>
+		<xsl:choose>
+			<xsl:when test="/root/request/debug">
+				<script type="text/javascript" src="{$widgetPath}/js/ext/ext-all-debug.js"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<script type="text/javascript" src="{$widgetPath}/js/ext/ext-all.js"/>
+			</xsl:otherwise>
+		</xsl:choose>
 		<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+		
+		<xsl:if test="/root/request/debug">
+            <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusFeedStore.js" />
+            <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusStore.js" />
+            <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js" />
+
+		</xsl:if>
 		<script type="text/javascript" language="JavaScript">
 			var catalogue;
 
@@ -51,6 +65,7 @@
 
 				var manager = new GeoNetwork.admin.ThesaurusManagerPanel({
 					catalogue: catalogue,
+					feed: '<xsl:value-of select="/root/gui/config/repository/thesaurus"/>',
 					renderTo: 'manager',
 					autoWidth : true,
 					layout : 'border',

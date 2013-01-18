@@ -14,9 +14,11 @@
     <rus>Русский</rus> <!-- Do not translate! -->
     <spa>Español</spa> <!-- Do not translate! -->
     <tur>Türkçe</tur> <!-- Do not translate! -->
+    <pol>Polski</pol> <!-- Do not translate! -->
     
 	<!-- new strings - 2.7 -->
 	<nodata>Null</nodata>
+	<isAdmin>Is administrator ?</isAdmin>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -304,7 +306,7 @@ ISO 19115 не позволяет иметь более одного.
 	<cannotRetrieveGroup js="true">Не удалось получить группы</cannotRetrieveGroup>
 	<selectNewOwner js="true">Выберите пользователя, который будет новым владельцем</selectNewOwner>
 	<selectOwnerGroup js="true">Выберите группу, которой принадлежит выбранный пользователь</selectOwnerGroup>
-	<selectOneFile js="true">Лучше выбрать хотя бы один файл для загрузки!</selectOneFile>
+	<selectOneFileDownload js="true">Лучше выбрать хотя бы один файл для загрузки!</selectOneFileDownload>
 	<checkEmail js="true">Пожалуйста, заполните правильно адрес электронной почты</checkEmail>
 	<addName js="true">Пожалуйста, заполните имя или организацию</addName>
 	<noComment js="true">Без комментариев</noComment>
@@ -327,7 +329,7 @@ ISO 19115 не позволяет иметь более одного.
 	<errorSaveFailed js="true">Ошибка: не удалось сохранить форму </errorSaveFailed>
 	<errorOnAction js="true">Ошибка: действие не удалось </errorOnAction>
 	<errorChangeProtocol js="true">Возможно, файл был загружен. Вы не можете изменить протокол, пока вы не удалите этот файл</errorChangeProtocol>
-	<selectOneFile js="true">Выберите с помощью обзора или введите имя файла до нажатия Загрузить!</selectOneFile>
+	<selectOneFileUpload js="true">Выберите с помощью обзора или введите имя файла до нажатия Загрузить!</selectOneFileUpload>
 	<uploadFailed js="true">Ошибка: Сбой при загрузке! - Вернуться </uploadFailed>
 	<uploadSetFileNameFailed js="true">Ошибка: Загрузка прошла успешно, но не удалось установить имя файла!</uploadSetFileNameFailed>
 	<cannotGetTooltip js="true">Не удается получить подсказку с сервера</cannotGetTooltip>
@@ -586,6 +588,7 @@ ISO 19115 не позволяет иметь более одного.
 	<login>Вход</login>
 	<loginCardTitle>Пользователь/Запись</loginCardTitle>
 	<loginwarning>Необходимо только для администрирования сайта</loginwarning>
+	<loginfailure>Loging failed.  Incorrect username or password</loginfailure>
 	<logout>Выход</logout>
 	<logoutDes>Выйти из системы</logoutDes>
 	<longitude>Долгота (от -180 до 180) в градусах</longitude>
@@ -717,50 +720,6 @@ ISO 19115 не позволяет иметь более одного.
 	<progressChoice value="planned">планируется</progressChoice>
 	<progressChoice/>
 	<protocol>Протокол</protocol>
-	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">Конфигурационный файл сервиса ArcIMS (*.AXL)</protocolChoice>
-	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">Интернет-сервис ArcIMS Feature Map Service</protocolChoice>
-	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">Интернет-сервис ArcIMS Image Map Service</protocolChoice>
-	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Сервис Google Earth KML (версия 2.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography Markup Language</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</protocolChoice>
-  <protocolChoice show="-" value="FILE:GEO">GIS file</protocolChoice>
-  <protocolChoice show="-" value="FILE:RASTER">GIS RASTER file</protocolChoice>
-  	<protocolChoice show="-" value="DB:ORACLE">ORACLE database table</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</protocolChoice>
-	<protocolChoice show="y" value="RBNB:DATATURBINE">Data Turbine</protocolChoice>
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">Сервис OGC-WCS Web Coverage Service (версия 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">Сервис OGC-WFS Web Feature Service(версия 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">Cервис OGC Web Map Service</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Сервис OGC-WMS Capabilities service(версия 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">Cервис OGC Web Map Service (версия 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">Cервис OGC Web Map Service (версия 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Файл для загрузки по FTP</protocolChoice>
-	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Файл для загрузки</protocolChoice>
-	<protocolChoice show="-" value="DB:POSTGIS">Таблица базы данных PostGIS </protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">Файл календаря iCalendar (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web-адрес (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Web-адрес партнера (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Родственная ссылка (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Новостная лента RSS (URL)</protocolChoice>
-	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Демонстрация (URL)</protocolChoice>
-    <protocolChoice show="-" value="UKST">Unknown Service Type</protocolChoice>
 	<pubdate>Дата публикации</pubdate>
 	<publicationDate>Дата публикации</publicationDate>
 	<publisher>Издатель</publisher>
@@ -1387,4 +1346,6 @@ ISO 19115 не позволяет иметь более одного.
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
+	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 </strings>

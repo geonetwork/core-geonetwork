@@ -1,16 +1,20 @@
 package org.fao.geonet.resources;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
@@ -19,6 +23,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.spatial.Pair;
 
 /**
  * Utility methods for managing resources that are site dependent. In other words
@@ -31,6 +36,23 @@ import org.fao.geonet.constants.Geonet;
  */
 public class Resources {
 
+	private final static Set<String> IMAGE_READ_SUFFIXES;
+	private final static Set<String> IMAGE_WRITE_SUFFIXES;
+	static {
+		HashSet<String> suffixes = new HashSet<String>();
+		for (String string : ImageIO.getReaderFileSuffixes()) {
+			suffixes.add(string.toLowerCase());
+		}
+
+		IMAGE_READ_SUFFIXES = Collections.unmodifiableSet(suffixes);
+
+		suffixes = new HashSet<String>();
+		for (String string : ImageIO.getReaderFileSuffixes()) {
+			suffixes.add(string.toLowerCase());
+		}
+
+		IMAGE_WRITE_SUFFIXES = Collections.unmodifiableSet(suffixes);
+	}
 	/**
 	 * Find the configured directory containing logos. The directory the logos
 	 * are located in depends on the configuration of dataImagesDir in the
@@ -174,26 +196,40 @@ public class Resources {
 	 *            logos/ or harvesting/
 	 * @param defaultValue
 	 *            the image to return if unable to find the actual image
-	 * @return the bytes of the actual image or defaultValue
+	 * @param loadSince
+	 * 			  If > -1 then it will be compared to the lastModified of the file.  If it is
+	 * 			  < lastModified then the file will be loaded otherwise <defaultValue,loadSince> will be returned
+	 * @return the bytes of the actual image or defaultValue and the lastModified timestamp.  
+	 * 			Timestamp will be -1 if defaultValue is returned.
+	 * 			If <ul>
+	 * 				 <li>an error occurs</li>
+	 * 			     <li>file does not exist</li>
+	 * 				 <li>loadSince is >= file.lastModified<li>
+	 * 			  </ul>
+	 *  		The defaultValue will be returned
 	 * 
 	 */
-	static byte[] loadResource(String resourcesDir, ServletContext context,
-			String appPath, String filename, byte[] defaultValue)
+	static Pair<byte[],Long> loadResource(String resourcesDir, ServletContext context,
+			String appPath, String filename, byte[] defaultValue, long loadSince)
 			throws IOException {
 		File file = locateResource(resourcesDir, context, appPath, filename);
 
 		if (file.exists()) {
+			
 			try {
-				ByteArrayOutputStream data = new ByteArrayOutputStream();
-				transferTo(file, data, true);
-				return data.toByteArray();
+				if(loadSince < 0 || file.lastModified() > loadSince) {
+					ByteArrayOutputStream data = new ByteArrayOutputStream();
+					transferTo(file, data, true);
+					return Pair.read(data.toByteArray(), file.lastModified());
+				} else {
+					Pair.read(defaultValue, loadSince);
+				}
 			} catch (IOException e) {
 				Log.warning(Geonet.RESOURCES, "Unable to find resource: "
 						+ filename);
-				return defaultValue;
 			}
 		}
-		return defaultValue;
+		return Pair.read(defaultValue, -1L);
 	}
 
 	/**
@@ -223,9 +259,9 @@ public class Resources {
 	 *            the image to return if unable to find the actual image
 	 * @return the bytes of the actual image or defaultValue
 	 */
-	public static byte[] loadImage(ServletContext context, String appPath,
+	public static Pair<byte[],Long> loadImage(ServletContext context, String appPath,
 			String filename, byte[] defaultValue) throws IOException {
-		return loadResource(null, context, appPath, filename, defaultValue);
+		return loadResource(null, context, appPath, filename, defaultValue, -1 );
 	}
 
 	private static File locateResource(String resourcesDir,
@@ -244,7 +280,33 @@ public class Resources {
 				file.getParentFile().mkdirs();
 				transferTo(webappCopy, new FileOutputStream(file), true);
 			}
+
+			final int indexOfDot = file.getName().lastIndexOf(".");
+			final String suffixless = file.getName().substring(0, indexOfDot);
+			String suffix = file.getName().substring(indexOfDot+1);
+			if (!file.exists() && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+				// find a different format and convert it to our desired format
+				File[] found = file.getParentFile().listFiles(new FilenameFilter() {
+
+					@Override
+					public boolean accept(File arg0, String name) {
+						boolean startsWith = name.startsWith(suffixless);
+						boolean canReadImage = name.length()>indexOfDot && IMAGE_READ_SUFFIXES.contains(name.substring(indexOfDot+1).toLowerCase());
+						return startsWith && canReadImage;
+					}
+				});
+
+				if(found.length > 0) {
+					BufferedImage image = ImageIO.read(found[0]);
+					try {
+						ImageIO.write(image, suffix, file);
+					} catch (IOException e) {
+						context.log("Unable to convert image from "+found[0]+" to "+file, e);
+					}
+				}
+			}
 		}
+
 		return file;
 	}
 

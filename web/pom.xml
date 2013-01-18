@@ -29,6 +29,10 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
+	  <dependency>
+      	<groupId>net.sf.ehcache</groupId>
+      	<artifactId>ehcache-core</artifactId>
+      </dependency>
 
       <!-- rewrite url servletfilter -->
       <dependency>
@@ -76,12 +80,12 @@
       <artifactId>spring-jdbc</artifactId>
     </dependency>
 		-->
-    
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
+      <artifactId>spring-context-support</artifactId>
     </dependency>
+    
+    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>
@@ -134,7 +138,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-analyzers</artifactId>
+      <artifactId>lucene-analyzers-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -143,6 +147,14 @@
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-queries</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-facet</artifactId>
     </dependency>
     <dependency>
         <groupId>pcj</groupId>
@@ -232,6 +244,10 @@
       <artifactId>mime-util</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
     </dependency>
@@ -252,7 +268,12 @@
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
     </dependency>
-
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-all</artifactId>
+		<scope>test</scope>
+	</dependency>
+	            
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
@@ -356,7 +377,6 @@
       <dependency>
           <groupId>com.cybozu.labs</groupId>
           <artifactId>langdetect</artifactId>
-          <version>1.0.0.0</version>
       </dependency>
       <dependency>
           <groupId>net.arnx.jsonic</groupId>
@@ -382,8 +402,26 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+		<groupId>org.xhtmlrenderer</groupId>
+		<artifactId>flying-saucer-core</artifactId>
+		<version>9.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.xhtmlrenderer</groupId>
+		<artifactId>flying-saucer-pdf</artifactId>
+		<version>9.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.xhtmlrenderer</groupId>
+		<artifactId>flying-saucer-pdf-itext5</artifactId>
+		<version>9.0.1</version>
+	</dependency>
+	
+	
+	</dependencies>
 
-  </dependencies>
   
   <build>
     <plugins>
@@ -488,6 +526,7 @@
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>
+          <encoding>UTF-8</encoding>
           <nomunge>false</nomunge>
           <jswarn>${minify.verbose}</jswarn>
           <excludes>
@@ -727,6 +766,7 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
+          <archiveClasses>true</archiveClasses>
           <!-- Filter resources according to current profile properties
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
@@ -788,23 +828,36 @@
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.18</version>
+        <artifactId>jetty-maven-plugin</artifactId>
+				<version>7.5.0.v20110901</version>
         <configuration>
           <connectors>
-            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
+              <requestHeaderSize>20000</requestHeaderSize>
+            </connector>
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+              <!-- Note: If another server needs to communicate with this one with
+                    https then it needs the environment variables set as follows:
+                    -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
+                    -->
+              <port>8443</port>
+              <keystore>${project.basedir}/keystore.jks</keystore>
+              <password>password</password>
+              <keyPassword>password</keyPassword>
+              <truststore>${project.basedir}/keystore.jks</truststore>
+              <trustPassword>password</trustPassword>
+              <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
-          <webApp>${project.build.directory}/geonetwork</webApp>
-          <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
-<!--      <webAppSourceDirectory>${build.webapp.resources}</webAppSourceDirectory> -->
+          <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>
-            <baseResource implementation="org.mortbay.resource.ResourceCollection">
-              <resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
-            </baseResource>
+          	<descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
+						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+							<resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+						</baseResource>
           </webAppConfig>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>

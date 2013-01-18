@@ -36,6 +36,36 @@ GeoNetwork.Settings.editor = {
 //    defaultViewMode : 'inspire'
 };
 
+//List of facet to display. If none, the server configuration is use.
+GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
+                                       {name: 'types'},  
+                                       {name: 'serviceTypes'}, 
+                                       {name: 'denominators'}, 
+                                       {name: 'keywords'}, 
+                                       {name: 'createDateYears'}];
+GeoNetwork.Settings.facetMaxItems = 7;
+
+GeoNetwork.Settings.results = {
+        // Parameters to set bounding box highlighter colors
+        // Use a custom single color for bounding box
+        featurecolor: 'orange',
+        // Use a random color map with 2 colors 
+        //colormap: GeoNetwork.Util.generateColorMap(2),
+        // Use a default color map with 10 colors
+        //colormap: GeoNetwork.Util.defaultColorMap,
+        // Use a custom color map
+        //colormap: ['red', 'green', 'blue'],
+        colormap: undefined,
+        // Use a custom CSS rules
+        //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
+        featurecolorCSS: undefined,
+        // Look for relation for all records (true) or only series (default).
+        // Only for series is recommended to not trigger to much queries when
+        // displaying search results. It may be relevant to search for all
+        // if record related to a dataset using largerWorkCitation is used.
+        //loadRelationForAll: true
+        loadRelationForAll: undefined
+};
 // Define if default mode should be used for HTML print output instead of tabs only
 GeoNetwork.printDefaultForTabs = false;
 

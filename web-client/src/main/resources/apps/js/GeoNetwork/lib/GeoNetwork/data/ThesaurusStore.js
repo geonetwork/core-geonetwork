@@ -44,6 +44,8 @@ GeoNetwork.data.ThesaurusStore = function(config){
         name: 'id',
         mapping: 'key'
     }, {
+        name: 'defaultNamespace',
+    }, {
         name: 'type'
     }, {
         name: 'activated'
@@ -54,11 +56,12 @@ GeoNetwork.data.ThesaurusStore = function(config){
         reader: new Ext.data.XmlReader({
             record: 'thesaurus'
         }, DataRecord),
-        sortInfo: {
-            field: 'id',
+        sortInfo: config.sortInfo || {
+            field: 'title',
             direction: 'ASC'
         },
-        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated']
+        fields: ['filename', 'theme', 'id', 'title', 'type', 'activated', 'defaultNamespace'],
+        listeners: config.listeners
     });
     
     if (config.allOption) {

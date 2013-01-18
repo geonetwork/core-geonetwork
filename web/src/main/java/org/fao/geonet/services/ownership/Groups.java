@@ -63,7 +63,7 @@ public class Groups implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Set<String> userGroups = am.getVisibleGroups(dbms, id);
-		Set<String> myGroups   = am.getUserGroups(dbms, us, null);
+		Set<String> myGroups   = am.getUserGroups(dbms, us, null, false);
 
 		//--- remove 'Intranet' and 'All' groups
 		myGroups.remove("0");
@@ -107,7 +107,7 @@ public class Groups implements Service
 				response.addContent(record);
 				// List all group users or administrator
 				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
-									" WHERE (groupId=? AND profile != 'RegisteredUser') OR profile = 'Administrator'";
+									" WHERE (groupId=? AND usergroups.profile != 'RegisteredUser') OR users.profile = 'Administrator'";
 
 				Element editors = dbms.select(query, new Integer(groupId));
 

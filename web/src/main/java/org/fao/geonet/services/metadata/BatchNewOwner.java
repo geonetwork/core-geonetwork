@@ -102,14 +102,14 @@ public class BatchNewOwner implements Service
 				String sourceGrp = info.groupOwner; 
 				if (sourceGrp.equals("")) {
 					context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
-					dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
+					dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp, false);
 				} else {
 					Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
 
 					// -- Set new privileges for new owner from privileges of the old  
 					// -- owner, if none then set defaults
 					if (sourcePriv.size() == 0) {
-						dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp);
+						dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp, false);
 						context.info("No privileges for user "+sourceUsr+" on metadata "+id+", so setting default privileges");
 					} else {
 						for (String priv : sourcePriv) {
@@ -131,7 +131,7 @@ public class BatchNewOwner implements Service
 		// -- reindex metadata
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display

@@ -8,7 +8,8 @@
 	<server>Server</server>
 	<host>Host</host>
 	<port>Port</port>
-	<protocol>Protocol</protocol>
+	<securePort>Secure Port</securePort>
+	<protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Network</network>
@@ -24,9 +25,13 @@
 
     <multilingual>多语言设置</multilingual>
     <autoDetectEnable>启用自动检测搜索请求的语言</autoDetectEnable>
-    <requestedlanguageonly>只有在要求的语言搜索</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>要求语言的搜索结果排序顶部</requestedlanguagesorted>
-    <requestedlanguageignored>无视要求语言搜索</requestedlanguageignored>
 
 	<z3950>Z39.50 Server</z3950>
 	<enable>Enable</enable>
@@ -132,24 +137,7 @@
 		
 	<authentication>Authentication</authentication>
 	
-	<loginuses>Login uses</loginuses>
 	<otherlogins>Allow other users to login from</otherlogins>
-
-	<geonetworkdb>GeoNetwork Database</geonetworkdb>
-
-	<ldap>LDAP</ldap>
-	<defProfile>Default profile</defProfile>
-    <uidAttr>Uid attribute</uidAttr>
-	<login>Login</login>
-	<userDN>User DN</userDN>
-	<distNames>Distinguished names</distNames>
-	<baseDN>Base</baseDN>
-	<usersDN>Users</usersDN>
-	<userAttribs>User's attributes</userAttribs>
-	<password>Password</password>
-	<profile>Profile</profile>
-    <group>Group</group>
-    <defGroup>Default group</defGroup>
 
 	<shib>Shibboleth</shib>
 	<path>Path</path>
@@ -412,5 +400,7 @@
 	<db.maxactive>Maximum number of database connections:</db.maxactive>	
 	<db.statserror>Database statistics:</db.statserror>
     <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

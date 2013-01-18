@@ -1,0 +1,262 @@
+package org.fao.geonet.kernel;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import jeeves.constants.Jeeves;
+import jeeves.guiservices.session.JeevesUser;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ProfileManager;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.jdom.Element;
+import org.junit.Test;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+
+public class XmlSerializerTest {
+	
+	public class DummyXmlSerializer extends XmlSerializer {
+
+		public DummyXmlSerializer(SettingManager settingManager) {
+			super(settingManager);
+		}
+
+		@Override
+		public void delete(Dbms dbms, String table, String id,
+				ServiceContext context) throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void update(Dbms dbms, String id, Element xml,
+				String changeDate, boolean updateDateStamp,
+				ServiceContext context) throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String insert(Dbms dbms, String schema, Element xml, int serial,
+				String source, String uuid, String createDate,
+				String changeDate, String isTemplate, String title, int owner,
+				String groupOwner, String docType, ServiceContext context)
+				throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Element select(Dbms dbms, String table, String id)
+				throws Exception {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask)
+				throws Exception {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask)
+				throws Exception {
+			return super.internalSelect(dbms, table, id, isIndexingTask);
+		}
+
+	}
+	private static final String OWNER_ID = "1234";
+	final String metadata;
+	{
+		InputStream in = XmlSerializerTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
+		try {
+			metadata = IOUtils.toString(in);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			IOUtils.closeQuietly(in);
+		}
+	}
+
+	@Test
+	public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
+		assertHiddenElements(false, false);
+	}
+
+	@Test
+	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
+		assertHiddenElements(true);
+	}
+
+	@Test
+	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
+		mockServiceContext(true, "3333");
+		
+		assertHiddenElements(false);
+	}
+
+	@Test
+	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
+		mockServiceContext(false, null);
+		
+		assertHiddenElements(true);
+	}
+
+	@Test
+	public void testInternalCompleteHidingHiddenElement() throws Exception {
+		mockServiceContext(false, OWNER_ID+"3");
+		
+		SettingManager settingManager = mockSettingManager(true, false);
+		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
+		
+		Dbms dbms = mockDbms();
+		
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
+		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
+
+		assertEquals(0, withheld.size());
+	}
+
+	@Test
+	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
+		mockServiceContext(false, OWNER_ID+"3");
+		
+		assertHiddenElements(true);
+	}
+	
+	@Test
+	public void testInternalSelectHidingWithheldOwner() throws Exception {
+		mockServiceContext(false, OWNER_ID);
+		
+		assertHiddenElements(false);
+	}
+
+	/**
+	 * @param userId null if not logged in non-null to login
+	 */
+	private ServiceContext mockServiceContext(boolean isAdmin, String userId) {
+		ProfileManager profileManager = mock(ProfileManager.class);
+		Set<String> adminProfiles = new HashSet<String>();
+		adminProfiles.add(ProfileManager.ADMIN);
+		when(profileManager.getProfilesSet(ProfileManager.ADMIN)).thenReturn(adminProfiles);
+		
+		Set<String> editorProfiles = new HashSet<String>();
+		final String editorProfile = "Editor";
+		editorProfiles.add(editorProfile);
+		when(profileManager.getProfilesSet(editorProfile)).thenReturn(editorProfiles);
+		
+		ServiceContext context = mock(ServiceContext.class);
+		doCallRealMethod().when(context).setAsThreadLocal();
+		when(context.getProfileManager()).thenReturn(profileManager);
+		UserSession userSession = new UserSession();
+		if (userId != null) {
+			String profile;
+			if (isAdmin) {
+				profile = ProfileManager.ADMIN;
+			} else {
+				profile = editorProfile;
+			}
+			SecurityContextImpl secContext = new SecurityContextImpl();
+			JeevesUser user = new JeevesUser(profileManager);
+			user.setId(userId);
+			user.setUsername("username");
+			user.setProfile(profile);
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
+            secContext.setAuthentication(authentication);
+			SecurityContextHolder.setContext(secContext);
+		} else {
+		    SecurityContextHolder.clearContext();
+		}
+		when(context.getUserSession()).thenReturn(userSession);
+
+		context.setAsThreadLocal();
+		return context;
+	}
+
+	private void assertHiddenElements(boolean checkElementsAreHidden) throws Exception {
+		assertHiddenElements(true, checkElementsAreHidden);
+	}
+
+	private void assertHiddenElements(boolean isEnabled, boolean checkElementsAreHidden) throws Exception {
+		final int numberMdResolution;
+		final int numberAttributes;
+		if(checkElementsAreHidden) {
+			numberMdResolution = 0;
+			numberAttributes = 1;
+		} else {
+			numberMdResolution = 1;
+			numberAttributes = 2;
+		}
+
+		SettingManager settingManager = mockSettingManager(isEnabled);
+		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
+		
+		Dbms dbms = mockDbms();
+		
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
+		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
+		assertEquals(numberMdResolution, resolutionElem.size());
+		
+		@SuppressWarnings("unchecked")
+		List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
+		assertEquals(1, withheld.size());
+		assertEquals(numberAttributes, withheld.get(0).getAttributes().size());
+		assertEquals("withheld", withheld.get(0).getAttributeValue("nilReason", Geonet.Namespaces.GCO));
+		
+		int actualNumberOfChildElements = 0;
+		for (Object element : withheld.get(0).getChildren()) {
+			if (element instanceof Element) {
+				actualNumberOfChildElements += 1;
+			}
+		}
+		assertEquals(numberMdResolution, actualNumberOfChildElements);
+		
+		if(checkElementsAreHidden) {
+			assertEquals("", withheld.get(0).getText());
+		}
+	}
+
+	private Dbms mockDbms() throws SQLException {
+		Element record = new Element(Jeeves.Elem.RECORD).addContent(new Element("data").addContent(metadata));
+		record.addContent(new Element("owner").setText(OWNER_ID));
+		Element response = new Element("result").addContent(record);
+		Dbms dbms = mock(Dbms.class);
+		when(dbms.select(anyString())).thenReturn(response);
+		when(dbms.select(anyString(), anyVararg())).thenReturn(response);
+		when(dbms.select(anyString(), anyMapOf(String.class, String.class))).thenReturn(response);
+		return dbms;
+	}
+
+	private SettingManager mockSettingManager(boolean enabled) {
+		return mockSettingManager(enabled, true);
+	}
+	private SettingManager mockSettingManager(boolean enabled, boolean keepmarkedelem) {
+		SettingManager settingManager = mock(SettingManager.class);
+		when(settingManager.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false)).thenReturn(enabled);
+		when(settingManager.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable")).thenReturn(enabled);
+		when(settingManager.getValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable")).thenReturn(Boolean.toString(enabled));
+
+		when(settingManager.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false)).thenReturn(keepmarkedelem);
+		when(settingManager.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement")).thenReturn(keepmarkedelem);
+		when(settingManager.getValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement")).thenReturn(Boolean.toString(keepmarkedelem));
+		return settingManager;
+	}
+
+}

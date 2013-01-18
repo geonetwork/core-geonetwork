@@ -23,17 +23,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import org.apache.lucene.search.TopFieldCollector;
-import org.apache.lucene.util.NumericUtils;
-import org.apache.lucene.util.Version;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +33,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ConfigurationOverrides;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
+import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.util.NumericUtils;
+import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
 /**
  * Lucene configuration class load Lucene XML configuration file.
  * 
@@ -51,14 +59,157 @@ import java.util.Set;
  * 
  */
 public class LuceneConfig {
-
-	private static final int ANALYZER_CLASS = 1;
+	public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
+    private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
-    private static final int DOC_BOOST_CLASS = 3;
+	private static final int DOC_BOOST_CLASS = 3;
 
 	private File configurationFile;
+	private File taxonomyConfigurationFile;
 	private String appPath;
+	
+    public static class Facet {
+        /**
+         * Default number of values for a facet
+         */
+        public static final int DEFAULT_MAX_KEYS = 10;
+        /**
+         * Max number of values for a facet
+         */
+        public static final int MAX_SUMMARY_KEY = 1000;
+        /**
+         * Define the sorting order of a facet.
+         */
+        public enum SortBy {
+            /**
+             * Use a text comparator for sorting values
+             */
+            VALUE, 
+            /**
+             * Use a numeric compartor for sorting values
+             */
+            NUMVALUE, 
+            /**
+             * Sort by count
+             */
+            COUNT
+        }
 
+        public enum SortOrder {
+            ASCENDIND, DESCENDING
+        }
+    }
+    
+    /**
+     * Facet configuration
+     */
+    public class FacetConfig {
+        private String name;
+        private String plural;
+        private String indexKey;
+        private Facet.SortBy sortBy = Facet.SortBy.COUNT;
+        private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
+        private int max;
+        private String translator;
+        /**
+         * Create a facet configuration from a summary configuration element.
+         * 
+         * @param summaryElement
+         */
+        public FacetConfig(Element summaryElement) {
+            
+            name = summaryElement.getAttributeValue("name");
+            plural = summaryElement.getAttributeValue("plural");
+            indexKey = summaryElement.getAttributeValue("indexKey");
+            translator = summaryElement.getAttributeValue("translator");
+            
+            String maxString = summaryElement.getAttributeValue("max");
+            if (maxString == null) {
+                max = Facet.DEFAULT_MAX_KEYS;
+            } else {
+                max = Integer.parseInt(maxString);
+            }
+            max = Math.min(Facet.MAX_SUMMARY_KEY, max);
+            
+            String sortByConfig = summaryElement.getAttributeValue("sortBy");
+            String sortOrderConfig = summaryElement.getAttributeValue("sortOrder");
+            
+            if("value".equals(sortByConfig)){
+                sortBy = Facet.SortBy.VALUE;
+            } else if("numValue".equals(sortByConfig)){
+                sortBy = Facet.SortBy.NUMVALUE;
+            }
+            
+            if("asc".equals(sortOrderConfig)){
+                sortOrder = Facet.SortOrder.ASCENDIND;
+            }
+        }
+        public String toString() {
+            StringBuffer sb = new StringBuffer("Field: ");
+            sb.append(indexKey);
+            sb.append("\tname:");
+            sb.append(name);
+            sb.append("\tmax:");
+            sb.append(max + "");
+            sb.append("\tsort by");
+            sb.append(sortBy.toString());
+            sb.append("\tsort order:");
+            sb.append(sortOrder.toString());
+            return sb.toString();
+        }
+        /**
+         * @return the name of the facet (ie. the tag name in the XML response)
+         */
+        public String getName() {
+            return name;
+        }
+        /**
+         * @return the plural for the name (ie. the parent tag of each facet values)
+         */
+        public String getPlural() {
+            return plural;
+        }
+        /**
+         * @return the name of the field in the index
+         */
+        public String getIndexKey() {
+            return indexKey;
+        }
+        /**
+         * @return the ordering for the facet. Defaults is by {@link Facet.SortBy#COUNT}.
+         */
+        public Facet.SortBy getSortBy() {
+            return sortBy;
+        }
+        /**
+         * @return asc or desc. Defaults is {@link Facet.SortOrder#DESCENDING}.
+         */
+        public Facet.SortOrder getSortOrder() {
+            return sortOrder;
+        }
+        /**
+         * @return (optional) the number of values to be returned for the facet.
+         * Defaults is {@link Facet#DEFAULT_MAX_KEYS} and never greater than
+         * {@link Facet#MAX_SUMMARY_KEY}.
+         */
+        public int getMax() {
+            return max;
+        }
+        public Translator getTranslator(ServiceContext context, String langCode) {
+            try {
+                return Translator.createTranslator(translator, context, langCode);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+	}
+
+	/**
+	 * List of taxonomy by taxonomy types (hits, hits_with_summary
+	 * for each field (eg. denominator) and its configuration (eg. sort).
+	 */
+	private Map<String, Map<String,FacetConfig>> taxonomy;
+	
 	/**
 	 * Lucene numeric field configuration
 	 */
@@ -115,7 +266,7 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificSearchAnalyzers = new HashMap<String, String>();
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
-    private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
+	private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
 	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
 
 	private String boostQueryClass;
@@ -123,8 +274,8 @@ public class LuceneConfig {
 	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
 
 	private String documentBoostClass;
-    private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-    private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
+	private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
 
 	private Element luceneConfig;
 
@@ -138,8 +289,13 @@ public class LuceneConfig {
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
 
-	private Version LUCENE_VERSION = Version.LUCENE_30;
-	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_30;
+	private long commitInterval = 30 * 1000;
+	private boolean useNRTManagerReopenThread = true;
+	private double nrtManagerReopenThreadMaxStaleSec = 5;
+	private double nrtManagerReopenThreadMinStaleSec = 0.1f;
+	
+	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
+	private Set<String> multilingualSortFields = new HashSet<String>();
 
 	
     /**
@@ -147,7 +303,7 @@ public class LuceneConfig {
 	 * 
 	 * @param appPath
 	 * @param servletContext
-   * @param luceneConfigXmlFile
+	 * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
@@ -155,6 +311,9 @@ public class LuceneConfig {
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
+		String taxonomyConfig = "WEB-INF/config-summary.xml";
+		this.taxonomyConfigurationFile = new File(appPath + taxonomyConfig);
+		this.loadTaxonomy(servletContext, taxonomyConfig);
 	}
 
 	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
@@ -172,11 +331,14 @@ public class LuceneConfig {
 			if (version == null) {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
+					if (LUCENE_VERSION == null) {
+					    LUCENE_VERSION = Geonet.LUCENE_VERSION;
+					}
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
-									+ ". Set to default: " + DEFAULT_LUCENE_VERSION.toString());
-					LUCENE_VERSION = DEFAULT_LUCENE_VERSION;
+									+ ". Set to default: " + Geonet.LUCENE_VERSION.toString());
+					LUCENE_VERSION = Geonet.LUCENE_VERSION;
 				}
 			}
 
@@ -204,6 +366,43 @@ public class LuceneConfig {
 							"Invalid integer value for merge factor. Using default value.");
 					MergeFactor = DEFAULT_MERGEFACTOR;
 				}
+			}
+			
+			String cI = elem.getChildText("commitInterval");
+			if (cI != null) {
+			    try {
+			        commitInterval = Long.valueOf(cI);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid long value for commitInterval. Using default value.");
+			    }
+			}
+			String reopenThread = elem.getChildText(USE_NRT_MANAGER_REOPEN_THREAD);
+			if (reopenThread != null) {
+			    try {
+			        useNRTManagerReopenThread = Boolean.parseBoolean(reopenThread);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid boolean value for useNRTManagerReopenThread. Using default value.");
+			    }
+			}
+			String maxStaleNS = elem.getChildText("nrtManagerReopenThreadMaxStaleSec");
+			if (maxStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMaxStaleSec = Double.valueOf(maxStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMaxStaleSec. Using default value.");
+			    }
+			}
+			String minStaleNS = elem.getChildText("nrtManagerReopenThreadMinStaleSec");
+			if (minStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMinStaleSec = Double.valueOf(minStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMinStaleSec. Using default value.");
+			    }
 			}
 
 			// Tokenized fields
@@ -321,12 +520,16 @@ public class LuceneConfig {
 						Element e = (Element) o;
 						String name = e.getAttributeValue("name");
 						String tagName = e.getAttributeValue("tagName");
+						String multilingualSortField = e.getAttributeValue("multilingualSortField");
 						if (name == null || tagName == null) {
 							Log.warning(
 									Geonet.SEARCH_ENGINE,
 									"Field must have a name and an tagName attribute, check Lucene configuration file.");
 						} else {
 							dumpFields.put(name, tagName);
+							if (Boolean.parseBoolean(multilingualSortField)) {
+							    this.multilingualSortFields.add(name);
+							}
 						}
 					}
 				}				
@@ -346,7 +549,6 @@ public class LuceneConfig {
 			if (elem != null && elem.getText().equals("true")) {
 				setDocsScoredInOrder(true);
 			}
-
 		} catch (FileNotFoundException e) {
 			Log.error(
 					Geonet.SEARCH_ENGINE,
@@ -362,6 +564,53 @@ public class LuceneConfig {
 					"Failed to load Lucene configuration XML file. Error is: "
 							+ e.getMessage());
 		}
+	}
+	
+	private void loadTaxonomy(ServletContext servletContext,
+			String taxonomyConfigFile) {
+		try {
+			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
+					this.taxonomyConfigurationFile));
+			if (servletContext != null) {
+				ConfigurationOverrides.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
+			}
+			
+			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
+			Element definitions = taxonomyConfig.getChild("def");
+			if (definitions != null) {
+				for (Object e : definitions.getChildren()) {
+					if (e instanceof Element) {
+						Element config = (Element) e;
+						taxonomy.put(config.getName(), getSummaryConfig(config));
+					}
+				}
+			}
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+    /**
+     *
+     * @param summaryConfig
+     * @param resultType
+     * @return
+     * @throws Exception
+     */
+	private Map<String,FacetConfig> getSummaryConfig(Element resultTypeConfig) {
+		Map<String, FacetConfig> results = new HashMap<String, FacetConfig>();
+
+		for (Object obj : resultTypeConfig.getChildren()) {
+			if(obj instanceof Element) {
+			    Element summaryElement = (Element) obj;
+			    FacetConfig fc = new FacetConfig(summaryElement);
+				results.put(fc.getIndexKey(), fc);
+			}
+		}
+		return results;
 	}
 
 	private void loadAnalyzerConfig(String configRootName, Map<String, String> fieldAnalyzer) {
@@ -478,6 +727,15 @@ public class LuceneConfig {
 		}
 	}
 
+	/**
+	 * Get the fields that are used for sorting also may have translations.
+	 * 
+	 * See http://trac.osgeo.org/geonetwork/ticket/1112
+	 */
+	public Set<String> getMultilingualSortFields() {
+		return multilingualSortFields;
+	}
+	
 	/**
 	 * 
 	 * @return The list of tokenized fields which could not determined using
@@ -655,8 +913,8 @@ public class LuceneConfig {
 		return RAMBufferSizeMB;
 	}
 
-	public String getLuceneVersion() {
-        return LUCENE_VERSION.toString();
+	public Version getLuceneVersion() {
+        return LUCENE_VERSION;
     }
 
 	/**
@@ -665,7 +923,7 @@ public class LuceneConfig {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Lucene configuration:\n");
-		sb.append(" * Version: " + getLuceneVersion() + "\n");
+		sb.append(" * Version: " + getLuceneVersion().toString() + "\n");
         sb.append(" * RAMBufferSize: " + getRAMBufferSize() + "\n");
 		sb.append(" * MergeFactor: " + getMergeFactor() + "\n");
 		sb.append(" * Default analyzer: " + getDefaultAnalyzerClass() + "\n");
@@ -687,6 +945,13 @@ public class LuceneConfig {
 		sb.append("  * trackDocScores: " + isTrackDocScores() + " \n");
 		sb.append("  * trackMaxScore: " + isTrackMaxScore() + " \n");
 		sb.append("  * docsScoredInOrder: " + isDocsScoredInOrder() + " \n");
+		sb.append("Taxonomy configuration: "
+				+ getTaxonomy().keySet().toString() + "\n");
+		for (String key : getTaxonomy().keySet()) {
+			sb.append("  * type: " + key + "\n");
+			Map<String, FacetConfig> facetsConfig = getTaxonomy().get(key);
+			sb.append(facetsConfig.toString());
+		}
 		return sb.toString();
 	}
 
@@ -733,4 +998,44 @@ public class LuceneConfig {
 	public boolean isDocsScoredInOrder() {
 		return docsScoredInOrder;
 	}
+
+	public Map<String, Map<String,FacetConfig>> getTaxonomy() {
+		return taxonomy;
+	}
+
+	public void setTaxonomy(Map<String, Map<String,FacetConfig>> taxonomy) {
+		this.taxonomy = taxonomy;
+	}
+
+    public static String multilingualSortFieldName(String fieldName, String locale) {
+        return fieldName + "|" + locale;
+    }
+
+    /**
+     * How often to check if a commit is required
+     */
+    public long commitInterval() {
+        return this.commitInterval;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public boolean useNRTManagerReopenThread() {
+        return this.useNRTManagerReopenThread;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMaxStaleSec() {
+        return this.nrtManagerReopenThreadMaxStaleSec;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMinStaleSec() {
+        return this.nrtManagerReopenThreadMinStaleSec;
+    }
 }

@@ -26,6 +26,8 @@ package jeeves.server.resources;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PreDestroy;
+
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.ResourceTracker;
 import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
@@ -262,7 +264,7 @@ public class ResourceManager
 	//--------------------------------------------------------------------------
 	/** Closes all resources doing a commit
 	  */
-
+	@PreDestroy
 	public synchronized void close() throws Exception
 	{
 		release(true);
@@ -314,11 +316,11 @@ public class ResourceManager
 
     Map<Object, TimerContext> timerContexts = new HashMap<Object, TimerContext>();
 
-    private void openMetrics(Object resource) {
+    protected void openMetrics(Object resource) {
         timerContexts.put(resource, resourceManagerResourceIsOpenTimer.time());
     }
 
-    private void closeMetrics(Object resource) {
+    protected void closeMetrics(Object resource) {
         TimerContext context = timerContexts.get(resource);
         if(context == null) {
             Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");

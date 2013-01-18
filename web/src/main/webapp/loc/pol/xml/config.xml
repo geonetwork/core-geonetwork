@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<strings>
+	<site>Strona</site>
+	<name>Nazwa</name>
+	<organ>Organizacja</organ>
+	
+	<server>Serwer</server>
+	<host>Host</host>
+	<port>Port</port>
+	<securePort>Secure Port</securePort>
+  <protocol>Preferred Protokół</protocol>
+	
+	<intranet>Intranet</intranet>
+	<network>Sieć</network>
+	<netmask>Maska sieci</netmask>
+	
+	<searchStats>Statystyki wyszukiwania</searchStats>
+
+	<z3950>Serwer Z39.50</z3950>
+	<enable>Włącz</enable>
+
+	<threadedindexing>Wielowątkowe indeksowanie</threadedindexing>
+	<maxthreads>Liczba wątków</maxthreads>
+	<recommendedThreads>Zalecane</recommendedThreads>
+	<reasonForOne>Baza danych nieprzetestowana lub niewspierana</reasonForOne>
+	<reasonForMore>Na podstawie ilości procesorów</reasonForMore>
+
+<multilingual>Ustawienia wielu języków</multilingual>
+    <autoDetectEnable>Włącz wykrywanie języka w wyszukiwaniu</autoDetectEnable>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguagesorted>Wyniki wyszukiwania w zadanym języku pokaż na wierzchu</requestedlanguagesorted>
+
+	<oai>OAI Provider</oai>
+		<datesearch>Wyszukiwanie danych</datesearch>
+		<datesearchopt>
+			<dsopt label="temporal extent">1</dsopt>
+			<dsopt label="modification date">2</dsopt>
+		</datesearchopt>
+	
+		<tokentimeout>Czas oczekiwania na wznowienie</tokentimeout>
+		<cachesize>Rozmiar pamięci podręcznej</cachesize>
+
+	<xlinkResolver>XLink Resolver</xlinkResolver>
+
+    <inspire>INSPIRE</inspire>
+	
+	<harvester>Zbieranie (Harvesting)</harvester>
+	<enableEditing>Pozwól na edycję zebranych danych</enableEditing>
+	
+	<downloadservice>Usługa pobierania</downloadservice>
+	<leave>Linki metadanych bez zmieniania</leave>
+	<simple>Użyj GeoNetwork simple file download service (resources.get)</simple>
+	<withdisclaimer>Użyj GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
+
+	<selectionmanager>Wyniki wyszukiwania metadanych</selectionmanager>
+	<maxrecords>Max.liczba wybranych rekordów</maxrecords>
+
+	<indexoptimizer>Lucene Index Optimizer</indexoptimizer>
+		<at>Uruchom o</at>
+		<atSpec>( godzina : minuta np.: 23:15 )</atSpec>
+		<interval>Uruchom ponownie co:</interval>
+		<hourintervals>
+			<hour label="1 godzina (nie zalecane)">1</hour>
+			<hour label="3 godziny">3</hour>
+			<hour label="6 godzin">6</hour>
+			<hour label="12 godzin">12</hour>
+			<hour label="1 dzień">24</hour>
+			<hour label="2 dni">48</hour>
+			<hour label="3 dni">72</hour>
+			<hour label="4 dni">96</hour>
+		</hourintervals>
+		<hours>
+			<hour label="0">0</hour>
+			<hour label="1">1</hour>
+			<hour label="2">2</hour>
+			<hour label="3">3</hour>
+			<hour label="4">4</hour>
+			<hour label="5">5</hour>
+			<hour label="6">6</hour>
+			<hour label="7">7</hour>
+			<hour label="8">8</hour>
+			<hour label="9">9</hour>
+			<hour label="10">10</hour>
+			<hour label="11">11</hour>
+			<hour label="12">12</hour>
+			<hour label="13">13</hour>
+			<hour label="14">14</hour>
+			<hour label="15">15</hour>
+			<hour label="16">16</hour>
+			<hour label="17">17</hour>
+			<hour label="18">18</hour>
+			<hour label="19">19</hour>
+			<hour label="20">20</hour>
+			<hour label="21">21</hour>
+			<hour label="22">22</hour>
+			<hour label="23">23</hour>
+		</hours>
+		<minutes>
+			<minute label="0">0</minute>
+			<minute label="15">15</minute>
+			<minute label="30">30</minute>
+			<minute label="45">45</minute>
+		</minutes>
+
+	<csw>Profil CSW ISO</csw>
+	<contactId>Dane kontaktowe</contactId>
+	<title>Tytuł</title>
+	<abstract>Streszczenie</abstract>
+	<fees>Opłaty</fees>
+	<accessConstraints>Ograniczenia dostępu</accessConstraints>
+    <cswMetadataPublic>Wprowadzone metadane są dostępne publicznie</cswMetadataPublic>
+    
+	<clickablehyperlinks>Aktywne hyperlinki</clickablehyperlinks>
+
+	<localrating>Rating lokalny</localrating>
+    <autofixing>Automatyczne poprawki</autofixing>
+	
+	<proxy>Proxy</proxy>
+	<use>Użyj</use>
+	<username>Nazwa użytkownika</username>
+	
+	<feedback>Zwrotny kontakt</feedback>
+	<email>EMail</email>
+	<smtpHost>SMTP Host</smtpHost>
+	<smtpPort>SMTP Port</smtpPort>
+
+	<userSelfRegistration>automatyczna rejestracja użytkowników</userSelfRegistration>
+	
+	<removedMetadata>Usunięte metadane</removedMetadata>
+	<dir>Katalog</dir>
+		
+	<authentication>Autentykacja</authentication>
+	
+	<loginuses>Login przy użyciu</loginuses>
+	<otherlogins>Zezwól innym użytkownikom na logowanie się z</otherlogins>
+
+	<geonetworkdb>Autentykacja GeoNetwork</geonetworkdb>
+
+	<ldap>LDAP</ldap>
+	<defProfil>Domyślny profil</defProfil>
+    <uidAttr>Atrybut Uid</uidAttr>
+	<login>Login</login>
+	<userDN>DN Użytkownika</userDN>
+	<distNames>Rozróżnialne nazwy (DN)</distNames>
+	<baseDN>Baza</baseDN>
+	<usersDN>Użytkownicy</usersDN>
+	<userAttribs>Atrybuty konta użytkownika</userAttribs>
+	<password>Hasło</password>
+	<Profil>Profil</Profil>
+    <group>Grupa</group>
+    <defGroup>Domyślna grupa</defGroup>
+
+	<shib>Shibboleth</shib>
+	<path>Ścieżka</path>
+	<attributes>Mapowanie atrybutów Shibboleth</attributes>
+	<surname>Nazwisko</surname>
+	<firstname>Imię</firstname>
+
+    <metadataEnableInspireSearch>Aktywuj panel wyszukiwania</metadataEnableInspireSearch>
+
+    <metadataViews>Widoki metadanych</metadataViews>
+    <metadataEnableSimpleView>Aktywuj podstawowy widok</metadataEnableSimpleView>
+    <metadataEnableIsoView>Aktywuj widok ISO</metadataEnableIsoView>
+    <metadataEnableInspireView>Aktywuj widok INSPIRE</metadataEnableInspireView>
+    <metadataEnableXmlView>Aktywuj widok XML</metadataEnableXmlView>
+    <metadataDefaultView>Widok domyślny</metadataDefaultView>
+    <metadataSimpleView>Widok podstawowy</metadataSimpleView>
+    <metadataIsoView>Widok ISO</metadataIsoView>
+    <metadataInspireView>Widok INSPIRE</metadataInspireView>
+    <metadataXmlView>Widok XML</metadataXmlView>
+    <metadataAdvancedView>Widok zaawansowany</metadataAdvancedView>
+
+	<metadataPrivs>Uprawnienia do metadanych</metadataPrivs>
+	<md.usergrouponly>Określ uprawnienia wyłącznie dla grup</md.usergrouponly>
+	
+	<!-- Buttons -->
+	
+	<save>Zapisz</save>
+	<refresh>Odśwież</refresh>
+	
+	<!-- validator messages -->
+	
+	<validator>
+		<length>
+			<cannotBeEmpty>Atrybut '{NAME}' nie może być pusty</cannotBeEmpty>
+			<invalidMinSize>Atrybut '{NAME}' musi mieć długość min. {VALUE} znaków</invalidMinSize>
+			<invalidMaxSize>Atrybut '{NAME}' może mieć max. {VALUE} znaków</invalidMaxSize>
+		</length>
+		
+		<integer>
+			<notInt>Atrybut '{NAME}' musi być liczbą całkowitą</notInt>
+			<invalidMinValue>Atrybut '{NAME}' musi być &gt;= {VALUE}</invalidMinValue>
+			<invalidMaxValue>Atrybut '{NAME}' musi być &lt;= {VALUE}</invalidMaxValue>
+		</integer>		
+		
+		<alphanum>
+			<notAlphaNumeric>Atrybut '{NAME}' musi być alphanumeryczny (zaczynać się od litery)</notAlphaNumeric>
+		</alphanum>
+		
+		<hostname>
+			<notHostName>Atrybut '{NAME}' nie jest prawidłową nazwą host-a</notHostName>
+		</hostname>
+		
+		<url>
+			<notURL>Atrybut '{NAME}' nie jest poprawnym adresem URL</notURL>
+		</url>
+		
+		<ipaddress>
+			<notIP>Atrybut '{NAME}' nie jest poprawnym adresem IP</notIP>
+		</ipaddress>
+	</validator>
+	
+	<!-- display messages -->
+	
+	<cannotGet>Nie można odczytać konfiguracji systemu</cannotGet>
+	<cannotSave>Nie można zapisać konfiguracji</cannotSave>
+	<saveOk>Konfiguracja systemu została zapisana.</saveOk>
+	
+	<!-- tooltips -->
+	
+	<tips>
+		<tip id="site.siteId">
+			Unikalny identyfikator katalogu.
+			Po zmianie identyfikatora strony, użytkownik powinien zaktualizować indeks i logo
+			w panelu administratora.
+		</tip>
+
+		<tip id="site.name">
+			Używane do identyfikacji instalacji.
+		</tip>
+		
+		<!-- server -->
+		
+		<tip id="server.host">
+			Server <b>host</b> i <b>port</b> są używane do utworzenia URLs do
+			serwera GeoNetwork. np. podczas edycji metadanych oraz odpowiedzi na GetCapabilities przy żądaniu CS/W.
+			<br/>
+			<b>Uwaga:</b> użyj narzędzia GAST do wprowadzenia tych informacji w metadanych.
+		</tip>
+		
+		<!-- intranet -->
+		
+		<tip id="intranet.network">
+			<b>Sieć</b> oraz <b>Maska sieci</b> są używane do identyfikowania
+			wewnętrznych połaczeń do GeoNetwork (grupa intranet).
+		</tip>
+		
+		<!-- Z39.50 -->
+		
+		<tip id="z3950.enable">
+			Jeśli ustawione to przy starcie GeoNetwork uruchamia komponent Z39.50 .
+			(ISO23950).
+			<br/>
+			<b>Uwaga:</b> zrestartuj GeoNetwork aby uaktywnić zmiany.
+		</tip>
+		
+		<tip id="z3950.port">
+			Zmień port nasłuchu Z39.50.
+			<br/>
+			<b>Uwaga:</b> zzrestartujuj GeoNetwork aby uaktywnić zmiany.
+		</tip>
+	
+		<!-- oai  -->
+		
+		<tip id="oai.mdmode">
+			Wpływa na zachowanie OAI kiedy podano parametery z lub dopóki.
+			Jeśli ustawiony zakres czasowy przeszukiwany jest zakres czasowy podany w metadanych.
+			Jeśli ustawiona data modyfikacji przeszukiwana jest data mdyfikacji metadanych.
+			<br/>
+			<b>Uwaga:</b> zrestartuj GeoNetwork aby uaktywnić zmiany.
+		</tip>
+		
+		<tip id="oai.tokentimeout">
+			Liczba sekund, gdy OAI resultset utrzymuje cache i może być przeszukiwany przy użyciu OAI resumptionToken
+			<br/>
+			<b>Uwaga:</b> zrestartuj GeoNetwork aby uaktywnić zmiany.
+		</tip>
+		
+		<tip id="oai.cachesize">
+			Liczba OAI resultSets przechowywanych w Cache.
+		</tip>
+
+		<!-- CSW ISO Profil -->
+		<tip id="csw.enable">
+			Uaktywnia CSW ISO Profil. Pozwala zbierać dane z innyc katalogów (harvesting).
+			<br/>
+			<b>Uwaga:</b> zrestartuj GeoNetwork aby uaktywnić zmiany.
+		</tip>
+		<tip id="csw.contactId">
+			Skonfiguruj CSW ISO Profil kontakt dla operacji for GetCapabilities.
+		</tip>
+		<tip id="csw.title">Tytuł</tip>
+		<tip id="csw.abstract">Streszczenie</tip>
+		<tip id="csw.fees">Opłaty</tip>
+		<tip id="csw.accessConstraints">Ograniczenia dostępu</tip>
+		
+		<!-- clickable hyperlinks -->
+		
+		<tip id="clickablehyperlinks.enable">
+			Jeśli ustawione GeoNetwork uaktywni hyperlinki w metadanych.
+		</tip>
+
+		<!-- local rating -->
+		<tip id="localrating.enable">
+			Jeśli ustawione GeoNetwork określi rating dla metadanych tylko z tego węzła (nie jest dystrybuowane między innymi węzłami GeoNetwork).
+		</tip>
+		
+		<!-- automatic fixes -->
+		<tip id="autofixing.enable">
+			Jeśli włączone GeoNetwork automatycznie dokonuje korekt przy zapisie metadanych.
+		</tip>
+
+		<!-- proxy -->
+		
+		<tip id="proxy.use">
+			Jeśli włączone GeoNetwork używa podanych  parameterów proxy przy dostępie do zdalnych węzłów (np. przy zbieraniu danych -harvesting).
+		</tip>
+		
+		<!-- feedback -->
+		
+		<tip id="feedback.email">
+			 Adres email  administratora.
+		</tip>
+		
+		<tip id="feedback.mail.host">
+			SMTP <b>host</b> oraz <b>port</b> używany do wysyłania email-i
+			do użytkowników GeoNetwork kiedy zasób zostanie pobrany.
+		</tip>
+		
+		<!-- removed metadata -->
+		
+		<tip id="removedMd.dir">
+			Katalog używany do składowania metadanych (w formacie MEF ) kiedy są usuwane.
+		</tip>
+
+		<!-- userSelfRegistration -->
+		
+		<tip id="userSelfRegistration.enable">
+			Jeśli ustwiony użytkownicy będą mogli sami się rejestrować (są oni przypisywani do grupy GUEST). Zwrotny email na podstawie podanego kontaktu zwrotnego.
+			<br/>
+		</tip>
+		
+		<tip id="downloadservice.simple">
+				Jeśli protokół jest typu 'Proste pobieranie danych' użytkownik może pobrać dane z Geonetwork bez dodatkowych działań.
+		</tip>
+		<tip id="downloadservice.withdisclaimer">
+				Jeśli protokół jest typu 'Data for download' użytkownik może pobrać dane z Geonetwork po zaakceptowaniu warunków korzystania z usuługi. Zasób jest spakowany jako paczka zip z opisem ograniczeń i zawartością rekordu metadanych (plik MEF).
+		</tip>
+		<tip id="downloadservice.leave">
+				Wybór tej opcji oznacza, że GeoNetwork obsługiwać będzie pobieranie plików.
+		</tip>
+
+		<!-- xlinkResolver -->
+
+		<tip id="xlinkResolver.enable">
+			Jeśli ustawione, będą rozwijane XLink-i do fragmentów rekordów metadanych.
+		</tip>
+
+		<!-- searchStats -->
+
+		<tip id="searchStats.enable">
+			Jeśli ustawione będą zbierane i zapisywane statystki wyszukiwania.
+		</tip>
+
+        <!-- multilingual settings -->
+        <tip id="autodetect.enable">
+            If set, the search language is automatically detected. Note that this doesn't work very well for short search terms.
+        </tip>
+        <tip id="requestedlanguage.only">
+            Only return search results in the requested language.
+        </tip>
+        <tip id="requestedlanguage.sorted">
+            Return search results in the requested language on top.
+        </tip>
+        <tip id="requestedlanguage.ignored">
+            Ignore requested language for search results.
+        </tip>
+
+	</tips>
+	<data.dir>Katalog danych:</data.dir>
+  <codeList.dir>Katalog thesaurusów:</codeList.dir>
+	<data.resources>Resources directory:</data.resources>
+	<data.configDir>Configuration directory:</data.configDir>
+	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
+	<data.subversionPath>Subversion directory:</data.subversionPath>
+	<data.codeListDir>Thesaurus directory:</data.codeListDir>
+	<xslt.factory>XSLT factory:</xslt.factory>
+	<java.vm.name>JVM:</java.vm.name>
+	<java.vm.vendor>JVM dostawca:</java.vm.vendor>
+	<java.version>JVM wersja:</java.version>
+	<os.arch>System - architektura:</os.arch>
+	<os.name>System - nazwa:</os.name>
+	<mem.total>Pamięć całkowita:</mem.total>
+	<mem.free>Całkowita wolna pamięć:</mem.free>
+	<index.size.lucene>Lucene index - rozmiar (ko):</index.size.lucene>
+	<index.size>Całkowity rozmiar indeksu (ko):</index.size>
+	<index.path>Katalog indeksu:</index.path>
+	<index>Lucene index</index>
+	<main>System </main>
+	<catalogue>Informacje o katalogu</catalogue>
+	<system>Konfiguracja katalogu </system>
+	<database>Informacje o bazie danych</database>
+	<siteId>Identyfikator:</siteId>
+	<version>Wersja:</version>
+	<subVersion>Pod-wersja:</subVersion>
+	<index.lucene.config>Lucene:</index.lucene.config>
+	<db.url>Baza danych:</db.url>
+	<db.openattempt>Status bazy danych:</db.openattempt>	
+	<db.numactive>Aktywne połączenia z bazą danych:</db.numactive>	
+	<db.numidle>Dostępne połączenia z bazą danych:</db.numidle>	
+	<db.maxactive>Maksymalna liczba połączeń z bazą danych:</db.maxactive>	
+	<db.statserror>Statystyki bazy danych:</db.statserror>
+    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+</strings>
+
