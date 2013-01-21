@@ -361,9 +361,18 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
               };
               setCHE();
               chinput.on('click', setCHE);
-            } else if(chinput) {
-              chinput.hide();
-            }
+              } else {
+                if(chinput) {
+                  chinput.hide();
+                }
+
+                var siblings = chinput.dom.siblings();
+                for(var i = 0; i < siblings.length; i++) {
+                  if(siblings[i].localName === 'label') {
+                    Ext.get(siblings[i]).hide();
+                  }
+                }
+              }
 
             if (wgsinput && nativeCoordsEl) {
               if (!wgsInputs) {
