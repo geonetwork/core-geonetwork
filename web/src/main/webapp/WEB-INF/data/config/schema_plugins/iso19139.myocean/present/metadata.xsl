@@ -11,97 +11,181 @@
 	
 	<!-- CSV export mode -->
 	<xsl:template mode="csv" match="gmd:MD_Metadata">
+		
+		<xsl:variable name="isProduct" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series'"/>
+		
 		<xsl:choose>
 			<xsl:when test="geonet:info/schema = 'iso19139.myocean'">
 				<metadata>
-					<ProductID><xsl:value-of select="gmd:fileIdentifier"/></ProductID>
-
-					<ProductionCentre><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					
+					<Type><xsl:value-of select="if ($isProduct) then 'PRODUCT' else 'DATASET'"/></Type>
+					
+					<Identifier><xsl:value-of select="gmd:fileIdentifier"/></Identifier>
+					
+					<ProductionCentre><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/
 						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']/
-						gmd:organisationName/gco:CharacterString"/></ProductionCentre>
-
-					<WorkPackage>Not available</WorkPackage>
-
+						gmd:organisationName/gco:CharacterString else ''"/></ProductionCentre>
+					
 					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords">
 						<GeographicalReferenceArea><xsl:value-of select="gmd:keyword/*/text()"/></GeographicalReferenceArea>
 					</xsl:for-each>
-
+					
+					
 					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
 						<Parameters><xsl:value-of select="gmd:keyword/*/text()"/></Parameters>
 					</xsl:for-each>
+						
 					
-					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords">
-						<TemporalScale><xsl:value-of select="gmd:keyword/*/text()"/></TemporalScale>
-					</xsl:for-each>
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+								[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords">
+								<TemporalScale><xsl:value-of select="gmd:keyword/*/text()"/></TemporalScale>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<TemporalScale></TemporalScale>
+						</xsl:otherwise>
+					</xsl:choose>
 					
-					<Title><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
-						gmd:CI_Citation/gmd:title/gco:CharacterString"/></Title>
+					<Title><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+						gmd:CI_Citation/gmd:title/gco:CharacterString else ''"/></Title>
 					
-					<CustomerName><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
-						gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/></CustomerName>
+					<Description><xsl:value-of select="if ($isProduct) then '' else gmd:identificationInfo/
+						gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/></Description>
 					
-					<ProductionUnit><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					
+					
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<DisseminationUnit></DisseminationUnit>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+								gmd:pointOfContact/gmd:CI_ResponsibleParty/
+								gmd:organisationName/gco:CharacterString">
+								<DisseminationUnit><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
+									gmd:pointOfContact/gmd:CI_ResponsibleParty/
+									gmd:contactInfo/gmd:CI_Contact/gmd:address/
+									gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/></DisseminationUnit>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
+					<CustomerName><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+						gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString else ''"/></CustomerName>
+					
+					<ProductionUnit><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/
 						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/
-						gmd:organisationName/gco:CharacterString"/></ProductionUnit>
+						gmd:organisationName/gco:CharacterString else ''"/></ProductionUnit>
 					
 					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 						gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-						<GeographicalCoverage><xsl:value-of select="gmd:westBoundLongitude"/>,<xsl:value-of select="gmd:southBoundLatitude"/><xsl:text> </xsl:text><xsl:value-of select="gmd:eastBoundLongitude"/>,<xsl:value-of select="gmd:northBoundLatitude"/></GeographicalCoverage>
+						<GeographicalCoverage><xsl:value-of select="gmd:westBoundLongitude"/>-<xsl:value-of select="gmd:eastBoundLongitude"/><xsl:text> </xsl:text><xsl:value-of select="gmd:southBoundLatitude"/>-<xsl:value-of select="gmd:northBoundLatitude"/></GeographicalCoverage>
 					</xsl:for-each>
 					
-					<HorizontalResolution><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					<HorizontalResolution><xsl:if test="$isProduct"><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
 						gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance"/><xsl:text> </xsl:text><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/
-							gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/></HorizontalResolution>
+							gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/></xsl:if></HorizontalResolution>
 					
 					
 					<xsl:variable name="vnl_flag">vertical level number: </xsl:variable>
-					<NumberOfVerticalLevels><xsl:value-of select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
-						gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]/substring-after(gco:CharacterString, $vnl_flag)"/></NumberOfVerticalLevels>
+					<NumberOfVerticalLevels><xsl:if test="$isProduct"><xsl:value-of select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
+						gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]/substring-after(gco:CharacterString, $vnl_flag)"/></xsl:if></NumberOfVerticalLevels>
 					
 					<xsl:variable name="tr_flag">temporal resolution: </xsl:variable>
-					<TemporalResolution><xsl:value-of select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
-						gmd:MD_RangeDimension/gmd:descriptor[contains(., 'temporal')]/substring-after(gco:CharacterString, $tr_flag)"/></TemporalResolution>
+					<TemporalResolution><xsl:if test="$isProduct"><xsl:value-of select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
+						gmd:MD_RangeDimension/gmd:descriptor[contains(., 'temporal')]/substring-after(gco:CharacterString, $tr_flag)"/></xsl:if></TemporalResolution>
 					
-					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='processing-level']/gmd:MD_Keywords">
-						<ProcessingLevel><xsl:value-of select="gmd:keyword/*/text()"/></ProcessingLevel>
-					</xsl:for-each>
 					
-					<Variables>Not available</Variables>
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+								[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='processing-level']/gmd:MD_Keywords">
+								<ProcessingLevel><xsl:value-of select="gmd:keyword/*/text()"/></ProcessingLevel>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<ProcessingLevel></ProcessingLevel>
+						</xsl:otherwise>
+					</xsl:choose>
 					
-					<ScientificAccurary>Not available</ScientificAccurary>
+					<ProcessingInformationTargetDeliveryTime><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
+						gmd:MD_MaintenanceInformation/gmd:maintenanceNote else ''"/></ProcessingInformationTargetDeliveryTime>
 					
-					<ProcessingInformationTargetDeliveryTime><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
-						gmd:MD_MaintenanceInformation/gmd:maintenanceNote"/></ProcessingInformationTargetDeliveryTime>
+					<ProcessingInformationUpdateFrequency><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
+						gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue else ''"/></ProcessingInformationUpdateFrequency>
 					
-					<ProcessingInformationUpdateFrequency><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
-						gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue"/></ProcessingInformationUpdateFrequency>
+					<ProcessingInformationUpdatedPeriodStart><xsl:value-of select="if ($isProduct) then substring-before(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
+						gmd:MD_MaintenanceInformation/gmd:updateScopeDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString, '#') else ''"/></ProcessingInformationUpdatedPeriodStart>
 					
-					<ProcessingInformationUpdatedPeriodStart><xsl:value-of select="substring-before(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
-						gmd:MD_MaintenanceInformation/gmd:updateScopeDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString, '#')"/></ProcessingInformationUpdatedPeriodStart>
+					<ProcessingInformationUpdatedPeriodEnd><xsl:value-of select="if ($isProduct) then substring-after(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
+						gmd:MD_MaintenanceInformation/gmd:updateScopeDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString, '#') else ''"/></ProcessingInformationUpdatedPeriodEnd>
 					
-					<ProcessingInformationUpdatedPeriodEnd><xsl:value-of select="substring-after(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceMaintenance/
-						gmd:MD_MaintenanceInformation/gmd:updateScopeDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString, '#')"/></ProcessingInformationUpdatedPeriodEnd>
-					
-					<TemporalExtent><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+					<TemporalExtentStart><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 						gmd:EX_Extent/gmd:temporalElement/
-						gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]"/><xsl:text>-</xsl:text><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+						gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]"/></TemporalExtentStart>
+					
+					<TemporalExtentEnd><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent/gmd:temporalElement/
-							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]"/></TemporalExtent>
+							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]"/></TemporalExtentEnd>
 					
-					<NumberOfDatasetsRelated><xsl:value-of select="count(//gmd:onLine[@uuidref!=''])"/></NumberOfDatasetsRelated>
+					<NumberOfDatasetsRelated><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[@uuidref!='']) else ''"/></NumberOfDatasetsRelated>
 					
-					<ProtocolMYOSUB><xsl:value-of select="count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB'])"/></ProtocolMYOSUB>
-					<ProtocolMYODGF><xsl:value-of select="count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF'])"/></ProtocolMYODGF>
-					<ProtocolWWWFTP><xsl:value-of select="count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'WWW:FTP'])"/></ProtocolWWWFTP>
-					<ProtocolOGCWMS><xsl:value-of select="count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'OGC:WMS'])"/></ProtocolOGCWMS>
+					
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<xsl:for-each select="//gmd:onLine[@uuidref!='']">
+								<ListOfRelatedDataset><xsl:value-of select="@uuidref"/></ListOfRelatedDataset>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<ListOfRelatedDataset></ListOfRelatedDataset>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<Protocol-MYO-SUB><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB']) else ''"/></Protocol-MYO-SUB>
+					<Protocol-MYO-DGF><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF']) else ''"/></Protocol-MYO-DGF>
+					<Protocol-WWW-FTP><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'WWW:FTP']) else ''"/></Protocol-WWW-FTP>
+					<Protocol-OGC-WMS><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'OGC:WMS']) else ''"/></Protocol-OGC-WMS>
+					
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<URL-MYO-MOTU-SUB></URL-MYO-MOTU-SUB>
+							<URL-MYO-DGF></URL-MYO-DGF>
+							<URL-WWW-FTPWMS></URL-WWW-FTPWMS>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+								gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB']">
+								<URL-MYO-MOTU-SUB><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-MYO-MOTU-SUB>
+							</xsl:for-each>
+							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+								gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF']">
+								<URL-MYO-DGF><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-MYO-DGF>
+							</xsl:for-each>
+							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+								gmd:protocol/gco:CharacterString = 'WWW:FTP']">
+								<URL-WWW-FTP><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-WWW-FTP>
+							</xsl:for-each>
+							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+								gmd:protocol/gco:CharacterString = 'OGC:WMS']">
+								<URL-OGC-WMS><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-OGC-WMS>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<ProductUpdateDate><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+						gmd:CI_Citation/gmd:editionDate/gco:Date else ''"/></ProductUpdateDate>
+					
+					<FeatureType><xsl:value-of select="if($isProduct) then '' else gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName"/></FeatureType>
 					
 					<MetadataCreationTime><xsl:value-of select="geonet:info/createDate"/></MetadataCreationTime>
 					
