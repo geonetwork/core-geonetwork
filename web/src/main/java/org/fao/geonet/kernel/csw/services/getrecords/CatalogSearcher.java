@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,12 +44,16 @@ import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
+import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
+import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -70,6 +75,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
@@ -422,7 +428,7 @@ public class CatalogSearcher {
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
         if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint);
+            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, _luceneConfig);
             Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
         }
 
@@ -564,11 +570,22 @@ public class CatalogSearcher {
      * @param cswServiceSpecificConstraint
      * @return
      * @throws ParseException
+     * @throws QueryNodeException 
      */
-    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint) throws ParseException {
-        String[] fields = {"title"};
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
-        Query q = parser.parse(cswServiceSpecificConstraint);
+    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
+        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
+        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
+            String name = field.getName();
+            int precisionStep = field.getPrecisionStep();
+            NumberFormat format = NumberFormat.getNumberInstance();
+            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
+            NumericConfig config = new NumericConfig(precisionStep, format, type);
+            numericMap.put(name, config);
+        }
+        parser.setNumericConfigMap(numericMap);
+        Query q = parser.parse(cswServiceSpecificConstraint, "title");
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
