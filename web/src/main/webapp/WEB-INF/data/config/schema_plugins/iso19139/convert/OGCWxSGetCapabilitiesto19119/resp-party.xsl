@@ -95,17 +95,21 @@
 		<!--cntOnLineRes-->
 		<!--cntHours -->
 		<!--cntInstr -->
-		<onlineResource>
-			<CI_OnlineResource>
-				<linkage>
-					<URL>
-                        <xsl:value-of select="//Service/OnlineResource/@xlink:href|
-                           ows:ProviderSite/@xlink:href|
-                           ows11:ProviderSite/@xlink:href"/>
-                    </URL>
-				</linkage>
-			</CI_OnlineResource>
-		</onlineResource>
+		<xsl:variable name="url" select="//Service/OnlineResource/@xlink:href|
+			//wms:Service/wms:OnlineResource/@xlink:href|
+			ows:ProviderSite/@xlink:href|
+			ows11:ProviderSite/@xlink:href"/>
+		<xsl:if test="$url != ''">
+			<onlineResource>
+				<CI_OnlineResource>
+					<linkage>
+						<URL>
+							<xsl:value-of select="$url"/>
+	                    </URL>
+					</linkage>
+				</CI_OnlineResource>
+			</onlineResource>
+		</xsl:if>
 	</xsl:template>
 
 
@@ -153,7 +157,7 @@
 
 		<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
+		<xsl:for-each select="ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
 			<electronicMailAddress>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</electronicMailAddress>

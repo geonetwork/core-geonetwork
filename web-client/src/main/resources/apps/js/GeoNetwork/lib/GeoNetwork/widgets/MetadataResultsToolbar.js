@@ -79,6 +79,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     sortByCombo: undefined,
     
+    /**
+     * Array of additionnal other Actions
+     */
+    customOtherActions: undefined,
+    
     mdSelectionInfo: 'md-selection-info',
     
     selectionActions: [],
@@ -142,7 +147,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.catalogue.on('afterLogin', this.updatePrivileges, this);
         this.catalogue.on('afterLogout', this.updatePrivileges, this);
         
-        this.updateSelectionInfo(this.catalogue, 0);
+        Ext.Ajax.request({
+ 		   url: this.catalogue.services.mdSelect,
+ 		   success: function(response, opts) {
+ 			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
+ 			  this.updateSelectionInfo(this.catalogue, numSelected);
+ 		  },
+ 		  scope:this
+ 		});
+        
     },
     getSortByCombo: function(){
         var tb = this;
@@ -413,6 +426,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         // text : 'Display selection only'
         // }
         );
+        
+        if(this.customOtherActions) {
+        	this.actionMenu.add(this.customOtherActions);
+        }
         this.createMassiveActionMenu(!this.catalogue.isIdentified());
         this.createAdminMenu(!this.catalogue.isIdentified());
         

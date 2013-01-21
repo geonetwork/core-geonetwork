@@ -301,6 +301,10 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         }, this);
         this.acMenu.show();
     },
+    
+    addCustomAction: function() {
+    	
+    },
     createMenu: function(id, dv){
         var record = this.getStore().getAt(id);
         
@@ -309,7 +313,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 floating: true,
                 catalogue: catalogue,
                 record: record,
-                resultsView: dv
+                resultsView: dv,
+                addCustomAction: this.addCustomAction
             });
         } else {
             this.contextMenu.setRecord(record);
