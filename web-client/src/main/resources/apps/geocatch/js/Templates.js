@@ -123,7 +123,7 @@ GeoNetwork.Geocatch.Templates.RELATIONS =
 
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
     '<p class="abstract"><i>{[OpenLayers.i18n("abstract")]}: </i>{[Ext.util.Format.ellipsis(values.abstract, 350, true)]}\
-     <tpl if="changedate!=\'\'"><br/>(<i>{[OpenLayers.i18n("modified")]}: </i>{values.changedate})</tpl>\
+     <tpl if="values.revisionDate && values.revisionDate!=\'\'"><br/>(<i>{[OpenLayers.i18n("modified")]}: </i>{revisionDate})</tpl>\
      {values}</p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
