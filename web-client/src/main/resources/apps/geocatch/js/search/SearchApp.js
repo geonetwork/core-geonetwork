@@ -82,6 +82,13 @@ GeoNetwork.searchApp = function() {
             Ext.getCmp("vp").doLayout();
         },
 
+        resetSearch : function() {
+
+            var searchForm = this.getSearchForm();
+
+            searchForm.fireEvent('reset');
+        },
+
         /***********************************************************************
          * api:method[generateSwitcher]
          * 
@@ -98,6 +105,9 @@ GeoNetwork.searchApp = function() {
                                 + '<input type="button" onclick="app.searchApp.fireSearch()"'
                                 + ' id="search-submit" class="form-submit" value="'
                                 + OpenLayers.i18n('Search')
+                                + '"></input><input type="button" onclick="app.searchApp.resetSearch()"'
+                                + ' id="search-reset" class="form-reset" value="'
+                                + OpenLayers.i18n('Reset')
                                 + '"></input></div>'
                                 + '<a id="show-advanced" href="javascript:showAdvancedSearch()">'
                                 + OpenLayers.i18n('showAdvancedOptions')
