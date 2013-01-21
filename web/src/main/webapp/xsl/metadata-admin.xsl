@@ -257,23 +257,47 @@
 				</span>
 			</td>
 			
-			<!-- loop on all operations,  edit, notify and admin privileges are hidden-->
-			<xsl:for-each select="oper">
-				<xsl:sort select="id"/>
-				<xsl:if test="id!='2' and id!='3'">
-					<td class="padded record-{id}" align="center" width="80">
-						<input type="checkbox" name="_{$groupId}_{id}" id="_{$groupId}_{id}">
-							<xsl:if test="$disabled">
-								<xsl:attribute name="disabled"/>
-							</xsl:if>
-							<xsl:if test="on">
-								<xsl:attribute name="checked"/>
-							</xsl:if>
-						</input>
-					</td>
-				</xsl:if>
-			</xsl:for-each>
-
+			<!-- loop on all operations leaving editing and notify to last -->
+			<xsl:choose>
+				<!-- If list of operation is overriden and must be displayed in a custom order -->
+				<xsl:when test="$operationOrder">
+					<xsl:variable name="oper" select="oper"/>
+					
+					<xsl:for-each select="$operationOrder/id">
+						<xsl:variable name="currentOperation" select="."/>
+						<xsl:for-each select="$oper[id = $currentOperation]">
+							<td class="padded record-{id}" align="center" width="80">
+								<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+									<xsl:if test="on">
+										<xsl:attribute name="checked"/>
+									</xsl:if>
+									<xsl:if test="$disabled">
+										<xsl:attribute name="disabled"/>
+									</xsl:if>
+								</input>
+							</td>
+						</xsl:for-each>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="oper">
+						<xsl:sort select="id" order="descending"/>
+						<xsl:if test="id!='2' and id!='3'">
+							<td class="padded record-{id}" align="center" width="80">
+								<input type="checkbox" id="_{$groupId}_{id}" name="_{$groupId}_{id}">
+									<xsl:if test="on">
+										<xsl:attribute name="checked"/>
+									</xsl:if>
+									<xsl:if test="$disabled">
+										<xsl:attribute name="disabled"/>
+									</xsl:if>
+								</input>
+							</td>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<!-- fill empty slots -->
 			<xsl:for-each select="oper">
 				<xsl:if test="id='2' or id='3'">
