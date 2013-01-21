@@ -414,49 +414,4 @@
       </xsl:copy>
 	</xsl:template>
 
-
-	<!-- EMODNET -->
-	
-	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle" priority="2">
-		<xsl:copy>
-			<xsl:choose>
-				<xsl:when test="../gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
-					<xsl:copy-of select="../gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:copy-of select="gco:CharacterString"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:copy>
-	</xsl:template> 
-	
-	<!-- TODO : Should move to suggestion ? -->
-	<xsl:template match="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description">
-		<xsl:choose>
-			<xsl:when test="starts-with(./gco:CharacterString,'Description of processed data sources :')">
-				<xsl:copy-of select="."/>
-			</xsl:when>
-			<xsl:otherwise>
-				<gmd:description>
-					<gco:CharacterString>Description of processed data sources : <xsl:value-of select="./gco:CharacterString"/></gco:CharacterString>
-				</gmd:description>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template> 
-	
-	<xsl:template match="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage[gmd:source]/gmd:statement">
-		<xsl:choose>
-			<xsl:when test="starts-with(./gco:CharacterString,'Description of data processing :')">
-				<xsl:copy-of select="."/>
-			</xsl:when>
-			<xsl:otherwise>
-				<gmd:statement>
-					<gco:CharacterString>Description of data processing : <xsl:value-of select="./gco:CharacterString"/>
-					</gco:CharacterString>
-				</gmd:statement>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	
-	
 </xsl:stylesheet>
