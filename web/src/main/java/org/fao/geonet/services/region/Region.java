@@ -11,6 +11,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.TransformException;
 
@@ -125,5 +126,15 @@ public class Region {
         }
         
         return regionEl;
+    }
+
+    public static CoordinateReferenceSystem decodeCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
+        CoordinateReferenceSystem mapCRS;
+        if (srs.equals("EPSG:4326")) {
+            mapCRS = WGS84;
+        } else {
+            mapCRS = CRS.decode(srs, false);
+        }
+        return mapCRS;
     }
 }

@@ -51,8 +51,6 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
 import org.jdom.Element;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
@@ -151,8 +149,8 @@ public class GetMap implements Service {
             GeomFormat format = GeomFormat.find(geomType);
             geom = format.parse(geomParam);
             if (!geomSrs.equals(srs)) {
-                CoordinateReferenceSystem mapCRS = decodeCRS(srs);
-                CoordinateReferenceSystem geomCRS = decodeCRS(geomSrs);
+                CoordinateReferenceSystem mapCRS = Region.decodeCRS(srs);
+                CoordinateReferenceSystem geomCRS = Region.decodeCRS(geomSrs);
                 MathTransform transform = CRS.findMathTransform(geomCRS, mapCRS, true);
                 geom = JTS.transform(geom, transform);
             }
@@ -212,16 +210,6 @@ public class GetMap implements Service {
         File tmpFile = File.createTempFile("GetMap", "." + format);
         ImageIO.write(image, format, tmpFile);
         return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
-    }
-
-    private CoordinateReferenceSystem decodeCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
-        CoordinateReferenceSystem mapCRS;
-        if (srs.equals("EPSG:4326")) {
-            mapCRS = Region.WGS84;
-        } else {
-            mapCRS = CRS.decode(srs, true);
-        }
-        return mapCRS;
     }
 
     private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {

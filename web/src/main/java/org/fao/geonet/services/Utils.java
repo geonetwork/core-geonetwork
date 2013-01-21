@@ -2,17 +2,25 @@ package org.fao.geonet.services;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.jdom.Element;
 
 public class Utils {
