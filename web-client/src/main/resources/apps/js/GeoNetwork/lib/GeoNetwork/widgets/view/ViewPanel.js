@@ -337,35 +337,33 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         // Create map panel for extent visualization
         this.catalogue.extentMap.initMapDiv();
         Ext.each(Ext.query("img.extentMap"), function (img) {
-            var renderTo = img.nextElementSibling;
-            var url = img.getAttribute('data');
-            var innerHTML = '<img src="'+url+'" onload="Ext.get(\''+img.id+'\').remove()" />';
-            renderTo.innerHTML = innerHTML;
+              var renderTo = img.nextElementSibling;
+              var url = img.getAttribute('data');
+              var innerHTML = '<img src="'+url+'" onload="Ext.get(\''+img.id+'\').remove()" />';
+              renderTo.innerHTML = innerHTML;
 
-            var ref = img.getAttribute('ref').split("_")[1];
-            var chinput = Ext.get("ch03_"+ref);
-            var wgsinput = Ext.get("wgs84_"+ref);
-            var nativeCoordsEl = Ext.get("native_"+ref);
-            if(!nativeCoordsEl || !nativeCoordsEl.dom.innerText || nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5).length < 4)  {
-              nativeCoordsEl = undefined;
-            }
-            var cheInputs, wgsInputs;
-            if (chinput && nativeCoordsEl) {
-              var nativeCoords = nativeCoordsEl ? nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5) : undefined;
-              wgsInputs = chinput.parent().query('input[type=hidden]');
-              cheInputs = chinput.parent().query('input[type=text]');
-              var setCHE = function () {
-                Ext.each(cheInputs, function (input, index) {
-                  input.value = nativeCoords[index].split('.')[0];
-                });
-              };
-              setCHE();
-              chinput.on('click', setCHE);
-              } else {
-                if(chinput) {
-                  chinput.hide();
-                }
-
+              var ref = img.getAttribute('ref').split("_")[1];
+              var chinput = Ext.get("ch03_"+ref);
+              var wgsinput = Ext.get("wgs84_"+ref);
+              var nativeCoordsEl = Ext.get("native_"+ref);
+              if(!nativeCoordsEl || !nativeCoordsEl.dom.innerText || nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5).length < 4)  {
+                nativeCoordsEl = undefined;
+              }
+              var cheInputs, wgsInputs;
+              if (chinput && nativeCoordsEl) {
+                var nativeCoords = nativeCoordsEl ? nativeCoordsEl.dom.innerText.split(/:|,/).slice(1,5) : undefined;
+                wgsInputs = chinput.parent().query('input[type=hidden]');
+                cheInputs = chinput.parent().query('input[type=text]');
+                var setCHE = function () {
+                  cheInputs[0].value = nativeCoords[3].split('.')[0];
+                  cheInputs[1].value = nativeCoords[0].split('.')[0];
+                  cheInputs[2].value = nativeCoords[2].split('.')[0];
+                  cheInputs[3].value = nativeCoords[1].split('.')[0];
+                };
+                setCHE();
+                chinput.on('click', setCHE);
+              } else if(chinput) {
+                chinput.hide();
                 var siblings = chinput.dom.siblings();
                 for(var i = 0; i < siblings.length; i++) {
                   if(siblings[i].localName === 'label') {
@@ -374,20 +372,28 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
                 }
               }
 
-            if (wgsinput && nativeCoordsEl) {
-              if (!wgsInputs) {
-                wgsInputs = wgsinput.parent().query('input[type=hidden]');
-                cheInputs = wgsinput.parent().query('input[type=text]');
+              if (wgsinput && nativeCoordsEl) {
+                if (!wgsInputs) {
+                  wgsInputs = wgsinput.parent().query('input[type=hidden]');
+                  cheInputs = wgsinput.parent().query('input[type=text]');
+                }
+                var setWGS = function () {
+                  Ext.each(cheInputs, function (input, index) {
+                    input.value = wgsInputs[index].value;
+                  });
+                };
+                wgsinput.on('click', setWGS);
+              } else if (wgsinput) {
+                wgsinput.hide();
+                if(!chinput) {
+                  var siblings = wgsinput.dom.siblings();
+                  for(var i = 0; i < siblings.length; i++) {
+                    if(siblings[i].localName === 'label') {
+                      Ext.get(siblings[i]).hide();
+                    }
+                  }
+                }
               }
-              var setWGS = function () {
-                Ext.each(cheInputs, function (input, index) {
-                  input.value = wgsInputs[index].value;
-                });
-              };
-              wgsinput.on('click', setWGS);
-            } else if (wgsinput) {
-              wgsinput.hide();
-            }
           });
         
         // Related metadata are only displayed in view mode with no tabs

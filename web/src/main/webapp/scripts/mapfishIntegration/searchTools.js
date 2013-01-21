@@ -499,17 +499,15 @@ var searchTools = {
                 wgsInputs = chinput.parent().query('input[type=hidden]');
                 cheInputs = chinput.parent().query('input[type=text]');
                 var setCHE = function () {
-                  Ext.each(cheInputs, function (input, index) {
-                    input.value = nativeCoords[index].split('.')[0];
-                  });
+                  cheInputs[0].value = nativeCoords[3].split('.')[0];
+                  cheInputs[1].value = nativeCoords[0].split('.')[0];
+                  cheInputs[2].value = nativeCoords[2].split('.')[0];
+                  cheInputs[3].value = nativeCoords[1].split('.')[0];
                 };
                 setCHE();
                 chinput.on('click', setCHE);
-              } else {
-                if(chinput) {
-                  chinput.hide();
-                }
-
+              } else if(chinput) {
+                chinput.hide();
                 var siblings = chinput.dom.siblings();
                 for(var i = 0; i < siblings.length; i++) {
                   if(siblings[i].localName === 'label') {
@@ -531,6 +529,14 @@ var searchTools = {
                 wgsinput.on('click', setWGS);
               } else if (wgsinput) {
                 wgsinput.hide();
+                if(!chinput) {
+                  var siblings = wgsinput.dom.siblings();
+                  for(var i = 0; i < siblings.length; i++) {
+                    if(siblings[i].localName === 'label') {
+                      Ext.get(siblings[i]).hide();
+                    }
+                  }
+                }
               }
             });
         } else {

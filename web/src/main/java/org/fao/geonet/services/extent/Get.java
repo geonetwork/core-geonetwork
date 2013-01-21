@@ -43,6 +43,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.services.region.Region;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
@@ -192,10 +193,10 @@ public class Get implements Service
         CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
         int coordDigits = ExtentHelper.COORD_DIGITS;
         if(epsgCode != null) {
-        	crs = CRS.decode(epsgCode, true);
-        	if(epsgCode.contains("21781")) {
-        		coordDigits = 0;
-        	}
+            crs = Region.decodeCRS(epsgCode);
+            if(epsgCode.contains("21781")) {
+        	coordDigits = 0;
+            }
         }
 
         Format format = Format.lookup(formatParam);
