@@ -43,7 +43,7 @@
                 <td/>
                 <td class="padded"><xsl:value-of select="/root/strings/from"/></td>
                 <td class="padded">
-                    <div id="{@id}.cgp.from" class="cal"></div>
+                    <div id="{@id}.cgp.from" class="cal"/>
                     <input id="{@id}.cgp.from_cal" type="hidden" value="{from}"/>
                     </td>
             </tr>
@@ -54,7 +54,7 @@
                 <td/>
                 <td class="padded"><xsl:value-of select="/root/strings/until"/></td>
                 <td class="padded">
-                    <div id="{@id}.cgp.until" class="cal"></div>
+                    <div id="{@id}.cgp.until" class="cal"/>
                     <input id="{@id}.cgp.until_cal" type="hidden" value="{until}"/></td>
             </tr>
 
