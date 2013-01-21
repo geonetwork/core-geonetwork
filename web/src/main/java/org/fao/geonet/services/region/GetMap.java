@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,22 +63,30 @@ import com.vividsolutions.jts.geom.Geometry;
 //=============================================================================
 
 /**
- * Return an image of the region as a polygon against an optional background.  If the background is provided it is assumed to
- * be a url with placeholders for width, height, srs, minx,maxx,miny and maxy.  For example:
+ * Return an image of the region as a polygon against an optional background. If
+ * the background is provided it is assumed to be a url with placeholders for
+ * width, height, srs, minx,maxx,miny and maxy. For example:
  * 
- *  http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2CBorders%2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX={MINX},{MINY},{MAXX},{MAXY}&WIDTH={WIDTH}&HEIGHT={HEIGHT}
- *  
- *  the placeholders must either be all uppercase or all lowercase
- *  
- *  The parameters to the service are:
- *  
- *  id - id of the region to render
- *  srs - (optional) default is EPSG:4326 otherwise it is the project to use when rendering the image
- *  width - (optional) width of the image that is created.  Only one of width and height are permitted
- *  height - (optional) height of the image that is created.  Only one of width and height are permitted
- *  background - URL for loading a background image for regions.   A WMS Getmap request is the typical example.  
- *      the URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height and optionally srs
- *      
+ * http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2
+ * CBorders
+ * %2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap
+ * &STYLES
+ * =&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX={MINX
+ * },{MINY},{MAXX},{MAXY}&WIDTH={WIDTH}&HEIGHT={HEIGHT}
+ * 
+ * the placeholders must either be all uppercase or all lowercase
+ * 
+ * The parameters to the service are:
+ * 
+ * id - id of the region to render srs - (optional) default is EPSG:4326
+ * otherwise it is the project to use when rendering the image width -
+ * (optional) width of the image that is created. Only one of width and height
+ * are permitted height - (optional) height of the image that is created. Only
+ * one of width and height are permitted background - URL for loading a
+ * background image for regions. A WMS Getmap request is the typical example.
+ * the URL must be parameterized with the following parameters: minx, maxx,
+ * miny, maxy, width, height and optionally srs
+ * 
  */
 public class GetMap implements Service {
     public static final String MAP_SRS_PARAM = "mapsrs";
@@ -93,7 +102,7 @@ public class GetMap implements Service {
     public void init(String appPath, ServiceConfig params) throws Exception {
         this.format = params.getMandatoryValue("format");
         List<Element> namedBackgrounds = params.getChildren("namedBackgrounds");
-        if(namedBackgrounds != null) {
+        if (namedBackgrounds != null) {
             for (Element element : namedBackgrounds) {
                 this.namedBackgrounds.put(element.getName(), element.getTextTrim());
             }
@@ -118,18 +127,23 @@ public class GetMap implements Service {
         String geomSrs = Util.getParam(params, GEOM_SRS_PARAM, "EPSG:4326");
 
         if (id == null && geomParam == null) {
-            throw new BadParameterEx(Params.ID, "Either "+GEOM_PARAM+" or "+Params.ID+" is required");
+            throw new BadParameterEx(Params.ID, "Either " + GEOM_PARAM + " or " + Params.ID + " is required");
         }
         if (id != null && geomParam != null) {
-            throw new BadParameterEx(Params.ID, "Only one of "+GEOM_PARAM+" or "+Params.ID+" is permitted");
+            throw new BadParameterEx(Params.ID, "Only one of " + GEOM_PARAM + " or " + Params.ID + " is permitted");
         }
 
         // see calculateImageSize for more parameter checks
-        
-        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-        Geometry geom;
-        if(id != null) {
-            geom = dao.getGeom(context, id, false, srs);
+
+        Geometry geom = null;
+        if (id != null) {
+            Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+            for (RegionsDAO regionsDAO : daos) {
+                geom = regionsDAO.getGeom(context, id, false, srs);
+                if (geom != null) {
+                    break;
+                }
+            }
             if (geom == null) {
                 throw new RegionNotFoundEx(id);
             }
@@ -150,7 +164,7 @@ public class GetMap implements Service {
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
         if (background != null) {
 
-            if(this.namedBackgrounds.containsKey(background)) {
+            if (this.namedBackgrounds.containsKey(background)) {
                 background = this.namedBackgrounds.get(background);
             }
 
@@ -158,21 +172,13 @@ public class GetMap implements Service {
             String maxx = Double.toString(bboxOfImage.getMaxX());
             String miny = Double.toString(bboxOfImage.getMinY());
             String maxy = Double.toString(bboxOfImage.getMaxY());
-            background = background.
-                replace("{minx}", minx).
-                replace("{maxx}", maxx).
-                replace("{miny}", miny).
-                replace("{maxy}", maxy).
-                replace("{srs}", srs).
-                replace("{width}", Integer.toString(imageDimenions.width)).
-                replace("{height}", Integer.toString(imageDimenions.height)).
-                replace("{MINX}", minx).
-                replace("{MAXX}", maxx).
-                replace("{MINY}", miny).
-                replace("{MAXY}", maxy).
-                replace("{SRS}", srs).
-                replace("{WIDTH}", Integer.toString(imageDimenions.width)).
-                replace("{HEIGHT}", Integer.toString(imageDimenions.height));
+            background = background.replace("{minx}", minx).replace("{maxx}", maxx).replace("{miny}", miny)
+                    .replace("{maxy}", maxy).replace("{srs}", srs)
+                    .replace("{width}", Integer.toString(imageDimenions.width))
+                    .replace("{height}", Integer.toString(imageDimenions.height)).replace("{MINX}", minx)
+                    .replace("{MAXX}", maxx).replace("{MINY}", miny).replace("{MAXY}", maxy).replace("{SRS}", srs)
+                    .replace("{WIDTH}", Integer.toString(imageDimenions.width))
+                    .replace("{HEIGHT}", Integer.toString(imageDimenions.height));
 
             URL imageUrl = new URL(background);
             InputStream in = imageUrl.openStream();
@@ -195,15 +201,15 @@ public class GetMap implements Service {
             Shape shape = shapeWriter.toShape(screenGeom);
             graphics.setColor(Color.yellow);
             graphics.draw(shape);
-            
-            graphics.setColor(new Color(255,255,0,100));
+
+            graphics.setColor(new Color(255, 255, 0, 100));
             graphics.fill(shape);
-            
+
         } finally {
             graphics.dispose();
         }
 
-        File tmpFile = File.createTempFile("GetMap", "."+format);
+        File tmpFile = File.createTempFile("GetMap", "." + format);
         ImageIO.write(image, format, tmpFile);
         return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
     }
@@ -221,22 +227,27 @@ public class GetMap implements Service {
     private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {
 
         if (widthString != null && heightString != null) {
-            throw new BadParameterEx(WIDTH_PARAM, "Only one of " + WIDTH_PARAM + " and " + HEIGHT_PARAM
-                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+            throw new BadParameterEx(
+                    WIDTH_PARAM,
+                    "Only one of "
+                            + WIDTH_PARAM
+                            + " and "
+                            + HEIGHT_PARAM
+                            + " can be defined currently.  Future versions may support this but it is not supported at the moment");
         }
-        if(widthString==null && heightString==null) {
+        if (widthString == null && heightString == null) {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
                     + " parameters must be included in the request");
-            
+
         }
 
         int width, height;
-        if(widthString != null) {
+        if (widthString != null) {
             width = Integer.parseInt(widthString);
-            height = (int) Math.round(bboxOfImage.getHeight()/bboxOfImage.getWidth()*width);
+            height = (int) Math.round(bboxOfImage.getHeight() / bboxOfImage.getWidth() * width);
         } else {
             height = Integer.parseInt(heightString);
-            width = (int) Math.round(bboxOfImage.getWidth()/bboxOfImage.getHeight()*height);
+            width = (int) Math.round(bboxOfImage.getWidth() / bboxOfImage.getHeight() * height);
         }
         return new Dimension(width, height);
     }

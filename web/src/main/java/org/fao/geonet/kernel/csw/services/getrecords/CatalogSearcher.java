@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,6 +79,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.services.region.MetadataRegionDAO;
 import org.fao.geonet.services.region.Region;
 import org.fao.geonet.services.region.RegionsDAO;
 import org.geotools.xml.Encoder;
@@ -558,7 +560,7 @@ public class CatalogSearcher {
 	 * @throws Exception
 	 */
 	private void updateRegionsInSpatialFilter(ServiceContext context, Element filterExpr) throws Exception {
-	    RegionsDAO regionDAO = context.getApplicationContext().getBean(RegionsDAO.class);
+	    Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
         for( Element regionEl: (List<Element>) lookupGeoms(filterExpr)) {
             Attribute attribute = regionEl.getAttribute("id", FindRegionFilterElements.namespace);
             Geometry unionedGeom = null;
@@ -566,12 +568,17 @@ public class CatalogSearcher {
             String[] regionIds = attribute.getValue().substring("region:".length()).split("\\s*,\\s*");
 
             for (String regionId : regionIds) {
-                Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
-                geoms.add(geometry);
-                if (unionedGeom == null) {
-                    unionedGeom = geometry;
-                } else {
-                    unionedGeom = unionedGeom.union(geometry);
+                for (RegionsDAO regionDAO: regionDAOs) {
+                    Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
+                    if(geometry!=null) {
+                        geoms.add(geometry);
+                        if (unionedGeom == null) {
+                            unionedGeom = geometry;
+                        } else {
+                            unionedGeom = unionedGeom.union(geometry);
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
                 }
             }
             

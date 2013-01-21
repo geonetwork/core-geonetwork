@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -37,45 +39,45 @@ import com.vividsolutions.jts.geom.Geometry;
 
 //=============================================================================
 
-/** Returns a specific region and coordinates given its id
-  */
+/**
+ * Returns a specific region and coordinates given its id
+ */
 
-public class GetGeom implements Service
-{
-	private static final String SIMPLIFIED_PARAM = "simplified";
+public class GetGeom implements Service {
+    private static final String SIMPLIFIED_PARAM = "simplified";
 
     private static final String SRS_PARAM = "srs";
-	
-	private GeomFormat format;
+
+    private GeomFormat format;
 
     public void init(String appPath, ServiceConfig params) throws Exception {
         format = GeomFormat.valueOf(params.getMandatoryValue("format"));
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = params.getChildText(Params.ID);
-		boolean simplified = Util.getParam(params, SIMPLIFIED_PARAM, false);
-		String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
+        boolean simplified = Util.getParam(params, SIMPLIFIED_PARAM, false);
+        String srs = Util.getParam(params, SRS_PARAM, "EPSG:4326");
 
-		if (id == null)
-			return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null)
+            return new Element(Jeeves.Elem.RESPONSE);
 
-		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Geometry geom = dao.getGeom(context, id, simplified, CRS.decode(srs, true));
-		if (geom == null) {
-		    throw  new RegionNotFoundEx(id);
-		}
-		
-		return format.toElement(geom);
-	}
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for (RegionsDAO dao : daos) {
+            Geometry geom = dao.getGeom(context, id, simplified, CRS.decode(srs, true));
+            if (geom != null) {
+                return format.toElement(geom);
+            }
+        }
+        throw new RegionNotFoundEx(id);
+    }
 }
 
-//=============================================================================
+// =============================================================================
 

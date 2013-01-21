@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -32,38 +34,55 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** Returns a specific region and coordinates given its id
-  */
+/**
+ * Returns a specific region and coordinates given its id
+ */
 
-public class List implements Service
-{
+public class List implements Service {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		String labelParam = Util.getParam(params, RegionParams.LABEL_SEARCH, null);
-		String categoryIdParam = Util.getParam(params, RegionParams.CATEGORY_SEARCH, null);
-		int maxRecordsParam = Util.getParam(params, RegionParams.MAX_RECORDS, -1);
-		
-		Request request = dao.createSearchRequest(context);
-		if(labelParam != null) { request.label(labelParam); }
-		if(categoryIdParam != null) { request.categoryId(categoryIdParam); }
-		if(maxRecordsParam > 0) { request.maxRecords(maxRecordsParam); }
-		
-		Element regions = request.xmlResult();
-		
-		return regions;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String labelParam = Util.getParam(params, RegionParams.LABEL_SEARCH, null);
+        String categoryIdParam = Util.getParam(params, RegionParams.CATEGORY_SEARCH, null);
+        int maxRecordsParam = Util.getParam(params, RegionParams.MAX_RECORDS, -1);
+
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        Element regions = null;
+        for (RegionsDAO dao : daos) {
+            Request request = dao.createSearchRequest(context);
+            if (labelParam != null) {
+                request.label(labelParam);
+            }
+            if (categoryIdParam != null) {
+                request.categoryId(categoryIdParam);
+            }
+            if (maxRecordsParam > 0) {
+                request.maxRecords(maxRecordsParam);
+            }
+            Element tmp = request.xmlResult();
+            if (regions != null) {
+                @SuppressWarnings("unchecked")
+                java.util.List<Element> children = tmp.getChildren();
+                for (Element element : children) {
+                    regions.addContent(element);
+                }
+            } else {
+                regions = tmp;
+            }
+        }
+
+        return regions;
+    }
 
 }
 
-//=============================================================================
+// =============================================================================
 
