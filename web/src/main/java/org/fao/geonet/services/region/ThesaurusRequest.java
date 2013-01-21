@@ -31,17 +31,7 @@ public class ThesaurusRequest extends Request {
     
     private static final String NO_CATEGORY = "_none_";
 
-    private static final CoordinateReferenceSystem WGS84;
-    static {
-        CoordinateReferenceSystem wgs84;
-        try {
-            wgs84 = CRS.decode("EPSG:4326", true);
-        } catch (Exception e) {
-            Log.error(Geonet.SPATIAL, "Unable to create EPSG:4326 crs, are correct geotools jars on the class path?.  Defaulting to DefaultGeographicCRS.WGS84");
-            wgs84 = DefaultGeographicCRS.WGS84;
-        }
-        WGS84 = wgs84;
-    }
+    private static final CoordinateReferenceSystem WGS84 = Region.WGS84;
 
     private WeakHashMap<String, Map<String, String>> categoryTranslations;
     private ServiceContext serviceContext;

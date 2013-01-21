@@ -70,7 +70,7 @@ public class GetGeom implements Service {
 
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
         for (RegionsDAO dao : daos) {
-            Geometry geom = dao.getGeom(context, id, simplified, CRS.decode(srs, true));
+            Geometry geom = dao.getGeom(context, id, simplified, Region.decodeCRS(srs));
             if (geom != null) {
                 return format.toElement(geom);
             }
