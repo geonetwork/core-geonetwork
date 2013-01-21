@@ -178,6 +178,7 @@ public class ExtractServicesLayers  implements Service {
 		            retchildlayer.setAttribute("owsurl", sLinkage);
 		            retchildlayer.setAttribute("owstype", sProto2);
 		            retchildlayer.setAttribute("layername", sName);
+		            retchildlayer.setAttribute("title", sDescription);
 		            retchildlayer.setAttribute("mdid", id);
 		            ret.addContent(retchildlayer);
 		        }
