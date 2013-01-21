@@ -192,7 +192,7 @@
 	        	<xsl:variable name="xlink" select="ancestor::gmd:extent/@xlink:href"/>
 	        	<xsl:variable name="geom">
 	        		<xsl:choose>
-		        		<xsl:when test="not(name(.) = 'gmd:EX_GeographicBoundingBox') and $xlink">
+		        		<xsl:when test="false() and not(name(.) = 'gmd:EX_GeographicBoundingBox') and $xlink">
 		        			<xsl:variable name="startId" select="substring-after($xlink, 'id=')"/>
 		        			<xsl:variable name="id" select="substring-before($startId, '&amp;')"/>
 		        			<xsl:variable name="startCategory" select="substring-after($xlink, 'typename=')"/>
@@ -207,7 +207,8 @@
 		        			
 		        			<xsl:text>id=</xsl:text><xsl:value-of select="$category"/><xsl:text>:</xsl:text><xsl:value-of select="$id"/>
 		        		</xsl:when>
-		        		<xsl:otherwise>geom=<xsl:value-of select="$coords"/>&amp;geomsrs=EPSG:4326</xsl:otherwise>
+		        		<xsl:when test="name(.) = 'gmd:EX_GeographicBoundingBox'">geom=<xsl:value-of select="$coords"/>&amp;geomsrs=EPSG:4326</xsl:when>
+		        		<xsl:otherwise>id=metadata:<xsl:value-of select="normalize-space(/root/*/gmd:fileIdentifier)"/>:<xsl:value-of select="$targetPolygon"/></xsl:otherwise>
 	        		</xsl:choose>
         		</xsl:variable>
         		<xsl:variable name="url"><xsl:value-of select="/root/gui/locService"/>/region.getmap.png?mapsrs=EPSG:21781&amp;<xsl:value-of select="$geom"/>&amp;background=<xsl:value-of select="$background"/></xsl:variable>
