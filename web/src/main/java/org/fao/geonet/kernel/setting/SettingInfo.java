@@ -102,7 +102,7 @@ public class SettingInfo
 
 		sb.append(host);
 
-		if (port != null) {
+		if (port != null && !((protocol.equals("http") && port == 80) || (protocol.equals("https") && port == 443))) {
 			sb.append(":");
 			sb.append(port);
 		}
