@@ -13,8 +13,8 @@
 	<xsl:template match="/root/node">
 
 		<tr id="{@id}">
-			<td class="padded" align="center"><input type="checkbox"/></td>
-			<td class="padded" id="node.name"><xsl:value-of select="site/name"/></td>
+			<td class="padded" align="center"><input type="checkbox" id="chk_{@id}"/></td>
+			<td class="padded" id="node.name"><label for="chk_{@id}"><xsl:value-of select="site/name"/></label></td>
 
 			<!-- Type - - - - - - - - - - - - - - - - - - - - - -->
 

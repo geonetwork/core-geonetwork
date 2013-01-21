@@ -17,6 +17,8 @@
                                         xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
 										xmlns:exslt="http://exslt.org/common"
+										xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+										xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
 										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
 
 	<!-- ============================================================================= -->
@@ -54,9 +56,20 @@
 				</title>
 				<date>
 					<CI_Date>
-						<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 						<date>
-							<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
+							<xsl:choose>
+								<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision">
+									<gco:Date>
+										<xsl:value-of select="//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision"/>
+									</gco:Date>
+								</xsl:when>
+								<xsl:otherwise>
+									<gco:DateTime>
+										<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
+										<xsl:value-of select="format-dateTime(current-dateTime(),$df)"/>
+									</gco:DateTime>
+								</xsl:otherwise>
+							</xsl:choose>
 						</date>
 						<dateType>
 							<CI_DateTypeCode codeList="./resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
@@ -99,7 +112,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="//ContactInformation|//wcs:responsibleParty|//wms:responsibleParty">
+		<xsl:for-each select="//ContactInformation|//wcs:responsibleParty|//wms:responsibleParty|wms:Service/wms:ContactInformation">
 			<pointOfContact>
 				<CI_ResponsibleParty>
 					<xsl:apply-templates select="." mode="RespParty"/>
@@ -117,7 +130,7 @@
 		<!-- resMaint -->
 		<!-- graphOver -->
 		<!-- dsFormat-->
-		<xsl:for-each select="$s/KeywordList|$s/wms:KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
+		<xsl:for-each select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
@@ -125,11 +138,91 @@
 			</descriptiveKeywords>
 		</xsl:for-each>
 		
+		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword" group-by="@vocabulary">
+			<descriptiveKeywords>
+				<MD_Keywords>
+					<xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
+						<keyword>
+							<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+						</keyword>
+					</xsl:for-each>
+					<type>
+						<MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+					</type>
+					<xsl:if test="current-grouping-key() != ''">
+						<thesaurusName>
+							<CI_Citation>
+								<title>
+									<gco:CharacterString><xsl:value-of select="current-grouping-key()"/></gco:CharacterString>
+								</title>
+								<alternateTitle gco:nilReason="missing">
+									<gco:CharacterString/>
+								</alternateTitle>
+								<date gco:nilReason="missing"/>
+							</CI_Citation>
+						</thesaurusName>
+					</xsl:if>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:for-each-group>
+		
+		<xsl:for-each select="//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
+			<descriptiveKeywords>
+				<MD_Keywords xmlns:gmx="http://www.isotc211.org/2005/gmx">
+					<xsl:for-each select="inspire_common:KeywordValue">
+						<keyword>
+							<gco:CharacterString>
+								<xsl:value-of select="."/>
+							</gco:CharacterString>
+						</keyword>
+					</xsl:for-each>
+					<type>
+						<MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+					</type>
+					<thesaurusName>
+						<CI_Citation>
+							<title>
+								<gco:CharacterString>INSPIRE Service taxonomy</gco:CharacterString>
+							</title>
+							<alternateTitle gco:nilReason="missing">
+								<gco:CharacterString/>
+							</alternateTitle>
+							<date>
+								<CI_Date>
+									<date>
+										<gco:Date>2010-04-22</gco:Date>
+									</date>
+									<dateType>
+										<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+									</dateType>
+								</CI_Date>
+							</date>
+						</CI_Citation>
+					</thesaurusName>
+				</MD_Keywords>
+			</descriptiveKeywords>
+		</xsl:for-each>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+		
+		<xsl:for-each select="$s/wms:AccessConstraints">
+			<resourceConstraints>
+				<MD_LegalConstraints>
+					<accessConstraints>
+						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+							codeListValue="otherRestrictions"/>
+					</accessConstraints>
+					<otherConstraints>
+						<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+					</otherConstraints>
+				</MD_LegalConstraints>
+			</resourceConstraints>
+		</xsl:for-each>
 		
 		<srv:serviceType>
 			<gco:LocalName codeSpace="www.w3c.org">
 				<xsl:choose>
+					<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:SpatialDataServiceType"><xsl:value-of select="//inspire_vs:ExtendedCapabilities/inspire_common:SpatialDataServiceType"/></xsl:when>
 					<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">OGC:WMS</xsl:when>
 					<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
 					<xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>
@@ -323,7 +416,8 @@
 												<xsl:value-of select="..//ows:Get[1]/@xlink:href"/><!-- FIXME supposed at least one Get -->
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="..//OnlineResource[1]/@xlink:href|..//wms:OnlineResource[1]/@xlink:href"/>
+												<xsl:value-of select="..//*[1]/OnlineResource/@xlink:href|
+													..//*[1]/wms:OnlineResource/@xlink:href"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</URL>
@@ -478,13 +572,34 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		<xsl:for-each select="//wms:Layer[wms:Name=$Name]/wms:KeywordList|wms:KeywordList">
+		
+		
+		<xsl:for-each-group select="//wms:Layer[wms:Name=$Name]/wms:KeywordList/wms:Keyword|wms:Service/wms:KeywordList/wms:Keyword" 
+			group-by="@vocabulary">
 			<descriptiveKeywords>
 				<MD_Keywords>
-					<xsl:apply-templates select="." mode="Keywords"/>
+					<xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
+						<keyword>
+							<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+						</keyword>
+					</xsl:for-each>
+					
+					<xsl:if test="current-grouping-key() != ''">
+						<thesaurusName>
+							<CI_Citation>
+								<title>
+									<gco:CharacterString><xsl:value-of select="current-grouping-key()"/></gco:CharacterString>
+								</title>
+							</CI_Citation>
+						</thesaurusName>
+					</xsl:if>
+					<type>
+						<MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+					</type>
 				</MD_Keywords>
 			</descriptiveKeywords>
-		</xsl:for-each>
+		</xsl:for-each-group>
+		
 		<xsl:for-each select="//wfs:FeatureType[wfs:Name=$Name]">
 			<descriptiveKeywords>
 				<MD_Keywords>
@@ -673,13 +788,6 @@
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</keyword>
 		</xsl:for-each>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<type>
-			<MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
-		</type>
-
 	</xsl:template>
 
 </xsl:stylesheet>
