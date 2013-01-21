@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -46,21 +48,22 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = params.getChildText(Params.ID);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
 
-		if (id == null)
-			return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null)
+            return new Element(Jeeves.Elem.RESPONSE);
 
-		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Element result = dao.createSearchRequest(context).id(id).xmlResult();
-		if (result.getChildren().isEmpty()) {
-		    throw  new RegionNotFoundEx(id);
-		}
-		
-		return result;
-	}
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for (RegionsDAO dao : daos) {
+            Element result = dao.createSearchRequest(context).id(id).xmlResult();
+            if (result != null && !result.getChildren().isEmpty()) {
+                return result;
+            }
+        }
+        throw new RegionNotFoundEx(id);
+
+    }
 }
 
 //=============================================================================

@@ -33,34 +33,38 @@ import org.jdom.Element;
 
 //=============================================================================
 
-/** Returns a specific region and coordinates given its id
-  */
+/**
+ * Returns a specific region and coordinates given its id
+ */
 
-public class ListCategories implements Service
-{
+public class ListCategories implements Service {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		Collection<String> ids = dao.getRegionCategoryIds(context);
-		Element result = new Element("categories");
-		for (String id : ids) {
-			Element catEl = new Element("category");
-			catEl.setAttribute("id", id);
-			result.addContent(catEl);
-		}
-		return result;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        Element result = new Element("categories");
+        for (RegionsDAO dao : daos) {
+
+            Collection<String> ids = dao.getRegionCategoryIds(context);
+            for (String id : ids) {
+                Element catEl = new Element("category");
+                catEl.setAttribute("id", id);
+                result.addContent(catEl);
+            }
+        }
+        return result;
+    }
 
 }
 
-//=============================================================================
+// =============================================================================
 

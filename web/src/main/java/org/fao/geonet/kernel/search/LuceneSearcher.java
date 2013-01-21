@@ -830,22 +830,30 @@ public class LuceneSearcher extends MetaSearcher {
         final String prefix = "region:";
         if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
             boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION,null));
-            RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+            Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
             for (String regionId : regionIds) {
-                Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
-                if(isWithinFilter) {
-                    geoms.add(geom);
-                }
-                if (unionedGeom == null) {
-                    unionedGeom = geom;
-                } else {
-                    unionedGeom = unionedGeom.union(geom);
+                for (RegionsDAO dao : regionDAOs) {
+                    Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
+                    if(dao!=null) {
+                        if(isWithinFilter) {
+                            geoms.add(geom);
+                        }
+                        if (unionedGeom == null) {
+                            unionedGeom = geom;
+                        } else {
+                            unionedGeom = unionedGeom.union(geom);
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
+                    
                 }
             }
-            geoms.add(0, unionedGeom);
+            if (regionIds.length > 1) {
+                geoms.add(0, unionedGeom);
+            }
             return geoms;
         }else if (geomWKT != null) {
             WKTReader reader = new WKTReader();
