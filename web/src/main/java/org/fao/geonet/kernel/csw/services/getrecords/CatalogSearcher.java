@@ -57,6 +57,7 @@ import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
@@ -751,26 +752,27 @@ public class CatalogSearcher {
         List<String> SECURITY_FIELDS = Arrays.asList(
              LuceneIndexField.OWNER,
              LuceneIndexField.GROUP_OWNER);
-
-        BooleanQuery bq = (BooleanQuery) q;
-
-        List<BooleanClause> clauses = bq.clauses();
-
-        Iterator<BooleanClause> it = clauses.iterator();
-        while (it.hasNext()) {
-            BooleanClause bc = it.next();
-
-            for (String fieldName : SECURITY_FIELDS){
-                if (bc.getQuery().toString().contains(fieldName + ":")) {
-                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                        Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                    it.remove();
-
-                    break;
+        
+        BooleanQuery bq;
+        if (q instanceof BooleanQuery) {
+            bq = (BooleanQuery) q;
+            List<BooleanClause> clauses = bq.clauses();
+    
+            Iterator<BooleanClause> it = clauses.iterator();
+            while (it.hasNext()) {
+                BooleanClause bc = it.next();
+    
+                for (String fieldName : SECURITY_FIELDS){
+                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+                        it.remove();
+    
+                        break;
+                    }
                 }
             }
         }
-
         return q;
     }
 
