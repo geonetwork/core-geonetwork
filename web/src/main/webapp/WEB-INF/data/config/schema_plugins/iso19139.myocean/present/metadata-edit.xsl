@@ -8,6 +8,8 @@
 
 	<xsl:variable name="myoceanSlidingWindowFlag">delta time</xsl:variable>
 
+
+
 	<!-- main template - the way into processing iso19139.myocean -->
 	<xsl:template name="metadata-iso19139.myoceanview-simple">
 		<xsl:call-template name="metadata-iso19139view-simple"/>

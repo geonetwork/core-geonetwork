@@ -76,10 +76,11 @@
 					</xsl:apply-templates>
 				</xsl:variable>
 				
+				
 				<!-- If not define just use the brief format -->
 				<xsl:variable name="md">
 					<xsl:choose>
-						<xsl:when test=". != $mdcsv">
+						<xsl:when test=". != $mdcsv and $mdcsv != ''">
 							<xsl:copy-of select="$mdcsv"/>
 						</xsl:when>
 						<xsl:otherwise>
