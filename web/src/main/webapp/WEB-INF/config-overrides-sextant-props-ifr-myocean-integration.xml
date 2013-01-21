@@ -5,6 +5,6 @@
     <db.driver>org.postgresql.Driver</db.driver>
     <db.url>jdbc:postgresql://visi1-common-php5:5432/sextant_myocean_integration</db.url>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
-    <widget.parameters>hl=fre</widget.parameters>
+    <widget.parameters>hl=eng</widget.parameters>
   </properties>
 </overrides>
