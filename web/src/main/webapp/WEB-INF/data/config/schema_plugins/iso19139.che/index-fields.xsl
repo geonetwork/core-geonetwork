@@ -177,7 +177,7 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 			<xsl:for-each select="*/gmd:EX_Extent">
-				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
+				<xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="northBLn"/>
 
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
 					<Field name="geoDescCode" string="{string(.)}" store="true" index="true" token="false"/>
@@ -509,32 +509,6 @@
 	<xsl:template match="*" mode="codeList">
 		<xsl:apply-templates select="*" mode="codeList"/>
 	</xsl:template>
-
-    <!-- ========================================================================================= -->
-    <!-- latlon coordinates indexed as numeric. -->
-
-    <!-- Use analog template like ../iso19139/convert/functions.xsl that manages to index geobox, keeping in this one store=true -->
-    <xsl:template match="*" mode="latLon">
-        <xsl:variable name="format" select="'##.00'"></xsl:variable>
-
-        <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
-            and number(gmd:southBoundLatitude/gco:Decimal)
-            and number(gmd:eastBoundLongitude/gco:Decimal)
-            and number(gmd:northBoundLatitude/gco:Decimal)
-            ">
-            <Field name="westBL" string="{format-number(gmd:westBoundLongitude/gco:Decimal, $format)}" store="true" index="true"/>
-            <Field name="southBL" string="{format-number(gmd:southBoundLatitude/gco:Decimal, $format)}" store="true" index="true"/>
-
-            <Field name="eastBL" string="{format-number(gmd:eastBoundLongitude/gco:Decimal, $format)}" store="true" index="true"/>
-            <Field name="northBL" string="{format-number(gmd:northBoundLatitude/gco:Decimal, $format)}" store="true" index="true"/>
-
-            <Field name="geoBox" string="{concat(gmd:westBoundLongitude/gco:Decimal, '|',
-                gmd:southBoundLatitude/gco:Decimal, '|',
-                gmd:eastBoundLongitude/gco:Decimal, '|',
-                gmd:northBoundLatitude/gco:Decimal
-                )}" store="true" index="false"/>
-        </xsl:if>
-    </xsl:template>
 
 	<!-- ========================================================================================= -->
 	<!--allText -->
