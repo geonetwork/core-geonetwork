@@ -72,11 +72,39 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         maximizable: true,
         maximized: false,
         collapsible: true,
+        constrain : true,
+        constrainHeader : true,
         collapsed: false,
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is true.
          */
-        permalink: false
+        permalink: false,
+        listeners: {
+            move: function(in_this, x, y){
+    //max window weight and width, -20 because we always want to see at least small part
+                var maxX = Ext.getBody().getViewSize().width-20;
+                var maxY = Ext.getBody().getViewSize().height-20;
+    //new position
+                x = parseInt(x);
+                y = parseInt(y);
+                if(x<0 || x>maxX || y<0 || y>maxY) {
+    //fix if moved too far on top/left
+                    if(y < 0)
+                        y = 0;
+                    if(x < 0)
+                        x = 0;
+    //fix if moved too far on down/right
+                    if(y > maxY)
+                        y = maxY - in_this.getHeight();
+                    if(x > maxX)
+                        x = maxX - in_this.getWidth();
+    //tries to show whole window, if it's too big it will go to left/top corner                 
+     
+    //move window on new position
+                    in_this.setPosition(x, y);
+                }
+            }
+        }
     },
     serviceUrl: undefined,
     catalogue: undefined,
@@ -136,7 +164,6 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
                 el.getWidth() > Ext.getBody().getWidth() ? Ext.getBody().getWidth() : el.getWidth(),
                 el.getHeight() > Ext.getBody().getHeight() ? Ext.getBody().getHeight() : el.getHeight()); 
         });
-
     }
 });
 
