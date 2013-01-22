@@ -136,7 +136,7 @@ GeoNetwork.Catalogue = Ext
                      * api: property[windowOption] ``String`` Configuration of
                      * popup windows
                      */
-                    windowOption : "menubar=no,location=no,toolbar=no,directories=no",
+                    windowOption : '',//"menubar=no,location=no,toolbar=no,directories=no",
 
                     /**
                      * api: property[windowName] ``String`` Name of popup
