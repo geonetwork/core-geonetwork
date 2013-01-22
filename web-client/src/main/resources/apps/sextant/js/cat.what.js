@@ -23,7 +23,7 @@ cat.what = function() {
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 			
 			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
-			var mode, groupFieldStore;
+			var mode, groupFieldStore; 
 			var configwhatInput = Ext.query('input[id*=configwhat]');
 			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
 				groupFieldStore =  new Ext.data.ArrayStore({
@@ -63,8 +63,23 @@ cat.what = function() {
 	            fieldLabel: OpenLayers.i18n('Catalogue')
 	        });
 			
+	        var baseParams = {
+				field : '_cat',
+				threshold: 1
+			};
+	        
+	        //if configwhat then send _groupPublished to the suggestion service to filter cat
+	        if(mode == 'local') {
+	        	baseParams.groupPublished = configwhatInput[0].value
+	        }
+	        var categoryStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+				url : services.opensearchSuggest,
+				rootId : 1,
+				baseParams : baseParams
+			});
+	        
 			var categoryTree = new GeoNetwork.CategoryTree({
-				url : services.getCategories,
+				store : categoryStore,
 				rootVisible: false,
 				label: OpenLayers.i18n('Themes'),
 				autoWidth: true

@@ -145,9 +145,18 @@ public class SearchSuggestion implements Service {
 		if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
 			LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(
 					SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-
+			
+			// Begin Sepecific SextantV5
+			// Send _groupPublished to suggestion in order to filter on catalogue if configwhat is set
+			
+			String groupPublished = Util.getParam(params, "groupPublished", "");
 			Collection<String> result = searcher.getSuggestionForFields(context,
-					fieldName, searchValue, _config, maxNumberOfTerms, threshold);
+				fieldName, searchValue, _config, maxNumberOfTerms, threshold, groupPublished);
+			
+			// End Sepecific SextantV5
+
+//			Collection<String> result = searcher.getSuggestionForFields(context,
+//			fieldName, searchValue, _config, maxNumberOfTerms, threshold);
 
 			listOfSuggestions.addAll(result);
 		}
