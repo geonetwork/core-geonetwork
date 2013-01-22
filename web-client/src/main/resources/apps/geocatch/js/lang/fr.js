@@ -66,7 +66,8 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'bbox': 'BBOX',
     'adminUnit': 'Unité administrative',
     'drawOnMap': 'Dessiner sur la carte',
-    'when': 'Quan?',
+    'when': 'Quand?',
+    'what': 'Quoi?',
     'from': 'Début',
     'to': 'Fin',
 
