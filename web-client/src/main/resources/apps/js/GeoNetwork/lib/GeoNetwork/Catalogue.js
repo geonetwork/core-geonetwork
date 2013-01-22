@@ -285,6 +285,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGet19115: serviceUrl + 'xml_iso19115to19139',
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete: serviceUrl + 'metadata.delete',
+            mdExtract: serviceUrl + 'metadata.service.extract',
             mdPrint: serviceUrl + 'pdf',
             //mdEdit : serviceUrl + 'metadata.edit',
             mdEdit: serviceUrl + 'edit',

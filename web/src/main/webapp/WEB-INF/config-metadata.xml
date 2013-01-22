@@ -288,6 +288,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <service name="metadata.service.extract">
+                <class name=".services.metadata.ExtractServicesLayers"/>
+        </service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.delete">
 			<class name=".services.metadata.Delete"/>
 
