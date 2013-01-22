@@ -124,21 +124,36 @@
           <param name="filter" value="+_groupPublished:SINPMER"/>
         </class>
       </service>
+      
+      <!-- MyOcean virtual CSW-->
+      <service name="csw-MYOCEAN-CORE-PRODUCTS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-CORE-PRODUCTS"/>
+        </class>
+      </service>
+      <service name="csw-MYOCEAN-CORE-SPECIFIC-PRODUCTS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-CORE-SPECIFIC-PRODUCTS"/>
+        </class>
+      </service>
+      <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
+        </class>
+      </service>
+      <service name="csw-MYOCEAN-UPSTREAM-PRODUCTS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-UPSTREAM-PRODUCTS"/>
+        </class>
+      </service>
+      <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-SERVICES-AND-DATASETS"/>
+        </class>
+      </service>
     </addXML>
   </file>
-  <file name=".*/WEB-INF/user-profiles.xml">
-    <addXML xpath="profile[@name='Guest']">
-      <allow service="csw-Netmar"/>
-      <allow service="csw-Netmar_Cedre"/>
-      <allow service="csw-GEOCATALOGUE"/>
-      <allow service="csw-EMODNET_Chemistry"/>
-      <allow service="csw-EMODNET_HYDROGRAPHY_CPRD"/>
-      <allow service="csw-EMODNET_HYDROGRAPHY_PRODUCT"/>
-      <allow service="csw-GEO_SEAS_CPRD"/>
-      <allow service="csw-GEO_SEAS_PRODUCT"/>
-      <allow service="csw-SINPMER"/>
-    </addXML>
-  </file>
+  
 
   <!-- Configure CSW Capabilities -->
   <!-- TODO : to be checked by ifremer for keywords mainly -->
