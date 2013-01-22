@@ -246,11 +246,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             displayField: 'id',
             listeners: {
                 select: function(cb, record, idx){
-                    if (this.searchFormCmp) {
-                        this.searchFormCmp.fireEvent('search');
-                    } else if (this.searchBtCmp) {
-                        this.searchBtCmp.fireEvent('click');
-                    }
+                    app.searchApp.fireSearch();
                 },
                 scope: tb
             }
