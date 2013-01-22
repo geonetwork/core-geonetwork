@@ -247,6 +247,7 @@ GeoNetwork.Lang.es = {
     'administration':'Administración',
     'validationReport':'Informe de validación',
     'status':'Estado',
+    'addLayerSelection': 'Add layers of selection to the map',
     'items':'Artículo',
     'item':'Artículo',
     'thumbnails':'Miniaturas',

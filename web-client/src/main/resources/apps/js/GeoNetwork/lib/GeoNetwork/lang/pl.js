@@ -261,6 +261,7 @@ GeoNetwork.Lang.pl = {
     'setVersioning': 'Wersjonowanie metadanych',
     'versioning': 'Rozpocznij wersjonowanie',
     'versioningTT': 'Uruchomienie wersjonowania pliku spowoduje zapis wszystkich zmian w pliku w repozytorium SVN',
+    'addLayerSelection': 'Add layers of selection to the map',
     'items': 'Elementy',
     'item': 'Element',
     'thumbnails': 'Miniaturki',
