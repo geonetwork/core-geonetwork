@@ -394,11 +394,21 @@ GeoNetwork.util.SearchTools = {
                             .getValue()));
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
-            var subField = value.match("^([^/]+)/(.*)$");
-            filters.push("similarity" + "=" + "1.0");
-            filters.push(subField[1] + "=" + encodeURIComponent(subField[2]));
-            filters.push("similarity" + "="
-                    + encodeURIComponent(defaultSimilarity));
+            var subField = value.split(",");
+            if (subField.length > 0) {
+                var finalValue = undefined;
+                var fieldName = undefined;
+                Ext.each(subField, function(a) {
+                    var tmp = a.split("/");
+                    if (!finalValue) {
+                        finalValue = tmp[1];
+                        fieldName = tmp[0];
+                    } else {
+                        finalValue = finalValue + " or " + tmp[1];
+                    }
+                });
+                filters.push(fieldName + "=" + encodeURIComponent(finalValue));
+            }
         } else {
             console.log("Cannot parse " + type + name + ": '" + value + "'");
         }
