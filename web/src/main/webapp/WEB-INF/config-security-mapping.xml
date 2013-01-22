@@ -356,6 +356,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.pdf!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
