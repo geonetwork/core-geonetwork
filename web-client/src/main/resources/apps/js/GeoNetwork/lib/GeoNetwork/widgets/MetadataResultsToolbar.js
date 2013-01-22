@@ -131,7 +131,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 id : 'previousBt_up',
                 text : '&lt;&lt;',
                 handler : function() {
-                    catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
                     if (from > 0) {
                         catalogue.startRecord = from;
                         catalogue
