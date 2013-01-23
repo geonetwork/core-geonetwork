@@ -143,8 +143,8 @@ GeoNetwork.app = function() {
 
             // Init cookie
             cookie = new Ext.state.CookieProvider({
-                expires : new Date(new Date().getTime()
-                        + (1000 * 60 * 60 * 24 * 365))
+//                expires : new Date(new Date().getTime()
+//                        + (1000 * 60 * 60 * 24 * 365))
             });
             // Create connection to the catalogue
             catalogue = new GeoNetwork.Catalogue(
@@ -168,7 +168,9 @@ GeoNetwork.app = function() {
                      */
                     });
 
-            catalogue.isLoggedIn();
+            if(cookie.get('user')){
+                catalogue.isLoggedIn();
+            }
 
             // set a permalink provider which will be the main state provider.
             /*
