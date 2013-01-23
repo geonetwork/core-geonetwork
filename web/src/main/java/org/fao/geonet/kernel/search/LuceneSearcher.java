@@ -373,7 +373,7 @@ public class LuceneSearcher extends MetaSearcher {
 		elData.addContent(new Element("to").setText(getSize() + ""));
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(1, getSize(), false);
+			TopDocs tdocs = performQuery(0, getSize(), false);
 
 			for (int i = 0; i < tdocs.scoreDocs.length; i++) {
 				if (counter >= maxNumberOfTerms) {
