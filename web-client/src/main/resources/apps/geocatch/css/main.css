@@ -136,30 +136,30 @@ body>.ext-el-mask {
 	text-decoration: bolder;
 }
 
-#lang-form div {
-	display: inline;
-	padding-right: 7px;
-	float: right;
-}
-
-#lang-form div div form {
-	background: transparent;
-	border: none;
-}
-
-#lang-form div div form div input {
-	background: transparent;
-	border: none;
-	text-align: right;
-}
-
 #lang-form {
 	padding-right: 5px;
 	padding-left: 5px;
 	text-decoration: none;
-	color: #767B7E;
 	float: right;
 	background-color: #CCCCCC;
+}
+
+.langButton {
+	border: none;
+	background: none;
+	background-color: transparent;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#lang-form .x-btn button,#lang-form .x-box-item {
+	color: black;
+}
+
+#lang-form .x-panel-body,#lang-form .x-btn-ml,#lang-form .x-btn-bl,#lang-form .x-btn-bc,#lang-form .x-btn-br,#lang-form .x-btn-mc,#lang-form .x-btn-tl,#lang-form .x-btn-tc,#lang-form .x-btn-tr,#lang-form .x-btn-mr
+	{
+	background: none;
+	background-color: transparent;
 }
 
 /* ==============
