@@ -604,7 +604,8 @@ GeoNetwork.MetadataResultsView = Ext
                                                                             .getElementsByTagName("info")[0];
 
                                                                     var text = info.textContent
-                                                                            || info.innerText;
+                                                                            || info.innerText
+                                                                            || info.text;
                                                                     if (!text) {
                                                                         text = '';
                                                                     }

@@ -48,16 +48,19 @@ GeoNetwork.searchApp = function() {
             app.searchApp.generateFacetedSearchPanel();
             // FIXME how many results should I load to
             // get all important facets?
-            Ext.Ajax.request({
-                url : catalogue.URL + "/srv/" + catalogue.LANG
-                        + "/q?fast=index&from=1&to=30&sortBy=relevance&summaryOnly=1&ts="
-                        + (new Date()).getTime(),
-                success : function(response) {
-                    Ext.getCmp('facets-panel').refresh(response);
-                },
-                disableCaching : false
+            Ext.Ajax
+                    .request({
+                        url : catalogue.URL
+                                + "/srv/"
+                                + catalogue.LANG
+                                + "/q?fast=index&from=1&to=30&sortBy=relevance&summaryOnly=1&ts="
+                                + (new Date()).getTime(),
+                        success : function(response) {
+                            Ext.getCmp('facets-panel').refresh(response);
+                        },
+                        disableCaching : false
 
-            });
+                    });
 
         },
 
@@ -444,14 +447,19 @@ GeoNetwork.searchApp = function() {
                         triggerAction : "all",
                         selectOnFocus : true,
                         hidden : !catalogue.isIdentified()
-                    }, /*
-                         * { xtype : "checkbox", fieldLabel :
-                         * OpenLayers.i18n("toEdit"), id : "toEdit", name :
-                         * "B_toEdit", hidden: !catalogue.isIdentified() }, {
-                         * xtype : "checkbox", fieldLabel :
-                         * OpenLayers.i18n("toPublish"), id : "toPublish", name :
-                         * "B_toPublish", hidden: !catalogue.isIdentified() }
-                         */]);
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : OpenLayers.i18n("toEdit"),
+                        id : "toEdit",
+                        name : "B_toEdit",
+                        hidden : !catalogue.isIdentified()
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : OpenLayers.i18n("toPublish"),
+                        id : "toPublish",
+                        name : "B_toPublish",
+                        hidden : !catalogue.isIdentified()
+                    } ]);
 
             d.push({
                 xtype : "fieldset",

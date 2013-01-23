@@ -77,6 +77,10 @@ GeoNetwork.loginApp = function() {
                                         .parent().parent(), true);
                                 show(Ext.getCmp("isValid").el.parent().parent()
                                         .parent(), true);
+                                show(Ext.getCmp("toEdit").el.parent().parent()
+                                        .parent(), true);
+                                show(Ext.getCmp("toPublish").el.parent()
+                                        .parent().parent(), true);
                             });
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);
@@ -101,6 +105,8 @@ GeoNetwork.loginApp = function() {
                 hide(Ext.getCmp("basicgeodataid").el.parent().parent());
                 hide(Ext.getCmp("isTemplate").el.parent().parent().parent());
                 hide(Ext.getCmp("isValid").el.parent().parent().parent());
+                hide(Ext.getCmp("toEdit").el.parent().parent().parent());
+                hide(Ext.getCmp("toPublish").el.parent().parent().parent());
             });
 
             // Refresh login form if needed
