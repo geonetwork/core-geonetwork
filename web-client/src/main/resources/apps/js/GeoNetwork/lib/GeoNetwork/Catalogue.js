@@ -659,7 +659,7 @@ GeoNetwork.Catalogue = Ext
                     search : function(formOrParams, onSuccess, onFailure,
                             startRecord, updateStore, metadataStore,
                             summaryStore, async) {
-
+                        
                         var isCatalogueMdStore = this.metadataStore === metadataStore;
                         if (isCatalogueMdStore) {
                             this.updateStatus(OpenLayers.i18n('searching'));
@@ -686,15 +686,27 @@ GeoNetwork.Catalogue = Ext
                         if (updateStore) {
                             metadataStore.removeAll();
                         }
+
+                        this.resultsView.el.parent().parent().mask(OpenLayers.i18n("searching") + "...");
+                        
+                        suc = function(result, query){
+                            onSuccess(result, query);
+                            catalogue.resultsView.el.parent().parent().unmask();
+                        }
+                        fail = function(response){
+                            onFailure(response);
+                            catalogue.resultsView.el.parent().parent().unmask();
+                        }
+                        
                         if (typeof formOrParams === 'object') {
                             GeoNetwork.util.SearchTools.doQueryFromParams(
-                                    formOrParams, this, startRecord, onSuccess,
-                                    onFailure, updateStore, metadataStore,
+                                    formOrParams, this, startRecord, suc,
+                                    fail, updateStore, metadataStore,
                                     summaryStore, async);
                         } else {
                             GeoNetwork.util.SearchTools.doQueryFromForm(
-                                    formOrParams, this, startRecord, onSuccess,
-                                    onFailure, updateStore, metadataStore,
+                                    formOrParams, this, startRecord, suc,
+                                    fail, updateStore, metadataStore,
                                     summaryStore, async);
                         }
                     },
