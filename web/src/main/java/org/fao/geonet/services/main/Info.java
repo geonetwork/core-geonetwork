@@ -266,7 +266,6 @@ public class Info implements Service
         for (Iterator<Element> i=source.iterator(); i.hasNext();){
             Element e = i.next();
             
-            System.out.println(e.toString());
             if(e != null && !e.getTextTrim().isEmpty()){
                 uuid = e.getTextTrim();
                 table = "Sources";
@@ -276,7 +275,6 @@ public class Info implements Service
         }
         for (Iterator<Element> i=group.iterator(); i.hasNext();){
             Element e = i.next();
-            System.out.println(e.toString());
             if(e != null && !e.getTextTrim().isEmpty()){
                 uuid = e.getTextTrim();
                 table = "Groups";
