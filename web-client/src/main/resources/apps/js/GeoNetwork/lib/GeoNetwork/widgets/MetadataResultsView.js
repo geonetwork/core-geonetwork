@@ -32,12 +32,11 @@ Ext.namespace('GeoNetwork');
 /**
  * api: constructor .. class:: MetadataResultsView(config)
  * 
- * Create a metadata results data view which interacts:
- *  * with :class:`GeoNetwork.Catalogue` * with
+ * Create a metadata results data view which interacts: * with
+ * :class:`GeoNetwork.Catalogue` * with
  * :class:`GeoNetwork.MetadataResultsToolBar` if provided
  * 
- * TODO:
- *  * Add links to the contextual menu of a record
+ * TODO: * Add links to the contextual menu of a record
  * 
  */
 GeoNetwork.MetadataResultsView = Ext
@@ -301,7 +300,7 @@ GeoNetwork.MetadataResultsView = Ext
                                     this.createMenu(idx, dv);
                                     this.contextMenu.showAt(e.getXY());
                                     e.stopEvent(); // Do not trigger browser
-                                                    // event
+                                    // event
                                 }
                             }
                         }
@@ -563,8 +562,64 @@ GeoNetwork.MetadataResultsView = Ext
                         this.initRatingWidget();
                         this.dislayLinks(records);
                         this.dislayRelations(records);
+                        this.initializeLoadingCatalog();
                         // this.initMenu();
                     },
+                    initializeLoadingCatalog : function() {
+                        var className = "loadCatalogName";
+                        var divs = Ext.DomQuery.select("*[class ^=" + className
+                                + "]", this.el.dom.body);
+
+                        var catalogNames = {};
+
+                        Ext
+                                .each(
+                                        divs,
+                                        function(div) {
+                                            var el = Ext.get(div);
+
+                                            var request = el.dom.className
+                                                    .substring(className.length);
+
+                                            var onmouseover = function() {
+
+                                                if (catalogNames[request]) {
+                                                    el.dom.title = catalogNames[request];
+                                                } else {
+
+                                                    var lang = /srv\/([a-z]{3})/
+                                                            .exec(window.location.href)[1];
+                                                    var url = GeoNetwork_URL
+                                                            + "/srv/"
+                                                            + lang
+                                                            + "/xml.info?type=catalogName&"
+                                                            + request;
+                                                    Ext.Ajax
+                                                            .request({
+                                                                url : url,
+                                                                success : function(
+                                                                        res) {
+                                                                    var xml = res.responseXML;
+                                                                    var info = xml
+                                                                            .getElementsByTagName("info")[0];
+
+                                                                    var text = info.textContent
+                                                                            || info.innerText;
+                                                                    if (!text) {
+                                                                        text = '';
+                                                                    }
+                                                                    el.dom.title = text;
+                                                                    catalogNames[request] = text;
+                                                                }
+                                                            })
+                                                }
+
+                                                el.un('mouseover', onmouseover);
+                                            };
+                                            el.on('mouseover', onmouseover);
+                                        });
+                    },
+
                     /**
                      * private: method[dislayLinks] Create link menu in the div
                      * for each records
@@ -1001,30 +1056,30 @@ GeoNetwork.MetadataResultsView = Ext
                                             var featurecolor = this.colormap
                                                     && this.colormap[idx
                                                             % this.colormap.length]; // is
-                                                                                        // used
-                                                                                        // below
-                                                                                        // to
-                                                                                        // set
-                                                                                        // the
-                                                                                        // color
-                                                                                        // property
-                                                                                        // of
-                                                                                        // the
-                                                                                        // record
-                                                                                        // and
-                                                                                        // the
-                                                                                        // corresponding
-                                                                                        // feature
+                                            // used
+                                            // below
+                                            // to
+                                            // set
+                                            // the
+                                            // color
+                                            // property
+                                            // of
+                                            // the
+                                            // record
+                                            // and
+                                            // the
+                                            // corresponding
+                                            // feature
                                             r.set('featurecolor', featurecolor); // could
-                                                                                    // be
-                                                                                    // used
-                                                                                    // in
-                                                                                    // the
-                                                                                    // Templates
-                                                                                    // to
-                                                                                    // set
-                                                                                    // CSS
-                                                                                    // properties
+                                            // be
+                                            // used
+                                            // in
+                                            // the
+                                            // Templates
+                                            // to
+                                            // set
+                                            // CSS
+                                            // properties
                                             r
                                                     .set(
                                                             'featurecolorCSS',

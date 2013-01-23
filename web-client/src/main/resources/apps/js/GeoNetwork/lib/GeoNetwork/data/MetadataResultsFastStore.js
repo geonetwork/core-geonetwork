@@ -61,6 +61,17 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             return '';
         }
     }
+    function getCatalogName(v, record) {
+
+        if (record.groupLogoUuid && record.groupLogoUuid[0]) {
+            return "group=" + encodeURI(record.groupLogoUuid[0].value);
+        } else if (record.geonet_info && record.geonet_info.source
+                && record.geonet_info.source[0]) {
+            return "source=" + encodeURI(record.geonet_info.source[0].value);
+        } else {
+            return '';
+        }
+    }
     function getGroupWebsite(v, record) {
         if (record.geonet_info && record.geonet_info.groupWebsite) {
             return record.geonet_info.groupWebsite[0].value;
@@ -365,6 +376,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }, {
             name : 'groupLogoUuid',
             convert : getGroupLogoUuid
+        },{
+            name : 'catalogName',
+            convert : getCatalogName
         }, {
             name : 'groupWebsite',
             convert : getGroupWebsite

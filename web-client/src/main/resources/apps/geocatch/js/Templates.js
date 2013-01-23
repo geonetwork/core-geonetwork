@@ -145,8 +145,8 @@ GeoNetwork.Geocatch.Templates.TITLE =
 
 GeoNetwork.Geocatch.Templates.LOGO = 
     '<div class="md-logo" xmlns="http://www.w3.org/1999/html"> \
-        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
-        <tpl if="groupWebsite==\'\'"><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
+        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img title="{[OpenLayers.i18n("Loading") + "..."]}"  class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
+        <tpl if="groupWebsite==\'\'"><img title="{[OpenLayers.i18n("Loading") + "..."]}" class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
     </div>';
 
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
