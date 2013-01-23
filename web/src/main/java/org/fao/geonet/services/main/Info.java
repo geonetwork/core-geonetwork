@@ -278,7 +278,7 @@ public class Info implements Service
             if(e != null && !e.getTextTrim().isEmpty()){
                 uuid = e.getTextTrim();
                 table = "Groups";
-                id="id";
+                id="logouuid";
             }
             break;
         }
