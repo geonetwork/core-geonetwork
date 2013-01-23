@@ -397,16 +397,25 @@ GeoNetwork.util.SearchTools = {
             var subField = value.split(",");
             if (subField.length > 0) {
                 var finalValue = undefined;
-                var fieldName = undefined;
+                var fieldName = name;
                 Ext.each(subField, function(a) {
-                    var tmp = a.split("/");
-                    if (!finalValue) {
-                        finalValue = tmp[1];
-                        fieldName = tmp[0];
+                    if (a.indexOf("/") >= 0) {
+                        var tmp = a.split("/");
+                        if (!finalValue) {
+                            finalValue = tmp[1];
+                            fieldName = tmp[0];
+                        } else {
+                            finalValue = finalValue + " or " + tmp[1];
+                        }
                     } else {
-                        finalValue = finalValue + " or " + tmp[1];
+                        if (!finalValue) {
+                            finalValue = a;
+                        } else {
+                            finalValue = finalValue + " or " + a;
+                        }
                     }
                 });
+
                 filters.push(fieldName + "=" + encodeURIComponent(finalValue));
             }
         } else {

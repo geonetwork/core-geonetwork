@@ -281,7 +281,7 @@ GeoNetwork.searchApp = function() {
             }, new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("keyword"),
                 id : "keywordsCombo",
-                name : "[E1.0_keyword",
+                name : "[V_keyword",
                 store : this.createKeywordsStore(),
                 mode : "local",
                 displayField : "name",
@@ -292,7 +292,7 @@ GeoNetwork.searchApp = function() {
                 anchor : '-10'
             }), new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("theme"),
-                name : "[E1.0_topicCat",
+                name : "[V_topicCat",
                 id : "topicCat",
                 store : new Ext.data.SimpleStore({
                     data : GeoNetwork.Settings.Stores['topicCat'],
