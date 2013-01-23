@@ -430,7 +430,7 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             name : 'changedate',
             convert : getChangeDate
         }, {
-            name : 'revisiondate',
+            name : 'revisionDate',
             convert : getRevisionDate
         }, {
             name : 'selected',
