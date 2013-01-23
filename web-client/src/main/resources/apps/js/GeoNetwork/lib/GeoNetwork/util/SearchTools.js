@@ -396,27 +396,28 @@ GeoNetwork.util.SearchTools = {
             // separated by a '/' with the value
             var subField = value.split(",");
             if (subField.length > 0) {
-                var finalValue = undefined;
-                var fieldName = name;
+                var finalValue = {};
                 Ext.each(subField, function(a) {
                     if (a.indexOf("/") >= 0) {
                         var tmp = a.split("/");
-                        if (!finalValue) {
-                            finalValue = tmp[1];
-                            fieldName = tmp[0];
+                        if (!finalValue[tmp[0]]) {
+                            finalValue[tmp[0]] = tmp[1];
                         } else {
-                            finalValue = finalValue + " or " + tmp[1];
+                            finalValue[tmp[0]] = finalValue[tmp[0]] + " or "
+                                    + tmp[1];
                         }
                     } else {
-                        if (!finalValue) {
-                            finalValue = a;
+                        if (!finalValue[name]) {
+                            finalValue[name] = a;
                         } else {
-                            finalValue = finalValue + " or " + a;
+                            finalValue[name] = finalValue[name] + " or " + a;
                         }
                     }
                 });
-
-                filters.push(fieldName + "=" + encodeURIComponent(finalValue));
+                for ( var fieldName in finalValue) {
+                    filters.push(fieldName + "="
+                            + encodeURIComponent(finalValue[fieldName]));
+                }
             }
         } else {
             console.log("Cannot parse " + type + name + ": '" + value + "'");
