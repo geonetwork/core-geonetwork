@@ -88,8 +88,7 @@ attached it to the metadata for data.
                             <xsl:apply-templates mode="onlinecopy" select="//extra/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
                                 gmd:citedResponsibleParty"/>
                             
-                            
-                            
+                            <!-- Not used in MyOcean
                             <gmd:transferOptions>
                                 <gmd:MD_DigitalTransferOptions>
                                     <xsl:copy-of
@@ -139,6 +138,7 @@ attached it to the metadata for data.
                             <xsl:copy-of
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
                             />
+                            -->
                         </gmd:MD_Distribution>
                         
                     </gmd:distributionInfo>
