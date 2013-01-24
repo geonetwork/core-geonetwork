@@ -27,6 +27,8 @@ Mapping between :
                                         xmlns:ows11="http://www.opengis.net/ows/1.1"
                                         xmlns:wps="http://www.opengeospatial.net/wps"
                                         xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+                                        xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+                                        xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
 										extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg">
 
 	<!-- ============================================================================= -->
@@ -78,9 +80,16 @@ Mapping between :
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<language>
-				<gco:CharacterString><xsl:value-of select="$lang"/></gco:CharacterString>
-				<!-- English is default. Not available in GetCapabilities. 
-				Selected by user from GUI -->
+				<xsl:choose>
+					<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language">
+						<LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language}"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- English is default. Not available in GetCapabilities
+							Selected by user from GUI -->
+						<LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{$lang}"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</language>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -129,9 +138,16 @@ Mapping between :
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 			<dateStamp>
-				<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
+				<xsl:choose>
+					<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate">
+						<gco:Date><xsl:value-of select="//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate"/></gco:Date>
+					</xsl:when>
+					<xsl:otherwise>
+						<gco:DateTime><xsl:value-of select="format-dateTime(current-dateTime(),$df)"/></gco:DateTime>
+					</xsl:otherwise>
+				</xsl:choose>
 			</dateStamp>
-
+			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<metadataStandardName>
@@ -246,6 +262,67 @@ Mapping between :
 							</levelDescription>
 						</DQ_Scope>
 					</scope>
+					
+					<!-- 
+		                <inspire_common:Conformity>
+		                    <inspire_common:Specification>
+		                        <inspire_common:Title>-</inspire_common:Title>
+		                        <inspire_common:DateOfLastRevision>2013-01-01</inspire_common:DateOfLastRevision>
+		                    </inspire_common:Specification>
+		                    <inspire_common:Degree>notEvaluated</inspire_common:Degree>
+		                </inspire_common:Conformity>
+		                -->
+					<xsl:for-each select="//inspire_vs:ExtendedCapabilities/inspire_common:Conformity">
+					<report>
+						<DQ_DomainConsistency>
+							<result>
+								<DQ_ConformanceResult>
+									<specification>
+										<CI_Citation>
+											<title>
+												<gco:CharacterString><xsl:value-of select="inspire_common:Specification/inspire_common:Title"/></gco:CharacterString>
+											</title>
+											<date>
+												<CI_Date>
+													<date>
+														<gco:Date><xsl:value-of select="inspire_common:Specification/inspire_common:DateOfLastRevision"/></gco:Date>
+													</date>
+													<dateType>
+														<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+													</dateType>
+												</CI_Date>
+											</date>
+										</CI_Citation>
+									</specification>
+									<!-- gmd:explanation is mandated by ISO 19115. A default value is proposed -->
+									<explanation>
+										<gco:CharacterString>See the referenced specification</gco:CharacterString>
+									</explanation>
+									<!-- the value is false instead of true if not conformant -->
+									<xsl:choose>
+										<xsl:when test="inspire_common:Degree='conformant'">
+											<pass>
+												<gco:Boolean>true</gco:Boolean>
+											</pass>
+										</xsl:when>
+										<xsl:when test="inspire_common:Degree='notConformant'">
+											<pass>
+												<gco:Boolean>false</gco:Boolean>
+											</pass>
+										</xsl:when>
+										<xsl:otherwise>
+											<!-- Not evaluated -->
+											<pass gco:nilReason="unknown">
+												<gco:Boolean/>
+											</pass>
+										</xsl:otherwise>
+									</xsl:choose>
+									
+								</DQ_ConformanceResult>
+							</result>
+						</DQ_DomainConsistency>
+					</report>
+					</xsl:for-each>
 					<lineage>
 						<LI_Lineage>
 							<statement gco:nilReason="missing">
@@ -254,6 +331,7 @@ Mapping between :
 						</LI_Lineage>
 					</lineage>
 				</DQ_DataQuality>
+				
 			</dataQualityInfo>
 			<!--mdConst -->
 			<!--mdMaint-->

@@ -61,6 +61,7 @@ public class MetadataSchema
 	private String	primeNS;
 	private String[] schematronRules;
 	private boolean canEdit = false;
+	private boolean readwriteUUID = false;
 
 	private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
 
@@ -414,6 +415,20 @@ public class MetadataSchema
 	
 	public List<Element> getSchemaAppInfoElements() {
 		return rootAppInfoElements;
+	}
+	
+	/**
+	 * true if schema requires to synch the uuid column schema info
+	 * with the uuid in the metadata record (updated on editing or in UFO).
+	 * 
+	 * @return
+	 */
+	public boolean isReadwriteUUID() {
+		return readwriteUUID;
+	}
+
+	public void setReadwriteUUID(boolean readwriteUUID) {
+		this.readwriteUUID = readwriteUUID;
 	}
 }
 

@@ -1019,6 +1019,7 @@ Votre équipe geocat.ch</msg>
 	<progressChoice value="planned">prévu</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
+<!-- Deleted on trunk -->
     <protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
     <protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
     <protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
@@ -1039,6 +1040,7 @@ Votre équipe geocat.ch</msg>
     <protocolChoice show="-" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
     <protocolChoice show="y" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
     <protocolChoice show="-" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature MapService</protocolChoice>
+<!-- End deleted on trunk -->
 	<pubdate>Date de publication</pubdate>
 	<publicationDate>Date de diffusion</publicationDate>
 	<publisher>Diffuseur</publisher>

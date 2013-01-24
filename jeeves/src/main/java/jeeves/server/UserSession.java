@@ -113,7 +113,15 @@ public class UserSession
     }
 
 	//--------------------------------------------------------------------------
-
+    
+    public void loginAs(JeevesUser user) {
+        SecurityContextImpl secContext = new SecurityContextImpl();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user, null);
+        secContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(secContext);
+    }
+    
 	public boolean isAuthenticated() {
 		return !(auth() instanceof AnonymousAuthenticationToken);
 	}

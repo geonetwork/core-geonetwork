@@ -3037,6 +3037,22 @@
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
 						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
+						<!-- trunk is:
+
+						<xsl:variable name="relatedJsAction">
+			            	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
+			      		</xsl:variable>
+			            
+			            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}"/>
+			            <xsl:for-each select="gco:CharacterString">
+			             <xsl:call-template name="helper">
+			               <xsl:with-param name="schema" select="$schema"/>
+			               <xsl:with-param name="attribute" select="false()"/>
+			               <xsl:with-param name="jsAction" select="$relatedJsAction"/>
+			             </xsl:call-template>
+			           </xsl:for-each>
+			          </xsl:with-param>
+-->
 						<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 						<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
 						<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>

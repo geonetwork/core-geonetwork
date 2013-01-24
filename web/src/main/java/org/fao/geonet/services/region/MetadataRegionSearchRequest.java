@@ -14,7 +14,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.services.Utils;
 import org.geotools.xml.Parser;
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 

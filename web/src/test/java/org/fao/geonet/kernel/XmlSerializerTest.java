@@ -50,7 +50,7 @@ public class XmlSerializerTest {
 		@Override
 		public void update(Dbms dbms, String id, Element xml,
 				String changeDate, boolean updateDateStamp,
-				ServiceContext context) throws Exception {
+				String uuid, ServiceContext context) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
@@ -70,15 +70,15 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext)
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id, ServiceContext srvContext)
+		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext)
 				throws Exception {
-			return super.internalSelect(dbms, table, id, srvContext);
+			return super.internalSelect(dbms, table, id, isIndexingTask, srvContext);
 		}
 
 	}
@@ -128,7 +128,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", context);
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false, context);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
@@ -210,7 +210,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", context);
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false, context);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

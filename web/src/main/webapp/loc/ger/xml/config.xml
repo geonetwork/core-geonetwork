@@ -31,7 +31,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Suchergebnisse in gewünschte Sprache auf der Oberseite sortiert</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorieren gewünschten Sprache auf der Suche</requestedlanguageignored>
 
 	<selectionmanager>Suchresultate</selectionmanager>
 	<maxrecords>Maximum der ausgewählten Einträge</maxrecords>

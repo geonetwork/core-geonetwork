@@ -419,7 +419,8 @@ public class LuceneSearcher extends MetaSearcher {
 		// Search for all current session could search for
 		// Do a like query to limit the size of the results
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
-		elData.addContent(new Element("fast").addContent("index"));
+		elData.addContent(new Element("fast").addContent("index")).
+		    addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).addContent(Boolean.toString(false)));
 		// FIXME : need more work on LQB
 //		if (!searchValue.equals("")) {
 //			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
@@ -439,7 +440,7 @@ public class LuceneSearcher extends MetaSearcher {
 				}
 				Document doc;
 
-                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(searchField);
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(Collections.singleton(searchField));
 				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
 				doc = docVisitor.getDocument();
 
@@ -639,7 +640,7 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
-                (!StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
+                (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }

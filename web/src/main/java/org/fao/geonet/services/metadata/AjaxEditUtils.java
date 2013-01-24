@@ -756,7 +756,7 @@ public class AjaxEditUtils extends EditUtils {
 		md = dataManager.processSharedObjects(dbms, id, md, srvContext.getLanguage());
 		
         String changeDate = null;
-				xmlSerializer.update(dbms, id, md, changeDate, false, context);
+				xmlSerializer.update(dbms, id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);
@@ -813,7 +813,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.processSharedObjects(dbms, id, md, srvContext.getLanguage());
         
         String changeDate = null;
-				xmlSerializer.update(dbms, id, md, changeDate, false, context);
+				xmlSerializer.update(dbms, id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
         dataManager.notifyMetadataChange(dbms, md, id);

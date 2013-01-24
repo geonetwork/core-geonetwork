@@ -53,7 +53,8 @@
       <xs:element name="depends"        type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
       <xs:element name="autodetect"     type="gns:autodetectType" 
-																				minOccurs="1" maxOccurs="1"/>
+        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="readwriteUuid"  type="xs:boolean" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 

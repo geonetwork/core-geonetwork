@@ -32,7 +32,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Resultados da busca em idioma solicitado classificados no topo</requestedlanguagesorted>
-    <requestedlanguageignored>Ignorar idioma solicitado em busca</requestedlanguageignored>
 
 	<z3950>Servidor Z39.50</z3950>
 	<enable>Activar</enable>

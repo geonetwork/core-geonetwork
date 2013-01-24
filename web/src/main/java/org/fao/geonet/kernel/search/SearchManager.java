@@ -54,6 +54,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
@@ -73,6 +74,7 @@ import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.SlowCompositeReaderWrapper;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.util.BytesRef;
@@ -1073,21 +1075,25 @@ public class SearchManager {
         List<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
+        @SuppressWarnings("resource")
         SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
-        TermsEnum termEnum = atomicReader.terms(fieldName).iterator(null);
-        int i = 1;
-        try {
-            BytesRef term = termEnum.next();
-            while (term != null && i++ < maxNumberOfTerms && term.utf8ToString().equals(fieldName)) {
-                String text = term.utf8ToString();
-                if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                    TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                    termList.add(freq);
+        Terms terms = atomicReader.terms(fieldName);
+        if (terms != null) {
+            TermsEnum termEnum = terms.iterator(null);
+            int i = 1;
+            try {
+                BytesRef term = termEnum.next();
+                while (term != null && i++ < maxNumberOfTerms) {
+                    String text = term.utf8ToString();
+                    if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
+                        TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                        termList.add(freq);
+                    }
+                    term = termEnum.next();
                 }
-                term = termEnum.next();
+            } finally {
+                releaseIndexReader(indexAndTaxonomy);
             }
-        } finally {
-            releaseIndexReader(indexAndTaxonomy);
         }
         return termList;
     }
