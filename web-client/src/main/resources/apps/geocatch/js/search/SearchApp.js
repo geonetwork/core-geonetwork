@@ -451,7 +451,7 @@ GeoNetwork.searchApp = function() {
                         xtype : "checkbox",
                         fieldLabel : OpenLayers.i18n("toEdit"),
                         id : "toEdit",
-                        name : "B_toEdit",
+                        name : "B_editable",
                         hidden : !catalogue.isIdentified()
                     }, {
                         xtype : "checkbox",

@@ -354,8 +354,10 @@ GeoNetwork.util.SearchTools = {
             });
 
         } else if (type == 'B') { // boolean
-            if (name == 'toEdit') {
-                searchTools.toEditFilter(filters);
+            if (name == 'editable') {
+                filters
+                    .push(name + "="
+                        + encodeURIComponent(value ? 'true' : 'false'));
             } else {
                 filters
                         .push(name + "="
