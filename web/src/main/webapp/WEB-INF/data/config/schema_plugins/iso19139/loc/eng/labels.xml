@@ -1885,7 +1885,7 @@
 	<element name="gmd:protocol" id="398.0">
 		<label>Protocol</label>
 		<description>Connection protocol to be used</description>
-		<helper>
+		<helper sort="true">
 			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File
 				(*.AXL)
 			</option>

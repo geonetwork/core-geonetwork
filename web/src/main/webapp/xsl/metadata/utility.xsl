@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:exslt="http://exslt.org/common" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" 
-  xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
   xmlns:date="http://exslt.org/dates-and-times" xmlns:saxon="http://saxon.sf.net/"
   extension-element-prefixes="saxon"
@@ -33,6 +33,69 @@
   </xsl:template>
 
 
+  <!-- Get the suggestion for an element -->
+  <xsl:function name="geonet:getHelper" as="node()">
+    <xsl:param name="schema" as="xs:string"/>
+    <xsl:param name="node" as="node()"/>
+    <xsl:param name="labels" as="node()"/>
+    
+    
+    <!-- Define the element to look for.
+         In dublin core element contains value.
+         In ISO, attribute also but element contains characterString which contains the value -->
+    <xsl:variable name="name" select="name($node)"/>
+    
+    <!-- The parent of the parent, may be used to customize a label. -->
+    <xsl:variable name="context" select="name($node/parent::node())"/>
+    
+    <!-- Retrieve the xpath (until the name of the element), may be used to customize a label. -->
+    <xsl:variable name="xpath">
+      <xsl:for-each select="$node">
+        <xsl:call-template name="getXPath"/>
+      </xsl:for-each>
+    </xsl:variable>
+    
+    
+    <xsl:choose>
+      <xsl:when
+        test="starts-with($schema,'iso19139')">
+        <xsl:choose>
+          <!-- Exact schema, name and full context match --> 
+          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$xpath]/helper">
+            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+          </xsl:when>
+          <!-- ISO19139, name and full context match --> 
+          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$xpath]/helper">
+            <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+          </xsl:when>
+          <!-- Exact schema, name and parent-only match --> 
+          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$context]/helper">
+            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+          </xsl:when>
+          <!-- ISO19139, name and parent-only match --> 
+          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$context]/helper">
+            <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+          </xsl:when>
+          <!-- Exact schema, name match --> 
+          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper">
+            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper"/>
+          </xsl:when>
+          <!-- ISO19139 schema, name match --> 
+          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper">
+            <xsl:copy-of
+              select="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper"/>
+          </xsl:when>
+          <xsl:otherwise><null/></xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of
+          select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name]/helper"
+        />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+  
   <xsl:template name="getXPath">
     <xsl:for-each select="ancestor-or-self::*">
       <xsl:if test="not(position() = 1)">
