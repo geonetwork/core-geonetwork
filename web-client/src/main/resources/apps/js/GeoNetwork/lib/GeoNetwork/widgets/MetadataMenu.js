@@ -282,7 +282,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.getMEFAction);
         
         /* Rating menu */
-        if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
+        if (Ext.ux.RatingItem && this.ratingWidget) { // Check required widget are loaded before displaying context menu
             this.add(this.ratingWidget);
         }
     },
