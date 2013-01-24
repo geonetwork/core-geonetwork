@@ -437,7 +437,7 @@ public class DataManager {
             
             // get metadata, extracting and indexing any xlinks
 
-            Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, servContext, true);
+            Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true, servContext);
 
             // get metadata table fields
             String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
@@ -472,7 +472,8 @@ public class DataManager {
                 md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
                 String parentUuid = null;
                 md = updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms, servContext);
-                xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+
+                xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, uuid, servContext);
 
             }
              if("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
@@ -482,7 +483,7 @@ public class DataManager {
 
 	                if(modified != null && !modified.isEmpty()) {
 	                    md = modified.get(0);
-	                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+	                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, null, servContext);
 	                }
             	} catch (Exception e) {
             	    Element stackTrace = JeevesException.toElement(e);
@@ -499,7 +500,7 @@ public class DataManager {
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
                     Processor.processXLink(md,servContext);
-                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, null, servContext);
                 } else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
                 }
@@ -1697,7 +1698,7 @@ public class DataManager {
 	public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide, boolean allowDbmsClosing) throws Exception {
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 		boolean doXLinks = xmlSerializer.resolveXLinks();
-		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, srvContext, false);
+		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false, srvContext);
 		if (md == null) return null;
 
 		String version = null;

@@ -73,18 +73,6 @@ public class KeywordBean {
         this.isoLanguageMapper = isoLangMapper;
     }
 
-    private String calculationDefaultLang() {
-	    String lang;
-	    if(defaultLang != null) {
-            lang = defaultLang;
-	    } else if (ServiceContext.get() != null) {
-	        lang = to3CharLang(ServiceContext.get().getLanguage());
-	    } else {
-	        lang = Geonet.DEFAULT_LANGUAGE;
-	    }
-        return lang;
-    }
-
 	public KeywordBean setThesaurusInfo(Thesaurus thesaurus) {
 	    this.thesaurusKey = thesaurus.getKey();
 	    this.thesaurusDate = thesaurus.getDate();

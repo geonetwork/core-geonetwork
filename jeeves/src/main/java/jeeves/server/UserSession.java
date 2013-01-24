@@ -199,13 +199,6 @@ public class UserSession
 		return null;
 	}
 
-	public void loginAs(JeevesUser user) {
-		SecurityContextImpl secContext = new SecurityContextImpl();
-		Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-        secContext.setAuthentication(authentication);
-		SecurityContextHolder.setContext(secContext);		
-	}
-
 }
 
 //=============================================================================
