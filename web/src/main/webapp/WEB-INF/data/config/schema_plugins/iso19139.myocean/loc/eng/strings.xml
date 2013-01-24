@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <myoceanTab>MyOcean short view</myoceanTab>
-    <myocean.simpleTab>MyOcean full view</myocean.simpleTab>
+    <myoceanTab>MyOcean full view</myoceanTab>
+    <myocean.simpleTab>MyOcean short view</myocean.simpleTab>
     
     <creationDate>Creation date</creationDate>
     
