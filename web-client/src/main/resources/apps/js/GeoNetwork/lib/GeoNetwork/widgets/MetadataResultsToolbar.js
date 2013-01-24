@@ -112,6 +112,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     adminAction: undefined,
     
+    addLayerAction: undefined,
+    
     permalinkProvider: undefined,
     
     actionMenu: undefined,
@@ -336,15 +338,16 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });*/
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction,
+        
+        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
         
-        this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
         //this.actionMenu.addItem(this.updateStatusAction);
         //this.actionMenu.addItem(this.updateVersionAction);
+        this.actionMenu.addItem(this.deleteAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -422,26 +425,26 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Template icon is based on template key lower-cased.
      */
     createTemplateMenu: function(){
-//        var tpls = this.metadataResultsView.getTemplates();
-//        var data = [];
-//        var t;
-//        for (t in tpls) {
-//            if (tpls.hasOwnProperty(t)) {
-//                var tg = new Ext.Button({
-//                    text: '',
-//                    enableToggle: true,
-//                    toggleGroup: 'tpl',
-//                    id: t,
-//                    iconCls: 'mn-view-' + t.toLowerCase(),
-//                    toggleHandler: this.clickTemplateMenu,
-//                    scope: this.metadataResultsView,
-//                    pressed: (t === 'FULL' ? true : false)
-//                });
-//                data.push(tg);
-//            }
-//        }
+        /*var tpls = this.metadataResultsView.getTemplates();
+        var data = [];
+        var t;
+        for (t in tpls) {
+            if (tpls.hasOwnProperty(t)) {
+                var tg = new Ext.Button({
+                    text: '',
+                    enableToggle: true,
+                    toggleGroup: 'tpl',
+                    id: t,
+                    iconCls: 'mn-view-' + t.toLowerCase(),
+                    toggleHandler: this.clickTemplateMenu,
+                    scope: this.metadataResultsView,
+                    pressed: (t === 'FULL' ? true : false)
+                });
+                data.push(tg);
+            }
+        }
         
-//        return [data, '|'];
+        return [data, '|'];*/
         return [];
     },
     /** private: method[createOtherActionMenu] 
@@ -492,14 +495,40 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 },
                 scope: this
             });
-            
-        this.selectionActions.push(mefExportAction, printAction); //,csvExportAction
+        
+        this.addLayerAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('addLayerSelection'),
+            id: 'addLayerAction',
+            iconCls : 'addLayerIcon',
+            handler: function(){
+            	Ext.Ajax.request({
+            		url: this.catalogue.services.mdExtract,
+            		success: function(response) {
+            			var layers = response.responseXML.getElementsByTagName('layer');
+            			var l=[];
+            			app.switchMode('1', true);
+            			for(var i=0;i<layers.length;i++) {
+            				l.push([layers[i].getAttribute('title'), 
+            				        layers[i].getAttribute('owsurl'), 
+            				        layers[i].getAttribute('layername'), 
+            				        layers[i].getAttribute('mdid')
+            				 ]);
+            			}
+            			app.getIMap().addWMSLayer(l);
+            		}
+        		});
+            },
+            scope: this
+        });
+        
+        this.selectionActions.push(mefExportAction, /*csvExportAction,*/ printAction/*, this.addLayerAction*/);
         
         this.actionMenu.add(
             '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>',
             mefExportAction, 
-            //csvExportAction,
-            printAction // ,{
+            //csvExportAction, 
+            printAction
+            //this.addLayerAction// ,{
         // text : 'Display selection only'
         // }
         );
