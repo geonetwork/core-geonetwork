@@ -614,6 +614,12 @@ public class DataManager {
                     moreFields.add(SearchManager.makeField("_valid_" + type, status, true, true));
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
+
+                // toPublish index field: metadata is valid, schema=iso19139.che, not a template and not harvested
+                if (isValid.equals("1") && schema.trim().equals("iso19139.che")
+                        && isTemplate.equals("n") && isHarvested.equals("n")) {
+                    moreFields.add(SearchManager.makeField("toPublish", "y", true, true));
+                }
             }
             searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
         }
