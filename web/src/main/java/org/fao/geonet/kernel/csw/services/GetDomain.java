@@ -60,6 +60,7 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -80,7 +81,11 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
-	public GetDomain() {}
+	private LuceneConfig _luceneConfig;
+
+    public GetDomain(LuceneConfig luceneConfig) {
+	    this._luceneConfig = luceneConfig;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -109,7 +114,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		if (propertyNames != null) {
 			List<Element> domainValues;
 			try {
-				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint);
+				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint, _luceneConfig);
 			} catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
@@ -163,8 +168,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	public static List<Element> handlePropertyName(String[] propertyNames,
-			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint) throws Exception {
-		 
+			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
+
 		List<Element> domainValuesList = null;
 
         if(Log.isDebugEnabled(Geonet.CSW))
@@ -201,7 +206,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
                 // Apply CSW service specific constraint
                 if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint);
+                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint, luceneConfig);
 
                     query = new BooleanQuery();
 
