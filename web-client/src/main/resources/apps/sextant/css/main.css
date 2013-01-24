@@ -668,9 +668,11 @@ div.x-tip-body div.help {
     float: none !important;
 }
 /* Do not display projection switcher in bounding box editor */
-.myocean .map * label {
+.myocean .map * label,
+.myocean\.simple .map * label {
     display: none;
 }
+
 .myocean .slidingWindow {
     width: 100%;
     display: inline-block;
