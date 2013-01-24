@@ -786,7 +786,7 @@ cat.app = function() {
                 catalogue.metadataEdit(urlParameters.edit);
             }
             if (urlParameters.create !== undefined) {
-                resultPanel.getTopToolbar().createMetadataAction.fireEvent('click');
+                Ext.getCmp('center').toolbars[0].createMetadataAction.fireEvent('click');
             }
             if (urlParameters.uuid !== undefined) {
                 catalogue.metadataShow(urlParameters.uuid, true);
