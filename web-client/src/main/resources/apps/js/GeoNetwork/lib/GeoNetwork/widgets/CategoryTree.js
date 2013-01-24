@@ -55,11 +55,11 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         GeoNetwork.CategoryTree.superclass.initComponent.call(this);
         
         this.lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
-        this.store = GeoNetwork.data.CategoryStore(this.url);
-        this.store.load({
-        	callback: this.loadCategories,
-        	scope: this
-        });
+        
+        this.loadStore();
+        
+        app.getCatalogue().on('afterLogin', this.loadStore, this);
+        app.getCatalogue().on('afterLogout', this.loadStore, this);
         
         this.addEvents('afterload');
         
@@ -74,19 +74,21 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
     
+    loadStore: function() {
+    	this.store.load({
+        	callback: this.loadCategories,
+        	scope: this
+        });
+    },
+    
     /**
      * Loads categories from CategoryStore then create the Tree
      */
     loadCategories : function(records,o,s) {
     	var r, pseudotree = {};
+    	this.root.removeAll();
     	for (var i=0; i<records.length; i++) {
-    		var labels = records[i].get('label')[this.lang];
-    		if(labels) {
-    			r = labels.split('/');
-    		}
-    		else {
-    			r = records[i].get('name').split('/');
-    		}
+    		r = records[i].get('value').split('/');
             this.createNodes(this.root, r, 1);
         }
     	this.restoreSearchedCat();

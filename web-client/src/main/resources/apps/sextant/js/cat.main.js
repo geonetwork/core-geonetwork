@@ -422,12 +422,14 @@ cat.app = function() {
 	}
 
 	function createSearchForm() {
-
+		
 		var services = catalogue.services;
+		cat.what.createCmp(services);
+		
 		var whereForm = cat.where.createCmp();
-		var whatForm = cat.what.createCmp(services);
+		var whatForm = cat.what.getPanel();
 		var whenForm = cat.when.createCmp();
-		var whoForm = cat.who.createCmp(services);
+		var whoForm = cat.who.createCmp(services, cat.what);
 
 		// Add hidden fields to be use by quick metadata links from the admin
 		// panel (eg. my metadata).

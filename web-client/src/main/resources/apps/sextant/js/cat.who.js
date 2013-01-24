@@ -2,17 +2,23 @@ Ext.namespace('cat');
 
 cat.who = function() {
 	
+	var configwho= "";
+	
+	/** the Who panel **/
+	var panel;
+	
 	return {
-		createCmp : function(services) {
+		createCmp : function(services, what) {
 			
 			// if configwho is set, the groupFieldStore is loaded from data in configwho
 			var mode, groupFieldStore;
 			var configwhoInput = Ext.query('input[id*=configwho]');
 			if(configwhoInput[0] && configwhoInput[0].value) {
+				configwho = configwhoInput[0].value;
 				groupFieldStore =  new Ext.data.ArrayStore({
 					fields: ['value']
 				});
-				var data = configwhoInput[0].value.split(',');
+				var data = configwho.split(',');
 				for(i=0;i<data.length;i++) {
 					data[i] = [data[i]];
 				}
@@ -24,11 +30,21 @@ cat.who = function() {
 	                url: services.opensearchSuggest,
 	                rootId: 1,
 	                baseParams: {
-	                    field: 'orgName'
+	                    field: 'orgName',
+	                    threshold: 1
 	                }
 	            });
 				mode='remote';
 			}
+			if(what.getConfigWhat) {
+				groupFieldStore.baseParams.groupPublished = what.getConfigWhat();
+			}
+			var updateOrgList = function(cb, value, record) {
+				groupFieldStore.baseParams.groupPublished = what.getCatalogueField().getValue() ? 
+						what.getCatalogueField().getValue() : what.getConfigWhat();
+			};
+			what.getCatalogueField().on('additem', updateOrgList);
+			what.getCatalogueField().on('removeitem', updateOrgList);
 			
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
