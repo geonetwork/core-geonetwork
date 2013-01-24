@@ -18,7 +18,4 @@
 	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
 		<property name="cacheAllRegionsInMemory" value="false"/>
 	</bean>
-	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
-		<property name="cacheAllRegionsInMemory" value="false"/>
-	</bean>
 </beans>
