@@ -20,8 +20,8 @@
 					
 					<Type><xsl:value-of select="if ($isProduct) then 'PRODUCT' else 'DATASET'"/></Type>
 					
-					<Identifier><xsl:value-of select="gmd:fileIdentifier"/></Identifier>
-					
+					<!--<Identifier><xsl:value-of select="gmd:fileIdentifier"/></Identifier>
+					-->
 					<ProductionCentre><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/
 						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']/
 						gmd:organisationName/gco:CharacterString else ''"/></ProductionCentre>
@@ -33,8 +33,8 @@
 					
 					
 					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
-						<Parameters><xsl:value-of select="gmd:keyword/*/text()"/></Parameters>
+						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords/gmd:keyword">
+						<Parameters><xsl:value-of select="*/text()"/></Parameters>
 					</xsl:for-each>
 						
 					
@@ -127,18 +127,18 @@
 					
 					<TemporalExtentStart><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 						gmd:EX_Extent/gmd:temporalElement/
-						gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]"/></TemporalExtentStart>
+						gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/></TemporalExtentStart>
 					
 					<TemporalExtentEnd><xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent/gmd:temporalElement/
-							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]"/></TemporalExtentEnd>
+							gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/></TemporalExtentEnd>
 					
-					<NumberOfDatasetsRelated><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[@uuidref!='']) else ''"/></NumberOfDatasetsRelated>
+					<NumberOfDatasetsRelated><xsl:value-of select="if ($isProduct) then count(.//gmd:onLine[@uuidref!='']) else ''"/></NumberOfDatasetsRelated>
 					
 					
 					<xsl:choose>
 						<xsl:when test="$isProduct">
-							<xsl:for-each select="//gmd:onLine[@uuidref!='']">
+							<xsl:for-each select=".//gmd:onLine[@uuidref!='']">
 								<ListOfRelatedDataset><xsl:value-of select="@uuidref"/></ListOfRelatedDataset>
 							</xsl:for-each>
 						</xsl:when>
@@ -147,35 +147,36 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					
-					<Protocol-MYO-SUB><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB']) else ''"/></Protocol-MYO-SUB>
-					<Protocol-MYO-DGF><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF']) else ''"/></Protocol-MYO-DGF>
-					<Protocol-WWW-FTP><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'WWW:FTP']) else ''"/></Protocol-WWW-FTP>
-					<Protocol-OGC-WMS><xsl:value-of select="if ($isProduct) then count(//gmd:onLine[gmd:CI_OnlineResource/
-						gmd:protocol/gco:CharacterString = 'OGC:WMS']) else ''"/></Protocol-OGC-WMS>
+					<Protocol-MYO-SUB><xsl:value-of select="if ($isProduct) then count(.//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB']) > 0 else ''"/></Protocol-MYO-SUB>
+					<Protocol-MYO-DGF><xsl:value-of select="if ($isProduct) then count(.//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF']) > 0 else ''"/></Protocol-MYO-DGF>
+					<Protocol-WWW-FTP><xsl:value-of select="if ($isProduct) then count(.//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'WWW:FTP']) > 0 else ''"/></Protocol-WWW-FTP>
+					<Protocol-OGC-WMS><xsl:value-of select="if ($isProduct) then count(.//gmd:onLine[gmd:CI_OnlineResource/
+						gmd:protocol/gco:CharacterString = 'OGC:WMS']) > 0 else ''"/></Protocol-OGC-WMS>
 					
 					<xsl:choose>
 						<xsl:when test="$isProduct">
 							<URL-MYO-MOTU-SUB></URL-MYO-MOTU-SUB>
 							<URL-MYO-DGF></URL-MYO-DGF>
-							<URL-WWW-FTPWMS></URL-WWW-FTPWMS>
+							<URL-WWW-FTP></URL-WWW-FTP>
+							<URL-OGC-WMS></URL-OGC-WMS>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+							<xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource[
 								gmd:protocol/gco:CharacterString = 'MYO:MOTU-SUB']">
 								<URL-MYO-MOTU-SUB><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-MYO-MOTU-SUB>
 							</xsl:for-each>
-							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+							<xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource[
 								gmd:protocol/gco:CharacterString = 'MYO:MOTU-DGF']">
 								<URL-MYO-DGF><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-MYO-DGF>
 							</xsl:for-each>
-							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+							<xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource[
 								gmd:protocol/gco:CharacterString = 'WWW:FTP']">
 								<URL-WWW-FTP><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-WWW-FTP>
 							</xsl:for-each>
-							<xsl:for-each select="//gmd:onLine/gmd:CI_OnlineResource[
+							<xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource[
 								gmd:protocol/gco:CharacterString = 'OGC:WMS']">
 								<URL-OGC-WMS><xsl:value-of select="gmd:linkage/gmd:URL"/></URL-OGC-WMS>
 							</xsl:for-each>
