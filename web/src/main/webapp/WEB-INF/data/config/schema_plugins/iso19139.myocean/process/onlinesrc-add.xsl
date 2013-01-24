@@ -67,23 +67,23 @@ attached it to the metadata for data.
                                         
                                         <!-- Add extra onlineSource in requested metadata where contact is matching
                                         current distribution section in existing section-->
-                                        <xsl:for-each select="//extra/gmd:MD_Metadata[normalize-space(
-                                            gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                                            gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
-                                            gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString) = $email
-                                            ]/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine">
-                                            
-                                            <gmd:distributorTransferOptions>
-                                                <gmd:MD_DigitalTransferOptions>
+                                        
+                                        <gmd:distributorTransferOptions>
+                                            <gmd:MD_DigitalTransferOptions>
+                                                    <xsl:for-each select="//extra/gmd:MD_Metadata[normalize-space(
+                                                        gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+                                                        gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
+                                                        gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString) = $email
+                                                        ]/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine">
                                                     <xsl:apply-templates mode="onlinecopy" select="."/>
-                                                </gmd:MD_DigitalTransferOptions>
-                                            </gmd:distributorTransferOptions>
-                                        </xsl:for-each>
+                                                </xsl:for-each>
+                                            </gmd:MD_DigitalTransferOptions>
+                                        </gmd:distributorTransferOptions>
                                     </gmd:MD_Distributor>
                                 </gmd:distributor>
                             </xsl:for-each>
                             
-                            
+                            <!-- TODO : group by distributor -->
                             <!-- Copy non existing ressource attached to one responsible party  -->
                             <xsl:apply-templates mode="onlinecopy" select="//extra/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
                                 gmd:citedResponsibleParty"/>
