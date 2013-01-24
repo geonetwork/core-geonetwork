@@ -140,7 +140,8 @@ public abstract class XmlSerializer {
     			UserSession userSession = context.getUserSession();
     			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
     			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
-    			boolean canEdit = userSession != null && gc.getAccessManager().hasEditPermission(context, id);
+    			// TODO: improve XmlSerializerTest for that UC
+    			boolean canEdit = userSession != null && gc != null && gc.getAccessManager().hasEditPermission(context, id);
     			if(isAdmin || isOwner || canEdit) {
     				hideWithheldElements = false;
     			}
