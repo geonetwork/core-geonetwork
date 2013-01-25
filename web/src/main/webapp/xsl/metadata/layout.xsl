@@ -1089,7 +1089,7 @@
                                       then . 
                                       else parent::node()"></xsl:variable>
     <!-- Look for the helper -->
-    <xsl:variable name="helper" select="geonet:getHelper($schema, $node, /root/gui)"/>
+    <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, $node, /root/gui)"/>
     
     
     
@@ -2022,7 +2022,7 @@
             <!-- Look for the helper to check if a radio edit mode is activated
             If yes, hide the input text which will be updated when clicking the radio
             or the other option. -->
-            <xsl:variable name="helper" select="geonet:getHelper($schema, parent::node(), /root/gui)"/>
+            <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, parent::node(), /root/gui)"/>
             
             
             <input class="md {$class}" type="{$input_type}" value="{text()}">
@@ -2035,7 +2035,7 @@
               <xsl:if test="$tabindex">
                 <xsl:attribute name="tabindex" select="$tabindex"/>
               </xsl:if>
-              <xsl:if test="contains($helper/@editorMode, 'radio')">
+              <xsl:if test="if ($helper) then contains($helper/@editorMode, 'radio') else false()">
                 <xsl:attribute name="style">display:none;</xsl:attribute>
               </xsl:if>
               <xsl:choose>
@@ -2099,7 +2099,7 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
-        <xsl:variable name="helper" select="geonet:getHelper($schema, parent::node(), /root/gui)"/>
+        <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, parent::node(), /root/gui)"/>
         
         <textarea class="md {$class}" name="_{geonet:element/@ref}" id="_{geonet:element/@ref}">
           <xsl:if test="$isXLinked">
@@ -2108,7 +2108,7 @@
           <xsl:if test="$visible = false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
-          <xsl:if test="contains($helper/@editorMode, 'radio')">
+          <xsl:if test="if ($helper) then contains($helper/@editorMode, 'radio') else false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
           <xsl:if
