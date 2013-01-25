@@ -52,19 +52,38 @@ GeoNetwork.map.BACKGROUND_LAYERS = [
 
 //GeoNetwork.map.RESOLUTIONS = [];
 
-GeoNetwork.map.MAP_OPTIONS = {
-    projection: GeoNetwork.map.PROJECTION,
-    maxExtent: GeoNetwork.map.EXTENT,
-    restrictedExtent: GeoNetwork.map.EXTENT,
-    resolutions: GeoNetwork.map.RESOLUTIONS,
-    controls: [],
-    theme:null
+// Define background map layer from an OGC Context. 
+// If a context is defined then GeoNetwork.map.BACKGROUND_LAYERS is ignored.
+//* DEMIS country layer
+//GeoNetwork.map.OWS = "../../maps/demis.xml";
+//* Default GeoServer layers
+//GeoNetwork.map.OWS = "../../maps/geoserver_localhost.xml";
+GeoNetwork.map.CONTEXT = "../../maps/geoserver_localhost.wmc";
+
+GeoNetwork.map.CONTEXT_MAP_OPTIONS = {
+ controls: [],
+ theme:null
 };
+
+GeoNetwork.map.CONTEXT_MAIN_MAP_OPTIONS = {
+ controls: [],
+ theme:null
+};
+
+GeoNetwork.map.MAP_OPTIONS = {
+ projection: GeoNetwork.map.PROJECTION,
+ maxExtent: GeoNetwork.map.EXTENT,
+ restrictedExtent: GeoNetwork.map.EXTENT,
+ resolutions: GeoNetwork.map.RESOLUTIONS,
+ controls: [],
+ theme:null
+};
+
 GeoNetwork.map.MAIN_MAP_OPTIONS = {
-    projection: GeoNetwork.map.PROJECTION,
-    maxExtent: GeoNetwork.map.EXTENT,
-    restrictedExtent: GeoNetwork.map.EXTENT,
-    resolutions: GeoNetwork.map.RESOLUTIONS,
-    controls: [],
-    theme:null
+ projection: GeoNetwork.map.PROJECTION,
+ maxExtent: GeoNetwork.map.EXTENT,
+ restrictedExtent: GeoNetwork.map.EXTENT,
+ resolutions: GeoNetwork.map.RESOLUTIONS,
+ controls: [],
+ theme:null
 };
