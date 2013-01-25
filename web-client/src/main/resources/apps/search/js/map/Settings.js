@@ -57,12 +57,14 @@ GeoNetwork.map.MAP_OPTIONS = {
     maxExtent: GeoNetwork.map.EXTENT,
     restrictedExtent: GeoNetwork.map.EXTENT,
     resolutions: GeoNetwork.map.RESOLUTIONS,
-    controls: []
+    controls: [],
+    theme:null
 };
 GeoNetwork.map.MAIN_MAP_OPTIONS = {
     projection: GeoNetwork.map.PROJECTION,
     maxExtent: GeoNetwork.map.EXTENT,
     restrictedExtent: GeoNetwork.map.EXTENT,
     resolutions: GeoNetwork.map.RESOLUTIONS,
-    controls: []
+    controls: [],
+    theme:null
 };

@@ -11,7 +11,7 @@
 	<ContactSelectionTitle js="true">Kontaktauswahl</ContactSelectionTitle>
 	<FormatSelectionTitle js="true">Formatauswahl</FormatSelectionTitle>
 	<ExtentSelectionTitle js="true">Ausdehnungsauswahl</ExtentSelectionTitle>
-	<refine.titles js="true">Title</refine.titles>
+	<refine.titles js="true">Titel</refine.titles>
 	<refine.keyword js="true">Schlüsselwörter</refine.keyword>
 	<refine.resolution js="true">Räumliche Auflösung</refine.resolution>
 	<refine.category js="true">Thematik</refine.category>
@@ -996,6 +996,7 @@ Ihr geocat.ch-Team</msg>
 	<progressChoice value="planned">geplant</progressChoice>
 	<progressChoice/>
 	<protocol>Protokoll</protocol>
+<!-- Deleted on trunk -->
     <protocolChoice value="WWW:LINK-1.0-http--link">Webaddresse (URL)</protocolChoice>
     <protocolChoice value="WWW:LINK-1.0-http--samples">Beispielprodukt (URL)</protocolChoice>
     <protocolChoice value="WWW:LINK-1.0-http--related">Verwandter Link (URL)</protocolChoice>
@@ -1016,6 +1017,7 @@ Ihr geocat.ch-Team</msg>
     <protocolChoice value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei (*.AXL)</protocolChoice>
     <protocolChoice value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
     <protocolChoice value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
+<!-- End deleted on trunk -->
 	<pubdate>Publikationsdatum</pubdate>
 	<publicationDate>Publikationsdatum</publicationDate>
 	<publisher>Herausgeber</publisher>

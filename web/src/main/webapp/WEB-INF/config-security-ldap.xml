@@ -56,25 +56,75 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="userDetailsContextMapper" ref="ldapUserContextMapper" />
     </bean>
     
-    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.GeoNetworkLDAPUserDetailsContextMapper">
+    
+    
+    
+    
+    <!-- User information retrieval could be defined in 3 ways by configuration. Only one could be defined
+         for an LDAP provider.                                                                             -->
+    
+    <!-- Get all user information from the LDAP user's attributes (including profile and groups)           -->
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper">
+        <property name="mapping">
+            <map/>
+        </property>
+        <property name="profileMapping">
+            <map/>
+        </property>
+        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
+        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+        <property name="contextSource" ref="contextSource" />
+    </bean>
+    
+    
+    <!-- Get all user information from the LDAP user's attributes (including profile and groups) 
+    where profile and groups are stored in one attribute. A custom pattern is defined to extract 
+    those information. -->
+    <!--<bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
+        <property name="mapping">
+            <map/>
+        </property>
+        <property name="profileMapping">
+            <map/>
+        </property>
+        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
+        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+        
+        <property name="privilegePattern" value="${ldap.privilege.pattern}" />
+        <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
+        <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
+        
+        <property name="contextSource" ref="contextSource" />
+    </bean>-->
+    
+    <!-- Get all user information from the LDAP user's attributes excluding profiles and groups
+        which are searched in another LDAP location. For profiles and groups, define the search
+        location and the extraction pattern. -->
+    <!--<bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearch">
         <property name="mapping">
             <map/>
          </property>
         <property name="profileMapping">
             <map/>
         </property>
-        <!-- Privileges extraction
-         * current trunk only support one group.
-         * here we support more than one group
-         * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
-        -->
         <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-        <property name="privilegePattern" value="${ldap.privilege.pattern}" />
-        <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
-        <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
-        
         <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
-    </bean>
+        
+        <property name="groupAttribute" value="${ldap.privilege.search.group.attribute}"/>
+        <property name="groupObject" value="${ldap.privilege.search.group.object}"/>
+        <property name="groupQuery" value="${ldap.privilege.search.group.query}"/>
+        <property name="groupQueryPattern" value="${ldap.privilege.search.group.pattern}"/>
+        
+        <property name="privilegeAttribute" value="${ldap.privilege.search.privilege.attribute}"/>
+        <property name="privilegeObject" value="${ldap.privilege.search.privilege.object}"/>
+        <property name="privilegeQuery" value="${ldap.privilege.search.privilege.query}"/>
+        <property name="privilegeQueryPattern" value="${ldap.privilege.search.privilege.pattern}"/>
+        
+        <property name="contextSource" ref="contextSource" />
+    </bean>-->
+    
+    
+    
     
     <bean id="scheduler"
         class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -86,8 +136,16 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="jobDataAsMap">
             <map>
                 <entry key="contextSource" value-ref="contextSource" />
-                <entry key="ldapSearchBase" value="${ldap.sync.user.search.base}" />
-                <entry key="ldapSearchFilter" value="${ldap.sync.user.search.filter}" />
+                <entry key="ldapUserSearchBase" value="${ldap.sync.user.search.base}" />
+                <entry key="ldapUserSearchFilter" value="${ldap.sync.user.search.filter}" />
+                <entry key="ldapUserSearchAttribute" value="${ldap.sync.user.search.attribute}" />
+                
+                <entry key="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}"/>
+                <entry key="ldapGroupSearchBase" value="${ldap.sync.group.search.base}" />
+                <entry key="ldapGroupSearchFilter" value="${ldap.sync.group.search.filter}" />
+                <entry key="ldapGroupSearchAttribute" value="${ldap.sync.group.search.attribute}" />
+                <entry key="ldapGroupSearchPattern" value="${ldap.sync.group.search.pattern}" />
+                
             </map>
         </property>
     </bean>

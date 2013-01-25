@@ -54,13 +54,13 @@ public class XmlSerializerSvn extends XmlSerializer {
 
     /**
      * Retrieves the xml element whose id matches the given one. The element is read from the database as subversion may be busy with commit changes.
-     *
      * @param id
+     *
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
-		Element rec = super.internalSelect(dbms, table, id, srvContext);
+	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext) throws Exception {
+		Element rec = super.internalSelect(dbms, table, id, isIndexingTask, srvContext);
 		if (rec != null) return (Element) rec.detach();
 		else return null;
 	}
@@ -77,7 +77,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws Exception
      */
 	public Element select(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
-		Element rec = internalSelect(dbms, table, id, srvContext);
+		Element rec = internalSelect(dbms, table, id, false, srvContext);
 		if (resolveXLinks()) Processor.detachXLink(rec, srvContext);
 		return rec;
 	}
@@ -94,8 +94,8 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
-		return internalSelect(dbms, table, id, srvContext);
+	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext) throws Exception {
+		return internalSelect(dbms, table, id, false, srvContext);
 	}
 
     /**
@@ -142,15 +142,14 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @param changeDate
      * @param updateDateStamp
      * @param context 
-     *
      * @throws SQLException, SVNException
      */
-	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws Exception {
+	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
 
 		// old XML comes from the database
-	  Element oldXml = super.internalSelect(dbms, "metadata", id, context);		
+	  Element oldXml = super.internalSelect(dbms, "metadata", id, false, context);		
 
-		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 
 		if (svnMan == null) { // do nothing
 			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");

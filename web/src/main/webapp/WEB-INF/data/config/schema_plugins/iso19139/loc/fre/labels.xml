@@ -1559,9 +1559,9 @@
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
     <helper relAtt="uom">
-      <option value="0.10" title="cm">10 cm</option>
-      <option value="0.25" title="cm">25 cm</option>
-      <option value="0.50" title="cm">50 cm</option>
+      <option value="0.10" title="m">10 cm</option>
+      <option value="0.25" title="m">25 cm</option>
+      <option value="0.50" title="m">50 cm</option>
       <option value="1" title="m">1 m</option>
       <option value="30" title="m">30 m</option>
       <option value="100" title="m">100 m</option>
@@ -2633,16 +2633,25 @@
     <help>Autres restrictions et conditions préalables de nature juridique concernant l'accès et l'utilisation de la ressource ou des métadonnées. Ce champ doit être complété dès lors que l'un des deux champs précédents (accessConstraints, useConstraints) porte la mention "Autres restrictions".</help>
     <condition>Condition</condition>
     <helper>
-      <option value="Pas de restriction d’accès public selon INSPIRE">Pas de restriction d’accès public selon INSPIRE</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
-      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)">L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)</option>
-      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)">L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)</option>
-      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)">L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)</option>
-      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)</option>
-      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)">L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)</option>
-      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
-      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
+      <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
+        title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
+      <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)" 
+        title="Les relations internationales, la sécurité publique ou la défense nationale.">L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)</option>
+      <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)" 
+        title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)</option>
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)" 
+        title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)</option>
+      <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)" 
+        title="Les droits de propriété intellectuelle.">L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)</option>
+      <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)" 
+        title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)</option>
+      <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)" 
+        title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)</option>
+      <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)" 
+        title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
+      <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
+        title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
     </helper>
   </element>
   <element name="gmd:page" id="406.0">
@@ -2819,7 +2828,49 @@
     <description>Protocole de la connexion à utiliser</description>
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
-    
+    <helper>
+      <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web
+      </option>
+      <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language
+      </option>
+      <option show="-" value="OGC:GML">OGC-GML Geography Markup Language
+      </option>
+      <option show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service
+      </option>
+      <option show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+      <option show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+      <option show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service
+      </option>
+      <option show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+      <option show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service
+      </option>
+      <option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service
+      </option>
+      <option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+      <option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+      <option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation
+        Service
+      </option>
+      <option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+      <option show="y" value="OGC:WMC">OGC-WMC Web Map Context</option>
+      <option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
+      <option show="-" value="OGC:WNS">OGC-WNS Web Notification Service
+      </option>
+      <option show="-" value="OGC:WPS">OGC-WPS Web Processing Service</option>
+      <option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</option>
+      <option show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
+      <option show="-" value="FILE:GEO">Fichier SIG</option>
+      <option show="-" value="FILE:RASTER">Fichier SIG RASTER</option>
+      <option show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
+      <option show="-" value="DB:POSTGIS">Base de données / Table PostGIS</option>
+      <option show="-" value="DB:ORACLE">Base de données / ORACLE</option>
+      <option show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
+      <option show="y" value="RBNB:DATATURBINE">Data Turbine</option>
+      <option show="-" value="UKST">Unknown Service Type</option>
+    </helper>
   </element>
   <element name="gmd:purpose" id="26.0">
     <label>But</label>
@@ -3502,6 +3553,7 @@
     <helper>
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
       <option value="Conditions inconnues">Conditions inconnues</option>
+      <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour</option>
     </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">
@@ -3797,17 +3849,18 @@
       Classification qui permet de rechercher les services de données géographiques disponibles. Un service donné ne
       peut être classé que dans une seule catégorie.<!-- [2] --></description>
     <helper>
+      <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type -->
+      <option value="discovery">Service de découverte (discovery)</option>
+      <option value="view">Service de visualisation (view)</option>
+      <option value="download">Service de téléchargement (download)</option>
+      <option value="transformation">Service de transformation (transformation)</option>
+      <option value="invoke">Service d'invocation (invoke)</option>
+      <option value="other">Autres services (other)</option>
       <option value="OGC:WMS">OGC Web Map Service</option>
       <option value="OGC:WFS">OGC Web Feature Service</option>
       <option value="OGC:WCS">OGC Web Coverage Service</option>
-      <option value="W3C:HTML:DOWNLOAD">Téléchargement</option>
-      <option value="W3C:HTML:LINK">Information</option>
-      <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type
-        <option value="discovery">Service de découverte (discovery)</option>
-        <option value="view">Service de visualisation (view)</option>
-        <option value="download">Service de téléchargement (download)</option>
-        <option value="transformation">Service de transformation (transformation)</option>
-        <option value="other">Autres services (other)</option> -->       
+      <!--<option value="W3C:HTML:DOWNLOAD">Téléchargement</option>
+      <option value="W3C:HTML:LINK">Information</option>-->
     </helper>
   </element>
   <element name="srv:SV_Parameter">

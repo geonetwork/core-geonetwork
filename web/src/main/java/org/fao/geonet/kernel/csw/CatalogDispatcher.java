@@ -66,8 +66,8 @@ public class CatalogDispatcher
 	public CatalogDispatcher(DataStore ds, File summaryConfig, LuceneConfig luceneConfig)
 	{
 		register(new DescribeRecord());
-		register(new GetCapabilities());
-		register(new GetDomain());
+		register(new GetCapabilities(luceneConfig));
+		register(new GetDomain(luceneConfig));
 		register(new GetRecordById(luceneConfig));
 		register(new GetRecords(luceneConfig));
 		register(new Harvest());

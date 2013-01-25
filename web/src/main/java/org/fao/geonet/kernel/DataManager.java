@@ -437,7 +437,7 @@ public class DataManager {
             
             // get metadata, extracting and indexing any xlinks
 
-            Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, servContext);
+            Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true, servContext);
 
             // get metadata table fields
             String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
@@ -472,7 +472,8 @@ public class DataManager {
                 md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
                 String parentUuid = null;
                 md = updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms, servContext);
-                xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+
+                xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, uuid, servContext);
 
             }
              if("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
@@ -482,7 +483,7 @@ public class DataManager {
 
 	                if(modified != null && !modified.isEmpty()) {
 	                    md = modified.get(0);
-	                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+	                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, null, servContext);
 	                }
             	} catch (Exception e) {
             	    Element stackTrace = JeevesException.toElement(e);
@@ -499,7 +500,7 @@ public class DataManager {
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
                     Processor.processXLink(md,servContext);
-                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, servContext);
+                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, null, servContext);
                 } else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
                 }
@@ -613,6 +614,12 @@ public class DataManager {
                     moreFields.add(SearchManager.makeField("_valid_" + type, status, true, true));
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
+
+                // toPublish index field: metadata is valid, schema=iso19139.che, not a template and not harvested
+                if (isValid.equals("1") && schema.trim().equals("iso19139.che")
+                        && isTemplate.equals("n") && isHarvested.equals("n")) {
+                    moreFields.add(SearchManager.makeField("toPublish", "y", true, true));
+                }
             }
             searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
         }
@@ -1053,7 +1060,9 @@ public class DataManager {
 	//--------------------------------------------------------------------------
 
     /**
-     *
+     * Extract UUID from the metadata record using the schema
+     * XSL for UUID extraction ({@link Geonet.File.EXTRACT_UUID})
+     * 
      * @param schema
      * @param md
      * @return
@@ -1695,7 +1704,7 @@ public class DataManager {
 	public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide, boolean allowDbmsClosing) throws Exception {
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
 		boolean doXLinks = xmlSerializer.resolveXLinks();
-		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, srvContext);
+		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false, srvContext);
 		if (md == null) return null;
 
 		String version = null;
@@ -1845,8 +1854,14 @@ public class DataManager {
             md = processSharedObjects(dbms, id, md, lang);
         }
 
+        
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
 		//--- write metadata to dbms
-        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, context);
+        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, uuid, context);
 
         String isTemplate = getMetadataTemplate(dbms, id);
         // Notifies the metadata change to metatada notifier service
@@ -2359,7 +2374,12 @@ public class DataManager {
 
 		md = Xml.transform(root, styleSheet);
         String changeDate = null;
-		xmlSerializer.update(dbms, id, md, changeDate, true, context);
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
+		xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
 
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id);
@@ -3026,7 +3046,7 @@ public class DataManager {
 			Element childForUpdate = new Element("root");
 			childForUpdate = Xml.transform(rootEl, styleSheet, params);
 			
-			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, srvContext);
+			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
 
             // Notifies the metadata change to metatada notifier service

@@ -113,7 +113,15 @@ public class UserSession
     }
 
 	//--------------------------------------------------------------------------
-
+    
+    public void loginAs(JeevesUser user) {
+        SecurityContextImpl secContext = new SecurityContextImpl();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user, null);
+        secContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(secContext);
+    }
+    
 	public boolean isAuthenticated() {
 		return !(auth() instanceof AnonymousAuthenticationToken);
 	}
@@ -189,13 +197,6 @@ public class UserSession
 			return (JeevesUser) auth.getPrincipal(); 
 		}
 		return null;
-	}
-
-	public void loginAs(JeevesUser user) {
-		SecurityContextImpl secContext = new SecurityContextImpl();
-		Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-        secContext.setAuthentication(authentication);
-		SecurityContextHolder.setContext(secContext);		
 	}
 
 }

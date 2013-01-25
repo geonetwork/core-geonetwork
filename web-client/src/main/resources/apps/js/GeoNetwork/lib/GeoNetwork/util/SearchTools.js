@@ -354,8 +354,10 @@ GeoNetwork.util.SearchTools = {
             });
 
         } else if (type == 'B') { // boolean
-            if (name == 'toEdit') {
-                searchTools.toEditFilter(filters);
+            if (name == 'editable') {
+                filters
+                    .push(name + "="
+                        + encodeURIComponent(value ? 'true' : 'false'));
             } else {
                 filters
                         .push(name + "="
@@ -394,11 +396,31 @@ GeoNetwork.util.SearchTools = {
                             .getValue()));
         } else if (type == 'V') { // field name specified in the value,
             // separated by a '/' with the value
-            var subField = value.match("^([^/]+)/(.*)$");
-            filters.push("similarity" + "=" + "1.0");
-            filters.push(subField[1] + "=" + encodeURIComponent(subField[2]));
-            filters.push("similarity" + "="
-                    + encodeURIComponent(defaultSimilarity));
+            var subField = value.split(",");
+            if (subField.length > 0) {
+                var finalValue = {};
+                Ext.each(subField, function(a) {
+                    if (a.indexOf("/") >= 0) {
+                        var tmp = a.split("/");
+                        if (!finalValue[tmp[0]]) {
+                            finalValue[tmp[0]] = tmp[1];
+                        } else {
+                            finalValue[tmp[0]] = finalValue[tmp[0]] + " or "
+                                    + tmp[1];
+                        }
+                    } else {
+                        if (!finalValue[name]) {
+                            finalValue[name] = a;
+                        } else {
+                            finalValue[name] = finalValue[name] + " or " + a;
+                        }
+                    }
+                });
+                for ( var fieldName in finalValue) {
+                    filters.push(fieldName + "="
+                            + encodeURIComponent(finalValue[fieldName]));
+                }
+            }
         } else {
             console.log("Cannot parse " + type + name + ": '" + value + "'");
         }

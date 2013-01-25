@@ -61,6 +61,17 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             return '';
         }
     }
+    function getCatalogName(v, record) {
+
+        if (record.groupLogoUuid && record.groupLogoUuid[0]) {
+            return "group=" + encodeURI(record.groupLogoUuid[0].value);
+        } else if (record.geonet_info && record.geonet_info.source
+                && record.geonet_info.source[0]) {
+            return "source=" + encodeURI(record.geonet_info.source[0].value);
+        } else {
+            return '';
+        }
+    }
     function getGroupWebsite(v, record) {
         if (record.geonet_info && record.geonet_info.groupWebsite) {
             return record.geonet_info.groupWebsite[0].value;
@@ -147,6 +158,18 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
                         type : url.type,
                         uuid : url.uuid
                     });
+                });
+            });
+        }
+        if (record.link) {
+            Ext.each(record.link, function(link) {
+                var values = link.value.split("|");
+                links.push({
+                    name : values[0] || values[1],
+                    title : values[0] || values[1],
+                    href : values[2],
+                    protocol : values[4],
+                    type : "WWWLINK"
                 });
             });
         }
@@ -315,7 +338,8 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     function isService(v, record) {
         if (record.type) {
             for (i = 0; i < record.type.length; i++) {
-                if (record.type[i].value == 'service') return true;
+                if (record.type[i].value == 'service')
+                    return true;
             }
         }
 
@@ -324,13 +348,13 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     function isDataset(v, record) {
         if (record.type) {
             for (i = 0; i < record.type.length; i++) {
-                if (record.type[i].value == 'dataset') return true;
+                if (record.type[i].value == 'dataset')
+                    return true;
             }
         }
 
         return false;
     }
-
 
     return new Ext.data.JsonStore({
         totalProperty : 'summary.count',
@@ -355,6 +379,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }, {
             name : 'groupLogoUuid',
             convert : getGroupLogoUuid
+        },{
+            name : 'catalogName',
+            convert : getCatalogName
         }, {
             name : 'groupWebsite',
             convert : getGroupWebsite
@@ -409,7 +436,7 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             name : 'changedate',
             convert : getChangeDate
         }, {
-            name : 'revisiondate',
+            name : 'revisionDate',
             convert : getRevisionDate
         }, {
             name : 'selected',

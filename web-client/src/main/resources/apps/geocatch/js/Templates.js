@@ -116,15 +116,15 @@ GeoNetwork.Geocatch.Templates = Ext.extend(Ext.XTemplate, {
 });
 
 GeoNetwork.Geocatch.Templates.RELATIONS = 
-    '<div class="relation" title="' + OpenLayers.i18n('relateddatasets') + '">\
+    '<div class="relation" title="{[ + OpenLayers.i18n("relateddatasets")]}">\
         <span></span>\
         <ul id="md-relation-{id}"></ul>\
     </div>';
 
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
-    '<p class="abstract"><i>' + OpenLayers.i18n('abstract') + ': </i>{[values.abstract.substring(0, 350)]} (...)\
-     <tpl if="revisiondate!=\'\'"><br/>(<i>' + OpenLayers.i18n('modified') + ': </i>{revisiondate})</tpl>\
-     </p>';
+    '<p class="abstract"><i>{[OpenLayers.i18n("abstract")]}: </i>{[Ext.util.Format.ellipsis(values.abstract, 350, true)]}\
+     <tpl if="revisionDate && revisionDate!=\'\'"><br/>(<i>{[OpenLayers.i18n("modified")]}: </i>{revisionDate})</tpl>\
+     {values}</p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
     '<div class="md-links" id="md-links-{id}"></div>';
@@ -146,8 +146,8 @@ GeoNetwork.Geocatch.Templates.TITLE =
 
 GeoNetwork.Geocatch.Templates.LOGO = 
     '<div class="md-logo" xmlns="http://www.w3.org/1999/html"> \
-        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
-        <tpl if="groupWebsite==\'\'"><img src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
+        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img title="{[OpenLayers.i18n("Loading") + "..."]}"  class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
+        <tpl if="groupWebsite==\'\'"><img title="{[OpenLayers.i18n("Loading") + "..."]}" class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
     </div>';
 
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(

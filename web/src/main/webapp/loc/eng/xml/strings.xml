@@ -1024,6 +1024,7 @@
 	<progressChoice value="planned">planned</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
+<!-- Deleted on trunk -->
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--link">Web address (URL)
 	</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)
@@ -1064,6 +1065,7 @@
 		Service</protocolChoice>
 	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature
 		Map Service</protocolChoice>
+<!-- End deleted on trunk -->
 	<pubdate>Publication Date</pubdate>
 	<publicationDate>Publication date</publicationDate>
 	<publisher>Publisher</publisher>

@@ -1,5 +1,6 @@
 package org.fao.geonet.services;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,7 +82,12 @@ public class Utils {
 	        return null;
 	    }
 
-	    PhraseQuery query = new PhraseQuery();
+	    return lookupMetadataIdFromFileId(gc, fileId);
+    }
+
+    public static String lookupMetadataIdFromFileId(GeonetContext gc, String fileId) throws IOException,
+            InterruptedException {
+        PhraseQuery query = new PhraseQuery();
         query.add(new Term("fileId", fileId));
 
         SearchManager searchManager = gc.getSearchmanager();

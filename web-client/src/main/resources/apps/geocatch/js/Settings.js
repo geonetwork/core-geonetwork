@@ -54,14 +54,15 @@ GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 
 
 //List of facet to display. If none, the server configuration is use.
-GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
-    {name: 'keywords'},
-    {name: 'licenses'},
-    {name: 'types'},
-    {name: 'categories'},
-    {name: 'serviceTypes'},
-    {name: 'denominators'},
-    {name: 'createDateYears'}];
+GeoNetwork.Settings.facetListConfig = [
+	{name: 'spatialRepresentationTypes'},
+	{name: 'keywords'},      
+	{name: 'denominators'}, 
+	{name: 'serviceTypes'},
+	{name: 'types'},          
+	{name: 'topicCats'},  
+	{name: 'orgNames'}      
+    ];
 GeoNetwork.Settings.facetMaxItems = 7;
 
 GeoNetwork.MapModule = true;
@@ -75,7 +76,7 @@ Ext.BLANK_IMAGE_URL = '../../apps/js/ext/resources/images/default/s.gif';
 GeoNetwork.Settings.results = {
     // Parameters to set bounding box highlighter colors
     // Use a custom single color for bounding box
-    featurecolor: 'orange',
+    featurecolor: 'black',
     // Use a random color map with 2 colors
     //colormap: GeoNetwork.Util.generateColorMap(2),
     // Use a default color map with 10 colors

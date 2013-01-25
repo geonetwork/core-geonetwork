@@ -633,6 +633,12 @@
 		<service name="region.getmap.png">
 			<class name=".services.region.GetMap" >
 				 <param name="format" value="png"/>
+				 <!-- named backgrounds allow the background parameter to be a simple key 
+				 	  and the complete URL will be looked up from this list of named backgrounds 
+				 	  The name of the child elements is the key and the text is the url -->
+				 <param name="namedBackgrounds">
+				 	<!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
+				 </param>
 			 </class>
 			<output file="true" contentType="image/png"/>
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">

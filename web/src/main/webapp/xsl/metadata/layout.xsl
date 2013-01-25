@@ -1059,6 +1059,7 @@
   <xsl:template name="helper">
     <xsl:param name="schema"/>
     <xsl:param name="attribute"/>
+    <xsl:param name="jsAction"/>
 
     <!-- Define the element to look for. -->
     <xsl:variable name="parentName">
@@ -1159,9 +1160,10 @@
       </xsl:variable>
       
       <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
-      <select
-        onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction}"
-        class="md">
+      <select id="s_{$refId}" name="s_{$refId}" size="1" 
+		onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
+		class="md" >
+        <option/>
         <option/>
         <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
         <xsl:copy-of select="$list/*"/>

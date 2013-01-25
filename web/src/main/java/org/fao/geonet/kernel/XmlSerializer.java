@@ -41,6 +41,7 @@ import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
@@ -114,10 +115,11 @@ public abstract class XmlSerializer {
      * @param dbms
      * @param table
      * @param id
+     * @param isIndexingTask If true, then withheld elements are not removed.
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
+	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
 		Element select = dbms.select(query, new Integer(id));
 		Element record = select.getChild(Jeeves.Elem.RECORD);
@@ -128,41 +130,42 @@ public abstract class XmlSerializer {
 		String xmlData = record.getChildText("data");
 		Element metadata = Xml.loadString(xmlData, false);
 
-		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-		if(ServiceContext.get() != null) {
-			ServiceContext context = ServiceContext.get();
-			String ownerId = record.getChildText("owner");
-			UserSession userSession = context.getUserSession();
-			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
-			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
-			if(isAdmin || isOwner) {
-				hideWithheldElements = false;
-			}
+		if (!isIndexingTask) { 
+    		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+    		if(ServiceContext.get() != null) {
+    			ServiceContext context = ServiceContext.get();
+    			String ownerId = record.getChildText("owner");
+    			UserSession userSession = context.getUserSession();
+    			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
+    			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
+    			if(isAdmin || isOwner) {
+    				hideWithheldElements = false;
+    			}
+    		}
+    		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
+    		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
+    			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+    			for (Object object : nodes) {
+    				if (object instanceof Element) {
+    					Element element = (Element) object;
+    					
+    					if(keepMarkedElement) {
+    						element.removeContent();
+    						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
+    						@SuppressWarnings("unchecked")
+    						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+    						for (Attribute attribute : atts) {
+    							if(attribute != nilReason) {
+    								attribute.detach();
+    							}
+    						}
+    					} else {
+    						element.detach();
+    					}
+    				}
+    			}
+    		}
 		}
-		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
-		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
-			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
-			for (Object object : nodes) {
-				if (object instanceof Element) {
-					Element element = (Element) object;
-					
-					if(keepMarkedElement) {
-						element.removeContent();
-						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
-						@SuppressWarnings("unchecked")
-						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
-						for (Attribute attribute : atts) {
-							if(attribute != nilReason) {
-								attribute.detach();
-							}
-						}
-					} else {
-						element.detach();
-					}
-				}
-			}
-		}
-
 		return (Element) metadata.detach();
 	}
 
@@ -248,35 +251,38 @@ public abstract class XmlSerializer {
      * @param xml
      * @param changeDate
      * @param updateDateStamp
-     *
+     * @param uuid null to not update metadata uuid column or the uuid value to be used for the update.
      * @throws SQLException
      */
-	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp) throws SQLException {
+	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
 		if (false && resolveXLinks()) Processor.removeXLink(xml);
 
-		String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
-        String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
-
+		
 		Vector<Serializable> args = new Vector<Serializable>();
 
 		fixCR(xml);
-		args.add(Xml.getString(xml));
-
-        if (updateDateStamp) {
-            if (changeDate == null)	{
-                args.add(new ISODate().toString());
-            } else {
-                args.add(changeDate);
-            }
-        }
-
- 		args.add(root);
-		args.add(new Integer(id));
-
+		String metadata = Xml.getString(xml);
+		int metadataId = new Integer(id);
+		
         if (updateDateStamp)  {
-            dbms.execute(query, args.toArray());
+            if (changeDate == null)	{
+                changeDate = new ISODate().toString();
+            }
+            if (uuid != null)  {
+                String queryWithUUIDUpdate = "UPDATE Metadata SET data=?, changeDate=?, root=?, uuid=? WHERE id=?";
+                dbms.execute(queryWithUUIDUpdate, metadata, changeDate, root, uuid, metadataId);
+            } else {
+                String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
+                dbms.execute(query, metadata, changeDate, root, metadataId);
+            }
         } else {
-            dbms.execute(queryMinor, args.toArray());
+            if (uuid != null)  {
+                String queryMinorWithUUIDUpdate = "UPDATE Metadata SET data=?, root=?, uuid=? WHERE id=?";
+                dbms.execute(queryMinorWithUUIDUpdate, metadata, root, uuid, metadataId);
+            } else {
+                String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
+                dbms.execute(queryMinor, metadata, root, metadataId);
+            }
         }
 	}
 
@@ -319,7 +325,7 @@ public abstract class XmlSerializer {
 	   throws Exception;
 
 	public abstract void update(Dbms dbms, String id, Element xml, 
-		 String changeDate, boolean updateDateStamp, ServiceContext context) 
+		 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) 
 		 throws Exception;
 
 	public abstract String insert(Dbms dbms, String schema, Element xml, 
@@ -331,6 +337,6 @@ public abstract class XmlSerializer {
 	
 	public abstract Element select(Dbms dbms, String table, String id, ServiceContext srvContext) 
 			 throws Exception;
-	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext) 
+	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext) 
 			 throws Exception;
 } 

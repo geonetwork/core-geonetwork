@@ -52,8 +52,10 @@ public class UserQueryInput {
             SearchParameter.OWNER, 
             SearchParameter.ISADMIN, 
             SearchParameter.ISREVIEWER, 
-            SearchParameter.ISUSERADMIN, 
-            LuceneIndexField.GROUP_OWNER);
+            SearchParameter.ISUSERADMIN);
+            // Removed for Swisstopo: LuceneQueryBuilder class manages about filtering by user permissions
+            // this field is fine to use in queries
+            //LuceneIndexField.GROUP_OWNER
 
     /**
      * Don't take into account those field in search (those field are not 
@@ -80,6 +82,14 @@ public class UserQueryInput {
             "region_simple", "attrset", "mode", 
             "region", "from", "to", "hitsperpage" 
             );
+
+    /**
+     * Don't take into account those field in search. For now is used to be able to send timestamp value to avoid cache
+     * of Ajax requests and for the debug setting.
+     *
+     */
+    public static final List<String> IGNORE_FIELDS = Arrays.asList("ts", "debug");
+
 
     private String similarity;
     private String editable;
@@ -134,6 +144,8 @@ public class UserQueryInput {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
+                        } else if (IGNORE_FIELDS.contains(nodeName)) {
+                            // Do nothing
                         } else {
                             // addValues(searchCriteria, nodeName, nodeValue);
                             // Rename search parameter to lucene index field

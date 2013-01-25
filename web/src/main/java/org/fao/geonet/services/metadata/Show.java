@@ -60,7 +60,8 @@ public class Show implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	private boolean keepXLinks;
+    public void init(String appPath, ServiceConfig params) throws Exception
 	{
 		String skip;
 		
@@ -72,6 +73,8 @@ public class Show implements Service
 
 		skip = params.getValue("addRefs", "n");
 		addRefs = skip.equals("y");
+		
+		this.keepXLinks = "y".equalsIgnoreCase(params.getValue("keepXLinks", "n"));
 		
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
@@ -124,8 +127,8 @@ public class Show implements Service
 		Element elMd;
 		boolean addEditing = "true".equalsIgnoreCase(Util.getParam(params, "addEditing","false"));
 		if (!skipInfo || addEditing) {
-            boolean withValidationErrors = false, keepXLinkAttributes = false, hideElements = true, allowDbmsClosing=true;
-            elMd = gc.getDataManager().getGeocatMetadata(context, id, addEditing, withValidationErrors, keepXLinkAttributes, hideElements, allowDbmsClosing);
+            boolean withValidationErrors = false, hideElements = true, allowDbmsClosing=true;
+            elMd = gc.getDataManager().getGeocatMetadata(context, id, addEditing, withValidationErrors, this.keepXLinks, hideElements, allowDbmsClosing);
 		}
         else {
 			elMd = dm.getMetadataNoInfo(context, id);

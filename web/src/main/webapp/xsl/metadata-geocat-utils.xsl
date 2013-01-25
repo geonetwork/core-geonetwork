@@ -126,12 +126,13 @@
 	
 			</xsl:when>
 		</xsl:choose>
-		<a href="{/root/gui/locService}/pdf?id={geonet:info/id}" title="PDF">
+<!-- 		<a href="{/root/gui/locService}/pdf?id={geonet:info/id}" title="PDF">
 			<img src="{/root/gui/url}/images/pdf.gif" alt="PDF" title="PDF"
 				style="border:0px;max-height:16px;" />
 		</a>
-		<a href="{/root/gui/locService}/metadata.print?id={geonet:info/id}" title="Print" target="_print" >
-			<img src="{/root/gui/url}/images/print.png" alt="Print" title="Print"
+ -->		
+ 		<a href="{/root/gui/locService}/metadata.print?id={geonet:info/id}" title="Print" >
+			<img src="{/root/gui/url}/images/pdf.gif" alt="PDF" title="PDF"
 				style="border:0px;max-height:16px;" />
 		</a>
 		<!-- start permalink code -->

@@ -552,10 +552,11 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                     iconCls: 'addIcon',
                     handler: function(){
                         var RecType = this.keywordGrid.store.recordType;
-                        
+                        var thesaurusRecordIdx = this.thesaurusStore.find('id', this.keywordStore.baseParams.pThesauri);
+                        var namespace = this.thesaurusStore.getAt(thesaurusRecordIdx).get('defaultNamespace');
                         // The uri of the new keyword is based on a timestamp in order to avoid
                         // two keywords with the same uri
-                        var newUri = 'http://custom.shared.obj.ch/concept#' + new Date().getTime();
+                        var newUri = (namespace+'#' + new Date().getTime()).replace(/#+/,'#');
                         
                         // Send a request to add a new keyword in the database
                         var ref = this.keywordStore.baseParams.pThesauri;
@@ -574,7 +575,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                             
                             requestPayLoad = '<request><oldid/><newid>' +
                                 newId + '</newid><lang>' + lang + '</lang><ref>' + ref + '</ref><definition>' +
-                                definition + '</definition><namespace>#</namespace>' + '<north>' + north + '</north><south>' +
+                                definition + '</definition><namespace>'+ namespace +'</namespace>' + '<north>' + north + '</north><south>' +
                                 south + '</south><east>' + east + '</east><prefLab>' + prefLab + '</prefLab><west>' +
                                 west + '</west><refType>' + refType + '</refType></request>';
 
@@ -587,7 +588,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                             });
                         } else {
                             requestPayLoad = '<request><newid>' + newId + '</newid><refType>' + refType + '</refType><definition>'
-                            + definition + '</definition><namespace>#</namespace><ref>' + ref + '</ref><oldid/><lang>' + lang + '</lang><prefLab>' + prefLab + '</prefLab></request>';
+                            + definition + '</definition><namespace>'+namespace+'</namespace><ref>' + ref + '</ref><oldid/><lang>' + lang + '</lang><prefLab>' + prefLab + '</prefLab></request>';
                             
                             Ext.Ajax.request({
                                 scope: this,
@@ -904,44 +905,44 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
         return this.createEmptyThesaurusForm;
     },
 
-    getCreateThesaurusFromLocalFileForm: function(){
-        this.createThesaurusFromLocalFileForm = new Ext.form.FormPanel({
-            fileUpload: true,
-            region: 'center',
-            autoHeight: true,
-            baseCls: 'x-plain',
-            errorReader: new Ext.data.XmlReader({
-                  record : 'record'
-              }, ['Thesaurus']
-            ),
-            labelWidth: 170,
-            split: true,
-            items: [{
-                xtype: 'fileuploadfield',
-                allowBlank: true,
-                fieldLabel: OpenLayers.i18n('thesaurusFilePath'),
-                id: 'local_fname',
-                name: 'fname',
-                buttonCfg: {
-                    text: OpenLayers.i18n('selectFile')
-                }
-            }, this.createTypeCombo('local_themeCmb'), {
-              xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('thesaurusType'),
-                id: 'local_thesaurusType',
-                name: 'type',
-                value: 'external',
-                hidden: true,
-                anchor: '-15'
-            }, {
-                xtype: 'textfield',
-                hidden: true,
-                name: 'mode',
-                value: 'file'
-            }]
-        });
-        return this.createThesaurusFromLocalFileForm;
-    },
+  getCreateThesaurusFromLocalFileForm: function(){
+  this.createThesaurusFromLocalFileForm = new Ext.form.FormPanel({
+      fileUpload: true,
+      region: 'center',
+      autoHeight: true,
+      baseCls: 'x-plain',
+      errorReader: new Ext.data.XmlReader({
+            record : 'record'
+        }, ['Thesaurus']
+      ),
+      labelWidth: 170,
+      split: true,
+      items: [{
+          xtype: 'fileuploadfield',
+          allowBlank: true,
+          fieldLabel: OpenLayers.i18n('thesaurusFilePath'),
+          id: 'local_fname',
+          name: 'fname',
+          buttonCfg: {
+              text: OpenLayers.i18n('selectFile')
+          }
+      }, this.createTypeCombo('local_themeCmb'), {
+        xtype: 'textfield',
+          fieldLabel: OpenLayers.i18n('thesaurusType'),
+          id: 'local_thesaurusType',
+          name: 'type',
+          value: 'external',
+          hidden: true,
+          anchor: '-15'
+      }, {
+          xtype: 'textfield',
+          hidden: true,
+          name: 'mode',
+          value: 'file'
+      }]
+  });
+  return this.createThesaurusFromLocalFileForm;
+},
     
     getCreateThesaurusFromRemoteFileForm: function(){
         this.createThesaurusFromRemoteFileForm = new Ext.form.FormPanel({

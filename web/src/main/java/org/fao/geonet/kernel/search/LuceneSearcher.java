@@ -321,7 +321,7 @@ public class LuceneSearcher extends MetaSearcher {
 						}
 						response.addContent(md);
 						
-						addGeocatElements(srvContext, md, id, gc);
+						//addGeocatElements(srvContext, md, id, gc);
 					}
 				}
 			} else {
@@ -419,7 +419,8 @@ public class LuceneSearcher extends MetaSearcher {
 		// Search for all current session could search for
 		// Do a like query to limit the size of the results
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
-		elData.addContent(new Element("fast").addContent("index"));
+		elData.addContent(new Element("fast").addContent("index")).
+		    addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).addContent(Boolean.toString(false)));
 		// FIXME : need more work on LQB
 //		if (!searchValue.equals("")) {
 //			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
@@ -431,7 +432,7 @@ public class LuceneSearcher extends MetaSearcher {
 		elData.addContent(new Element("to").setText(getSize() + ""));
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(1, getSize(), false);
+			TopDocs tdocs = performQuery(0, getSize(), false);
 
 			for (int i = 0; i < tdocs.scoreDocs.length; i++) {
 				if (counter >= maxNumberOfTerms) {
@@ -439,7 +440,7 @@ public class LuceneSearcher extends MetaSearcher {
 				}
 				Document doc;
 
-                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(searchField);
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(Collections.singleton(searchField));
 				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
 				doc = docVisitor.getDocument();
 
@@ -639,7 +640,7 @@ public class LuceneSearcher extends MetaSearcher {
 
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
-                (!StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
+                (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
 				for (String group : userGroups) {
 					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
                 }
@@ -887,22 +888,30 @@ public class LuceneSearcher extends MetaSearcher {
         final String prefix = "region:";
         if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
             boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION,null));
-            RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+            Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
             for (String regionId : regionIds) {
-                Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
-                if(isWithinFilter) {
-                    geoms.add(geom);
-                }
-                if (unionedGeom == null) {
-                    unionedGeom = geom;
-                } else {
-                    unionedGeom = unionedGeom.union(geom);
+                for (RegionsDAO dao : regionDAOs) {
+                    Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
+                    if(dao!=null) {
+                        if(isWithinFilter) {
+                            geoms.add(geom);
+                        }
+                        if (unionedGeom == null) {
+                            unionedGeom = geom;
+                        } else {
+                            unionedGeom = unionedGeom.union(geom);
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
+                    
                 }
             }
-            geoms.add(0, unionedGeom);
+            if (regionIds.length > 1) {
+                geoms.add(0, unionedGeom);
+            }
             return geoms;
         }else if (geomWKT != null) {
             WKTReader reader = new WKTReader();

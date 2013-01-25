@@ -35,7 +35,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
-    <requestedlanguageignored>Omet l'idioma sol·licitat en la recerca</requestedlanguageignored>
 
 	<oai>Proveïdor OAI</oai>
 		<datesearch>Datesearch</datesearch>

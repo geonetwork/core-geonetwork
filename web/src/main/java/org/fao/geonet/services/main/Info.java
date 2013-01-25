@@ -133,8 +133,11 @@ public class Info implements Service
             else if (type.equals("isolanguages"))
                 result.addContent(Lib.local.retrieve(dbms, "IsoLanguages"));
 
-			else if (type.equals("sources"))
-				result.addContent(getSources(dbms, sm));
+            else if (type.equals("sources"))
+                result.addContent(getSources(dbms, sm));
+			
+            else if (type.equals("catalogName"))
+                result.addContent(getCatalogName(dbms, sm, params));
 
 			else if (type.equals("users"))
 				result.addContent(getUsers(context, dbms));
@@ -226,28 +229,77 @@ public class Info implements Service
 
 	//--------------------------------------------------------------------------
 
-	private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
-	{
-		String  query   = "SELECT * FROM Sources ORDER BY name";
-		Element sources = new Element("sources");
+    private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
+    {
+        String  query   = "SELECT * FROM Sources ORDER BY name";
+        Element sources = new Element("sources");
 
-		String siteId   = sm.getValue("system/site/siteId");
-		String siteName = sm.getValue("system/site/name");
+        String siteId   = sm.getValue("system/site/siteId");
+        String siteName = sm.getValue("system/site/name");
 
-		add(sources, siteId, siteName);
+        add(sources, siteId, siteName);
 
-		for (Object o : dbms.select(query).getChildren())
-		{
-			Element rec = (Element) o;
+        for (Object o : dbms.select(query).getChildren())
+        {
+            Element rec = (Element) o;
 
-			String uuid = rec.getChildText("uuid");
-			String name = rec.getChildText("name");
+            String uuid = rec.getChildText("uuid");
+            String name = rec.getChildText("name");
 
-			add(sources, uuid, name);
-		}
+            add(sources, uuid, name);
+        }
 
-		return sources;
-	}
+        return sources;
+    }//--------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    private Element getCatalogName(Dbms dbms, SettingManager sm, 
+           Element params) throws SQLException
+    {
+        String uuid = null;
+        String table = null;
+        String id = "";
+        
+        List<Element> source = (List<Element>) params.getChildren("source");
+        List<Element> group = (List<Element>)params.getChildren("group");
+        
+        for (Iterator<Element> i=source.iterator(); i.hasNext();){
+            Element e = i.next();
+            
+            if(e != null && !e.getTextTrim().isEmpty()){
+                uuid = e.getTextTrim();
+                table = "Sources";
+                id = "uuid";
+            }
+            break;
+        }
+        for (Iterator<Element> i=group.iterator(); i.hasNext();){
+            Element e = i.next();
+            if(e != null && !e.getTextTrim().isEmpty()){
+                uuid = e.getTextTrim();
+                table = "Groups";
+                id="logouuid";
+            }
+            break;
+        }
+        
+        Element res = new Element("catalogName");
+        
+        if(table != null && uuid != null){
+            
+            String  query   = "SELECT name FROM " + table +" WHERE " 
+                    + id + " = '" + uuid + "' LIMIT 1";
+            
+            Element query_res = dbms.select(query); 
+            for (Object o : query_res.getChildren())
+            {
+                Element rec = (Element) o;
+                String name = rec.getChildText("name");
+                res.setText(name);
+            }
+        }    
+        return res;
+    }
 
 	//--------------------------------------------------------------------------
 	//--- ZRepositories

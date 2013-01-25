@@ -799,5 +799,8 @@ public class Thesaurus {
 			AdminListener listener = new DummyAdminListener();
 			repository.clear(listener);
 		}
+        public String getDefaultNamespace() {
+            return this.defaultNamespace;
+        }
 
 }

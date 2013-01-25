@@ -1955,6 +1955,7 @@
 	<xsl:template name="helper">
 		<xsl:param name="schema"/>
 		<xsl:param name="attribute"/>
+		<xsl:param name="jsAction"/>
 		
 		<!-- Define the element to look for. -->
 		<xsl:variable name="parentName">
@@ -2001,7 +2002,8 @@
 			
 			<xsl:text> </xsl:text>				
 			(<xsl:value-of select="/root/gui/strings/helperList"/>
-		  <select onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup(); {$relatedElementAction}" class="md">
+		  <select id="s_{$refId}" name="s_{$refId}" size="1" 
+		  onchange="$('_{$refId}').value=this.options[this.selectedIndex].value; if ($('_{$refId}').onkeyup) $('_{$refId}').onkeyup(); {$relatedElementAction} {$jsAction}" class="md">
 		    <option/>
 		    <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
 		    <xsl:copy-of select="$list/*"/>
@@ -2189,7 +2191,6 @@
               <xsl:otherwise>s<xsl:value-of select="$eltRef"/></xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
-          
           
           <xsl:variable name="geom" >
             <xsl:value-of select="concat('Polygon((', $wValue, ' ', $sValue,',',$eValue,' ',$sValue,',',$eValue,' ',$nValue,',',$wValue,' ',$nValue,',',$wValue,' ',$sValue, '))')"/>

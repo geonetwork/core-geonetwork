@@ -148,7 +148,7 @@ public class ReusableObjManager
 
             if (changed != null) {
                 Processor.processXLink(changed, context);
-                gc.getXmlSerializer().update(dbms, id, changed, new ISODate().toString(), false, context);
+                gc.getXmlSerializer().update(dbms, id, changed, new ISODate().toString(), false, null, context);
             }
         }
         return process != null;

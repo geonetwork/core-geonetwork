@@ -63,8 +63,9 @@ ConfigModel.prototype.getConfig_OK = function(node)
 
 			SEARCHSTATS_ENABLE        : xml.evalXPath(node, 'searchStats/enable'),
 
-            AUTODETECT_ENABLE : xml.evalXPath(node, 'autodetect/enable'),
-            REQUESTED_LANGUAGE_ONLY : xml.evalXPath(node, 'requestedLanguage/only'),
+      AUTODETECT_ENABLE : xml.evalXPath(node, 'autodetect/enable'),
+      REQUESTED_LANGUAGE_ONLY : xml.evalXPath(node, 'requestedLanguage/only'),
+      REQUESTED_LANGUAGE_SORTED : xml.evalXPath(node, 'requestedLanguage/sorted'),
 
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
 			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
@@ -201,6 +202,7 @@ ConfigModel.updateTemp =
 '	</autodetect>'+
 '	<requestedLanguage>'+
 '        <only>{REQUESTED_LANGUAGE_ONLY}</only>' +
+'        <sorted>{REQUESTED_LANGUAGE_SORTED}</sorted>' +
 '	</requestedLanguage>'+
 '	<downloadservice>'+
 '		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+

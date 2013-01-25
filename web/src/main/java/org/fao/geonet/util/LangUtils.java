@@ -234,9 +234,6 @@ public final class LangUtils
 
         final String xml = "<description>" + basicValue.replaceAll("(<\\w+>)\\s*(\\<!\\[CDATA\\[)*\\s*(.*?)\\s*(\\]\\]\\>)*(</\\w+>)","$1<![CDATA[$3]]>$5") + "</description>";
 
-        if(org.apache.log4j.Logger.getLogger(Geonet.GEONETWORK).isDebugEnabled()) {
-            System.out.println("Parsing xml to get languages: \n"+xml);
-        }
         Log.debug(Geonet.GEONETWORK, "Parsing xml to get languages: \n"+xml);
 
         Element desc;

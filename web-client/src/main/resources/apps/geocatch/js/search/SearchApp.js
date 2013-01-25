@@ -43,22 +43,53 @@ GeoNetwork.searchApp = function() {
             hideAdvancedSearch();
 
             this.createResultsPanel(null);
+
+            // Show initial facets filter
+            app.searchApp.generateFacetedSearchPanel();
+            // FIXME how many results should I load to
+            // get all important facets?
+            Ext.Ajax
+                    .request({
+                        url : catalogue.URL
+                                + "/srv/"
+                                + catalogue.LANG
+                                + "/q?fast=index&from=1&to=30&sortBy=relevance&summaryOnly=1&ts="
+                                + (new Date()).getTime(),
+                        success : function(response) {
+                            Ext.getCmp('facets-panel').refresh(response);
+                        },
+                        disableCaching : false
+
+                    });
+
         },
 
-        fireSearch : function() {
-
+        getSearchForm : function() {
             var searchForm = Ext.getCmp('advanced-search-options-content-form');
 
             if (!searchForm.isVisible()) {
                 searchForm = Ext.getCmp('simple-search-options-content-form');
             }
 
+            return searchForm;
+        },
+
+        fireSearch : function() {
+
+            var searchForm = this.getSearchForm();
+
             searchForm.fireEvent('search');
-            
-            
-            //Maximize Search Results Panel
+
+            // Maximize Search Results Panel
             Ext.getCmp("west").setWidth(Ext.getCmp("west").minWidth);
             Ext.getCmp("vp").doLayout();
+        },
+
+        resetSearch : function() {
+
+            var searchForm = this.getSearchForm();
+
+            searchForm.fireEvent('reset');
         },
 
         /***********************************************************************
@@ -77,6 +108,9 @@ GeoNetwork.searchApp = function() {
                                 + '<input type="button" onclick="app.searchApp.fireSearch()"'
                                 + ' id="search-submit" class="form-submit" value="'
                                 + OpenLayers.i18n('Search')
+                                + '"></input><input type="button" onclick="app.searchApp.resetSearch()"'
+                                + ' id="search-reset" class="form-reset" value="'
+                                + OpenLayers.i18n('Reset')
                                 + '"></input></div>'
                                 + '<a id="show-advanced" href="javascript:showAdvancedSearch()">'
                                 + OpenLayers.i18n('showAdvancedOptions')
@@ -210,7 +244,7 @@ GeoNetwork.searchApp = function() {
                 id : "anyField",
                 enableKeyEvents : true,
                 anchor : '-10',
-                name : "T_AnyText",
+                name : "T_any",
                 listeners : {
                     keyup : function(e, a) {
                         if (a.ENTER == a.keyCode) {
@@ -247,7 +281,7 @@ GeoNetwork.searchApp = function() {
             }, new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("keyword"),
                 id : "keywordsCombo",
-                name : "[E1.0_keyword",
+                name : "[V_keyword",
                 store : this.createKeywordsStore(),
                 mode : "local",
                 displayField : "name",
@@ -258,7 +292,7 @@ GeoNetwork.searchApp = function() {
                 anchor : '-10'
             }), new Ext.ux.form.SuperBoxSelect({
                 fieldLabel : OpenLayers.i18n("theme"),
-                name : "[E1.0_topicCat",
+                name : "[V_topicCat",
                 id : "topicCat",
                 store : new Ext.data.SimpleStore({
                     data : GeoNetwork.Settings.Stores['topicCat'],
@@ -436,16 +470,19 @@ GeoNetwork.searchApp = function() {
                         triggerAction : "all",
                         selectOnFocus : true,
                         hidden : !catalogue.isIdentified()
-                    }, fieldArchivedGeoData
-                    /*
-                         * { xtype : "checkbox", fieldLabel :
-                         * OpenLayers.i18n("toEdit"), id : "toEdit", name :
-                         * "B_toEdit", hidden: !catalogue.isIdentified() }, {
-                         * xtype : "checkbox", fieldLabel :
-                         * OpenLayers.i18n("toPublish"), id : "toPublish", name :
-                         * "B_toPublish", hidden: !catalogue.isIdentified() }
-                         */
-                    ]);
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : OpenLayers.i18n("toEdit"),
+                        id : "toEdit",
+                        name : "B_editable",
+                        hidden : !catalogue.isIdentified()
+                    }, {
+                        xtype : "checkbox",
+                        fieldLabel : OpenLayers.i18n("toPublish"),
+                        id : "toPublish",
+                        name : "B_toPublish",
+                        hidden : !catalogue.isIdentified()
+                    }, fieldArchivedGeoData ]);
 
             d.push({
                 xtype : "fieldset",
@@ -895,14 +932,17 @@ GeoNetwork.searchApp = function() {
             Ext.Ajax
                     .request({
                         url : "xml.regions.list?categoryId=" + type,
+                        disableCaching : false,
                         success : function(r) {
                             var data = [];
 
-                            if (!r.responseXML.childNodes) {
-                                console.log(r);
+                            var i = 0;
+
+                            if (Ext.isIE) {
+                                i++;
                             }
 
-                            var children = r.responseXML.childNodes[0].childNodes;
+                            var children = r.responseXML.childNodes[i].childNodes;
                             Ext
                                     .each(
                                             children,
@@ -910,32 +950,66 @@ GeoNetwork.searchApp = function() {
                                                 if (e.hasChildNodes()) {
 
                                                     var label_ = Ext.DomQuery
-                                                            .select(lang, e)[0].textContent;
+                                                            .select(lang, e)[0].textContent
+                                                            || Ext.DomQuery
+                                                                    .select(
+                                                                            lang,
+                                                                            e)[0].text;
 
                                                     if (label_
                                                             && label_.length > 0) {
 
-                                                        var bbox = "POLYGON ("
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "north",
-                                                                                e)[0].textContent
-                                                                + " "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "east",
-                                                                                e)[0].textContent
-                                                                + ", "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "south",
-                                                                                e)[0].textContent
-                                                                + " "
-                                                                + Ext.DomQuery
-                                                                        .select(
-                                                                                "west",
-                                                                                e)[0].textContent
-                                                                + ")";
+                                                        if (Ext.DomQuery
+                                                                .select(
+                                                                        "north",
+                                                                        e)[0].textContent) {
+
+                                                            var bbox = "POLYGON ("
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "north",
+                                                                                    e)[0].textContent
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "east",
+                                                                                    e)[0].textContent
+                                                                    + ", "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "south",
+                                                                                    e)[0].textContent
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "west",
+                                                                                    e)[0].textContent
+                                                                    + ")";
+                                                        } else {
+
+                                                            var bbox = "POLYGON ("
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "north",
+                                                                                    e)[0].text
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "east",
+                                                                                    e)[0].text
+                                                                    + ", "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "south",
+                                                                                    e)[0].text
+                                                                    + " "
+                                                                    + Ext.DomQuery
+                                                                            .select(
+                                                                                    "west",
+                                                                                    e)[0].text
+                                                                    + ")";
+                                                        }
+
                                                         data
                                                                 .push({
                                                                     "ID" : e
@@ -981,7 +1055,8 @@ GeoNetwork.searchApp = function() {
 
                             app.mapApp.getMap().zoomToExtent(
                                     geocat.vectorLayer.getDataExtent());
-                        }
+                        },
+                        disableCaching : false
                     });
                 });
             };
@@ -1451,10 +1526,6 @@ GeoNetwork.searchApp = function() {
             // Ext.state.Manager.getProvider().updateLastSearch(query);
             // Show "List results" panel
             var facetPanel = Ext.getCmp('facets-panel');
-            // Init facet panel on first search
-            if (!facetPanel) {
-                app.searchApp.generateFacetedSearchPanel();
-            }
             Ext.getCmp('facets-panel').refresh(response);
 
             if (Ext.getCmp('previousBt')) {
@@ -1558,18 +1629,14 @@ GeoNetwork.searchApp = function() {
                 }
             });
 
-            var facetsPanel = new GeoNetwork.FacetsPanel(
-                    {
-                        id : 'facets-panel',
-                        renderTo : 'facets-panel-div',
-                        // renderTo: 'search-filter',
-                        searchForm : Ext
-                                .getCmp('advanced-search-options-content-form'),
-                        breadcrumb : breadcrumb,
-                        maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
-                        facetListConfig : GeoNetwork.Settings.facetListConfig
-                                || []
-                    });
+            var facetsPanel = new GeoNetwork.FacetsPanel({
+                id : 'facets-panel',
+                renderTo : 'facets-panel-div',
+                // renderTo: 'search-filter',
+                breadcrumb : breadcrumb,
+                maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
+                facetListConfig : GeoNetwork.Settings.facetListConfig || []
+            });
         }
     };
 

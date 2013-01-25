@@ -57,7 +57,7 @@ public abstract class RegionsDAO {
      * @return the geometry containing the CRS
      */
     public final Geometry getGeom(ServiceContext context, String id, boolean simplified, String projectionCode) throws Exception {
-        return getGeom(context, id, simplified, CRS.decode(projectionCode, true));
+        return getGeom(context, id, simplified, Region.decodeCRS(projectionCode));
     }
     
     /**

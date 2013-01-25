@@ -127,13 +127,14 @@
 
             <script type="text/javascript">
                 <xsl:attribute name="src"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext/adapter/ext/ext-base-debug.js</xsl:attribute>
+                        select="$baseUrl" />/apps/js/ext/adapter/ext/ext-base.js</xsl:attribute>
             </script>
 
             <script type="text/javascript">
                 <xsl:attribute name="src"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext/ext-all-debug.js</xsl:attribute>
+                        select="$baseUrl" />/apps/js/ext/ext-all.js</xsl:attribute>
             </script>
+            
 
             <script type="text/javascript">
                 <xsl:attribute name="src"><xsl:value-of
@@ -166,18 +167,21 @@
         </head>
         <body>
             
+            <script>
+                var geonetMask = Ext.getBody().mask("<xsl:value-of select="/root/gui/strings/loading"/>");
+            </script>
                     <!--[if lt IE 7]> <p class="chromeframe">You are using an outdated browser.
                              <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install
                              Google Chrome Frame</a> to better experience this site.</p> <![endif] -->
 
-            <div id="header" style="display:none">
-                <div>
-                    <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float: right;"/>
+            <div id="header">
+                <div style="height: 100px; overflow:hidden;">
                     <img src="/geonetwork/images/geocat_logo_li.gif" alt="geocat.ch logo"  />
+                    <img src="/geonetwork/images/bg_kopf_geocat.gif" alt="geocat.ch logo" style="float:right;" />
                 </div>
 
                 <header class="wrapper clearfix">
-                    <div style="width: 100%; margin: 0 auto; background-color: #CCCCCC; border-bottom: 1px solid #FFFFFF;">
+                    <div class="header_middle">
                         <nav id="navTop">
                             <ul id="top-navigation">
                                 <li>
@@ -204,7 +208,7 @@
                     <xsl:variable name="user">
                         <xsl:value-of select="/root/response/user" />
                     </xsl:variable>
-                    <div style="width: 100%; margin: 0 auto; background-color: #CCCCCC; border-bottom: 1px solid #FFFFFF;">
+                    <div class="header_bottom">
                         <nav id="nav">
                             <ul id="main-navigation">
                                 <li>
@@ -306,14 +310,7 @@
                 </header>
             </div>
 
-            <div id="loading">
-                <div class="loading-indicator">
-                    <img src="{/root/gui/url}/images/spinner.gif" width="32" height="32"/>GeoNetwork opensource catalogue<br />
-                    <span id="loading-msg"><xsl:value-of select="/root/gui/strings/loading"/></span>
-                </div>
-            </div>
-
-            <div id="search-results" style="display:none; height: 100%">
+            <div id="search-results" style="height: 100%">
                 <div id="results-main">
                     <h2><xsl:value-of
                             select="/root/gui/strings/mainpageTitle" /></h2>
@@ -355,7 +352,7 @@
                 <div id="result-panel"></div>
             </div>
 
-             <div id="search-filter" style="display:none">
+             <div id="search-filter">
                 <div id="bread-crumb-div"></div>
                 <div id="facets-panel-div"></div>
             </div>
@@ -364,7 +361,7 @@
             
             <script type="text/javascript">
                 GeoNetwork_URL = '<xsl:value-of select="$baseUrl" />';
-            </script>"
+            </script>
 
             <xsl:choose>
                 <xsl:when test="/root/request/debug">

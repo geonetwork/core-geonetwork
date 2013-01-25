@@ -319,7 +319,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      */
     addFacet: function (recordId) {
         var r = this.facetsStore.getById(recordId),
-            form = this.searchForm, id = 'facet_' + this.counter ++;
+            form = app.searchApp.getSearchForm(), id = 'facet_' + this.counter ++;
         
         var data = {
             id: id, 
@@ -359,6 +359,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                 scrollMenu.add({
                     group: data.id + '#',
                     id: data.id + '#' + i++,
+                    facetType : data.facet,
                     altText : item.get('node'),
                     checked: item.get('node') === r.get('node') ? true : false,
                     text: (item.get('label') != null ? item.get('label') : item.get('node')),
@@ -368,14 +369,18 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                     scope: panel
                 });
             });
+            
+            var text = OpenLayers.i18n(data.facet) + ": " 
+                + (data.label != null ? data.label : data.value);
+            
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
-                text: (data.label != null ? data.label : data.value),
+                text: text,
                 menu: scrollMenu
             }));
             this.breadcrumb.doLayout();
         }
-        this.searchForm.fireEvent('search');
+        app.searchApp.getSearchForm().fireEvent('search');
     },
     /** private: method[switchFacet]
      *  :param elem: ``String`` the key of the facet to be removed
@@ -398,9 +403,10 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         // Update value of search field
         field.setValue(newValue);
         // Update switcher label
-        switcher.setText(newValue);
+        switcher.setText(OpenLayers.i18n(elem.facetType) 
+                + ": " + newValue);
         
-        this.searchForm.fireEvent('search');
+        app.searchApp.getSearchForm().fireEvent('search');
     },
     
     /** private: method[removeFacet]
@@ -418,14 +424,14 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             switcher = Ext.getCmp(filter.get('bcid'));
         
         // Remove search form reference
-        this.searchForm.remove(field);
+        app.searchApp.getSearchForm().remove(field);
         // Remove breadcrumb reference
         this.breadcrumb && this.breadcrumb.remove(switcher);
         
         this.currentFilterStore.remove(filter);
         
         if (!silent) {
-            this.searchForm.fireEvent('search');
+            app.searchApp.getSearchForm().fireEvent('search');
         }
     },
     /** public: method[reset]

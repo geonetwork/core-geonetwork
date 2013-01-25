@@ -46,7 +46,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'searchText': 'Ricerca testuale',
     'rtitle': 'Titolo',
     'Abstract': 'Abstract',
-    'Keyword': 'Parola chiave',
+    'keyword': 'Parola chiave',
     'theme': 'Temi',
     'contact': 'Contatto',
     'organisationName': 'Organizzazione',
@@ -64,8 +64,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'drawOnMap': 'Disegna sulla carta',
     'when': 'When?',
 
-    'source': 'Source?',
-    'catalog': 'Catalogue(s)',
+    'source': 'Provenienza?',
+    'catalog': 'Catalogo',
 
     'startNewPolygonHelp' : 'Disegna un nuovo poligono (doppio clic per terminare)',
     'deletePolygonHelp' : 'Annulare o ricominciare un nuovo poligono',
@@ -76,7 +76,18 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'refineSearch': 'Affinare la ricerca',
     
     'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa',
-    'linklabel-OGC:WMS': ''
+    'linklabel-OGC:WMS': ' ',
+    'createDateYear' : 'anni',
+    'createDateYears' : 'aAnno',
+    'denominator' : 'risoluzione spaziale',
+    'denominators' : 'Risoluzione spaziale',
+    'orgName' : 'organizzazione',
+    'orgNames' : 'Organizzazioni',
+    'serviceTypes' : 'Tipi di servizio',
+    'facetMore' : '+ Mostra di più',
+    'facetLess' : '- Mostra meno',
+    'topicCat' : 'Categoria',
+    'topicCats' : 'Categoria'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);

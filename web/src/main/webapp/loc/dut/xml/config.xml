@@ -35,7 +35,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Zoekresultaten in gewenste taal gesorteerd op de top</requestedlanguagesorted>
-    <requestedlanguageignored>Negeer gevraagde zoektaal</requestedlanguageignored>
 
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>

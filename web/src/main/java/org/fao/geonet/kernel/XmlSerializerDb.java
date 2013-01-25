@@ -53,7 +53,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @throws Exception
      */
 	public Element select(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
-		Element rec = internalSelect(dbms, table, id, srvContext);
+		Element rec = internalSelect(dbms, table, id, false, srvContext);
 		if (resolveXLinks()) Processor.detachXLink(rec, srvContext);
 		return rec;
 	}
@@ -69,8 +69,8 @@ public class XmlSerializerDb extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, ServiceContext srvContext) throws Exception {
-		return internalSelect(dbms, table, id, srvContext);
+	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask, ServiceContext srvContext) throws Exception {
+		return internalSelect(dbms, table, id, isIndexingTask, srvContext);
 	}
 
     /**
@@ -111,14 +111,12 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param xml
      * @param changeDate
      * @param updateDateStamp
+     * @param context
      * @param userId
-		 * @param context
-     *
      * @throws SQLException
      */
-	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, ServiceContext context) throws SQLException {
-
-		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp);
+	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
+		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 	}
 
     /**

@@ -32,7 +32,6 @@
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>要求语言的搜索结果排序顶部</requestedlanguagesorted>
-    <requestedlanguageignored>无视要求语言搜索</requestedlanguageignored>
 
 	<z3950>Z39.50 Server</z3950>
 	<enable>Enable</enable>

@@ -26,6 +26,11 @@ body {
 	width: 100%;
 }
 
+body>.ext-el-mask {
+	background-color: white;
+	opacity: 1;
+}
+
 #header {
 	background-image: url('../images/header-background.jpg');
 	background-color: white;
@@ -55,16 +60,16 @@ body {
 }
 
 #latestChanges {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
-#mostPopular div, #latestChanges div {
-    margin-bottom: 8px;
+#mostPopular div,#latestChanges div {
+	margin-bottom: 8px;
 }
 
-#mostPopular legend, #latestChanges legend {
-    font-size: 0.8em;
-    font-weight: bold;
+#mostPopular legend,#latestChanges legend {
+	font-size: 0.8em;
+	font-weight: bold;
 }
 
 .arrow {
@@ -73,7 +78,7 @@ body {
 	padding: 0 0 3px 7px;
 	margin-left: 10px;
 	font-size: 12px !important;
-    color: #064377;
+	color: #064377;
 }
 
 #bread-crumb-div,#facets-panel-div {
@@ -131,30 +136,30 @@ body {
 	text-decoration: bolder;
 }
 
-#lang-form div {
-	display: inline;
-	padding-right: 7px;
-	float: right;
-}
-
-#lang-form div div form {
-	background: transparent;
-	border: none;
-}
-
-#lang-form div div form div input {
-	background: transparent;
-	border: none;
-	text-align: right;
-}
-
 #lang-form {
 	padding-right: 5px;
 	padding-left: 5px;
 	text-decoration: none;
-	color: #767B7E;
 	float: right;
 	background-color: #CCCCCC;
+}
+
+.langButton {
+	border: none;
+	background: none;
+	background-color: transparent;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#lang-form .x-btn button,#lang-form .x-box-item {
+	color: black;
+}
+
+#lang-form .x-panel-body,#lang-form .x-btn-ml,#lang-form .x-btn-bl,#lang-form .x-btn-bc,#lang-form .x-btn-br,#lang-form .x-btn-mc,#lang-form .x-btn-tl,#lang-form .x-btn-tc,#lang-form .x-btn-tr,#lang-form .x-btn-mr
+	{
+	background: none;
+	background-color: transparent;
 }
 
 /* ==============
@@ -168,18 +173,41 @@ body {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: 750px;
+	max-width: 700px;
+	min-width: 620px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
+	background-color: #CCCCCC;
+}
+
+.header_middle {
+	width: 100%;
+	height: 22px;
+	margin: 0 auto;
+	background-color: #CCCCCC;
+	border-bottom: 1px solid #FFFFFF;
+	overflow: hidden;
+}
+
+.header_bottom {
+	width: 100%;
+	margin: 0 auto;
+	background-color: #CCCCCC;
+	border-bottom: 1px solid #FFFFFF;
+	height: 26px;
+	overflow: hidden;
+	scroll: none;
 }
 
 #navTop {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	min-width: 650px;
+	min-width: 200px;
 	background-color: #CCCCCC;
 	font-size: 0.6em;
+	overflow: hidden;
+	height: 22px;
 }
 
 /* Login form
@@ -242,8 +270,9 @@ body {
 	margin: 1;
 }
 
-#search-container .x-form-field-wrap .x-superboxselect + .x-form-trigger.x-form-arrow-trigger {
-    display: none;
+#search-container .x-form-field-wrap .x-superboxselect+.x-form-trigger.x-form-arrow-trigger
+	{
+	display: none;
 }
 
 input[type="button"] {
@@ -303,10 +332,15 @@ div#search-container>div>div>div.x-panel>div.x-panel-bwrap>div.x-panel-body.x-pa
 	width: 350px;
 	z-index: 20000;
 	padding: 12px;
-	background-color: rgba(255, 240, 240, 0.2);
+	background-color: rgba(223, 232, 246, 0.7);
 	box-shadow: 10px 10px 5px #888888;
 	color: black;
 	border-radius: 5px;
+}
+
+.label-warning {
+	color: #01669E;
+	font-weight: bold;
 }
 
 /*******************************
@@ -373,7 +407,7 @@ div.facets ul ul {
 
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	color: #E26F02;
-    font-size: 12px;
+	font-size: 12px;
 }
 
 .facet-link {
@@ -395,9 +429,12 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 	min-width: 100%;
 }
 
-
-
 /* Icon based on protocol prefix in related resource table */
+.md-links .x-btn.x-btn-icon {
+	width: auto;
+	display: inline;
+}
+
 .WWWLINK {
 	background-image: url(../../images/default/link.png);
 }
@@ -411,11 +448,12 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 }
 
 .OGCWFS {
-    background-image: url(../../images/default/map/server_vector.png);
+	background-image: url(../../images/default/map/server_vector.png);
 }
 
 .removeLayers {
-    background-image: url(../../../images/removeLayers.png);}
+	background-image: url(../../../images/removeLayers.png);
+}
 
 /* Other icons */
 .md-mn-reset {
@@ -515,5 +553,14 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 
 /* Fix ExtJs menu margin, otherwise the normalize.css adds too much margin to this component */
 ul.x-menu-list {
-    margin: 0px;
+	margin: 0px;
+}
+
+#search-container div.x-superboxselect ul {
+	margin: 0px
+}
+
+#search-reset {
+	margin-left: 30px;
+	padding: 5px;
 }
