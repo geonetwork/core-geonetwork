@@ -91,7 +91,8 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'topicCats' : 'Thématique',
     'topicCat' : 'Thématique',
 	'denominators' : 'Résolution spatiale',
-	'denominator' : 'résolution spatiale'
+	'denominator' : 'résolution spatiale',
+	'sendmail' : 'Envoyer un mail'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.GeoCatCh.Lang.fr);

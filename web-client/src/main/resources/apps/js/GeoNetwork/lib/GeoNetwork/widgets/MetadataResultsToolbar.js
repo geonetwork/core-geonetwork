@@ -299,6 +299,18 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
+        this.notifyByMailAction = new Ext.Action({
+            text: OpenLayers.i18n('sendmail'),
+            id: 'notifyByMailAction',
+            handler: function() {
+            	Ext.Ajax.request({
+         		   url: catalogue.services.notifyByMail
+            	});
+            },
+            scope: this,
+            hidden: hide
+        });
+        
         this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
@@ -339,9 +351,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });*/
         
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+        this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
         
+        this.actionMenu.addItem(this.notifyByMailAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);

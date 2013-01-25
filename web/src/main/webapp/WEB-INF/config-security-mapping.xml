@@ -259,6 +259,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/external.getmetadata!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/resources.getgraphover!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/graphover.show!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.select.notifybymail!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.select!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/selection.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/pdf.selection.search!?.*" access="permitAll"></sec:intercept-url>
