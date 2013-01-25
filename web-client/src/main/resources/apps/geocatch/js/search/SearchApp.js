@@ -145,7 +145,7 @@ GeoNetwork.searchApp = function() {
                     }
                 }
             });
-
+            
             var fieldKantone = this.getKantoneCombo(true).combo;
 
             var hidden = new Ext.form.TextField({
@@ -391,6 +391,29 @@ GeoNetwork.searchApp = function() {
                 cls : "compressedFieldSet",
                 items : f
             } ];
+            
+            var fieldArchivedGeoData = new Ext.form.ComboBox({
+                fieldLabel : 'Geodata',
+                name : 'E1.0_historicalArchive',
+                store : this.getArchivedStore(),
+                mode : 'local',
+                displayField : 'name',
+                valueField : 'id',
+                value : '',
+                hideTrigger : true,
+                forceSelection : true,
+                editable : false,
+                triggerAction : 'all',
+                selectOnFocus : true,
+                anchor : '-10',
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
+            });
             var c = [ this.getTypeCombo() ];
             c = c.concat([
                     {
@@ -413,14 +436,16 @@ GeoNetwork.searchApp = function() {
                         triggerAction : "all",
                         selectOnFocus : true,
                         hidden : !catalogue.isIdentified()
-                    }, /*
+                    }, fieldArchivedGeoData
+                    /*
                          * { xtype : "checkbox", fieldLabel :
                          * OpenLayers.i18n("toEdit"), id : "toEdit", name :
                          * "B_toEdit", hidden: !catalogue.isIdentified() }, {
                          * xtype : "checkbox", fieldLabel :
                          * OpenLayers.i18n("toPublish"), id : "toPublish", name :
                          * "B_toPublish", hidden: !catalogue.isIdentified() }
-                         */]);
+                         */
+                    ]);
 
             d.push({
                 xtype : "fieldset",
@@ -1059,6 +1084,18 @@ GeoNetwork.searchApp = function() {
                                         OpenLayers.i18n('service-OGC:WMS') ],
                                 [ 'service-OGC:WFS',
                                         OpenLayers.i18n('service-OGC:WFS') ] ]
+                    });
+        },
+        
+        getArchivedStore : function(defaultValue) {
+            return new Ext.data.ArrayStore(
+                    {
+                        id : 0,
+                        fields : [ 'id', 'name' ],
+                        data : [
+                                [ '', OpenLayers.i18n('includearchived') ],
+                                [ 'n',OpenLayers.i18n('excludearchived') ],
+                                [ 'y',OpenLayers.i18n('onlyarchived') ] ]
                     });
         },
 

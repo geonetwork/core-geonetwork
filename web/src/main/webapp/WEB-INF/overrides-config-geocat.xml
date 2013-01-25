@@ -136,7 +136,8 @@
     	<addXml xpath="search/dumpFields">
 	      <field name="wms_uri" tagName="wmsuri"/>
 	      <field name="statusProgressCode" tagName="statusProgressCode"/>
-    	</addXml>
+	      <field name="historicalArchive" tagName="historicalArchive"/>
+	    </addXml>
     	<addXml xpath="tokenized">
     		<Field name="orgName"/>
     	</addXml>

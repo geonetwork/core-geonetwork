@@ -32,6 +32,10 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
 
+	'includearchived': 'Include archived',
+	'excludearchived': 'Exclude archived',
+	'onlyarchived': 'Only archived',
+
 	'withinGeo': 'Completely within or equal',
 	'intersectGeo': 'Intersects',
 	'containsGeo': 'Contains at least',

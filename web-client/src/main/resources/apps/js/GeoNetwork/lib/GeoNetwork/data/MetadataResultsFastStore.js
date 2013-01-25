@@ -220,6 +220,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }
     }
 
+    function getHistoricalArchive(v, record) {
+    	return (record.historicalArchive && record.historicalArchive[0].value=='y');
+    }
     function getIsHarvested(v, record) {
         if (record.isHarvested) {
             return record.isHarvested[0].value;
@@ -390,6 +393,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             name : 'uri',
             mapping : 'uri',
             defaultValue : ''
+        },{
+            name : 'historicalArchive',
+            convert : getHistoricalArchive
         }, {
             name : 'isharvested',
             convert : getIsHarvested

@@ -184,11 +184,14 @@ GeoNetwork.data.MetadataResultsStore = function() {
     }
 
     function getIsHarvested(v, record) {
-        if (record.geonet_info && record.geonet_info.isHarvested) {
-            return record.geonet_info.isHarvested[0].value;
+        if (record.isHarvested) {
+            return record.isHarvested[0].value;
         } else {
             return '';
         }
+    }
+    function getHistoricalArchive(v, record) {
+    	return (record.historicalArchive && record.historicalArchive[0].value=='y');
     }
     function getHarvesterType(v, record) {
         if (record.geonet_info && record.geonet_info.harvestInfo
@@ -340,6 +343,9 @@ GeoNetwork.data.MetadataResultsStore = function() {
         }, {
             name : 'isharvested',
             convert : getIsHarvested
+        }, {
+            name : 'historicalArchive',
+            convert : getHistoricalArchive
         }, {
             name : 'harvestertype',
             convert : getHarvesterType
