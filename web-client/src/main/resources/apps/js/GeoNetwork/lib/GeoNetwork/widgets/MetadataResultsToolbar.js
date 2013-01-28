@@ -139,11 +139,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 text : '&lt;&lt;',
                 handler : function() {
                     var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    if(from < 0)
+                        from = 0;
                     if (from > 0) {
                         catalogue.startRecord = from;
-                        catalogue
-                            .search(
-                                'advanced-search-options-content-form',
+                        //Swisstopo specific
+                        catalogue.search(
+                                app.searchApp.getSearchForm().id,
                                 app.searchApp.loadResults,
                                 null,
                                 catalogue.startRecord,
@@ -161,8 +163,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text : '&gt;&gt;',
             handler : function() {
                 catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                //Swisstopo specific
                 catalogue.search(
-                    'advanced-search-options-content-form',
+                    app.searchApp.getSearchForm().id,
                     app.searchApp.loadResults, null,
                     catalogue.startRecord, true);
             },
