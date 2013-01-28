@@ -676,7 +676,7 @@ GeoNetwork.searchApp = function() {
                     anchor : '-10',
                     postfix : "T00:00:00",
                     enableKeyEvents : true,
-                    name : "E_extTo",
+                    name : "E_extFrom",
                     listeners : {
                         keyup : function(e, a) {
                             if (a.ENTER == a.keyCode) {
@@ -691,7 +691,7 @@ GeoNetwork.searchApp = function() {
                     postfix : "T23:59:59",
                     enableKeyEvents : true,
                     anchor : '-10',
-                    name : "E_extFrom",
+                    name : "E_extTo",
                     listeners : {
                         keyup : function(e, a) {
                             if (a.ENTER == a.keyCode) {
