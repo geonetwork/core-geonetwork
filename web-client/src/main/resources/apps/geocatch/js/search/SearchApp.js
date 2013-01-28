@@ -1043,6 +1043,7 @@ GeoNetwork.searchApp = function() {
             var p = new Ext.ux.form.SuperBoxSelect(config);
             var o = function(w) {
                 geocat.vectorLayer.removeAllFeatures();
+                app.mapApp.getMap().zoomToMaxExtent();
                 var format = new OpenLayers.Format.WKT();
 
                 Ext.each(w.usedRecords.items, function(q) {
@@ -1062,6 +1063,7 @@ GeoNetwork.searchApp = function() {
             };
             p.on("change", o);
             p.on("removeitem", o);
+            p.on("reset", o);
             return {
                 combo : p,
                 store : c,
