@@ -89,6 +89,9 @@ GeoNetwork.searchApp = function() {
 
             var searchForm = this.getSearchForm();
 
+            geocat.vectorLayer.removeAllFeatures();
+            app.mapApp.getMap().zoomToMaxExtent();
+
             searchForm.fireEvent('reset');
         },
 
