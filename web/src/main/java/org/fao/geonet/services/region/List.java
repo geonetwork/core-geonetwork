@@ -57,25 +57,27 @@ public class List implements Service {
         Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
         Element regions = null;
         for (RegionsDAO dao : daos) {
-            Request request = dao.createSearchRequest(context);
-            if (labelParam != null) {
-                request.label(labelParam);
-            }
-            if (categoryIdParam != null) {
-                request.categoryId(categoryIdParam);
-            }
-            if (maxRecordsParam > 0) {
-                request.maxRecords(maxRecordsParam);
-            }
-            Element tmp = request.xmlResult();
-            if (regions != null) {
-                @SuppressWarnings("unchecked")
-                java.util.List<Element> children = tmp.getChildren();
-                for (Element element : children) {
-                    regions.addContent(element);
+            if (dao.includeInListing()) {
+                Request request = dao.createSearchRequest(context);
+                if (labelParam != null) {
+                    request.label(labelParam);
                 }
-            } else {
-                regions = tmp;
+                if (categoryIdParam != null) {
+                    request.categoryId(categoryIdParam);
+                }
+                if (maxRecordsParam > 0) {
+                    request.maxRecords(maxRecordsParam);
+                }
+                Element tmp = request.xmlResult();
+                if (regions != null) {
+                    @SuppressWarnings("unchecked")
+                    java.util.List<Element> children = tmp.getChildren();
+                    for (Element element : children) {
+                        regions.addContent(element);
+                    }
+                } else {
+                    regions = tmp;
+                }
             }
         }
 

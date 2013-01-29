@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="labels">
+    <xs:annotation>
+      <xs:documentation>A list of labels describing standard descriptors</xs:documentation>
+    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="element"/>
+        <xs:element maxOccurs="unbounded" ref="element">
+          <xs:annotation>
+            <xs:documentation>A descriptor with label, definition, help text and suggestions</xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="element">
     <xs:complexType>
       <xs:all>
-        <xs:element ref="label" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="help" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="condition" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="_condition" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="example" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="helper" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="label" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The descriptor label to display next to the field in view and edit mode</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="description" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The definition to be displayed in the help panel in edit mode or in the tooltip in view mode</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="help" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>More help (CDATA could be used to store HTML)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="condition" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>CHECKME: Not really used ?</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="_condition" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>CHECKME: Not really used ?</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="example" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Examples to be added to the help section</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="helper" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>List of suggestion to be displayed in edit mode to help populating the field. It's ussually common values for a field.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element ref="inspireInfo" minOccurs="0" maxOccurs="1"/>
       </xs:all>
       <xs:attribute name="context" type="xs:NMTOKEN"/>
@@ -33,9 +68,40 @@
   <xs:element name="helper">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="option"/>
+        <xs:element maxOccurs="unbounded" ref="option">
+          <xs:annotation>
+            <xs:documentation>Suggestion is an HTML option</xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
-      <xs:attribute name="rel" type="xs:NMTOKEN"/>
+      <xs:attribute name="rel" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of the element to be populated by the title attribute of the option. That parameter allows to update 2 fields in the editor at a time.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="relAtt" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of an attribute (eg. uom) to be populated by the title attribute of the option. That parameter allows to update 2 fields in the editor at a time.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="sort" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Set this attribute to true to sort by alpha order. By default, the helpers are displayed in the order define in labels file.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="editorMode">
+        <xs:annotation>
+          <xs:documentation>By default, the list of suggestion is displayed in a combo next to the 
+	element. The layout may be customized by setting the editorMode.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="radio"/>
+            <xs:enumeration value="radio_withdesc"/>
+            <xs:enumeration value="radio_linebreak"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="option">

@@ -658,9 +658,9 @@
 			</error>
 		</service>
 
-		<service name="region.geom.gml">
+		<service name="region.geom.gml3">
 			<class name=".services.region.GetGeom">
-				<param name="format" value="GML"/>
+				<param name="format" value="GML3"/>
 			</class>
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
@@ -1082,12 +1082,6 @@
 
 		<service name="xml.operation.update">
 			<class name=".services.operation.Update" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.region.update">
-			<class name=".services.region.Update" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

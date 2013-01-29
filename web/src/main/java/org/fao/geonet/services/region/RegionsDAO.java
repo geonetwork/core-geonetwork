@@ -104,4 +104,8 @@ public abstract class RegionsDAO {
         allRegions.clear();
     }
 
+    public boolean includeInListing() {
+        return true;
+    }
+
 }

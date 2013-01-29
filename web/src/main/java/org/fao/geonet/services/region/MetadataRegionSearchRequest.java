@@ -53,7 +53,7 @@ public class MetadataRegionSearchRequest extends Request {
 
     @Override
     public Collection<Region> execute() throws Exception {
-        if(label!=null && (id!=null || !id.startsWith("metadata:")) ) {
+        if(label==null && id==null || (id!=null && !id.startsWith("metadata:")) ) {
             return Collections.emptySet();
         }
         List<Region> regions = new ArrayList<Region>();
@@ -154,10 +154,8 @@ public class MetadataRegionSearchRequest extends Request {
         String mdId = Utils.lookupMetadataIdFromFileId(gc, fileId);
         boolean withEditorValidationErrors = false;
         boolean keepXlinkAttributes = true;
-        boolean elementsHide = false;
-        boolean allowDbmsClosing = false;
         
-        return gc.getDataManager().getGeocatMetadata(context, mdId, true, withEditorValidationErrors, keepXlinkAttributes, elementsHide, allowDbmsClosing);
+        return gc.getDataManager().getMetadata(context, mdId, true, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Override

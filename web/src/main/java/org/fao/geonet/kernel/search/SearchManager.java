@@ -711,7 +711,7 @@ public class SearchManager {
         try {
             _spatial.writer().index(schemaDir, id, metadata);
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
         }
@@ -1707,9 +1707,7 @@ public class SearchManager {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
                 if(geom.size() == 1) {
-                    Geometry g =  geom.iterator().next();
-                    SpatialFilter sf = _types.get(relation.toLowerCase()).newInstance(query, numHits, g, new SpatialIndexAccessor());
-                    return sf;
+                    return _types.get(relation.toLowerCase()).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
                 } else {
                     Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
                     Envelope bounds = null;

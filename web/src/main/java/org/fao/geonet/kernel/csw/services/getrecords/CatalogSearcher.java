@@ -115,7 +115,7 @@ public class CatalogSearcher {
             return false;
         }
     }
-	private boolean                        _logSpatialObjects = false;
+
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
 	private final Set<String> _selector;

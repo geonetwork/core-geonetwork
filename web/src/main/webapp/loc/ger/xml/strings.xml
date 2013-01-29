@@ -309,6 +309,7 @@ Ihr geocat.ch-Team</msg>
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>jede Sprache</anyLanguage>

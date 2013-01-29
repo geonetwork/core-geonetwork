@@ -39,4 +39,8 @@ public class MetadataRegionDAO extends RegionsDAO {
         }
     }
 
+    @Override
+    public boolean includeInListing() {
+        return false;
+    }
 }

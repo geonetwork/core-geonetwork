@@ -895,21 +895,21 @@ public class LuceneSearcher extends MetaSearcher {
             for (String regionId : regionIds) {
                 for (RegionsDAO dao : regionDAOs) {
                     Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
-                    if(dao!=null) {
+                    if(geom!=null) {
+                        geoms.add(geom);
                         if(isWithinFilter) {
-                            geoms.add(geom);
-                        }
-                        if (unionedGeom == null) {
-                            unionedGeom = geom;
-                        } else {
-                            unionedGeom = unionedGeom.union(geom);
+                            if (unionedGeom == null) {
+                                unionedGeom = geom;
+                            } else {
+                                unionedGeom = unionedGeom.union(geom);
+                            }
                         }
                         break; // break out of looking through all RegionDAOs
                     }
                     
                 }
             }
-            if (regionIds.length > 1) {
+            if (regionIds.length > 1 && isWithinFilter) {
                 geoms.add(0, unionedGeom);
             }
             return geoms;

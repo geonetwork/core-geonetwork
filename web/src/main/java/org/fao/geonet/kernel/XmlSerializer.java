@@ -40,8 +40,8 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
@@ -134,11 +134,14 @@ public abstract class XmlSerializer {
     		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
     		if(ServiceContext.get() != null) {
     			ServiceContext context = ServiceContext.get();
+    			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
     			String ownerId = record.getChildText("owner");
     			UserSession userSession = context.getUserSession();
     			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
     			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
-    			if(isAdmin || isOwner) {
+    			// TODO: improve XmlSerializerTest for that UC
+    			boolean canEdit = userSession != null && gc != null && gc.getAccessManager().hasEditPermission(context, id);
+    			if(isAdmin || isOwner || canEdit) {
     				hideWithheldElements = false;
     			}
     		}

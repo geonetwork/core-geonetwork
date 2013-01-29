@@ -298,8 +298,9 @@ public abstract class SpatialFilter extends Filter
                 geom = _geom;
             }
 
+            SpatialIndex spatialIndex = sourceAccessor.two();
             @SuppressWarnings("unchecked")
-            List<Pair<FeatureId,String>> fids = sourceAccessor.two().query(geom.getEnvelopeInternal());
+            List<Pair<FeatureId,String>> fids = spatialIndex.query(geom.getEnvelopeInternal());
             _unrefinedMatches = new HashMap<String,FeatureId>();
             for (Pair<FeatureId, String> match : fids) {
                 _unrefinedMatches.put(match.two(), match.one());
