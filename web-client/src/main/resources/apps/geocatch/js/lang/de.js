@@ -82,7 +82,9 @@ GeoNetwork.GeoCatCh.Lang.de = {
     'topicCats' : 'Thematik',
     'topicCat' : 'thematik',
 	'denominators' : 'Räumliche Auflösung',
-	'denominator' : 'räumliche auflösung'
+	'denominator' : 'räumliche auflösung',
+    'country': 'Staat',
+    'city': 'Statd'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);
