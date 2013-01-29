@@ -567,29 +567,36 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
             TermRangeQuery temporalRangeQuery;
+            BooleanClause temporalRangeQueryClause;
 
             // temporal extent start is within search extent
-            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
-            BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+            if (StringUtils.isNotBlank(extFrom) && (StringUtils.isBlank(extTo))) {
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-            temporalExtentQuery.add(temporalRangeQueryClause);
+                temporalExtentQuery.add(temporalRangeQueryClause);
+            }
+
+
 
             // or temporal extent end is within search extent
-            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
-            temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+            if (StringUtils.isNotBlank(extTo) && (StringUtils.isBlank(extFrom))) {
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-            temporalExtentQuery.add(temporalRangeQueryClause);
+                temporalExtentQuery.add(temporalRangeQueryClause);
+            }
 
             // or temporal extent contains search extent
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, null, extTo, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 

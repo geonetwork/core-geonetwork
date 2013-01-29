@@ -1398,7 +1398,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 
-        String expected = "+(tempExtentBegin:[2010-04-01T17:35:00 TO *] tempExtentEnd:[2010-04-01T17:35:00 TO *]) +_isTemplate:n";
+        String expected = "+(tempExtentBegin:[2010-04-01T17:35:00 TO *]) +_isTemplate:n";
         assertEquals("unexpected Lucene query", expected, query.toString());
 
         // test extTo
@@ -1411,7 +1411,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI2);
 
-        expected = "+(tempExtentBegin:[* TO 2010-04-27T17:43:00] tempExtentEnd:[* TO 2010-04-27T17:43:00]) +_isTemplate:n";
+        expected = "+(tempExtentEnd:[* TO 2010-04-27T17:43:00]) +_isTemplate:n";
         assertEquals("unexpected Lucene query", expected, query.toString());
 
         // test extfrom and extTo
@@ -1429,7 +1429,7 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI3);
 
-        expected = "+(tempExtentBegin:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] tempExtentEnd:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] (+tempExtentEnd:[2010-04-27T17:43:00 TO *] +tempExtentBegin:[* TO 2010-04-08T17:46:00])) +_isTemplate:n";
+        expected = "+((+tempExtentEnd:[* TO 2010-04-27T17:43:00] +tempExtentBegin:[2010-04-08T17:46:00 TO *])) +_isTemplate:n";
         assertEquals("unexpected Lucene query", expected, query.toString());
 
         // create request object
