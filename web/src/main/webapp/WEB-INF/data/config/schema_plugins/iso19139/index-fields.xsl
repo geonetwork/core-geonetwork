@@ -72,7 +72,9 @@
 		<!-- the double // here seems needed to index MD_DataIdentification when
            it is nested in a SV_ServiceIdentification class -->
 
-		<xsl:for-each select="gmd:identificationInfo//gmd:MD_DataIdentification|gmd:identificationInfo/srv:SV_ServiceIdentification">
+		<xsl:for-each select="gmd:identificationInfo//gmd:MD_DataIdentification|
+			gmd:identificationInfo//*[@gco:isoType='gmd:MD_DataIdentification']|
+			gmd:identificationInfo/srv:SV_ServiceIdentification">
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">
 				<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
