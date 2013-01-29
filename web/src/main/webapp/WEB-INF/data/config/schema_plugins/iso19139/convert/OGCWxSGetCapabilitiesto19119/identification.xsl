@@ -208,13 +208,39 @@
 		<xsl:for-each select="$s/wms:AccessConstraints">
 			<resourceConstraints>
 				<MD_LegalConstraints>
-					<accessConstraints>
-						<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
-							codeListValue="otherRestrictions"/>
-					</accessConstraints>
-					<otherConstraints>
-						<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-					</otherConstraints>
+					<xsl:choose>
+						<xsl:when test=". = 'copyright'
+							or . = 'patent'
+							or . = 'patentPending'
+							or . = 'trademark'
+							or . = 'license'
+							or . = 'intellectualPropertyRight'
+							or . = 'restricted'
+							">
+							<accessConstraints>
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+									codeListValue="{.}"/>
+							</accessConstraints>
+						</xsl:when>
+						<xsl:when test="lower-case(.) = 'none'">
+							<accessConstraints>
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+									codeListValue="otherRestrictions"/>
+							</accessConstraints>
+							<otherConstraints>
+								<gco:CharacterString>no conditions apply</gco:CharacterString>
+							</otherConstraints>
+						</xsl:when>
+						<xsl:otherwise>
+							<accessConstraints>
+								<MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" 
+									codeListValue="otherRestrictions"/>
+							</accessConstraints>
+							<otherConstraints>
+								<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+							</otherConstraints>
+						</xsl:otherwise>
+					</xsl:choose>
 				</MD_LegalConstraints>
 			</resourceConstraints>
 		</xsl:for-each>

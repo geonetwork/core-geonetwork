@@ -272,7 +272,8 @@ Mapping between :
 		                    <inspire_common:Degree>notEvaluated</inspire_common:Degree>
 		                </inspire_common:Conformity>
 		                -->
-					<xsl:for-each select="//inspire_vs:ExtendedCapabilities/inspire_common:Conformity">
+					<xsl:for-each select="//inspire_vs:ExtendedCapabilities/inspire_common:Conformity[
+						inspire_common:Degree='conformant' or inspire_common:Degree='notConformant']">
 					<report>
 						<DQ_DomainConsistency>
 							<result>
