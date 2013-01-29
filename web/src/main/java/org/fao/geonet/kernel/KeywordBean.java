@@ -61,6 +61,7 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
+    private String broader;
 	/**
 	 * Create keyword bean with the default IsoLanguageMapper
 	 */
@@ -689,5 +690,19 @@ public class KeywordBean {
     public KeywordBean removeDefinition(String lang) {
         definitions.remove(lang);
         return this;
+    }
+
+    public String getBroaderRelationship() {
+        return broader;
+    }
+    
+    public KeywordBean setBroaderRelationship(String broader) {
+        this.broader = broader;
+        return this;
+    }
+    
+    @Override
+    public String toString() {
+        return getUriCode()+" : "+getDefaultValue();
     }
 }

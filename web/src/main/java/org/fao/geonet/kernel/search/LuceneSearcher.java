@@ -105,6 +105,8 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.services.region.Region;
+import org.fao.geonet.services.region.RegionsDAO;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
@@ -683,8 +685,8 @@ public class LuceneSearcher extends MetaSearcher {
 		    // Use RegionsData rather than fetching from the DB everytime
 		    //
 		    //request.addContent(Lib.db.select(dbms, "Regions", "region"));
-//		    Element regions = RegionsData.getRegions(dbms);
-//		    request.addContent(regions);
+			//RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
+		    //request.addContent(dao.getAllRegionsAsXml(srvContext));
 		}
 
         /*
@@ -696,11 +698,15 @@ public class LuceneSearcher extends MetaSearcher {
 
 		*/
 
-		Geometry geometry = getGeometry(request);
+		Collection<Geometry> geometry = getGeometry(srvContext, request);
 		SpatialFilter spatialfilter = null;
         if (geometry != null) {
             if (_sm.getLogSpatialObject()) {
-                _geomWKT = geometry.toText();
+                StringBuilder wkt = new StringBuilder();
+                for (Geometry geom : geometry) {
+                    wkt.append("geom:").append(geom.toText()).append("\n");
+                }
+                _geomWKT = wkt.toString();
             }
             spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
@@ -819,13 +825,42 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-	private Geometry getGeometry(Element request) throws Exception {
+	private Collection<Geometry> getGeometry(ServiceContext context, Element request) throws Exception {
         String geomWKT = Util.getParam(request, Geonet.SearchResult.GEOMETRY, null);
-        if (geomWKT != null) {
+        final String prefix = "region:";
+        if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
+            boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION,null));
+            Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+            String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
+            Geometry unionedGeom = null;
+            List<Geometry> geoms = new ArrayList<Geometry>();
+            for (String regionId : regionIds) {
+                for (RegionsDAO dao : regionDAOs) {
+                    Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
+                    if(geom!=null) {
+                        geoms.add(geom);
+                        if(isWithinFilter) {
+                            if (unionedGeom == null) {
+                                unionedGeom = geom;
+                            } else {
+                                unionedGeom = unionedGeom.union(geom);
+                            }
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
+                    
+                }
+            }
+            if (regionIds.length > 1 && isWithinFilter) {
+                geoms.add(0, unionedGeom);
+            }
+            return geoms;
+        }else if (geomWKT != null) {
             WKTReader reader = new WKTReader();
-            return reader.read(geomWKT);
+            return Arrays.asList(reader.read(geomWKT));
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**

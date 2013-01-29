@@ -97,6 +97,7 @@ import org.fao.geonet.kernel.search.spatial.EqualsFilter;
 import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
+import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
@@ -116,6 +117,7 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 
@@ -703,7 +705,7 @@ public class SearchManager {
         try {
             _spatial.writer().index(schemaDir, id, metadata);
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
         }
@@ -1665,7 +1667,7 @@ public class SearchManager {
             try {
             	Parser filterParser = getFilterParser(filterVersion);
                 Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
-                return OgcGenericFilters.create(query, numHits, filterExpr, accessor , filterParser);
+                return OgcGenericFilters.create(query, numHits, filterExpr, accessor, filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
@@ -1687,12 +1689,26 @@ public class SearchManager {
          * @throws Exception
          */
         public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
-                Geometry geom, Element request) throws Exception {
+                Collection<Geometry> geom, Element request) throws Exception {
             _lock.lock();
             try {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
+                if(geom.size() == 1) {
+                    return _types.get(relation).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
+                } else {
+                    Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
+                    Envelope bounds = null;
+                    for (Geometry geometry : geom) {
+                        if(bounds == null) {
+                            bounds = geometry.getEnvelopeInternal();
+                        } else {
+                            bounds.expandToInclude(geometry.getEnvelopeInternal());
+                        }
+                        filters.add(_types.get(relation).newInstance(query, numHits, geometry, new SpatialIndexAccessor()));
+                    }
+                    return new OrSpatialFilter(query, numHits, bounds, new SpatialIndexAccessor(), filters);
+                }
             }
             finally {
                 _lock.unlock();

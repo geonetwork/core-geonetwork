@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 
 import jeeves.server.ConfigurationOverrides;
-import jeeves.server.sources.http.JeevesServlet;
 
 import javax.servlet.ServletContext;
 
