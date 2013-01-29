@@ -12,7 +12,7 @@ import jeeves.utils.Util;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -85,8 +85,7 @@ public class Utils {
 
     public static String lookupMetadataIdFromFileId(GeonetContext gc, String fileId) throws IOException,
             InterruptedException {
-        PhraseQuery query = new PhraseQuery();
-        query.add(new Term("fileId", fileId));
+        TermQuery query = new TermQuery(new Term("fileId", fileId));
 
         SearchManager searchManager = gc.getSearchmanager();
 
