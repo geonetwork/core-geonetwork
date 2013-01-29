@@ -120,12 +120,12 @@
         <version>${jetty.version}</version>
         <configuration>
           <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>${jettyPort}</port>
               <maxIdleTime>60000</maxIdleTime>
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
-            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
               <!-- Note: If another server needs to communicate with this one with
                     https then it needs the environment variables set as follows:
                     -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password

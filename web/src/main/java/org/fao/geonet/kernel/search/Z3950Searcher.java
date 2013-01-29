@@ -22,33 +22,13 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.TransformerFactoryFactory;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.SchemaManager;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.DOMBuilder;
-import org.jzkit.search.LandscapeSpecification;
-import org.jzkit.search.StatelessSearchResultsPageDTO;
-import org.jzkit.search.impl.StatelessQueryService;
-import org.jzkit.search.landscape.SimpleLandscapeSpecification;
-import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
-import org.jzkit.search.util.QueryModel.QueryModel;
-import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
-import org.jzkit.search.util.RecordModel.InformationFragment;
-import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
-import org.jzkit.search.util.ResultSet.IRResultSetStatus;
-import org.jzkit.service.z3950server.ZSetInfo;
-import org.springframework.context.ApplicationContext;
+import static java.lang.Integer.parseInt;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -58,13 +38,36 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
 
-import static java.lang.Integer.parseInt;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.TransformerFactoryFactory;
+import jeeves.utils.Xml;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.services.region.RegionsDAO;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
+import org.jzkit.search.LandscapeSpecification;
+import org.jzkit.search.StatelessSearchResultsPageDTO;
+import org.jzkit.search.impl.StatelessQueryService;
+import org.jzkit.search.landscape.SimpleLandscapeSpecification;
+import org.jzkit.search.util.QueryModel.QueryModel;
+import org.jzkit.search.util.QueryModel.PrefixString.PrefixString;
+import org.jzkit.search.util.RecordModel.ArchetypeRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
+import org.jzkit.search.util.RecordModel.InformationFragment;
+import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
+import org.jzkit.search.util.ResultSet.IRResultSetStatus;
+import org.jzkit.service.z3950server.ZSetInfo;
+import org.springframework.context.ApplicationContext;
 
 //--------------------------------------------------------------------------------
 // search metadata remotely using Z39.50
@@ -104,15 +107,14 @@ class Z3950Searcher extends MetaSearcher
 
 	public void search(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception
 	{
-		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "CRITERIA:\n"+ Xml.getString(request));
 		String query  = request.getChildText(Geonet.SearchResult.ZQUERY);
 
 		// --  process params if we don't have a fully specified zquery 
-		if (query == null) { 
-			request.addContent(RegionsData.getRegions(dbms));
+		if (query == null) {
+	        RegionsDAO dao = srvContext.getApplicationContext().getBean(RegionsDAO.class);
+	        request.addContent(dao.getAllRegionsAsXml(srvContext));
 
 			Element xmlQuery = _searchMan.transform(_styleSheetName, request);
 

@@ -31,6 +31,7 @@ public class KeywordSearchParamsBuilder {
     private int maxResults = -1;
     private LinkedList<SearchClause> searchClauses = new LinkedList<SearchClause>();
     private boolean lenient;
+    private boolean requireBoundedBy = false;
     
     public KeywordSearchParamsBuilder(IsoLanguagesMapper mapper) {
         this.isoLangMapper = mapper;
@@ -207,7 +208,7 @@ public class KeywordSearchParamsBuilder {
                 where = where.or(nextClause.toWhere(langs));
             }
         }
-        QueryBuilder<KeywordBean> builder = QueryBuilder.keywordQueryBuilder(isoLangMapper, new ArrayList<String>(langs))
+        QueryBuilder<KeywordBean> builder = QueryBuilder.keywordQueryBuilder(isoLangMapper, new ArrayList<String>(langs), requireBoundedBy)
                 .offset(offset)
                 .where(where);
         
@@ -290,5 +291,13 @@ public class KeywordSearchParamsBuilder {
     public KeywordSearchParamsBuilder uri(String keywordURI) {
         this.searchClauses.add(new URISearchClause(keywordURI));
         return this;
+    }
+    public void relationship(String relatedId, KeywordRelation relation, KeywordSearchType searchType, boolean ignoreCase) {
+        this.searchClauses.add(new RelationShipClause(relation, relatedId, searchType, ignoreCase));
+        
+    }
+    public void requireBoundedBy(boolean require) {
+        this.requireBoundedBy  = require;
+        
     }
 }

@@ -23,10 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,11 +85,37 @@ import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.services.region.MetadataRegionDAO;
+import org.fao.geonet.services.region.Region;
+import org.fao.geonet.services.region.RegionsDAO;
+import org.geotools.xml.Encoder;
+import org.geotools.gml2.GMLConfiguration;
+import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 //=============================================================================
 
 public class CatalogSearcher {
+	private static final class FindRegionFilterElements implements org.jdom.filter.Filter {
+        private static final Namespace namespace = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        private static final long serialVersionUID = 1L;
+
+        public boolean matches(Object obj)
+        {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                Attribute attribute = element.getAttribute("id", namespace);
+                return attribute != null && attribute.getValue() != null;
+            }
+            return false;
+        }
+    }
+
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
 	private final Set<String> _selector;
@@ -97,11 +125,14 @@ public class CatalogSearcher {
 	private Sort          _sort;
 	private String        _lang;
 	private long          _searchToken;
+    private final GMLConfiguration   _configuration;
 	
-	public CatalogSearcher(LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
+	public CatalogSearcher(GMLConfiguration  configuration, 
+			LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_selector = selector;
+		_configuration = configuration;
 		_uuidselector = uuidselector;
 		_searchToken = -1L;  // means we will get a new IndexSearcher when we
 		                     // ask for it first time
@@ -466,7 +497,8 @@ public class CatalogSearcher {
 
         int numHits = startPosition + maxRecords;
 
-		// TODO Handle NPE creating spatial filter (due to constraint
+        updateRegionsInSpatialFilter(context, filterExpr);
+		// TODO Handle NPE creating spatial filter (due to constraint)
         Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
         Filter duplicateRemovingFilter = new DuplicateDocFilter(query, 1000000);
         Filter cFilter = null;
@@ -524,8 +556,136 @@ public class CatalogSearcher {
 		summary.setNamespace(Csw.NAMESPACE_GEONET);
 		return Pair.read(summary, results);
 	}
+    // ---------------------------------------------------------------------------
 
-	// ---------------------------------------------------------------------------
+	/**
+	 * Process all spatial filters by replacing the region placeholders (filters with gml:id starting with 'region:')
+	 * with the gml of the actual region geometry.
+	 * 
+	 * @param context
+	 * @param filterExpr
+	 * @throws Exception
+	 */
+	private void updateRegionsInSpatialFilter(ServiceContext context, Element filterExpr) throws Exception {
+	    Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for( Element regionEl: (List<Element>) lookupGeoms(filterExpr)) {
+            Attribute attribute = regionEl.getAttribute("id", FindRegionFilterElements.namespace);
+            Geometry unionedGeom = null;
+            List<Geometry> geoms = new ArrayList<Geometry>();
+            String[] regionIds = attribute.getValue().substring("region:".length()).split("\\s*,\\s*");
+
+            for (String regionId : regionIds) {
+                for (RegionsDAO regionDAO: regionDAOs) {
+                    Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
+                    if(geometry!=null) {
+                        geoms.add(geometry);
+                        if (unionedGeom == null) {
+                            unionedGeom = geometry;
+                        } else {
+                            unionedGeom = unionedGeom.union(geometry);
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
+                }
+            }
+            
+            updateWithinFilter(regionEl, geoms);
+
+            setGeom(regionEl, unionedGeom);
+        }
+        
+    }
+	/**
+	 * If the filter is a within filter then we want to break the within into a few parts.  
+	 * 
+	 * <ul>
+	 * <li>A within filter where the geometry is the union of all the geometries that was in the gml:id</li>
+	 * <li>A within filter for each of the individual geometries</li>
+	 * </ul> 
+	 * 
+	 * The reason is the case of within 2 adjacent regions.  Suppose you have a within switzerland and france, if
+	 * a metadata crosses the border then within will fail in the normal case, the fixes that case.
+	 * 
+	 * The reason that the union and each individual geometry are or-d together is for the situation where a metadata's 
+	 * polygon extent is exactly the same as one of the individual geometries.  The within filter is a little dumb in
+	 * that it is true if the geometry is fully within or is exactly equals.  So if only the union is used then
+	 * the geometry is neither fully within (IE doesn't share boundary) nor exactly the same.  So
+	 * I use the work around of having several filters or'd together.  This is not a common case in practice
+	 * but must be handled. 
+	 */
+    private void updateWithinFilter(Element regionEl, List<Geometry> geoms) throws IOException, JDOMException {
+        if(geoms.size() < 2) {
+            return;
+        }
+        Element withinFilter = findWithinFilter(regionEl);
+
+        if(withinFilter!=null ){
+            Element parentElement = withinFilter.getParentElement();
+            int index = parentElement.indexOf(withinFilter);
+
+            ArrayList<Element> ors = new ArrayList<Element>();
+            ors.add(withinFilter);
+            for (Geometry geometry : geoms) {
+                Element newEl = (Element) withinFilter.clone();
+                org.jdom.filter.Filter filter = new FindRegionFilterElements();
+                Iterator<?> children = regionEl.getDescendants(filter);
+                if (children.hasNext()) {
+                    setGeom((Element) children.next(), geometry);
+                }
+                ors.add(newEl);
+            }
+
+            Element or = new Element("Or","ogc", "http://www.opengis.net/ogc");
+            parentElement.setContent(index, or);
+
+            or.addContent(ors);
+        }
+    }
+
+    /**
+     * Check to see if there is a within filter in the element.
+     */
+    private Element findWithinFilter(Element element)
+    {
+        if(element == null ){
+            return null;
+        }
+        if(element.getName().equalsIgnoreCase("WITHIN")){
+            return element;
+        }
+        return findWithinFilter(element.getParentElement());
+    }
+
+    /**
+     * Update the element with the gml encoded geometry
+     */
+    private void setGeom(Element element, Geometry fullGeom) throws IOException, JDOMException
+    {
+        Element parentElement = element.getParentElement();
+        int index = parentElement.indexOf(element);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Encoder encoder = new Encoder(_configuration);
+        encoder.setOmitXMLDeclaration(true);
+        encoder.setNamespaceAware(true);
+
+        encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(), false);
+        parentElement.setContent(index, geomElem);
+    }
+
+    private ArrayList<Element> lookupGeoms(Element filterExpr)
+    {
+        org.jdom.filter.Filter filter = new FindRegionFilterElements();
+        Iterator<?> children = filterExpr.getDescendants(filter);
+        ArrayList<Element> elements = new ArrayList<Element>();
+        while (children.hasNext()) {
+            elements.add((Element) children.next());
+        }
+        return elements;
+    }
+
+    // ---------------------------------------------------------------------------
 
 	/**
 	 * Allow search on current user's groups only adding a BooleanClause to the

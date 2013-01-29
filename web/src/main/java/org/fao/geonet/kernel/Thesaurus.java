@@ -40,8 +40,13 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sesame.admin.AdminListener;
 import org.openrdf.sesame.admin.DummyAdminListener;
+import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.AccessDeniedException;
+import org.openrdf.sesame.config.ConfigurationException;
+import org.openrdf.sesame.config.RepositoryConfig;
+import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.QueryLanguage;
+import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
@@ -185,7 +190,11 @@ public class Thesaurus {
 	 * @return
 	 */
 	public static String buildThesaurusKey(String fname, String type, String dname) {
-		return type + "." + dname + "." + fname.substring(0, fname.indexOf(".rdf"));
+	    String name = fname;
+	    if(name.endsWith(".rdf")) {
+	        name = name.substring(0, fname.indexOf(".rdf"));
+	    }
+		return type + "." + dname + "." + name;
 	}
 
 	private String buildDownloadUrl(String fname, String type, String dname, String siteUrl) {
@@ -208,6 +217,21 @@ public class Thesaurus {
 	public synchronized Thesaurus setRepository(LocalRepository repository) {
 		this.repository = repository;
 		return this;
+	}
+	public synchronized Thesaurus initRepository() throws ConfigurationException {
+	    RepositoryConfig repConfig = new RepositoryConfig(getKey());
+
+        SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
+        SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(getFile().getAbsolutePath(),
+                RDFFormat.RDFXML);
+        repConfig.addSail(syncSail);
+        repConfig.addSail(memSail);
+        repConfig.setWorldReadable(true);
+        repConfig.setWorldWriteable(true);
+
+        LocalRepository thesaurusRepository = Sesame.getService().createRepository(repConfig);
+        setRepository(thesaurusRepository);
+	    return this;
 	}
 
     /**

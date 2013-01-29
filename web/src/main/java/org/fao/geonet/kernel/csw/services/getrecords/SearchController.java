@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -65,13 +66,14 @@ public class SearchController {
 	private LuceneConfig _luceneConfig;
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
+    private GMLConfiguration _gmlConfig;
 
 	public SearchController(LuceneConfig luceneConfig) {
 		_luceneConfig = luceneConfig;
 		
 		_selector = Collections.singleton("_id");
 		_uuidselector = Collections.singleton("_uuid");
-		
+		_gmlConfig = new GMLConfiguration();		
     }
 	
     public void setLuceneConfig(LuceneConfig newConfig) {
@@ -113,7 +115,7 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _luceneConfig, _selector, _uuidselector);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
