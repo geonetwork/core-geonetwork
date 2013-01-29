@@ -936,48 +936,6 @@
     
     <!-- Sextant configuration profile -->
     <profile>
-      <id>ifr-extra</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-extra</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-inter</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-inter</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-intra</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-intra</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-      </properties>
-    </profile>
-    <profile>
       <id>ifr-visi1-sextant5</id>
       <activation>
         <property>
@@ -988,6 +946,20 @@
       <properties>
         <env>prod</env>
         <server>ifr-visi1-sextant5</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
+      <id>ifr-exp</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-exp</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>

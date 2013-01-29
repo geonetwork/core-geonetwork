@@ -1124,38 +1124,59 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     login: function(username, password){
         var app = this, user;
         if (this.casEnabled) {
-        	// TODO MERGE-GN
-        	var framePanel = new Ext.Panel({
-        		hidden: true,
-        		renderTo: 'casLogin-frame-win',
-        		width: 800,
-        		height: 500,
-        		html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
-        				this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>'
-        		
-        	});
-        	
-//        	loginWindow = window.open(this.URL+'/srv/'+this.LANG+'/login.form?casLogin', '_casLogin', 'menubar=no,location=no,toolbar=no', true);
-        	intervalID = setInterval(function (){
-        		loginAttempts += 1;
-        		if(loginAttempts > (5*60*2)) {
-        			clearInterval (intervalID);
-        			app.identifiedUser = undefined;
-	                app.onAfterBadLogin();
-        		} 
-        		else if (framePanel.rendered) {
-        			var iframe = document.getElementById('casLoginFrame');
-        			var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        			var connectedDiv = innerDoc.getElementById('content_container');
-        			if(connectedDiv) {
-        				clearInterval (intervalID);
-        				app.isLoggedIn();
-        			}
-//        		} else if(loginWindow.closed) {
-//        			clearInterval (intervalID);
-//        			app.isLoggedIn();
-        		}
-        	}, 500);
+            var framePanel = new Ext.Panel({
+               hidden: true,
+               renderTo: 'casLogin-frame-win',
+               width: 800,
+               height: 500,
+               html:'<iframe frameborder="0" width="700" height="450" id="casLoginFrame" height="20" src="'+
+                      this.URL+'/srv/'+this.LANG+'/login.form?casLogin'+'"></iframe>',
+               listeners: {
+                   afterrender: {
+                       fn: function() {
+                           
+                           var intervalID;
+                           var loginAttempts = 0;
+                           
+                           intervalID = setInterval(function (){
+                               loginAttempts += 1;
+                               if(loginAttempts > (25)) {
+                                   clearInterval (intervalID);
+                                   app.identifiedUser = undefined;
+                                   app.onAfterBadLogin();
+                               }
+                               else  {
+                            	   
+                            	   try {
+                                   
+                                       var iframe = document.getElementById('casLoginFrame');
+                                       var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                                       
+                                       // Test if the CAS login form is in the iframe
+                                       if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
+                                           clearInterval (intervalID);
+                                           app.identifiedUser = undefined;
+                                           app.onAfterBadLogin();
+                                       }
+                                       
+                                       // Test if the auth have been made
+                                       var connectedDiv = innerDoc.getElementById('content_container');
+                                       if(connectedDiv) {
+                                           clearInterval (intervalID);
+                                           app.isLoggedIn();
+                                       }
+                            	   }
+                            	   catch(err) {
+                            		   loginAttempts+=25;
+                            		   app.identifiedUser = undefined;
+                                       app.onAfterBadLogin();
+                            	   }
+                               }
+                           }, 200);
+                       }
+                   }
+               }
+            });
         } else {
 			OpenLayers.Request.POST({
 			    url: this.services.login,

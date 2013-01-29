@@ -346,13 +346,14 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @param searchValue	The value contained in field's value (case is ignored)
 	 * @param maxNumberOfTerms	The maximum number of terms to search for
 	 * @param threshold	The minimum frequency for terms to be returned
+	 * @param groupPublished	(Specific SextantV5) filter on a catalogue
 	 * @return
 	 * @throws Exception
 	 */
 	public Collection<String> getSuggestionForFields(ServiceContext srvContext, 
 								final String searchField, final String searchValue, 
 								ServiceConfig config,
-								int maxNumberOfTerms, int threshold) throws Exception {
+								int maxNumberOfTerms, int threshold, String groupPublished) throws Exception {
 		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 			Log.debug(Geonet.SEARCH_ENGINE, "Get suggestion on field: '"
 					+ searchField + "'" + "\tsearching: '" + searchValue + "'"
@@ -381,13 +382,19 @@ public class LuceneSearcher extends MetaSearcher {
 //			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
 //		// TODO : filter template ?
 //		}
+		
+		//Begin Specific Sextant V5
+		// If configwhat is set, filter search by catalog to reduce suggestion scope
+		elData.addContent(new Element("_groupPublished").addContent(groupPublished.replace(","," or ")));
+		// End Specific Sextant V5
+		
 		search(srvContext, elData, config);
 
 		elData.addContent(new Element("from").setText("1"));
 		elData.addContent(new Element("to").setText(getSize() + ""));
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(1, getSize(), false);
+			TopDocs tdocs = performQuery(0, getSize(), false);
 
 			for (int i = 0; i < tdocs.scoreDocs.length; i++) {
 				if (counter >= maxNumberOfTerms) {

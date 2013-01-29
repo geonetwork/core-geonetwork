@@ -124,7 +124,6 @@
           <param name="filter" value="+_groupPublished:SINPMER"/>
         </class>
       </service>
-      
       <!-- MyOcean virtual CSW-->
       <service name="csw-MYOCEAN-CORE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
@@ -149,11 +148,135 @@
       <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-SERVICES-AND-DATASETS"/>
+      <service name="csw-AIRESMARINES">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:AIRESMARINES"/>
+        </class>
+      </service>
+      <service name="csw-ATLAS_CHARM">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:ATLAS_CHARM"/>
+        </class>
+      </service>
+      <service name="csw-DCSMM">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DCSMM"/>
+        </class>
+      </service>
+      <service name="csw-DELEGATION_REUNION">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DELEGATION_REUNION"/>
+        </class>
+      </service>
+      <service name="csw-EUROSHELL">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:EUROSHELL"/>
+        </class>
+      </service>
+      <service name="csw-GRANULATS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:GRANULATS"/>
+        </class>
+      </service>
+      <service name="csw-LITTORAL_ENVIRONNEMENT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:LITTORAL_ENVIRONNEMENT"/>
+        </class>
+      </service>
+      <service name="csw-MIMEL">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MIMEL"/>
+        </class>
+      </service>
+      <service name="csw-NATURA2000">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:NATURA2000"/>
+        </class>
+      </service>
+      <service name="csw-NOUVELLE_CALEDONIE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:NOUVELLE_CALEDONIE"/>
+        </class>
+      </service>
+      <service name="csw-OCEAN_INDIEN">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:OCEAN_INDIEN"/>
+        </class>
+      </service>
+      <service name="csw-PELAGIS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:PELAGIS"/>
+        </class>
+      </service>
+      <service name="csw-PERSIG">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:PERSIG"/>
+        </class>
+      </service>
+      <service name="csw-PHOTOS_ANCIENNES">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
+        </class>
+      </service>
+      <service name="csw-REBENT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:REBENT"/>
+        </class>
+      </service>
+      <service name="csw-REMATA">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:REMATA"/>
+        </class>
+      </service>
+      <service name="csw-ROLNP">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:ROLNP"/>
+        </class>
+      </service>
+      <service name="csw-SIG972">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:SIG972"/>
+        </class>
+      </service>
+      <service name="csw-URANTILLES">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:URANTILLES"/>
         </class>
       </service>
     </addXML>
   </file>
-  
+  <file name=".*/WEB-INF/user-profiles.xml">
+    <addXML xpath="profile[@name='Guest']">
+      <allow service="csw-Netmar"/>
+      <allow service="csw-Netmar_Cedre"/>
+      <allow service="csw-GEOCATALOGUE"/>
+      <allow service="csw-EMODNET_Chemistry"/>
+      <allow service="csw-EMODNET_HYDROGRAPHY_CPRD"/>
+      <allow service="csw-EMODNET_HYDROGRAPHY_PRODUCT"/>
+      <allow service="csw-GEO_SEAS_CPRD"/>
+      <allow service="csw-GEO_SEAS_PRODUCT"/>
+      <allow service="csw-SINPMER"/>
+      <allow service="csw-AIRESMARINES"/>
+      <allow service="csw-ATLAS_CHARM"/>
+      <allow service="csw-DCSMM"/>
+      <allow service="csw-DELEGATION_REUNION"/>
+      <allow service="csw-EUROSHELL"/>
+      <allow service="csw-GRANULATS"/>
+      <allow service="csw-LITTORAL_ENVIRONNEMENT"/>
+      <allow service="csw-MIMEL"/>
+      <allow service="csw-NATURA2000"/>
+      <allow service="csw-NOUVELLE_CALEDONIE"/>
+      <allow service="csw-OCEAN_INDIEN"/>
+      <allow service="csw-PELAGIS"/>
+      <allow service="csw-PERSIG"/>
+      <allow service="csw-PHOTOS_ANCIENNES"/>
+      <allow service="csw-REBENT"/>
+      <allow service="csw-REMATA"/>
+      <allow service="csw-ROLNP"/>
+      <allow service="csw-SIG972"/>
+      <allow service="csw-URANTILLES"/>
+    </addXML>
+  </file>
 
   <!-- Configure CSW Capabilities -->
   <!-- TODO : to be checked by ifremer for keywords mainly -->

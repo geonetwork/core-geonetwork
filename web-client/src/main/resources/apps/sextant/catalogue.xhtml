@@ -79,8 +79,50 @@
           <!-- FIN catalog -->
 
     <script type="text/javascript" src="#{contextPath}/js/lib/ext/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="#{contextPath}/js/lib/ext/ext-all.js"></script>
-    <script type="text/javascript" src="#{contextPath}/js/sextant-mini.js"></script>
+    
+    <c:choose>
+    	<c:when test="#{!empty param.debug}">
+    
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext/ext-all-debug.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/Rating/RatingItem.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/FileUploadField/FileUploadField.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/DateTime/DateTime.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/RowExpander/RowExpander.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/MultiselectItemSelector-3.0/DDView.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/SuperBoxSelect/SuperBoxSelect.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext-ux/LightBox/lightbox.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/GeoNetwork/lib/GeoNetwork/widgets/CategoryTree.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/proj4js-compressed.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/OpenLayers/lib/OpenLayers.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/GeoExt/lib/overrides/override-ext-ajax.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/GeoExt/lib/GeoExt.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/GeoNetwork/lib/GeoNetwork.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.lang/fr.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.lang/en.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/Settings.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/Shortcuts.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.map/Settings.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.what.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.when.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.where.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.who.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.edit.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.ViewWindow.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.ViewPanel.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.MetadataResultsView.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.list.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.ipc.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/cat.main.js"></script>
+
+        </c:when>
+    	<c:otherwise>
+		    <script type="text/javascript" src="#{contextPath}/js/lib/ext/ext-all.js"></script>
+		    <script type="text/javascript" src="#{contextPath}/js/sextant-mini.js"></script>
+        </c:otherwise>
+      </c:choose>
 
     <script type="text/javascript">
     	cat.imgPath = '#{contextPath}'+'/';
