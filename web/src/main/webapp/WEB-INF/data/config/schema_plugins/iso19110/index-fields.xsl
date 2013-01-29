@@ -100,7 +100,7 @@
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 			<!-- === Metadata type (iso19110 is used to describe attribute datasets) === -->
-			<Field name="type" string="model" store="true" index="true"/>
+			<Field name="type" string="featureCatalog" store="true" index="true"/>
 
 		</Document>
 	</xsl:template>
