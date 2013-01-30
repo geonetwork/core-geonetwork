@@ -729,7 +729,7 @@ GeoNetwork.searchApp = function() {
                 },
                 items : [ new Ext.ux.form.SuperBoxSelect({
                     fieldLabel : OpenLayers.i18n("catalog"),
-                    name : "[V_",
+                    name : "[V__catalog",
                     store : GeoNetwork.Settings.Stores['sources_groups'],
                     displayField : 'label',
                     valueField : 'name',
