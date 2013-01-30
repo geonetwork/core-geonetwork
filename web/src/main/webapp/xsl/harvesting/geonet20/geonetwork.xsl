@@ -32,28 +32,11 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
 				<td class="padded"><input id="gn20.host" class="content" type="text" value="" size="30"/></td>
 			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="gn20.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="gn20.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="gn20.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="gn20.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'gn20'"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 
@@ -109,17 +92,6 @@
 			</tr>
 		</table>
 	</div>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

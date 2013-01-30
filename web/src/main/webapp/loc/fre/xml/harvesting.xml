@@ -138,6 +138,7 @@
 	
 	<content>Contenu récupéré</content>
 	<importxslt>Appliquer une transformation XSL aux fiches récupérées</importxslt>
+	<rejectDuplicateResource>Rejeter les fiches si un doublon sur l'identifiant de la ressource est détecté (uniquement pour les métadonnées en ISO19139 ou profil ISO)</rejectDuplicateResource>
 
 	<at>Lancer à</at>
 	<atSpec>( heure : minute eg. 23:15 )</atSpec>
@@ -394,9 +395,10 @@
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
 		<incompatible>Incompatible</incompatible>
-		<couldNotInsert>Could not insert</couldNotInsert>
+		<couldNotInsert>Insertion impossible</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
-		<recordsUpdated>Records Updated</recordsUpdated>
+		<recordsUpdated>Enregistrements mis à jour</recordsUpdated>
+		<duplicatedResource>Ressources en double</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>

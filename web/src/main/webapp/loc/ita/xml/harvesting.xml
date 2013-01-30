@@ -139,6 +139,7 @@
 	
 	<content>Contenuto scaricato</content>
 	<importxslt>Applicare questo XSLT ai metadati scaricati</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
 	<options>Opzioni</options>
 	<everySpec>(giorni : ore : minuti)</everySpec>
@@ -347,8 +348,7 @@
 		<couldNotInsert>Non ho potuto inserire</couldNotInsert>
 		<subtemplatesUpdated>Subtemplate aggiornati</subtemplatesUpdated>
 		<recordsUpdated>Record aggiornati</recordsUpdated>
-
-		
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Non ancora eseguito</notRun>

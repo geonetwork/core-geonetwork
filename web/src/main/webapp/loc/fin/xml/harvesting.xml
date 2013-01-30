@@ -104,6 +104,8 @@
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
 	<mefFormatFull>Use full MEF format</mefFormatFull>
 	
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<xslfilter>XSL filter name</xslfilter>
 	<search>Hakukriteerit</search>
 	<siteName>Sivuston nimi</siteName>
@@ -344,6 +346,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Odottaa ensimmäistä ajoa.</notRun>

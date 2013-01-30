@@ -17,7 +17,9 @@
 			<xsl:call-template name="content-Z3950Config"/>
 			<div style="display:none;"> // make these invisible as we don't need them
 				<div class="dots"/>
-				<xsl:call-template name="privileges-Z3950Config"/>
+				<xsl:call-template name="privileges">
+					<xsl:with-param name="type" select="'z3950Config'"/>
+				</xsl:call-template>
 				<div class="dots"/>
 				<xsl:call-template name="categories-Z3950Config"/>
 			</div>
@@ -46,27 +48,9 @@
 			</tr>
 
 
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="z3950Config.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="z3950Config.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="z3950Config.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="z3950Config.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'z3950Config'"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 
@@ -92,7 +76,7 @@
 		<table border="0">
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/clearConfig"/></td>
+				<td class="padded"><label for="z3950Config.clearConfig"><xsl:value-of select="/root/gui/harvesting/clearConfig"/></label></td>
 				<td class="padded"><input id="z3950Config.clearConfig" type="checkbox" value=""/></td>
 			</tr>
 		<xsl:call-template name="schedule-widget-notable">
@@ -148,10 +132,6 @@
                 </td>
             </tr>
  -->
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/oneRun"/></td>
-				<td class="padded"><input id="z3950Config.oneRunOnly" type="checkbox" value=""/></td>
-			</tr>
 		</table>
 	</xsl:template>
 
@@ -177,34 +157,6 @@
 		</table>
 	</div>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-Z3950Config">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="z3950Config.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="z3950Config.addGroups" class="content" onclick="harvesting.z3950Config.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="z3950Config.privileges">
-			<tr>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/group"/></th>
-				<th class="padded"><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></th>
-				<th/>
-			</tr>
-		</table>
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -214,17 +166,4 @@
 		<select id="z3950Config.categories" class="content" size="8" multiple="on"/>
 	</xsl:template>
 	
-	<!-- ============================================================================================= -->
-
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-        <option>
-            <xsl:attribute name="value">
-                <xsl:value-of select="."/>
-            </xsl:attribute>
-            <xsl:value-of select="@label"/>
-        </option>
-    </xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

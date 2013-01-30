@@ -58,12 +58,24 @@
 
 		<tr>
 			<td class="padded">
+				<label for="{$type}.oneRunOnly" >
 				<xsl:value-of select="/root/gui/harvesting/oneRun" />
+				</label>
 			</td>
 			<td class="padded">
 				<input id="{$type}.oneRunOnly" type="checkbox" value="" />
 			</td>
 		</tr>
 	</xsl:template>
-
+	
+	<!-- Populating a set of options for a select-->
+	<xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
+		<option>
+			<xsl:attribute name="value">
+				<xsl:value-of select="."/>
+			</xsl:attribute>
+			<xsl:value-of select="@label"/>
+		</option>
+	</xsl:template>
+	
 </xsl:stylesheet>

@@ -1511,57 +1511,64 @@ public class LuceneSearcher extends MetaSearcher {
     /**
      * Searches in Lucene index and return Lucene index field value. Metadata records is retrieved based on its uuid.
      *
-     * @param webappName
      * @param priorityLang
      * @param id
      * @param fieldname
      * @return
      * @throws Exception
      */
-    public static String getMetadataFromIndex(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, id, Collections.singleton(fieldname)).get(fieldname);
+    public static String getMetadataFromIndex(String priorityLang, String id, String fieldname) throws Exception {
+            return LuceneSearcher.getMetadataFromIndex(priorityLang, id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
      * TODO javadoc.
      *
-     * @param webappName
-     * @param priorityLang
+     * @param webappNameg
      * @param id
      * @param fieldname
      * @return
      * @throws Exception
      */
-    public static String getMetadataFromIndexById(String webappName, String priorityLang, String id, String fieldname) throws Exception {
-            return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_id", id, Collections.singleton(fieldname)).get(fieldname);
+    public static String getMetadataFromIndexById(String priorityLang, String id, String fieldname) throws Exception {
+            return LuceneSearcher.getMetadataFromIndex(priorityLang, "_id", id, Collections.singleton(fieldname)).get(fieldname);
     }
 
     /**
      * TODO javadoc.
      *
-     * @param webappName
      * @param priorityLang
      * @param uuid
      * @param fieldnames
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String uuid, Set<String> fieldnames) throws Exception {
-        return LuceneSearcher.getMetadataFromIndex(webappName, priorityLang, "_uuid", uuid, fieldnames);
+    private static Map<String,String> getMetadataFromIndex(String priorityLang, String uuid, Set<String> fieldnames) throws Exception {
+        return LuceneSearcher.getMetadataFromIndex(priorityLang, "_uuid", uuid, fieldnames);
     }
-
+    
+    public static Map<String,String> getMetadataFromIndex(String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
+        Map<String,Map<String,String>> results = LuceneSearcher.getAllMetadataFromIndexFor(priorityLang, idField, id, fieldnames, false);
+        if (results.size() == 1) {
+            return (Map<String, String>) results.values().toArray()[0];
+        } else {
+            return new HashMap<String, String>();
+        }
+    }
     /**
-     * TODO javadoc.
+     * Get Lucene index fields for matching records
+     * 
+     * @param priorityLang  Preferred index language to use.
+     * @param field   Field to search for (eg. _uuid)
+     * @param value    Value to search for
+     * @param returnFields    Fields to return
+     * @param checkAllHits If false, only the first match is analyzed for returned field. 
+     * Set to true when searching on uuid field and only one record is expected.
      *
-     * @param webappName
-     * @param priorityLang
-     * @param idField
-     * @param id
-     * @param fieldnames
      * @return
      * @throws Exception
      */
-    private static Map<String,String> getMetadataFromIndex(String webappName, String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
+    public static Map<String,Map<String,String>> getAllMetadataFromIndexFor(String priorityLang, String field, String value, Set<String> returnFields, boolean checkAllHits) throws Exception {
         final IndexAndTaxonomy indexAndTaxonomy;
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
@@ -1576,27 +1583,37 @@ public class LuceneSearcher extends MetaSearcher {
         }
         IndexSearcher searcher = new IndexSearcher(reader);
 
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, Map<String, String>> records = new HashMap<String, Map<String, String>>();
 
         try {
-            TermQuery query = new TermQuery(new Term(idField, id));
+            TermQuery query = new TermQuery(new Term(field, value));
             SettingInfo settingInfo = _sm.get_settingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);
             
+            int numberOfHits = 1;
+            int counter = 0;
+            if (checkAllHits) {
+                numberOfHits = Integer.MAX_VALUE;
+            }
             Sort sort = LuceneSearcher.makeSort(Collections.<Pair<String, Boolean>>emptyList(), priorityLang, sortRequestedLanguageOnTop);
             Filter filter = NoFilterFilter.instance();
-            TopDocs tdocs = searcher.search(query, filter, 1, sort);
-
+            TopDocs tdocs = searcher.search(query, filter, numberOfHits, sort);
+            
             for( ScoreDoc sdoc : tdocs.scoreDocs ) {
-                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(fieldnames);
+                Map<String, String> values = new HashMap<String, String>();
+                
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(returnFields);
                 reader.document(sdoc.doc, docVisitor);
                 Document doc = docVisitor.getDocument();
                 
-                for( String fieldname : fieldnames ) {
+                for( String fieldname : returnFields ) {
                     values.put(fieldname, doc.get(fieldname));
                 }
+                
+                records.put(String.valueOf(counter), values);
+                counter ++;
             }
 
         } catch (CorruptIndexException e) {
@@ -1609,7 +1626,7 @@ public class LuceneSearcher extends MetaSearcher {
         } finally {
             searchmanager.releaseIndexReader(indexAndTaxonomy);
         }
-        return values;
+        return records;
     }
 
     /**
