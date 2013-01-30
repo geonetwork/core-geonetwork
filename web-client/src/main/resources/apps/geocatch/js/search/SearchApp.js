@@ -563,6 +563,7 @@ GeoNetwork.searchApp = function() {
                                     },
                                     items : [
                                             {
+                                                id : "none_where",
                                                 inputValue : "none",
                                                 boxLabel : OpenLayers
                                                         .i18n("wherenone"),
@@ -573,6 +574,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "bbox_where",
                                                 inputValue : "bbox",
                                                 boxLabel : OpenLayers
                                                         .i18n("bbox"),
@@ -582,6 +584,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "gg25_where",
                                                 inputValue : "gg25",
                                                 boxLabel : OpenLayers
                                                         .i18n("adminUnit"),
@@ -591,6 +594,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "polygon_where",
                                                 inputValue : "polygon",
                                                 boxLabel : OpenLayers
                                                         .i18n("drawOnMap"),
