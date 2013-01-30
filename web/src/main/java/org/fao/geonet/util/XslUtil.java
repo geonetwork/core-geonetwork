@@ -179,12 +179,11 @@ public final class XslUtil
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
     public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
-        String webappName = appName.toString();
         String id = uuid.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
         try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndex(webappName, language, id, fieldname);
+            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
             if(fieldValue == null) {
                 return getIndexFieldById(appName,uuid,field,lang);
             }
@@ -196,11 +195,10 @@ public final class XslUtil
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
-        String webappName = appName.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
         try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndexById(webappName, language, id.toString(), fieldname);
+            String fieldValue = LuceneSearcher.getMetadataFromIndexById(language, id.toString(), fieldname);
             return fieldValue == null ? "" : fieldValue;
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
