@@ -526,7 +526,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
             //Swisstopo specific
             if (isHarvested.contains("n")) {
-                moreFields.add(SearchManager.makeField("_catalog",      owner,      true, true));
+                moreFields.add(SearchManager.makeField("_catalog",      groupOwner,      true, true));
             } else {
                 moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
             }
