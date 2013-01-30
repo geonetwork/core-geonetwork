@@ -12,3 +12,4 @@ ALTER TABLE usergroups ADD PRIMARY KEY (userid, profile, groupid);
 ALTER TABLE Metadata ALTER COLUMN harvestUri varchar(512);
 
 ALTER TABLE HarvestHistory ADD elapsedTime int;
+UPDATE HarvestHistory SET elapsedTime = 0 WHERE elapsedTime IS NULL;
