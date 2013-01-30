@@ -888,6 +888,15 @@ GeoNetwork.searchApp = function() {
                         e.setVisible(false);
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
+                        
+                        var combos = Ext.query("input", Ext.get(adminBorders).dom);
+                        
+                        Ext.each(combos, function(combo){
+                            var e = Ext.getCmp(combo.id);
+                            if(e && e.getValueEx().length > 0){
+                                e.fireEvent("change", e);
+                            }
+                        });
                         break;
                     case "polygon":
                         d.setVisible(false);
