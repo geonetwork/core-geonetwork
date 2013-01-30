@@ -148,6 +148,8 @@
       <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-SERVICES-AND-DATASETS"/>
+        </class>
+      </service>
       <service name="csw-AIRESMARINES">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:AIRESMARINES"/>
@@ -243,38 +245,6 @@
           <param name="filter" value="+_groupPublished:URANTILLES"/>
         </class>
       </service>
-    </addXML>
-  </file>
-  <file name=".*/WEB-INF/user-profiles.xml">
-    <addXML xpath="profile[@name='Guest']">
-      <allow service="csw-Netmar"/>
-      <allow service="csw-Netmar_Cedre"/>
-      <allow service="csw-GEOCATALOGUE"/>
-      <allow service="csw-EMODNET_Chemistry"/>
-      <allow service="csw-EMODNET_HYDROGRAPHY_CPRD"/>
-      <allow service="csw-EMODNET_HYDROGRAPHY_PRODUCT"/>
-      <allow service="csw-GEO_SEAS_CPRD"/>
-      <allow service="csw-GEO_SEAS_PRODUCT"/>
-      <allow service="csw-SINPMER"/>
-      <allow service="csw-AIRESMARINES"/>
-      <allow service="csw-ATLAS_CHARM"/>
-      <allow service="csw-DCSMM"/>
-      <allow service="csw-DELEGATION_REUNION"/>
-      <allow service="csw-EUROSHELL"/>
-      <allow service="csw-GRANULATS"/>
-      <allow service="csw-LITTORAL_ENVIRONNEMENT"/>
-      <allow service="csw-MIMEL"/>
-      <allow service="csw-NATURA2000"/>
-      <allow service="csw-NOUVELLE_CALEDONIE"/>
-      <allow service="csw-OCEAN_INDIEN"/>
-      <allow service="csw-PELAGIS"/>
-      <allow service="csw-PERSIG"/>
-      <allow service="csw-PHOTOS_ANCIENNES"/>
-      <allow service="csw-REBENT"/>
-      <allow service="csw-REMATA"/>
-      <allow service="csw-ROLNP"/>
-      <allow service="csw-SIG972"/>
-      <allow service="csw-URANTILLES"/>
     </addXML>
   </file>
 
