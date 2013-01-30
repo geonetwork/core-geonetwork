@@ -84,7 +84,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'topicCats' : 'Categories',
 	'denominator' : 'spatial resolution',
 	'denominators' : 'Spatial Resolution',
-	'sendmail' : 'Send email'
+	'sendmail' : 'Send email',
+    'country': 'Country',
+    'city': 'City'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);
