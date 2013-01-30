@@ -524,6 +524,12 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_createDate",  createDate,  true, true));
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
+            //Swisstopo specific
+            if (isHarvested.contains("n")) {
+                moreFields.add(SearchManager.makeField("_catalog",      owner,      true, true));
+            } else {
+                moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
+            }
             moreFields.add(SearchManager.makeField("_isTemplate",  isTemplate,  true, true));
             moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
@@ -1253,7 +1259,7 @@ public class DataManager {
 		info.root        = record.getChildText("root");
 		info.owner       = record.getChildText("owner");
 		info.groupOwner  = record.getChildText("groupowner");
-                info.displayOrder  = record.getChildText("displayOrder");
+        info.displayOrder  = record.getChildText("displayOrder");
 
 		String temp = record.getChildText("istemplate");
 
@@ -3129,8 +3135,8 @@ public class DataManager {
 		String  popularity = rec.getChildText("popularity");
 		String  rating     = rec.getChildText("rating");
 		String  owner      = rec.getChildText("owner");
-		String  groupOwner      = rec.getChildText("groupowner");
-                String  displayOrder = rec.getChildText("displayorder");
+        String  groupOwner = rec.getChildText("groupowner");
+        String  displayOrder = rec.getChildText("displayorder");
 
 		Element info = new Element(Edit.RootChild.INFO, Edit.NAMESPACE);
 
@@ -3145,7 +3151,7 @@ public class DataManager {
 		addElement(info, Edit.Info.Elem.IS_HARVESTED,isHarvested);
 		addElement(info, Edit.Info.Elem.POPULARITY,  popularity);
 		addElement(info, Edit.Info.Elem.RATING,      rating);
-                addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
+        addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
 
 		if (isHarvested.equals("y"))
 			info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));
