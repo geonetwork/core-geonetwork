@@ -437,6 +437,8 @@ public class Aligner
             try {
                 // Extract resource identifier
                 XPath xp = XPath.newInstance (resourceIdentifierXPath);
+                xp.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                xp.addNamespace("gco", "http://www.isotc211.org/2005/gco");
                 List<Element> resourceIdentifiers = xp.selectNodes(response);
                 if (resourceIdentifiers.size() > 0) {
                     // Check if the metadata to import has a resource identifier
