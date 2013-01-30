@@ -39,7 +39,6 @@
     <xsl:param name="node" as="node()"/>
     <xsl:param name="labels" as="node()"/>
     
-    
     <!-- Define the element to look for.
          In dublin core element contains value.
          In ISO, attribute also but element contains characterString which contains the value -->
@@ -89,9 +88,15 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:copy-of
+        
+        <xsl:variable name="result"
           select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name]/helper"
         />
+        
+        <xsl:choose>
+          <xsl:when test="$result"><xsl:copy-of select="$result"/></xsl:when>
+          <xsl:otherwise><null/></xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
