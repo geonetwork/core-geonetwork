@@ -79,19 +79,24 @@
   <!-- Add custom CSW service -->
   <file name=".*/WEB-INF/config-csw-servers.xml">
     <addXML xpath="services">
-      <service name="csw-Netmar">
+      <service name="csw-AIRESMARINES">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:Netmar"/>
+          <param name="filter" value="+_groupPublished:AIRESMARINES"/>
         </class>
       </service>
-      <service name="csw-Netmar_Cedre">
+      <service name="csw-ATLAS_CHARM">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:Netmar_Cedre"/>
+          <param name="filter" value="+_groupPublished:ATLAS_CHARM"/>
         </class>
       </service>
-      <service name="csw-GEOCATALOGUE">
+      <service name="csw-DCSMM">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:GEOCATALOGUE"/>
+          <param name="filter" value="+_groupPublished:DCSMM"/>
+        </class>
+      </service>
+      <service name="csw-DELEGATION_REUNION">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DELEGATION_REUNION"/>
         </class>
       </service>
       <service name="csw-EMODNET_Chemistry">
@@ -109,6 +114,15 @@
           <param name="filter" value="+_groupPublished:EMODNET_HYDROGRAPHY_PRODUCT"/>
         </class>
       </service>
+      <service name="csw-EUROSHELL">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:EUROSHELL"/>
+        </class>
+      </service>
+      <service name="csw-GEOCATALOGUE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:GEOCATALOGUE"/>
+        </class>
       <service name="csw-GEO_SEAS_CPRD">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:GEO_SEAS_CPRD"/>
@@ -119,12 +133,22 @@
           <param name="filter" value="+_groupPublished:GEO_SEAS_PRODUCT"/>
         </class>
       </service>
-      <service name="csw-SINPMER">
+      </service>
+      <service name="csw-GRANULATS">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:SINPMER"/>
+          <param name="filter" value="+_groupPublished:GRANULATS"/>
         </class>
       </service>
-      <!-- MyOcean virtual CSW-->
+      <service name="csw-LITTORAL_ENVIRONNEMENT">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:LITTORAL_ENVIRONNEMENT"/>
+        </class>
+      </service>
+      <service name="csw-MIMEL">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MIMEL"/>
+        </class>
+      </service>
       <service name="csw-MYOCEAN-CORE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-CORE-PRODUCTS"/>
@@ -150,49 +174,19 @@
           <param name="filter" value="+_groupPublished:MYOCEAN-SERVICES-AND-DATASETS"/>
         </class>
       </service>
-      <service name="csw-AIRESMARINES">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:AIRESMARINES"/>
-        </class>
-      </service>
-      <service name="csw-ATLAS_CHARM">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:ATLAS_CHARM"/>
-        </class>
-      </service>
-      <service name="csw-DCSMM">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:DCSMM"/>
-        </class>
-      </service>
-      <service name="csw-DELEGATION_REUNION">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:DELEGATION_REUNION"/>
-        </class>
-      </service>
-      <service name="csw-EUROSHELL">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:EUROSHELL"/>
-        </class>
-      </service>
-      <service name="csw-GRANULATS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:GRANULATS"/>
-        </class>
-      </service>
-      <service name="csw-LITTORAL_ENVIRONNEMENT">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:LITTORAL_ENVIRONNEMENT"/>
-        </class>
-      </service>
-      <service name="csw-MIMEL">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:MIMEL"/>
-        </class>
-      </service>
       <service name="csw-NATURA2000">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:NATURA2000"/>
+        </class>
+      </service>
+      <service name="csw-Netmar">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:Netmar"/>
+        </class>
+      </service>
+      <service name="csw-Netmar_Cedre">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:Netmar_Cedre"/>
         </class>
       </service>
       <service name="csw-NOUVELLE_CALEDONIE">
@@ -238,6 +232,11 @@
       <service name="csw-SIG972">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:SIG972"/>
+        </class>
+      </service>
+      <service name="csw-SINPMER">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:SINPMER"/>
         </class>
       </service>
       <service name="csw-URANTILLES">
