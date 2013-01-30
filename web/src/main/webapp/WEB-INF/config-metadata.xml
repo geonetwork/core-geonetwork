@@ -445,7 +445,9 @@
 		
 		<service name="metadata.select.notifybymail">
 			<class name=".services.selection.NotifyByMail">
-				<param name="type" value="metadata" />
+				<param name="subject" value="Keep your metadata uptodate." />
+				<param name="body" value="Metadata not up to date : {0}. Please keep the metadata up to date." />
+				<param name="bodyError" value="Error when sending mail : {0}" />
 			</class>
 		</service>
 

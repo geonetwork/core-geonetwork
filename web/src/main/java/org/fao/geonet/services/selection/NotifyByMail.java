@@ -1,7 +1,9 @@
 package org.fao.geonet.services.selection;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -24,15 +26,23 @@ import org.jdom.Element;
 
 public class NotifyByMail implements Service {
 	
+		private ServiceConfig _config;
+		
 		private final String ADMIN_MAIL = "geocat@swisstopo.ch";
 		
+		private static final Pattern rfc2822 = Pattern.compile(
+		        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+		);
+
 		//--------------------------------------------------------------------------
 		//---
 		//--- Init
 		//---
 		//--------------------------------------------------------------------------
 
-		public void init(String appPath, ServiceConfig params) throws Exception {}
+		public void init(String appPath, ServiceConfig config) throws Exception {
+			_config = config;
+		}
 
 		//--------------------------------------------------------------------------
 		//---
@@ -41,10 +51,12 @@ public class NotifyByMail implements Service {
 		//--------------------------------------------------------------------------
 
 		public Element exec(Element params, ServiceContext context) throws Exception {
-
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
+		String messageBody       = _config.getValue("body");
+		String messageBodyError = _config.getValue("bodyError");
+		String messageSubject   = _config.getValue("subject");
+		
 		UserSession us = context.getUserSession();
 		
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -62,17 +74,28 @@ public class NotifyByMail implements Service {
 	            List<Element> uuidQuery = dbms.select("SELECT u.email FROM Metadata m, Users u where m.owner = u.id AND m.uuid ='" + uuid +"'" ).getChildren();
 	            for (Element uuidElement : uuidQuery) {
 	            	emailAddress = uuidElement.getChildText("email");
-	            	if("".equals(emailAddress)) {
+	            	if(emailAddress == null || "".equals(emailAddress) || !rfc2822.matcher(emailAddress).matches()) {
 	            		emailAddress = ADMIN_MAIL;
 	            	}
+	            	
 	            	context.info("Send notification email to " + emailAddress + " for MD uuid : " + uuid);
+	            	
 	            	Element retchildserv = new Element("sendMail");
 		            retchildserv.setAttribute("email", emailAddress);
 		            retchildserv.setAttribute("uuid", uuid);
-
-	            	ret.addContent(retchildserv);
+		            
+	            	String body = MessageFormat.format(messageBody, uuid);
 	            	
-	            	gc.getEmail().send("email", "Metadata not up to date : " + uuid, "Please keep the metadata up to date.", false);
+	            	try {
+	            		gc.getEmail().send(emailAddress, messageSubject, body, false);
+	            	} catch(Exception e) {
+	            		if(!emailAddress.equals(ADMIN_MAIL)) {
+	            			gc.getEmail().sendToAdmin(messageSubject, MessageFormat.format(messageBodyError, body), false);
+	            			retchildserv.setText("error");
+	            		}
+	            	} finally {
+	            		ret.addContent(retchildserv);
+	            	}
 	    		}
 	        }
 	    }
