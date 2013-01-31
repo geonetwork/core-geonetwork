@@ -160,11 +160,19 @@
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true" token="true"/>
 			</xsl:for-each>
-
+			
+			<xsl:choose>
+            	<xsl:when test="count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'historicalArchive']) > 0">
+            		<Field name="historicalArchive" string="y" store="true" index="true"/>
+            	</xsl:when>
+            	<xsl:otherwise>
+            		<Field name="historicalArchive" string="n" store="true" index="true" />
+            	</xsl:otherwise>
+            </xsl:choose>
+	            
             <xsl:for-each select="gmd:status/gmd:MD_ProgressCode/@codeListValue">
 				<Field name="statusProgressCode" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
-
 
 			<xsl:for-each select="che:basicGeodataID/gco:CharacterString">
 				<Field name="basicgeodataid" string="{string(.)}" store="true" index="true" token="false"/>

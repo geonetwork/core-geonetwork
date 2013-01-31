@@ -320,6 +320,15 @@ Ext.onReady(function() {
 
     GeoNetwork.Settings.GeoserverUrl = geoserverUrl;
 
+    // Swisstopo specific
+    var catalog_store = geoNetworkStores["sources_groups"];
+    for (i = 0; i < catalog_store.length; i++) {
+        var el = catalog_store[i];
+        var index = el[0].indexOf("/");
+        if (index > 0) {
+            catalog_store[i][0] = el[0].substring(index + 1);
+        }
+    }
     GeoNetwork.Settings.Stores = geoNetworkStores;
 
     // Language handling

@@ -223,6 +223,13 @@ function showAdvancedSearch() {
         show(Ext.getCmp("isTemplate").el.parent().parent().parent(), true);
         show(Ext.getCmp("isValid").el.parent().parent().parent(), true);
     }
+    // Restore map restrictions
+    Ext.each(Ext.query("input[name=G_whereType]"), function(el) {
+        if (el.checked && Ext.getCmp(el.id)) {
+            Ext.getCmp(el.id).setValue(false);
+            Ext.getCmp(el.id).setValue(true);
+        }
+    });
 }
 
 function hideAdvancedSearch() {
@@ -230,6 +237,14 @@ function hideAdvancedSearch() {
     hide('hide-advanced');
     hide(Ext.getCmp('advanced-search-options-content-form'));
     show(Ext.getCmp('simple-search-options-content-form'));
+
+    // Restore map restrictions
+    if (app.mapApp && app.mapApp.getMap()) {
+        var el = Ext.getCmp("kantoneComboBox");
+        if (el) {
+            el.fireEvent("change", el);
+        }
+    }
 }
 
 /**

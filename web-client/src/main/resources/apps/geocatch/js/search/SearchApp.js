@@ -89,6 +89,9 @@ GeoNetwork.searchApp = function() {
 
             var searchForm = this.getSearchForm();
 
+            geocat.vectorLayer.removeAllFeatures();
+            app.mapApp.getMap().zoomToMaxExtent();
+
             searchForm.fireEvent('reset');
         },
 
@@ -179,7 +182,7 @@ GeoNetwork.searchApp = function() {
                     }
                 }
             });
-
+            
             var fieldKantone = this.getKantoneCombo(true).combo;
 
             var hidden = new Ext.form.TextField({
@@ -425,6 +428,29 @@ GeoNetwork.searchApp = function() {
                 cls : "compressedFieldSet",
                 items : f
             } ];
+            
+            var fieldArchivedGeoData = new Ext.form.ComboBox({
+                fieldLabel : 'Geodata',
+                name : 'E1.0_historicalArchive',
+                store : this.getArchivedStore(),
+                mode : 'local',
+                displayField : 'name',
+                valueField : 'id',
+                value : '',
+                hideTrigger : true,
+                forceSelection : true,
+                editable : false,
+                triggerAction : 'all',
+                selectOnFocus : true,
+                anchor : '-10',
+                listeners : {
+                    keyup : function(e, a) {
+                        if (a.ENTER == a.keyCode) {
+                            app.searchApp.fireSearch();
+                        }
+                    }
+                }
+            });
             var c = [ this.getTypeCombo() ];
             c = c.concat([
                     {
@@ -459,7 +485,7 @@ GeoNetwork.searchApp = function() {
                         id : "toPublish",
                         name : "B_toPublish",
                         hidden : !catalogue.isIdentified()
-                    } ]);
+                    }, fieldArchivedGeoData ]);
 
             d.push({
                 xtype : "fieldset",
@@ -540,6 +566,7 @@ GeoNetwork.searchApp = function() {
                                     },
                                     items : [
                                             {
+                                                id : "none_where",
                                                 inputValue : "none",
                                                 boxLabel : OpenLayers
                                                         .i18n("wherenone"),
@@ -550,6 +577,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "bbox_where",
                                                 inputValue : "bbox",
                                                 boxLabel : OpenLayers
                                                         .i18n("bbox"),
@@ -559,6 +587,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "gg25_where",
                                                 inputValue : "gg25",
                                                 boxLabel : OpenLayers
                                                         .i18n("adminUnit"),
@@ -568,6 +597,7 @@ GeoNetwork.searchApp = function() {
                                                 }
                                             },
                                             {
+                                                id : "polygon_where",
                                                 inputValue : "polygon",
                                                 boxLabel : OpenLayers
                                                         .i18n("drawOnMap"),
@@ -653,7 +683,7 @@ GeoNetwork.searchApp = function() {
                     anchor : '-10',
                     postfix : "T00:00:00",
                     enableKeyEvents : true,
-                    name : "E_extTo",
+                    name : "E_extFrom",
                     listeners : {
                         keyup : function(e, a) {
                             if (a.ENTER == a.keyCode) {
@@ -668,7 +698,7 @@ GeoNetwork.searchApp = function() {
                     postfix : "T23:59:59",
                     enableKeyEvents : true,
                     anchor : '-10',
-                    name : "E_extFrom",
+                    name : "E_extTo",
                     listeners : {
                         keyup : function(e, a) {
                             if (a.ENTER == a.keyCode) {
@@ -699,7 +729,7 @@ GeoNetwork.searchApp = function() {
                 },
                 items : [ new Ext.ux.form.SuperBoxSelect({
                     fieldLabel : OpenLayers.i18n("catalog"),
-                    name : "[V_",
+                    name : "[V__catalog",
                     store : GeoNetwork.Settings.Stores['sources_groups'],
                     displayField : 'label',
                     valueField : 'name',
@@ -861,6 +891,15 @@ GeoNetwork.searchApp = function() {
                         e.setVisible(false);
                         app.mapApp.getMap().events.unregister("moveend", null,
                                 geocat.highlightGeographicFilter);
+                        
+                        var combos = Ext.query("input", Ext.get(adminBorders).dom);
+                        
+                        Ext.each(combos, function(combo){
+                            var e = Ext.getCmp(combo.id);
+                            if(e && e.getValueEx().length > 0){
+                                e.fireEvent("change", e);
+                            }
+                        });
                         break;
                     case "polygon":
                         d.setVisible(false);
@@ -1020,6 +1059,7 @@ GeoNetwork.searchApp = function() {
             var p = new Ext.ux.form.SuperBoxSelect(config);
             var o = function(w) {
                 geocat.vectorLayer.removeAllFeatures();
+                app.mapApp.getMap().zoomToMaxExtent();
                 var format = new OpenLayers.Format.WKT();
 
                 Ext.each(w.usedRecords.items, function(q) {
@@ -1039,6 +1079,7 @@ GeoNetwork.searchApp = function() {
             };
             p.on("change", o);
             p.on("removeitem", o);
+            p.on("reset", o);
             return {
                 combo : p,
                 store : c,
@@ -1136,6 +1177,18 @@ GeoNetwork.searchApp = function() {
                                         OpenLayers.i18n('service-OGC:WMS') ],
                                 [ 'service-OGC:WFS',
                                         OpenLayers.i18n('service-OGC:WFS') ] ]
+                    });
+        },
+        
+        getArchivedStore : function(defaultValue) {
+            return new Ext.data.ArrayStore(
+                    {
+                        id : 0,
+                        fields : [ 'id', 'name' ],
+                        data : [
+                                [ '', OpenLayers.i18n('includearchived') ],
+                                [ 'n',OpenLayers.i18n('excludearchived') ],
+                                [ 'y',OpenLayers.i18n('onlyarchived') ] ]
                     });
         },
 

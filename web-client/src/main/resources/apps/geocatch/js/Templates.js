@@ -139,6 +139,7 @@ GeoNetwork.Geocatch.Templates.TITLE =
         <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
         <tpl if="isdataset==true"><img src="{[catalogue.URL]}/images/dataset.gif" title="dataset" alt="dataset"/></tpl>\
         <tpl if="isservice==true"><img src="{[catalogue.URL]}/images/service.gif" title="service" alt="service"/></tpl>\
+        <tpl if="historicalArchive==true"><img src="{[catalogue.URL]}/apps/geocatch/images/archived.png" title="archive" alt="archive"/></tpl>\
         <span class="md-action-menu"> - <a rel="mdMenu">&nbsp;</a></span>\
     </h1>';
 

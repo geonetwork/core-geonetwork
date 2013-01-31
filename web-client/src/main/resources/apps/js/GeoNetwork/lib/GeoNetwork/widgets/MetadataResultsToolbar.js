@@ -139,11 +139,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 text : '&lt;&lt;',
                 handler : function() {
                     var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    if(from < 0)
+                        from = 0;
                     if (from > 0) {
                         catalogue.startRecord = from;
-                        catalogue
-                            .search(
-                                'advanced-search-options-content-form',
+                        //Swisstopo specific
+                        catalogue.search(
+                                app.searchApp.getSearchForm().id,
                                 app.searchApp.loadResults,
                                 null,
                                 catalogue.startRecord,
@@ -161,8 +163,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text : '&gt;&gt;',
             handler : function() {
                 catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                //Swisstopo specific
                 catalogue.search(
-                    'advanced-search-options-content-form',
+                    app.searchApp.getSearchForm().id,
                     app.searchApp.loadResults, null,
                     catalogue.startRecord, true);
             },
@@ -299,6 +302,18 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
+        this.notifyByMailAction = new Ext.Action({
+            text: OpenLayers.i18n('sendmail'),
+            id: 'notifyByMailAction',
+            handler: function() {
+            	Ext.Ajax.request({
+         		   url: catalogue.services.notifyByMail
+            	});
+            },
+            scope: this,
+            hidden: hide
+        });
+        
         this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
@@ -339,9 +354,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });*/
         
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+        this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
         
+        this.actionMenu.addItem(this.notifyByMailAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);

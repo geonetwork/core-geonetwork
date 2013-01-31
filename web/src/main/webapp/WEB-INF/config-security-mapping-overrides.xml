@@ -114,7 +114,10 @@
 			    <sec:intercept-url pattern="/srv/.*/download.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/trigger.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			    
-          <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"></sec:intercept-url>
+			    <!-- Notification on selection -->
+                <sec:intercept-url pattern="/srv/.*/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                
+                <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"></sec:intercept-url>
 
 			    <sec:intercept-url pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			</sec:filter-security-metadata-source>

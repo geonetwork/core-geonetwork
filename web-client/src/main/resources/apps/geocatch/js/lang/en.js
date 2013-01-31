@@ -32,6 +32,10 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
 
+	'includearchived': 'Include archived',
+	'excludearchived': 'Exclude archived',
+	'onlyarchived': 'Only archived',
+
 	'withinGeo': 'Completely within or equal',
 	'intersectGeo': 'Intersects',
 	'containsGeo': 'Contains at least',
@@ -79,7 +83,10 @@ GeoNetwork.GeoCatCh.Lang.en = {
     'topicCat' : 'category',
 	'topicCats' : 'Categories',
 	'denominator' : 'spatial resolution',
-	'denominators' : 'Spatial Resolution'
+	'denominators' : 'Spatial Resolution',
+	'sendmail' : 'Send email',
+    'country': 'Country',
+    'city': 'City'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);

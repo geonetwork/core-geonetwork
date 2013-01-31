@@ -169,6 +169,7 @@
             
             <script>
                 var geonetMask = Ext.getBody().mask("<xsl:value-of select="/root/gui/strings/loading"/>");
+                geonetMask.setStyle("opacity", "1");
             </script>
                     <!--[if lt IE 7]> <p class="chromeframe">You are using an outdated browser.
                              <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install
