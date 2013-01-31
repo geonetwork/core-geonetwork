@@ -60,7 +60,7 @@ public class Unpublish implements Service {
 	            dbms.execute("DELETE FROM operationallowed WHERE metadataid = ? and (groupid = 1 or groupid = -1)", Integer.valueOf(id));
 	            
 	            dbms.execute("INSERT INTO publish_tracking (uuid, entity, validated, published, failurerule) VALUES (?,?,?,?,?)", uuid,
-	                    "Administrator", 'n', 'n', "manual unpublish by administrator");
+	                    "Administrator", 'y', 'n', "manual unpublish by administrator");
 	            
 	            Element retchildserv = new Element("unpublished");
 	            retchildserv.setAttribute("uuid", uuid);
