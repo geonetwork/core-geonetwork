@@ -161,15 +161,26 @@
 											  	</select>
 											  	<div>
 											  	<script language="JavaScript" type="text/javascript">
+											  	function twoChar(time, inc) {
+											  	  if (inc) {
+											  	    time = time + 1;
+											  	  }
+											  	  
+											  	  if(time &lt; 10) {
+											  	  	return "0"+time;
+											  	  } else {
+											  	    return ''+time;
+											  	  } 
+											  	}
 											  	function expiredSearch() {
 											  		var url = '<xsl:value-of select="/root/gui/config/client/@url"/>';
 											  		var stateId = '<xsl:value-of select="/root/gui/config/client/@stateId"/>';
 											  		var fromMillis = parseInt($('expired').value) * parseInt($F('expired.unit')) * 60 * 60 * 1000;
 											  		var now = new Date();
 											  		var from = new Date(now - fromMillis);
-											  		var fromParam = '&amp;dateFrom='+from.getFullYear()+'-'+from.getMonth()+'-'+from.getDay();
-											  		var toParam = '&amp;dateTo='+now.getFullYear()+'-'+now.getMonth()+'-'+now.getDay();
-											  		var href = url+'?hl='+Env.lang+'&amp;s_search&amp;'+stateId+fromParam+toParam;
+											  		var fromParam = '&amp;dateFrom='+from.getFullYear()+'-'+twoChar(from.getMonth(), true)+'-'+twoChar(from.getDate());
+											  		var toParam = '&amp;dateTo='+now.getFullYear()+'-'+twoChar(now.getMonth(), true)+'-'+twoChar(now.getDate());
+											  		var href = url+'?hl='+Env.lang+'&amp;s_search'+fromParam+toParam;
 											  		window.location = href;
 											  	}
 											  	</script>
