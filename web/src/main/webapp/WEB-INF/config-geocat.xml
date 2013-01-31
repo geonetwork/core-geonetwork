@@ -4,7 +4,7 @@
 	<services package="org.fao.geonet">
 
 
-        <service name="geocatui">
+        <service name="geocat">
             <output sheet="geocat_widgetui.xsl">
                 <call name="groups" class=".guiservices.groups.GetAll" />
                                 <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
@@ -32,7 +32,7 @@
             </output>
         </service>
 
-        <service name="geocat">
+        <service name="oldgeocat">
             <output sheet="geocat.xsl">
             	<call name="groups" class=".guiservices.groups.GetAll" />
 				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
