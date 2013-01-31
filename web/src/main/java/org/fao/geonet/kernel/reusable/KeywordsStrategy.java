@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -163,16 +164,32 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     private KeywordsSearcher search(String keyword) throws Exception
     {
-    	KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
-    	builder.addThesaurus(GEOCAT_THESAURUS_NAME)
-    		.addThesaurus(NON_VALID_THESAURUS_NAME)
-    		.addLang("eng")
-    		.addLang("ger")
-    		.addLang("fre")
-    		.addLang("ita")
-    		.maxResults(1)
-    		.keyword(keyword, KeywordSearchType.MATCH, true);
-    		
+        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
+        builder.addLang("eng")
+            .addLang("ger")
+            .addLang("fre")
+            .addLang("ita")
+            .maxResults(1)
+            .keyword(keyword, KeywordSearchType.MATCH, true);
+        
+        Collection<Thesaurus> thesauri = new ArrayList<Thesaurus>(_thesaurusMan.getThesauriMap().values());
+        for (Iterator<Thesaurus> iterator = thesauri.iterator(); iterator.hasNext();) {
+            Thesaurus thesaurus = iterator.next();
+            String type = thesaurus.getType();
+            
+            if (type.equals("external")) {
+                builder.addThesaurus(thesaurus.getKey());
+                iterator.remove();
+            } else if (thesaurus.getKey().equals(NON_VALID_THESAURUS_NAME)) {
+                iterator.remove();
+            }
+        }
+
+        for (Thesaurus thesaurus : thesauri) {
+            builder.addThesaurus(thesaurus.getKey());
+        }
+        
+        builder.addThesaurus(NON_VALID_THESAURUS_NAME);
 
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
