@@ -62,14 +62,13 @@ public class KeywordSearchParams {
         List<KeywordBean> results = new ArrayList<KeywordBean>();
         int id = 0;
 
-        for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
+        for (String thesaurusName : thesauriNames) {
+            Thesaurus thesaurus = finder.getThesauriMap().get(thesaurusName);
             Query<KeywordBean> query = queryBuilder.limit(maxResults-results.size()).build();
-            if(thesauriNames.contains(thesaurus.getKey())) {
-                for (KeywordBean keywordBean : query.execute(thesaurus)) {
-                    keywordBean.setId(id);
-                    results.add(keywordBean);
-                    id++;
-                }
+            for (KeywordBean keywordBean : query.execute(thesaurus)) {
+                keywordBean.setId(id);
+                results.add(keywordBean);
+                id++;
             }
         }
         return results;
