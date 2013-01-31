@@ -56,41 +56,12 @@ attached it to the metadata for data.
                             <xsl:copy-of
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
                             
-                            <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor">
-                                <gmd:distributor>
-                                    <gmd:MD_Distributor>
-                                        <xsl:copy-of select="gmd:MD_Distributor/gmd:distributorContact"/>
-                                        <xsl:copy-of select="gmd:MD_Distributor/gmd:distributorTransferOptions"/>
-                                        
-                                        <xsl:variable name="email" select="normalize-space(gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty/
-                                            gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress)"/>
-                                        
-                                        <!-- Add extra onlineSource in requested metadata where contact is matching
-                                        current distribution section in existing section-->
-                                        
-                                        <gmd:distributorTransferOptions>
-                                            <gmd:MD_DigitalTransferOptions>
-                                                    <xsl:for-each select="//extra/gmd:MD_Metadata[normalize-space(
-                                                        gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                                                        gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
-                                                        gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString) = $email
-                                                        ]/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine">
-                                                    <xsl:apply-templates mode="onlinecopy" select="."/>
-                                                </xsl:for-each>
-                                            </gmd:MD_DigitalTransferOptions>
-                                        </gmd:distributorTransferOptions>
-                                    </gmd:MD_Distributor>
-                                </gmd:distributor>
-                            </xsl:for-each>
+                            <xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
                             
                             <!-- Copy non existing ressource attached to one responsible party  -->
-                            <xsl:for-each-group select="//extra/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                                gmd:citedResponsibleParty" group-by="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
-                                gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
-                                <xsl:call-template name="onlinecopy">
-                                    <xsl:with-param name="email" select="current-grouping-key()"/>
-                                </xsl:call-template>
-                            </xsl:for-each-group>
+                            <xsl:for-each select="//extra/gmd:MD_Metadata">
+                                <xsl:call-template name="onlinecopy"/>
+                            </xsl:for-each>
                             
                             <!-- Not used in MyOcean
                             <gmd:transferOptions>
@@ -167,38 +138,22 @@ attached it to the metadata for data.
     
     <!-- Copy dataset distributor -->
     <xsl:template name="onlinecopy">
-        <xsl:param name="email"/>
-        
-        <xsl:if test="count(/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
-            gmd:distributor/gmd:MD_Distributor/gmd:distributorContact/gmd:CI_ResponsibleParty
-            [gmd:contactInfo/gmd:CI_Contact/
-            gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email]) = 0">
-            <gmd:distributor>
-                <gmd:MD_Distributor>
-                    <gmd:distributorContact>
-                        <xsl:for-each select="//extra/gmd:MD_Metadata/
-                            gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                            gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:contactInfo/gmd:CI_Contact/
-                            gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email]">
-                            <xsl:if test="position() = 1">
-                                <xsl:copy-of select="."/>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </gmd:distributorContact>
-                    <gmd:distributorTransferOptions>
-                        <gmd:MD_DigitalTransferOptions>
-                            <!-- Add all online source from the target metadata to the
-                                    current one for the current user -->
-                            <xsl:apply-templates mode="onlinecopy" select="//extra/gmd:MD_Metadata[
-                                gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                                gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
-                                gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString = $email
-                                ]/gmd:distributionInfo//gmd:onLine"/>
-                        </gmd:MD_DigitalTransferOptions>
-                    </gmd:distributorTransferOptions>
-                </gmd:MD_Distributor>
-            </gmd:distributor>
-        </xsl:if>
+    
+        <gmd:distributor>
+            <gmd:MD_Distributor>
+                <gmd:distributorContact>
+                    <xsl:copy-of select="
+                        gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+                        gmd:citedResponsibleParty/gmd:CI_ResponsibleParty"/>
+                </gmd:distributorContact>
+                <gmd:distributorTransferOptions>
+                    <gmd:MD_DigitalTransferOptions>
+                        <xsl:apply-templates mode="onlinecopy" select="
+                            gmd:distributionInfo//gmd:onLine"/>
+                    </gmd:MD_DigitalTransferOptions>
+                </gmd:distributorTransferOptions>
+            </gmd:MD_Distributor>
+        </gmd:distributor>
     </xsl:template>
     
     
