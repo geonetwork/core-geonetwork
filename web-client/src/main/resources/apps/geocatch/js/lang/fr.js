@@ -93,6 +93,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'denominators' : 'Résolution spatiale',
 	'denominator' : 'résolution spatiale',
 	'sendmail' : 'Envoyer un mail',
+	'unpublishSlection' : 'Dépublier la sélection',
     'country': 'Pays',
     'city': 'Ville'
 };

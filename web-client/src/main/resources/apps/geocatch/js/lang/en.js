@@ -85,6 +85,7 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'denominator' : 'spatial resolution',
 	'denominators' : 'Spatial Resolution',
 	'sendmail' : 'Send email',
+	'unpublishSlection' : 'Unpublish the selection',
     'country': 'Country',
     'city': 'City'
 };

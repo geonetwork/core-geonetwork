@@ -386,6 +386,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             logoUrl : this.URL + '/images/logos/',
             imgUrl : this.URL + '/images/',
             harvesterLogoUrl : this.URL + '/images/harvesting/',
+            unpublishSelection : serviceUrl + 'metadata.select.unpublish',
             notifyByMail : serviceUrl + 'metadata.select.notifybymail'
         };
 

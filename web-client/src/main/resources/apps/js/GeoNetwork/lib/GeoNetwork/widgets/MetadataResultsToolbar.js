@@ -106,6 +106,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     createMetadataAction: undefined,
     
+    unpublishSelectionAction : undefined,
+    
+    notifyByMailAction : undefined,
+    
     newMetadataWindow: undefined,
     
     mdImportAction: undefined,
@@ -313,6 +317,17 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
+        this.unpublishSelectionAction = new Ext.Action({
+            text: OpenLayers.i18n('unpublishSlection'),
+            id: 'unpublishSelectionAction',
+            handler: function() {
+            	Ext.Ajax.request({
+         		   url: catalogue.services.unpublishSelection
+            	});
+            },
+            scope: this,
+            hidden: hide
+        });
         
         this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
@@ -354,10 +369,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });*/
         
-        this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.ownerAction, this.updateCategoriesAction, 
+        this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.unpublishSelectionAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.notifyByMailAction);
+        this.actionMenu.addItem(this.unpublishSelectionAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);

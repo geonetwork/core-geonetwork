@@ -450,6 +450,13 @@
 				<param name="bodyError" value="Error when sending mail : {0}" />
 			</class>
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="metadata.select.unpublish">
+			<class name=".services.selection.Unpublish">
+			</class>
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
