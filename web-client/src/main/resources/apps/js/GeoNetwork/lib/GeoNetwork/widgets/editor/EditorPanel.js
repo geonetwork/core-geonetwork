@@ -40,21 +40,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     border: false,
     editUrl: undefined,
     updateUrl: undefined,
-    
-    /**
-     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
-     */
-    selectionPanelImgPath: undefined,
-    
     frame: false,
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
-    
-    /**
-     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
-     */
-    selectionPanelImgPath: undefined,
-
     defaultConfig: {
     	/** api: config[defaultViewMode] 
          *  Default view mode to open the editor. Default to 'simple'.
@@ -63,13 +51,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         defaultEditMode: 'simple',
         editMode: null,
         defaultViewMode: 'simple',
+        /**
+         * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
+         */
         selectionPanelImgPath: '../js/ext-ux/images',
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
          *  instead of keyword selection popup.
          */
         thesaurusButton: true,
-    	selectionPanelImgPath: '../js/ext-ux/MultiselectItemSelector-3.0/icons',
         layout: 'border',
         height: 800,
         /** api: config[xlinkOptions] 

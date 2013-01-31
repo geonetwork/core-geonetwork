@@ -50,16 +50,12 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     /**
      * relative imagePath for ItemSelector
      */
-    imagePath: undefined,
+    imagePath: '../../apps/js/ext-ux/images',
     
     subTemplateStore: undefined,
     codeListStore: undefined,
     metadataSchema: undefined,
     subTplTypeField: undefined,
-    /**
-     * relative imagePath for ItemSelector
-     */
-    imagePath: undefined,
     
     /**
      * Property: itemSelector

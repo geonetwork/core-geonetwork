@@ -163,7 +163,7 @@ cat.app = function() {
 				defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
 				editMode : GeoNetwork.Settings.editor.editMode,
 				defaultViewMode : GeoNetwork.Settings.editor.defaultViewMode,
-				selectionPanelImgPath: cat.libPath + '/ext-ux/MultiselectItemSelector-3.0/icons',
+				selectionPanelImgPath: cat.libPath + '/ext-ux/images',
 				catalogue : catalogue,
 				xlinkOptions : {
 					CONTACT : true
