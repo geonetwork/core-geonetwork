@@ -78,6 +78,7 @@
 		
 			    <sec:intercept-url pattern="/srv/.*/mapfish!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/geocat!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/oldgeocat!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/cgp!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/gm03.xml!?.*" access="permitAll"></sec:intercept-url>
 			    <sec:intercept-url pattern="/srv/.*/gm03small.xml!?.*" access="permitAll"></sec:intercept-url>

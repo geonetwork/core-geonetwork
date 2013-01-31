@@ -28,15 +28,19 @@ public class OrSpatialFilter extends SpatialFilter {
         this.filters = filters;
     }
 
-    private static final long serialVersionUID = 1L;
-
     @Override
-    public Filter createGeomFilter(FilterFactory2 filterFactory, PropertyName geomPropertyName, Literal geomExpression) {
+    protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source) {
         List<Filter> ops = new ArrayList<Filter>(filters.size());
         
         for (SpatialFilter sfilter : filters) {
-            ops.add(sfilter.createGeomFilter(filterFactory, geomPropertyName, geomExpression));
+            ops.add(sfilter.createFilter(source));
         }
-        return filterFactory.or(ops);
+        return _filterFactory.or(ops);
+
+    }
+    
+    @Override
+    public Filter createGeomFilter(FilterFactory2 filterFactory, PropertyName geomPropertyName, Literal geomExpression) {
+        throw new UnsupportedOperationException();
     }
 }
