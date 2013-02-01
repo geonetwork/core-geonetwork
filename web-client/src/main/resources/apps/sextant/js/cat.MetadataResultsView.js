@@ -199,9 +199,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	
         	// Hide button if doesn't contain any element
         	// Unable button if elements have class dynamic-false (no privilege)
-        	var a = Ext.DomQuery.jsSelect('div.wmsLink', lis[i]);
+        	var geoviewerrurl = Ext.query('input[id*=configgeoviewerurl]');
+    		var a = Ext.DomQuery.jsSelect('div.wmsLink', lis[i]);
         	var elMenu = Ext.get(wmsMenu);
-        	if(a && a.length > 0) {
+        	if(a && a.length > 0 && 
+        			geoviewerrurl && geoviewerrurl[0] && geoviewerrurl[0].value) {
+        		
         		elMenu.removeClass('mdHiddenBtn');
         		if(Ext.get(a[0]).hasClass('dynamic-false')) {
         			elMenu.addClass('unabled');
@@ -212,10 +215,13 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	} else {
         		elMenu.addClass('mdHiddenBtn');
         	}
-        	
+
+        	var panierurl = Ext.query('input[id*=configpanierurl]');
         	a = Ext.DomQuery.jsSelect('div.downloadLink', lis[i]);
         	elMenu = Ext.get(downloadMenu);
-        	if(a && a.length > 0) {
+        	if(a && a.length > 0 && 
+        			panierurl && panierurl[0] && panierurl[0].value) {
+        		
         		elMenu.removeClass('mdHiddenBtn');
         		if(Ext.get(a[0]).hasClass('download-false')) {
         			elMenu.addClass('unabled');

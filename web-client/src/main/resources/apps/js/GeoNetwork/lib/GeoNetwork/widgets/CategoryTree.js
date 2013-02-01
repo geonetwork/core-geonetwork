@@ -10,6 +10,8 @@ Ext.namespace('GeoNetwork');
  *     Create a tree from Categories
  *     (tree will be formated following '/' character as delimiter)
  *     
+ *     @author : fgravin
+ *     
  */
 GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     
@@ -181,7 +183,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      */
     reset: function() {
     	Ext.each(this.getChecked(), function(node) {
-    		node.getUI().toggleCheck();
+    		node.getUI().toggleCheck(false);
     	});
     }
 });
@@ -199,13 +201,29 @@ GeoNetwork.CategoryTreeNode = Ext.extend(Ext.tree.TreeNode, {
 		
         GeoNetwork.CategoryTreeNode.superclass.constructor.apply(this, arguments);
         
-        this.on({
-            'checkchange': this.toggleCheck,
-            scope: this
-        });
+        this.on('checkchange', this.toggleCheck,this);
+    },
+    
+    /**
+     * Recursive method to check parent node if one children node is checked
+     * Event of the parentnode are disable to avoid infinite loop
+     */
+    checkParent: function() {
+    	if(!this.parentNode.getUI().isChecked()) {
+    		this.parentNode.purgeListeners();
+        	if(this.parentNode && this.parentNode.checkParent) {
+        		this.parentNode.getUI().toggleCheck(true);
+        		this.parentNode.checkParent();
+        	}
+        	this.parentNode.on('checkchange', this.toggleCheck,this);
+    	}
     },
     
     toggleCheck: function(n,c) {
+    	if(c) {
+    		n.checkParent();
+    	}
+    	
 		Ext.each(n.childNodes, function(child){
 			child.getUI().toggleCheck(c);
 		});
