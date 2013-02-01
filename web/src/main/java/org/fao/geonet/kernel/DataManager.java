@@ -1750,6 +1750,10 @@ public class DataManager {
 			        Processor.detachXLink(md,srvContext);
 			    }
 			}
+	                     if( getMetadataSchema(dbms, id).equals("iso19139.che")) {
+	                            md = Xml.transform(md, stylePath+"add-charstring.xsl");
+	                        }
+
 		}
 
         if (elementsHide) {
