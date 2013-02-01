@@ -7,7 +7,7 @@
         http://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices </documentation>
       <class name=".services.metadata.Show">
         <param name="addRefs" value="n"/>
-        <param name="cache" value="y"/>
+        <!--<param name="cache" value="y"/>-->
 		<!--<param name="isExport" value="y" />-->
 	  </class>
       <output sheet="metadata/view/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
