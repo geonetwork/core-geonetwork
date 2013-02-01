@@ -171,7 +171,11 @@ function get_cookie ( cookie_name )
 // Navigation
 	function goBack()
 	{
-		history.back();
+		if(history.length > 1) {
+		  history.back();
+		} else if (confirm(translate('closeWindow')+'?')) { 
+ 		  window.close();
+		}
 	}
 
 	function processCancel() {
