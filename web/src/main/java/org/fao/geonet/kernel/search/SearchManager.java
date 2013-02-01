@@ -691,13 +691,12 @@ public class SearchManager {
 	 */
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title)
             throws Exception {
-        deleteIndexDocument(id, false);
-        
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
         List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
+        _indexWriter.deleteDocuments(new Term("_id", id));
         for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
             _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
@@ -709,6 +708,7 @@ public class SearchManager {
     private void indexGeometry(String schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {
+            _spatial.writer().delete(id);
             _spatial.writer().index(schemaDir, id, metadata);
         } catch (Exception e) {
             Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
@@ -736,7 +736,7 @@ public class SearchManager {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
 		_indexWriter.deleteDocuments(new Term(fld, txt));
-
+		
 		_spatial.writer().delete(txt);
 	}
 	

@@ -15,7 +15,6 @@
 		<xsl:param name="validationLink"/>
 		<xsl:param name="id"/>
 
-		
 		<span id="buttons_{$id}">
 			<xsl:if test="geonet:*/@ref">
 				<a name="{concat('_', geonet:*/@ref)}"/>

@@ -91,6 +91,10 @@ function displayXLinkSearchBox(ref, name, action, id, replacement, max) {
     xl.href = null;
     xlinks = [xl];
     
+    if(!name || name === '') {
+      name = id.split("_")[0];
+    }
+    
     // store the variables of the request for use by the Create button
     dialogRequest.action = action;
     dialogRequest.ref = ref;

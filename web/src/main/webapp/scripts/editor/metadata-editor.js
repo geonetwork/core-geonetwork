@@ -278,12 +278,16 @@ function swapControls(el1,el2)
     var el1Descs = getControlsFromElement(el1);
 	var el2Descs = getControlsFromElement(el2);
 	for (var index = 0; index < el1Descs.length; ++index) {
-	 var visible1 = el1Descs[index].visible();
-	 var visible2 = el2Descs[index].visible();
-	 if (visible1) el2Descs[index].show();
-	 else el2Descs[index].hide();
-	 if (visible2) el1Descs[index].show();
-	 else el1Descs[index].hide();
+	 var visible1 = el1Descs[index] && el1Descs[index].visible();
+	 var visible2 = el2Descs[index] && el2Descs[index].visible();
+	 if(el2Descs[index]) {
+	   if (visible1) el2Descs[index].show();
+  	 else el2Descs[index].hide();
+   }
+	 if(el1Descs[index]) {
+	   if (visible2) el1Descs[index].show();
+  	 else el1Descs[index].hide();
+   }
 	}
 }
 
