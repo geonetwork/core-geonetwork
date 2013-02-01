@@ -4,6 +4,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:util="java:org.fao.geonet.util.XslUtil"
     >
     
     <xsl:output method="xml"/>
@@ -21,7 +22,7 @@
 	                <gmd:PT_FreeText>
 	                    <xsl:for-each select="value">
 	                        <gmd:textGroup>
-	                            <gmd:LocalisedCharacterString locale="#{substring(@lang,1,2)}"
+	                            <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode(@lang))}"
 	                                ><xsl:value-of select="."/></gmd:LocalisedCharacterString>
 	                        </gmd:textGroup>
 	                    </xsl:for-each>
@@ -35,8 +36,18 @@
                 <xsl:if test="thesaurus!=''">
                 	<gmd:thesaurusName>
                 		<gmd:CI_Citation>
-                			<gmd:title>
-                				<gco:CharacterString><xsl:value-of select="thesaurus"/></gco:CharacterString>
+                			<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                				<gco:CharacterString><xsl:value-of select="thesaurus/key"/></gco:CharacterString>
+               					<xsl:if test="thesaurus/title">
+               						<gmd:PT_FreeText>
+					                    <xsl:for-each select="thesaurus/title">
+					                        <gmd:textGroup>
+					                            <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode(@lang))}"
+					                                ><xsl:value-of select="."/></gmd:LocalisedCharacterString>
+					                        </gmd:textGroup>
+					                    </xsl:for-each>
+					                </gmd:PT_FreeText>
+               					</xsl:if>
                 			</gmd:title>
                 			<gmd:date gco:nilReason="missing"/>
                			</gmd:CI_Citation>

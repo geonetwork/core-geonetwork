@@ -26,9 +26,14 @@ import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
+
+import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.httpclient.URIException;
@@ -536,10 +541,11 @@ public class KeywordBean {
 
 	/**
      * Create a xml node for the current Keyword
+	 * @param context 
      *
      * @return
      */
-    public Element toElement(String defaultLang, String... langs) {
+	public Element toElement(ThesaurusFinder finder, ServiceContext context, String defaultLang, String... langs) throws JDOMException, IOException {
         defaultLang = to3CharLang(defaultLang);
         List<String> prioritizedList = new ArrayList<String>();
         prioritizedList.add(defaultLang);
@@ -593,7 +599,15 @@ public class KeywordBean {
         if (thesaurusType.contains("-"))
             thesaurusType = thesaurusType.split("-")[1];
         elKeyword.setAttribute("type", thesaurusType);
-        Element elthesaurus = new Element("thesaurus").setText(this.getThesaurusKey());
+        Thesaurus thesaurus = finder.getThesaurusByName(getThesaurusKey());
+        Element elthesaurus = new Element("thesaurus");
+        if(thesaurus != null) {
+            Set<Entry<String, String>> titles = thesaurus.getTitles(context).entrySet();
+            for (Entry<String, String> entry : titles) {
+                elthesaurus.addContent(new Element("title").setAttribute("lang", entry.getKey()).setText(entry.getValue()));
+            }
+        }
+        elthesaurus.addContent(new Element("key").setText(this.getThesaurusKey()));
 
         // Geo attribute
         if (this.getCoordEast() != null && this.getCoordWest() != null

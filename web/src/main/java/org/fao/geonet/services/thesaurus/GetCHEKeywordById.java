@@ -26,7 +26,6 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
@@ -84,7 +83,7 @@ public class GetCHEKeywordById implements Service {
 		if (kb == null)
 			return response;
 		else {
-			Element element = kb.toElement(lang, langs);
+			Element element = kb.toElement(thesaurusMan, context, lang, langs);
 			return response.addContent(element);
 		}
 	}
