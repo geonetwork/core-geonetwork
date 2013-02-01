@@ -124,7 +124,7 @@
 		che:CHE_MD_Association/che:name[gco:CharacterString]|
 		che:CHE_MD_Class/che:name[gco:CharacterString]|
 		che:CHE_MD_Type/che:name[gco:CharacterString]|
-		che:attribute/che:name[gco:CharacterString]|		
+		che:attribute/che:name[gco:CharacterString]|	
 		che:CHE_MD_CodeValue/che:name[gco:CharacterString]"
 		priority="100">
 		<xsl:param name="schema" />

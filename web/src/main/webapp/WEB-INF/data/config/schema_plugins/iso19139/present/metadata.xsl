@@ -4143,6 +4143,8 @@
 		gmd:administrativeArea[gco:CharacterString]|
 		gmd:voice[gco:CharacterString]|
 		gmd:facsimile[gco:CharacterString]|
+		gmd:MD_Format/gmd:version[gco:CharacterString] |	
+		gmd:MD_Format/gmd:name[gco:CharacterString] |	
 		gmd:MD_ScopeDescription/gmd:dataset[gco:CharacterString]|
 		gmd:MD_ScopeDescription/gmd:other[gco:CharacterString]|
 		gmd:hoursOfService[gco:CharacterString]|
