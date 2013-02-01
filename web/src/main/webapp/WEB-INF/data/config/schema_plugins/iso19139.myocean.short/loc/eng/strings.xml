@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <myoceanTab>MyOcean full view</myoceanTab>
+    <myocean.simpleTab>MyOcean short view</myocean.simpleTab>
+    
+    <creationDate>Creation date</creationDate>
+    
+    <!-- Section title -->
+    <identification>Identification</identification>
+    <quicklookAndKeywords>Descriptive keywords</quicklookAndKeywords>
+    <spatioTemporalCoverage>Spatio-temporal extent</spatioTemporalCoverage>
+    <processingOperation>Processing operations</processingOperation>
+    <processingSchedule>Processing Schedule</processingSchedule>
+    <org>Organisations responsible for management and processing, point of contact</org>
+    <metadataInfo>Metadata date stamps and versions</metadataInfo>
+    <metadataInfoTitle>Product identification</metadataInfoTitle>
+    <ancillaryInfo>Complementary information</ancillaryInfo>
+    <geoCoverage>Geographical extent</geoCoverage>
+    <verticalCoverage>Vertical extent</verticalCoverage>
+    <temporalCoverage>Temporal extent</temporalCoverage>
+    
+    <orgOriginator>Production center</orgOriginator>
+    <orgCustodian>Product manager</orgCustodian>
+    <orgServiceDesk>Local service desk</orgServiceDesk>
+    <slidingWindow>Sliding window of updates</slidingWindow>
+    <unknown>Unknown</unknown>
+    
+    <!-- Some hardcoded element name -->
+    <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>
+    <startDate>Start date</startDate>
+    <endDate>End date</endDate>
+    <startPeriod>Start period</startPeriod>
+    <endPeriod>End period</endPeriod>
+    <month>Months</month>
+    <day>Days</day>
+    <hour>Hours</hour>
+    <temporalResolution>Temporal resolution</temporalResolution>
+    <temporalScale>Temporal scale</temporalScale>
+    <missionType>Mission type</missionType>
+    <featureType>Feature type</featureType>
+    <areaOfBenefit>Area of benefit</areaOfBenefit>
+    <oceanVariables>Ocean variables</oceanVariables>
+    <refArea>MyOcean reference areas</refArea>
+    <processingLevel>Processing level</processingLevel>
+    
+    <orgAdd>Add organisation</orgAdd>
+    <orgCustodianAdd>Add product manager</orgCustodianAdd>
+</strings>

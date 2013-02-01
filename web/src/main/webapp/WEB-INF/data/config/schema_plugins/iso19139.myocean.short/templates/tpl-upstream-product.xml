@@ -54,7 +54,7 @@
         <gco:DateTime>2011-10-11T00:00:00+02:00</gco:DateTime>
     </gmd:dateStamp>
     <gmd:metadataStandardName>
-        <gco:CharacterString>ISO 19139, MyOcean profile</gco:CharacterString>
+        <gco:CharacterString>ISO 19139, MyOcean profile short</gco:CharacterString>
     </gmd:metadataStandardName>
     <gmd:metadataStandardVersion>
         <gco:CharacterString>0.2</gco:CharacterString>

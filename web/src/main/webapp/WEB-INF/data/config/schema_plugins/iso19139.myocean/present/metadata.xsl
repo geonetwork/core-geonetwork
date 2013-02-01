@@ -15,7 +15,7 @@
 		<xsl:variable name="isProduct" select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series'"/>
 		
 		<xsl:choose>
-			<xsl:when test="geonet:info/schema = 'iso19139.myocean'">
+			<xsl:when test="geonet:info/schema = 'iso19139.myocean' or geonet:info/schema = 'iso19139.myocean.short'">
 				<metadata>
 					
 					<Type><xsl:value-of select="if ($isProduct) then 'PRODUCT' else 'DATASET'"/></Type>
