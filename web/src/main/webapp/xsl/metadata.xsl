@@ -845,6 +845,12 @@
 					<xsl:when test="$helpLink!=''">
 						<span id="stip.{$helpLink}|{$id}" onclick="toolTip(this.id);" class="content" style="cursor:help;">
 							<xsl:value-of select="$title"/>
+							<xsl:if test="name() = 'che:individualFirstName' or name() = 'che:individualLastName'">
+								<div class="toolTipOverlay" style="display:none">
+                                  	<b><xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:individualName']/label"/></b><br></br>
+                                  	<span class="tooltipDescription"><xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:individualName']/description"/></span>
+                                </div>
+							</xsl:if>
 						</span>
 						<xsl:call-template name="asterisk">
 							<xsl:with-param name="link" select="$removeLink"/>
