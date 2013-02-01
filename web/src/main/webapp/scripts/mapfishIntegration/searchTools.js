@@ -490,7 +490,10 @@ var searchTools = {
               var chinput = Ext.get("ch03_"+ref);
               var wgsinput = Ext.get("wgs84_"+ref);
               var nativeCoordsEl = Ext.get("native_"+ref);
-              var coordText = nativeCoordsEl.dom.textContent ? nativeCoordsEl.dom.textContent : nativeCoordsEl.dom.innerText;
+              var coordText;
+              if (nativeCoordsEl && nativeCoordsEl.dom) {
+                coordText = nativeCoordsEl.dom.textContent ? nativeCoordsEl.dom.textContent : nativeCoordsEl.dom.innerText;
+              }
               
               if(!nativeCoordsEl || !coordText || coordText.split(/:|,/).slice(1,5).length < 4)  {
                 nativeCoordsEl = undefined;
