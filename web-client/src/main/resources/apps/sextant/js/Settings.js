@@ -37,6 +37,7 @@ GeoNetwork.Settings.editor = {
     // according to metadata schema
     editMode: {
         'iso19139.myocean': 'myocean',
+        'iso19139.myocean.short': 'myocean.simple',
         'iso19139.sextant': 'sextant',
         'iso19139.emodnet.chemistry': 'emodnet.chemistry',
         'iso19139.emodnet.hydrography': 'emodnet.hydrography'

@@ -104,12 +104,27 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         id: 'E__groupPublished',
                         value: 'MYOCEAN-UPSTREAM-PRODUCTS'
                     }]
+                },
+                'iso19139.myocean.short': {
+                    // and depends on codelist value
+                    // Updated when codelist change
+                    document: [{
+                        id: 'E__groupPublished',
+                        value: 'MYOCEAN-DOCUMENTS'
+                    }],
+                    upstream: [{
+                        id: 'E__groupPublished',
+                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                    }]
                 }
             },
             onlinesrc: {
                 // Depends on schema
                 // Updated when window created
                 'iso19139.myocean': {
+                    'E__groupPublished': 'MYOCEAN-SERVICES-AND-DATASETS'
+                },
+                'iso19139.myocean.short': {
                     'E__groupPublished': 'MYOCEAN-SERVICES-AND-DATASETS'
                 }
             }
