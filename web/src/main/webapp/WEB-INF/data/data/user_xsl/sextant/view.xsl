@@ -110,7 +110,7 @@
 					<td>
 						<img class="result-photo">
 							<xsl:attribute name="src">
-								<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString" />
+								<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString = 'thumbnail']/gmd:fileName/gco:CharacterString" />
 							</xsl:attribute>
 						</img>
 					</td>
