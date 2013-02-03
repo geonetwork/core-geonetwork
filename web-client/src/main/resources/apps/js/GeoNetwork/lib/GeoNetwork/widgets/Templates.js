@@ -271,3 +271,15 @@ GeoNetwork.Templates.Relation = {
                 '<tpl if="subType!=\'\'"><span class="badge relation-type">{subType}</span></tpl>',
                  '</li>']
 };
+
+GeoNetwork.Templates.KEYWORD_ITEM = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="ux-mselect-item" title="{definition}">{value}</div>',
+    '</tpl>'
+);
+
+GeoNetwork.Templates.THESAURUS_HEADER = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
+    '</tpl>'
+);
