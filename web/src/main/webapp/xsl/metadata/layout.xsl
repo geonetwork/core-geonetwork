@@ -1172,7 +1172,7 @@
             <xsl:choose>
               <xsl:when test="$isTextArea">
                 <textarea id="other_{$refId}" type="text" 
-                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true;"
+                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true; Ext.getDom('_{$refId}').value=this.value;"
                   onkeyup="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();"
                   >
                   <xsl:if test="not($valueInHelper)">
@@ -1182,7 +1182,7 @@
               </xsl:when>
               <xsl:otherwise>
                 <input id="other_{$refId}" type="text" 
-                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true;"
+                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true; Ext.getDom('_{$refId}').value=this.value;"
                   onkeyup="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();"
                   >
                   <xsl:if test="not($valueInHelper)">
