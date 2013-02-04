@@ -1,6 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:exslt="http://exslt.org/common" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" 
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  xmlns:srv="http://www.isotc211.org/2005/srv"
   xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
   xmlns:date="http://exslt.org/dates-and-times" xmlns:saxon="http://saxon.sf.net/"
@@ -55,47 +56,75 @@
     </xsl:variable>
     
     
-    <xsl:choose>
-      <xsl:when
-        test="starts-with($schema,'iso19139')">
+    <xsl:variable name="helpers">
         <xsl:choose>
-          <!-- Exact schema, name and full context match --> 
-          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$xpath]/helper">
-            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+          <xsl:when
+            test="starts-with($schema,'iso19139')">
+            <xsl:choose>
+              <!-- Exact schema, name and full context match --> 
+              <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$xpath]/helper">
+                <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+              </xsl:when>
+              <!-- ISO19139, name and full context match --> 
+              <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$xpath]/helper">
+                <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+              </xsl:when>
+              <!-- Exact schema, name and parent-only match --> 
+              <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$context]/helper">
+                <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+              </xsl:when>
+              <!-- ISO19139, name and parent-only match --> 
+              <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$context]/helper">
+                <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
+              </xsl:when>
+              <!-- Exact schema, name match --> 
+              <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper">
+                <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper"/>
+              </xsl:when>
+              <!-- ISO19139 schema, name match --> 
+              <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper">
+                <xsl:copy-of
+                  select="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper"/>
+              </xsl:when>
+              <xsl:otherwise><null/></xsl:otherwise>
+            </xsl:choose>
           </xsl:when>
-          <!-- ISO19139, name and full context match --> 
-          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$xpath]/helper">
-            <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
-          </xsl:when>
-          <!-- Exact schema, name and parent-only match --> 
-          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and @context=$context]/helper">
-            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
-          </xsl:when>
-          <!-- ISO19139, name and parent-only match --> 
-          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and @context=$context]/helper">
-            <xsl:copy-of select="$labels/schemas/iso19139/labels/element[@name = $name and (@context=$xpath or @context=$context)]/helper"/>
-          </xsl:when>
-          <!-- Exact schema, name match --> 
-          <xsl:when test="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper">
-            <xsl:copy-of select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name and not(@context)]/helper"/>
-          </xsl:when>
-          <!-- ISO19139 schema, name match --> 
-          <xsl:when test="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper">
-            <xsl:copy-of
-              select="$labels/schemas/iso19139/labels/element[@name = $name and not(@context)]/helper"/>
-          </xsl:when>
-          <xsl:otherwise><null/></xsl:otherwise>
+          <xsl:otherwise>
+            
+            <xsl:variable name="result"
+              select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name]/helper"
+            />
+            
+            <xsl:choose>
+              <xsl:when test="$result"><xsl:copy-of select="$result"/></xsl:when>
+              <xsl:otherwise><null/></xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
         </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:choose>
+      <xsl:when test="count($helpers/*) = 1">
+        <xsl:copy-of select="$helpers/*"/>
       </xsl:when>
       <xsl:otherwise>
-        
-        <xsl:variable name="result"
-          select="$labels/schemas/*[name(.)=$schema]/labels/element[@name = $name]/helper"
-        />
+        <!-- Conditional helpers which may define an xpath expression to evaluate 
+        if the xpath match -->
+        <xsl:variable name="matchingHelpers">
+          <xsl:for-each select="$helpers/*">
+            <xsl:if test="@displayIf and saxon:evaluate(@displayIf, $node)">
+              <xsl:copy-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:variable>
         
         <xsl:choose>
-          <xsl:when test="$result"><xsl:copy-of select="$result"/></xsl:when>
-          <xsl:otherwise><null/></xsl:otherwise>
+          <xsl:when test="$matchingHelpers">
+            <xsl:copy-of select="$matchingHelpers"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <null/>
+          </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
