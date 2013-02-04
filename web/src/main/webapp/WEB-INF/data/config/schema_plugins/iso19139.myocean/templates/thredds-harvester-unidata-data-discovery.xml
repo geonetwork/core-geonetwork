@@ -4,9 +4,7 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:gml="http://www.opengis.net/gml"
                  xmlns:gco="http://www.isotc211.org/2005/gco"
-                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-				 xmlns:xlink="http://www.w3.org/1999/xlink"
-				 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmx/gmx.xsd">
+                 xmlns:gmx="http://www.isotc211.org/2005/gmx">
 				 
   <gmd:fileIdentifier>
       <gco:CharacterString xmlns:srv="http://www.isotc211.org/2005/srv">5294e6ae-9c7c-462f-a7c5-6cbe0a7c8b90</gco:CharacterString>
@@ -132,24 +130,8 @@
         <gmd:featureTypes id="thredds.datatype">
             <gco:LocalName>grid</gco:LocalName>
         </gmd:featureTypes>
-        <gmd:featureCatalogueCitation>
-            <gmd:CI_Citation>
-                <gmd:title>
-                    <gmx:Anchor xlink:href="http://www.unidata.ucar.edu/projects/THREDDS/tech/catalog/v1.0.2/InvCatalogSpec.html">Unidata Feature Types</gmx:Anchor>
-                </gmd:title>
-                <gmd:date>
-                    <gmd:CI_Date>
-                        <gmd:date>
-                            <gco:DateTime>2008-03-03T00:00:00+01:00</gco:DateTime>
-                        </gmd:date>
-                        <gmd:dateType>
-                            <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
-                        </gmd:dateType>
-                    </gmd:CI_Date>
-                </gmd:date>
-            </gmd:CI_Citation>
-        </gmd:featureCatalogueCitation>               
-    </gmd:MD_FeatureCatalogueDescription>     
+        <gmd:featureCatalogueCitation/>
+    </gmd:MD_FeatureCatalogueDescription>
   </gmd:contentInfo>
   <gmd:distributionInfo>
       <gmd:MD_Distribution>
