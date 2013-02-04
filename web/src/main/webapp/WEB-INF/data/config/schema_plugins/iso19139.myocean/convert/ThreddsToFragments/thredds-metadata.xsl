@@ -7,7 +7,7 @@
 	xmlns:util="java:java.util.UUID" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:fdd="local:functions"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"	
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	exclude-result-prefixes="util xs xsi tds nc rdf skos">
 
@@ -56,8 +56,7 @@
 
 					<!-- Metadata creation date [Mandatory] -->
 
-					<fragment id="thredds.metadata.creation"
-						uuid="{util:toString(util:randomUUID())}"
+					<fragment id="thredds.metadata.creation" uuid="{util:toString(util:randomUUID())}"
 						title="{concat($datasetName,'_metadata_creation')}">
 						<gmd:dateStamp>
 							<gco:DateTime>
@@ -68,15 +67,13 @@
 									<xsl:when test="$creationDate[1]!=''">
 										<!-- Use resource creation date if available -->
 										<xsl:call-template name="getThreddsDateAsUTC">
-											<xsl:with-param name="sourceDate"
-												select="$creationDate[1]"/>
+											<xsl:with-param name="sourceDate" select="$creationDate[1]"/>
 										</xsl:call-template>
 									</xsl:when>
 									<xsl:otherwise>
 										<!-- Otherwise use curent date -->
 										<xsl:call-template name="getUtcDateTime">
-											<xsl:with-param name="dateTime"
-												select="current-dateTime()"/>
+											<xsl:with-param name="dateTime" select="current-dateTime()"/>
 										</xsl:call-template>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -123,8 +120,7 @@
 									<gmd:CI_Date>
 										<gmd:date>
 											<xsl:call-template name="getThreddsDateAsUTC">
-												<xsl:with-param name="sourceDate"
-												select="$creationDate[1]"/>
+												<xsl:with-param name="sourceDate" select="$creationDate[1]"/>
 											</xsl:call-template>
 										</gmd:date>
 										<gmd:dateType>
@@ -150,8 +146,7 @@
 										<gmd:date>
 											<gco:DateTime>
 												<xsl:call-template name="getThreddsDateAsUTC">
-												<xsl:with-param name="sourceDate"
-												select="$modifiedDate[1]"/>
+													<xsl:with-param name="sourceDate" select="$modifiedDate[1]"/>
 												</xsl:call-template>
 											</gco:DateTime>
 										</gmd:date>
@@ -178,8 +173,7 @@
 										<gmd:date>
 											<gco:DateTime>
 												<xsl:call-template name="getThreddsDateAsUTC">
-												<xsl:with-param name="sourceDate"
-												select="$issuedDate[1]"/>
+													<xsl:with-param name="sourceDate" select="$issuedDate[1]"/>
 												</xsl:call-template>
 											</gco:DateTime>
 										</gmd:date>
@@ -210,35 +204,34 @@
 												<xsl:value-of select="tds:name"/>
 											</gco:CharacterString>
 										</gmd:individualName>
-										<xsl:if
-											test="tds:contact/@email!='' or tds:contact/@url!=''">
+										<xsl:if test="tds:contact/@email!='' or tds:contact/@url!=''">
 											<gmd:contactInfo>
 												<gmd:CI_Contact>
-												<xsl:if test="tds:contact/@email!=''">
-												<gmd:address>
-												<gmd:CI_Address>
-												<gmd:electronicMailAddress>
-												<gco:CharacterString>
-												<xsl:value-of select="tds:contact/@email"/>
-												</gco:CharacterString>
-												</gmd:electronicMailAddress>
-												</gmd:CI_Address>
-												</gmd:address>
-												</xsl:if>
-												<xsl:if test="tds:contact/@url!=''">
-												<gmd:onlineResource>
-												<gmd:CI_OnlineResource>
-												<gmd:linkage>
-												<gmd:URL>
-												<xsl:value-of select="tds:contact/@url"/>
-												</gmd:URL>
-												</gmd:linkage>
-												<gmd:protocol>
-												<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-												</gmd:protocol>
-												</gmd:CI_OnlineResource>
-												</gmd:onlineResource>
-												</xsl:if>
+													<xsl:if test="tds:contact/@email!=''">
+														<gmd:address>
+															<gmd:CI_Address>
+																<gmd:electronicMailAddress>
+																<gco:CharacterString>
+																<xsl:value-of select="tds:contact/@email"/>
+																</gco:CharacterString>
+																</gmd:electronicMailAddress>
+															</gmd:CI_Address>
+														</gmd:address>
+													</xsl:if>
+													<xsl:if test="tds:contact/@url!=''">
+														<gmd:onlineResource>
+															<gmd:CI_OnlineResource>
+																<gmd:linkage>
+																<gmd:URL>
+																<xsl:value-of select="tds:contact/@url"/>
+																</gmd:URL>
+																</gmd:linkage>
+																<gmd:protocol>
+																<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+																</gmd:protocol>
+															</gmd:CI_OnlineResource>
+														</gmd:onlineResource>
+													</xsl:if>
 												</gmd:CI_Contact>
 											</gmd:contactInfo>
 										</xsl:if>
@@ -267,31 +260,31 @@
 										<xsl:if test="tds:contact/@name!='' or tds:contact/@url!=''">
 											<gmd:contactInfo>
 												<gmd:CI_Contact>
-												<xsl:if test="tds:contact/@name!=''">
-												<gmd:address>
-												<gmd:CI_Address>
-												<gmd:electronicMailAddress>
-												<gco:CharacterString>
-												<xsl:value-of select="tds:contact/@email"/>
-												</gco:CharacterString>
-												</gmd:electronicMailAddress>
-												</gmd:CI_Address>
-												</gmd:address>
-												</xsl:if>
-												<xsl:if test="tds:contact/@url!=''">
-												<gmd:onlineResource>
-												<gmd:CI_OnlineResource>
-												<gmd:linkage>
-												<gmd:URL>
-												<xsl:value-of select="tds:contact/@url"/>
-												</gmd:URL>
-												</gmd:linkage>
-												<gmd:protocol>
-												<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-												</gmd:protocol>
-												</gmd:CI_OnlineResource>
-												</gmd:onlineResource>
-												</xsl:if>
+													<xsl:if test="tds:contact/@name!=''">
+														<gmd:address>
+															<gmd:CI_Address>
+																<gmd:electronicMailAddress>
+																<gco:CharacterString>
+																<xsl:value-of select="tds:contact/@email"/>
+																</gco:CharacterString>
+																</gmd:electronicMailAddress>
+															</gmd:CI_Address>
+														</gmd:address>
+													</xsl:if>
+													<xsl:if test="tds:contact/@url!=''">
+														<gmd:onlineResource>
+															<gmd:CI_OnlineResource>
+																<gmd:linkage>
+																<gmd:URL>
+																<xsl:value-of select="tds:contact/@url"/>
+																</gmd:URL>
+																</gmd:linkage>
+																<gmd:protocol>
+																<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+																</gmd:protocol>
+															</gmd:CI_OnlineResource>
+														</gmd:onlineResource>
+													</xsl:if>
 												</gmd:CI_Contact>
 											</gmd:contactInfo>
 										</xsl:if>
@@ -320,14 +313,14 @@
 										<gmd:role>
 											<xsl:choose>
 												<xsl:when test="@role='PI'">
-												<gmd:CI_RoleCode
-												codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_RoleCode"
-												codeListValue="principalInvestigator"/>
+													<gmd:CI_RoleCode
+														codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_RoleCode"
+														codeListValue="principalInvestigator"/>
 												</xsl:when>
 												<xsl:otherwise>
-												<gmd:CI_RoleCode
-												codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_RoleCode"
-												codeListValue="author"/>
+													<gmd:CI_RoleCode
+														codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_RoleCode"
+														codeListValue="author"/>
 												</xsl:otherwise>
 											</xsl:choose>
 										</gmd:role>
@@ -430,18 +423,18 @@
 										<gmd:aggregateDataSetName>
 											<gmd:CI_Citation>
 												<gmd:title>
-												<gco:CharacterString>
-												<xsl:value-of select="."/>
-												</gco:CharacterString>
+													<gco:CharacterString>
+														<xsl:value-of select="."/>
+													</gco:CharacterString>
 												</gmd:title>
 												<gmd:date>
-												<gmd:CI_Date>
-												<gmd:dateType>
-												<gmd:CI_DateTypeCode
-												codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
-												codeListValue=""/>
-												</gmd:dateType>
-												</gmd:CI_Date>
+													<gmd:CI_Date>
+														<gmd:dateType>
+															<gmd:CI_DateTypeCode
+																codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+																codeListValue=""/>
+														</gmd:dateType>
+													</gmd:CI_Date>
 												</gmd:date>
 											</gmd:CI_Citation>
 										</gmd:aggregateDataSetName>
@@ -454,8 +447,7 @@
 										<gmd:initiativeType>
 											<gmd:DS_InitiativeTypeCode
 												codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DS_InitiativeTypeCode"
-												codeListValue="project"
-												>project</gmd:DS_InitiativeTypeCode>
+												codeListValue="project">project</gmd:DS_InitiativeTypeCode>
 										</gmd:initiativeType>
 									</gmd:MD_AggregateInformation>
 								</gmd:aggregationInfo>
@@ -480,28 +472,28 @@
 										<gmd:geographicElement>
 											<gmd:EX_GeographicBoundingBox>
 												<gmd:westBoundLongitude>
-												<gco:Decimal>
-												<xsl:value-of select="tds:eastwest/tds:start"/>
-												</gco:Decimal>
+													<gco:Decimal>
+														<xsl:value-of select="tds:eastwest/tds:start"/>
+													</gco:Decimal>
 												</gmd:westBoundLongitude>
 												<gmd:eastBoundLongitude>
-												<gco:Decimal>
-												<xsl:value-of
-												select="tds:eastwest/tds:start + tds:eastwest/tds:size"
-												/>
-												</gco:Decimal>
+													<gco:Decimal>
+														<xsl:value-of
+															select="tds:eastwest/tds:start + tds:eastwest/tds:size"
+														/>
+													</gco:Decimal>
 												</gmd:eastBoundLongitude>
 												<gmd:southBoundLatitude>
-												<gco:Decimal>
-												<xsl:value-of select="tds:northsouth/tds:start"/>
-												</gco:Decimal>
+													<gco:Decimal>
+														<xsl:value-of select="tds:northsouth/tds:start"/>
+													</gco:Decimal>
 												</gmd:southBoundLatitude>
 												<gmd:northBoundLatitude>
-												<gco:Decimal>
-												<xsl:value-of
-												select="tds:northsouth/tds:start + tds:northsouth/tds:size"
-												/>
-												</gco:Decimal>
+													<gco:Decimal>
+														<xsl:value-of
+															select="tds:northsouth/tds:start + tds:northsouth/tds:size"
+														/>
+													</gco:Decimal>
 												</gmd:northBoundLatitude>
 											</gmd:EX_GeographicBoundingBox>
 										</gmd:geographicElement>
@@ -510,8 +502,7 @@
 
 								<!-- temporal extent [0..1] -->
 
-								<xsl:for-each
-									select="tds:timeCoverage|tds:metadata//tds:timeCoverage">
+								<xsl:for-each select="tds:timeCoverage|tds:metadata//tds:timeCoverage">
 									<xsl:variable name="dateRange">
 										<xsl:call-template name="resolveThreddsDateRange">
 											<xsl:with-param name="start" select="tds:start"/>
@@ -524,12 +515,12 @@
 										<gmd:EX_TemporalExtent>
 											<gmd:extent>
 												<gml:TimePeriod gml:id="{generate-id(.)}">
-												<gml:beginPosition>
-												<xsl:value-of select="$dateRange/startDate"/>
-												</gml:beginPosition>
-												<gml:endPosition>
-												<xsl:value-of select="$dateRange/endDate"/>
-												</gml:endPosition>
+													<gml:beginPosition>
+														<xsl:value-of select="$dateRange/startDate"/>
+													</gml:beginPosition>
+													<gml:endPosition>
+														<xsl:value-of select="$dateRange/endDate"/>
+													</gml:endPosition>
 												</gml:TimePeriod>
 											</gmd:extent>
 										</gmd:EX_TemporalExtent>
@@ -544,12 +535,12 @@
 										<gmd:EX_VerticalExtent>
 											<gmd:minimumValue>
 												<gco:Real>
-												<xsl:value-of select="tds:start"/>
+													<xsl:value-of select="tds:start"/>
 												</gco:Real>
 											</gmd:minimumValue>
 											<gmd:maximumValue>
 												<gco:Real>
-												<xsl:value-of select="tds:start+tds:size"/>
+													<xsl:value-of select="tds:start+tds:size"/>
 												</gco:Real>
 											</gmd:maximumValue>
 										</gmd:EX_VerticalExtent>
@@ -582,8 +573,7 @@
 					<!-- Online resources [2..N] -->
 
 					<replacementGroup id="thredds.online.resources">
-						<xsl:variable name="catalogUrl"
-							select="replace(/root/catalogUri,'.xml','.html')"/>
+						<xsl:variable name="catalogUrl" select="replace(/root/catalogUri,'.xml','.html')"/>
 
 						<!-- Links to services if an atomic dataset -->
 
@@ -605,8 +595,7 @@
 								<gmd:CI_OnlineResource>
 									<gmd:linkage>
 										<gmd:URL>
-											<xsl:value-of
-												select="concat($catalogUrl,'?dataset=',@ID)"/>
+											<xsl:value-of select="concat($catalogUrl,'?dataset=',@ID)"/>
 										</gmd:URL>
 									</gmd:linkage>
 									<gmd:protocol>
@@ -654,18 +643,18 @@
 										<gmd:scope>
 											<gmd:DQ_Scope>
 												<gmd:level>
-												<gmd:MD_ScopeCode
-												codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
-												codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+													<gmd:MD_ScopeCode
+														codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
+														codeListValue="dataset">dataset</gmd:MD_ScopeCode>
 												</gmd:level>
 											</gmd:DQ_Scope>
 										</gmd:scope>
 										<gmd:lineage>
 											<gmd:LI_Lineage>
 												<gmd:statement>
-												<gco:CharacterString>
-												<xsl:value-of select="."/>
-												</gco:CharacterString>
+													<gco:CharacterString>
+														<xsl:value-of select="."/>
+													</gco:CharacterString>
 												</gmd:statement>
 											</gmd:LI_Lineage>
 										</gmd:lineage>
@@ -683,18 +672,18 @@
 										<gmd:scope>
 											<gmd:DQ_Scope>
 												<gmd:level>
-												<gmd:MD_ScopeCode
-												codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
-												codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+													<gmd:MD_ScopeCode
+														codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
+														codeListValue="dataset">dataset</gmd:MD_ScopeCode>
 												</gmd:level>
 											</gmd:DQ_Scope>
 										</gmd:scope>
 										<gmd:lineage>
 											<gmd:LI_Lineage>
 												<gmd:statement>
-												<gco:CharacterString>
-												<xsl:value-of select="."/>
-												</gco:CharacterString>
+													<gco:CharacterString>
+														<xsl:value-of select="."/>
+													</gco:CharacterString>
 												</gmd:statement>
 											</gmd:LI_Lineage>
 										</gmd:lineage>
@@ -713,8 +702,7 @@
 								title="{concat($datasetName,'_datatype')}">
 								<gmd:featureTypes>
 									<gco:LocalName>
-										<xsl:for-each
-											select="tds:dataType|tds:metadata//tds:dataType">
+										<xsl:for-each select="tds:dataType|tds:metadata//tds:dataType">
 											<xsl:value-of select="."/>
 										</xsl:for-each>
 									</gco:LocalName>
@@ -737,8 +725,8 @@
 										<gmd:maintenanceNote>
 											<gco:CharacterString>
 												<xsl:for-each
-												select="tds:property[@name='update-schedule']|tds:metadata//tds:property[@name='update-schedule']">
-												<xsl:value-of select="@value"/>
+													select="tds:property[@name='update-schedule']|tds:metadata//tds:property[@name='update-schedule']">
+													<xsl:value-of select="@value"/>
 												</xsl:for-each>
 											</gco:CharacterString>
 										</gmd:maintenanceNote>
@@ -759,8 +747,7 @@
 		<xsl:param name="vocabulary"/>
 		<xsl:param name="keywords"/>
 
-		<fragment uuid="{util:toString(util:randomUUID())}"
-			title="{concat($datasetName,'_keywords')}">
+		<fragment uuid="{util:toString(util:randomUUID())}" title="{concat($datasetName,'_keywords')}">
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<xsl:choose>
@@ -795,23 +782,24 @@
 
 	<xsl:template match="tds:keyword" mode="keywords-cf">
 		<xsl:variable name="parameter-thesaurus"
-			select="document(concat(system-property('geonetwork.codeList.dir'), '/local/thesauri/parameter/myocean.ocean-variables.rdf'))"/>		
+			select="document(concat(system-property('geonetwork.codeList.dir'), '/local/thesauri/parameter/myocean.ocean-variables.rdf'))"/>
 		<xsl:variable name="cf-param" select="."/>
-		<xsl:variable name="cf-href" select="$parameter-thesaurus/rdf:RDF/skos:Collection/skos:member/skos:Concept[skos:prefLabel/text()=$cf-param]/@rdf:about"/>
+		<xsl:variable name="cf-href"
+			select="$parameter-thesaurus//skos:Concept[skos:prefLabel/text()=$cf-param]/@rdf:about|$parameter-thesaurus//rdf:Description[skos:prefLabel/text()=$cf-param]/@rdf:about"/>
 		<xsl:choose>
 			<xsl:when test="$cf-href">
 				<gmd:keyword>
-					<gmx:Anchor>						
+					<gmx:Anchor>
 						<xsl:attribute name="xlink:href">
 							<xsl:value-of select="$cf-href"/>
-						</xsl:attribute>				
+						</xsl:attribute>
 						<xsl:value-of select="."/>
 					</gmx:Anchor>
 				</gmd:keyword>
 			</xsl:when>
 			<xsl:otherwise>
 				<gmd:keyword>
-					<gco:CharacterString>								
+					<gco:CharacterString>
 						<xsl:value-of select="."/>
 					</gco:CharacterString>
 				</gmd:keyword>
@@ -844,8 +832,7 @@
 				<xsl:apply-templates mode="transfer-options"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="catalogPath"
-					select="replace(/root/catalogUri,'^http://[^/]*','')"/>
+				<xsl:variable name="catalogPath" select="replace(/root/catalogUri,'^http://[^/]*','')"/>
 				<xsl:variable name="catalogHost"
 					select="substring-before(/root/catalogUri,$catalogPath)"/>
 				<xsl:variable name="baseUrl" select="@base"/>
@@ -884,8 +871,7 @@
 										</xsl:when>
 										<xsl:when test="@serviceType='OPENDAP'">
 											<xsl:value-of
-												select="concat($catalogHost,$baseUrl,$urlPath,'.html')"
-											/>
+												select="concat($catalogHost,$baseUrl,$urlPath,'.html')"/>
 										</xsl:when>
 										<xsl:when test="upper-case(@serviceType)='MOTU-SUB'">
 											<xsl:value-of select="concat($baseUrl,$ID)"/>
@@ -896,9 +882,7 @@
 											/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of
-												select="concat($catalogHost,$baseUrl,$urlPath)"
-											/>
+											<xsl:value-of select="concat($catalogHost,$baseUrl,$urlPath)"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</gmd:URL>
@@ -912,8 +896,8 @@
 								<gco:CharacterString/>
 							</gmd:name>
 							<gmd:description>
-								<gco:CharacterString>Data available via <xsl:value-of
-										select="@serviceType"/></gco:CharacterString>
+								<gco:CharacterString>Data available via <xsl:value-of select="@serviceType"
+									/></gco:CharacterString>
 							</gmd:description>
 						</gmd:CI_OnlineResource>
 					</gmd:onLine>
@@ -923,10 +907,11 @@
 	</xsl:template>
 
 	<!-- === Function to return DNS in URL === -->
-	<xsl:variable name="vRegEx"> ^(.*) <!-- The scheme --> :// ([a-zA-Z0-9\-]?[a-zA-Z0-9\-]+\.)?
-		<!-- between http:// and domain name (if defined) -->
-		([a-zA-Z0-9\-\.]?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}) <!-- The domain --> ([:]?[0-9]{0,6})
-		<!-- The port --> (/\S*)?(/.*)$ <!-- the path and query string -->
+	<xsl:variable name="vRegEx"> ^(.*) <!-- The scheme --> 
+		:// ([a-zA-Z0-9\-]?[a-zA-Z0-9\-]+\.)? <!-- between http:// and domain name (if defined) -->
+		([a-zA-Z0-9\-\.]?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}) <!-- The domain --> 
+		([:]?[0-9]{0,6}) <!-- The port --> 
+		(/\S*)?(/.*)$ <!-- the path and query string -->
 	</xsl:variable>
 
 	<xsl:function name="fdd:getDomain">

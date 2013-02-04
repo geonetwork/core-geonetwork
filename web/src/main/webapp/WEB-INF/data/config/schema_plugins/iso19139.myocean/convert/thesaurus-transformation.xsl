@@ -33,6 +33,7 @@
 					</gmd:featureTypes>
 				</xsl:otherwise>
 			</xsl:choose>
+			<gmd:featureCatalogueCitation/>
 		</gmd:MD_FeatureCatalogueDescription>
 		
 	</xsl:template>
