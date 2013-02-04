@@ -276,7 +276,7 @@
            gmd:citedResponsibleParty|geonet:child[@name='citedResponsibleParty' and @prefix='gmd'] |
            gmd:pointOfContact|geonet:child[@name='pointOfContact' and @prefix='gmd'] |
            gmd:distributorContact|geonet:child[@name='distributorContact' and @prefix='gmd'] |
-           gmd:source|geonet:child[@name='source' and @prefix='gmd'] |
+           gmd:source[not(ancestor::gmd:LI_Lineage or ancestor::gmd:LI_Lineage)]|geonet:child[@name='source' and @prefix='gmd' and not(ancestor::gmd:LI_Lineage or ancestor::gmd:LI_Lineage)] |
            gmd:userContactInfo|geonet:child[@name='userContactInfo' and @prefix='gmd'] |
            gmd:distributionFormat|geonet:child[@name='distributionFormat' and @prefix='gmd'] |
            gmd:distributorFormat|geonet:child[@name='distributorFormat' and @prefix='gmd'] |
@@ -284,5 +284,4 @@
            ">
         <xsl:text>displayXLinkSearchBox</xsl:text>
     </xsl:template>
-
 </xsl:stylesheet>
