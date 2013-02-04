@@ -34,9 +34,6 @@
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<xsl:call-template name="geoHeader"/>
-		<xsl:call-template name="jsHeader">
-			<xsl:with-param name="small" select="false()"/>
-		</xsl:call-template>
 		
 		<xsl:choose>
             <xsl:when test="/root/request/debug">
