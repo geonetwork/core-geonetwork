@@ -1,0 +1,406 @@
+.gn {
+  background-color : #FFFFFF;
+}
+.md-view {
+  background-color : #FFFFFF;
+  text-shadow : 0 1px 0 #FFFFFF;
+}
+.md-view ul {
+  display : block;
+  height : auto;
+  position : relative;
+}
+/*.md-view ul li img {
+  margin-bottom : 1px;
+}
+*/
+.md-view ul li * h1 {
+  color : #0076A1;
+  font-size : small;
+  margin-bottom : 5px;
+}
+
+.md-view div.relation {
+  margin-left : 30px !important;
+  max-height : 50px !important;
+  overflow : hidden;
+  display: none;
+  position:relative;  /* Required for IE */
+}
+.md-view div.relation ul {
+  margin-left: 15px !important;
+}
+.md-view div.relation span {
+  background-image : url(../images/default/chart_organisation.png) !important;
+  background-repeat : no-repeat;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+}
+.md-view div.more {
+  background-image : url(../images/default/three_dots.png) !important;
+  background-repeat : no-repeat;
+  background-position : 95% 80%;
+}
+
+.md-view div.relation.more:hover {
+  overflow : auto;
+  background-image : none !important;
+  max-height : 500px !important;
+}
+
+.md-view div.relation ul li,
+table.related * li {
+  float : left;
+  width : 200px;
+  line-height : initial !important;
+  word-wrap: break-word;
+  padding: 2px;
+}
+
+.md-view * a {
+  text-decoration : none;
+  color : #0076A1;
+  cursor: pointer;
+}
+.md-view * a:hover {
+  text-decoration : underline;
+  color : #959532
+}
+.md-view td.left {
+  width : 30px;
+}
+.md-view td.thumb {
+  width : 180px;
+}
+.md-view td.icon {
+  width : 16px;
+  border-left : 1px dashed #e1e1e1;
+  text-align : center;
+}
+.md-view ul li * .md-logo img {
+  max-width : 30px;
+}
+.md-view ul li {
+  border-top : 1px solid transparent;
+  color : #222222;
+  float : left;
+  margin : 2px;
+  overflow : hidden;
+  padding : 2px 2px 2px 2px;
+}
+
+/* View mode */
+.md-view ul li.md-simple {
+  width : 98%;
+  /* FIXME : Should be auto */
+}
+.md-view ul li.md-full {
+  width : 98%;
+  /* FIXME : Should be auto */
+}
+.md-view ul li.md-thumbnail {
+  height : 220px;
+  width : 160px;
+}
+.md-thumbnail * h1 {
+  font-size : smaller !important;
+}
+
+
+
+.md-view * table {
+  width : 100%;
+}
+.md-view * table tr {
+  vertical-align : top;
+} /*
+.md-view * table tr td.md-full-right {
+  width : 180px;
+  text-align : right;
+}
+*/
+.md-full-right * img {
+  max-width : 180px;
+  max-height : 140px;
+  min-height : 40px;
+}
+
+.md-view * div.md-wrap {
+  float : left;
+  width : 85%;
+}
+.md-view * div.rating,
+.md-view * div.thumbnail {
+  clear : both;
+  width : 182px;
+}
+
+.md-view * div.thumbnail img {
+  border : 1px solid #e7e5e5;
+  padding : 1px;
+  max-width : 180px;
+  max-height : 140px;
+  min-height : 40px;
+  height: auto;
+}
+
+.md-view * div.rating {
+  padding-bottom : 2px;
+}
+
+img.orgLogo {
+  max-width : 40px;
+  max-height : 40px;
+  vertical-align : middle;
+}
+
+div.md-contact span {
+  font-style : italic !important;
+  font-size : 80% !important;
+  color : #666;
+  padding-right : 4px;
+}
+
+div.md-contact {
+  text-align : right;
+  clear : both;
+}
+
+span.md-action-menu {
+  visibility : hidden;
+}
+
+.md-view ul li.x-view-selected {
+  -moz-border-radius : 4px 4px 4px 4px;
+  /*
+  background-color:rgba(100, 100, 100, 0.15);
+  border-top:1px solid rgba(0, 0, 0, 0.15);
+ */
+  background-color : rgba(217, 210, 123, 0.85);
+  border : 1px solid rgba(0, 51, 102, 0.25);
+}
+.md-view ul li.md-over {
+  -moz-border-radius : 4px 4px 4px 4px;
+  background-color : rgba(10, 10, 10, 0.15);
+  border-top : 1px solid rgba(0, 0, 0, 0.15);
+}
+.md-view li strong {
+  color : #000000;
+  display : block;
+} /*
+.md-view * .rating,
+.md-full * div.rating {
+  display : block;
+  padding-left : 0px !important;
+  text-align : center;
+}
+.md-view * .rating * {
+  padding-left : 0px !important;
+}*/
+.md-view * p {
+  color : #444;
+}
+
+.md-view * .md-links {
+}
+
+/**
+ * Format Ext button in the link area
+ */
+.md-links table {
+    float: left;
+    margin-right: 5px;
+}
+.md-links * .x-btn-tl, 
+.md-links * .x-btn-tr, 
+.md-links * .x-btn-tc, 
+.md-links * .x-btn-ml, 
+.md-links * .x-btn-mr, 
+.md-links * .x-btn-mc, 
+.md-links * .x-btn-bl, 
+.md-links * .x-btn-br, 
+.md-links * .x-btn-bc{
+    background: none;
+}
+/*
+Display hyperlink as text next to element
+.md-links a:hover:after {
+    content : " " attr(href) " ";
+    font-size : 80%;
+}*/
+
+.md-view * p.abstract {
+}
+.md-view * p.subject {
+  font-size : 80%;
+  text-transform : uppercase;
+}
+.md-view ul li.md-full div,
+.md-view ul li.md-simple div {
+  padding-left : 1px;
+}
+/* Icons */
+.md-mn {
+  background-repeat : no-repeat;
+  padding-left: 20px;
+  padding-bottom: 3px;
+}
+.md-mn-view {
+  background-image : url(../images/default/page_go.png) !important;
+}
+.md-mn-edit {
+  background-image : url(../images/default/page_edit.png) !important;
+}
+.md-mn-del {
+  background-image : url(../images/default/page_delete.png) !important;
+}
+.md-mn-copy {
+  background-image : url(../images/default/page_copy.png) !important;
+}
+.md-mn-find {
+  background-image : url(../images/default/find.png) !important;
+}
+.md-mn-go {
+  background-image : url(../images/default/bullet_go.png) !important;
+}
+.md-mn-advanced {
+  background-image : url(../images/default/cog.png) !important;
+}
+.md-mn-user {
+  background-image : url(../images/default/user.png) !important;
+}
+.md-mn-pdf {
+  background-image : url(../images/default/page_white_acrobat.png) !important;
+}
+.md-mn-badd {
+  background-image : url(../images/default/brick_add.png) !important;
+}
+.md-mn-zip {
+  background-image : url(../images/default/page_white_zip.png) !important;
+}
+.md-mn-ftp {
+  background-image : url(../images/default/folder.png) !important;
+}
+.md-mn-ftps {
+  background-image : url(../images/default/folder_key.png) !important;
+}
+.md-mn-download {
+  background-image : url(../images/default/download.png) !important;
+}
+.mn-user-location {
+  background-image : url(../images/default/user_location.png) !important;
+}
+.mn-view-simple {
+  background-image : url(../images/default/mv-simple.png) !important;
+  background-repeat : no-repeat;
+}
+.mn-view-full {
+  background-image : url(../images/default/mv-full.png) !important;
+  background-repeat : no-repeat;
+}
+.mn-view-thumbnail {
+  background-image : url(../images/default/mv-thumbnail.png) !important;
+  background-repeat : no-repeat;
+}
+.mn-login {
+  background-image : url(../images/default/user_go.png) !important;
+}
+.mn-logout {
+  background-image : url(../images/default/door_out.png) !important;
+}
+.mn-clear {
+  background-image : url(../images/default/cross.png) !important;
+}
+.search-item {
+  font-weight : normal !important;
+  line-height : 1.5em;
+}
+.search-item span {
+  text-decoration : underline;
+}
+/* TagCloud styles */
+ul li.tag-cloud {
+  border-top : 1px solid transparent;
+  text-align : center;
+  padding : 1px;
+  margin : 2px;
+  /*
+  height:200px;
+  width:200px;
+ */
+}
+ul li.tag-cloud-hover {
+  -moz-border-radius : 4px 4px 4px 4px;
+  background-color : rgba(10, 10, 10, 0.15);
+  border-top : 1px solid rgba(0, 0, 0, 0.15);
+}
+li.tag-cloud-0 {
+  font-size : xx-small !important
+}
+li.tag-cloud-1 {
+  font-size : x-small !important
+}
+li.tag-cloud-2 {
+  font-size : smaller !important
+}
+li.tag-cloud-3 {
+  font-size : small !important
+}
+li.tag-cloud-4 {
+  font-size : medium !important
+}
+li.tag-cloud-5 {
+  font-size : larger !important
+}
+li.tag-cloud-6 {
+  font-size : x-large !important
+}
+li.tag-cloud-7 {
+  font-size : xx-large !important
+}
+/* Image in combo box */
+.x-combo-list-item img {
+  max-width : 20px;
+  max-height : 20px;
+  vertical-align : middle;
+  margin-right : 3px;
+}
+.connectIcon {
+  background-image : url(../images/default/connect.png) !important;
+}
+.zoomin {
+  background-image : url(../images/default/icon_zoomin.png) !important;
+  height : 20px !important;
+  width : 20px !important;
+}
+.zoomout {
+  background-image : url(../images/default/icon_zoomout.png) !important;
+  height : 20px !important;
+  width : 20px !important;
+}
+.zoomfull {
+  background-image : url(../images/default/icon_zoomfull.png) !important;
+  height : 20px !important;
+  width : 20px !important;
+}
+.pan {
+  background-image : url(../images/default/icon_pan.png) !important;
+  height : 20px !important;
+  width : 20px !important;
+}
+
+div.help .title {
+  font-size : 120%;
+  font-weight : bold;
+}
+div.help div {
+  margin-top : 3px;
+}
+div.help span {
+  font-style : italic;
+}
+div.help ul li {
+  list-style-type : circle !important;
+  margin-left : 10px !important;
+}
