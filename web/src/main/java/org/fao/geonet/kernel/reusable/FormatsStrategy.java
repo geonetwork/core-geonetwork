@@ -138,7 +138,7 @@ public final class FormatsStrategy extends ReplacementStrategy
         for (Element result : results) {
             Element e = new Element(REPORT_ELEMENT);
             String id = result.getChildTextTrim(ID_COL);
-            String url = XLink.LOCAL_PROTOCOL+"format.admin?id=" + id + "&dialog=true";
+            String url = XLink.LOCAL_PROTOCOL+"format.admin?closeOnSave&id=" + id + "&dialog=true";
             String name = result.getChildTextTrim(NAME_COL);
             if (name == null || name.length() == 0) {
                 name = id;

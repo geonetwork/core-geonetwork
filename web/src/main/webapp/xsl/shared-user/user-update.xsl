@@ -25,9 +25,23 @@
 					return;
 				}
 				// all ok, proceed
-				document.userupdateform.submit();
-				if(window.opener) {  
-                    window.opener.location.href="javascript:refresh();";
+				if (window.location.search.indexOf("?closeOnSave") != -1) {
+				   new Ajax.Request($('userupdateform').action,
+					{
+			            method: 'post',
+			            parameters: $('userupdateform').serialize(true),
+			            onSuccess: function(req) {
+			                window.close();
+			            },
+			            onFailure: function(req) {
+			                alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+			            }
+				    });
+				} else {
+					document.userupdateform.submit();
+					if(window.opener) {  
+	                    window.opener.location.href="javascript:refresh();";
+	                }
                 }
 			}//update
 
@@ -83,7 +97,7 @@
 	           <xsl:otherwise>nonvalidated</xsl:otherwise>
 	       </xsl:choose>
 	   </xsl:variable>
-		<form name="userupdateform" class="users" accept-charset="UTF-8"
+		<form id="userupdateform" name="userupdateform" class="users" accept-charset="UTF-8"
 			 method="post">
 			<xsl:attribute name="action"><xsl:value-of select="$validatedPrefix"/>.shared.user.update?operation=<xsl:value-of select="/root/request/operation"/>&amp;validated=<xsl:value-of select="/root/request/validated"/></xsl:attribute>
 

@@ -30,7 +30,9 @@
 		}
 		
         function finishEditing(){
-           if(window.opener) {  
+           if (window.location.search.indexOf("?closeOnSave") != -1) {
+           	 window.close();
+           } else if(window.opener) {
              window.opener.location.href="javascript:refresh();";
            }
          }

@@ -512,7 +512,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 Element e = new Element(REPORT_ELEMENT);
 
                 String id = idAttributeToIdString(featureType, feature);
-                String url = XLink.LOCAL_PROTOCOL+"extent.edit?crs=EPSG:21781&wfs=default&typename="
+                String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:21781&wfs=default&typename="
                         + NON_VALIDATED_TYPE + "&id=" + id;
 
                 addChild(e, REPORT_URL, url);

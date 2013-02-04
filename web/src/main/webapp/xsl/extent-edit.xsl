@@ -155,16 +155,17 @@
             }
             
             function submitExtent(){
-                document.forms["editform"].submit();
-                new Ext.LoadMask(submitButton(), {msg:"Please wait..."}).show();
-
-                window.onunload = function() {
-                        if(window.opener) {
-                            window.opener.location.href="javascript:refresh();";
-                        } else {
-                            close();
-                        }
-                };
+			   new Ajax.Request($('editform').action,
+				{
+		            method: 'post',
+		            parameters: $('editform').serialize(true),
+		            onSuccess: function(req) {
+		                window.close();
+		            },
+		            onFailure: function(req) {
+		                alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+		            }
+			    });
             }
         </script>
     </xsl:template>
