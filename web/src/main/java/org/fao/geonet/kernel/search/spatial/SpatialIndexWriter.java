@@ -92,7 +92,7 @@ public class SpatialIndexWriter implements FeatureListener
 
     private final Parser                              _parser;
     private final Transaction                         _transaction;
-    private final  int                                _maxWrites;
+    private  int                                 _maxWrites;
     private final Lock                                _lock;
     private FeatureStore<SimpleFeatureType, SimpleFeature> _featureStore;
     private STRtree                                   _index;
@@ -103,7 +103,6 @@ public class SpatialIndexWriter implements FeatureListener
 	}
 
 	private Name _idColumn;
-    private Name _geomColumn;
     private boolean _autocommit;
 
 
@@ -158,7 +157,7 @@ public class SpatialIndexWriter implements FeatureListener
             Geometry geometry = extractGeometriesFrom(
                     schemaDir, metadata, _parser, errorMessage);
 
-            if (geometry != null) {
+            if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
                 SimpleFeatureType schema = _featureStore.getSchema();
                 
@@ -168,11 +167,7 @@ public class SpatialIndexWriter implements FeatureListener
                 template.setAttribute(_IDS_ATTRIBUTE_NAME, id);
                 features.add(template);
 
-                List<FeatureId> ids = _featureStore.addFeatures(features);
-                for (FeatureId featureId : ids) {
-	                String id2 = featureId.getID();
-					SpatialFilter.getJCSCache().remove(id2);
-                }
+                _featureStore.addFeatures(features);
 
                 _writes++;
 
@@ -197,6 +192,9 @@ public class SpatialIndexWriter implements FeatureListener
             _transaction.close();
             _index = null;
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
+            SpatialFilter.getJCSCache().clear();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             _lock.unlock();
         }
@@ -219,6 +217,11 @@ public class SpatialIndexWriter implements FeatureListener
             _index = null;
 
             _featureStore.removeFeatures(filter);
+            try {
+                SpatialFilter.getJCSCache().clear();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             _writes++;
         } finally {
             _lock.unlock();
@@ -229,13 +232,15 @@ public class SpatialIndexWriter implements FeatureListener
     {
         _lock.lock();
         try {
-
-            if (_writes > 0) {
+            
+            if (!_autocommit && _writes > 0) {
                 _writes = 0;
                 _transaction.commit();
                 _index = null;
-                populateIndex();
+                SpatialFilter.getJCSCache().clear();
             }
+        } catch (Throwable e) {
+            e.printStackTrace();
         } finally {
             _lock.unlock();
         }
@@ -376,6 +381,11 @@ public class SpatialIndexWriter implements FeatureListener
 
     private void populateIndex() throws IOException
     {
+        try {
+            SpatialFilter.getJCSCache().clear();
+        } catch (CacheException e) {
+            e.printStackTrace();
+        }
         _index = new STRtree();
         FeatureIterator<SimpleFeature> features = _featureStore.getFeatures().features();
         try {

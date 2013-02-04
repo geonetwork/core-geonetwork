@@ -55,6 +55,7 @@
 	-->
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
+		<xsl:param name="buttonBarId" select="''"/>
 		<xsl:param name="ownerbuttonsonly" select="false()"/>
 
 		<!-- Title is truncated if longer than maxLength.  -->
@@ -102,11 +103,11 @@
 			&#160;
 			<!-- =========================  -->
 			<!-- Add other actions list     -->
-			<button id="oAc{$metadata/geonet:info/id}" name="oAc{$metadata/geonet:info/id}" class="content" onclick="oActions('oAc',{$metadata/geonet:info/id});" style="width:150px;" title="{/root/gui/strings/otherActions}">
-				<img id="oAcImg{$metadata/geonet:info/id}" name="oAcImg{$metadata/geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
+			<button id="{$buttonBarId}oAc{$metadata/geonet:info/id}" name="{$buttonBarId}oAc{$metadata/geonet:info/id}" class="content" onclick="oActions('{$buttonBarId}oAc',{$metadata/geonet:info/id});" style="width:150px;" title="{/root/gui/strings/otherActions}">
+				<img id="{$buttonBarId}oAcImg{$metadata/geonet:info/id}" name="{$buttonBarId}oAcImg{$metadata/geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
 				<xsl:value-of select="/root/gui/strings/otherActions"/>
 			</button>
-			<div id="oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('oAc',{$metadata/geonet:info/id});">
+			<div id="{$buttonBarId}oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('{$buttonBarId}oAc',{$metadata/geonet:info/id});">
 				
 				<!-- privileges button -->
 				<xsl:if test="java:isAccessibleService('metadata.admin.form')">

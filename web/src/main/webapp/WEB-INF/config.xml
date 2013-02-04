@@ -616,6 +616,56 @@
 
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="xml.regions.list">
+			<class name=".services.region.List" />
+		</service>
+
+		<service name="xml.regions.category.list">
+			<class name=".services.region.ListCategories" />
+		</service>
+
+		<service name="region.getmap.png">
+			<class name=".services.region.GetMap" >
+				 <param name="format" value="png"/>
+				 <!-- named backgrounds allow the background parameter to be a simple key 
+				 	  and the complete URL will be looked up from this list of named backgrounds 
+				 	  The name of the child elements is the key and the text is the url -->
+				 <param name="namedBackgrounds">
+				 	<!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
+				 </param>
+			 </class>
+			<output file="true" contentType="image/png"/>
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="region.geom.wkt">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="WKT"/>
+			</class>
+			
+			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="region.geom.gml3">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="GML3"/>
+			</class>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1031,12 +1081,6 @@
 
 		<service name="xml.operation.update">
 			<class name=".services.operation.Update" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.region.update">
-			<class name=".services.region.Update" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

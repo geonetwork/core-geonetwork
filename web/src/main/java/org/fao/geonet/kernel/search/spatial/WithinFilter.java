@@ -27,8 +27,12 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 import org.apache.lucene.search.Query;
 import org.geotools.data.FeatureSource;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.factory.GeoTools;
+import org.geotools.filter.spatial.WithinImpl;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.FilterFactory;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
@@ -45,17 +49,17 @@ import java.io.IOException;
 public class WithinFilter extends SpatialFilter
 {
 
-    private static final long serialVersionUID = 1114543251684147194L;
-
     public WithinFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         super(query, numHits, geom, sourceAccessor);
     }
 
-    protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
+    public SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
-        return filterFactory.within(geomPropertyName, geomExpression);
+        final WithinImpl impl = (WithinImpl) filterFactory.within(geomPropertyName, geomExpression);
+        FilterFactory factory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
+        return new WithinOrEquals(factory, impl.getExpression1(), impl.getExpression2());
     }
 
 }

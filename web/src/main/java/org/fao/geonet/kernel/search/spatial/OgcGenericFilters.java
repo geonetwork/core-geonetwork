@@ -1,7 +1,6 @@
 package org.fao.geonet.kernel.search.spatial;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -175,15 +174,7 @@ public class OgcGenericFilters
         {
             final WithinImpl impl = (WithinImpl) filter;
             FilterFactory factory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
-            return new WithinImpl(factory, impl.getExpression1(), impl.getExpression2())
-            {
-
-                @Override
-                public boolean evaluateInternal(Geometry leftGeom, Geometry rightGeom) {
-                    boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
-                    return equals2 || super.evaluateInternal(leftGeom, rightGeom);
-                }
-            };
+            return new WithinOrEquals(factory, impl.getExpression1(), impl.getExpression2());
         };
     }
 

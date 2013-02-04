@@ -26,10 +26,12 @@ package jeeves.server.context;
 import java.util.Hashtable;
 import java.util.Map;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
@@ -84,6 +86,7 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
+    private XmlCacheManager xmlCacheManager;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -91,10 +94,11 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
 	{
-		super(mm, pm, sf, contexts);
+		super(jeevesApplicationContext, mm, pm, sf, contexts);
 
+		this.xmlCacheManager = cacheManager;
 		profilMan    = p;
 		setService(service);
 	}
@@ -181,7 +185,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
 			public ResourceManager getResourceManager() {
 				return new ResourceManager(getMonitorManager(), getProviderManager()) {
 					@Override
@@ -229,6 +233,10 @@ public class ServiceContext extends BasicContext
 			throw new ServiceExecutionFailedException(request.getService(),e);
 		}
 	}
+
+    public XmlCacheManager getXmlCacheManager() {
+        return this.xmlCacheManager;
+    }
 
 }
 

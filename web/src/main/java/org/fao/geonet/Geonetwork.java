@@ -408,6 +408,11 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Metadata notifier ...");
 
+        
+        //------------------------------------------------------------------------
+        //--- initialize metadata notifier subsystem
+        logger.info("  - Metadata notifier ...");
+        
 		//------------------------------------------------------------------------
 		//--- return application context
 
@@ -840,7 +845,7 @@ public class Geonetwork implements ApplicationHandler {
 		} else {
 			logger.info("Using shapefile "+file.getAbsolutePath());
 		}
-		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), true, true, IndexType.QIX, Charset.defaultCharset());
+		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), false, false, IndexType.QIX, Charset.forName("UTF-8"));
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
 
 		if (crs != null) {

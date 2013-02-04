@@ -27,7 +27,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/xml.group.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.category.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.operation.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.region.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.import!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.ping!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.empty!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -274,7 +273,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/xml.metadocument.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.info!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.forward!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.keyword.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.file.disclaimer!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.file.download!?.*" access="permitAll"></sec:intercept-url>
@@ -353,15 +351,26 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/contacts.getRole!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/subtemplate!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/isolanguages!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/robots.txt" access="permitAll"></sec:intercept-url>
+
+                <!-- Formatter services -->
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.pdf!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/robots.txt" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
+
+                <!-- Region services -->
+                <sec:intercept-url pattern="/srv/.*/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.regions.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.regions.category.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/region.getmap.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/region\.geom\.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
+
+
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>

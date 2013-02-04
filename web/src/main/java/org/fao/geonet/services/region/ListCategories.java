@@ -23,45 +23,48 @@
 
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
+
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Update implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+/**
+ * Returns a specific region and coordinates given its id
+ */
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+public class ListCategories implements Service {
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-		for (Object r : params.getChildren("region"))
-		{
-			Element region = (Element) r;
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-			String  id    = Util.getAttrib(region, Params.ID);
-			Element label = Util.getChild (region, "label");
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
-			Lib.local.update(dbms, "Regions", Integer.parseInt(id), label);
-		}
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        Element result = new Element("categories");
+        for (RegionsDAO dao : daos) {
 
-		return new Element("ok");
-	}
+            Collection<String> ids = dao.getRegionCategoryIds(context);
+            for (String id : ids) {
+                Element catEl = new Element("category");
+                catEl.setAttribute("id", id);
+                result.addContent(catEl);
+            }
+        }
+        return result;
+    }
+
 }
 
-//=============================================================================
+// =============================================================================
 

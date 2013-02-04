@@ -494,6 +494,11 @@
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-xml</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-filter</artifactId>
         <version>${geotools.version}</version>
@@ -681,6 +686,12 @@
         <artifactId>junit</artifactId>
         <version>4.6</version>
         <!--<scope>test</scope>-->
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.9.5</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- should we had this as scope test?-->
@@ -954,7 +965,7 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <geotools.version>8.1</geotools.version>
+    <geotools.version>8.6</geotools.version>
     <lucene.version>4.1-SNAPSHOT</lucene.version>
     <spring.version>3.1.1.RELEASE</spring.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
