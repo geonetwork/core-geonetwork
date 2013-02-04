@@ -30,6 +30,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -46,6 +47,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -160,6 +162,8 @@ public class GetMap implements Service {
         double expandFactor = 0.2;
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
+
+        Exception error = null;
         if (background != null) {
 
             if (this.namedBackgrounds.containsKey(background)) {
@@ -178,12 +182,18 @@ public class GetMap implements Service {
                     .replace("{WIDTH}", Integer.toString(imageDimenions.width))
                     .replace("{HEIGHT}", Integer.toString(imageDimenions.height));
 
-            URL imageUrl = new URL(background);
-            InputStream in = imageUrl.openStream();
+            InputStream in = null;
             try {
+                URL imageUrl = new URL(background);
+                in = imageUrl.openStream();
                 image = ImageIO.read(in);
-            } finally {
-                in.close();
+            } catch (IOException e) {
+                image = new BufferedImage(imageDimenions.width, imageDimenions.height, BufferedImage.TYPE_INT_ARGB);
+                error = e;
+            }finally {
+                if(in != null) {
+                    IOUtils.closeQuietly(in);
+                }
 
             }
         } else {
@@ -192,6 +202,9 @@ public class GetMap implements Service {
 
         Graphics2D graphics = image.createGraphics();
         try {
+            if(error != null) {
+                graphics.drawString(error.getMessage(), 0, imageDimenions.height/2);
+            }
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
             MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
