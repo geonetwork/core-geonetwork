@@ -1628,9 +1628,10 @@ GeoNetwork.searchApp = function() {
             });
 
             if (!cookie || !cookie.get('user') || !cookie.get('user').username) {
-                Ext.each(Ext.DomQuery.select('.md-action-menu'), function(el) {
-                    hide(el);
-                });
+                // Swisstopo: show always the action menu in metadata results
+                //Ext.each(Ext.DomQuery.select('.md-action-menu'), function(el) {
+                //    hide(el);
+                //});
             }
         },
         generateFacetedSearchPanel : function() {
