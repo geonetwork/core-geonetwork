@@ -199,6 +199,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+
+        this.viewGM03Action = new Ext.Action({
+         text: OpenLayers.i18n('saveGM03'),
+         iconCls: 'xmlIcon',
+         handler: function(){
+             var id = this.record.get('uuid');
+             this.catalogue.metadataGM03Show(id);
+         },
+         scope: this
+        });
         
         this.viewRDFAction = new Ext.Action({
             text: OpenLayers.i18n('saveRdf'),
@@ -276,7 +286,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.viewAction);
         this.add(this.zoomToAction);
         this.add(this.viewXMLAction);
-        
+        this.add(this.viewGM03Action);
+
         this.add(this.viewRDFAction);
         this.add(this.printAction);
         this.add(this.getMEFAction);

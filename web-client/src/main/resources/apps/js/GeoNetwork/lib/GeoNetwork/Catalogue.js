@@ -296,6 +296,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGetDC : serviceUrl + 'xml_dublin-core',
             mdXMLGetFGDC : serviceUrl + 'xml_fgdc-std',
             mdXMLGet19115 : serviceUrl + 'xml_iso19115to19139',
+            mdXMLGetGM03 : serviceUrl + 'gm03.xml',
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete : serviceUrl + 'metadata.delete',
             mdExtract: serviceUrl + 'metadata.service.extract',
@@ -954,6 +955,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         } else if (schema === 'iso19115') {
             service = this.services.mdXMLGet19115; // Force ISO19115 record to 19139
         }
+
+        var url = service + '?uuid=' + uuid;
+        window.open(url, this.windowName, this.windowOption);
+    },
+    /** api: method[metadataGM03Show]
+     *  :param uuid: ``String`` uuid of the metadata to dislay
+     *
+     * Display a metadata record in a new window in XML GM03 format
+     *
+     */
+    metadataGM03Show : function(uuid) {
+        // Default GeoNetwork XML service
+        var service = this.services.mdXMLGetGM03;
 
         var url = service + '?uuid=' + uuid;
         window.open(url, this.windowName, this.windowOption);

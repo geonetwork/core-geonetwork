@@ -234,6 +234,7 @@ GeoNetwork.Lang.fr = {
     'view': 'Consulter',
     'zoomTo': 'Zoomer vers',
     'saveXml': 'Export (XML)',
+    'saveGM03': 'Export (GM03)',
     'saveRdf': 'Export (RDF)',
     'exportCsv': 'Export (CSV)',
     'exportZip': 'Export (ZIP)',

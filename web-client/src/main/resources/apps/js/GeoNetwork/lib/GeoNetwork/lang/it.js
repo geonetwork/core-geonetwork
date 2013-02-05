@@ -21,15 +21,33 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.it = {
 
-        'createDateYear' : 'anni',
-        'createDateYears' : 'aAnno',
-        'denominator' : 'risoluzione spaziale',
-        'denominators' : 'Risoluzione spaziale',
-        'orgName' : 'organizzazione',
-        'orgNames' : 'Organizzazioni',
-        'serviceTypes' : 'Tipi di servizio',
-        'facetMore' : '+ Mostra di più',
-        'facetLess' : '- Mostra meno'
+    'createDateYear' : 'anni',
+    'createDateYears' : 'aAnno',
+    'denominator' : 'risoluzione spaziale',
+    'denominators' : 'Risoluzione spaziale',
+    'orgName' : 'organizzazione',
+    'orgNames' : 'Organizzazioni',
+    'serviceTypes' : 'Tipi di servizio',
+    'facetMore' : '+ Mostra di più',
+    'facetLess' : '- Mostra meno',
+    'view': 'View',
+    'zoomTo': 'Zoom to',
+    'saveXml': 'Save as XML',
+    'saveGM03': 'Save as GM03',
+    'saveRdf': 'Save as RDF',
+    'exportCsv': 'Export (CSV)',
+    'exportZip': 'Export (ZIP)',
+    'printSel': 'Export (PDF)',
+    'getMEF': 'Export (ZIP)',
+    'hitsPerPage': 'Hits per page',
+    'sortBy': 'Sort by',
+    'otherActions': 'Other actions',
+    'onSelection': 'On selection',
+    'none': 'none',
+    'all': 'all',
+    'allInPage': 'all in page',
+    'select': 'Select ',
+    'resultBy': ' result(s) / '
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
