@@ -120,7 +120,7 @@
         
         <xsl:choose>
           <xsl:when test="$matchingHelpers">
-            <xsl:copy-of select="$matchingHelpers"/>
+            <xsl:copy-of select="$matchingHelpers/helper"/>
           </xsl:when>
           <xsl:otherwise>
             <null/>
