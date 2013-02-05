@@ -200,6 +200,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             scope: this
         });
 
+        this.viewISO19139Action = new Ext.Action({
+            text: OpenLayers.i18n('saveXmlIso19139'),
+            iconCls: 'xmlIcon',
+            handler: function(){
+                var id = this.record.get('uuid');
+                this.catalogue.metadataXMLShow(id, 'iso19139');
+            },
+            scope: this
+        });
+
         this.viewGM03Action = new Ext.Action({
          text: OpenLayers.i18n('saveGM03'),
          iconCls: 'xmlIcon',
@@ -286,6 +296,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.viewAction);
         this.add(this.zoomToAction);
         this.add(this.viewXMLAction);
+        this.add(this.viewISO19139Action);
         this.add(this.viewGM03Action);
 
         this.add(this.viewRDFAction);

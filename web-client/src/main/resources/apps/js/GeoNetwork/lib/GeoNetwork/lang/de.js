@@ -228,6 +228,7 @@ GeoNetwork.Lang.de = {
 'view':'Anzeigen',
 'zoomTo':'Zoom auf',
 'saveXml':'Speichern als XML',
+'saveXmlIso19139': 'Speichern als ISO19139 XML',
 'saveGM03': 'Speichern als GM03',
 'exportCsv':'Export (CSV)',
 'exportZip':'Export (ZIP)',
