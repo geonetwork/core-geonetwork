@@ -171,9 +171,7 @@ function get_cookie ( cookie_name )
 // Navigation
 	function goBack()
 	{
-		if() {
-		  
-		} else if(history.length > 1) {
+    if(history.length > 1) {
 		  history.back();
 		} else if (confirm(translate('closeWindow')+'?')) { 
  		  window.close();
