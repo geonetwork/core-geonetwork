@@ -18,16 +18,6 @@
 	-->
 	<xsl:template mode="script" match="/">
 	
-		<!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
-		<xsl:choose>
-			<xsl:when test="/root/request/debug">
-				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-
 		<xsl:call-template name="geoHeader"/>
 
 		<!-- Required by keyword selection panel -->
@@ -37,10 +27,6 @@
 		
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">         	
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/><xsl:text>&#10;</xsl:text>
-
 				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"/><xsl:text>&#10;</xsl:text>
 
 				<!--link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
@@ -48,15 +34,6 @@
 
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css"/>
 				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" /-->
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/LoadingPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/addins/ScaleBar.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geo/proj4js-compressed.js"/><xsl:text>&#10;</xsl:text>
 
 				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text>
@@ -119,8 +96,6 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/><xsl:text>&#10;</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>             
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"/><xsl:text>&#10;</xsl:text>
 
 				<!-- Editor JS is still required here at least for batch operation -->
