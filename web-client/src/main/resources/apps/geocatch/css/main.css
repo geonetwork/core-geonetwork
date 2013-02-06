@@ -28,7 +28,7 @@ body {
 
 body>.ext-el-mask {
 	background-color: white;
-/**	opacity: 1;**/
+	/**	opacity: 1;**/
 }
 
 #header {
@@ -173,8 +173,8 @@ body>.ext-el-mask {
 	margin: 0px;
 	xclear: both;
 	float: left;
-	max-width: 710px;
-	min-width: 690px;
+	max-width: 900px;
+	min-width: 705px;
 	background-color: #CCCCCC;
 	font-size: 0.9em;
 	background-color: #CCCCCC;
@@ -196,7 +196,7 @@ body>.ext-el-mask {
 	border-bottom: 1px solid #FFFFFF;
 	height: 26px;
 	overflow: hidden;
-	scroll: none;
+	overflow-y: auto;
 }
 
 #navTop {
@@ -216,9 +216,6 @@ body>.ext-el-mask {
 	float: right;
 	font-size: 0.8em;
 	background-color: #CCCCCC;
-}
-
-#login_div,#logout-div {
 	padding-top: 5px;
 }
 
