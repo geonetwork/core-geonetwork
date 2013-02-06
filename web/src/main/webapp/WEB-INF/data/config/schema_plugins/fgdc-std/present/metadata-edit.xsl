@@ -4,7 +4,9 @@
 	xmlns:exslt="http://exslt.org/common"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	exclude-result-prefixes="exslt geonet">
-
+	
+	<xsl:include href="metadata-markup.xsl"/>
+	
 	<!-- main template - the way into processing fgdc-std -->
 	<xsl:template name="metadata-fgdc-std">
 		<xsl:param name="schema"/>

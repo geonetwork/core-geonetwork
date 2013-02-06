@@ -7,7 +7,7 @@
 	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 	
-	<xsl:template mode="permitMarkup" match="dc:description">
-		<xsl:value-of select="true()" />
+	<xsl:template name="permitMarkup-csw-record">
+		<xsl:value-of select="false()" />
 	</xsl:template>
 </xsl:stylesheet>

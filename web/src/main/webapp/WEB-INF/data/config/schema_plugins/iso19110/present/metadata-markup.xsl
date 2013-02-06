@@ -6,7 +6,7 @@
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 	
-	<xsl:template mode="permitMarkup" match="gfc:scope | gfc:description | gfc:definition">
-		<xsl:value-of select="true()" />
+	<xsl:template name="permitMarkup-iso19110">
+		<xsl:value-of select="false()" />
 	</xsl:template>
 </xsl:stylesheet>

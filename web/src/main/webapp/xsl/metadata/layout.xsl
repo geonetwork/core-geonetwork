@@ -1280,10 +1280,16 @@
     <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0
                     and (name(.) != 'gmx:Anchor' and name(..) != 'gmx:Anchor')"/>
     <xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
+    
     <xsl:variable name="allowMarkup">
-		<xsl:apply-templates mode="permitMarkup" select="."/>
-	</xsl:variable>
-
+      <xsl:choose>
+        <xsl:when test="$schema">
+          <saxon:call-template name="{concat('permitMarkup-',$schema)}"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
     <tr id="{$id}">
       <xsl:if test="not($visible)">
         <xsl:attribute name="style"> display:none; </xsl:attribute>
@@ -1309,7 +1315,7 @@
 			  	<xsl:value-of select="java:markupToolTip($tip, $name, $link)"/>
 		    </xsl:attribute>
 		  </xsl:if>
-		</xsl:if>
+	 	</xsl:if>
         <label
           for="_{if (gco:CharacterString) then gco:CharacterString/geonet:element/@ref else if (gmd:file) then '' else ''}">
           <xsl:choose>
@@ -1859,7 +1865,9 @@
         
         
     <xsl:variable name="allowMarkup">
-      <xsl:apply-templates mode="permitMarkup" select="../."/>
+      <xsl:for-each select="../.">
+        <saxon:call-template name="{concat('permitMarkup-',$schema)}"/>
+      </xsl:for-each>
     </xsl:variable>
     
     <xsl:variable name="edit" select="xs:boolean($edit)"/>

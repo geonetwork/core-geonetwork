@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 	
-	<xsl:template mode="permitMarkup" match="idAbs | orDesc">
-		<xsl:value-of select="true()" />
+	<xsl:template name="permitMarkup-iso19115">
+		<xsl:value-of select="false()" />
 	</xsl:template>
 </xsl:stylesheet>

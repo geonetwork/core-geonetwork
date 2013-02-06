@@ -5,7 +5,9 @@
 	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
-
+	
+	<xsl:include href="metadata-markup.xsl"/>
+	
 	<!-- main template - the way into processing iso19139.sextant -->
 	<xsl:template name="metadata-iso19139.sextantview-simple">
 		<xsl:call-template name="metadata-iso19139view-simple"/>
