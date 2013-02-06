@@ -261,6 +261,15 @@
             <xsl:apply-templates mode="DataIdentification" select="gmd:thesaurusName"/>
         </GM03_2Core.Core.MD_Keywords>
     </xsl:template>
+    <xsl:template mode="DataIdentification" match="gmd:thesaurusName">
+    	<thesaurus REF='?'>
+	        <GM03_2Core.Core.MD_Thesaurus TID="x{util:randomId()}">
+	            <citation REF="?">
+	            	<xsl:apply-templates mode="DataIdentification" select="gmd:CI_Citation"/>
+	            </citation>
+	        </GM03_2Core.Core.MD_Thesaurus>
+        </thesaurus>
+    </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:resourceFormat">
         <GM03_2Comprehensive.Comprehensive.resourceFormatMD_Identification TID='x{util:randomId()}'>

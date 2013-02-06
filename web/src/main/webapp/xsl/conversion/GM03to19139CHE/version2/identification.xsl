@@ -414,6 +414,15 @@
                     </gmd:keyword>
                 </xsl:for-each>
             </xsl:for-each>
+            <xsl:for-each select="int:thesaurus">
+            	<gmd:thesaurusName>
+	                <xsl:for-each select="int:GM03_2Core.Core.MD_Thesaurus">
+	                	<xsl:for-each select="int:citation">
+	                        <xsl:apply-templates mode="Citation" select="int:GM03_2Comprehensive.Comprehensive.CI_Citation"/>
+	                	</xsl:for-each>
+	                </xsl:for-each>
+	            </gmd:thesaurusName>
+            </xsl:for-each>
             <xsl:for-each select="int:type">
                 <gmd:type>
                     <gmd:MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="{.}" />
