@@ -1037,11 +1037,26 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         var markupTextarea = Ext.query('textarea.markup', this.body.dom);
         var syntax = {
-                bold: "${before}'''${text}'''${after}",
-                italic: "${before}''${text}''${after}",
-                ul: '${before}* ${text}${after}',
-                ol: '${before}# ${text}${after}',
-                hyperlink: '${before}[${link} ${text}]${after}'
+                bold: {
+                    pattern: "${before}'''${text}'''${after}",
+                    emptyValue: {text: 'boldText'}
+                },
+                italic: {
+                    pattern: "${before}''${text}''${after}",
+                    emptyValue: {text: 'italicText'}
+                },
+                ul: {
+                    pattern: '${before}* ${text}${after}',
+                    emptyValue: {text: 'item'}
+                },
+                ol: {
+                    pattern: '${before}# ${text}${after}',
+                    emptyValue: {text: 'item'}
+                },
+                hyperlink: {
+                    pattern: '${before}[${link} ${text}]${after}',
+                    emptyValue: {text: 'linkName', link: 'http://url'}
+                }
         };
         Ext.each(markupTextarea, function(item, index, allItems){
             var ta = Ext.get(item);
@@ -1125,14 +1140,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         // There is always a text element which is the current 
         // selection, forget empty selection or space
         if (obj.text === "" || obj.text === " ") {
-            return;
+            obj.text = undefined;
+            Ext.applyIf(obj, syntaxForm.emptyValue);
         }
+        
         if (item.setSelectionRange) {
             Ext.applyIf(obj, {
                 before: item.value.substring(0, item.selectionStart), 
                 after: item.value.substring(item.selectionEnd, item.value.length)
             });
-            item.value = OpenLayers.String.format(syntaxForm, obj);
+            item.value = OpenLayers.String.format(syntaxForm.pattern, obj);
         }
         else {
             // IE
@@ -1142,7 +1159,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     before: '', 
                     after: ''
                 });
-                document.selection.createRange().text = OpenLayers.String.format(syntax.bold, obj); 
+                document.selection.createRange().text = OpenLayers.String.format(syntaxForm.pattern, obj); 
             }
         }
     },
