@@ -557,6 +557,9 @@ GeoNetwork.Lang.fr = {
     'linklabel-text/html': 'Liens',
     'linklabel-text/plain': 'Liens',
     'linklabel-image/png': 'Images',
-    'linklabel-': 'Liens'
+    'linklabel-': 'Liens',
+        'WMS Layer' : 'WMS Couche',
+        'KML Layer' : 'KML Couche',
+        'Link' : 'Liens'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);
