@@ -6,5 +6,6 @@
 
     <xsl:include href="../GM03to19139CHE/version2/CHE03-to-19139.xsl"/>
 
+	<xsl:param name="uuid"/>
     <xsl:strip-space elements="*"/>
 </xsl:stylesheet>
