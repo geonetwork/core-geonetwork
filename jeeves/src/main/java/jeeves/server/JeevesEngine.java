@@ -54,6 +54,7 @@ import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest;

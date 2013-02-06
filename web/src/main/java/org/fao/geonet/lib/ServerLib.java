@@ -35,7 +35,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import jeeves.server.ConfigurationOverrides;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 //=============================================================================
 

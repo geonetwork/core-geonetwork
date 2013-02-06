@@ -29,7 +29,7 @@ import org.jdom.JDOMException;
 import java.io.File;
 import java.io.IOException;
 
-import jeeves.server.ConfigurationOverrides;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 import javax.servlet.ServletContext;
 

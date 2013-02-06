@@ -2,6 +2,7 @@ package org.fao.geonet.services.region;
 
 import java.util.Collections;
 
+import org.fao.geonet.services.region.MetadataRegionSearchRequest.Id;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -14,8 +15,8 @@ public class MetadataRegion extends Region {
 
     private Geometry geometry;
 
-    public MetadataRegion(String fileId, String id, Geometry geometry) {
-        super(fileId+":"+id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME, 
+    public MetadataRegion(Id mdId, String id, Geometry geometry) {
+        super("metadata"+mdId.getIdentifiedId()+":"+id, Collections.<String, String>emptyMap(), MetadataRegionDAO.CATEGORY_NAME, 
                 Collections.<String, String>emptyMap(), true, 
                 new ReferencedEnvelope(geometry.getEnvelopeInternal(), WGS84));
         this.geometry = geometry;

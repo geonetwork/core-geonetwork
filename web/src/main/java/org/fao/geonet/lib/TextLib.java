@@ -23,7 +23,7 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.server.ConfigurationOverrides;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Util;
 
