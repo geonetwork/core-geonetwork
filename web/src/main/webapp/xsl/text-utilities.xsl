@@ -52,7 +52,7 @@
 			<xsl:copy-of select="$text"/>
 		  </xsl:when>
           <xsl:when test="($markupType != 'none' or $wysiwygEnabled = 'true') and $allowMarkup = 'true'">
-             <xsl:copy-of select="java:parseWikiText($text, string($text), string($markupType))"></xsl:copy-of>
+              <div class="gn-wiki"><xsl:copy-of select="java:parseWikiText($text, string($text), string($markupType))"/></div>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="addLineBreaksAndHyperlinks">

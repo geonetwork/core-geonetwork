@@ -154,7 +154,7 @@
 						
 						<xsl:choose>
 							<xsl:when test="($markupType != 'none' or $wysiwygEnabled = true()) and $allowMarkup = true()">
-								<xsl:copy-of select="java:parseWikiText(., string(gco:CharacterString), string($markupType))"></xsl:copy-of>
+								<div class="gn-wiki"><xsl:copy-of select="java:parseWikiText(., string(gco:CharacterString), string($markupType))"/></div>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="gco:CharacterString" />
