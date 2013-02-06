@@ -68,14 +68,20 @@
             <gmd:LocalisedCharacterString locale="#{$mainLang}"><xsl:value-of select="gco:CharacterString"></xsl:value-of></gmd:LocalisedCharacterString>
           </gmd:textGroup>
 	    </xsl:variable>
-
+		<xsl:variable name="mainLangText"><xsl:value-of select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#',$mainLang)]"/></xsl:variable>
 	    <xsl:choose>
+	       <xsl:when test="normalize-space($mainLangText) != ''">
+	       	    <xsl:copy>
+		          <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
+           		  <xsl:apply-templates mode="copy" select="gmd:PT_FreeText"/>
+	           </xsl:copy>
+	       </xsl:when>
 	       <xsl:when test="normalize-space(gmd:PT_FreeText) != ''">
 		       <xsl:copy>
 		          <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
 		           <gmd:PT_FreeText>
 		               <xsl:copy-of select="$textGroup"/>
-		               <xsl:copy-of select="gmd:PT_FreeText/*"/>
+           		  	   <xsl:apply-templates mode="copy" select="gmd:PT_FreeText"/>
 		           </gmd:PT_FreeText>
 	           </xsl:copy>
 	       </xsl:when>
@@ -90,6 +96,45 @@
 	    </xsl:choose>
    </xsl:template>
 
+	<xsl:template mode="copy" match="*|@*">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()" mode="copy"/>
+		</xsl:copy>
+	</xsl:template>
+	
+	<xsl:template mode="copy" match="gmd:LocalisedCharacterString" priority="5">
+		<xsl:variable name="locale" select="@locale"/>
+		<xsl:choose>
+			<xsl:when test="normalize-space(.) = ''">
+			</xsl:when>
+			<xsl:when test="preceding-sibling::gmd:LocalisedCharacterString[@locale = $locale]">
+			</xsl:when>
+			<xsl:when test="../preceding-sibling::gmd:textGroup[gmd:LocalisedCharacterString/@locale = $locale]">
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:apply-templates select="@*|node()" mode="copy"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template mode="copy" match="gmd:LocalisedURL" priority="5">
+				<xsl:variable name="locale" select="@locale"/>
+		<xsl:choose>
+			<xsl:when test="normalize-space(.) = ''">
+			</xsl:when>
+			<xsl:when test="preceding-sibling::gmd:LocalisedURL[@locale = $locale]">
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy>
+					<xsl:apply-templates select="@*|node()" mode="copy"/>
+				</xsl:copy>
+			</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+	
 	<xsl:template priority="5" match="gmd:language/gco:CharacterString">
 		<gco:CharacterString><xsl:call-template name="normalizeLang"><xsl:with-param name="lang" select="string(.)"/></xsl:call-template></gco:CharacterString>
 	</xsl:template>
