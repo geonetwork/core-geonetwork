@@ -651,30 +651,14 @@
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/qualityTitle)"/>
 			<xsl:with-param name="content">
 				
-				
-				<xsl:apply-templates mode="simpleElement" select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="title">
-						<xsl:value-of select="string(/root/gui/schemas/iso19139/labels/element[@name='gmd:LI_Lineage']/label)"/>
-					</xsl:with-param>
-					<xsl:with-param name="helpLink">
-						<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
-							<xsl:call-template name="getHelpLink">
-								<xsl:with-param name="name"   select="name(.)"/>
-								<xsl:with-param name="schema" select="$schema"/>
-							</xsl:call-template>
-						</xsl:for-each>
-					</xsl:with-param>
-					<xsl:with-param name="text">
-						<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString">
-							<xsl:call-template name="getElementText">
-								<xsl:with-param name="edit"   select="$edit"/>
-								<xsl:with-param name="schema" select="$schema"/>
-							</xsl:call-template>
-						</xsl:for-each>
-					</xsl:with-param>
-				</xsl:apply-templates>
+				<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
+					
+					<xsl:apply-templates mode="elementEP" select=".">
+						<xsl:with-param name="schema" select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="flat"   select="$flat"/>
+					</xsl:apply-templates>
+				</xsl:for-each>
 				
 				<xsl:apply-templates mode="elementEP" select="gmd:spatialRepresentationInfo">
 					<xsl:with-param name="schema" select="$schema"/>
