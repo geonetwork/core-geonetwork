@@ -71,6 +71,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     viewXMLAction: undefined,
     getMEFAction: undefined,
     ratingWidget: undefined,
+    wmsLinks: undefined,
+    kmlLinks: undefined,
+    inks: undefined,
     defaultConfig: {},
     /** private: method[setRecord] 
      *  Create the menu.
@@ -250,8 +253,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             scope: this
         });
         
-        
-        
         /* Rating menu */
         // Swisstopo: Disable rating
         if ((Ext.ux.RatingItem) && (false)) { // Check required widget are loaded before displaying context menu
@@ -279,7 +280,120 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* TODO : add categories / privileges / create child */
         this.updateMenu();
     },
-    
+
+                    
+/**
+ * private: method[dislayLinks] Create link menu in the div for each records
+ * Swisstopo specific
+ * 
+ */
+    displayLinks : function(r) {
+        var id = r.get('id');
+        var uuid = r.get('uuid');
+
+        var wmsLinks = [];
+        var kmlLinks = [];
+        var links = [];
+
+        Ext
+                .each(
+                        r.get('links'),
+                        function(record) {
+                            // Avoid empty URL
+                            if (record.href !== '') {
+                                var currentType = record.type;
+
+                                if (currentType === 'application/vnd.ogc.wms_xml'
+                                        || currentType === 'OGC:WMS') {
+
+                                    var handler = function() {
+                                        app.mapApp
+                                                .addWMSLayer([ [
+                                                        record.title,
+                                                        record.href,
+                                                        record.name,
+                                                        uuid ] ]);
+                                    };
+                                    wmsLinks
+                                            .push(new Ext.Action(
+                                                    {
+                                                        text : record.title
+                                                                || record.name,
+                                                        handler : handler
+                                                    }));
+
+                                    var kmlLink = catalogue.URL
+                                            + '/srv/'
+                                            + catalogue.LANG
+                                            + "/google.kml?uuid="
+                                            + uuid + "&layers="
+                                            + record.href;
+                                    kmlLinks
+                                            .push(new Ext.Action(
+                                                    {
+                                                        text : (record.title || record.name),
+                                                        href : kmlLink
+                                                    }));
+                                }
+                                if (currentType === 'OGC:KML') {
+                                    kmlLinks
+                                            .push(new Ext.Action(
+                                                    {
+                                                        text : (record.title || record.name),
+                                                        href : record.href
+                                                    }));
+
+                                }
+
+                                // Add the download all
+                                // button
+                                if (currentType === 'application/x-compressed' ||
+                                        currentType === 'WWWLINK') {
+                                    links
+                                            .push(new Ext.Action(
+                                                    {
+                                                        text : (record.title || record.name),
+                                                        handler : function() {
+                                                            catalogue
+                                                                    .metadataPrepareDownload(id);
+                                                        }
+                                                    }));
+                                }
+                            }
+
+                        });
+
+        if (wmsLinks.length > 0) {
+            this.wmsLinks = new Ext.menu.Item({
+                text : OpenLayers.i18n('WMS Layer'),
+                iconCls : 'addLayer',
+                menu : {
+                    items : wmsLinks
+                }
+            });
+        }
+
+        if (kmlLinks.length > 0) {
+            this.kmlLinks = new Ext.menu.Item({
+                text : OpenLayers.i18n('KML Layer'),
+                iconCls : 'md-mn-kml',
+                menu : {
+                    items : kmlLinks
+                }
+            });
+        }
+
+        if (links.length > 0) {
+            this.links = new Ext.menu.Item({
+                text : OpenLayers.i18n('Link'),
+                iconCls : 'WWWLINK',
+                menu : {
+                    items : links
+                }
+            });
+        }
+    },
+   
     composeMenu: function(){
         this.add(this.editAction);
         this.add(this.deleteAction);
@@ -287,7 +401,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.categoryAction] //this.statusAction, this.versioningAction,
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.categoryAction] // this.statusAction,
+                                                                                                                // this.versioningAction,
             }
         });
         this.add(this.otherActions);
@@ -362,6 +477,27 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             } else {
                 this.ratingWidget.enable();
             }
+        }
+        
+        this.remove(this.wmsLinks);
+        this.remove(this.kmlLinks);
+        this.remove(this.links);
+        
+
+        this.wmsLinks = null;
+        this.kmlLinks = null;
+        this.links = null;
+        
+        this.displayLinks(this.record);
+
+        if(this.wmsLinks){
+            this.add(this.wmsLinks);
+        }
+        if(this.kmlLinks){
+            this.add(this.kmlLinks);
+        }
+        if(this.links){
+            this.add(this.links);
         }
         
     },

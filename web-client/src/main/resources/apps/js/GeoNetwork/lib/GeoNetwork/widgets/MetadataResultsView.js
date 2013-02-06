@@ -560,7 +560,8 @@ GeoNetwork.MetadataResultsView = Ext
                         this.drawMetadataBbox(view, records, options);
                         this.contextMenu = undefined;
                         this.initRatingWidget();
-                        this.dislayLinks(records);
+                       //Swisstopo specific
+                        // this.dislayLinks(records);
                         this.dislayRelations(records);
                         this.initializeLoadingCatalog();
                         // this.initMenu();
