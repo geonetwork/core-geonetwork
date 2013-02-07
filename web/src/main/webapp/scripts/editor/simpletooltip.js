@@ -7,6 +7,9 @@ function toolTip(spanId)
 {
 	elem = $(spanId);
 	if (elem.childElements().length == 0) {
+    if(Ext) {
+      Ext.each(Ext.query(".toolTipOverlay"), function(e) {Ext.get(e).setVisible(false)});
+    }
 		// cant use spanId, IE barfs
 		var tokens = elem.getAttribute('id').split('|'); 
 		var schema = tokens[0].substring(5); // remove stip. 
@@ -33,9 +36,21 @@ function toolTip(spanId)
 			elem.appendChild(tip);
 			
 		}));	
-	} else { 
+	} else {
+	  
+
 		childs = elem.childElements();
-		childs[0].toggle();
+    if(Ext) {
+      var tip = Ext.get(childs[0]);
+      var isVisible = tip.isVisible();
+      Ext.each(Ext.query(".toolTipOverlay"), function(e) {Ext.get(e).setVisible(false)});
+
+      if(!isVisible) {
+        tip.setVisible(true);
+      }
+    } else {
+      childs[0].toggle();
+    }
 	}
 }
 

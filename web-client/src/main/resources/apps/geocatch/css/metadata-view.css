@@ -403,3 +403,30 @@ div.help ul li {
   list-style-type : circle !important;
   margin-left : 10px !important;
 }
+
+div.toolTipOverlay {
+    font-size: x-small;
+	background: #fff;
+    max-width: 600px!important;
+    height: auto;
+	font-weight: normal;
+	position: absolute;
+	border-style: solid;
+	margin: 2px;
+	padding: 2px;
+	white-space: normal;
+}
+
+
+div.toolTipOverlay * li {
+    white-space: pre-wrap;
+}
+
+div.toolTipOverlay ul li, div.shortcutHelp ul li {
+    margin-left:15px;
+    list-style-type: disc;
+}
+
+.tooltipDescription {
+	white-space:normal;
+}

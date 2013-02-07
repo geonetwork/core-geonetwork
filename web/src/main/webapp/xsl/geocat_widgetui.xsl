@@ -134,7 +134,6 @@
                 <xsl:attribute name="src"><xsl:value-of
                         select="$baseUrl" />/apps/js/ext/ext-all.js</xsl:attribute>
             </script>
-            
 
             <script type="text/javascript">
                 <xsl:attribute name="src"><xsl:value-of
@@ -501,7 +500,12 @@
                         <xsl:attribute name="src"><xsl:value-of
                                 select="$appBaseUrl" />/js/App.js</xsl:attribute>
                     </script>
-
+                    
+                    <script type="text/javascript">
+                        <xsl:attribute name="src"><xsl:value-of
+                                select="$appBaseUrl" />/js/MetadataTooltip.js</xsl:attribute>
+                    </script>
+                    
                 </xsl:when>
                 <xsl:otherwise>
                     <script type="text/javascript" src="{concat($appBaseUrl, '/js/App-mini.js')}"></script>
