@@ -344,10 +344,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
 
                                 }
 
-                                // Add the download all
+                                // Add the download 
                                 // button
-                                if (currentType === 'application/x-compressed' ||
-                                        currentType === 'WWWLINK') {
+                                if (currentType === 'application/x-compressed' ) {
                                     links
                                             .push(new Ext.Action(
                                                     {
@@ -355,6 +354,18 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                                                         handler : function() {
                                                             catalogue
                                                                     .metadataPrepareDownload(id);
+                                                        }
+                                                    }));
+                                }
+                                // Add the download 
+                                // button
+                                if ( currentType === 'WWWLINK') {
+                                    links
+                                            .push(new Ext.Action(
+                                                    {
+                                                        text : (record.title || record.name || record.href),
+                                                        handler: function() {
+                                                            window.open(record.href, '');
                                                         }
                                                     }));
                                 }
