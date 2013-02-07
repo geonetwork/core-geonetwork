@@ -66,9 +66,10 @@
 								
 								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
 								<div class="result-metadata-modal-content">
-								
-									<xsl:apply-templates mode="iso19139"
-										select="/root/gmd:MD_Metadata/gmd:distributionInfo" />
+									<xsl:for-each select="/root/gmd:MD_Metadata/gmd:distributionInfo">
+										<xsl:apply-templates mode="iso19139"
+											select="." />
+									</xsl:for-each>
 									<hr/>
 									<xsl:apply-templates mode="iso19139"
 										select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints" />
@@ -215,7 +216,16 @@
 		</xsl:for-each>
 		
 	</xsl:template>
-
+	
+	<!-- gmd:onLine are displayed in advanced view > relation section -->
+	<xsl:template mode="iso19139" match="gmd:onLine"/>
+	
+	<!-- Create separator between distributors (MyOcean usually have many). -->
+	<xsl:template mode="iso19139" match="gmd:distributor">
+		<xsl:apply-templates mode="iso19139" />
+		<xsl:if test="following-sibling::*[name(.) = 'gmd:distributor']"><hr/></xsl:if>
+	</xsl:template>
+	
 	<!-- Display characterString -->
 	<xsl:template mode="iso19139"
 		match="gmd:*[gco:CharacterString or gmd:PT_FreeText]|
