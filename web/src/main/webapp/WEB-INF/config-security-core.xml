@@ -110,6 +110,7 @@
 		<property name="authenticationSuccessHandler">
 			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 				<property name="defaultTargetUrl" value="/" />
+				<property name="targetUrlParameter" value="redirectUrl" />
 			</bean>
 		</property>
 		<property name="sessionAuthenticationStrategy">
