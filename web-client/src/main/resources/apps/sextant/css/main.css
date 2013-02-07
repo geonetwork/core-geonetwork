@@ -711,17 +711,17 @@ font-size: 30px;
 	padding: 0;
 	padding-bottom: 2px;
 }
-.viewmd-panel ol, .result-list ol {
+.viewmd-panel div.gn-wiki ol, .result-list div.gn-wiki ol {
     list-style: decimal !important;
     padding-left: 20px;
 }
-.viewmd-panel ul, .result-list ul {
+.viewmd-panel div.gn-wiki ul, .result-list div.gn-wiki ul {
     list-style: circle !important;
     padding-left: 20px;
 }
 
-.viewmd-panel ol li, .result-list ol li,
-.viewmd-panel ul li, .result-list ul li {
+.viewmd-panel div.gn-wiki ol li, .result-list div.gn-wiki ol li,
+.viewmd-panel div.gn-wiki ul li, .result-list div.gn-wiki ul li {
     float: none !important;
     overflow: visible !important;
 }

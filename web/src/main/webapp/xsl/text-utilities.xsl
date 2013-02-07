@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:java="java:org.fao.geonet.util.XslUtil"
     xmlns:exslt="http://exslt.org/common" 
+    xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
 	xmlns:fn="http://www.w3.org/2005/02/xpath-functions"
 	exclude-result-prefixes="#all">
 <!--							-->
@@ -34,15 +35,21 @@
 		
 	<xsl:template name="processText">
 		<xsl:param name="node" select="."/>
+		<xsl:param name="schema" select="'iso19139'"/>
 		<xsl:param name="markupType" select="/root/gui/env/wiki/markup"/>
 		<xsl:param name="wysiwygEnabled" select="/root/gui/env/wysiwyg/enable"/>
 		<xsl:param name="text"/>
 		
 	    <xsl:variable name="allowMarkup">
-			<xsl:apply-templates mode="permitMarkup" select="$node"/>
+	    	<xsl:choose>
+	    		<xsl:when test="$schema">
+	    			<saxon:call-template name="{concat('permitMarkup-',$schema)}"/>
+	    		</xsl:when>
+	    		<xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+	    	</xsl:choose>
 		</xsl:variable>
 		
-        <xsl:variable name="textnode" select="exslt:node-set($text)"/>
+		<xsl:variable name="textnode" select="exslt:node-set($text)"/>
         
 		<xsl:choose>
           <xsl:when test="count($textnode/*) &gt; 0">

@@ -75,6 +75,7 @@
       <div>
         <xsl:call-template name="processText">
           <xsl:with-param name="text" select="$content"/>
+          <xsl:with-param name="schema" select="$schema"/>
         </xsl:call-template>
       </div>
     </div>

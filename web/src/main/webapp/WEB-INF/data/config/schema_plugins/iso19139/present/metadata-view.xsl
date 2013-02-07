@@ -26,14 +26,15 @@
       </xsl:with-param>
       <xsl:with-param name="exportButton"/>
       <xsl:with-param name="abstract">
-        <xsl:call-template name="processText">
-          <xsl:with-param name="node" select="gmd:identificationInfo/*/gmd:abstract"/>
-          <xsl:with-param name="text">
-            <xsl:apply-templates mode="localised" select="gmd:identificationInfo/*/gmd:abstract">
-               <xsl:with-param name="langId" select="$langId"/>
-            </xsl:apply-templates>
-          </xsl:with-param>
-        </xsl:call-template>
+        <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
+          <xsl:call-template name="processText">
+            <xsl:with-param name="text">
+              <xsl:apply-templates mode="localised" select=".">
+                 <xsl:with-param name="langId" select="$langId"/>
+              </xsl:apply-templates>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:for-each>
       </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"

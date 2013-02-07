@@ -825,6 +825,7 @@
 					<xsl:otherwise>
 						<xsl:call-template name="processText">
 							<xsl:with-param name="text" select="$text"/>
+							<xsl:with-param name="schema" select="$schema"/>
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>

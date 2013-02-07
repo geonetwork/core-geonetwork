@@ -461,6 +461,7 @@
 								<xsl:call-template name="processText">
 									<xsl:with-param name="node" select="$metadata/abstract"/>
 									<xsl:with-param name="text" select="$text"/>
+									<xsl:with-param name="schema" select="$metadata/geonet:info/schema"/>
 								</xsl:call-template>
 							</div>
 						</div>
