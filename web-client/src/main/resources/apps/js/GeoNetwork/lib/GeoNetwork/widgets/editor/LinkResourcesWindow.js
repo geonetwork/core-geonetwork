@@ -992,7 +992,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             parameters += "&protocol=" + this.serviceProtocol;
         } else if (this.type === 'thumbnail') {
             // Attach a thumbnail by URL
-            parameters += "&thumbnail_url=" + this.serviceUrl;
+            parameters += "&thumbnail_url=" + encodeURIComponent(this.serviceUrl);
             // TODO : set name and description
         } else if (this.type === 'sibling') {
          // Combine all links if multiple selection is available
