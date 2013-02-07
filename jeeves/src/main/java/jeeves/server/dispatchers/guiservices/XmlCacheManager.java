@@ -38,7 +38,7 @@ public class XmlCacheManager {
         String rootPath = (isBaseAbsolutePath) ? base : appPath + base;
 
         if (localized) xmlFilePath = rootPath + File.separator + preferedLanguage +File.separator + file;
-        else xmlFilePath = appPath + file;
+        else xmlFilePath = rootPath+ File.separator + file;
 
         ServletContext servletContext = null;
         if(context.getServlet() != null) {

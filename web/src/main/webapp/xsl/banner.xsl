@@ -163,7 +163,17 @@
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<form name="login" action="{/root/gui/url}/j_spring_security_check" method="post">
+									<xsl:variable name="paramString">
+										<xsl:if test="/root/request/*">
+											<xsl:text>?</xsl:text>
+											<xsl:for-each select="/root/request/*">
+												<xsl:if test="preceding-sibling::*"><xsl:text>&amp;</xsl:text></xsl:if>
+												<xsl:value-of select="name(.)"/><xsl:text>=</xsl:text><xsl:value-of select="."/>
+											</xsl:for-each>
+										</xsl:if>
+									</xsl:variable>
+									
+									<form name="login" action="{/root/gui/url}/j_spring_security_check?redirectUrl=/srv/{/root/gui/language}/{/root/gui/reqService}{$paramString}" method="post">
 										<xsl:if test="string(/root/gui/env/shib/use)='true'">
 											<a class="banner" href="{/root/gui/env/shib/path}">
 												<xsl:value-of select="/root/gui/strings/shibLogin"/>
