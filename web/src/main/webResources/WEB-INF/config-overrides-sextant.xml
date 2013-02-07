@@ -35,7 +35,7 @@
   <file name=".*/WEB-INF/config.xml">
     <replaceText xpath="general/uploadDir">../../temp/</replaceText>
     <replaceText xpath="general/maxUploadSize">100</replaceText>
-    <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
+    <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="true"/>
     
     <replaceAtt xpath="//service[@name = 'main.search.suggest']/class/param[@name='threshold']" attName="value" value="1"/>
     
@@ -48,9 +48,10 @@
           <password>${db.pass}</password>
           <driver>${db.driver}</driver>
           <url>${db.url}</url>
-          <poolSize>20</poolSize>
-          <minIdle>0</minIdle>
-          <maxIdle>10</maxIdle>
+          <poolSize>30</poolSize>
+          <minIdle>10</minIdle>
+          <maxIdle>30</maxIdle>
+          <maxWait>1000</maxWait>
           <validationQuery>SELECT 1</validationQuery>
         </config>
       </resource>
