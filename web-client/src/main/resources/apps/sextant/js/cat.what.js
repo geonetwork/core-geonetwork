@@ -91,6 +91,8 @@ cat.what = function() {
 	        
 			var categoryTree = new GeoNetwork.CategoryTree({
 				store : categoryStore,
+				lang: cat.language,
+				storeLabel: GeoNetwork.data.CategoryStore(services.getCategories),
 				rootVisible: false,
 				label: OpenLayers.i18n('Themes'),
 				autoWidth: true

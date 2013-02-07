@@ -15,11 +15,11 @@ Ext.namespace('GeoNetwork');
  */
 GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     
-    /** CategoryStore **/
+    /** CategoryStore from suggestion **/
     store: undefined,
     
-    /** url of CategoryStore **/
-    url : undefined,
+    /** CategoryStore from xmlinfo?type=categories containing translations **/
+    storeLabel: undefined,
     
     /** geonetwork language **/
     lang: undefined,
@@ -56,7 +56,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         Ext.applyIf(this, this.defaultConfig);
         GeoNetwork.CategoryTree.superclass.initComponent.call(this);
         
-        this.lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
+        this.lang = this.lang || GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
         
         this.loadStore();
         
@@ -76,10 +76,17 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
     
-    loadStore: function() {
-    	this.store.load({
-        	callback: this.loadCategories,
-        	scope: this
+    loadStore : function() {
+        this.storeLabel.load({
+            callback : this.loadCategoriesLabel,
+            scope : this
+        });
+    },
+    
+    loadCategoriesLabel: function(records, o, s) {
+        this.store.load({
+            callback : this.loadCategories,
+            scope : this
         });
     },
     
@@ -90,10 +97,22 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	var r, pseudotree = {};
     	this.root.removeAll();
     	for (var i=0; i<records.length; i++) {
-    		r = records[i].get('value').split('/');
+    		r = this.getLabel(records[i].get('value')).split('/');
             this.createNodes(this.root, r, 1);
         }
     	this.restoreSearchedCat();
+    },
+    
+    /**
+     * Retrieve translation of the key value for the category
+     */
+    getLabel: function(value){
+        var idx = this.storeLabel.find('name',value);
+        if(idx && this.storeLabel.getAt(idx).get('label') &&
+                this.storeLabel.getAt(idx).get('label')[this.lang]) {
+            return this.storeLabel.getAt(idx).get('label')[this.lang];
+        }
+        else return value;
     },
     
     /**
