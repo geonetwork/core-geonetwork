@@ -310,9 +310,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: OpenLayers.i18n('sendmail'),
             id: 'notifyByMailAction',
             handler: function() {
-            	Ext.Ajax.request({
-         		   url: catalogue.services.notifyByMail
-            	});
+            	GeoNetwork.NotifyByEmail.openDialog();
             },
             scope: this,
             hidden: hide

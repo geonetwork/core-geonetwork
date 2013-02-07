@@ -296,33 +296,6 @@
             <class name=".services.reusable.ReferencingMetadata" />
         </service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Search for metadata that has not recently been updated        -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.expired.email" type="xml">
-           <class name=".services.metadata.DetectOld">
-               <param name="serviceType" value="email" />
-           </class>
-           <output sheet="metadata_expire_results.xsl"/>
-         </service>
-
-        <service name="metadata.expired.unpublish" type="xml">
-           <class name=".services.metadata.DetectOld">
-               <param name="serviceType" value="unpublish" />
-           </class>
-           <output sheet="metadata_expire_results.xsl"/>
-         </service>
-
-        <service name="metadata.expired.form" type="html">
-           <class name=".services.metadata.DetectOld">
-               <param name="email" value="3" />
-               <param name="unpublish" value="5" />
-               <param name="serviceType" value="form" />
-           </class>
-           <output sheet="metadata_expire_operations.xsl"/>
-         </service>
-
         <service name="metadata.ext.edit" type="html">
 			<output sheet="ext/edit.xsl"/>
          </service>
@@ -563,11 +536,11 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="metadata.select.notifybymail">
-			<class name=".services.selection.NotifyByMail">
-				<param name="subject" value="Keep your metadata uptodate." />
-				<param name="body" value="Metadata not up to date : {0}. Please keep the metadata up to date." />
-				<param name="bodyError" value="Error when sending mail : {0}" />
-			</class>
+			<class name=".services.selection.NotifyByMail"/>
+		</service>
+		
+		<service name="metadata.select.info">
+			<class name=".services.selection.Info"/>
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

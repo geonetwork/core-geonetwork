@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<template>
+		<name>Update Metadata</name>
+		<subject>Keep your metadata up-to-date.</subject>
+		<body>Metadata not up to date : {0}. Please keep the metadata up to date.</body>
+		<bodyError>Error when sending mail : {0}</bodyError>
+	</template>
+</templates>

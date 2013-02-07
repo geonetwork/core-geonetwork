@@ -87,7 +87,15 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'sendmail' : 'Send email',
 	'unpublishSlection' : 'Unpublish the selection',
     'country': 'Country',
-    'city': 'City'
+    'city': 'City',
+    'body': 'Body',
+    'bodyError': 'Error',
+    'subject': 'Subject',
+    'composeMessage': 'Compose Message',
+    'send': 'Send',
+    'cancel': 'Cancel',
+    'nonEmptyField': "Field cannot be empty"
+
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.GeoCatCh.Lang.en);

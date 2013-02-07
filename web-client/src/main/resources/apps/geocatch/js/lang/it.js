@@ -87,7 +87,15 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'facetMore' : '+ Mostra di più',
     'facetLess' : '- Mostra meno',
     'topicCat' : 'Categoria',
-    'topicCats' : 'Categoria'
+    'topicCats' : 'Categoria',
+    'body': 'Body',
+    'bodyError': 'Error',
+    'subject': 'Subject',
+    'composeMessage': 'Compose Message',
+    'send': 'Send',
+    'cancel': 'Cancel',
+    'nonEmptyField': "Field cannot be empty"
+
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);

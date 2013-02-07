@@ -1,6 +1,4 @@
 /*
-/*
-/*
  * Copyright (C) 2009 GeoNetwork
  *
  * This file is part of GeoNetwork
@@ -84,7 +82,14 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'denominators' : 'Räumliche Auflösung',
 	'denominator' : 'räumliche auflösung',
     'country': 'Staat',
-    'city': 'Statd'
+    'city': 'Statd',
+    'body': 'Body',
+    'bodyError': 'Error',
+    'subject': 'Subject',
+    'composeMessage': 'Compose Message',
+    'send': 'Send',
+    'cancel': 'Cancel',
+    'nonEmptyField': "Field cannot be empty"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.de, GeoNetwork.GeoCatCh.Lang.de);

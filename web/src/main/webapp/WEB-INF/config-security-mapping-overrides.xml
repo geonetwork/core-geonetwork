@@ -118,6 +118,7 @@
 			    <!-- Notification on selection -->
                 <sec:intercept-url pattern="/srv/.*/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.select.unpublish!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.select.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 
                 <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"></sec:intercept-url>
 
