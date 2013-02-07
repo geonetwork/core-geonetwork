@@ -4,10 +4,10 @@
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
 	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml">
 	
-	<xsl:template mode="permitMarkup-iso19139"
+	<!--<xsl:template mode="permitMarkup-iso19139"
 		match="gmd:abstract | gmd:description | gmd:statement | gmd:purpose | gmd:supplementalInformation">
 		<xsl:value-of select="true()"/>
-	</xsl:template>
+	</xsl:template>-->
 	<xsl:template mode="permitMarkup-iso19139" match="*">
 		<xsl:value-of select="false()"/>
 	</xsl:template>
