@@ -382,7 +382,7 @@ public class Aligner
 			//--- maybe the metadata has been removed
 
 			if (list.size() == 0) {
-			    log.warning("record from host: "+request.getHost()+" (uuid: "+uuid+") did not return a metadata");
+			    Log.warning(Geonet.CSW_HARVEST, "record from host: "+request.getHost()+" (uuid: "+uuid+") did not return a metadata");
 			    return null;
 			}
 
