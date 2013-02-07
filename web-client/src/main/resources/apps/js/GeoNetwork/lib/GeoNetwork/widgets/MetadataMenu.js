@@ -68,7 +68,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     categoryAction: undefined,
     viewAction: undefined,
     printAction: undefined,
-    viewXMLAction: undefined,
     getMEFAction: undefined,
     ratingWidget: undefined,
     wmsLinks: undefined,
@@ -352,7 +351,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                                     links
                                             .push(new Ext.Action(
                                                     {
-                                                        text : (record.title || record.name),
+                                                        text : (record.title || record.name || record.href),
                                                         handler : function() {
                                                             catalogue
                                                                     .metadataPrepareDownload(id);
@@ -410,13 +409,17 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         this.add(this.viewAction);
         this.add(this.zoomToAction);
-        this.add(this.viewXMLAction);
-        this.add(this.viewISO19139Action);
-        this.add(this.viewGM03Action);
-
-        this.add(this.viewRDFAction);
-        this.add(this.printAction);
-        this.add(this.getMEFAction);
+        
+        this.exportActions = new Ext.menu.Item({
+            text: OpenLayers.i18n('Export'),
+            menu: {
+                items: [this.viewXMLAction, this.viewISO19139Action, this.viewGM03Action,
+                        this.viewRDFAction, this.printAction, this.getMEFAction],
+                                                                                                                // this.versioningAction,
+            }
+        });
+        
+        this.add(this.exportActions);
         
         /* Rating menu */
         if (Ext.ux.RatingItem && this.ratingWidget) { // Check required widget are loaded before displaying context menu
