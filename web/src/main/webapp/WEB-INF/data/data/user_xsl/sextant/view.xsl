@@ -8,6 +8,7 @@
 
 
 	<!-- Load labels. -->
+	<xsl:variable name="lang" select="substring-before(substring-after(/root/locUrl, 'srv/'), '/')" />
 	<xsl:variable name="label" select="/root/schemas/iso19139.sextant" />
 	<xsl:variable name="labelIso" select="/root/schemas/iso19139" />
 	<xsl:template xmlns:geonet="http://www.fao.org/geonetwork"
@@ -16,8 +17,11 @@
 	<xsl:template match="/" priority="5">
 		<html>
 			<!-- Set some vars. -->
-			<xsl:variable name="title"
-				select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString" />
+			<xsl:variable name="title">
+				<xsl:apply-templates mode="localised" 
+					select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title" />
+			</xsl:variable>
+				
 
 			<head>
 				<title>
@@ -152,13 +156,16 @@
 						<xsl:variable name="markupType" select="'org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage'"/>
 						<xsl:variable name="wysiwygEnabled" select="true()"/>
 						<xsl:variable name="allowMarkup" select="true()"/>
+						<xsl:variable name="text">
+							<xsl:call-template name="localised" />
+						</xsl:variable>
 						
 						<xsl:choose>
 							<xsl:when test="($markupType != 'none' or $wysiwygEnabled = true()) and $allowMarkup = true()">
-								<div class="gn-wiki"><xsl:copy-of select="java:parseWikiText(., string(gco:CharacterString), string($markupType))"/></div>
+								<div class="gn-wiki"><xsl:copy-of select="java:parseWikiText(., string($text), string($markupType))"/></div>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="gco:CharacterString" />
+								<xsl:value-of select="$text"></xsl:value-of>
 							</xsl:otherwise>
 						</xsl:choose>
 						
@@ -265,5 +272,28 @@
 
 	</xsl:template>
 
+	<xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmd:PT_FreeText]">
+        <xsl:variable name="langId">
+         	<xsl:value-of select="concat('#', upper-case($lang))" />
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when
+                test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] and
+                gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != ''">
+                <xsl:value-of
+                    select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"
+                />
+            </xsl:when>
+            <xsl:when test="not(gco:CharacterString)">
+                <!-- If no CharacterString, try to use the first textGroup available -->
+                <xsl:value-of
+                    select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"
+                />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="gco:CharacterString"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
 </xsl:stylesheet>
