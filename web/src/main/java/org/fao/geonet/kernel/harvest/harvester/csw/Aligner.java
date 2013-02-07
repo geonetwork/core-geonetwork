@@ -30,6 +30,7 @@ import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
@@ -380,8 +381,10 @@ public class Aligner
 
 			//--- maybe the metadata has been removed
 
-			if (list.size() == 0)
-				return null;
+			if (list.size() == 0) {
+			    log.warning("record from host: "+request.getHost()+" (uuid: "+uuid+") did not return a metadata");
+			    return null;
+			}
 
 			response = (Element) list.get(0);
 			response = (Element) response.detach();
