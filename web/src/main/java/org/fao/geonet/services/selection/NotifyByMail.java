@@ -1,7 +1,9 @@
 package org.fao.geonet.services.selection;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -66,40 +68,41 @@ public class NotifyByMail implements Service {
 
         Element ret = new Element("response");
 
-        Set<String> selection = sm.getSelection("metadata");
+        Collection<String> selection = sm.getSelection("metadata");
         synchronized (selection) {
-            for (Iterator<String> iter = selection.iterator(); iter.hasNext();) {
-                String uuid = (String) iter.next();
-                String emailAddress;
+            selection = new LinkedList<String>(selection);
+        }
 
-                List<Element> uuidQuery = dbms.select(
-                        "SELECT u.email FROM Metadata m, Users u where m.owner = u.id AND m.uuid ='" + uuid + "'")
-                        .getChildren();
-                for (Element uuidElement : uuidQuery) {
-                    emailAddress = uuidElement.getChildText("email");
-                    if (emailAddress == null || "".equals(emailAddress) || !rfc2822.matcher(emailAddress).matches()) {
-                        emailAddress = ADMIN_MAIL;
+        for (Iterator<String> iter = selection.iterator(); iter.hasNext();) {
+            String uuid = (String) iter.next();
+            String emailAddress;
+
+            List<Element> uuidQuery = dbms.select(
+                    "SELECT u.email FROM Metadata m, Users u where m.owner = u.id AND m.uuid ='" + uuid + "'")
+                    .getChildren();
+            for (Element uuidElement : uuidQuery) {
+                emailAddress = uuidElement.getChildText("email");
+                if (emailAddress == null || "".equals(emailAddress) || !rfc2822.matcher(emailAddress).matches()) {
+                    emailAddress = ADMIN_MAIL;
+                }
+
+                context.info("Send notification email to " + emailAddress + " for MD uuid : " + uuid);
+
+                Element retchildserv = new Element("sendMail");
+                retchildserv.setAttribute("email", emailAddress);
+                retchildserv.setAttribute("uuid", uuid);
+
+                String body = MessageFormat.format(messageBody, uuid);
+
+                try {
+                    gc.getEmail().send(emailAddress, messageSubject, body, false);
+                } catch (Exception e) {
+                    if (!emailAddress.equals(ADMIN_MAIL)) {
+                        gc.getEmail().sendToAdmin(messageSubject, MessageFormat.format(messageBodyError, body), false);
+                        retchildserv.setText("error");
                     }
-
-                    context.info("Send notification email to " + emailAddress + " for MD uuid : " + uuid);
-
-                    Element retchildserv = new Element("sendMail");
-                    retchildserv.setAttribute("email", emailAddress);
-                    retchildserv.setAttribute("uuid", uuid);
-
-                    String body = MessageFormat.format(messageBody, uuid);
-
-                    try {
-                        gc.getEmail().send(emailAddress, messageSubject, body, false);
-                    } catch (Exception e) {
-                        if (!emailAddress.equals(ADMIN_MAIL)) {
-                            gc.getEmail().sendToAdmin(messageSubject, MessageFormat.format(messageBodyError, body),
-                                    false);
-                            retchildserv.setText("error");
-                        }
-                    } finally {
-                        ret.addContent(retchildserv);
-                    }
+                } finally {
+                    ret.addContent(retchildserv);
                 }
             }
         }

@@ -306,7 +306,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
-        this.notifyByMailAction = new Ext.Action({
+        this.notifyByMailAction = new Ext.menu.Item({
             text: OpenLayers.i18n('sendmail'),
             id: 'notifyByMailAction',
             handler: function() {
@@ -315,7 +315,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        this.unpublishSelectionAction = new Ext.Action({
+        this.unpublishSelectionAction = new Ext.menu.Item({
             text: OpenLayers.i18n('unpublishSlection'),
             id: 'unpublishSelectionAction',
             handler: function() {
@@ -667,6 +667,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],
+            onlyAdminActions = [this.notifyByMailAction, this.unpublishSelectionAction],
             actions = [this.adminAction, this.otherItem];
         
         Ext.each(actions, function(){
@@ -679,6 +680,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         // Change owners are only available for admins (#781)
         Ext.each(adminActions, function(){
             this.setVisible(user && (user.role === 'Administrator' || user.role === 'UserAdmin'));
+        });
+        Ext.each(onlyAdminActions, function(){
+            this.setVisible(user && user.role === 'Administrator');
         });
     },
     /** private: method[onDestroy] 
