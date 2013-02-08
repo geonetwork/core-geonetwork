@@ -83,12 +83,7 @@ GeoNetwork.editor.KeywordSelectionPanel = Ext.extend(Ext.FormPanel, {
      * Property: ref
      */
     ref: null,
-    
-    /**
-     * relative imagePath for ItemSelector
-     */
-    imagePath: undefined,
-    
+        
     name: 'gmd:descriptiveKeywords',
     /**
      * APIProperty: keywordsSelected

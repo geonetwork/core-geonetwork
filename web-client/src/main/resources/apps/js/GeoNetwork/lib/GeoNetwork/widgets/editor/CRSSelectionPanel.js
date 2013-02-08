@@ -81,12 +81,7 @@ GeoNetwork.editor.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
      * APIProperty: crsSelected
      */
     crsSelected: "",
-    
-    /**
-     * relative imagePath for ItemSelector
-     */
-    imagePath: undefined,
-    
+        
     initComponent: function(){
         this.crsStore = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({

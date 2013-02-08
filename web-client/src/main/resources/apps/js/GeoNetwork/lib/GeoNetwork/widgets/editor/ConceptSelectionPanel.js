@@ -63,6 +63,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``String`` trigger search when thesaurus change. Only for default mode. 
          *  if combo or list mode use, the list of keyword is loaded automatically.
          */
+        
         searchOnThesaurusSelection: false,
         /** api: config[mode] 
          *  ``String`` The widget mode:
@@ -153,6 +154,12 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     nbResultsField: null,
     initialized: false,
     keywords: null,
+    
+    /**
+     * relative imagePath for ItemSelector
+     */
+    imagePath: undefined,
+    
     /** private: property[KeywordRecord] 
      *  ``Ext.data.Record`` A record object for the keyword
      */
@@ -344,7 +351,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
+            imagePath: this.imagePath,
             fromTBar: [this.generateFilterField(), '->', 
                        OpenLayers.i18n('maxResults'), this.getLimitInput()],
             toTBar: [{
@@ -739,7 +746,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
  *       transformations: [], 
  *       transformation: ''}}"/>
  */
-GeoNetwork.editor.ConceptSelectionPanel.init = function () {
+GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
     var thesaurusPickers = Ext.DomQuery.select('.thesaurusPickerCfg');
     
     for (var idx = 0; idx < thesaurusPickers.length; ++idx) {
@@ -756,6 +763,7 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                     thesaurus: jsonConfig.thesaurus,
                     mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,
+                    imagePath: cfg.imagePath,
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
                     identificationMode: jsonConfig.identificationMode,
