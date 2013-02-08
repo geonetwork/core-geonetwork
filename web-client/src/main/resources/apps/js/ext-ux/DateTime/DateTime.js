@@ -4,8 +4,8 @@
  *
  * DateTime field, combination of DateField and TimeField
  *
- * @author      Ing. Jozef Sakáloš
- * @copyright (c) 2008, Ing. Jozef Sakáloš
+ * @author      Ing. Jozef Sakï¿½loï¿½
+ * @copyright (c) 2008, Ing. Jozef Sakï¿½loï¿½
  * @version   2.0
  * @revision  $Id: Ext.ux.form.DateTime.js 813 2010-01-29 23:32:36Z jozo $
  *
@@ -200,6 +200,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
 //        if(Ext.isIE && Ext.isStrict) {
 //            t.select('input').applyStyles({top:0});
 //        }
+        t.select('img').applyStyles({position:'relative'});
 
         this.df.el.swallowEvent(['keydown', 'keypress']);
         this.tf.el.swallowEvent(['keydown', 'keypress']);

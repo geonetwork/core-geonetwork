@@ -1272,6 +1272,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         name: id,
                         id: id,
                         value: value,
+                        width: 250, 
                         disabled: disabledEl.value === 'true',
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i',
