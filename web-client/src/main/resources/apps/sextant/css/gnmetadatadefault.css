@@ -343,7 +343,7 @@ span.buttons a, a.buttons {
 }
 span.buttons a.small span, a.small.buttons span {
   margin : 1px;
-  padding : 0px 4px;
+  padding : 0px 10px;
   width : 6px !important;
   height : 5px !important;
   background-repeat : no-repeat;
@@ -353,7 +353,7 @@ span.buttons a.small span, a.small.buttons span {
   background-image : url(../images/default/find.png);
 }
 .buttons a.findsub span, a.findsub.buttons span {
-  padding-left : 15px !important;
+  padding-left : 25px !important;
   background-image : url(../images/default/find.png);
 }
 .buttons a.error span {

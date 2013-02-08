@@ -744,8 +744,11 @@ body.x-body-masked .x-window-plain .x-window-mc {
 /* liferay input size */
 input[type="text"] {
 	padding: 0;
-}
-input[type="text"] {
 	padding: 1px 3px;
 	height:16px;
+	background-image: none;
+}
+
+.gn table {
+	clear: right;
 }
