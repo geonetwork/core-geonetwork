@@ -2186,7 +2186,6 @@ public class DataManager {
      */
 	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
 										  String styleSheet) throws Exception {
-		
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
@@ -2304,6 +2303,7 @@ public class DataManager {
      * @throws Exception
      */
 	private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
 		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		if (md == null) return;
@@ -3210,6 +3210,7 @@ public class DataManager {
         if (isTemplate.equals("n")) {
             GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
+            XmlSerializer.removeWithheldElements(md, gc.getSettingManager());
             String uuid = getMetadataUuid(dbms, id);
             gc.getMetadataNotifier().updateMetadata(md, id, uuid, dbms, gc);
         }
