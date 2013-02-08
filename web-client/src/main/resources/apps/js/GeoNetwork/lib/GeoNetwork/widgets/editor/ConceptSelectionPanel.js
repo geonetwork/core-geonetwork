@@ -269,12 +269,16 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var dv = new Ext.DataView({
             store: this.keywordStore,
             tpl: this.keywordsTpl,
+            border: true,
 //            autoHeight: true,
             simpleSelect: true,
             multiSelect: this.mode === 'multiplelist' ? true : false,
             singleSelect: true,
             width: 350,
             height: 250,
+            style: {
+                border: '1px solid #dbdbdb'
+            },
             selectedClass: 'ux-mselect-selected',
             itemSelector: 'div.ux-mselect-item',
             listeners: {
