@@ -547,6 +547,9 @@ dl.xml * dd {
 .thesaurusPicker * .thesaurusInfo span {
     padding-right: 5px;
 }
+table.gn .x-form-field-wrap img.x-form-trigger {
+    position: relative;
+}
 .x-superboxselect-item img {
     max-height: 16px;
     vertical-align: middle;
