@@ -58,7 +58,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         
         this.lang = this.lang || GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
         
-        this.loadStore();
+        this.loadCategoriesLabel();
         
         app.getCatalogue().on('afterLogin', this.loadStore, this);
         app.getCatalogue().on('afterLogout', this.loadStore, this);
@@ -76,14 +76,14 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
     
-    loadStore : function() {
+    loadCategoriesLabel : function() {
         this.storeLabel.load({
-            callback : this.loadCategoriesLabel,
+            callback : this.loadStore,
             scope : this
         });
     },
     
-    loadCategoriesLabel: function(records, o, s) {
+    loadStore: function(records, o, s) {
         this.store.load({
             callback : this.loadCategories,
             scope : this
