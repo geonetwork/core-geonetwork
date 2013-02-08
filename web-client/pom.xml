@@ -236,6 +236,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/DragPan.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Click.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Navigation.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Zoom.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/HTTPRequest.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/Grid.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/WMS.js</include>
