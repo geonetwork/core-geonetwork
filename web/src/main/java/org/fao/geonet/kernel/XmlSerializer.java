@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 /**
@@ -135,42 +136,41 @@ public abstract class XmlSerializer {
     		if(ServiceContext.get() != null) {
     			ServiceContext context = ServiceContext.get();
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-    			String ownerId = record.getChildText("owner");
-    			UserSession userSession = context.getUserSession();
-    			boolean isOwner = userSession != null && ownerId != null && ownerId.equals(userSession.getUserId());
-    			boolean isAdmin = userSession != null && userSession.getProfile() != null && context.getProfileManager().getProfilesSet(userSession.getProfile()).contains(ProfileManager.ADMIN);
-    			// TODO: improve XmlSerializerTest for that UC
-    			boolean canEdit = userSession != null && gc != null && gc.getAccessManager().hasEditPermission(context, id);
-    			if(isAdmin || isOwner || canEdit) {
+    			boolean canEdit = gc.getAccessManager().canEdit(context, id);
+    			if(canEdit) {
     				hideWithheldElements = false;
     			}
     		}
-    		boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
     		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
-    			List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
-    			for (Object object : nodes) {
-    				if (object instanceof Element) {
-    					Element element = (Element) object;
-    					
-    					if(keepMarkedElement) {
-    						element.removeContent();
-    						Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
-    						@SuppressWarnings("unchecked")
-    						List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
-    						for (Attribute attribute : atts) {
-    							if(attribute != nilReason) {
-    								attribute.detach();
-    							}
-    						}
-    					} else {
-    						element.detach();
-    					}
-    				}
-    			}
+    		    removeWithheldElements(metadata, sm);
     		}
 		}
 		return (Element) metadata.detach();
 	}
+
+    public static void removeWithheldElements(Element metadata, SettingManager sm) throws JDOMException {
+        boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
+        List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+        for (Object object : nodes) {
+        	if (object instanceof Element) {
+        		Element element = (Element) object;
+        		
+        		if(keepMarkedElement) {
+        			element.removeContent();
+        			Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
+        			@SuppressWarnings("unchecked")
+        			List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+        			for (Attribute attribute : atts) {
+        				if(attribute != nilReason) {
+        					attribute.detach();
+        				}
+        			}
+        		} else {
+        			element.detach();
+        		}
+        	}
+        }
+    }
 
     /**
      * TODO javadoc.
@@ -259,9 +259,6 @@ public abstract class XmlSerializer {
      */
 	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
-
-		
-		Vector<Serializable> args = new Vector<Serializable>();
 
 		fixCR(xml);
 		String metadata = Xml.getString(xml);

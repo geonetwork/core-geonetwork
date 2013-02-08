@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -203,6 +204,8 @@ public class XslProcessing implements Service {
 			
 			// --- save metadata and return status
             if (save) {
+                Lib.resource.checkEditPrivilege(context, id);
+
                 boolean validate = true;
                 boolean ufo = true;
                 boolean index = false;
