@@ -1310,8 +1310,11 @@
       -->
     <xsl:variable name="widgetMode" select="''"/>
     
-    <xsl:variable name="thesaurusId" select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1])"/>
+    <xsl:variable name="thesaurusName" select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
+    <xsl:variable name="thesaurusId" select="if (gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+    
     
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
@@ -1407,7 +1410,6 @@
             <xsl:variable name="thesaurusCode" select="if (gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
               gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
               gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
-            
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor. 
