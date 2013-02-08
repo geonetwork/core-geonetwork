@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <R1>External shortname is mandatory</R1>
+    <alert.R1>
+        <div>Check that the external shortname is defined.</div>
+    </alert.R1>
+    <report.R1>External shortname is:</report.R1>
+</strings>
