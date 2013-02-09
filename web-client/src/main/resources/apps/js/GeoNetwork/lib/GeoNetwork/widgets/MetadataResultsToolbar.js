@@ -79,6 +79,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     sortByCombo: undefined,
     
+    /**
+     * Array of additionnal other Actions
+     */
+    customOtherActions: undefined,
+    
     mdSelectionInfo: 'md-selection-info',
     
     selectionActions: [],
@@ -104,6 +109,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     mdImportAction: undefined,
     
     adminAction: undefined,
+    
+    addLayerAction: undefined,
     
     permalinkProvider: undefined,
     
@@ -142,7 +149,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.catalogue.on('afterLogin', this.updatePrivileges, this);
         this.catalogue.on('afterLogout', this.updatePrivileges, this);
         
-        this.updateSelectionInfo(this.catalogue, 0);
+        Ext.Ajax.request({
+ 		   url: this.catalogue.services.mdSelect,
+ 		   success: function(response, opts) {
+ 			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
+ 			  this.updateSelectionInfo(this.catalogue, numSelected);
+ 		  },
+ 		  scope:this
+ 		});
+        
     },
     getSortByCombo: function(){
         var tb = this;
@@ -247,15 +262,17 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
+        
         this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
         
-        this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
         this.actionMenu.addItem(this.updatePrivilegesAction);
         this.actionMenu.addItem(this.updateStatusAction);
         this.actionMenu.addItem(this.updateVersionAction);
+        this.actionMenu.addItem(this.deleteAction);
+
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -402,17 +419,47 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 },
                 scope: this
             });
-            
-        this.selectionActions.push(mefExportAction, csvExportAction, printAction);
+        
+        this.addLayerAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('addLayerSelection'),
+            id: 'addLayerAction',
+            iconCls : 'addLayerIcon',
+            handler: function(){
+            	Ext.Ajax.request({
+            		url: this.catalogue.services.mdExtract,
+            		success: function(response) {
+            			var layers = response.responseXML.getElementsByTagName('layer');
+            			var l=[];
+            			app.switchMode('1', true);
+            			for(var i=0;i<layers.length;i++) {
+            				l.push([layers[i].getAttribute('title'), 
+            				        layers[i].getAttribute('owsurl'), 
+            				        layers[i].getAttribute('layername'), 
+            				        layers[i].getAttribute('mdid')
+            				 ]);
+            			}
+            			app.getIMap().addWMSLayer(l);
+            		}
+        		});
+            },
+            scope: this
+        });
+        
+        this.selectionActions.push(mefExportAction, csvExportAction, printAction, this.addLayerAction);
         
         this.actionMenu.add(
             '<b class="menu-title">' + OpenLayers.i18n('onSelection') + '</b>',
             mefExportAction, 
             csvExportAction, 
-            printAction // ,{
+            printAction,
+            this.addLayerAction// ,{
         // text : 'Display selection only'
         // }
         );
+        
+        if(this.customOtherActions) {
+        	this.actionMenu.add(this.customOtherActions);
+        }
         this.createMassiveActionMenu(!this.catalogue.isIdentified());
         this.createAdminMenu(!this.catalogue.isIdentified());
         

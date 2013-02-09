@@ -137,7 +137,8 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier comparison (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
     <interval>Will run again every</interval>
@@ -398,6 +399,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>

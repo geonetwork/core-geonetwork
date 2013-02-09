@@ -285,6 +285,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGet19115: serviceUrl + 'xml_iso19115to19139',
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete: serviceUrl + 'metadata.delete',
+            mdExtract: serviceUrl + 'metadata.service.extract',
             mdPrint: serviceUrl + 'pdf',
             //mdEdit : serviceUrl + 'metadata.edit',
             mdEdit: serviceUrl + 'edit',
@@ -887,18 +888,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_id=" + id, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('id', id));
             }
-            
-            var win = new GeoNetwork.view.ViewWindow({
-                serviceUrl: url,
-                currTab: GeoNetwork.defaultViewMode || 'simple',
-                catalogue: this,
-                maximized: maximized || false,
-                record: record,
-                metadataUuid: record ? record.get('uuid') : undefined,
-                resultsView: this.resultsView
-                });
-            win.show(this.resultsView);
-            win.alignTo(Ext.getBody(), 'r-r');
+            this.metadataShow(record ? record.get('uuid') : undefined, maximized, width, height);
         }
     },
     /** api: method[metadataXMLShow]

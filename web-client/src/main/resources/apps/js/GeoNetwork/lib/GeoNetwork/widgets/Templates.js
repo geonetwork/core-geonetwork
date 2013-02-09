@@ -196,7 +196,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                 '</td>',
                 '<td id="{uuid}">',
                     GeoNetwork.Templates.TITLE,
-                    '<p class="abstract">{[values.abstract.substring(0, 350)]} ...</p>',    // FIXME : 250 as parameters
+                    '<p class="abstract">{[Ext.util.Format.ellipsis(Ext.util.Format.stripTags(values.abstract), 350, true)]}</p>',    // FIXME : 250 as parameters
                     '<tpl if="subject">',
                         '<p class="subject"><tpl for="subject">',
                             '{value}{[xindex==xcount?"":", "]}',
@@ -267,6 +267,19 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
 GeoNetwork.Templates.Relation = {
         // TODO : subType should be translated
         SHORT: ['<li class="{type}">',
-                  '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a><span class="badge relation-type">{subType}</span>',
+                '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</a>',
+                '<tpl if="subType!=\'\'"><span class="badge relation-type">{subType}</span></tpl>',
                  '</li>']
 };
+
+GeoNetwork.Templates.KEYWORD_ITEM = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="ux-mselect-item" title="{definition}">{value}</div>',
+    '</tpl>'
+);
+
+GeoNetwork.Templates.THESAURUS_HEADER = new Ext.XTemplate(
+    '<tpl for=".">',
+        '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
+    '</tpl>'
+);

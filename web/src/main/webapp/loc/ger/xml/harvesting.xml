@@ -137,7 +137,8 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<at>Ausf�hren um</at>
     <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
     <interval>Wird ausgef�hrt</interval>
@@ -371,6 +372,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Warten auf das erste Update</notRun>

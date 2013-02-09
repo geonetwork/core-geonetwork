@@ -143,11 +143,20 @@ public class Resources {
 	 *         harvesting likely contain the actual images
 	 */
 	public static String locateResourcesDir(ServiceContext context) {
-		String webappName = "geonetwork";
 		if (context.getServlet() != null) {
-			webappName = context.getServlet().getServletContext().getServletContextName();
+			return locateResourcesDir(context.getServlet().getServletContext());
 		}
-		return System.getProperty(webappName + ".resources.dir");
+		String webappName = context.getBaseUrl().substring(1);
+
+		String dir = System.getProperty(webappName + ".resources.dir");
+		if (dir == null) {
+			dir = System.getProperty("geonetwork.resources.dir");
+		}
+		if (dir == null) {
+			return "resources";
+		} else {
+			return dir;
+		}
 	}
 
 	/**
@@ -163,8 +172,27 @@ public class Resources {
 	 *         harvesting likely contain the actual images
 	 */
 	public static String locateResourcesDir(ServletContext context) {
-		return System.getProperty(context.getServletContextName()
-				+ ".resources.dir");
+		String property = null;
+		String path = context.getContextPath();
+		if (path != null) {
+			property = System.getProperty(path.substring(1) + ".resources.dir");
+		}
+		if (property == null) {
+			property = System.getProperty(context.getServletContextName()
+					+ ".resources.dir");
+		}
+		if (property == null) {
+			property = System.getProperty("geonetwork.resources.dir");
+		}
+		if (property == null) {
+			property = context.getRealPath("/WEB-INF/data/resources");
+		}
+
+		if (property == null) {
+			return "resources";
+		} else {
+			return property;
+		}
 	}
 
 	/**

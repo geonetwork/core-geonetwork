@@ -59,34 +59,37 @@ public class JeevesServlet extends HttpServlet
 	//---
 	//---------------------------------------------------------------------------
 
-	public void init() throws ServletException
-	{
-		String appPath = getServletContext().getRealPath("/");
+    public void init() throws ServletException {
+        String appPath = new File(getServletContext().getRealPath("/xsl")).getParent() + File.separator;
 
-		String baseUrl    = "";
-		
-    try {
-			// 2.5 servlet spec or later (eg. tomcat 6 and later)
-      baseUrl = getServletContext().getContextPath();
-    } catch (java.lang.NoSuchMethodError ex) {
-			// 2.4 or earlier servlet spec (eg. tomcat 5.5)
-			try { 
-				String resource = getServletContext().getResource("/").getPath(); 
-				baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1); 
-			} catch (java.net.MalformedURLException e) { // unlikely
-				baseUrl = getServletContext().getServletContextName(); 
-			}
+        String baseUrl = "";
+
+        try {
+            // 2.5 servlet spec or later (eg. tomcat 6 and later)
+            baseUrl = getServletContext().getContextPath();
+        } catch (java.lang.NoSuchMethodError ex) {
+            // 2.4 or earlier servlet spec (eg. tomcat 5.5)
+            try {
+                String resource = getServletContext().getResource("/").getPath();
+                baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1);
+            } catch (java.net.MalformedURLException e) { // unlikely
+                baseUrl = getServletContext().getServletContextName();
+            }
+        }
+
+        if (!appPath.endsWith(File.separator))
+            appPath += File.separator;
+
+        String configPath = getServletConfig().getServletContext().getRealPath("/WEB-INF/config.xml");
+        if (configPath == null) {
+            configPath = appPath + "WEB-INF" + File.separator;
+        } else {
+            configPath = new File(configPath).getParent() + File.separator;
+        }
+
+        jeeves.init(appPath, configPath, baseUrl, this);
+        initialized = true;
     }
-		
-		if (!appPath.endsWith(File.separator))
-			appPath += File.separator;
-
-		String configPath = appPath + "WEB-INF" +
-                File.separator;
-
-		jeeves.init(appPath, configPath, baseUrl, this);
-		initialized = true;
-	}
 
 	//---------------------------------------------------------------------------
 	//---

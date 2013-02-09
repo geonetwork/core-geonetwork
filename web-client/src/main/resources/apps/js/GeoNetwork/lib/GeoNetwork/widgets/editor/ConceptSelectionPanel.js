@@ -97,20 +97,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /** api: config[thesaurusInfoTpl] 
          *  ``Ext.XTemplate`` template to use to render thesaurus information in the widget header.
          */
-        thesaurusInfoTpl: new Ext.XTemplate(
-                '<tpl for=".">',
-                    '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
-                '</tpl>'
-        ),
+        thesaurusInfoTpl: GeoNetwork.Templates.THESAURUS_HEADER,
         /** api: config[keywordsTpl] 
          *  ``Ext.XTemplate`` template to use to render keyword in data views.
          */
-        keywordsTpl: new Ext.XTemplate(
-            '<tpl for=".">',
-                // TODO : add keyword definiton ?
-                '<div class="ux-mselect-item">{value}</div>',
-            '</tpl>'
-        ),
+        keywordsTpl: GeoNetwork.Templates.KEYWORD_ITEM,
         /** api: config[renderTo] 
          *  ``String`` Id of the element
          */
@@ -154,6 +145,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     KeywordRecord: Ext.data.Record.create([{
             name: 'value'
+        }, {
+            name: 'definition'
         }, {
             name: 'thesaurus',
             mapping: 'thesaurus/key'

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<OWSContext version="0.3.0" id="ows-context-ex-1-v3" xmlns="http://www.opengis.net/ows-context"
+    xmlns:gml="http://www.opengis.net/gml" xmlns:kml="http://www.opengis.net/kml/2.2"
+    xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows"
+    xmlns:sld="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/ows-context http://www.ogcnetwork.net/schemas/owc/0.3.0/owsContext.xsd">
+    <General>
+        <Window width="600" height="300"/>
+        <ows:BoundingBox crs="EPSG:4326">
+            <ows:LowerCorner>-180 -90</ows:LowerCorner>
+            <ows:UpperCorner>180 90</ows:UpperCorner>
+        </ows:BoundingBox>
+        <ows:Title xml:lang="en">Default map</ows:Title>
+    </General>
+    <ResourceList>
+        <Layer group="background" name="gn:world" queryable="false" hidden="0">
+            <ows:Title xml:lang="en">World</ows:Title>
+            <ows:OutputFormat>image/jpeg</ows:OutputFormat>
+            <Server service="urn:ogc:serviceType:WMS" version="1.1.1">
+                <OnlineResource xlink:type="simple"
+                    xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
+            </Server>
+        </Layer>
+        <!-- FIXME: All layers added as baselayer -->
+        <Layer group="overlays"
+            name="gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline"
+            queryable="true" hidden="0">
+            <ows:Title xml:lang="en">Country boundaries</ows:Title>
+            <ows:OutputFormat>image/png</ows:OutputFormat>
+            <Server service="urn:ogc:serviceType:WMS" version="1.1.1">
+                <OnlineResource xlink:type="simple"
+                    xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
+            </Server>
+        </Layer>
+    </ResourceList>
+</OWSContext>

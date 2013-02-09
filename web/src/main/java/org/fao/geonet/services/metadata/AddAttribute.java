@@ -57,9 +57,6 @@ public class AddAttribute implements Service
 
         ajaxEditUtils.preprocessUpdate(params, context);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-
 		Dbms dbms   = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id      = Util.getParam(params, Params.ID);

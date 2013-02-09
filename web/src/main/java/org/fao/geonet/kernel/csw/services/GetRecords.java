@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.xml.NamespaceUtils;
@@ -81,12 +82,15 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
 	private SearchController _searchController;
 
+    private LuceneConfig _luceneConfig;
+
     /**
      * @param summaryConfig
      * @param luceneConfig
      */
-	public GetRecords(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public GetRecords(LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(luceneConfig);
+    	this._luceneConfig = luceneConfig;
     }
 
     /**
@@ -762,8 +766,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getSearchmanager();
+        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
+		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}
 
 

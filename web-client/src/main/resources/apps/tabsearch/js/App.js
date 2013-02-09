@@ -67,8 +67,14 @@ GeoNetwork.app = function () {
      */
     function initMap() {
         iMap = new GeoNetwork.mapApp();
-        iMap.init(GeoNetwork.map.BACKGROUND_LAYERS,
-                GeoNetwork.map.MAIN_MAP_OPTIONS);
+        var layers={}, options={};
+        if(GeoNetwork.map.CONTEXT || GeoNetwork.map.OWS) {
+            options = GeoNetwork.map.CONTEXT_MAIN_MAP_OPTIONS;
+        } else {
+            options = GeoNetwork.map.MAIN_MAP_OPTIONS;
+            layers  = GeoNetwork.map.BACKGROUND_LAYERS;
+        }
+        iMap.init(layers, options);
         metadataResultsView.addMap(iMap.getMap());
         visualizationModeInitialized = true;
         return iMap;
@@ -160,10 +166,38 @@ GeoNetwork.app = function () {
     }
     function getResultsMap() {
         // Create map panel
-        var map = new OpenLayers.Map({ div: 'results_map' });
-				map.setOptions(GeoNetwork.map.MAP_OPTIONS);
-        map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
-        map.zoomToMaxExtent();
+        var map = undefined;
+        
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                map = format.read(text, {map: GeoNetwork.map.CONTEXT_MAP_OPTIONS});
+            }
+        }
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                map = parser.read(text, {map: GeoNetwork.map.CONTEXT_MAP_OPTIONS});
+            }
+        }
+        
+        if (!map) {
+            map = new OpenLayers.Map('results_map', GeoNetwork.map.MAP_OPTIONS);
+            map.addLayers(GeoNetwork.map.BACKGROUND_LAYERS);
+            map.zoomToMaxExtent();
+        }
         
         var mapPanel = new GeoExt.MapPanel({
             id : "resultsMap",
@@ -770,7 +804,14 @@ GeoNetwork.app = function () {
                         urlParameters.extent[0], urlParameters.extent[1],
                         urlParameters.extent[2], urlParameters.extent[3]);
             }
-
+            
+            if (urlParameters.wmc) {
+               GeoNetwork.map.CONTEXT = urlParameters.wmc;
+            }
+            if (urlParameters.ows) {
+               GeoNetwork.map.OWS = urlParameters.ows;
+            }
+            
             // Init cookie
             cookie = new Ext.state.CookieProvider({
                 expires : new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 365))

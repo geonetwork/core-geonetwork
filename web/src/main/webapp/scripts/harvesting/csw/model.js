@@ -119,6 +119,8 @@ var updateTemp =
 '        <username>{USERNAME}</username>'+
 '        <password>{PASSWORD}</password>'+
 '      </account>'+
+'      <rejectDuplicateResource>{REJECTDUPLICATERESOURCE}</rejectDuplicateResource>'+
+
 '    </site>'+
     
 '    <options>'+

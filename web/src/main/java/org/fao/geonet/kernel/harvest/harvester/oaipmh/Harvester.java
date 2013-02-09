@@ -253,10 +253,9 @@ class Harvester
         //
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -268,7 +267,7 @@ class Harvester
 		addCategories(id);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.added++;
 	}
 
@@ -474,7 +473,7 @@ class Harvester
 			addCategories(id);
 
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, id);
+			dataMan.indexMetadata(dbms, id);
 			result.updated++;
 		}
 	}

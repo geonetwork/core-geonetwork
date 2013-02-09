@@ -257,6 +257,7 @@ GeoNetwork.Lang.ca={
     'status': 'Estat',
     'updateStatus': 'Actualitzar estat',
     'updateVersion': 'Activar versionat',
+    'addLayerSelection': 'Add layers of selection to the map',
     'statusTT': 'Canviar l\'estat d\'un registre segons la fase del seu cicle de vida',
     'setVersioning': 'Versionat de metadades',
     'versioning': 'Activar versionat',

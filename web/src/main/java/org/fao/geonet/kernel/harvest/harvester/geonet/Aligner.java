@@ -314,12 +314,11 @@ public class Aligner
         md = processMetadata(ri, md);
         
         // insert metadata
-        int userid = 1;
         String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, siteId,
+        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, siteId,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -352,7 +351,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
 
 		return id;
@@ -637,7 +636,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 	}
 
 	/**

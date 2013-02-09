@@ -149,6 +149,7 @@ public class CswHarvester extends AbstractHarvester
 
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
+        settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
 
 		//--- store search nodes
 
@@ -206,7 +207,8 @@ public class CswHarvester extends AbstractHarvester
 			add(res, "added",        result.addedMetadata);
 			add(res, "updated",      result.updatedMetadata);
 			add(res, "unchanged",    result.unchangedMetadata);
-			add(res, "unknownSchema",result.unknownSchema);
+			add(res, "duplicatedResource",result.duplicatedResource);
+            add(res, "unknownSchema",result.unknownSchema);
 			add(res, "removed",      result.locallyRemoved);
 			add(res, "unretrievable",result.unretrievable);
             add(res, "doesNotValidate",result.doesNotValidate);
@@ -247,6 +249,7 @@ class CswResult
 	public int updatedMetadata;
 	public int unchangedMetadata;
 	public int locallyRemoved;
+	public int duplicatedResource;
 	public int unknownSchema;
 	public int unretrievable;
     public int doesNotValidate;	    

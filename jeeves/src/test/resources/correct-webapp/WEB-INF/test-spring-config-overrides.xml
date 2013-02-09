@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overrides>
+	<properties>
+		<db>newString</db>
+		<sharedPath>./spring</sharedPath>
+	</properties>
+	<spring>
+		<import file="${sharedPath}/imported-config.xml"/>
+		<set bean="testBean" property="simpleRef" ref="testBean2"/>
+		<set bean="testBean" property="basicProp2" ref="astring"/>
+		<add bean="testBean" property="collectionProp" value="${db}" />
+		<add bean="testBean" property="collectionRef" ref="testBean3" />
+		<addInterceptUrl bean="filterSecurityInterceptor" pattern="/monitor/.*" access="hasRole('Administrator')"/>
+	</spring>
+</overrides>

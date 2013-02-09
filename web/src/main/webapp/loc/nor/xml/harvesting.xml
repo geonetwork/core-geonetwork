@@ -137,6 +137,7 @@
 	
 	<content>Høstet innhold</content>
 	<importxslt>Kjør denne XSLT'en på høstede poster</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
     <at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
@@ -396,6 +397,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Venter på første gjennomkjøring</notRun>

@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.*;
 import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.anyVararg;
@@ -24,6 +25,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -32,6 +34,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Any;
 
 public class XmlSerializerTest {
 	
@@ -50,7 +54,7 @@ public class XmlSerializerTest {
 		@Override
 		public void update(Dbms dbms, String id, Element xml,
 				String changeDate, boolean updateDateStamp,
-				ServiceContext context) throws Exception {
+				String uuid, ServiceContext context) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
@@ -70,15 +74,15 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id)
+		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id)
+		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask)
 				throws Exception {
-			return super.internalSelect(dbms, table, id);
+			return super.internalSelect(dbms, table, id, isIndexingTask);
 		}
 
 	}
@@ -107,28 +111,28 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-		mockServiceContext(true, "3333");
+		mockServiceContext(true);
 		
 		assertHiddenElements(false);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-		mockServiceContext(false, null);
+		mockServiceContext(false);
 		
 		assertHiddenElements(true);
 	}
 
 	@Test
 	public void testInternalCompleteHidingHiddenElement() throws Exception {
-		mockServiceContext(false, OWNER_ID+"3");
+		mockServiceContext(false);
 		
 		SettingManager settingManager = mockSettingManager(true, false);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
@@ -136,14 +140,14 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-		mockServiceContext(false, OWNER_ID+"3");
+		mockServiceContext(false);
 		
 		assertHiddenElements(true);
 	}
 	
 	@Test
 	public void testInternalSelectHidingWithheldOwner() throws Exception {
-		mockServiceContext(false, OWNER_ID);
+		mockServiceContext(true);
 		
 		assertHiddenElements(false);
 	}
@@ -151,41 +155,16 @@ public class XmlSerializerTest {
 	/**
 	 * @param userId null if not logged in non-null to login
 	 */
-	private ServiceContext mockServiceContext(boolean isAdmin, String userId) {
-		ProfileManager profileManager = mock(ProfileManager.class);
-		Set<String> adminProfiles = new HashSet<String>();
-		adminProfiles.add(ProfileManager.ADMIN);
-		when(profileManager.getProfilesSet(ProfileManager.ADMIN)).thenReturn(adminProfiles);
-		
-		Set<String> editorProfiles = new HashSet<String>();
-		final String editorProfile = "Editor";
-		editorProfiles.add(editorProfile);
-		when(profileManager.getProfilesSet(editorProfile)).thenReturn(editorProfiles);
-		
-		ServiceContext context = mock(ServiceContext.class);
-		doCallRealMethod().when(context).setAsThreadLocal();
-		when(context.getProfileManager()).thenReturn(profileManager);
-		UserSession userSession = new UserSession();
-		if (userId != null) {
-			String profile;
-			if (isAdmin) {
-				profile = ProfileManager.ADMIN;
-			} else {
-				profile = editorProfile;
-			}
-			SecurityContextImpl secContext = new SecurityContextImpl();
-			JeevesUser user = new JeevesUser(profileManager);
-			user.setId(userId);
-			user.setUsername("username");
-			user.setProfile(profile);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-            secContext.setAuthentication(authentication);
-			SecurityContextHolder.setContext(secContext);
-		} else {
-		    SecurityContextHolder.clearContext();
-		}
-		when(context.getUserSession()).thenReturn(userSession);
+	private ServiceContext mockServiceContext(boolean canEdit) throws Exception{//boolean isAdmin, String userId) {
+        ServiceContext context = mock(ServiceContext.class);
+        doCallRealMethod().when(context).setAsThreadLocal();
 
+        AccessManager accessManager = mock(AccessManager.class);
+        when(accessManager.canEdit(any(ServiceContext.class), anyString())).thenReturn(canEdit);
+        GeonetContext gc = mock(GeonetContext.class);
+        when(gc.getAccessManager()).thenReturn(accessManager);
+        when(context.getHandlerContext(Geonet.CONTEXT_NAME)).thenReturn(gc);
+        
 		context.setAsThreadLocal();
 		return context;
 	}
@@ -210,7 +189,7 @@ public class XmlSerializerTest {
 		
 		Dbms dbms = mockDbms();
 		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1");
+		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

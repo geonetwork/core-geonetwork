@@ -17,6 +17,22 @@
 	<z3950>Z39.50 Sunucu</z3950>
 	<enable>İzin ver</enable>
 
+	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<maxthreads>Number of processing threads</maxthreads>
+	<recommendedThreads>Recommended</recommendedThreads>
+	<reasonForOne>Database not tested or doesn't support</reasonForOne>
+	<reasonForMore>From number of processors</reasonForMore>
+
+    <multilingual>Multilingual settings</multilingual>
+    <autoDetectEnable>Enable auto-detecting search request language</autoDetectEnable>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguagesorted>Search results in requested language sorted on top</requestedlanguagesorted>
+
 	<oai>OAI Sağlayıcı</oai>
 		<datesearch>Veri arama</datesearch>
 		<datesearchopt>

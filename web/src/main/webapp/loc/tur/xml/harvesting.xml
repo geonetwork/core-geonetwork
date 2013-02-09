@@ -115,6 +115,7 @@
 
 <content>Hasat İçerik</content>
 <importxslt>Hasat kayıtlara bu XSLT'yi uygula</importxslt>
+<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
 <options>Seçenekler</options>
 <everySpec>(gün: saat: dakika)</everySpec>
@@ -292,7 +293,8 @@
 <fragmentsUnknownSchema>Şeması bilinmeyen parçalar</fragmentsUnknownSchema>
 <fragmentsReturned>Geri dönen parçalar</fragmentsReturned>
 <fragmentsMatched>Eşlenen parçalar</fragmentsMatched>
-<recordsBuilt>Oluşan kayıtlar</recordsBuilt>
+		<recordsBuilt>Oluşan kayıtlar</recordsBuilt>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 </tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>

@@ -34,9 +34,6 @@
 	<xsl:template mode="script" match="/">
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<xsl:call-template name="geoHeader"/>
-		<xsl:call-template name="jsHeader">
-			<xsl:with-param name="small" select="false()"/>
-		</xsl:call-template>
 		
 		<xsl:choose>
             <xsl:when test="/root/request/debug">
@@ -87,6 +84,7 @@
 								<tr><td class="padded-content" height="100%" align="center" valign="top">
 									<xsl:call-template name="buttons">
 										<xsl:with-param name="metadata" select="$metadata"/>
+										<xsl:with-param name="buttonBarId" select="1"/>
 									</xsl:call-template>
 								</td></tr>
 							</xsl:variable>
@@ -155,7 +153,12 @@
 							</td></tr>
 							
 							<xsl:if test="$buttons!=''">
-								<xsl:copy-of select="$buttons"/>
+								<tr><td class="padded-content" height="100%" align="center" valign="top">
+									<xsl:call-template name="buttons">
+										<xsl:with-param name="metadata" select="$metadata"/>
+										<xsl:with-param name="buttonBarId" select="2"/>
+									</xsl:call-template>
+								</td></tr>
 							</xsl:if>
 							
 						</table>

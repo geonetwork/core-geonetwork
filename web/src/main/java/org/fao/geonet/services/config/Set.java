@@ -146,9 +146,8 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/cachesize",             "system/oai/cachesize"),
 
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "autodetect/enable",             "system/autodetect/enable"),
-        new ConfigEntry(ConfigEntry.Type.BOOL,   false, "requestedLanguage/only",             "system/requestedLanguage/only"),
+        new ConfigEntry(ConfigEntry.Type.STRING,   false, "requestedLanguage/only",             "system/requestedLanguage/only"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true, "requestedLanguage/sorted",     "system/requestedLanguage/sorted"),
-        new ConfigEntry(ConfigEntry.Type.BOOL,   false,  "requestedLanguage/ignored",             "system/requestedLanguage/ignored"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/withdisclaimer",     "system/downloadservice/withdisclaimer"),

@@ -142,6 +142,7 @@
 	
 	<content>Zawartość pobrana</content>
 	<importxslt>Zastosuj ten XSLT do pobranych rekordów</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
 	<at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
@@ -401,6 +402,7 @@
 		<couldNotInsert>Nie udało się wstawić</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Czekaj nie pierwszy przebieg</notRun>

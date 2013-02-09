@@ -333,10 +333,9 @@ class Harvester
         //
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -451,7 +450,7 @@ class Harvester
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
 
-                String hRefLink =  dataMan.getSiteURL() + "/iso19139.xml?uuid=" + layer.uuid;
+                String hRefLink =  dataMan.getSiteURL() + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
 				
@@ -639,13 +638,12 @@ class Harvester
             //
             //  insert metadata
             //
-            int userid = 1;
             String group = null, isTemplate = null, docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, userid, group, params.uuid,
+            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
 			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms, context);
@@ -663,7 +661,7 @@ class Harvester
 			
 			dbms.commit();
 			
-			dataMan.indexMetadataGroup(dbms, reg.id);
+			dataMan.indexMetadata(dbms, reg.id);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

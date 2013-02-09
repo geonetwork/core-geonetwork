@@ -2105,6 +2105,14 @@
 		<xsl:call-template name="complexElementGui">
 			<xsl:with-param name="title" select="/root/gui/strings/metadata"/>
 			<xsl:with-param name="validationLink" select="$validationLink"/>
+
+			<xsl:with-param name="helpLink">
+			  <xsl:call-template name="getHelpLink">
+			      <xsl:with-param name="name" select="name(.)"/>
+			      <xsl:with-param name="schema" select="$schema"/>
+			  </xsl:call-template>
+			</xsl:with-param>
+
 			<xsl:with-param name="edit" select="true()"/>
 			<xsl:with-param name="content">
 
@@ -2985,26 +2993,30 @@
 							<xsl:with-param name="schema" select="$schema"/>
 						</xsl:call-template>
 					</xsl:with-param>
+
+					<xsl:with-param name="helpLink">
+		                <xsl:call-template name="getHelpLink">
+		                    <xsl:with-param name="name" select="name(.)"/>
+		                    <xsl:with-param name="schema" select="$schema"/>
+		                </xsl:call-template>
+		            </xsl:with-param>
 					<xsl:with-param name="text">
 						<xsl:variable name="value" select="string(gco:CharacterString)"/>
 						<xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
 						<xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
-						<input type="hidden" id="_{$ref}" name="_{$ref}" value="{$value}"/>
-						<select id="s_{$ref}" name="s_{$ref}" size="1" onchange="checkForFileUpload('{$fref}', '{$ref}');" class="md">
-							<xsl:if test="$value=''">
-								<option value=""/>
-							</xsl:if>
-							<xsl:for-each select="/root/gui/strings/protocolChoice[@value]">
-								<option>
-									<xsl:if test="string(@value)=$value">
-										<xsl:attribute name="selected"/>
-									</xsl:if>
-									<xsl:attribute name="value"><xsl:value-of select="string(@value)"/></xsl:attribute>
-									<xsl:value-of select="string(.)"/>
-								</option>
-							</xsl:for-each>
-						</select>
-					</xsl:with-param>
+						<xsl:variable name="relatedJsAction">
+			            	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
+			      		</xsl:variable>
+			            
+			            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}"/>
+			            <xsl:for-each select="gco:CharacterString">
+			             <xsl:call-template name="helper">
+			               <xsl:with-param name="schema" select="$schema"/>
+			               <xsl:with-param name="attribute" select="false()"/>
+			               <xsl:with-param name="jsAction" select="$relatedJsAction"/>
+			             </xsl:call-template>
+			           </xsl:for-each>
+			          </xsl:with-param>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -4187,8 +4199,8 @@
 										<xsl:value-of select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="concat('_',
-											gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
+										<xsl:variable name="strings" select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref"/>
+										<xsl:value-of select="concat('_', $strings[0])"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>

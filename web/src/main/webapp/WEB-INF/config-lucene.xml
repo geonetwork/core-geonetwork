@@ -13,7 +13,25 @@
     <MergeFactor>10</MergeFactor>
 
     <!-- Default Lucene version to use (mainly for Analyzer creation). -->
-    <luceneVersion>30</luceneVersion>
+    <luceneVersion>36</luceneVersion>
+    <!-- How often to check if a commit is required -->
+    <commitInterval>30000</commitInterval>
+    <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
+    	 If false then the reader will be opened everytime they are obtained.  -->
+    <useNRTManagerReopenThread>true</useNRTManagerReopenThread>
+    <!-- 
+    	Only applies if useNRTManagerReopenThread is true
+    	Maximum time until a new  reader must be opened; this sets the upper bound 
+    	on how slowly reopens may occur 
+    	See NRTManagerReopenThread -->
+    <nrtManagerReopenThreadMaxStaleSec>5</nrtManagerReopenThreadMaxStaleSec>
+    <!-- 
+    	 Only applies if useNRTManagerReopenThread is true
+    	 Minimum time until a new reader can be opened; this sets the lower bound
+         on how quickly reopens may occur, when a caller
+         is waiting for a specific indexing change to become visible 
+         See NRTManagerReopenThread-->
+    <nrtManagerReopenThreadMinStaleSec>0.1</nrtManagerReopenThreadMinStaleSec>
   </index>
 
 
@@ -51,7 +69,18 @@
 
     <!-- 
       List of fields to dump when using q service. Fields must be stored in the index.
-    -->
+
+	  The attribute 'multilingualSortField' flag fields that are used for sorting also may have translations.
+	  This is the solution for http://trac.osgeo.org/geonetwork/ticket/1112
+	  This is an issue where searching by one field and sorting by another will result
+	  in an incorrect sorting. The reason is that sorted field may have multiple translations.
+	  If the document found is one language (say french) and the UI language is english then
+	  then the french translation will be used for sorting even though when the metadata
+	  is viewed by user the metadata will be in english.  
+	  
+	  The following fields are the sort field that can have translations and therefore
+	  need special care when indexing and sorting.
+	   -->
     <dumpFields>
       <field name="_isTemplate" tagName="isTemplate"/>
       <field name="_isHarvested" tagName="isHarvested"/>
@@ -76,7 +105,9 @@
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
       <field name="_edit" tagName="edit"/>
-      <field name="title" tagName="title"/>
+      <field name="_title" tagName="title" multilingualSortField="true"/>
+      <field name="_docLocale" tagName="docLocale"/>
+      <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>
       <field name="abstract" tagName="abstract"/>
       <field name="keyword" tagName="keyword"/>
@@ -160,13 +191,13 @@
       <Param name="stopWords" type="java.io.File" value="/path/to/resources/stopwords/en.txt"/>
     </Field>
     -->
-    <Field name="subject" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="_cat" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="subject" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_cat" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     
 
-    <Field name="keyword" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
-    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.KeywordAnalyzer"/>
+    <Field name="keyword" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>

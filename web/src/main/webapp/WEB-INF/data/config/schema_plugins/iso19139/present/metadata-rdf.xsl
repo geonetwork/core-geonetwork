@@ -62,6 +62,9 @@
       <dct:modified><xsl:value-of select="$date"/></dct:modified>
       <!-- xpath: gmd:dateStamp/gco:DateTime -->
       
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="uuid" select="gmd:fileIdentifier/gco:CharacterString"/>
+      </xsl:call-template>
     </dcat:CatalogRecord>
     
     <xsl:apply-templates select="gmd:identificationInfo/*" mode="to-dcat"/>
@@ -69,6 +72,26 @@
   </xsl:template>
   
   
+  <!-- Add references for HTML and XML metadata record link -->
+  <xsl:template name="add-reference">
+    <xsl:param name="uuid"/>
+    
+    <dct:references>
+      <rdf:Description rdf:about="{$url}/srv/eng/xml.metadata.get?uuid={$uuid}">
+        <dct:format>
+          <dct:IMT><rdf:value>application/xml</rdf:value><rdfs:label>XML</rdfs:label></dct:IMT>
+        </dct:format>
+      </rdf:Description>
+    </dct:references>
+    
+    <dct:references>
+      <rdf:Description rdf:about="{$url}?uuid={$uuid}">
+        <dct:format>
+          <dct:IMT><rdf:value>text/html</rdf:value><rdfs:label>HTML</rdfs:label></dct:IMT>
+        </dct:format>
+      </rdf:Description>
+    </dct:references>
+  </xsl:template>
   
   <!-- Create all references for ISO19139 record (if rdf.metadata.get) or records (if rdf.search) -->
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="references">
@@ -76,7 +99,7 @@
     <!-- Keywords -->
     <xsl:for-each-group select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString" group-by=".">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
-      <skos:Concept rdf:about="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{.}">
+      <skos:Concept rdf:about="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{encode-for-uri(.)}">
         <skos:inScheme rdf:resource="{$url}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}"/>
         <skos:prefLabel><xsl:value-of select="."/></skos:prefLabel>
       </skos:Concept>
@@ -144,11 +167,11 @@
         
         xpath: //gmd:organisationName
       -->
-      <foaf:Organization rdf:about="{$url}/organization/{current-grouping-key()}">
+      <foaf:Organization rdf:about="{$url}/organization/{encode-for-uri(current-grouping-key())}">
         <foaf:name><xsl:value-of select="current-grouping-key()"/></foaf:name>
         <!-- xpath: gmd:organisationName/gco:CharacterString -->
         <xsl:for-each-group select="//gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString=current-grouping-key()]" group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
-          <foaf:member rdf:resource="{$url}/organization/{iso19139:getContactId(.)}"/>
+          <foaf:member rdf:resource="{$url}/organization/{encode-for-uri(iso19139:getContactId(.))}"/>
         </xsl:for-each-group>
       </foaf:Organization>
     </xsl:for-each-group>
@@ -158,7 +181,8 @@
       <!-- Organization memeber
         
         xpath: //gmd:CI_ResponsibleParty-->
-      <foaf:Person rdf:about="{$url}/person/{iso19139:getContactId(.)}">
+      
+      <foaf:Agent rdf:about="{$url}/person/{encode-for-uri(iso19139:getContactId(.))}">
         <xsl:if test="gmd:individualName/gco:CharacterString">
           <foaf:name><xsl:value-of select="gmd:individualName/gco:CharacterString"/></foaf:name>
         </xsl:if>
@@ -168,10 +192,10 @@
         </xsl:if>
         <!-- xpath: gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString -->
         <xsl:if test="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
-          <foaf:mbox><xsl:value-of select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"/></foaf:mbox>
+          <foaf:mbox rdf:resource="mailto:{gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString}"/>
         </xsl:if>
         <!-- xpath: gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString -->
-      </foaf:Person>
+      </foaf:Agent>
     </xsl:for-each-group>
   </xsl:template>
   
@@ -351,6 +375,9 @@
     </xsl:for-each>
     
     
+    <xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
+      <dct:relation rdf:resource="{$url}/metadata/{gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString}"/>
+    </xsl:for-each>
     
     <!-- Source relation -->
     <xsl:for-each select="/root/gui/relation/sources/response/metadata">
@@ -424,7 +451,7 @@
     
     <xsl:value-of select="if ($thesaurusName/*/gmd:otherCitationDetails/*!='') then $thesaurusName/*/gmd:otherCitationDetails/*
       else if ($thesaurusName/gmd:CI_Citation/@id!='') then $thesaurusName/gmd:CI_Citation/@id!=''
-      else $thesaurusName/*/gmd:title/gco:CharacterString"/>
+      else encode-for-uri($thesaurusName/*/gmd:title/gco:CharacterString)"/>
   </xsl:function>
   
   <!-- 

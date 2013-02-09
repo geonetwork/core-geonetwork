@@ -47,7 +47,7 @@ public class UriMapper
 
 	public UriMapper(Dbms dbms, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, uuid, harvestUri, changeDate, isTemplate FROM Metadata WHERE harvestUuid=?";
+		String query = "SELECT id, uuid, harvestUri, changeDate, schemaId, isTemplate FROM Metadata WHERE harvestUuid=?";
 
 		List idsList = dbms.select(query, harvestUuid).getChildren();
 

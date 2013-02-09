@@ -365,7 +365,7 @@ public class FragmentHarvester {
 
 				dataMan.setTemplateExt(dbms, iId, "s", title);
 				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadataGroup(dbms, id);
+        dataMan.indexMetadata(dbms, id);
 
         dbms.commit();
 
@@ -392,10 +392,9 @@ public class FragmentHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
         String group= null, isTemplate= null, docType= null, category= null;
         boolean ufo= false, indexImmediate= false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -405,7 +404,7 @@ public class FragmentHarvester {
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 
 		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
@@ -569,7 +568,7 @@ public class FragmentHarvester {
         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
         addCategories(id);
 
-        dataMan.indexMetadataGroup(dbms, id);	
+        dataMan.indexMetadata(dbms, id);	
 
         dbms.commit();
 				harvestSummary.recordsUpdated++;
@@ -594,10 +593,9 @@ public class FragmentHarvester {
         //
         // insert metadata
         //
-        int userid = 1;
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, userid, group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -609,7 +607,7 @@ public class FragmentHarvester {
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 
         if(log.isDebugEnabled())
             log.debug("	- Commit "+id);
@@ -683,6 +681,7 @@ public class FragmentHarvester {
 	static public class FragmentParams {
 		public String url;
 		public String uuid;
+        public String owner;
 		public String templateId;
 		public String outputSchema;
 		public String isoCategory;

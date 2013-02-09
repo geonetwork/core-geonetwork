@@ -1406,3 +1406,6 @@ div#privileges {
   padding: 4px;
 }
 
+div#editPanel * div table tr > td {
+    max-width: 350px;
+}

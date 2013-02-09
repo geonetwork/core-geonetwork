@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<!-- ============================================================================================= -->
 
@@ -115,6 +115,64 @@
     </table>
     </xsl:template>
 
+	<xsl:template name="privileges">
+		<xsl:param name="type"/>
+		<xsl:param name="jsId" required="no" select="$type"/>
+		
+		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
+		
+		<table>
+			<tr>
+				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
+				<td class="padded"><select id="{$type}.groups" class="content" size="8" multiple="on"/></td>
+				<td class="padded" valign="top">
+					<div align="center">
+						<button id="{$type}.addGroups" class="content" onclick="harvesting.{$jsId}.addGroupRow()">
+							<xsl:value-of select="/root/gui/harvesting/add"/>
+						</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table id="{$type}.privileges">
+			<tr>
+				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
+				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
+				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
+				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
+				<th/>
+			</tr>
+		</table>
+		
+	</xsl:template>
+
+	<!-- Create elements to define username and password field. -->
+	<xsl:template name="useAccount">
+		<xsl:param name="type"/>
+		
+		<tr>
+			<td class="padded"><label for="{$type}.useAccount"><xsl:value-of select="/root/gui/harvesting/useAccount"/></label></td>
+			<td class="padded"><input id="{$type}.useAccount" type="checkbox" checked="on"/></td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<table id="{$type}.account">
+					<tr>
+						<td class="padded"><label for="{$type}.username"><xsl:value-of select="/root/gui/harvesting/username"/></label></td>
+						<td class="padded"><input id="{$type}.username" class="content" type="text" value="" size="20"/></td>
+					</tr>
+					
+					<tr>
+						<td class="padded"><label for="{$type}.password"><xsl:value-of select="/root/gui/harvesting/password"/></label></td>
+						<td class="padded"><input id="{$type}.password" class="content" type="password" value="" size="20"/></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		
+	</xsl:template>
 	<!-- ============================================================================================= -->
 	
 </xsl:stylesheet>
