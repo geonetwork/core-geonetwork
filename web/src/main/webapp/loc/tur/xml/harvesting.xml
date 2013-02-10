@@ -22,6 +22,11 @@
 		<long>GeoNetwork v2.0 uzak nokta</long>
 	</info>
 	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web DAV sunucusu</long>
@@ -70,6 +75,8 @@
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<wxstype>OGC Web Servisi Tipi</wxstype>
 	<wxstypes>

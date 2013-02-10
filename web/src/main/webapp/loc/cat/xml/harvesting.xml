@@ -22,6 +22,11 @@
 		<long>Node remot GeoNetwork v2.0</long>
 	</info>
 	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Web DAV server</long>
@@ -75,6 +80,8 @@
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Lloc</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>

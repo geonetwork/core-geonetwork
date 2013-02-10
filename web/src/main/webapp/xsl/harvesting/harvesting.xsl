@@ -8,6 +8,7 @@
 	<xsl:include href="buttons.xsl"/>
 	<xsl:include href="geonet/geonetwork.xsl"/>
 	<xsl:include href="geonet20/geonetwork.xsl"/>
+	<xsl:include href="geoPREST/geoPREST.xsl"/>
 	<xsl:include href="webdav/webdav.xsl"/>
 	<xsl:include href="csw/csw.xsl"/>
 	<xsl:include href="ogcwxs/ogcwxs.xsl"/>
@@ -102,6 +103,7 @@
 		<xsl:call-template name="editPanel-WD"/>
 		<xsl:call-template name="editPanel-GN20"/>
 		<xsl:call-template name="editPanel-CSW"/>
+		<xsl:call-template name="editPanel-geoPREST"/>
 		<xsl:call-template name="editPanel-OGCWXS"/>
 		<xsl:call-template name="editPanel-thredds"/>
 		<xsl:call-template name="editPanel-wfsfeatures"/>

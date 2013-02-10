@@ -22,6 +22,11 @@
 		<long>Noeud GeoNetwork distant (v2.0)</long>
 	</info>
 	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Serveur Web DAV</long>
@@ -77,6 +82,9 @@
 	<site>Site</site>
 
 	<category>Catégorie</category>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Type de service OGC</wxstype>
