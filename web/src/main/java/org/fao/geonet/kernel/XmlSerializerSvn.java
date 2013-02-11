@@ -95,7 +95,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @throws Exception
      */
 	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
-		return internalSelect(dbms, table, id, false);
+		return internalSelect(dbms, table, id, isIndexingTask);
 	}
 
     /**
