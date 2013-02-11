@@ -35,7 +35,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Any;
 
 public class XmlSerializerTest {
 	

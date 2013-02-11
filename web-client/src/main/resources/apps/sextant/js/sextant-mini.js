@@ -43,10 +43,7 @@ this.store.insert(index,rec);
 this.setValue(rec.data.id);
 this.fireEvent("select",this,rec,index)
 }});
-Ext.reg("twintriggercombo",Ext.ux.form.TwinTriggerComboBox);/*
- * Ext Core Library $version&#xD;&#xA;http://extjs.com/&#xD;&#xA;Copyright(c) 2006-2009, $author.&#xD;&#xA;&#xD;&#xA;The MIT License&#xD;&#xA;&#xD;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy&#xD;&#xA;of this software and associated documentation files (the &quot;Software&quot;), to deal&#xD;&#xA;in the Software without restriction, including without limitation the rights&#xD;&#xA;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell&#xD;&#xA;copies of the Software, and to permit persons to whom the Software is&#xD;&#xA;furnished to do so, subject to the following conditions:&#xD;&#xA;&#xD;&#xA;The above copyright notice and this permission notice shall be included in&#xD;&#xA;all copies or substantial portions of the Software.&#xD;&#xA;&#xD;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;&#xA;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;&#xA;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;&#xA;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER&#xD;&#xA;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,&#xD;&#xA;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN&#xD;&#xA;THE SOFTWARE.&#xD;&#xA;
- */
-Ext.ns("Ext.ux");
+Ext.reg("twintriggercombo",Ext.ux.form.TwinTriggerComboBox);Ext.ns("Ext.ux");
 Ext.ux.RatingItem=Ext.extend(Ext.Component,{starWidth:16,resetValue:"",defaultConfig:{defaultSelected:-1,nbStars:5,split:1,selected:-1,showTitles:true,cls:"",disabled:false},constructor:function(element,config){Ext.apply(this,config);
 Ext.applyIf(this,this.defaultConfig);
 Ext.ux.RatingItem.superclass.constructor.call(this);
@@ -349,13 +346,7 @@ return retval
 };
 return renderer
 }});
-Ext.reg("xdatetime",Ext.ux.form.DateTime);/*
- * Ext JS Library 3.3.0
- * Copyright(c) 2006-2010 Ext JS, Inc.
- * licensing@extjs.com
- * http://www.extjs.com/license
- */
-Ext.ns("Ext.ux.grid");
+Ext.reg("xdatetime",Ext.ux.form.DateTime);Ext.ns("Ext.ux.grid");
 Ext.ux.grid.RowExpander=Ext.extend(Ext.util.Observable,{expandOnEnter:true,expandOnDblClick:true,header:"",width:20,sortable:false,fixed:true,hideable:false,menuDisabled:true,dataIndex:"",id:"expander",lazyRender:true,enableCaching:true,constructor:function(config){Ext.apply(this,config);
 this.addEvents({beforeexpand:true,expand:true,beforecollapse:true,collapse:true});
 Ext.ux.grid.RowExpander.superclass.constructor.call(this);
@@ -860,10 +851,7 @@ this.fromMultiselect.store.sort(this.displayField,"ASC")
 }this.valueChanged(this.toMultiselect.store);
 this.fireEvent("changeend",this)
 }});
-Ext.reg("itemselector",Ext.ux.ItemSelector);/*
- * Ext Core Library $version&#xD;&#xA;http://extjs.com/&#xD;&#xA;Copyright(c) 2006-2009, $author.&#xD;&#xA;&#xD;&#xA;The MIT License&#xD;&#xA;&#xD;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy&#xD;&#xA;of this software and associated documentation files (the &quot;Software&quot;), to deal&#xD;&#xA;in the Software without restriction, including without limitation the rights&#xD;&#xA;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell&#xD;&#xA;copies of the Software, and to permit persons to whom the Software is&#xD;&#xA;furnished to do so, subject to the following conditions:&#xD;&#xA;&#xD;&#xA;The above copyright notice and this permission notice shall be included in&#xD;&#xA;all copies or substantial portions of the Software.&#xD;&#xA;&#xD;&#xA;THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;&#xA;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;&#xA;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;&#xA;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER&#xD;&#xA;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,&#xD;&#xA;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN&#xD;&#xA;THE SOFTWARE.&#xD;&#xA;
- */
-Ext.ns("Ext.ux");
+Ext.reg("itemselector",Ext.ux.ItemSelector);Ext.ns("Ext.ux");
 Ext.ux.Lightbox=(function(){var els={},images=[],activeImage,initialized=false,selectors=[];
 return{overlayOpacity:0.85,animate:true,resizeSpeed:8,borderSize:10,labelImage:"Image",labelOf:"of",init:function(){this.resizeDuration=this.animate?((11-this.resizeSpeed)*0.15):0;
 this.overlayDuration=this.animate?0.2:0;
@@ -5458,7 +5446,7 @@ if(obj.BoundingBox){obj.BoundingBox.push(boundingBox)
 }else{obj.projection=boundingBox.crs;
 boundingBox=obj
 }this.readChildNodes(node,boundingBox)
-},BoundingBox:function(node,obj){this.readers.ows["WGS84BoundingBox"].apply(this,[node,obj])
+},BoundingBox:function(node,obj){this.readers.ows.WGS84BoundingBox.apply(this,[node,obj])
 },LowerCorner:function(node,obj){var str=this.getChildValue(node).replace(this.regExes.trimSpace,"");
 str=str.replace(this.regExes.trimComma,",");
 var pointList=str.split(this.regExes.splitSpace);
@@ -10716,7 +10704,35 @@ if(this.active){this.zoomBox.activate()
 this.handlers.wheel.deactivate()
 },enableZoomWheel:function(){this.zoomWheelEnabled=true;
 if(this.active){this.handlers.wheel.activate()
-}},CLASS_NAME:"OpenLayers.Control.Navigation"});OpenLayers.Layer.HTTPRequest=OpenLayers.Class(OpenLayers.Layer,{URL_HASH_FACTOR:(Math.sqrt(5)-1)/2,url:null,params:null,reproject:false,initialize:function(name,url,params,options){OpenLayers.Layer.prototype.initialize.apply(this,[name,options]);
+}},CLASS_NAME:"OpenLayers.Control.Navigation"});OpenLayers.Control.Zoom=OpenLayers.Class(OpenLayers.Control,{zoomInText:"+",zoomInId:"olZoomInLink",zoomOutText:"-",zoomOutId:"olZoomOutLink",draw:function(){var div=OpenLayers.Control.prototype.draw.apply(this),links=this.getOrCreateLinks(div),zoomIn=links.zoomIn,zoomOut=links.zoomOut,eventsInstance=this.map.events;
+if(zoomOut.parentNode!==div){eventsInstance=this.events;
+eventsInstance.attachToElement(zoomOut.parentNode)
+}eventsInstance.register("buttonclick",this,this.onZoomClick);
+this.zoomInLink=zoomIn;
+this.zoomOutLink=zoomOut;
+return div
+},getOrCreateLinks:function(el){var zoomIn=document.getElementById(this.zoomInId),zoomOut=document.getElementById(this.zoomOutId);
+if(!zoomIn){zoomIn=document.createElement("a");
+zoomIn.href="#zoomIn";
+zoomIn.appendChild(document.createTextNode(this.zoomInText));
+zoomIn.className="olControlZoomIn";
+el.appendChild(zoomIn)
+}OpenLayers.Element.addClass(zoomIn,"olButton");
+if(!zoomOut){zoomOut=document.createElement("a");
+zoomOut.href="#zoomOut";
+zoomOut.appendChild(document.createTextNode(this.zoomOutText));
+zoomOut.className="olControlZoomOut";
+el.appendChild(zoomOut)
+}OpenLayers.Element.addClass(zoomOut,"olButton");
+return{zoomIn:zoomIn,zoomOut:zoomOut}
+},onZoomClick:function(evt){var button=evt.buttonElement;
+if(button===this.zoomInLink){this.map.zoomIn()
+}else{if(button===this.zoomOutLink){this.map.zoomOut()
+}}},destroy:function(){if(this.map){this.map.events.unregister("buttonclick",this,this.onZoomClick)
+}delete this.zoomInLink;
+delete this.zoomOutLink;
+OpenLayers.Control.prototype.destroy.apply(this)
+},CLASS_NAME:"OpenLayers.Control.Zoom"});OpenLayers.Layer.HTTPRequest=OpenLayers.Class(OpenLayers.Layer,{URL_HASH_FACTOR:(Math.sqrt(5)-1)/2,url:null,params:null,reproject:false,initialize:function(name,url,params,options){OpenLayers.Layer.prototype.initialize.apply(this,[name,options]);
 this.url=url;
 if(!this.params){this.params=OpenLayers.Util.extend({},params)
 }},destroy:function(){this.url=null;
@@ -11841,7 +11857,7 @@ if(!(OpenLayers.Util.isArray(obj[name]))){obj[name]=[]
 }},ows:OpenLayers.Util.applyDefaults({BoundingBox:function(node,obj){if(obj.bounds){obj.BoundingBox=[{crs:obj.projection,value:[obj.bounds.left,obj.bounds.bottom,obj.bounds.right,obj.bounds.top]}];
 delete obj.projection;
 delete obj.bounds
-}OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers.ows["BoundingBox"].apply(this,arguments)
+}OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers.ows.BoundingBox.apply(this,arguments)
 }},OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers.ows)},write:function(options){var node=this.writeNode("csw:GetRecords",options);
 node.setAttribute("xmlns:gmd",this.namespaces.gmd);
 return OpenLayers.Format.XML.prototype.write.apply(this,[node])
@@ -12867,7 +12883,7 @@ for(var i=0,len=attrs.length;
 i<len;
 ++i){boundingBox[attrs[i].name]=attrs[i].nodeValue
 }obj.BoundingBox.push(boundingBox)
-},BoundingBox:function(node,obj){this.readers.ows["WGS84BoundingBox"].apply(this,[node,obj])
+},BoundingBox:function(node,obj){this.readers.ows.WGS84BoundingBox.apply(this,[node,obj])
 }}},CLASS_NAME:"OpenLayers.Format.CSWGetRecords.v2_0_2_GeoNetwork"});OpenLayers.Format.GeoNetworkRecords=OpenLayers.Class(OpenLayers.Format.XML,{defaultPrefix:"nons",namespaces:{nons:"",geonet:"http://www.fao.org/geonetwork"},initialize:function(options){OpenLayers.Format.XML.prototype.initialize.apply(this,[options])
 },read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data])
 }if(data&&data.nodeType==9){data=data.documentElement
@@ -13433,7 +13449,7 @@ return Ext.apply(enc,{type:"TMS",format:layer.type})
 },TileCache:function(layer){var enc=this.encoders.layers.HTTPRequest.call(this,layer);
 return Ext.apply(enc,{type:"TileCache",layer:layer.layername,maxExtent:layer.maxExtent.toArray(),tileSize:[layer.tileSize.w,layer.tileSize.h],extension:layer.extension,resolutions:layer.serverResolutions||layer.resolutions})
 },KaMapCache:function(layer){var enc=this.encoders.layers.KaMap.call(this,layer);
-return Ext.apply(enc,{type:"KaMapCache",group:layer.params.g,metaTileWidth:layer.params.metaTileSize["w"],metaTileHeight:layer.params.metaTileSize["h"]})
+return Ext.apply(enc,{type:"KaMapCache",group:layer.params.g,metaTileWidth:layer.params.metaTileSize.w,metaTileHeight:layer.params.metaTileSize.h})
 },KaMap:function(layer){var enc=this.encoders.layers.HTTPRequest.call(this,layer);
 return Ext.apply(enc,{type:"KaMap",map:layer.params.map,extension:layer.params.i,group:layer.params.g||"",maxExtent:layer.maxExtent.toArray(),tileSize:[layer.tileSize.w,layer.tileSize.h],resolutions:layer.serverResolutions||layer.resolutions})
 },HTTPRequest:function(layer){return{baseURL:this.getAbsoluteUrl(layer.url instanceof Array?layer.url[0]:layer.url),opacity:(layer.opacity!=null)?layer.opacity:1,singleTile:layer.singleTile}
@@ -17317,7 +17333,7 @@ Ext.each(selections,function(node){records.push(dv.getStore().getAt(dv.indexOf(n
 self.selectedKeywordStore.add(records)
 }if(selections.length===0){self.generateXML()
 }};
-var dv=new Ext.DataView({store:this.keywordStore,tpl:this.keywordsTpl,simpleSelect:true,multiSelect:this.mode==="multiplelist"?true:false,singleSelect:true,width:350,height:250,selectedClass:"ux-mselect-selected",itemSelector:"div.ux-mselect-item",listeners:{selectionchange:selectionChangeCb,afterrender:function(){this.keywordStore.on("load",function(){var cb=function(response){self.loadingKeywordStore.loadData(response.responseXML,true)
+var dv=new Ext.DataView({store:this.keywordStore,tpl:this.keywordsTpl,border:true,simpleSelect:true,multiSelect:this.mode==="multiplelist"?true:false,singleSelect:true,width:350,height:250,style:{border:"1px solid #dbdbdb"},selectedClass:"ux-mselect-selected",itemSelector:"div.ux-mselect-item",listeners:{selectionchange:selectionChangeCb,afterrender:function(){this.keywordStore.on("load",function(){var cb=function(response){self.loadingKeywordStore.loadData(response.responseXML,true)
 };
 Ext.each(self.initialKeyword,function(initKeyword){var filter=(self.identificationMode==="uri"?"uri":"value");
 dv.select(self.keywordStore.find(filter,initKeyword),true);
@@ -17656,7 +17672,7 @@ this.setTitle(OpenLayers.i18n("linkAResource-"+this.type));
 this.generateMode()
 }});
 Ext.reg("gn_editor_linkresourceswindow",GeoNetwork.editor.LinkResourcesWindow);Ext.namespace("GeoNetwork.editor");
-GeoNetwork.editor.LinkedMetadataPanel=Ext.extend(Ext.Panel,{title:undefined,editor:undefined,metadataId:undefined,metadataUuid:undefined,selectedUuid:undefined,selectedType:undefined,metadataSchema:undefined,serviceUrl:undefined,store:undefined,parentAction:undefined,datasetAction:undefined,serviceAction:undefined,featureCatAction:undefined,delFeatureCatAction:undefined,updateChildrenAction:undefined,colModel:undefined,expander:undefined,processMap:{"parent-remove":"parentIdentifier-remove","children-remove":"parentIdentifier-remove","onlinesrc-remove":"onlinesrc-remove","fcats-remove":"update-detachFeatureCatalogue","datasets-remove":"update-srv-detachDataset","sibling-remove":"sibling-remove","thumbnail-remove":"thumbnail-from-url-remove"},defaultConfig:{border:false,frame:false,sep:"^",iconCls:"linkIcon",cls:"linkPanel",collapsible:true,collapsed:false,resourcesTypes:{iso19139:["thumbnail","onlinesrc","parent","children","service","dataset","fcats","sibling"],"iso19139.myocean":["thumbnail","onlinesrc","sibling"],"iso19139.myocean.short":["thumbnail"],"dublin-core":["children"]},tpl:null},updatePanel:function(){this.reload()
+GeoNetwork.editor.LinkedMetadataPanel=Ext.extend(Ext.Panel,{title:undefined,editor:undefined,metadataId:undefined,metadataUuid:undefined,selectedUuid:undefined,selectedType:undefined,metadataSchema:undefined,serviceUrl:undefined,store:undefined,parentAction:undefined,datasetAction:undefined,serviceAction:undefined,featureCatAction:undefined,delFeatureCatAction:undefined,updateChildrenAction:undefined,colModel:undefined,expander:undefined,processMap:{"parent-remove":"parentIdentifier-remove","children-remove":"parentIdentifier-remove","onlinesrc-remove":"onlinesrc-remove","fcats-remove":"update-detachFeatureCatalogue","datasets-remove":"update-srv-detachDataset","sibling-remove":"sibling-remove","thumbnail-remove":"thumbnail-from-url-remove"},defaultConfig:{border:false,frame:false,sep:"^",iconCls:"linkIcon",cls:"linkPanel",collapsible:true,collapsed:false,resourcesTypes:{iso19139:["thumbnail","parent","children","service","dataset","fcats","sibling"],"iso19139.sextant":["thumbnail","parent","children","service","dataset","fcats","sibling"],"iso19139.emodnet.chemistry":["thumbnail","parent","children","service","dataset","fcats","sibling"],"iso19139.emodnet.hydrography":["thumbnail","parent","children","service","dataset","fcats","sibling"],"iso19139.myocean":["thumbnail","onlinesrc","sibling"],"iso19139.myocean.short":["thumbnail"],"dublin-core":["children"]},tpl:null},updatePanel:function(){this.reload()
 },clear:function(){this.store.removeAll();
 this.update("<div></div>")
 },reload:function(e,id,schema,version){this.metadataId=id||this.metadataId;
