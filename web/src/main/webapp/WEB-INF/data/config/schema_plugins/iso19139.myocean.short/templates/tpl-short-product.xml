@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml"
-    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink">
     <gmd:fileIdentifier>
         <gco:CharacterString>myocean.eu/ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:language>
-        <gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode"
-            codeListValue="eng">eng</gmd:LanguageCode>
+        <gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
     </gmd:language>
     <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeListValue="utf8"
-            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
-        />
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
     </gmd:characterSet>
     <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode
-            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode"
-            codeListValue="series"/>
+        <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="series"/>
     </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName>
+        <gco:CharacterString>MyOcean product specification</gco:CharacterString>
+    </gmd:hierarchyLevelName>
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
             <gmd:organisationName>
@@ -44,9 +39,7 @@
                 </gmd:CI_Contact>
             </gmd:contactInfo>
             <gmd:role>
-                <gmd:CI_RoleCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                    codeListValue="pointOfContact"/>
+                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
             </gmd:role>
         </gmd:CI_ResponsibleParty>
     </gmd:contact>
@@ -58,7 +51,7 @@
     </gmd:metadataStandardName>
     <gmd:metadataStandardVersion>
         <gco:CharacterString>0.2</gco:CharacterString>
-    </gmd:metadataStandardVersion>   
+    </gmd:metadataStandardVersion>
     <gmd:identificationInfo>
         <gmd:MD_DataIdentification>
             <gmd:citation>
@@ -98,9 +91,7 @@
                         </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
-                        <gmd:CI_RoleCode codeListValue="pointOfContact"
-                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                        />
+                        <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"/>
                     </gmd:role>
                 </gmd:CI_ResponsibleParty>
             </gmd:pointOfContact>
@@ -110,7 +101,7 @@
                         <gco:CharacterString>no conditions apply</gco:CharacterString>
                     </gmd:useLimitation>
                 </gmd:MD_Constraints>
-            </gmd:resourceConstraints>                       
+            </gmd:resourceConstraints>
             <gmd:language>
                 <gco:CharacterString>eng</gco:CharacterString>
             </gmd:language>
@@ -137,9 +128,10 @@
                                 <gco:Decimal>90.0</gco:Decimal>
                             </gmd:northBoundLatitude>
                         </gmd:EX_GeographicBoundingBox>
-                    </gmd:geographicElement>                   
+                    </gmd:geographicElement>
                 </gmd:EX_Extent>
-            </gmd:extent>            
+            </gmd:extent>
         </gmd:MD_DataIdentification>
     </gmd:identificationInfo>
 </gmd:MD_Metadata>
+
