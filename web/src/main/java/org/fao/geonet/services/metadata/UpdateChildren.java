@@ -31,6 +31,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.util.HashMap;
@@ -69,7 +70,7 @@ public class UpdateChildren implements Service
 	{
 		String parentUuid = Util.getParam(params,"parentUuid");
 		String childrenIds = Util.getParam(params, "childrenIds");
-		
+
 		// Transform params element into Map<String, String> for xsl transformation
 		List<Element> lstParams = params.getChildren();
 		Map<String, String> parameters = new HashMap<String, String>();

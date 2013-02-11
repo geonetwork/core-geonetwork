@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -36,7 +37,6 @@ public class AjaxEditUtils extends EditUtils {
     private static final String XML_FRAGMENT_SEPARATOR = "&&&";
     private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
     private static final String COLON_SEPARATOR = "COLON";
-    private static final int COLON_SEPARATOR_SIZE = COLON_SEPARATOR.length();
     
     public AjaxEditUtils(ServiceContext context) {
         super(context);
@@ -81,6 +81,7 @@ public class AjaxEditUtils extends EditUtils {
      */
     protected Element applyChangesEmbedded(Dbms dbms, String id, 
                                         Hashtable changes, String currVersion) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();
 
@@ -284,6 +285,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized Element addElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, String childName)  throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
 		String  schema = dataManager.getMetadataSchema(dbms, id);
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -385,6 +387,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized Element deleteElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String parentRef) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
 
 		String schema = dataManager.getMetadataSchema(dbms, id);
 
@@ -474,7 +477,9 @@ public class AjaxEditUtils extends EditUtils {
 	 * @throws Exception
 	 */
 	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
-		String[] token = ref.split("_");
+	    Lib.resource.checkEditPrivilege(context, id);
+
+	    String[] token = ref.split("_");
 		String elementId = token[1];
 		String attributeName = token[2];
 		Element result = new Element(Edit.RootChild.NULL, Edit.NAMESPACE);
@@ -524,7 +529,9 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized void swapElementEmbedded(Dbms dbms, UserSession session, String id, String ref, boolean down) throws Exception {
-        dataManager.getMetadataSchema(dbms, id);
+	    Lib.resource.checkEditPrivilege(context, id);
+
+	    dataManager.getMetadataSchema(dbms, id);
 
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -601,6 +608,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
+
 		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
@@ -658,6 +667,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
+
 		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
