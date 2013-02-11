@@ -18,7 +18,7 @@ schematrons/.build
 docs/*/users/build
 .props/
 web-client/src/main/resources/apps/js/GeoNetwork-mini*
-web-client/src/main/resources/apps/*/js/App-mini.js
+web-client/src/main/resources/apps/*/js/*-mini.js
 portlet/src/main/webapp/js
 portlet/src/main/webapp/css
 portlet/src/main/webapp/images
@@ -27,7 +27,5 @@ web-client/src/main/resources/apps/css/geonetwork.css
 web-client/src/main/resources/apps/js/GeoNetwork-mini-nomap.js
 web-client/src/main/resources/apps/js/GeoNetwork-mini.js
 web-client/src/main/resources/apps/js/ext-ux/css/ext-ux.css
-web-client/src/main/resources/apps/search/js/App-mini.js
-web-client/src/main/resources/apps/tabsearch/js/App-mini.js
 *.iml
 .idea/
