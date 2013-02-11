@@ -10,10 +10,10 @@
 	</xsl:template>
 
 	<!-- add gmd prefix for everything that is part of the gmd namespace
-	     - note we need the gmd prefix for matching element names and 
+	     - note GeoNetwork needs the gmd prefix for matching element names and 
 			   codelists -->
 	<xsl:template match="*[namespace-uri()='http://www.isotc211.org/2005/gmd']">
-		<xsl:element name="gmd:{name()}" namespace="http://www.isotc211.org/2005/gmd">
+		<xsl:element name="gmd:{local-name()}" namespace="http://www.isotc211.org/2005/gmd">
 			<xsl:apply-templates select="@*|node()"/>
 		</xsl:element>
 	</xsl:template>
