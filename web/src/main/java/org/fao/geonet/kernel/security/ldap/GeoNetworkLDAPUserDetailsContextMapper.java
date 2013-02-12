@@ -184,6 +184,9 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				// 2. a privilegePattern is defined which define a 
 				// combination of group and profile pair.
 				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
+				if(userDetails.getOrganisation().equals("IFREMER")) {
+					privileges.add("SXT_IFREMER_RegisteredUser");
+				}
 				if (privileges != null) {
 					Set<String> profileList = new HashSet<String>();
 					
