@@ -276,10 +276,10 @@
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Quick Search Controller" enabled="true"/>
         <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="1 request a second Timer" enabled="true">
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="5 request a second Timer" enabled="true">
             <doubleProp>
               <name>throughput</name>
-              <value>60.0</value>
+              <value>300.0</value>
               <savedValue>0.0</savedValue>
             </doubleProp>
             <stringProp name="calcMode">all active threads</stringProp>
@@ -336,7 +336,7 @@
           </HTTPSamplerProxy>
           <hashTree>
             <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-              <stringProp name="DurationAssertion.duration">1000</stringProp>
+              <stringProp name="DurationAssertion.duration">4000</stringProp>
             </DurationAssertion>
             <hashTree/>
           </hashTree>
@@ -405,8 +405,8 @@
               <boolProp name="XPath.namespace">false</boolProp>
             </XPathAssertion>
             <hashTree/>
-            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="false">
-              <stringProp name="DurationAssertion.duration">1000</stringProp>
+            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+              <stringProp name="DurationAssertion.duration">7000</stringProp>
             </DurationAssertion>
             <hashTree/>
           </hashTree>
@@ -476,7 +476,7 @@
             </XPathAssertion>
             <hashTree/>
             <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-              <stringProp name="DurationAssertion.duration">10000</stringProp>
+              <stringProp name="DurationAssertion.duration">18000</stringProp>
             </DurationAssertion>
             <hashTree/>
           </hashTree>
