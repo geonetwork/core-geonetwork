@@ -276,10 +276,10 @@
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Quick Search Controller" enabled="true"/>
         <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="5 requests a second Timer" enabled="true">
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="1 request a second Timer" enabled="true">
             <doubleProp>
               <name>throughput</name>
-              <value>300.0</value>
+              <value>60.0</value>
               <savedValue>0.0</savedValue>
             </doubleProp>
             <stringProp name="calcMode">all active threads</stringProp>
@@ -357,13 +357,13 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="5 requests a second Timer" enabled="true">
+        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="30 request a minute Timer" enabled="true">
           <doubleProp>
             <name>throughput</name>
-            <value>300.0</value>
+            <value>30.0</value>
             <savedValue>0.0</savedValue>
           </doubleProp>
-          <stringProp name="calcMode">this thread only</stringProp>
+          <stringProp name="calcMode">all active threads</stringProp>
         </ConstantThroughputTimer>
         <hashTree/>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="CSW non-spatial Search Controller" enabled="true"/>
@@ -429,13 +429,13 @@
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="CSW BBox Search Controller" enabled="true"/>
         <hashTree>
-          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="30 requests a minute Timer" enabled="true">
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="10 requests a minute Timer" enabled="true">
             <doubleProp>
               <name>throughput</name>
-              <value>30.0</value>
+              <value>10.0</value>
               <savedValue>0.0</savedValue>
             </doubleProp>
-            <stringProp name="calcMode">this thread only</stringProp>
+            <stringProp name="calcMode">all active threads</stringProp>
           </ConstantThroughputTimer>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="csw bbox search" enabled="true">
