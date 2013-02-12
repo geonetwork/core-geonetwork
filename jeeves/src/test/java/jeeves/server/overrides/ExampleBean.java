@@ -3,15 +3,15 @@ package jeeves.server.overrides;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestBean {
+public class ExampleBean {
     private String basicProp;
     private String basicProp2;
     private List<String> collectionProp = new ArrayList<String>();
     private List<String> collectionProp2 = new ArrayList<String>();
-    private TestBean simpleRefOtherNameForTesting;
-    private List<TestBean> collectionRef = new ArrayList<TestBean>();
+    private ExampleBean simpleRefOtherNameForTesting;
+    private List<ExampleBean> collectionRef = new ArrayList<ExampleBean>();
 
-    public TestBean() {
+    public ExampleBean() {
         collectionProp.add("initial");
         collectionProp2.add("initial");
     }
@@ -33,16 +33,16 @@ public class TestBean {
     public void setCollectionProp(List<String> collectionProp) {
         this.collectionProp = collectionProp;
     }
-    public TestBean getSimpleRef() {
+    public ExampleBean getSimpleRef() {
         return simpleRefOtherNameForTesting;
     }
-    public void setSimpleRef(TestBean simpleRef) {
+    public void setSimpleRef(ExampleBean simpleRef) {
         this.simpleRefOtherNameForTesting = simpleRef;
     }
-    public List<TestBean> getCollectionRef() {
+    public List<ExampleBean> getCollectionRef() {
         return collectionRef;
     }
-    public void setCollectionRef(List<TestBean> collectionRef) {
+    public void setCollectionRef(List<ExampleBean> collectionRef) {
         this.collectionRef = collectionRef;
     }
 

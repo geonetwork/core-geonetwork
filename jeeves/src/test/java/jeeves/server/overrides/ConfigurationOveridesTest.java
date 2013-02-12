@@ -117,9 +117,9 @@ public class ConfigurationOveridesTest {
     private void updateAndPerformSpringAssertions(JeevesApplicationContext applicationContext) {
         applicationContext.refresh();
 
-        TestBean testBean = applicationContext.getBean("testBean", TestBean.class); 
-        TestBean testBean2 = applicationContext.getBean("testBean2", TestBean.class); 
-        TestBean testBean3 = applicationContext.getBean("testBean3", TestBean.class);
+        ExampleBean testBean = applicationContext.getBean("testBean", ExampleBean.class); 
+        ExampleBean testBean2 = applicationContext.getBean("testBean2", ExampleBean.class); 
+        ExampleBean testBean3 = applicationContext.getBean("testBean3", ExampleBean.class);
         
         assertNotNull(testBean);
         assertNotNull(testBean2);

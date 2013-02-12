@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security-3.1.xsd" >
 
-	<bean id="testBean" class="jeeves.server.overrides.TestBean"/>
+	<bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
     <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="filterSecurityInterceptor">
     	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_coreSecurityMapping_filterApplied"/>
         <property name="authenticationManager" ref="authenticationManager"></property>

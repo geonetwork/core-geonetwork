@@ -5,5 +5,5 @@
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="testBean3" class="jeeves.server.overrides.TestBean"/>
+    <bean id="testBean3" class="jeeves.server.overrides.ExampleBean"/>
 </beans>
