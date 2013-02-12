@@ -185,7 +185,7 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 				// combination of group and profile pair.
 				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
 				if(userDetails.getOrganisation().equals("IFREMER")) {
-					privileges.add("SXT_IFREMER_RegisteredUser");
+					privileges.add("SXT5_IFREMER_RegisteredUser");
 				}
 				if (privileges != null) {
 					Set<String> profileList = new HashSet<String>();
