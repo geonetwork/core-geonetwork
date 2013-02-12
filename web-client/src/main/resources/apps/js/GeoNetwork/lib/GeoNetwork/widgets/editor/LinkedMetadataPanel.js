@@ -137,10 +137,20 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 getThumbnail: this.catalogue.services.mdGetThumbnail,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
                 unsetThumbnail: this.catalogue.services.mdUnsetThumbnail,
-                height: 400,
                 bodyStyle: 'padding:10px;',
                 imagePath: this.imagePath
             };
+        if (type === 'thumbnail') {
+            config.height= 300;
+            config.width= 500;
+        } else if (type === 'onlinesrc') {
+            config.height= 450;
+            config.width= 700;
+        } else if (type === 'sibling') {
+            config.height= 450;
+            config.width= 700;
+        }
+        
         if (this.metadataSchema === 'iso19139.myocean') {
             window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);
         } else {

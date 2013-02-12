@@ -410,28 +410,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         this.previewImage = new Ext.BoxComponent({
             autoEl: {
                 tag: 'img',
-                style: 'padding-left: 100px;',
                 'class': 'thumb-small',
-                src: '../../apps/images/default/nopreview.png'
+                src: cat.imgPath + 'images/default/nopreview.png'
             }
         });
-        var radioURL = new Ext.form.Radio({
-                xtype: 'radio',
-                fieldLabel: OpenLayers.i18n('setAURL'),
-                name: 'type',
-                inputValue: 'small',
-                checked: !this.uploadThumbnail,
-                listeners: {
-                    check: function (radio, checked) {
-                        this.uploadThumbnail = !checked;
-                        self.createBt.setDisabled(!self.uploadForm.getComponent(11).validate());
-                    },
-                    scope: this
-                }
-            }),
-            urlField = new Ext.form.TextField({
+        var urlField = new Ext.form.TextField({
                 name: 'url',
                 value: '',
+                width: 400,
                 validator: function (value) {
                     if (self.uploadThumbnail !== true) {
                         var isUrl = Ext.form.VTypes.url(value);
@@ -453,52 +439,98 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         this.serviceUrl = value;
                         
                         if (value !== "") {
-                            // Set the URL mode on based on the radio position
-                            radioURL.setValue(true);
                             self.createBt.setDisabled(false);
                         }
                     },
                     scope: this
                 }
             }),
-            radioUpload = new Ext.form.Radio({
-                xtype: 'radio',
-                checked: this.uploadThumbnail,
-                fieldLabel: OpenLayers.i18n('uploadAnImage'),
-                name: 'type',
-                inputValue: 'large',
-                listeners: {
-                    check: function (radio, checked) {
-                        this.uploadThumbnail = checked;
-                        self.createBt.setDisabled(fileUploadField.getValue() === "");
-                    },
-                    scope: this
-                }
-            }), 
             // A file upload field for the thumbnail
             fileUploadField = new Ext.form.FileUploadField({
                 emptyText: OpenLayers.i18n('selectImage'),
                 name: 'fname',
+                width: 300,
                 buttonText: '',
                 buttonCfg: {
                     iconCls: 'thumbnailAddIcon'
                 },
                 listeners: {
                     fileselected: function (cmp, value) {
-                        // Set the upload mode on based on the radio
-                        radioUpload.setValue(true);
                         self.createBt.setDisabled(value === "");
                     }
                 }
             });
+        
+        var fsUpload = new Ext.form.FieldSet ({
+            checkboxToggle:true,
+            title: OpenLayers.i18n('uploadAnImage'),
+            collapsed: !this.uploadThumbnail,
+            items :[fileUploadField, {
+                xtype: 'checkbox',
+                checked: false,
+                fieldLabel: '',
+                labelSeparator: '',
+                boxLabel: OpenLayers.i18n('createSmall'),
+                name: 'createSmall',
+                value: 'false'
+            }],
+            listeners: {
+                collapse: {
+                    fn: function() {
+                        if(fsUrl.collapsed) {
+                            fsUrl.expand();
+                        }
+                    },
+                    scope: this
+                },
+                expand: {
+                    fn: function() {
+                        this.uploadThumbnail = true;
+                        if(!fsUrl.collapsed) {
+                            fsUrl.collapse();
+                        }
+                    },
+                    scope: this
+                }
+            }
+        });
+        
+        var fsUrl = new Ext.form.FieldSet ({
+            checkboxToggle:true,
+            title: OpenLayers.i18n('setAURL'),
+            collapsed: this.uploadThumbnail,
+            items :[urlField,this.previewImage],
+            listeners: {
+                collapse: {
+                    fn: function() {
+                        if(fsUpload.collapsed) {
+                            fsUpload.expand();
+                        }
+                    },
+                    scope: this
+                },
+                expand: {
+                    fn: function() {
+                        this.uploadThumbnail = false;
+                        if(!fsUpload.collapsed) {
+                            fsUpload.collapse();
+                        }
+                    },
+                    scope: this
+                }
+            }
+        });
+        
         // TODO : deprecate ThumbnailPanel
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
-            anchor: '100%',
+            labelWidth: 50,
             defaults: {
+                hideLabels: true,
                 xtype: 'textfield'
             },
-            items: [this.idField, this.versionField, radioUpload, {
+            anchor: '80%',
+            items: [this.idField, this.versionField, {  
                 name: 'scalingDir',
                 value: 'width',
                 hidden: true
@@ -519,19 +551,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 name: 'smallScalingFactor',
                 value: '180',
                 hidden: true
-            }, fileUploadField, {
-                xtype: 'checkbox',
-                checked: false,
-                fieldLabel: '',
-                labelSeparator: '',
-                boxLabel: OpenLayers.i18n('createSmall'),
-                name: 'createSmall',
-                value: 'false'
-            }, 
-            radioURL, 
-            urlField,
-            this.previewImage
-            ],
+            }, fsUpload, fsUrl],
             buttons: [this.createBt, cancelBt]
         });
         return this.uploadForm;
