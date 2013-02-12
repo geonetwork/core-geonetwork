@@ -53,6 +53,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     updateChildrenAction: undefined,
     colModel: undefined,
     expander: undefined,
+    imagePath: undefined,
     processMap: {
         'parent-remove': 'parentIdentifier-remove',
         'children-remove': 'parentIdentifier-remove',
@@ -135,7 +136,10 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 metadataSchema: this.metadataSchema,
                 getThumbnail: this.catalogue.services.mdGetThumbnail,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
-                unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
+                unsetThumbnail: this.catalogue.services.mdUnsetThumbnail,
+                height: 400,
+                bodyStyle: 'padding:10px;',
+                imagePath: this.imagePath
             };
         if (this.metadataSchema === 'iso19139.myocean') {
             window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);

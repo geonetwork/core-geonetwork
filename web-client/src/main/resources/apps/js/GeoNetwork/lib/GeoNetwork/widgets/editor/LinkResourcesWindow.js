@@ -41,6 +41,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         height: 740,
         border: false,
         modal: true,
+        defaults: {
+            border:false
+        },
         /** api: config[closeAction] 
          *  The close action. Default is 'destroy'.
          */
@@ -53,6 +56,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         uploadThumbnail: true,
         uploadDocument: false,
         metadataSchema: 'iso19139',
+        
+        /**
+         * relative imagePath for ItemSelector
+         */
+        imagePath: undefined,
+        
         protocolForServices: ['application/vnd.ogc.wms_xml', 'application/vnd.ogc.wfs_xml'],
         /**
          * URL parameter separator mainly used
@@ -839,7 +848,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
+            imagePath: this.imagePath,
             toTBar: [{
                 // control to clear all select keywwords and refresh the XML.
                 text: OpenLayers.i18n('clear'),
@@ -866,6 +875,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
+            border: false,
             buttons: [{
                 text: OpenLayers.i18n('link'),
                 iconCls: 'linkIcon',
@@ -1132,7 +1142,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
+            imagePath: this.imagePath,
             toTBar: [{
                 // control to clear all select keywwords and refresh the XML.
                 text: OpenLayers.i18n('clear'),

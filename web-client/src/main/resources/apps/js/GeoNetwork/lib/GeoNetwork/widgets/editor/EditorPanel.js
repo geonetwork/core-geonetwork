@@ -1485,7 +1485,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             metadataId: this.metadataId,
             metadataUuid: this.metadataUuid,
             metadataSchema: this.metadataSchema,
-            catalogue: this.catalogue
+            catalogue: this.catalogue,
+            imagePath: this.selectionPanelImgPath
         }, this.utilityPanelConfig.relationPanel));
         
 //        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
