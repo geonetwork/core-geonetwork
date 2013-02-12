@@ -116,6 +116,23 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     },
     
     /**
+     * Retrieve key value from a translation of a category
+     */
+    getKey: function(value){
+        var idx = this.storeLabel.findBy(function(record, id) {
+            if(record.get('label')[this.lang] == value) {
+                return true;
+            } else {
+                return false;
+            }
+        }, this);
+        if(idx > 0 && this.storeLabel.getAt(idx)) {
+            return this.storeLabel.getAt(idx).get('name');
+        }
+        else return value;
+    },
+    
+    /**
      * Create category node (recursive)
      */
     createNodes : function(node, r, index) {
@@ -166,12 +183,12 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	Ext.each(selNodes, function(node) {
     		if(!node.hasChildNodes()) {
     			if(res == '') {
-    				res = node.attributes.category;
+    				res = this.getKey(node.attributes.category);
     			} else {
-    				res += ' or ' + node.attributes.category;
+    				res += ' or ' + this.getKey(node.attributes.category);
     			}
     		}
-    	});
+    	}, this);
 
     	cookie.set('cat.searchform.categorytree', res);
     	return res;
