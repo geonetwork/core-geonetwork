@@ -130,20 +130,22 @@ class GeonetworkNRTManager {
                 } catch (IOException e) {
                     Log.error(Geonet.LUCENE, "error pruning SearcherLifetimeManager for: " + GeonetworkNRTManager.this, e);
                 }
-                // prune out the versionMapping now that lifetimeManager has
-                // been pruned
-                Iterator<Long> iter = versionMapping.values().iterator();
-                while (iter.hasNext()) {
-                    Long version = iter.next();
-                    IndexSearcher searcher = lifetimeManager.acquire(version);
-                    if (searcher != null) {
-                        try {
-                            lifetimeManager.release(searcher);
-                        } catch (IOException e) {
-                            Log.error(Geonet.LUCENE, e.getMessage(), e);
+                synchronized (GeonetworkNRTManager.this) {
+                    // prune out the versionMapping now that lifetimeManager has
+                    // been pruned
+                    Iterator<Long> iter = versionMapping.values().iterator();
+                    while (iter.hasNext()) {
+                        Long version = iter.next();
+                        IndexSearcher searcher = lifetimeManager.acquire(version);
+                        if (searcher != null) {
+                            try {
+                                lifetimeManager.release(searcher);
+                            } catch (IOException e) {
+                                Log.error(Geonet.LUCENE, e.getMessage(), e);
+                            }
+                        } else {
+                            iter.remove();
                         }
-                    } else {
-                        iter.remove();
                     }
                 }
             }
