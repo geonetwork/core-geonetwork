@@ -1323,7 +1323,7 @@ public class LuceneSearcher extends MetaSearcher {
                             .hasNext();) {
                         FacetResultNode node = (FacetResultNode) subresults
                                 .next();
-                        facetValues.put(node.getLabel().lastComponent(),
+                        facetValues.put(node.getLabel().components[node.getLabel().length-1],
                                 node.getValue());
                     }
                     List<Entry<String, Double>> entries = new ArrayList<Entry<String, Double>>(
@@ -1423,7 +1423,7 @@ public class LuceneSearcher extends MetaSearcher {
 	 */
 	private static FacetSearchParams buildFacetSearchParams(
 			Map<String, FacetConfig> summaryConfigValues) {
-		FacetSearchParams fsp = new FacetSearchParams();
+            List<FacetRequest> requests = new ArrayList<FacetRequest>(summaryConfigValues.size());
 		
 		for (String key : summaryConfigValues.keySet()) {
 			FacetConfig config = summaryConfigValues.get(key);
@@ -1434,9 +1434,9 @@ public class LuceneSearcher extends MetaSearcher {
 					new CategoryPath(key), max);
 			facetRequest.setSortBy(SortBy.VALUE);
 			facetRequest.setSortOrder(SortOrder.DESCENDING);
-			fsp.addFacetRequest(facetRequest);
+			requests.add(facetRequest);
 		}
-		return fsp;
+		return new FacetSearchParams(requests);
 	}
 
 	/**
