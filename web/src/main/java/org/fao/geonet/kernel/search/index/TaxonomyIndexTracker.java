@@ -12,7 +12,7 @@ import jeeves.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.facet.index.CategoryDocumentBuilder;
+import org.apache.lucene.facet.index.FacetFields;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
@@ -77,9 +77,8 @@ class TaxonomyIndexTracker {
 
     void addDocument(Document doc, List<CategoryPath> categories) {
         try {
-            CategoryDocumentBuilder categoryDocBuilder = new CategoryDocumentBuilder(taxonomyWriter);
-            categoryDocBuilder.setCategoryPaths(categories);
-            categoryDocBuilder.build(doc);
+            FacetFields facetFields = new FacetFields(taxonomyWriter);
+            facetFields.addFields(doc, categories);
             taxonomyWriter.commit();
             
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
