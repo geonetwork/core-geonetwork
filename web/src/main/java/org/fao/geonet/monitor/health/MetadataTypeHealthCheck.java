@@ -37,9 +37,9 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
 
                 IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(null, -1);
 				GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-                IndexSearcher searcher = new IndexSearcher(reader);
 
                 try {
+                    IndexSearcher searcher = new IndexSearcher(reader);
                     BooleanQuery query = new BooleanQuery();
                     TermQuery schemaIsIso19139CHE = new TermQuery(new Term("_schema", "iso19139.che"));
                     TermQuery notHarvested = new TermQuery(new Term("_isHarvested", "n"));

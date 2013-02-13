@@ -226,9 +226,9 @@ public final class Utils {
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-        IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
+            IndexSearcher searcher = new IndexSearcher(reader);
             TreeSet<MetadataRecord> results = new TreeSet<MetadataRecord>(new Comparator<MetadataRecord>(){
 
                 public int compare( MetadataRecord o1, MetadataRecord o2 ) {
