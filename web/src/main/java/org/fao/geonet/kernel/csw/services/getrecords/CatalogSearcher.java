@@ -118,7 +118,7 @@ public class CatalogSearcher {
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
 	private Query         _query;
-	private CachingWrapperFilter _filter;
+	private Filter _filter;
 	private Sort          _sort;
 	private String        _lang;
 	private long          _searchToken;
