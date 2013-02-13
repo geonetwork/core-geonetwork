@@ -59,6 +59,7 @@
                     <gmd:title>
                         <gco:CharacterString>Template for myOcean product short description</gco:CharacterString>
                     </gmd:title>
+                    <gmd:date/>
                     <gmd:identifier>
                         <gmd:MD_Identifier>
                             <gmd:code>
