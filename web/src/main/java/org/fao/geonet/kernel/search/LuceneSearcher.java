@@ -137,8 +137,6 @@ public class LuceneSearcher extends MetaSearcher {
 	private Sort          _sort;
 	private Element       _elSummary;
 	
-	private IndexAndTaxonomy _indexAndTaxonomy;
-
 	private int           _maxHitsInSummary;
 	private int           _numHits;
 	private String        _resultType;
@@ -153,6 +151,7 @@ public class LuceneSearcher extends MetaSearcher {
      * Filter geometry object WKT, used in the logger ugly way to store this object, as ChainedFilter API is a little bit cryptic to me...
 	 */
 	private String _geomWKT = null;
+    private long _versionToken = -1;
 
     /**
      * constructor
@@ -193,7 +192,6 @@ public class LuceneSearcher extends MetaSearcher {
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
 		_language = determineLanguage(srvContext, request, _sm.get_settingInfo());
-		_indexAndTaxonomy = _sm.getNewIndexReader(_language);
 
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
@@ -283,14 +281,20 @@ public class LuceneSearcher extends MetaSearcher {
 			if (tdocs.scoreDocs.length >= nrHits) {
 				for (int i = 0; i < nrHits; i++) {
 					Document doc;
-					if (inFastMode) {
-						doc = _indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc); // no selector
-					}
-                    else {
-                        DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id");
-						_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
-						doc = docVisitor.getDocument();
-					}
+                    IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
+                    _versionToken = indexAndTaxonomy.version;
+                    try {
+                        if (inFastMode) {
+                            // no selector
+                            doc = indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc);
+                        } else {
+                            DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id");
+                            indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+                            doc = docVisitor.getDocument();
+                        }
+                    } finally {
+                        _sm.releaseIndexReader(indexAndTaxonomy);
+                    }
 					String id = doc.get("_id");
 					Element md = null;
 
@@ -441,24 +445,31 @@ public class LuceneSearcher extends MetaSearcher {
 				Document doc;
 
                 DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor(Collections.singleton(searchField));
-				_indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
-				doc = docVisitor.getDocument();
+                IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
+                _versionToken = indexAndTaxonomy.version;
+                try {
+                    indexAndTaxonomy.indexReader.document(tdocs.scoreDocs[i].doc, docVisitor);
+                    doc = docVisitor.getDocument();
 
-				String[] values = doc.getValues(searchField);
-				
-				for (int j = 0; j < values.length; ++j) {
-					if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValue)) {
-						if (threshold > 1) {
-							// Use a map to save values frequency
-							Integer valueFrequency = finalValuesMap.get(values[j]);
-							//Log.debug(Geonet.SEARCH_ENGINE, "  " + values[j] + ":" + valueFrequency);
-							finalValuesMap.put(values[j], (valueFrequency != null ? ++ valueFrequency : 1));
-						} else {
-							finalValues.add(values[j]);
-						}
-						counter ++;
-					}
-				}
+                    String[] values = doc.getValues(searchField);
+
+                    for (int j = 0; j < values.length; ++j) {
+                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValue)) {
+                            if (threshold > 1) {
+                                // Use a map to save values frequency
+                                Integer valueFrequency = finalValuesMap.get(values[j]);
+                                // Log.debug(Geonet.SEARCH_ENGINE, "  " +
+                                // values[j] + ":" + valueFrequency);
+                                finalValuesMap.put(values[j], (valueFrequency != null ? ++valueFrequency : 1));
+                            } else {
+                                finalValues.add(values[j]);
+                            }
+                            counter++;
+                        }
+                    }
+                } finally {
+                    _sm.releaseIndexReader(indexAndTaxonomy);
+                }
 			}
 		}
 		
@@ -502,21 +513,7 @@ public class LuceneSearcher extends MetaSearcher {
      * TODO javadoc.
      */
 	public synchronized void close() {
-        if(!closed) {
-            try {
-                closed = true;
-                if (_indexAndTaxonomy != null) {
-                    _sm.releaseIndexReader(_indexAndTaxonomy);
-                }
-                _indexAndTaxonomy = null;
-            } catch (IOException e) {
-                Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                Log.error(Geonet.SEARCH_ENGINE,"Failed to close Index Reader: "+e.getMessage());
-                e.printStackTrace();
-            }
-        }
+	    // TODO remove method
 	}
 
 	//
@@ -859,12 +856,18 @@ public class LuceneSearcher extends MetaSearcher {
 		} else {
 			numHits = endHit;
 		}
-		
-		Pair<TopDocs,Element> results = doSearchAndMakeSummary( endHit, startHit, endHit, 
-				_language, _luceneConfig.getTaxonomy().get(_resultType), _indexAndTaxonomy.indexReader, 
-				_query, _filter, _sort, _indexAndTaxonomy.taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(),
-				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
-		);
+		IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
+        _versionToken = indexAndTaxonomy.version;
+        Pair<TopDocs,Element> results;
+        try {
+            results = doSearchAndMakeSummary( endHit, startHit, endHit, 
+    				_language, _luceneConfig.getTaxonomy().get(_resultType), indexAndTaxonomy.indexReader, 
+    				_query, _filter, _sort, indexAndTaxonomy.taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(),
+    				_luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder()
+    		);
+        } finally {
+            _sm.releaseIndexReader(indexAndTaxonomy);
+        }
 		
 		TopDocs hits = results.one();
 		_elSummary = results.two();
@@ -1536,13 +1539,18 @@ public class LuceneSearcher extends MetaSearcher {
     public List<String> getAllUuids(int maxHits) throws Exception {
         List<String> response = new ArrayList<String>();
 		TopDocs tdocs = performQuery(0, maxHits, false);
-
-        for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-            DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
-            _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
-            Document doc = docVisitor.getDocument();
-            String uuid = doc.get("_uuid");
-            if (uuid != null) response.add(uuid);
+		IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
+        _versionToken = indexAndTaxonomy.version;
+        try {
+            for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+                DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_uuid");
+                indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+                Document doc = docVisitor.getDocument();
+                String uuid = doc.get("_uuid");
+                if (uuid != null) response.add(uuid);
+            }
+        } finally {
+            _sm.releaseIndexReader(indexAndTaxonomy);
         }
         return response;
     }
@@ -1559,44 +1567,49 @@ public class LuceneSearcher extends MetaSearcher {
     public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
 
       Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
-			TopDocs tdocs = performQuery(0, maxHits, false);
-
-      for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
-          DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
-                  "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
-          _indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
-          Document doc = docVisitor.getDocument();
-
-          MdInfo mdInfo = new MdInfo();
-          mdInfo.id           = doc.get("_id");
-          mdInfo.uuid         = doc.get("_uuid");
-          mdInfo.schemaId     = doc.get("_schema");
-          String isTemplate   = doc.get("_isTemplate");
-          if (isTemplate.equals("y")) {
-              mdInfo.template = MdInfo.Template.TEMPLATE;
+      TopDocs tdocs = performQuery(0, maxHits, false);
+      IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
+      _versionToken = indexAndTaxonomy.version;
+      try {
+          for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
+              DocumentStoredFieldVisitor docVisitor = new DocumentStoredFieldVisitor("_id", "_root", "_schema", "_createDate", "_changeDate",
+                      "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
+              indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
+              Document doc = docVisitor.getDocument();
+    
+              MdInfo mdInfo = new MdInfo();
+              mdInfo.id           = doc.get("_id");
+              mdInfo.uuid         = doc.get("_uuid");
+              mdInfo.schemaId     = doc.get("_schema");
+              String isTemplate   = doc.get("_isTemplate");
+              if (isTemplate.equals("y")) {
+                  mdInfo.template = MdInfo.Template.TEMPLATE;
+              }
+              else if (isTemplate.equals("s")) {
+                  mdInfo.template = MdInfo.Template.SUBTEMPLATE;
+              }
+              else {
+                  mdInfo.template = MdInfo.Template.METADATA;
+              }
+              String isHarvested  = doc.get("_isHarvested");
+              if (isHarvested != null) {
+                  mdInfo.isHarvested  = doc.get("_isHarvested").equals("y");
+              }
+              else {
+                  mdInfo.isHarvested  = false;
+              }
+              mdInfo.createDate   = doc.get("_createDate");
+              mdInfo.changeDate   = doc.get("_changeDate");
+              mdInfo.source       = doc.get("_source");
+              mdInfo.title        = doc.get("_title");
+              mdInfo.root         = doc.get("_root");
+              mdInfo.owner        = doc.get("_owner");
+              mdInfo.groupOwner   = doc.get("_groupOwner");
+    
+              response.put(Integer.parseInt(mdInfo.id), mdInfo);
           }
-          else if (isTemplate.equals("s")) {
-              mdInfo.template = MdInfo.Template.SUBTEMPLATE;
-          }
-          else {
-              mdInfo.template = MdInfo.Template.METADATA;
-          }
-          String isHarvested  = doc.get("_isHarvested");
-          if (isHarvested != null) {
-              mdInfo.isHarvested  = doc.get("_isHarvested").equals("y");
-          }
-          else {
-              mdInfo.isHarvested  = false;
-          }
-          mdInfo.createDate   = doc.get("_createDate");
-          mdInfo.changeDate   = doc.get("_changeDate");
-          mdInfo.source       = doc.get("_source");
-          mdInfo.title        = doc.get("_title");
-          mdInfo.root         = doc.get("_root");
-          mdInfo.owner        = doc.get("_owner");
-          mdInfo.groupOwner   = doc.get("_groupOwner");
-
-          response.put(Integer.parseInt(mdInfo.id), mdInfo);
+      } finally {
+          _sm.releaseIndexReader(indexAndTaxonomy);
       }
       return response;
     }
