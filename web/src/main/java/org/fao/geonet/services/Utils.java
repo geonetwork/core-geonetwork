@@ -91,9 +91,9 @@ public class Utils {
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-        IndexSearcher searcher = new IndexSearcher(reader);
 
         try {
+            IndexSearcher searcher = new IndexSearcher(reader);
             TopDocs tdocs = searcher.search(query, 1);
 
             if (tdocs.totalHits > 0) {

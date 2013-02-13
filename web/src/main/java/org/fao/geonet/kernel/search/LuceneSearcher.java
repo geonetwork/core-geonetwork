@@ -1616,11 +1616,11 @@ public class LuceneSearcher extends MetaSearcher {
         } else {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");
         }
-        IndexSearcher searcher = new IndexSearcher(reader);
 
         Map<String, Map<String, String>> records = new HashMap<String, Map<String, String>>();
 
         try {
+            IndexSearcher searcher = new IndexSearcher(reader);
             TermQuery query = new TermQuery(new Term(field, value));
             SettingInfo settingInfo = _sm.get_settingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();

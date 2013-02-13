@@ -953,9 +953,9 @@ public class SearchManager {
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
         IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         
 		try {
+		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
 			Set<Integer> docs = new LinkedHashSet<Integer>();
 			for (int i = 0; i < reader.maxDoc(); i++) {
@@ -994,8 +994,8 @@ public class SearchManager {
      */
 	public Map<String,String> getDocsChangeDate() throws Exception {
         IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 		try {
+		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
 			int capacity = (int)(reader.maxDoc() / 0.75)+1;
 			Map<String,String> docs = new HashMap<String,String>(capacity);
@@ -1032,8 +1032,8 @@ public class SearchManager {
     public Vector<String> getTerms(String fld) throws Exception {
         Vector<String> terms = new Vector<String>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
-        AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
         try {
+            AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
             TermsEnum enu = reader.terms(fld).iterator(null);
             BytesRef term = enu.next();
             while (term != null) {
@@ -1068,26 +1068,26 @@ public class SearchManager {
 	                                            int threshold) throws Exception {
         List<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
-        GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
-        @SuppressWarnings("resource")
-        SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
-        Terms terms = atomicReader.terms(fieldName);
-        if (terms != null) {
-            TermsEnum termEnum = terms.iterator(null);
-            int i = 1;
-            try {
-                BytesRef term = termEnum.next();
-                while (term != null && i++ < maxNumberOfTerms) {
-                    String text = term.utf8ToString();
-                    if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                        TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                        termList.add(freq);
+        try {
+            GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
+            @SuppressWarnings("resource")
+            SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
+            Terms terms = atomicReader.terms(fieldName);
+            if (terms != null) {
+                TermsEnum termEnum = terms.iterator(null);
+                int i = 1;
+                    BytesRef term = termEnum.next();
+                    while (term != null && i++ < maxNumberOfTerms) {
+                        String text = term.utf8ToString();
+                        if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
+                            TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                            termList.add(freq);
+                        }
+                        term = termEnum.next();
                     }
-                    term = termEnum.next();
-                }
-            } finally {
-                releaseIndexReader(indexAndTaxonomy);
             }
+        } finally {
+            releaseIndexReader(indexAndTaxonomy);
         }
         return termList;
     }
@@ -1301,11 +1301,13 @@ public class SearchManager {
             _indexReader = new LuceneIndexReaderFactory(_tracker);
             _indexWriter = new LuceneIndexWriterFactory(_tracker);
             try {
-                _indexReader.aquire(null, -1);
+                IndexAndTaxonomy reader = _indexReader.aquire(null, -1);
+                _indexReader.release(reader.indexReader);
             } catch (Throwable e) {
                 badIndex1 = true;
                 Log.error(Geonet.INDEX_ENGINE,
                         "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
+            } finally {
             }
             badIndex = badIndex1;
 	    }
