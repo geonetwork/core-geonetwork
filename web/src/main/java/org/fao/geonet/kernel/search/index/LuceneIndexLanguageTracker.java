@@ -108,7 +108,7 @@ public class LuceneIndexLanguageTracker {
         return locale;
     }
     
-    synchronized IndexAndTaxonomy aquire(String preferedLang, long versionToken) throws IOException {
+    synchronized IndexAndTaxonomy aquire(final String preferedLang, final long versionToken) throws IOException {
         long finalVersion = versionToken;
         Map<Pair<Long, IndexSearcher>, GeonetworkNRTManager> searchers = new HashMap<Pair<Long, IndexSearcher>, GeonetworkNRTManager>((int) (searchManagers.size() * 1.5));
         IndexReader[] readers = new IndexReader[searchManagers.size()];

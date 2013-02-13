@@ -51,13 +51,11 @@ import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;
@@ -86,7 +84,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
-import org.fao.geonet.services.region.MetadataRegionDAO;
 import org.fao.geonet.services.region.Region;
 import org.fao.geonet.services.region.RegionsDAO;
 import org.geotools.xml.Encoder;
@@ -242,7 +239,7 @@ public class CatalogSearcher {
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang,
-                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, _filter, _sort, null, false,
+                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, wrapSpatialFilter(), _sort, null, false,
                     _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
@@ -499,17 +496,8 @@ public class CatalogSearcher {
 
         updateRegionsInSpatialFilter(context, filterExpr);
 		// TODO Handle NPE creating spatial filter (due to constraint)
-        Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(query, 1000000);
-        Filter cFilter = null;
-        if (spatialfilter == null) {
-            cFilter = duplicateRemovingFilter;
-        }
-        else {
-            Filter[] filters = new Filter[]{duplicateRemovingFilter, spatialfilter};
-            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
-        }
-
+        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
+        
         boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
         // get as many results as instructed or enough for search summary
         if (buildSummary) {
@@ -517,11 +505,10 @@ public class CatalogSearcher {
         }
 		// record globals for reuse
 		_query = query;
-		_filter = new CachingWrapperFilter(cFilter);
 		_sort = sort;
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, _filter,
+                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
@@ -557,6 +544,20 @@ public class CatalogSearcher {
 		return Pair.read(summary, results);
 	}
     // ---------------------------------------------------------------------------
+
+    private Filter wrapSpatialFilter() {
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter cFilter = null;
+        if (_filter == null) {
+            cFilter = duplicateRemovingFilter;
+        }
+        else {
+            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter };
+            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
+        }
+        cFilter = new CachingWrapperFilter(cFilter);
+        return cFilter;
+    }
 
 	/**
 	 * Process all spatial filters by replacing the region placeholders (filters with gml:id starting with 'region:')
