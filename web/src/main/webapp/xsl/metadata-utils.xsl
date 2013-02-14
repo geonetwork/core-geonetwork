@@ -207,7 +207,40 @@
 		        			
 		        			<xsl:text>id=</xsl:text><xsl:value-of select="$category"/><xsl:text>:</xsl:text><xsl:value-of select="$id"/>
 		        		</xsl:when>
-		        		<xsl:when test="name(.) = 'gmd:EX_GeographicBoundingBox'">geom=<xsl:value-of select="$coords"/>&amp;geomsrs=EPSG:4326</xsl:when>
+		        		<xsl:when test="name(.) = 'gmd:EX_GeographicBoundingBox'">
+		        			<xsl:variable name="nativeCoords" select="normalize-space(comment())"/>
+			        		<xsl:choose>
+			        			<xsl:when test="contains($nativeCoords,'native coords:')">
+			        				<xsl:variable name="tokenizedCoords" select="tokenize(substring-after($nativeCoords, 'native coords:'),',')"/>
+			        				<xsl:text>geom=Polygon((</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[1])"/>
+			        				<xsl:text>%20</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[2])"/>
+
+			        				<xsl:text>,</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[3])"/>
+			        				<xsl:text>%20</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[2])"/>
+
+			        				<xsl:text>,</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[3])"/>
+			        				<xsl:text>%20</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[4])"/>
+
+			        				<xsl:text>,</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[1])"/>
+			        				<xsl:text>%20</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[4])"/>
+
+			        				<xsl:text>,</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[1])"/>
+			        				<xsl:text>%20</xsl:text>
+			        				<xsl:value-of select="normalize-space($tokenizedCoords[2])"/>
+			        				<xsl:text>))&amp;geomsrs=EPSG:21781</xsl:text>
+			        			</xsl:when>
+			        			<xsl:otherwise>geom=<xsl:value-of select="$coords"/>&amp;geomsrs=EPSG:4326</xsl:otherwise>
+			        		</xsl:choose>
+		        		</xsl:when>
 		        		<xsl:otherwise>id=metadata:@id<xsl:value-of select="normalize-space(/root/*/geonet:info/id)"/>:<xsl:value-of select="$targetPolygon"/></xsl:otherwise>
 	        		</xsl:choose>
         		</xsl:variable>

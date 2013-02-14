@@ -32,8 +32,8 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 SearchManager searchMan = gc.getSearchmanager();
 
                 IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
-                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
+                    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                     TermQuery indexError = new TermQuery(new Term("_indexingError", "1"));
                     TopDocs hits = new IndexSearcher(reader).search(indexError, 1);
                     if (hits.totalHits > 0) {

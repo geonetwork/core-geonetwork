@@ -32,8 +32,8 @@ public class LuceneIndexHealthCheck implements HealthCheckFactory {
 
 
                 IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
-                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
+                    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                     Query query = new MatchAllDocsQuery();
                     TopDocs hits = new IndexSearcher(reader).search(query, 1);
                     if (hits.totalHits > 1) {
