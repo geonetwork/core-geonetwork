@@ -12,6 +12,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.UpdateIndexFunction;
 
 public class LuceneIndexWriterFactory {
 
@@ -46,5 +47,9 @@ public class LuceneIndexWriterFactory {
 
     public void createDefaultLocale() throws IOException {
         tracker.open(Geonet.DEFAULT_LANGUAGE);
+    }
+
+    public void update(String id, UpdateIndexFunction function) throws Exception {
+        tracker.update(id, function);
     }
 }

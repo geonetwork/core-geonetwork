@@ -22,4 +22,8 @@ public class GeonetworkMultiReader extends MultiReader {
         }
         searchers.clear();
     }
+
+    public int numSubReaders() {
+        return searchers.size();
+    }
 }
