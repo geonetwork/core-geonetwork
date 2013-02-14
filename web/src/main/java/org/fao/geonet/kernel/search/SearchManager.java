@@ -1270,7 +1270,7 @@ public class SearchManager {
 	}
 
     public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
-        return _indexReader.aquire(preferedLang, versionToken);
+        return _indexReader.acquire(preferedLang, versionToken);
     }
     public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
@@ -1301,7 +1301,7 @@ public class SearchManager {
             _indexReader = new LuceneIndexReaderFactory(_tracker);
             _indexWriter = new LuceneIndexWriterFactory(_tracker);
             try {
-                IndexAndTaxonomy reader = _indexReader.aquire(null, -1);
+                IndexAndTaxonomy reader = _indexReader.acquire(null, -1);
                 _indexReader.release(reader.indexReader);
             } catch (Throwable e) {
                 badIndex1 = true;
