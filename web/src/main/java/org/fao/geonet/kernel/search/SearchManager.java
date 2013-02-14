@@ -77,6 +77,11 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
@@ -674,6 +679,10 @@ public class SearchManager {
 
 	public String getLuceneTermsToExclude() {
 		return _luceneTermsToExclude;
+	}
+	
+	public void updateIndex(String id, UpdateIndexFunction function) throws Exception {
+	   this._indexWriter.update(id, function);
 	}
 
 	// indexing methods
