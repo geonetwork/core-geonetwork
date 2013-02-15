@@ -150,7 +150,7 @@
 				<user>admin</user>
 				<password>gnos</password>
 				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
+				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;MVCC=TRUE</url>
 				<poolSize>33</poolSize>
 				<validationQuery>SELECT 1</validationQuery>
 			</config>
@@ -172,7 +172,7 @@
 				<user>admin</user>
 				<password>gnos</password>
 				<driver>org.h2.Driver</driver>
-				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000</url>
+				<url>jdbc:h2:geonetwork;LOCK_TIMEOUT=20000;MVCC=TRUE</url>
 				<poolSize>33</poolSize>
 				<validationQuery>SELECT 1</validationQuery>
 			</config>
