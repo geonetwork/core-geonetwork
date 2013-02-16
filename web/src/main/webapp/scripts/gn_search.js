@@ -1184,7 +1184,6 @@ function addWMSLayer(layers) {
 
 function addWMSServerLayers(url) {
 	Ext.getCmp("north-map-panel").expand();
-	mainViewport.doLayout();
     GeoNetwork.mapViewer.addWMSServerLayers(url);
 }
 
