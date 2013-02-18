@@ -191,6 +191,7 @@
  <!-- Add an option to be able to toggle all fieldsets
   in view and edit mode. -->
  <metadata-view-toggleTab/>
+ <metadata-show showMapPanel="true"/>
  
  <!-- Actions configuration
  -->

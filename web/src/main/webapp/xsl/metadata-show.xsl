@@ -20,6 +20,7 @@
 	<xsl:variable name="port" select="/root/gui/env/server/port" />
 	<xsl:variable name="baseURL" select="concat($protocol,'://',$host,':',$port,/root/gui/url)" />
 	<xsl:variable name="serverUrl" select="concat($protocol,'://',$host,':',$port,/root/gui/locService)" />
+	<xsl:variable name="showMap" select="/root/gui/config/metadata-show/@showMapPanel" />
 
 	<xsl:template mode="css" match="/">
 		<xsl:if test="$currTab!='xml'">
@@ -125,7 +126,9 @@
 
 			function init() {};
 
-
+      if ('<xsl:value-of select="$showMap"/>' !== 'true') {
+        return;  // only show mappanel if configuration says to.
+      }
 			var getIMServiceURL = function(service){
 				// FIXME: the "/intermap/" context should be parametrized
 				return "/intermap/srv/"+Env.lang+"/"+service;
