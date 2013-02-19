@@ -207,9 +207,9 @@ public class GetMap implements Service {
             }
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
-            MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
-            Geometry screenGeom = JTS.transform(geom, mathTransform);
-            Shape shape = shapeWriter.toShape(screenGeom);
+//            MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
+//            Geometry screenGeom = JTS.transform(geom, mathTransform);
+            Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom));
             graphics.setColor(Color.yellow);
             graphics.draw(shape);
 
