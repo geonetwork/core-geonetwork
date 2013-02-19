@@ -68,7 +68,7 @@
 
 			<!-- no thumbnail -->
 			<xsl:otherwise>
-				<img src="{/root/gui/locUrl}/images/nopreview.gif" alt="{/root/gui/strings/thumbnail}"/>
+				<!-- <img src="{/root/gui/locUrl}/images/nopreview.gif" alt="{/root/gui/strings/thumbnail}"/> -->
 			</xsl:otherwise>
 		</xsl:choose>
 		<br/>

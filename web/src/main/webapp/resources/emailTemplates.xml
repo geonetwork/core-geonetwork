@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 	<template>
-		<name>Update Metadata</name>
-		<subject>Keep your metadata up-to-date.</subject>
-		<body>Metadata not up to date : {0}. Please keep the metadata up to date.</body>
-		<bodyError>Error when sending mail : {0}</bodyError>
+		<name>Update Metadata DE+FR</name>
+		<subject>Metadaten aktualisieren / Mise à jour des métadonnées</subject>
+		<body>
+Aktualisieren sie bitte folgenden Metadatensatz in www.geocat.ch:
+http://www.geocat.ch/geonetwork/srv/deu/metadata.show?uuid={0}
+Veuillez mettre à jour la métadonnée suivante dans www.geocat.ch:
+http://www.geocat.ch/geonetwork/srv/fre/metadata.show?uuid={0}
+		</body>
+		<bodyError>Error when sending mail "Update Metadata DE+FR": {0}</bodyError>
+	</template>
+	
+	<template>
+	<name>Publication Metadata DE+FR</name>
+	<subject>Der Metadatensatz wurde publiziert / Le jeu de métadonnées a été publié</subject>
+	<body>
+Folgender Metadatensatz wurde in www.geocat.ch publiziert:
+http://www.geocat.ch/geonetwork/srv/deu/metadata.show?uuid={0}
+Le jeu de métadonnées suivant a été publié dans www.geocat.ch:
+http://www.geocat.ch/geonetwork/srv/fre/metadata.show?uuid={0}
+	</body>
+	<bodyError>Error when sending mail "Publication Metadata DE+FR": {0}</bodyError>
 	</template>
 </templates>
