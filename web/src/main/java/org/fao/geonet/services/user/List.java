@@ -110,11 +110,14 @@ public class List implements Service
 
 	private HashSet getGroups(Dbms dbms, String id, String profile) throws Exception
 	{
-		String query = (profile.equals(ProfileManager.ADMIN))
-							? "SELECT id FROM Groups"
-							: "SELECT groupId AS id FROM UserGroups WHERE userId=" + id;
+        Element groups;
+        if (profile.equals(ProfileManager.ADMIN)) {
+            groups = dbms.select("SELECT id FROM Groups");
+        } else {
+            groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
+        }
 
-		java.util.List list = dbms.select(query).getChildren();
+        java.util.List<Element> list = groups.getChildren();
 
 		HashSet hs = new HashSet();
 

@@ -126,10 +126,10 @@ public class Download implements Service
 				query.append("SELECT g.id, g.name, g.email ");
 				query.append("FROM   OperationAllowed oa, Groups g ");
 				query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
-				query.append("AND    oa.metadataId = " + id + " ");
+                query.append("AND    oa.metadataId = ? ");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString());
+                Element groups = dbms.select(query.toString(), new Integer(id));
 
 				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
 				{

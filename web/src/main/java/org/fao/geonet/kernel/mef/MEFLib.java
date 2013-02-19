@@ -391,10 +391,11 @@ public class MEFLib {
 		Element categ = new Element("categories");
 
 		String id = md.getChildText("id");
-		String query = "SELECT name FROM MetadataCateg, Categories "
-				+ "WHERE categoryId = id AND metadataId = " + id;
 
-		List list = dbms.select(query).getChildren();
+        String query = "SELECT name FROM MetadataCateg, Categories "
+                + "WHERE categoryId = id AND metadataId = ?";
+
+        List list = dbms.select(query, new Integer(id)).getChildren();
 
 		for (int i = 0; i < list.size(); i++) {
 			Element record = (Element) list.get(i);
@@ -423,16 +424,17 @@ public class MEFLib {
 				.open(Geonet.Res.MAIN_DB);
 
 		String id = md.getChildText("id");
+        int iId = new Integer(id);
 		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
 				+ "FROM   OperationAllowed, Groups, Operations "
 				+ "WHERE  groupId = Groups.id "
 				+ "  AND  operationId = Operations.id "
-				+ "  AND  metadataId = " + id;
+                + "  AND  metadataId = ?";
 
-		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = "
-				+ id;
+        String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
+
 		// Only one groupOwner per metadata
-		Element grpOwnerRs = dbms.select(grpOwnerQuery).getChild("record");
+        Element grpOwnerRs = dbms.select(grpOwnerQuery, iId).getChild("record");
 		// Get group Owner ID
 		String grpOwnerId = grpOwnerRs.getChildText("groupowner");
 		String grpOwnerName = "";
@@ -450,7 +452,7 @@ public class MEFLib {
 
 		// --- scan query result to collect info
 
-		List list = dbms.select(query).getChildren();
+        List list = dbms.select(query, iId).getChildren();
 
 		for (int i = 0; i < list.size(); i++) {
 			Element record = (Element) list.get(i);

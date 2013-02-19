@@ -48,9 +48,8 @@ public class IndexLanguagesDAO {
     public void saveIndexLanguages(Set<IndexLanguage> languages, Dbms dbms) throws Exception {
        for(IndexLanguage language : languages) {
            // check if exists in db
-           String query = "SELECT * FROM IndexLanguages WHERE languageName = '" + language.getName() + "'";
-           System.out.println("query is :" + query);
-           List<Element> results = dbms.select(query).getChildren();
+           String query = "SELECT * FROM IndexLanguages WHERE languageName = ?";
+           List<Element> results = dbms.select(query, language.getName()).getChildren();
            // does not yet exist: insert
            if(CollectionUtils.isEmpty(results)) {
                query = "INSERT INTO IndexLanguages (languageName, selected) VALUES (?, ?)";

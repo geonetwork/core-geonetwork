@@ -3078,7 +3078,7 @@ public class DataManager
         dbms.execute("DELETE FROM CustomElementSet");
         for(String xpath : customElementSet.getXpaths()) {
              if(StringUtils.hasLength(xpath)) {
-                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES ('" + xpath + "')");
+                 dbms.execute("INSERT INTO CustomElementSet (xpath) VALUES (?)", xpath);
              }
         }
     }

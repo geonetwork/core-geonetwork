@@ -221,9 +221,9 @@ public class AccessManager
 			}
 			else
 			{
-				Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=" + usrSess.getUserId());
+                Element elUserGrp = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?",usrSess.getUserIdAsInt());
 
-				List list = elUserGrp.getChildren();
+                List list = elUserGrp.getChildren();
 
                 for (Object aList : list) {
                     Element el = (Element) aList;
@@ -258,11 +258,13 @@ public class AccessManager
 		Element user    = (Element) list.get(0);
 		String  profile = user.getChildText("profile");
 
-		query = profile.equals(Geonet.Profile.ADMINISTRATOR)
-					 ? "SELECT id AS grp FROM Groups"
-					 : "SELECT groupId AS grp FROM UserGroups WHERE userId=" + userId;
-
-		Element elUserGrp = dbms.select(query);
+        Element elUserGrp;
+        if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
+        }
+        else {
+            elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", new Integer(userId));
+        }
 
 		for(Object o : elUserGrp.getChildren())
 		{
@@ -354,8 +356,8 @@ public class AccessManager
      */
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
         // group 'all' has the magic id 1.
-        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = " + metadataId;
-        Element result = dbms.select(query);
+        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
+        Element result = dbms.select(query, new Integer(metadataId));
         if(result == null) {
             return false;
         }
