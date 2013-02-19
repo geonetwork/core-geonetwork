@@ -219,6 +219,8 @@
                     <!-- True to write columns (header) informations at the beginning of the file (required),
                          false to dump only data -->
                     <param name="dumpHeader" value="true"/>
+                    <!-- Allowed tables to be exported, separated by commas -->
+                    <param name="allowedTables" value="requests,params"/>
                 </call>
             </output>
         </service>
