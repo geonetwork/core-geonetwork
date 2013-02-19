@@ -7,8 +7,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import jeeves.constants.Jeeves;
+import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -39,6 +43,9 @@ public class TableExport implements Service {
     /** true to dump headers, false to dump only data */
     private boolean dumpHeader = true;
 
+    /** List of tables that can be exported **/
+
+    private List<String> allowedTablesToExport;
 
     //--------------------------------------------------------------------------
 	//---
@@ -49,6 +56,7 @@ public class TableExport implements Service {
 		this.currentExportFormat = params.getValue("exportType");
 		this.csvSep = params.getValue("csvSeparator");
 		this.dumpHeader = "true".equalsIgnoreCase(params.getValue("dumpHeader"));
+        this.allowedTablesToExport = Arrays.asList(params.getValue("allowedTables").split(","));
         this.appPath = appPath;
     }
 
@@ -67,6 +75,11 @@ public class TableExport implements Service {
             if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
                 Log.debug(Geonet.SEARCH_LOGGER,"Export Statistics table: no table name received from the client.");
         }
+
+        if (!allowedTablesToExport.contains(tableToExport)) {
+            throw new BadParameterEx("tableToExport", tableToExport);
+        }
+
         // file to write
 		File tableDumpFile = new File(appPath + File.separator + "images" + File.separator + "statTmp");
 		if (!tableDumpFile.exists()) {
