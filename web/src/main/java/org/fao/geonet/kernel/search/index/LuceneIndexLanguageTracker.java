@@ -148,16 +148,16 @@ public class LuceneIndexLanguageTracker {
             }
             searchers.put(result, manager);
         }
-//
-//        if (tokenExpired) {
-//            if (lastVersionUpToDate) {
-//                finalVersion = versionTracker.lastVersion();
-//            } else {
-//                taxonomyIndexTracker.maybeRefresh();
-//                finalVersion = versionTracker.register(searchers);
-//            }
-//
-//        }
+
+        if (tokenExpired) {
+            if (lastVersionUpToDate) {
+                finalVersion = versionTracker.lastVersion();
+            } else {
+                taxonomyIndexTracker.maybeRefresh();
+                finalVersion = versionTracker.register(searchers);
+            }
+
+        }
         return new IndexAndTaxonomy(finalVersion, new GeonetworkMultiReader(readers, searchers),
                 taxonomyIndexTracker.acquire());
     }

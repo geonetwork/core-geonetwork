@@ -69,33 +69,32 @@ class GeonetworkNRTManager {
      *         searchers.
      */
     public synchronized AcquireResult acquire(long versionToken, SearcherVersionTracker versionTracker) throws IOException {
-        return new AcquireResult(-1L, true, actualManager.acquire(), true);
-//        Long version = -1L;
-//        if(versionToken != -1) {
-//            version = versionTracker.get(this.language, versionToken);
-//            if (version == null) {
-//                version = -1L;
-//            }
-//        }
-//        IndexSearcher searcher = lifetimeManager.acquire(version);
-//        boolean lastVersionUpToDate = false;
-//        if (searcher == null) {
-//            searcher = actualManager.acquire();
-//            version = lifetimeManager.record(searcher);
-//            Long lastVersion = versionTracker.last(this.language);
-//            
-//            if (lastVersion != null) {
-//                IndexSearcher lastSearcher = lifetimeManager.acquire(lastVersion);
-//                if(lastSearcher == searcher) {
-//                    actualManager.release(searcher);
-//                    searcher = lastSearcher;
-//                    lastVersionUpToDate = true;
-//                }
-//            }
-//        } else {
-//            version = versionToken;
-//        }
-//        return new AcquireResult(version, lastVersionUpToDate, searcher, version != versionToken);
+        Long version = -1L;
+        if(versionToken != -1) {
+            version = versionTracker.get(this.language, versionToken);
+            if (version == null) {
+                version = -1L;
+            }
+        }
+        IndexSearcher searcher = lifetimeManager.acquire(version);
+        boolean lastVersionUpToDate = false;
+        if (searcher == null) {
+            searcher = actualManager.acquire();
+            version = lifetimeManager.record(searcher);
+            Long lastVersion = versionTracker.last(this.language);
+            
+            if (lastVersion != null) {
+                IndexSearcher lastSearcher = lifetimeManager.acquire(lastVersion);
+                if(lastSearcher == searcher) {
+                    actualManager.release(searcher);
+                    searcher = lastSearcher;
+                    lastVersionUpToDate = true;
+                }
+            }
+        } else {
+            version = versionToken;
+        }
+        return new AcquireResult(version, lastVersionUpToDate, searcher, version != versionToken);
     }
     final class AcquireResult {
         final long version;
