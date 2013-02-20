@@ -122,13 +122,12 @@
 		<xsl:variable name="typeWMS"><xsl:copy-of select="/root/request/type"/></xsl:variable>
 
 
+<xsl:if test="$showMap!='false'">
 		<script type="text/javascript">
 
 			function init() {};
 
-      if ('<xsl:value-of select="$showMap"/>' !== 'true') {
-        return;  // only show mappanel if configuration says to.
-      }
+
 			var getIMServiceURL = function(service){
 				// FIXME: the "/intermap/" context should be parametrized
 				return "/intermap/srv/"+Env.lang+"/"+service;
@@ -271,6 +270,7 @@
 			}
 
 		</script>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="content">
