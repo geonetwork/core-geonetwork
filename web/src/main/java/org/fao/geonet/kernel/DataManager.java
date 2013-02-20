@@ -408,7 +408,7 @@ public class DataManager {
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation);
+                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false);
                                 }
                                 catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
@@ -419,7 +419,7 @@ public class DataManager {
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation);
+                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false);
                     }
                 }
                 finally {
@@ -439,16 +439,17 @@ public class DataManager {
         }
     }
     public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext) throws Exception {
-        indexMetadata(dbms, id, processSharedObjects, servContext, false);
+        indexMetadata(dbms, id, processSharedObjects, servContext, false, false);
     }
     /**
      * TODO javadoc.
      *
      * @param dbms
      * @param id
+     * @param b 
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation) throws Exception {
+	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = new Integer(id);
@@ -482,7 +483,7 @@ public class DataManager {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
 
-            if(schema.trim().equals("iso19139.che")) {
+            if(schema.trim().equals("iso19139.che") && !fastIndex) {
                 /*
                  * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
                  * This transformation ensures this property
@@ -508,7 +509,7 @@ public class DataManager {
             		Log.error(Geonet.DATA_MANAGER, "error while trying to update shared objects of metadata, "+id+":\n "+Xml.getString(stackTrace)); //DEBUG
             	}
             }
-            if (xmlSerializer.resolveXLinks() || ("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che"))) {
+            if ("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
@@ -524,7 +525,8 @@ public class DataManager {
                 }
             }
             else {
-                moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
+                List<Attribute> xlinks = Processor.getXLinks(md);
+                if(xlinks.size()>0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
             }
 
 
@@ -3707,7 +3709,7 @@ public class DataManager {
             String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
             Integer iId = new Integer(id);
             dbms.execute(updateQuery, iId);
-            indexMetadata(dbms, id);
+            indexMetadata(dbms, id, false, srvContext, false, false);
         }
         catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
