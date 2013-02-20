@@ -39,7 +39,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.UpdateIndexFunction;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.kernel.search.spatial.Pair;
 
@@ -297,64 +296,4 @@ public class LuceneIndexLanguageTracker {
 
         }
     }
-
-    public void update(String id, UpdateIndexFunction function) throws Exception {
-
-        function.prepareForUpdate();
-        Map<String, Document> originalDocs = new HashMap<String, Document>();
-
-        final Term idTerm = new Term("_id", id);
-        synchronized (this) {
-            final TermQuery query = new TermQuery(idTerm);
-            for (Map.Entry<String, GeonetworkNRTManager> e : searchManagers.entrySet()) {
-                String language = e.getKey();
-                GeonetworkNRTManager manager = e.getValue();
-                AcquireResult result = manager.acquire(-1L, versionTracker);
-                try {
-                    IndexSearcher searcher = result.searcher;
-                    TopFieldCollector results = TopFieldCollector.create(Sort.INDEXORDER, 2, true, false, false, false);
-                    searcher.search(query, results);
-                    TopDocs docs = results.topDocs();
-                    if (docs.totalHits > 1) {
-                        Log.error(Geonet.LUCENE, "The " + language
-                                + " index has more than one document for the metadata with id: " + id);
-                    } else if (docs.totalHits == 1) {
-                        Document doc = searcher.doc(docs.scoreDocs[0].doc);
-                        originalDocs.put(language, doc);
-                    }
-
-                } finally {
-                    manager.release(result.searcher);
-                }
-            }
-            HashMap<String, Pair<Document, List<CategoryPath>>> updatedDocs = new HashMap<String, Pair<Document, List<CategoryPath>>>();
-            for (Entry<String, Document> entry : originalDocs.entrySet()) {
-                Pair<Document, List<CategoryPath>> updated = function.update(entry.getKey(), entry.getValue());
-                if (updated != null) {
-                    updatedDocs.put(entry.getKey(), updated);
-                }
-            }
-
-            for (Entry<String, Pair<Document, List<CategoryPath>>> entry : updatedDocs.entrySet()) {
-                String lang = entry.getKey();
-                Document doc = entry.getValue().one();
-                List<CategoryPath> categoryPaths = entry.getValue().two();
-
-                if (categoryPaths != null && !categoryPaths.isEmpty()) {
-                    taxonomyIndexTracker.addDocument(doc, categoryPaths);
-                }
-
-                if (doc != null) {
-                    TrackingIndexWriter writer = this.trackingWriters.get(lang);
-                    if (writer == null) {
-                        throw new IllegalStateException("Error updating document with id: " + id
-                                + ". The document was loaded for language: " + lang
-                                + " but there was no writer for writing the doc");
-                    }
-                    writer.updateDocument(idTerm, doc);
-                }
-            }
-        }
-    }
-
 }
