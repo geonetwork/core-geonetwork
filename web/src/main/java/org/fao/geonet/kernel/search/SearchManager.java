@@ -675,10 +675,6 @@ public class SearchManager {
 		return _luceneTermsToExclude;
 	}
 	
-	public void updateIndex(String id, UpdateIndexFunction function) throws Exception {
-	   this._indexWriter.update(id, function);
-	}
-
 	// indexing methods
 
 	/**

@@ -59,7 +59,6 @@ import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.UpdateIndexFunction;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -3343,10 +3342,9 @@ public class DataManager {
     /**
      * TODO javadoc.
      */
-	class IncreasePopularityTask implements Runnable, UpdateIndexFunction {
+	class IncreasePopularityTask implements Runnable {
         private ServiceContext srvContext;
         String id;
-        private String updatedPopularity;
 
         /**
          *
@@ -3366,7 +3364,7 @@ public class DataManager {
             String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
             Integer iId = new Integer(id);
             dbms.execute(updateQuery, iId);
-            searchMan.updateIndex(id, this);
+            indexMetadata(dbms, id);
         }
         catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
@@ -3384,46 +3382,6 @@ public class DataManager {
 
         }
 
-        @Override
-        public void prepareForUpdate() {
-            Dbms dbms = null;
-            try {
-                dbms  = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-                Integer iId = new Integer(id);
-                String selectQuery = "SELECT popularity from Metadata where id = ?";
-                Element result = dbms.select(selectQuery, iId).getChild("record");
-                this.updatedPopularity = result.getChildText("popularity");
-            }
-            catch (Exception e) {
-                Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
-                e.printStackTrace();
-            }
-            finally {
-                    try {
-                        if (dbms != null) srvContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-                    }
-                    catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "+id+". Error: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-        }
-
-        @Override
-        public Pair<org.apache.lucene.document.Document, List<CategoryPath>> update(String indexLanguage,
-                org.apache.lucene.document.Document currentDocument) {
-            String fieldName = "_popularity";
-            currentDocument.removeFields(fieldName);
-            
-            // TODO check config if popularity becomes a numeric
-            FieldType fieldType = new FieldType();
-            fieldType.setStored(true);
-            fieldType.setIndexed(true);
-            fieldType.setTokenized(false);
-            Field field = new Field(fieldName, this.updatedPopularity, fieldType);
-            currentDocument.add(field);
-            return Pair.read(currentDocument, null);
-        }
 	}
 
     public enum UpdateDatestamp {
