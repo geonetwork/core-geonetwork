@@ -261,7 +261,7 @@ public class LuceneIndexLanguageTracker {
 
         @Override
         public void run() {
-            Log.debug(Geonet.LUCENE, "Running Lucene committer timer");
+            Log.info(Geonet.LUCENE, "Running Lucene committer timer");
             for (TrackingIndexWriter writer : trackingWriters.values()) {
                 try {
                     try {
