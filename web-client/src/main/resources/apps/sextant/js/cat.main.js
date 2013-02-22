@@ -383,7 +383,7 @@ cat.app = function() {
 			],
 			createOtherActionMenu : function() {
 				this.actionMenu = new Ext.menu.Menu();
-				this.createAdminMenu(!this.catalogue.isIdentified());
+				this.createAdminMenu(!this.catalogue.isAdmin());
 				
 				this.on('afterrender', function() {
 					var adminBtn = this.getComponent('gn-sxt-restb-admin-btn');
@@ -395,7 +395,7 @@ cat.app = function() {
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
 					tBar.changeMode(false);
-					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isIdentified());
+					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isAdmin());
 				}, this);
 				
 				return ' ';

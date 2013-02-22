@@ -416,7 +416,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user is an admin
      */
     isAdmin: function(){
-        return this.adminUser;
+        var role = this.identifiedUser.role;
+        return (role.indexOf('Admin') >= 0 || role.indexOf('Editor') >= 0);
     },
     /** api: method[onAfterLogin]
      *  :param e: ``Object``
