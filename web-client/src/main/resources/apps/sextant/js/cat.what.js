@@ -108,8 +108,13 @@ cat.what = function() {
 				categoryTree.loadStore();
 			};
 			categoryStore.on('load', function() {
+			
+			    if(catalogueField.getValue()) {
+			        updateCatTree(catalogueField);
+			    }
 				catalogueField.on('additem', updateCatTree);
 				catalogueField.on('removeitem', updateCatTree);
+				catalogueField.on('reset', updateCatTree);
 			}, this, {single:true});
 			
 			

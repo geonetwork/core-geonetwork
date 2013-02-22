@@ -69,7 +69,15 @@ Ext.ux.form.SuperBoxSelect = function(config) {
          * @memberOf Ext.ux.form.SuperBoxSelect
          * @param {SuperBoxSelect} this
          */
-        'clear'
+        'clear',
+        
+        /**
+         * Fires after the field have been reset.
+         * @event reset
+         * @memberOf Ext.ux.form.SuperBoxSelect
+         * @param {SuperBoxSelect} this
+         */
+        'reset'
     );
     
 };
@@ -950,6 +958,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         Ext.ux.form.SuperBoxSelect.superclass.reset.call(this);
         this.addedRecords = [];
         this.autoSize().setRawValue('');
+        this.fireEvent('reset',this);
     },
     applyEmptyText : function(){
 		this.setRawValue('');
