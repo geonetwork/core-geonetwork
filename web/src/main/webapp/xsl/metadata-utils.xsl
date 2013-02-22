@@ -112,7 +112,7 @@
 			<div id="{$buttonBarId}oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('{$buttonBarId}oAc',{$metadata/geonet:info/id});">
 				
 				<!-- privileges button -->
-				<xsl:if test="java:isAccessibleService('metadata.admin.form')">
+				<xsl:if test="java:isAccessibleService('metadata.admin.form') and /root/gui/session/profiles/Reviewer">
 					<xsl:variable name="privileges" select="concat(/root/gui/strings/privileges,': ',$ltitle)"/>
 					<button onclick="doOtherButton('{/root/gui/locService}/metadata.admin.form?id={$metadata/geonet:info/id}','{$privileges}',800)"><xsl:value-of select="/root/gui/strings/privileges"/></button>
 				</xsl:if>
