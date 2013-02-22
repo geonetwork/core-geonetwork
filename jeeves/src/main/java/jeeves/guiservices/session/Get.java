@@ -24,7 +24,9 @@
 package jeeves.guiservices.session;
 
 import java.util.*;
+
 import org.jdom.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import jeeves.interfaces.*;
 import jeeves.server.*;
@@ -75,6 +77,7 @@ public class Get implements Service
 		String sName     = session.getName();
 		String sSurname  = session.getSurname();
 		String sProfile  = session.getProfile();
+		
 
 		if (sUsername == null)
 			sUsername = ProfileManager.GUEST;
@@ -93,13 +96,16 @@ public class Get implements Service
 		Element name     = new Element("name")    .addContent(sName);
 		Element surname  = new Element("surname") .addContent(sSurname);
 		Element profile  = new Element("profile") .addContent(sProfile);
+        Element profiles = context.getProfileManager().getProfilesElement(sProfile);
+
 
 		Element sEl = new Element(Jeeves.Elem.SESSION)
 			.addContent(userId)
 			.addContent(username)
 			.addContent(name)
 			.addContent(surname)
-			.addContent(profile);
+			.addContent(profile)
+			.addContent(profiles);
 
 		if (groupName != null)
 		{
