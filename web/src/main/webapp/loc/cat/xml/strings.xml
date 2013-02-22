@@ -596,9 +596,9 @@
 	<mapViewerOpen>Obrir el visualitzador de mapes</mapViewerOpen>
 	<batchActions>Accions batchs:</batchActions>
 	<batchDeleteTitle>Operació d'esborrat massiu</batchDeleteTitle>
-	<batchNewOwnerTitle>Operació d'assignació de propietari massiva</batchNewOwnerTitle>
-	<batchUpdateCategoriesTitle>Operació d'actualització de categories massiva</batchUpdateCategoriesTitle>
-	<batchUpdatePrivilegesTitle>Operació d'actualització de privilegis massiva</batchUpdatePrivilegesTitle>
+	<batchNewOwnerTitle>Operació d\'assignació de propietari massiva</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Operació d\'actualització de categories massiva</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Operació d\'actualització de privilegis massiva</batchUpdatePrivilegesTitle>
 	<max>Màxim</max>
 	<mdRating>Rànquing de metadades</mdRating>
 	<mdUpdateError>Actualitzar error</mdUpdateError>
