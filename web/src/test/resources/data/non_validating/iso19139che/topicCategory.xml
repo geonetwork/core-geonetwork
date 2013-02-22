@@ -106,6 +106,13 @@
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>climatologyMeteorologyAtmosphere</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
+      <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+	  <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>environment_EnvironmentalProtection
+		</gmd:MD_TopicCategoryCode>
+	</gmd:topicCategory>
     </che:CHE_MD_DataIdentification>
   </gmd:identificationInfo>
 </che:CHE_MD_Metadata>

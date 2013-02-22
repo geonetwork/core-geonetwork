@@ -106,7 +106,14 @@ public class ValidateTransformationTest
         File file = new File(data, "non_validating/iso19139che/topicCategory.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
         rules.put("GM03_2Comprehensive.Comprehensive.MD_DataIdentification", new Count(1, new Finder("topicCategory")));
+        rules.put("GM03_2Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2Core.Core.MD_TopicCategoryCode_/value", new EqualText("environment"))));
+        rules.put("GM03_2Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Count(3, new Finder("GM03_2Core.Core.MD_TopicCategoryCode_/value")));
         file = testFile(file, Control.ISO_GM03, rules, false);
+        
+        rules.clear();
+        
+        file = testFile(file, Control.GM03_2_ISO, rules, false);
+        
     }
 
     @Test

@@ -302,9 +302,18 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:topicCategory">
-	        <GM03_2Core.Core.MD_TopicCategoryCode_>
-	          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
-	        </GM03_2Core.Core.MD_TopicCategoryCode_>
+		<xsl:choose>
+			<xsl:when test="
+		    	normalize-space(.) = 'imageryBaseMapsEarthCover' or
+		    	normalize-space(.) = 'planningCadastre' or
+		    	normalize-space(.) = 'geoscientificInformation' or
+		    	normalize-space(.) = 'environment'"></xsl:when>
+    		<xsl:otherwise>
+		        <GM03_2Core.Core.MD_TopicCategoryCode_>
+		          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
+		        </GM03_2Core.Core.MD_TopicCategoryCode_>
+    		</xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:language">
