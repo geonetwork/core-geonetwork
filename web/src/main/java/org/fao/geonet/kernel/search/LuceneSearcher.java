@@ -1404,14 +1404,14 @@ public class LuceneSearcher extends MetaSearcher {
         
         if (dumpFields != null) {
             for (DumpField dumpField : dumpFields.values()) {
-                Field[] values = doc.getFields(dumpField.getFieldName());
+                Field[] values = doc.getFields(dumpField.getTagName());
                 for (Field f : values) {
                     if (f != null) {
                         String stringValue = f.stringValue();
                         if (markupParser != null && dumpField.isMarkup()) {
                             stringValue = XslUtil.parseMarkupToText(stringValue, markupParser);
                         }
-                        md.addContent(new Element(dumpField.getTagName()).setText(stringValue));
+                        md.addContent(new Element(dumpField.getFieldName()).setText(stringValue));
                     }
                 }
             }
