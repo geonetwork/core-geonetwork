@@ -122,7 +122,7 @@
 		<xsl:variable name="typeWMS"><xsl:copy-of select="/root/request/type"/></xsl:variable>
 
 
-<xsl:if test="$showMap!='false'">
+		<xsl:if test="normalize-space($showMap)!='false'">
 		<script type="text/javascript">
 
 			function init() {};
