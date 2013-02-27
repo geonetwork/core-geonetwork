@@ -18,5 +18,5 @@ web/src/main/webapp/WEB-INF/metadata_subversion/
 .project
 schematrons/.build
 docs/*/users/build
-/geonetwork-2.8.0/
+/geonetwork-2.8.1/
 /.props/
