@@ -634,7 +634,7 @@ public class GeoServerRest {
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, "UTF-8"));
 			}
 		} else if (method.equals(METHOD_DELETE)) {
 			m = new DeleteMethod(url);
@@ -642,7 +642,7 @@ public class GeoServerRest {
 			m = new PostMethod(url);
 			if (postData != null) {
 				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, "UTF-8"));
 			}
 
 		} else {
