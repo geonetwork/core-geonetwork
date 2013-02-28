@@ -286,7 +286,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param  extent: ``String`` Initial map extent.
      *
      */
-    showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
+    showGeoPublisherPanel: function(id, uuid, title, mdabstract, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
         var editorPanel = this;
         
@@ -350,7 +350,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 iconCls: 'repository'
             });
         }
-        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, name, accessStatus);
+        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, mdabstract, name, accessStatus);
         this.geoPublisherWindow.setTitle(OpenLayers.i18n('geoPublisherWindowTitle') + " " + name);
         this.geoPublisherWindow.show();
         
