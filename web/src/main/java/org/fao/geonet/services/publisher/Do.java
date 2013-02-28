@@ -200,7 +200,10 @@ public class Do implements Service {
 			String nodeId = Util.getParam(params, "nodeId");
 			String metadataId = Util.getParam(params, "metadataId");
 			String metadataUuid = Util.getParam(params, "metadataUuid", "");
-			String metadataTitle = Util.getParam(params, "metadataTitle", "");
+			// purge \\n from metadataTitle - geoserver prefers layer titles on a single line
+			String metadataTitle = Util.getParam(params, "metadataTitle", "").replace("\\n","");
+			// unescape \\n from metadataAbstract so they're properly sent to geoserver
+			String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
 			GeoServerNode g = geoserverNodes.get(nodeId);
 			if (g == null)
 				throw new IllegalArgumentException(
@@ -231,16 +234,16 @@ public class Do implements Service {
 				String db = dbInfo[0]; 
 				String table = dbInfo[1]; 
 				
-				return publishDbTable(action, gs, "postgis", host, port, user, password, db, table, "postgis", g.getNamespaceUrl(), metadataUuid, metadataTitle);
+				return publishDbTable(action, gs, "postgis", host, port, user, password, db, table, "postgis", g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
 			} else {
 			    if (file.startsWith("file://") || file.startsWith("http://")) {
-			        return addExternalFile(action, gs, file, metadataUuid, metadataTitle);
+			        return addExternalFile(action, gs, file, metadataUuid, metadataTitle, metadataAbstract);
 			    } else {
 			        // Get ZIP file from data directory
 	                File dir = new File(Lib.resource
 	                        .getDir(context, access, metadataId));
 	                File f = new File(dir, file);
-	                return addZipFile(action, gs, f, file, metadataUuid, metadataTitle);
+	                return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
 			    }
 			}
 		}
@@ -266,14 +269,14 @@ public class Do implements Service {
 	 */
 	private Element publishDbTable(ACTION action, GeoServerRest g, String string,
 			String host, String port, String user, String password, String db,
-			String table, String dbType, String ns, String metadataUuid, String metadataTitle) {
+			String table, String dbType, String ns, String metadataUuid, String metadataTitle, String metadataAbstract) {
 		try {
 			if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)) {
 				String report = "";
 				// TODO : check datastore already exist
 				if (!g.createDatabaseDatastore(db, host, port, db, user, password, dbType, ns))
 					report += "Datastore: " + g.getStatus();
-				if (!g.createFeatureType(db, table, true, metadataUuid, metadataTitle))
+				if (!g.createFeatureType(db, table, true, metadataUuid, metadataTitle, metadataAbstract))
 					report += "Feature type: " + g.getStatus();
 //				Publication of Datastore and feature type may failed if already exist
 //				if (!report.equals("")) {
@@ -323,7 +326,7 @@ public class Do implements Service {
 	 * @return
 	 * @throws IOException
 	 */
-	private Element addZipFile(Do.ACTION action, GeoServerRest gs, File f, String file, String metadataUuid, String metadataTitle)
+	private Element addZipFile(Do.ACTION action, GeoServerRest gs, File f, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		if (f == null) {
 			return report(EXCEPTION, null,
@@ -339,7 +342,7 @@ public class Do implements Service {
 		try {
 			vectorLayers = gf.getVectorLayers(true);
 			if (vectorLayers.size() > 0) {
-				if (publishVector(f, gs, action, metadataUuid, metadataTitle)) {
+				if (publishVector(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
 					return report(SUCCESS, VECTOR, getReport());
 				} else {
 					return report(EXCEPTION, VECTOR, getErrorCode());
@@ -352,7 +355,7 @@ public class Do implements Service {
 		try {
 			rasterLayers = gf.getRasterLayers();
 			if (rasterLayers.size() > 0) {
-				if (publishRaster(f, gs, action, metadataUuid, metadataTitle)) {
+				if (publishRaster(f, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
 					return report(SUCCESS, RASTER, getReport());
 				} else {
 					return report(EXCEPTION, RASTER, getErrorCode());
@@ -370,10 +373,10 @@ public class Do implements Service {
 		return null;
 	}
 
-	private Element addExternalFile(Do.ACTION action, GeoServerRest gs, String file, String metadataUuid, String metadataTitle)
+	private Element addExternalFile(Do.ACTION action, GeoServerRest gs, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
             throws IOException {
 	    // TODO vector or raster file ? Currently GeoServer does not support RASTER for external
-	    if (publishExternal(file, gs, action, metadataUuid, metadataTitle)) {
+	    if (publishExternal(file, gs, action, metadataUuid, metadataTitle, metadataAbstract)) {
             return report(SUCCESS, VECTOR, getReport());
         } else {
             return report(EXCEPTION, VECTOR, getErrorCode());
@@ -396,17 +399,17 @@ public class Do implements Service {
 		return report;
 	}
 
-	private boolean publishVector(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle) {
+	private boolean publishVector(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 
 		String ds = f.getName();
 		String dsName = ds.substring(0, ds.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {
 				g.createDatastore(dsName, f, true);
-				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle);
+				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.UPDATE)) {
 				g.createDatastore(dsName, f, false);
-				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle);
+				g.createFeatureType(dsName, dsName, false, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.DELETE)) {
 				String report = "";
 				if (!g.deleteLayer(dsName))
@@ -436,7 +439,7 @@ public class Do implements Service {
 		return false;
 	}
 
-	private boolean publishExternal(String file, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle) {
+	private boolean publishExternal(String file, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 
         String dsName = file.substring(file.lastIndexOf("/") + 1, file.lastIndexOf("."));
         boolean isRaster = GeoFile.fileIsRASTER(file);
@@ -444,13 +447,13 @@ public class Do implements Service {
         try {
             if (action.equals(ACTION.CREATE)) {
                 if (isRaster) {
-                	g.createCoverage(dsName, file, metadataUuid, metadataTitle);
+                	g.createCoverage(dsName, file, metadataUuid, metadataTitle, metadataAbstract);
                 } else {
                     g.createDatastore(dsName, file, true);
                 }
             } else if (action.equals(ACTION.UPDATE)) {
                 if (isRaster) {
-                	g.createCoverage(dsName, file, metadataUuid, metadataTitle);
+                	g.createCoverage(dsName, file, metadataUuid, metadataTitle, metadataAbstract);
                 } else {
                     g.createDatastore(dsName, file, false);
                 }
@@ -485,14 +488,14 @@ public class Do implements Service {
         }
         return false;
     }
-	private boolean publishRaster(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle) {
+	private boolean publishRaster(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 		String cs = f.getName();
 		String csName = cs.substring(0, cs.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {
-				g.createCoverage(csName, f, metadataUuid, metadataTitle);
+				g.createCoverage(csName, f, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.UPDATE)) {
-				g.createCoverage(csName, f, metadataUuid, metadataTitle);
+				g.createCoverage(csName, f, metadataUuid, metadataTitle, metadataAbstract);
 			} else if (action.equals(ACTION.DELETE)) {
 				String report = "";
 				if (!g.deleteLayer(csName))
