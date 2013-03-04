@@ -79,24 +79,24 @@
 
 				<link rel="stylesheet">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/ngr2/css/normalize.min.css</xsl:attribute>
+						select="$baseUrl" />/apps/html5ui/css/normalize.min.css</xsl:attribute>
 				</link>
 				<link rel="stylesheet">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/ngr2/css/main.css</xsl:attribute>
+						select="$baseUrl" />/apps/html5ui/css/main.css</xsl:attribute>
 				</link>
 				<link rel="stylesheet">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/ngr2/css/gnmetadatadefault.css</xsl:attribute>
+						select="$baseUrl" />/apps/html5ui/css/gnmetadatadefault.css</xsl:attribute>
 				</link>
 				<link rel="stylesheet">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/ngr2/css/gnmetadataview.css</xsl:attribute>
+						select="$baseUrl" />/apps/html5ui/css/gnmetadataview.css</xsl:attribute>
 				</link>
 
 
 				<!--[if lt IE 7]> <link rel="stylesheet"> <xsl:attribute name="href"><xsl:value-of 
-					select="$baseUrl" />/apps/ngr2/css/ltie7.css"/></xsl:attribute> </link> <![endif] -->
+					select="$baseUrl" />/apps/html5ui/css/ltie7.css"/></xsl:attribute> </link> <![endif] -->
 
 				<script type="text/javascript">
 					<xsl:attribute name="src"><xsl:value-of
@@ -110,7 +110,7 @@
 
 				<script type="text/javascript">
 					<xsl:attribute name="src"><xsl:value-of
-						select="$baseUrl" />/apps/ngr2/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js</xsl:attribute>
+						select="$baseUrl" />/apps/html5ui/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js</xsl:attribute>
 				</script>
 
 				<script type="text/javascript">
@@ -457,47 +457,47 @@
 						
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/GlobalFunctions.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/GlobalFunctions.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/Settings.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/Settings.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/Templates.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/Templates.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/Shortcuts.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/Shortcuts.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/map/Settings.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/map/Settings.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/map/MapApp.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/map/MapApp.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/search/SearchApp.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/search/SearchApp.js</xsl:attribute>
 						</script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/user/LoginApp.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/user/LoginApp.js</xsl:attribute>
 						</script>
                         <script type="text/javascript">
                             <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/ngr2/js/state/PermalinkProvider.js</xsl:attribute>
+                                select="$baseUrl" />/apps/html5ui/js/state/PermalinkProvider.js</xsl:attribute>
                         </script>
                         <script type="text/javascript">
                             <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/ngr2/js/state/History.js</xsl:attribute>
+                                select="$baseUrl" />/apps/html5ui/js/state/History.js</xsl:attribute>
                         </script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
-								select="$baseUrl" />/apps/ngr2/js/BreadCrumb.js</xsl:attribute>
+								select="$baseUrl" />/apps/html5ui/js/BreadCrumb.js</xsl:attribute>
                         </script>
                         <script type="text/javascript">
                             <xsl:attribute name="src"><xsl:value-of
@@ -509,12 +509,12 @@
                         </script>
                         <script type="text/javascript">
                             <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/ngr2/js/App.js</xsl:attribute>
+                                select="$baseUrl" />/apps/html5ui/js/App.js</xsl:attribute>
 						</script>
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<script type="text/javascript" src="{concat($baseUrl, '/apps/ngr2/js/App-mini.js')}"></script>
+						<script type="text/javascript" src="{concat($baseUrl, '/apps/html5ui/js/App-mini.js')}"></script>
 					</xsl:otherwise>
 				</xsl:choose>
 				
