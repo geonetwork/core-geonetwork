@@ -39,9 +39,12 @@
                 </language>
             </xsl:if>
             <xsl:apply-templates mode="enum" select="gmd:characterSet"/>
-            <xsl:if test="gmd:topicCategory">
-                <topicCategory>
+            <xsl:variable name="tc">
                     <xsl:apply-templates mode="DataIdentification" select="gmd:topicCategory"/>
+            </xsl:variable>
+            <xsl:if test="gmd:topicCategory and count($tc/*) &gt; 0">
+                <topicCategory>
+                	<xsl:copy-of select="$tc"/>
                 </topicCategory>
             </xsl:if>
             <xsl:apply-templates mode="DataIdentification" select="che:projectType"/>
