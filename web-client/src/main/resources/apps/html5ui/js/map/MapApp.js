@@ -819,20 +819,6 @@ GeoNetwork.mapApp = function() {
 
         toolbar.push(action);
 
-        var buttonGazetteer = new Ext.Toolbar.Button({
-            iconCls : 'searchIcon',
-            text : OpenLayers.i18n("GazetteerWindowTitle"),
-            tooltip : {
-                title : OpenLayers.i18n("gazetteerTooltipTitle"),
-                text : OpenLayers.i18n("gazetteerTooltipText")
-            },
-            handler : function() {
-                GeoNetwork.WindowManager.showWindow("gazetteer");
-            }
-        });
-
-        toolbar.push(buttonGazetteer);
-
         toolbar.push("-");
 
         featureinfo = new OpenLayers.Control.WMSGetFeatureInfo({
@@ -1611,11 +1597,6 @@ GeoNetwork.mapApp = function() {
                 GeoNetwork.LoadWmcWindow, {
                     map : map,
                     id : "loadwmc"
-                });
-        GeoNetwork.WindowManager.registerWindow("gazetteer",
-                GeoNetwork.GazetteerWindow, {
-                    map : map,
-                    id : "gazetteer"
                 });
         GeoNetwork.WindowManager.registerWindow("featureinfo",
                 GeoNetwork.FeatureInfoWindow, {
