@@ -929,6 +929,14 @@
           <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
+    <profile>
+		<id>html5ui</id>
+		<properties>
+			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
+			<widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+		</properties>
+    </profile>
+    
   </profiles>
   
   <reporting>
