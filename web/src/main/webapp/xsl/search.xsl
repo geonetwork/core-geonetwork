@@ -237,29 +237,13 @@
 								<nav id="nav">
 									<ul id="main-navigation">
 										<li>
-											<a id="home-tab" href="javascript:loadPDOK('home-tab', 'nl/ngr/ngr-home');">
-												<xsl:value-of select="/root/gui/strings/menu.home" />
-											</a>
-										</li>
-										<li>
 											<a id="browse-tab" class="selected" href="javascript:showBrowse();">
-												<xsl:value-of select="/root/gui/strings/menu.catalog" />
+												<xsl:value-of select="/root/gui/strings/home" />
 											</a>
 										</li>
-                                        <li>
-                                            <a id="help-tab" target="docs">
-                                                <xsl:attribute name="href"><xsl:value-of select="$baseUrl" />/docs/eng/users/</xsl:attribute>
-                                                <xsl:value-of select="/root/gui/strings/help" />
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a id="contact-tab" href="javascript:loadPDOK('contact-tab', 'nl/over-pdok/contact-met-pdok');">
-                                                <xsl:value-of select="/root/gui/strings/menu.contact" />
-                                            </a>
-                                        </li>
 										<li>
-											<a id="about-tab" href="javascript:loadPDOK('about-tab', 'nl/over-pdok');">
-												<xsl:value-of select="/root/gui/strings/menu.about" />
+											<a id="about-tab" href="http://geonetwork-opensource.org/" target="about">
+												<xsl:value-of select="/root/gui/strings/about" />
 											</a>
 										</li>
 									</ul>
@@ -271,7 +255,7 @@
                     <div id="pdok-loads" style="display:none;"></div>
                     <div id="foot-loads" style="display:none;"></div>
 					<div id="main">
-			<div id="copy-clipboard-ie"></div>
+			        <div id="copy-clipboard-ie"></div>
                        <div id="share-capabilities" style="display:none">
                             <a id="custom-tweet-button" href="javascript:void(0);" target="_blank">
                                     <xsl:value-of select="/root/gui/strings/tweet" />
@@ -372,13 +356,10 @@
 						<footer class="wrapper">
 							<ul class="black">
 								<li>
-									<a href="javascript:loadFoot('copyright')"><xsl:value-of select="/root/gui/strings/footer.copyright" /></a>
+									<a href="http://geonetwork-opensource.org/">GeoNetwork OpenSource</a>
 								</li>
 								<li>
-									<a href="javascript:loadFoot('privacy')"><xsl:value-of select="/root/gui/strings/footer.privacy" /></a>
-								</li>
-								<li>
-									<a href="javascript:loadFoot('cookies')"><xsl:value-of select="/root/gui/strings/footer.cookies" /></a>
+                                    <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>
 								</li>
 							</ul>
 						</footer>
