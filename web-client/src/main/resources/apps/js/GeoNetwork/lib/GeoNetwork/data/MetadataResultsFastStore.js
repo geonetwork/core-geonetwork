@@ -228,13 +228,23 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }
     }
 
+    function getOwnerId(v, record) {
+        if (record.owner && record.owner.length > 0 && record.owner[0].value) {
+            return record.owner[0].value;
+        } else {
+            return false;
+        }
+    }
+
     function getOwnerName(v, record) {
         if (record.userinfo && record.userinfo[0].value) {
             var userinfo = record.userinfo[0].value.split(separator);
             try {
-                return userinfo[2] + " " + userinfo[1]; // User profile + ' (' +
-                // OpenLayers.i18n(userinfo[3])
-                // + ')';
+                if(userinfo[2] !== userinfo[1]) {
+                    return userinfo[2] + " " + userinfo[1];
+                } else {
+                    return userinfo[1];
+                }
             } catch (e) {
                 return '';
             }
@@ -462,6 +472,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }, {
             name : 'ownername',
             convert : getOwnerName
+        }, {
+        	name : 'ownerid',
+        	convert : getOwnerId
         }, {
             name : 'edit',
             convert : getEdit

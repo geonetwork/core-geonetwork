@@ -31,6 +31,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'service': 'Services',
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
+	'owner': 'Proprietario',
 
 	'withinGeo': 'Completely within or equal',
 	'intersectGeo': 'Intersects',

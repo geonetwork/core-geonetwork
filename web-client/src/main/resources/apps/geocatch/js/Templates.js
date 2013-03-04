@@ -124,10 +124,12 @@ GeoNetwork.Geocatch.Templates.RELATIONS =
 GeoNetwork.Geocatch.Templates.ABSTRACT = 
     '<p class="abstract"><i>{[OpenLayers.i18n("abstract")]}: </i>{[Ext.util.Format.ellipsis(values.abstract, 350, true)]}\
      <tpl if="revisionDate && revisionDate!=\'\'"><br/>(<i>{[OpenLayers.i18n("modified")]}: </i>{revisionDate})</tpl>\
+	 <tpl if="this.isAdmin() && ownerid && ownerid!=\'\'"><br/>(<i>{[OpenLayers.i18n("owner")]}:</i><a href="user.edit?id={ownerid}" target="_useredit">{ownername}</a>)</tpl>\
      {values}</p>';
 
 GeoNetwork.Geocatch.Templates.LINKS = 
     '<div class="md-links" id="md-links-{id}"></div>';
+
 
 
 GeoNetwork.Geocatch.Templates.TITLE = 
@@ -171,6 +173,10 @@ GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
             '</tpl>',
         '</ul>',
     {
+       
+        isAdmin: function() {
+        	return catalogue.identifiedUser && catalogue.identifiedUser.role === 'Administrator';
+        },
         hasDownloadLinks: function(values) {
             var i;
             for (i = 0; i < values.length; i ++) {

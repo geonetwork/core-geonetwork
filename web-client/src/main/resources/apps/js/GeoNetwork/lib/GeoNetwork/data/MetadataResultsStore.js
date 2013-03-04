@@ -175,6 +175,14 @@ GeoNetwork.data.MetadataResultsStore = function() {
         }
     }
 
+    function getOwnerId(v, record) {
+        if (record.owner && record.owner.length > 0 && record.owner[0].value) {
+            return record.owner[0].value;
+        } else {
+            return false;
+        }
+    }
+
     function getOwnerName(v, record) {
         if (record.geonet_info && record.geonet_info.ownername) {
             return record.geonet_info.ownername[0].value;
@@ -379,6 +387,15 @@ GeoNetwork.data.MetadataResultsStore = function() {
         }, {
             name : 'ownername',
             convert : getOwnerName
+        }, {
+        	name : 'ownerid',
+        	convert : getOwnerId
+        }, {
+        	name : 'ownerid',
+        	convert : getOwnerId
+        }, {
+        	name : 'ownername',
+        	convert : getOwnerName
         }, {
             name : 'edit',
             convert : getEdit

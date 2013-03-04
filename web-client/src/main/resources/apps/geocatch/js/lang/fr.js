@@ -35,6 +35,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'includearchived': 'Archives inclues',
 	'excludearchived': 'Archives exclues',
 	'onlyarchived': 'Archives seules',
+	'owner': 'Propriétaire',
 	
 	'withinGeo': 'complètement à l\'intérieur ou égal',
 	'intersectGeo': 'au moins partiellement à l\'intérieur',

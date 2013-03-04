@@ -29,6 +29,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'service': 'Dieste',
 	'service-OGC:WMS': ' + WMS',
 	'service-OGC:WFS': ' + WFS',
+	'owner': 'Besitzer',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',

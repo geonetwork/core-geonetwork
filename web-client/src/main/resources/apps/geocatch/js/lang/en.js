@@ -35,6 +35,7 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'includearchived': 'Include archived',
 	'excludearchived': 'Exclude archived',
 	'onlyarchived': 'Only archived',
+	'owner': 'Owner',
 
 	'withinGeo': 'Completely within or equal',
 	'intersectGeo': 'Intersects',
