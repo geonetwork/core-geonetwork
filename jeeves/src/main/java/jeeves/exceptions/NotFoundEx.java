@@ -39,6 +39,7 @@ public abstract class NotFoundEx extends JeevesClientEx
 		super(message, object);
 
 		id = "not-found";
+		code = 404;
 	}
 }
 

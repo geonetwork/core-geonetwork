@@ -47,4 +47,5 @@ public class LuceneIndexWriterFactory {
     public void createDefaultLocale() throws IOException {
         tracker.open(Geonet.DEFAULT_LANGUAGE);
     }
+
 }

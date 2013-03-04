@@ -133,7 +133,7 @@ public class ResourceLib {
 		}
 	}
 
-	private void denyAccess(ServiceContext context) throws Exception {
+	public void denyAccess(ServiceContext context) throws Exception {
 		if (context.getUserSession().isAuthenticated()) {
 			throw new AccessDeniedException("User is not permitted to access this resource");
 		} else {

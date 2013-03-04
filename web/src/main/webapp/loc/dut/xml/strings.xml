@@ -16,6 +16,7 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Ongeacht welke taal</anyLanguage>

@@ -101,7 +101,7 @@ public class Show implements Service
 		SchemaManager sm = gc.getSchemamanager();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-
+		boolean skipPopularity = this.skipPopularity;
 		if (!skipPopularity) { // skipPopularity could be a URL param as well
 			String skip = Util.getParam(params, "skipPopularity", "n");
 			skipPopularity = skip.equals("y");

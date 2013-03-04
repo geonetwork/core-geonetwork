@@ -55,7 +55,12 @@
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unknownSchema"/></td>
 				<td class="tipCell"><xsl:value-of select="unknownSchema"/></td>					
 			</tr>
-
+			
+			<tr class="tipRow">
+				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/duplicatedResource"/></td>
+				<td class="tipCell"><xsl:value-of select="duplicatedResource"/></td>
+			</tr>
+			
 			<tr class="tipRow">
 				<td class="tipHeader"><xsl:value-of select="/root/strings/tipHeader/unretrievable"/></td>
 				<td class="tipCell"><xsl:value-of select="unretrievable"/></td>					

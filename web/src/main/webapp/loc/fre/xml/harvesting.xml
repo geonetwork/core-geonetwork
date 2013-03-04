@@ -22,6 +22,11 @@
 		<long>Noeud GeoNetwork distant (v2.0)</long>
 	</info>
 	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Serveur Web DAV</long>
@@ -77,6 +82,9 @@
 	<site>Site</site>
 
 	<category>Catégorie</category>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Type de service OGC</wxstype>
@@ -138,6 +146,7 @@
 	
 	<content>Contenu récupéré</content>
 	<importxslt>Appliquer une transformation XSL aux fiches récupérées</importxslt>
+	<rejectDuplicateResource>Rejeter les fiches si un doublon sur l'identifiant de la ressource est détecté (uniquement pour les métadonnées en ISO19139 ou profil ISO)</rejectDuplicateResource>
 
 	<at>Lancer à</at>
 	<atSpec>( heure : minute eg. 23:15 )</atSpec>
@@ -394,9 +403,10 @@
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
 		<incompatible>Incompatible</incompatible>
-		<couldNotInsert>Could not insert</couldNotInsert>
+		<couldNotInsert>Insertion impossible</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
-		<recordsUpdated>Records Updated</recordsUpdated>
+		<recordsUpdated>Enregistrements mis à jour</recordsUpdated>
+		<duplicatedResource>Ressources en double</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>En attente du premier lancement</notRun>

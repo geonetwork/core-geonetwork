@@ -33,8 +33,8 @@ public class LuceneIndexReaderFactory {
      * @param versionToken A token indicating which state of search should be obtained
      * @return an index reader for reading from all indices
      */
-    public IndexAndTaxonomy aquire(String preferedLang, long versionToken) throws IOException {
-        return tracker.aquire(preferedLang, versionToken);
+    public IndexAndTaxonomy acquire(String preferedLang, long versionToken) throws IOException {
+        return tracker.acquire(preferedLang, versionToken);
     }
     
     public void release (GeonetworkMultiReader reader) throws InterruptedException, IOException {

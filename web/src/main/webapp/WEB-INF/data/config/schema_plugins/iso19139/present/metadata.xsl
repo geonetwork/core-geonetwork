@@ -4199,8 +4199,8 @@
 										<xsl:value-of select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="concat('_',
-											gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref)"/>
+										<xsl:variable name="strings" select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$mainLangId]/geonet:element/@ref"/>
+										<xsl:value-of select="concat('_', $strings[0])"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>

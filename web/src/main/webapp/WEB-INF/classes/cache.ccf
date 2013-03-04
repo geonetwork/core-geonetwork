@@ -27,8 +27,8 @@ jcs.region.xlink.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.xlink.elementattributes.IsEternal=true
 jcs.region.xlink.elementattributes.MaxLifeSeconds=0
 jcs.region.xlink.elementattributes.IdleTime=1800
-jcs.region.xlink.elementattributes.IsSpool=true
-jcs.region.xlink.elementattributes.IsRemote=true
+jcs.region.xlink.elementattributes.IsSpool=false
+jcs.region.xlink.elementattributes.IsRemote=false
 jcs.region.xlink.elementattributes.IsLateral=true
         
 # SPATIAL Filter FEATURE CACHING
@@ -40,8 +40,8 @@ jcs.region.SpatialFilterCache.elementattributes=org.apache.jcs.engine.ElementAtt
 jcs.region.SpatialFilterCache.elementattributes.IsEternal=false
 jcs.region.SpatialFilterCache.elementattributes.MaxLifeSeconds=7200
 jcs.region.SpatialFilterCache.elementattributes.IdleTime=1800
-jcs.region.SpatialFilterCache.elementattributes.IsSpool=true
-jcs.region.SpatialFilterCache.elementattributes.IsRemote=true
+jcs.region.SpatialFilterCache.elementattributes.IsSpool=false
+jcs.region.SpatialFilterCache.elementattributes.IsRemote=false
 jcs.region.SpatialFilterCache.elementattributes.IsLateral=true
 
 # JeevesCacheManager caches

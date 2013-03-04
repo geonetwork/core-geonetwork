@@ -23,9 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,12 +46,15 @@ import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queries.ChainedFilter;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
+import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
+import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -70,31 +76,60 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.services.region.Region;
+import org.fao.geonet.services.region.RegionsDAO;
+import org.geotools.xml.Encoder;
+import org.geotools.gml2.GMLConfiguration;
+import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 //=============================================================================
 
 public class CatalogSearcher {
+	private static final class FindRegionFilterElements implements org.jdom.filter.Filter {
+        private static final Namespace namespace = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        private static final long serialVersionUID = 1L;
+
+        public boolean matches(Object obj)
+        {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                Attribute attribute = element.getAttribute("id", namespace);
+                return attribute != null && attribute.getValue() != null;
+            }
+            return false;
+        }
+    }
+
 	private final LuceneConfig	_luceneConfig;
 	private final Set<String> _tokenizedFieldSet;
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
 	private Query         _query;
-	private CachingWrapperFilter _filter;
+	private Filter _filter;
 	private Sort          _sort;
 	private String        _lang;
 	private long          _searchToken;
+    private final GMLConfiguration   _configuration;
 	
-	public CatalogSearcher(LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
+	public CatalogSearcher(GMLConfiguration  configuration, 
+			LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
 		_luceneConfig = luceneConfig;
 		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_selector = selector;
+		_configuration = configuration;
 		_uuidselector = uuidselector;
 		_searchToken = -1L;  // means we will get a new IndexSearcher when we
 		                     // ask for it first time
@@ -204,7 +239,7 @@ public class CatalogSearcher {
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang,
-                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, _filter, _sort, null, false,
+                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, wrapSpatialFilter(), _sort, null, false,
                     _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
@@ -422,7 +457,7 @@ public class CatalogSearcher {
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
         if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint);
+            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, _luceneConfig);
             Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
         }
 
@@ -459,18 +494,10 @@ public class CatalogSearcher {
 
         int numHits = startPosition + maxRecords;
 
-		// TODO Handle NPE creating spatial filter (due to constraint
-        Filter spatialfilter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(query, 1000000);
-        Filter cFilter = null;
-        if (spatialfilter == null) {
-            cFilter = duplicateRemovingFilter;
-        }
-        else {
-            Filter[] filters = new Filter[]{duplicateRemovingFilter, spatialfilter};
-            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
-        }
-
+        updateRegionsInSpatialFilter(context, filterExpr);
+		// TODO Handle NPE creating spatial filter (due to constraint)
+        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
+        
         boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
         // get as many results as instructed or enough for search summary
         if (buildSummary) {
@@ -478,11 +505,10 @@ public class CatalogSearcher {
         }
 		// record globals for reuse
 		_query = query;
-		_filter = new CachingWrapperFilter(cFilter);
 		_sort = sort;
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, _filter,
+                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
                 _luceneConfig.isDocsScoredInOrder()
 		);
@@ -517,8 +543,150 @@ public class CatalogSearcher {
 		summary.setNamespace(Csw.NAMESPACE_GEONET);
 		return Pair.read(summary, results);
 	}
+    // ---------------------------------------------------------------------------
 
-	// ---------------------------------------------------------------------------
+    private Filter wrapSpatialFilter() {
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter cFilter = null;
+        if (_filter == null) {
+            cFilter = duplicateRemovingFilter;
+        }
+        else {
+            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter };
+            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
+        }
+        cFilter = new CachingWrapperFilter(cFilter);
+        return cFilter;
+    }
+
+	/**
+	 * Process all spatial filters by replacing the region placeholders (filters with gml:id starting with 'region:')
+	 * with the gml of the actual region geometry.
+	 * 
+	 * @param context
+	 * @param filterExpr
+	 * @throws Exception
+	 */
+	private void updateRegionsInSpatialFilter(ServiceContext context, Element filterExpr) throws Exception {
+	    Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for( Element regionEl: (List<Element>) lookupGeoms(filterExpr)) {
+            Attribute attribute = regionEl.getAttribute("id", FindRegionFilterElements.namespace);
+            Geometry unionedGeom = null;
+            List<Geometry> geoms = new ArrayList<Geometry>();
+            String[] regionIds = attribute.getValue().substring("region:".length()).split("\\s*,\\s*");
+
+            for (String regionId : regionIds) {
+                for (RegionsDAO regionDAO: regionDAOs) {
+                    Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
+                    if(geometry!=null) {
+                        geoms.add(geometry);
+                        if (unionedGeom == null) {
+                            unionedGeom = geometry;
+                        } else {
+                            unionedGeom = unionedGeom.union(geometry);
+                        }
+                        break; // break out of looking through all RegionDAOs
+                    }
+                }
+            }
+            
+            updateWithinFilter(regionEl, geoms);
+
+            setGeom(regionEl, unionedGeom);
+        }
+        
+    }
+	/**
+	 * If the filter is a within filter then we want to break the within into a few parts.  
+	 * 
+	 * <ul>
+	 * <li>A within filter where the geometry is the union of all the geometries that was in the gml:id</li>
+	 * <li>A within filter for each of the individual geometries</li>
+	 * </ul> 
+	 * 
+	 * The reason is the case of within 2 adjacent regions.  Suppose you have a within switzerland and france, if
+	 * a metadata crosses the border then within will fail in the normal case, the fixes that case.
+	 * 
+	 * The reason that the union and each individual geometry are or-d together is for the situation where a metadata's 
+	 * polygon extent is exactly the same as one of the individual geometries.  The within filter is a little dumb in
+	 * that it is true if the geometry is fully within or is exactly equals.  So if only the union is used then
+	 * the geometry is neither fully within (IE doesn't share boundary) nor exactly the same.  So
+	 * I use the work around of having several filters or'd together.  This is not a common case in practice
+	 * but must be handled. 
+	 */
+    private void updateWithinFilter(Element regionEl, List<Geometry> geoms) throws IOException, JDOMException {
+        if(geoms.size() < 2) {
+            return;
+        }
+        Element withinFilter = findWithinFilter(regionEl);
+
+        if(withinFilter!=null ){
+            Element parentElement = withinFilter.getParentElement();
+            int index = parentElement.indexOf(withinFilter);
+
+            ArrayList<Element> ors = new ArrayList<Element>();
+            ors.add(withinFilter);
+            for (Geometry geometry : geoms) {
+                Element newEl = (Element) withinFilter.clone();
+                org.jdom.filter.Filter filter = new FindRegionFilterElements();
+                Iterator<?> children = regionEl.getDescendants(filter);
+                if (children.hasNext()) {
+                    setGeom((Element) children.next(), geometry);
+                }
+                ors.add(newEl);
+            }
+
+            Element or = new Element("Or","ogc", "http://www.opengis.net/ogc");
+            parentElement.setContent(index, or);
+
+            or.addContent(ors);
+        }
+    }
+
+    /**
+     * Check to see if there is a within filter in the element.
+     */
+    private Element findWithinFilter(Element element)
+    {
+        if(element == null ){
+            return null;
+        }
+        if(element.getName().equalsIgnoreCase("WITHIN")){
+            return element;
+        }
+        return findWithinFilter(element.getParentElement());
+    }
+
+    /**
+     * Update the element with the gml encoded geometry
+     */
+    private void setGeom(Element element, Geometry fullGeom) throws IOException, JDOMException
+    {
+        Element parentElement = element.getParentElement();
+        int index = parentElement.indexOf(element);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Encoder encoder = new Encoder(_configuration);
+        encoder.setOmitXMLDeclaration(true);
+        encoder.setNamespaceAware(true);
+
+        encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(), false);
+        parentElement.setContent(index, geomElem);
+    }
+
+    private ArrayList<Element> lookupGeoms(Element filterExpr)
+    {
+        org.jdom.filter.Filter filter = new FindRegionFilterElements();
+        Iterator<?> children = filterExpr.getDescendants(filter);
+        ArrayList<Element> elements = new ArrayList<Element>();
+        while (children.hasNext()) {
+            elements.add((Element) children.next());
+        }
+        return elements;
+    }
+
+    // ---------------------------------------------------------------------------
 
 	/**
 	 * Allow search on current user's groups only adding a BooleanClause to the
@@ -564,36 +732,48 @@ public class CatalogSearcher {
      * @param cswServiceSpecificConstraint
      * @return
      * @throws ParseException
+     * @throws QueryNodeException 
      */
-    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint) throws ParseException {
-        String[] fields = {"title"};
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
-        Query q = parser.parse(cswServiceSpecificConstraint);
+    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
+        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
+        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
+            String name = field.getName();
+            int precisionStep = field.getPrecisionStep();
+            NumberFormat format = NumberFormat.getNumberInstance();
+            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
+            NumericConfig config = new NumericConfig(precisionStep, format, type);
+            numericMap.put(name, config);
+        }
+        parser.setNumericConfigMap(numericMap);
+        Query q = parser.parse(cswServiceSpecificConstraint, "title");
 
         // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
         List<String> SECURITY_FIELDS = Arrays.asList(
              LuceneIndexField.OWNER,
              LuceneIndexField.GROUP_OWNER);
-
-        BooleanQuery bq = (BooleanQuery) q;
-
-        List<BooleanClause> clauses = bq.clauses();
-
-        Iterator<BooleanClause> it = clauses.iterator();
-        while (it.hasNext()) {
-            BooleanClause bc = it.next();
-
-            for (String fieldName : SECURITY_FIELDS){
-                if (bc.getQuery().toString().contains(fieldName + ":")) {
-                    if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                        Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                    it.remove();
-
-                    break;
+        
+        BooleanQuery bq;
+        if (q instanceof BooleanQuery) {
+            bq = (BooleanQuery) q;
+            List<BooleanClause> clauses = bq.clauses();
+    
+            Iterator<BooleanClause> it = clauses.iterator();
+            while (it.hasNext()) {
+                BooleanClause bc = it.next();
+    
+                for (String fieldName : SECURITY_FIELDS){
+                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+                        it.remove();
+    
+                        break;
+                    }
                 }
             }
         }
-
         return q;
     }
 

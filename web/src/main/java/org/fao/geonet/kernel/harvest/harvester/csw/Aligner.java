@@ -41,9 +41,14 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.xpath.XPath;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
@@ -384,6 +389,13 @@ public class Aligner
                     return null;
                 }
             }
+            
+            if(params.rejectDuplicateResource) {
+                if (foundDuplicateForResource(uuid, response)) {
+                    return null;
+                }
+            }
+            
             return response;
 		}
 		catch(Exception e)
@@ -396,6 +408,71 @@ public class Aligner
 			return null;
 		}
 	}
+
+    /**
+     * Check for metadata in the catalog having the same resource identifier as the
+     * harvested record.
+     * 
+     * If one dataset (same MD_metadata/../identificationInfo/../identifier/../code) 
+     * (eg. a NMA layer for roads) is described in 2 or more catalogs with different 
+     * metadata uuids. The metadata may be slightly different depending on the author,
+     * but the resource is the same. When harvesting, some users would like to have 
+     * the capability to exclude "duplicate" description of the same dataset.
+     * 
+     * The check is made searching the identifier field in the index using 
+     * {@link LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, Set, boolean)}
+     * 
+     * @param uuid the metadata unique identifier
+     * @param response  the XML document to check
+     * @return true if a record with same resource identifier is found. false otherwise.
+     */
+    private boolean foundDuplicateForResource(String uuid, Element response) {
+        String schema = dataMan.autodetectSchema(response);
+        
+        if(schema.startsWith("iso19139")) {
+            String resourceIdentifierXPath = "gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString";
+            String resourceIdentifierLuceneIndexField = "identifier";
+            String defaultLanguage = "eng";
+            
+            try {
+                // Extract resource identifier
+                XPath xp = XPath.newInstance (resourceIdentifierXPath);
+                xp.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                xp.addNamespace("gco", "http://www.isotc211.org/2005/gco");
+                List<Element> resourceIdentifiers = xp.selectNodes(response);
+                if (resourceIdentifiers.size() > 0) {
+                    // Check if the metadata to import has a resource identifier
+                    // existing in current catalog for a record with a different UUID
+                    
+                    log.debug("  - Resource identifiers found : " + resourceIdentifiers.size());
+                    
+                    for (Element identifierNode : resourceIdentifiers) {
+                        String identifier = identifierNode.getTextTrim();
+                        log.debug("    - Searching for duplicates for resource identifier: " + identifier);
+                        
+                        Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField, 
+                                identifier, Collections.singleton("_uuid"), true);
+                        log.debug("    - Number of resources with same identifier: " + values.size());
+                        for (String key : values.keySet()) {
+                            Map<String, String> recordFieldValues = values.get(key);
+                            String indexRecordUuid = recordFieldValues.get("_uuid");
+                            if (!indexRecordUuid.equals(uuid)) {
+                                log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
+                                log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+                                
+                                result.duplicatedResource ++;
+                                return true;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
 	//--------------------------------------------------------------------------
 	//---

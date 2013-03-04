@@ -104,6 +104,10 @@
       <artifactId>gt-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-xml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-gml3</artifactId>
     </dependency>
@@ -132,6 +136,10 @@
       <artifactId>gt-epsg-hsql</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.vividsolutions</groupId>
+      <artifactId>jts</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
@@ -832,12 +840,12 @@
 				<version>7.5.0.v20110901</version>
         <configuration>
           <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
-            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
               <!-- Note: If another server needs to communicate with this one with
                     https then it needs the environment variables set as follows:
                     -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password

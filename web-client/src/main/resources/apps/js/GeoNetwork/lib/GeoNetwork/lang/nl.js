@@ -250,6 +250,7 @@ GeoNetwork.Lang.nl = {
     'administration': "Beheer",
     'validationReport': "Validatierapport",
     'status': "Status",
+    'addLayerSelection': 'Add layers of selection to the map',
     'items': "onderdelen",
     'item': "onderdeel",
     'thumbnails': "Thumbnails",

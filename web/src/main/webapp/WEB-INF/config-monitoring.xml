@@ -13,6 +13,7 @@
         <warningHealthCheck class=".FreeConnectionsHealthCheck"/>
         <warningHealthCheck class="jeeves.monitor.healthcheck.FreeFileHandlesHealthCheck"/>
         <expensiveHealthCheck class=".CswGetRecordsHealthCheck"/>
+        <expensiveHealthCheck class=".FieldCacheSanityHealthCheck"/>
     </monitors>
     <monitors package="org.fao.geonet.monitor.harvest">
         <counter class=".AbstractHarvesterErrorCounter"/>

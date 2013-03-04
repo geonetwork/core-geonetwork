@@ -262,28 +262,16 @@ public class DefaultStatusActions implements StatusActions {
 
 		List<Element> userList = users.getChildren();
 
-		List<Integer> mIds = new ArrayList<Integer>();
-		boolean first = true;
-		String lastUserId = "-100";
-		String email = "";
-		String id = "";
+		Set<String> emails = new HashSet<String>();
 
 		for (Element user : userList) {
-			String mid = user.getChildText("metadataid");
-			id  = user.getChildText("userid");
-			email      = user.getChildText("email");
-			if (!id.equals(lastUserId) && !first) {	// send out list
-				sendEmail(email, subject, status, changeDate, changeMessage);	
-				mIds = new ArrayList<Integer>();
-				lastUserId = id;
-			}
-			mIds.add(new Integer(mid));
-			first = false;
+			emails.add(user.getChildText("email"));
 		}
 
-		if (mIds.size() > 0) { // send out the last one
-			sendEmail(email, subject, status, changeDate, changeMessage);
+		for (String email : emails) {
+			sendEmail(email, subject, status, changeDate, changeMessage);	
 		}
+
 	}
 
 	/**
@@ -301,7 +289,7 @@ public class DefaultStatusActions implements StatusActions {
 		String message = changeMessage+"\n\nRecords are available from the following URL:\n"+buildMetadataSearchLink(status, changeDate);
 
 		if (!emailNotes) {
-			context.info("Would send email with message:\n"+message);
+			context.info("Would send email \nTo: "+sendTo+"\nSubject: "+subject+"\n Message:\n"+message);
 		} else {
 			MailSender sender = new MailSender(context);
 			sender.sendWithReplyTo(host, Integer.parseInt(port), from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);

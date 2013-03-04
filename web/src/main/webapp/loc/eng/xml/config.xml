@@ -34,6 +34,7 @@
     <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
     <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
     <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguagesorted>Search results in requested language sorted on top</requestedlanguagesorted>
 
 	<oai>OAI Provider</oai>
 		<datesearch>Datesearch</datesearch>

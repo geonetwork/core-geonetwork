@@ -247,6 +247,7 @@ GeoNetwork.Lang.de = {
 'administration':'Verwaltung',
 'validationReport':'Validation Report',
 'status':'Status',
+'addLayerSelection': 'Add layers of selection to the map',
 'items':'Artikel',
 'item':'Artikel',
 'thumbnails':'Thumbnails',

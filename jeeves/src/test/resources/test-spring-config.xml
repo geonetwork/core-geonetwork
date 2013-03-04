@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:sec="http://www.springframework.org/schema/security"
+
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.1.xsd" >
+
+	<bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
+    <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="filterSecurityInterceptor">
+    	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_coreSecurityMapping_filterApplied"/>
+        <property name="authenticationManager" ref="authenticationManager"></property>
+        <property name="accessDecisionManager" ref="accessDecisionManager"></property>
+        <property name="securityMetadataSource">
+            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex" id="coreFilterSecurityMetadataSource">
+                <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+            </sec:filter-security-metadata-source>
+        </property>
+    </bean>
+
+	<bean id="authenticationManager"
+		class="org.springframework.security.authentication.ProviderManager">
+		<property name="providers">
+			<list>
+				<!-- Check if the preAuthenticationFilter has already authenticated user -->
+				<ref bean="nullFilterAuthenticationProvider" />
+			</list>
+		</property>
+	</bean>
+	
+    <bean class="org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider" id="nullFilterAuthenticationProvider">
+    </bean>
+	
+
+</beans>

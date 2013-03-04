@@ -1,13 +1,24 @@
-package jeeves.server;
+package jeeves.server.overrides;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.utils.Log;
 import jeeves.utils.XPath;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
 import org.jdom.*;
 import org.jdom.filter.Filter;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 
 import javax.servlet.ServletContext;
 import java.io.*;
@@ -103,6 +114,17 @@ import java.util.regex.Pattern;
      	<update linePattern="(.*) Relations">$1 NewRelations</update>
      	<update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
      </textFile>
+     <!-- configure the spring aspects of geonetwork -->
+     <spring>
+         <!-- import a complete spring xml file -->
+         <import file="./config-spring-overrides.xml"/>
+         <!-- declare a file as a spring properties override file: See http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/beans/factory/config/PropertyOverrideConfigurer.html -->
+         <propertyOverrides file="./config-property-overrides.properties" />
+         <!-- set a property on one bean to reference another bean -->
+         <set bean="beanName" property="propertyName" ref="otherBeanName"/>
+         <!-- add a references to a bean to a property on another bean.  This assumes the property is a collection -->
+         <add bean="beanName" property="propertyName" ref="otherBeanName"/>
+      </spring>
  </overrides>
  * ]]></pre>
  * 
@@ -125,7 +147,7 @@ public class ConfigurationOverrides {
     }
 
     static String LOGFILE_XPATH = "logging/logFile";
-    static String OVERRIDES_KEY = "jeeves.configuration.overrides.file";
+    public static String OVERRIDES_KEY = "jeeves.configuration.overrides.file";
     private static String ATTNAME_ATTR_NAME = "attName";
     private static String VALUE_ATTR_NAME = "value";
     private static String XPATH_ATTR_NAME = "xpath";
@@ -454,7 +476,7 @@ public class ConfigurationOverrides {
         return elems;
     }
 
-    private static String updatePropertiesInText(Properties properties, String value) {
+    static String updatePropertiesInText(Properties properties, String value) {
         if (value == null) {
             return null;
         }
@@ -565,7 +587,16 @@ public class ConfigurationOverrides {
     }
 
     public static abstract class ResourceLoader {
-        protected abstract InputStream loadInputStream(String resource) throws IOException;
+        protected InputStream loadInputStream(String resource) throws IOException {
+            File file = resolveFile(resource);
+            if(file == null) {
+                return fallbackInputStream(resource);
+            } else {
+                return new FileInputStream(file);
+            }
+        }
+        protected abstract File resolveFile(String resource) throws IOException;
+        protected abstract InputStream fallbackInputStream(String resource) throws IOException;
         protected String resolveImportFileName(String importResource, String baseResource) {
             String resolved = resolveRelative(importResource, baseResource, File.separator);
             if(resolved.equals(importResource)) {
@@ -723,7 +754,49 @@ public class ConfigurationOverrides {
             this.appPath = appPath;
         }
 
-        protected InputStream loadInputStream(String resource) throws IOException {
+        @Override
+        protected File resolveFile(String resource) throws IOException {
+            File file = null;
+            File testPath = new File(resource);
+
+            if(testPath.exists()) {
+                file = testPath;
+            }
+            if(file ==null && context!=null) {
+                String path = context.getRealPath(resource);
+                if(path != null) {
+                    testPath = new File(path);
+                    if(testPath.exists()) {
+                        file = testPath;
+                    }
+                }
+            }
+            if(file == null && appPath != null) {
+                File testFile = new File(appPath, resource);
+                if (testFile.exists()) {
+                    file = testFile;
+                }
+            }
+
+            if(file == null) {
+                URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+                if (url != null) {
+                    File testFile = new File(url.getFile());
+                    if (testFile.exists()) {
+                        file = testFile;
+                    } else {
+                        testFile = new File(url.getPath());
+                        if (testFile.exists()) {
+                            file = testFile;
+                        }
+                    }
+                }
+            }
+            return file;
+        }
+
+        @Override
+        protected InputStream fallbackInputStream(String resource) throws IOException {
 
             if (resource != null) {
                 InputStream in;
@@ -869,5 +942,71 @@ public class ConfigurationOverrides {
 			reader.close();
 		}
 	}
+
+    @SuppressWarnings("unchecked")
+    public static void importSpringConfigurations(XmlBeanDefinitionReader reader, ConfigurableBeanFactory beanFactory, ServletContext servletContext, String appPath) throws JDOMException, IOException {
+        String overridesResource = lookupOverrideParameter(servletContext, appPath);
+
+        ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
+        
+        Element overrides = loader.loadXmlResource(overridesResource);
+        if (overrides == null) {
+            return;
+        }
+
+        Properties properties = loadProperties(overrides);
+
+        for(Element e: (List<Element>) overrides.getChildren("spring")) {
+            for (Element element : (List<Element>) e.getChildren("import")) {
+
+                String importFile = element.getAttributeValue("file");
+                importFile = updatePropertiesInText(properties, importFile);
+                
+                Log.info(Log.JEEVES, "ConfigurationOverrides: importing spring file into application context: "+importFile);
+                File file = loader.resolveFile(importFile);
+                if(file != null) {
+                    Resource inputSource = new FileSystemResource(file);
+                    reader.loadBeanDefinitions(inputSource);
+                } else {
+                    InputStream inputStream = loader.loadInputStream(importFile);
+                    try {
+                        Resource inputSource = new InputStreamResource(inputStream);
+                        reader.loadBeanDefinitions(inputSource);
+                    } finally {
+                        IOUtils.closeQuietly(inputStream);
+                    }
+                }
+            }
+        }
+
+        
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void applyNonImportSpringOverides(JeevesApplicationContext jeevesApplicationContext, ServletContext servletContext,
+            String appPath) throws JDOMException, IOException {
+
+        String overridesResource = lookupOverrideParameter(servletContext, appPath);
+
+        ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
+        
+        Element overrides = loader.loadXmlResource(overridesResource);
+        if (overrides == null) {
+            return;
+        }
+        
+        Properties properties = loadProperties(overrides);
+        List<Element> updateEls = new ArrayList<Element>();
+        List<Element> spring = new ArrayList<Element>(overrides.getChildren("spring"));
+        for (Element el: spring) {
+            for (Element element : (List<Element>) el.getChildren()) {
+                if(!element.getName().equals("import")) {
+                    updateEls.add(element);
+                }
+                
+            }
+        }
+        new SpringPropertyOverrides(updateEls, properties).applyOverrides(jeevesApplicationContext);
+    }
 
 }

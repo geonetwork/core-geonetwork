@@ -22,6 +22,11 @@
 		<long>GeoNetwork v2.0 entfernter Knoten</long>
 	</info>
 	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Web DAV server</long>
@@ -76,6 +81,8 @@
 	
 	<site>Site</site>
 		
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
@@ -137,7 +144,8 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<at>Ausf�hren um</at>
     <atSpec>( Stunde : Minute z.B. 23:15 )</atSpec>
     <interval>Wird ausgef�hrt</interval>
@@ -371,6 +379,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Warten auf das erste Update</notRun>

@@ -14,7 +14,10 @@
 			<div class="dots"/>
 			<xsl:call-template name="content-WD"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-WD"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'wd'"/>
+				<xsl:with-param name="jsId" select="'webdav'"/>
+			</xsl:call-template>
 			<div class="dots"/>
 			<xsl:call-template name="categories-WD"/>
 		</div>
@@ -56,27 +59,9 @@
 				</td>
 			</tr>
 			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="wd.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="wd.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="wd.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="wd.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'wd'"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 	
@@ -126,54 +111,10 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template name="privileges-WD">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="wd.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button class="content" onclick="harvesting.webdav.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="wd.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-
 	<xsl:template name="categories-WD">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="wd.categories" class="content" size="8" multiple="on"/>
 	</xsl:template>
 	
-	<!-- ============================================================================================= -->
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

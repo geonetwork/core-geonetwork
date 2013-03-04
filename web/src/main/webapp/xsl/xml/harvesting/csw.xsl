@@ -13,6 +13,7 @@
 	<xsl:template match="*" mode="site">
 		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
 		<icon><xsl:value-of select="icon/value" /></icon>
+		<rejectDuplicateResource><xsl:value-of select="rejectDuplicateResource/value"/></rejectDuplicateResource>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

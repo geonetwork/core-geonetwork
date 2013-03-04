@@ -26,11 +26,15 @@ public enum KeywordSearchType {
     }
 
     public Where toWhere(String columnName, KeywordLabelSearchClause clause) {
-        String value = MessageFormat.format(template, clause.keyword);
-        if(clause.ignoreCase) {
-            return Wheres.ilike(columnName, value);
+        return toWhere(columnName, clause.keyword, clause.ignoreCase);
+    }
+    
+    public Where toWhere(String columnName, String value, boolean ignoreCase) {
+        String finalValue = MessageFormat.format(template, value);
+        if(ignoreCase) {
+            return Wheres.ilike(columnName, finalValue);
         } else {
-            return Wheres.like(columnName, value);
+            return Wheres.like(columnName, finalValue);
         }
     }
 }

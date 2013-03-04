@@ -65,7 +65,8 @@ public class CswParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
-
+        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  false);
+        
         try {
             capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
         }
@@ -93,7 +94,8 @@ public class CswParams extends AbstractParams
 		Element searches = node.getChild("searches");
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
-
+        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  rejectDuplicateResource);
+        
         try {
             capabUrl = URLDecoder.decode(capabUrl, "UTF-8");
         }
@@ -133,6 +135,7 @@ public class CswParams extends AbstractParams
 
 		copy.capabUrl = capabUrl;
 		copy.icon     = icon;
+		copy.rejectDuplicateResource = rejectDuplicateResource;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -168,6 +171,7 @@ public class CswParams extends AbstractParams
 
 	public String capabUrl;
 	public String icon;
+    public boolean rejectDuplicateResource;
 
 	private List<Search> alSearches = new ArrayList<Search>();
 }

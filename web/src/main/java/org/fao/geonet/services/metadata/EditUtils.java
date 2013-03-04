@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -104,12 +105,12 @@ class EditUtils {
 		//-----------------------------------------------------------------------
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		
+
 		if (!dataManager.existsMetadata(dbms, iLocalId))
 			throw new BadParameterEx("id", id);
 
 		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+		    Lib.resource.denyAccess(context);
 	}
 
     /**
@@ -193,6 +194,7 @@ class EditUtils {
      * @throws Exception
      */
     private Element applyChanges(Dbms dbms, String id, Hashtable changes, String currVersion) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
         Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted

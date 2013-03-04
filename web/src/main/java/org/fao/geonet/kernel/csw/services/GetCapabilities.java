@@ -24,8 +24,8 @@
 package org.fao.geonet.kernel.csw.services;
 
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ConfigurationOverrides;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -63,7 +64,11 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
-	public GetCapabilities() {}
+	private LuceneConfig _luceneConfig;
+
+    public GetCapabilities(LuceneConfig luceneConfig) {
+            this._luceneConfig = luceneConfig;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -400,7 +405,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
-			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(), cswServiceSpecificContraint);
+			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(), cswServiceSpecificContraint, _luceneConfig);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 			// If GetDomain operation failed, just add nothing to the capabilities document template.            

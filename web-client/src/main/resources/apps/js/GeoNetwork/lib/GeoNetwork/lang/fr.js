@@ -257,6 +257,7 @@ GeoNetwork.Lang.fr = {
     'status': 'État',
     'updateStatus': 'Mettre à jour l\'état',
     'updateVersion': 'Activer le suivi des versions',
+    'addLayerSelection': 'Ajouter les couches de la sélection à la carte',
     'statusTT': 'Modifier l\'état d\'une métadonnée (eg. brouillon, validé, rejeté).',
     'setVersioning': 'Suivi des versions',
     'versioning': 'Activer le suivi des versions',

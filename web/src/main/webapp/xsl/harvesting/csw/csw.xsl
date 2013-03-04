@@ -16,7 +16,9 @@
 			<div class="dots"/>
 			<xsl:call-template name="content-CSW"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-CSW"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'csw'"/>
+			</xsl:call-template>
 			<div class="dots"/>
 			<xsl:call-template name="categories-CSW"/>
 		</div>
@@ -47,27 +49,14 @@
 				</td>
 			</tr>
 			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'csw'"/>
+			</xsl:call-template>
+			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="csw.useAccount" type="checkbox" checked="on"/></td>
+				<td class="padded"><label for="csw.rejectDuplicateResource"><xsl:value-of select="/root/gui/harvesting/rejectDuplicateResource"/></label></td>
+				<td class="padded"><input id="csw.rejectDuplicateResource" type="checkbox" value=""/></td>
 			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="csw.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="csw.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="csw.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
 		</table>
 	</xsl:template>
 	
@@ -112,39 +101,9 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
 				<td class="padded"><input id="csw.validate" type="checkbox" value=""/></td>
 			</tr>
+			
 		</table>
 	</div>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-CSW">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="csw.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="csw.addGroups" class="content" onclick="harvesting.csw.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="csw.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
 	</xsl:template>
 	
 	<!-- ============================================================================================= -->
@@ -153,17 +112,6 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="csw.categories" class="content" size="8" multiple="on"/>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

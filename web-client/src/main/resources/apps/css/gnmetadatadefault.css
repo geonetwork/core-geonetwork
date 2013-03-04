@@ -192,6 +192,46 @@ label + span {
   float: left;
 }
 
+
+.metadata * .helper-radio,
+.metadata * .helper-radio_withdesc,
+.metadata * .helper-radio {
+    float: left;
+    width: 100%;
+}
+
+.metadata * .helper div {
+    padding: 5px;
+    width: 30%;
+    float: left;
+}
+
+.metadata * .helper div label span {
+    color: #069;
+    padding-left: 5px;
+}
+
+/* for helper having description, increase
+height to make them align vertically. To be improved
+for long description */
+.metadata * .helper-radio_withdesc div {
+    min-height: 45px;
+}
+
+.metadata * .helper-radio_linebreak div {
+    width: 100% !important;
+}
+
+.metadata * .helper div label {
+    float: none;
+    padding-left: 3px;
+}
+
+.metadata * .helper div input,
+.metadata * .helper div textarea {
+    float: none;
+}
+
 .metadata * table.map * input {
   float: none !important;
 }

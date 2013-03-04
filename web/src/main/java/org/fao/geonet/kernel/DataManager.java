@@ -31,6 +31,7 @@ import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.exceptions.XSDValidationErrorEx;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -42,6 +43,9 @@ import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -127,6 +131,9 @@ public class DataManager {
 		this.xmlSerializer = parameterObject.xmlSerializer;
 		this.svnManager    = parameterObject.svnManager;
 
+		UserSession session = new UserSession();
+		session.loginAs(new JeevesUser(servContext.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
+        servContext.setUserSession(session);
 		init(parameterObject.context, parameterObject.dbms, false);
 	}
 
@@ -142,6 +149,7 @@ public class DataManager {
 	 **/
 	public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
 
+	    
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
 		
@@ -330,18 +338,25 @@ public class DataManager {
         private final List<String> ids;
         private int beginIndex;
         private int count;
+        private JeevesUser user;
 
         IndexMetadataTask(ServiceContext context, List<String> ids) {
             this.context = context;
             this.ids = ids;
             this.beginIndex = 0;
             this.count = ids.size();
+            if(context.getUserSession() != null) {
+                this.user = context.getUserSession().getPrincipal();
+            }
         }
         IndexMetadataTask(ServiceContext context, List<String> ids, int beginIndex, int count) {
             this.context = context;
             this.ids = ids;
             this.beginIndex = beginIndex;
             this.count = count;
+            if(context.getUserSession() != null) {
+                this.user = context.getUserSession().getPrincipal();
+            }
         }
 
         /**
@@ -357,6 +372,9 @@ public class DataManager {
                     Thread.sleep(10000); // sleep 10 seconds
                 }
                 Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+                if(user != null && context.getUserSession().getUserId() == null) {
+                    context.getUserSession().loginAs(user);
+                }
                 try {
 
                     if (ids.size() > 1) {
@@ -971,7 +989,9 @@ public class DataManager {
 	//--------------------------------------------------------------------------
 
     /**
-     *
+     * Extract UUID from the metadata record using the schema
+     * XSL for UUID extraction ({@link Geonet.File.EXTRACT_UUID})
+     * 
      * @param schema
      * @param md
      * @return
@@ -1705,8 +1725,14 @@ public class DataManager {
             String parentUuid = null;
 		    md = updateFixedInfo(schema, id, null, md, parentUuid, (updateDateStamp ? DataManager.UpdateDatestamp.yes : DataManager.UpdateDatestamp.no), dbms, context);
         }
+        
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
 		//--- write metadata to dbms
-        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, context);
+        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, uuid, context);
 
         String isTemplate = getMetadataTemplate(dbms, id);
         // Notifies the metadata change to metatada notifier service
@@ -2142,7 +2168,6 @@ public class DataManager {
      */
 	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
 										  String styleSheet) throws Exception {
-		
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
@@ -2190,7 +2215,12 @@ public class DataManager {
 
 		md = Xml.transform(root, styleSheet);
         String changeDate = null;
-		xmlSerializer.update(dbms, id, md, changeDate, true, context);
+        String uuid = null;
+        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+            uuid = extractUUID(schema, md);
+        }
+        
+		xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
 
         // Notifies the metadata change to metatada notifier service
         notifyMetadataChange(dbms, md, id);
@@ -2255,6 +2285,7 @@ public class DataManager {
      * @throws Exception
      */
 	private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
 		Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		if (md == null) return;
@@ -2861,7 +2892,7 @@ public class DataManager {
 			Element childForUpdate = new Element("root");
 			childForUpdate = Xml.transform(rootEl, styleSheet, params);
 			
-			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, srvContext);
+			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
 
             // Notifies the metadata change to metatada notifier service
@@ -3161,6 +3192,7 @@ public class DataManager {
         if (isTemplate.equals("n")) {
             GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
+            XmlSerializer.removeWithheldElements(md, gc.getSettingManager());
             String uuid = getMetadataUuid(dbms, id);
             gc.getMetadataNotifier().updateMetadata(md, id, uuid, dbms, gc);
         }
@@ -3313,7 +3345,6 @@ public class DataManager {
 	class IncreasePopularityTask implements Runnable {
         private ServiceContext srvContext;
         String id;
-        Dbms dbms = null;
 
         /**
          *
@@ -3327,15 +3358,16 @@ public class DataManager {
     	}
 
 		public void run() {
+        Dbms dbms = null;
         try {
-       	    dbms = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-            String query = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
-            dbms.execute(query, new Integer(id));
-            boolean indexGroup = false;
+       	    dbms  = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+            String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
+            Integer iId = new Integer(id);
+            dbms.execute(updateQuery, iId);
             indexMetadata(dbms, id);
         }
         catch (Exception e) {
-            Log.warning(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
+            Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
 			e.printStackTrace();
 		}
         finally {
@@ -3349,6 +3381,7 @@ public class DataManager {
 			}
 
         }
+
 	}
 
     public enum UpdateDatestamp {

@@ -1038,7 +1038,7 @@ GeoNetwork.util.SearchFormTools = {
         var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 
                                ['series', OpenLayers.i18n('series')],
                                ['service', OpenLayers.i18n('service')],
-                               ['model', OpenLayers.i18n('featureCat')]],
+                               ['featureCatalog', OpenLayers.i18n('featureCat')]],
             config = {
                     name: 'E_type',
                     mode: 'local',

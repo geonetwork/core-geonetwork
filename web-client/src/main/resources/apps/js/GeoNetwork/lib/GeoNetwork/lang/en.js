@@ -258,6 +258,7 @@ GeoNetwork.Lang.en = {
     'status': 'Status',
     'updateStatus': 'Update status',
     'updateVersion': 'Activate versioning',
+    'addLayerSelection': 'Add layers of selection to the map',
     'statusTT': 'Change the status of a record according to its life cycle phase',
     'setVersioning': 'Metadata versioning',
     'versioning': 'Start versioning',

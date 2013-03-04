@@ -15,14 +15,7 @@
             to the CSW request. The filter condition should be defined using Lucene query syntax
             ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).
 
-            Defining a new CSW entry point requires:
-
-                1) Update the file WEB-INF/user-profiles.xml to give permissions for the new service.
-                   For example, for csw-custom entry point:
-
-                    <allow service="csw-custom"/>
-
-                2) Restart GeoNetwork
+            Defining a new CSW entry point requires a GeoNetwork restart
 
             Some examples:
 

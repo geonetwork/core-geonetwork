@@ -5,6 +5,7 @@
       <xs:sequence>
         <xs:element ref="import"/>
         <xs:element ref="properties"/>
+        <xs:element ref="spring"/>
         <xs:element maxOccurs="unbounded" ref="file"/>
         <xs:element maxOccurs="unbounded" ref="textFile"/>
       </xs:sequence>
@@ -30,6 +31,108 @@
       <xs:all/>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="spring">
+    <xs:annotation>
+      <xs:documentation>override/modify/add the core spring application context</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="import"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="addProperty"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="setProperty"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="addInterceptUrl"/>
+        </xs:sequence>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addProperty">
+    <xs:annotation>
+      <xs:documentation>Add a value or bean to a collection property on a bean that exists in the application context</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="bean" use="required">
+        <xs:annotation>
+          <xs:documentation>The id of the bean to modify</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="property" use="required">
+        <xs:annotation>
+          <xs:documentation>The name of the property to modify</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ref">
+        <xs:annotation>
+          <xs:documentation>The references of the bean to add to the collection.  Either ref or value is required</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="value">
+        <xs:annotation>
+          <xs:documentation>The value to add to the collection.  Either ref or value is required</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="setProperty">
+    <xs:annotation>
+      <xs:documentation>Set the property on an existing to the new value/bean</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="bean" use="required">
+        <xs:annotation>
+          <xs:documentation>The id of the bean to modify</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="property" use="required">
+        <xs:annotation>
+          <xs:documentation>The name of the property to modify</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ref">
+        <xs:annotation>
+          <xs:documentation>The references of the bean to add to the collection.  Either ref or value is required</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="value">
+        <xs:annotation>
+          <xs:documentation>The value to add to the collection.  Either ref or value is required</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addInterceptUrl">
+    <xs:annotation>
+      <xs:documentation>Add a new intercept url mapping to the identified Security Interceptor bean</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="bean" use="required">
+        <xs:annotation>
+          <xs:documentation>The id of the bean to modify</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="pattern" use="required">
+        <xs:annotation>
+          <xs:documentation>Same as the 'pattern' attribute of the spring security intercept-url element</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="caseInsensitive">
+        <xs:annotation>
+          <xs:documentation>either true|false defaults is false</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="httpMethod">
+        <xs:annotation>
+          <xs:documentation>One of the http allowed methods, POST,PUT,DELETE,GET,etc... (case insensitive).  Restricts the httpMethod that is matched by interceptor. If not specified then all will be matched</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="access" use="required">
+        <xs:annotation>
+          <xs:documentation>Same as the 'access' attribute of the spring security intercept-url element</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+  </xs:complexType>
+  
   
   <xs:element name="file">
     <xs:annotation>
@@ -111,4 +214,5 @@
       <xs:attribute name="linePattern" use="required"/>
     </xs:complexType>
   </xs:element>
+
 </xs:schema>

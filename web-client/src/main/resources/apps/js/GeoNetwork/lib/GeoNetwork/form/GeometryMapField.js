@@ -298,7 +298,35 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         if (!options.controls) {
             options.controls = [];
         }
-        this.map = new OpenLayers.Map('search_map', options);
+        
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                this.map = format.read(text, {map:options});
+                this.layers = undefined;
+            }
+        }
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                this.map = parser.read(text, {map: options});
+                this.layers = undefined;
+            }
+        }
+        
+        this.map = this.map || new OpenLayers.Map('search_map', options);
         this.map.addControl(new GeoNetwork.Control.ZoomWheel());
         this.map.addControl(new OpenLayers.Control.LoadingPanel());
         this.map.addControl(new OpenLayers.Control.MousePosition());

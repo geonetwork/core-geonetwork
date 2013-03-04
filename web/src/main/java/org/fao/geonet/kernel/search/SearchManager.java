@@ -77,6 +77,11 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -97,6 +102,7 @@ import org.fao.geonet.kernel.search.spatial.EqualsFilter;
 import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
+import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
@@ -116,6 +122,7 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 
@@ -667,7 +674,7 @@ public class SearchManager {
 	public String getLuceneTermsToExclude() {
 		return _luceneTermsToExclude;
 	}
-
+	
 	// indexing methods
 
 	/**
@@ -683,13 +690,12 @@ public class SearchManager {
 	 */
 	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title)
             throws Exception {
-        deleteIndexDocument(id, false);
-        
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
         List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
+        _indexWriter.deleteDocuments(new Term("_id", id));
         for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
             _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
@@ -701,9 +707,10 @@ public class SearchManager {
     private void indexGeometry(String schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {
+            _spatial.writer().delete(id);
             _spatial.writer().index(schemaDir, id, metadata);
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage());
+            Log.error(Geonet.INDEX_ENGINE, "Failed to properly index geometry of metadata " + id + ". Error: " + e.getMessage(), e);
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_FIELD, "1", true, true));
             moreFields.add(SearchManager.makeField(INDEXING_ERROR_MSG, "GNIDX-GEOWRITE||" + e.getMessage(), true, false));
         }
@@ -728,7 +735,7 @@ public class SearchManager {
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
 		_indexWriter.deleteDocuments(new Term(fld, txt));
-
+		
 		_spatial.writer().delete(txt);
 	}
 	
@@ -951,9 +958,9 @@ public class SearchManager {
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
         IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
         
 		try {
+		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
 			Set<Integer> docs = new LinkedHashSet<Integer>();
 			for (int i = 0; i < reader.maxDoc(); i++) {
@@ -992,8 +999,8 @@ public class SearchManager {
      */
 	public Map<String,String> getDocsChangeDate() throws Exception {
         IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 		try {
+		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
 			int capacity = (int)(reader.maxDoc() / 0.75)+1;
 			Map<String,String> docs = new HashMap<String,String>(capacity);
@@ -1030,8 +1037,8 @@ public class SearchManager {
     public Vector<String> getTerms(String fld) throws Exception {
         Vector<String> terms = new Vector<String>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
-        AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
         try {
+            AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
             TermsEnum enu = reader.terms(fld).iterator(null);
             BytesRef term = enu.next();
             while (term != null) {
@@ -1066,26 +1073,26 @@ public class SearchManager {
 	                                            int threshold) throws Exception {
         List<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
-        GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
-        @SuppressWarnings("resource")
-        SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
-        Terms terms = atomicReader.terms(fieldName);
-        if (terms != null) {
-            TermsEnum termEnum = terms.iterator(null);
-            int i = 1;
-            try {
-                BytesRef term = termEnum.next();
-                while (term != null && i++ < maxNumberOfTerms) {
-                    String text = term.utf8ToString();
-                    if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                        TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                        termList.add(freq);
+        try {
+            GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
+            @SuppressWarnings("resource")
+            SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
+            Terms terms = atomicReader.terms(fieldName);
+            if (terms != null) {
+                TermsEnum termEnum = terms.iterator(null);
+                int i = 1;
+                    BytesRef term = termEnum.next();
+                    while (term != null && i++ < maxNumberOfTerms) {
+                        String text = term.utf8ToString();
+                        if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
+                            TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                            termList.add(freq);
+                        }
+                        term = termEnum.next();
                     }
-                    term = termEnum.next();
-                }
-            } finally {
-                releaseIndexReader(indexAndTaxonomy);
             }
+        } finally {
+            releaseIndexReader(indexAndTaxonomy);
         }
         return termList;
     }
@@ -1268,7 +1275,7 @@ public class SearchManager {
 	}
 
     public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
-        return _indexReader.aquire(preferedLang, versionToken);
+        return _indexReader.acquire(preferedLang, versionToken);
     }
     public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
@@ -1299,11 +1306,13 @@ public class SearchManager {
             _indexReader = new LuceneIndexReaderFactory(_tracker);
             _indexWriter = new LuceneIndexWriterFactory(_tracker);
             try {
-                _indexReader.aquire(null, -1);
+                IndexAndTaxonomy reader = _indexReader.acquire(null, -1);
+                _indexReader.release(reader.indexReader);
             } catch (Throwable e) {
                 badIndex1 = true;
                 Log.error(Geonet.INDEX_ENGINE,
                         "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
+            } finally {
             }
             badIndex = badIndex1;
 	    }
@@ -1665,7 +1674,7 @@ public class SearchManager {
             try {
             	Parser filterParser = getFilterParser(filterVersion);
                 Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> accessor = new SpatialIndexAccessor();
-                return OgcGenericFilters.create(query, numHits, filterExpr, accessor , filterParser);
+                return OgcGenericFilters.create(query, numHits, filterExpr, accessor, filterParser);
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
@@ -1687,12 +1696,26 @@ public class SearchManager {
          * @throws Exception
          */
         public SpatialFilter filter(org.apache.lucene.search.Query query, int numHits,
-                Geometry geom, Element request) throws Exception {
+                Collection<Geometry> geom, Element request) throws Exception {
             _lock.lock();
             try {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
-                return _types.get(relation).newInstance(query, numHits, geom, new SpatialIndexAccessor());
+                if(geom.size() == 1) {
+                    return _types.get(relation).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
+                } else {
+                    Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
+                    Envelope bounds = null;
+                    for (Geometry geometry : geom) {
+                        if(bounds == null) {
+                            bounds = geometry.getEnvelopeInternal();
+                        } else {
+                            bounds.expandToInclude(geometry.getEnvelopeInternal());
+                        }
+                        filters.add(_types.get(relation).newInstance(query, numHits, geometry, new SpatialIndexAccessor()));
+                    }
+                    return new OrSpatialFilter(query, numHits, bounds, new SpatialIndexAccessor(), filters);
+                }
             }
             finally {
                 _lock.unlock();

@@ -1,21 +1,25 @@
-package jeeves.server;
+package jeeves.server.overrides;
 
 
+import jeeves.config.springutil.GeonetworkFilterSecurityInterceptor;
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Xml;
 import org.apache.log4j.Level;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
+import org.springframework.security.access.ConfigAttribute;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ConfigurationOveridesTest {
     final ClassLoader classLoader = getClass().getClassLoader();
@@ -95,13 +99,56 @@ public class ConfigurationOveridesTest {
     		reader.close();
     	}
     }
+    
+    @Test
+    public void updateSpringConfiguration() throws JDOMException, IOException {
+        JeevesApplicationContext applicationContext = new JeevesApplicationContext();
+        applicationContext.setAppPath(appPath);
+        applicationContext.setConfigLocation("classpath:test-spring-config.xml");
+        System.setProperty("geonetwork."+ConfigurationOverrides.OVERRIDES_KEY, ",/WEB-INF/test-spring-config-overrides.xml");
+        updateAndPerformSpringAssertions(applicationContext);
+        
+        // make sure refresh works multiple times
+        updateAndPerformSpringAssertions(applicationContext);
+        
+        // make sure refresh works multiple times
+        updateAndPerformSpringAssertions(applicationContext);
+    }
+    private void updateAndPerformSpringAssertions(JeevesApplicationContext applicationContext) {
+        applicationContext.refresh();
+
+        ExampleBean testBean = applicationContext.getBean("testBean", ExampleBean.class); 
+        ExampleBean testBean2 = applicationContext.getBean("testBean2", ExampleBean.class); 
+        ExampleBean testBean3 = applicationContext.getBean("testBean3", ExampleBean.class);
+        
+        assertNotNull(testBean);
+        assertNotNull(testBean2);
+        assertNotNull(testBean3);
+        
+        assertEquals("overriddenProp", testBean.getBasicProp());
+        assertEquals(testBean2, testBean.getSimpleRef());
+        assertTrue("testbean should have a testbean added to one of its collections", testBean.getCollectionRef().contains(testBean3));
+        assertEquals("astring", testBean.getBasicProp2());
+        assertTrue("testBeans doesn't contain 'newString' in its collection of strings", testBean.getCollectionProp().contains("newString"));
+        
+        GeonetworkFilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", GeonetworkFilterSecurityInterceptor.class);
+        Collection<ConfigAttribute> attributes = filterSecurityInterceptor.getSecurityMetadataSource().getAllConfigAttributes();
+        String expectedExp = "hasRole('Administrator')";
+        boolean found = false;
+        for (ConfigAttribute configAttribute : attributes) {
+            if(configAttribute.toString().equals(expectedExp)) {
+                found = true;
+            }
+        }
+        
+        assertTrue(attributes+" does not contain "+expectedExp, found);
+    }
 
     @Test
     public void noUpdateConfig() throws JDOMException, IOException {
         Element config = Xml.loadFile(classLoader.getResource("test-config.xml"));
         Element unchanged = (Element) config.clone();
         ConfigurationOverrides.updateWithOverrides("config.xml", null, falseAppPath, config);
-        
 
         assertLang("eng",config);
 

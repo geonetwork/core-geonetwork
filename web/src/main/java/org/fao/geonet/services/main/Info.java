@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.region.RegionsDAO;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
 
@@ -123,8 +124,11 @@ public class Info implements Service
 			else if (type.equals("operations"))
 				result.addContent(Lib.local.retrieve(dbms, "Operations"));
 
-			else if (type.equals("regions"))
-				result.addContent(Lib.local.retrieve(dbms, "Regions"));
+			else if (type.equals("regions")) {
+		        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+		        Element regions = dao.createSearchRequest(context).xmlResult();
+				result.addContent(regions);
+			}
 
             else if (type.equals("isolanguages"))
                 result.addContent(Lib.local.retrieve(dbms, "IsoLanguages"));

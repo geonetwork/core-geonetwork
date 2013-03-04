@@ -14,7 +14,9 @@
 			<div class="dots"/>
 			<xsl:call-template name="content-wfsfeatures"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-wfsfeatures"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'wfsfeatures'"/>
+			</xsl:call-template>
 			<div class="dots"/>
 			<xsl:call-template name="categories-wfsfeatures"/>
 		</div>
@@ -46,30 +48,11 @@
 					<img id="wfsfeatures.icon.image" src="" alt="" />
 				</td>
 			</tr>
-
-			<!-- TODO : Do we have to set up an account for WxS secured ? -->
-			<tr style="display:none;">
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="wfsfeatures.useAccount" type="checkbox"/></td>
-			</tr>
-
-			<tr style="display:none;">
-				<td/>
-				<td>
-					<table id="wfsfeatures.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="wfsfeatures.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="wfsfeatures.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
-
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'wfsfeatures'"/>
+			</xsl:call-template>
+			
 			<!-- language -->
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/wfsFeaturesLang"/></td>
@@ -181,37 +164,6 @@
 		</table>
 	</div>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-wfsfeatures">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="wfsfeatures.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="wfsfeatures.addGroups" class="content" onclick="harvesting.wfsfeatures.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="wfsfeatures.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -221,17 +173,4 @@
 		<select id="wfsfeatures.categories" class="content"/>
 	</xsl:template>
 	
-	<!-- ============================================================================================= -->
-
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-        <option>
-            <xsl:attribute name="value">
-                <xsl:value-of select="."/>
-            </xsl:attribute>
-            <xsl:value-of select="@label"/>
-        </option>
-    </xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

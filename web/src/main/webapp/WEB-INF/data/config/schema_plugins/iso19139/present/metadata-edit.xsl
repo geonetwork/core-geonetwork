@@ -144,17 +144,27 @@
         <xsl:variable name="text">
           <xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
           
-          <input type="number" class="md" name="_{$ref}" id="_{$ref}"  
-            onkeyup="validateNumber(this,true,true);"
-            onchange="validateNumber(this,true,true);"
-            value="{gco:Distance}" size="30"/>
+          <!-- Look for the helper to check if a radio edit mode is activated
+            If yes, hide the input text which will be updated when clicking the radio
+            or the other option. -->
+          <xsl:variable name="helper" select="geonet:getHelper($schema, ., /root/gui)"/>
           
-          &#160;
-          <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
-          &#160;
-          <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
-            value="{gco:Distance/@uom}" style="width:30px;"/>
-          
+          <div>
+            <xsl:if test="contains($helper/@editorMode, 'radio')">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
+            <input type="number" class="md" name="_{$ref}" id="_{$ref}"  
+              onkeyup="validateNumber(this,true,true);"
+              onchange="validateNumber(this,true,true);"
+              value="{gco:Distance}" size="30">
+            </input>
+            
+            &#160;
+            <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+            &#160;
+            <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
+              value="{gco:Distance/@uom}" style="width:30px;"/>
+          </div>
           <xsl:for-each select="gco:Distance">
             <xsl:call-template name="helper">
               <xsl:with-param name="schema" select="$schema"/>
@@ -1048,34 +1058,44 @@
                 Radio button modes
               -->
               <xsl:when test="contains($mode, 'radio')">
+                <div class="helper helper-{$mode}">
+                  <div>
+                    <input class="md" type="radio" id="{$name}" name="{$name}" value="">
+                      <xsl:if test="$isXLinked">
+                        <xsl:attribute name="disabled">disabled</xsl:attribute>
+                      </xsl:if>
+                    </input>
+                    <label for="{$name}"><xsl:value-of select="/root/gui/strings/nodata"/></label>
+                  </div>
+                  
+                  
+                  <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
+                    <xsl:sort select="label"/>
+                    <div>
+                      <input class="md" type="radio" name="{$name}" id="{$name}{position()}" value="{code}">
+                        <xsl:if test="$isXLinked">
+                          <xsl:attribute name="disabled">disabled</xsl:attribute>
+                        </xsl:if>
+                        <xsl:if test="code=$value">
+                          <xsl:attribute name="checked"/>
+                        </xsl:if>
+                      </input>
+                      <label for="{$name}{position()}" title="{description}">
+                        <xsl:value-of select="label"/>
+                        <xsl:if test="$mode='radio_withdesc'"><span><xsl:value-of select="description"/></span></xsl:if>
+                      </label>
+                    </div>
+                  </xsl:for-each>
                 
-                <input class="md" type="radio" id="{$name}" name="{$name}" value="">
-                  <xsl:if test="$isXLinked">
-                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                  <!-- Add non existing values -->
+                  <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
+                    <div>
+                      <input class="md" type="radio" name="{$name}" id="{$name}{position()}" checked="checked" value="{$value}"/>
+                      <label for="{$name}{position()}"><xsl:value-of select="$value"/></label>
+                    </div>
                   </xsl:if>
-                </input>
-                <label for="{$name}"><xsl:value-of select="/root/gui/strings/nodata"/></label>
-                <xsl:if test="$mode='radio_linebreak' or $mode='radio_withdesc'"><br/></xsl:if>
-                <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
-                  <xsl:sort select="label"/>
-                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" value="{code}">
-                    <xsl:if test="$isXLinked">
-                      <xsl:attribute name="disabled">disabled</xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="code=$value">
-                      <xsl:attribute name="checked"/>
-                    </xsl:if>
-                  </input>
-                  <label for="{$name}{position()}" title="{description}"><xsl:value-of select="label"/></label>
-                  <xsl:if test="$mode='radio_withdesc'"> : <xsl:value-of select="description"/><br/></xsl:if>
-                  <xsl:if test="$mode='radio_linebreak'"><br/></xsl:if>
-                </xsl:for-each>
+                </div>
                 
-                <!-- Add non existing values -->
-                <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
-                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" checked="checked" value="{$value}"/>
-                  <label for="{$name}{position()}"><xsl:value-of select="$value"/></label>
-                </xsl:if>
               </xsl:when>
               <!-- 
                 Select list modes
@@ -2779,7 +2799,16 @@
             	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
       		</xsl:variable>
             
-            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}"/>
+            <!-- Look for the helper to check if a radio edit mode is activated
+            If yes, hide the input text which will be updated when clicking the radio
+            or the other option. -->
+            <xsl:variable name="helper" select="geonet:getHelper($schema, ., /root/gui)"/>
+            
+            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}">
+              <xsl:if test="contains($helper/@editorMode, 'radio')">
+                <xsl:attribute name="style">display:none;</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:for-each select="gco:CharacterString">
              <xsl:call-template name="helper">
                <xsl:with-param name="schema" select="$schema"/>

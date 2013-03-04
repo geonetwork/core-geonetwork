@@ -80,7 +80,14 @@ GeoNetwork.app = function () {
     
     function initMap() {
         iMap = new GeoNetwork.mapApp();
-        iMap.init(GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAIN_MAP_OPTIONS);
+        var layers={}, options={};
+        if(GeoNetwork.map.CONTEXT || GeoNetwork.map.OWS) {
+            options = GeoNetwork.map.CONTEXT_MAIN_MAP_OPTIONS;
+        } else {
+            options = GeoNetwork.map.MAIN_MAP_OPTIONS;
+            layers  = GeoNetwork.map.BACKGROUND_LAYERS;
+        }
+        iMap.init(layers, options);
         metadataResultsView.addMap(iMap.getMap());
         visualizationModeInitialized = true;
     }
@@ -308,9 +315,18 @@ GeoNetwork.app = function () {
             },
             items: advancedCriteria
         });
+        
+        // Check good map options if we load map config from WMC or OWS
+        var mapOptions;
+        if(GeoNetwork.map.CONTEXT || GeoNetwork.map.OWS) {
+            mapOptions = GeoNetwork.map.CONTEXT_MAP_OPTIONS;
+        } else {
+            mapOptions = GeoNetwork.map.MAP_OPTIONS;
+        }
+        
         var formItems = [];
         formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
-                    GeoNetwork.map.BACKGROUND_LAYERS, GeoNetwork.map.MAP_OPTIONS, true, 
+                    GeoNetwork.map.BACKGROUND_LAYERS, mapOptions, true, 
                     GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
                     adv, GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined));
         // Add advanced mode criteria to simple form - end
@@ -326,13 +342,13 @@ GeoNetwork.app = function () {
             Ext.each(adminFields, function (item) {
                 item.setVisible(true);
             });
-            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
+            groupField.getStore().reload();
         });
         catalogue.on('afterLogout', function () {
             Ext.each(adminFields, function (item) {
                 item.setVisible(false);
             });
-            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
+            groupField.getStore().reload();
         });
         
         
@@ -709,6 +725,13 @@ GeoNetwork.app = function () {
                 urlParameters.bounds = new OpenLayers.Bounds(urlParameters.extent[0], urlParameters.extent[1], urlParameters.extent[2], urlParameters.extent[3]);
             }
             
+            if (urlParameters.wmc) {
+               GeoNetwork.map.CONTEXT = urlParameters.wmc;
+            }
+            if (urlParameters.ows) {
+               GeoNetwork.map.OWS = urlParameters.ows;
+            }
+            
             // Init cookie
             cookie = new Ext.state.CookieProvider({
                 expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 365))
@@ -813,7 +836,14 @@ GeoNetwork.app = function () {
                     hidden: !GeoNetwork.MapModule,
                     margins: margins,
                     minWidth: 300,
-                    width: 500
+                    width: 500,
+                    listeners: {
+                        beforeexpand: function () {
+                            app.getIMap();
+                            this.add(iMap.getViewport());
+                            this.doLayout();
+                        }
+                    }
                 }]
             });
             

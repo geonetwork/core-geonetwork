@@ -21,46 +21,59 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.region;
+package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Update implements Service
+class Search
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
-
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	//---
-	//--- Service
+	//--- Constructor
 	//---
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Search() {}
+
+	//---------------------------------------------------------------------------
+
+	public Search(Element search)
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		for (Object r : params.getChildren("region"))
-		{
-			Element region = (Element) r;
-
-			String  id    = Util.getAttrib(region, Params.ID);
-			Element label = Util.getChild (region, "label");
-
-			Lib.local.update(dbms, "Regions", Integer.parseInt(id), label);
-		}
-
-		return new Element("ok");
+		freeText = Util.getParam(search, "freeText", "").trim();
 	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- API methods
+	//---
+	//---------------------------------------------------------------------------
+
+	public Search copy()
+	{
+		Search s = new Search();
+
+		s.freeText = freeText;
+
+		return s;
+	}
+
+	//---------------------------------------------------------------------------
+
+	public static Search createEmptySearch()
+	{
+		return new Search(new Element("search"));
+	}
+
+	//---------------------------------------------------------------------------
+	//---
+	//--- Variables
+	//---
+	//---------------------------------------------------------------------------
+
+	public String freeText;
 }
 
 //=============================================================================

@@ -14,9 +14,11 @@
 			<div class="dots"/>
 			<xsl:call-template name="content-Filesystem"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-Filesystem"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'filesystem'"/>
+			</xsl:call-template>
 			<div class="dots"/>
-			<xsl:call-template name="categories-Filesystem"/>			
+			<xsl:call-template name="categories-Filesystem"/>
 			<p/>
 		</div>
 	</xsl:template>
@@ -86,37 +88,6 @@
 			<xsl:with-param name="type">filesystem</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-Filesystem">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="filesystem.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="filesystem.addGroups" class="content" onclick="harvesting.filesystem.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="filesystem.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -124,17 +95,6 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="filesystem.categories" class="content" size="8" multiple="on"/>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->	
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

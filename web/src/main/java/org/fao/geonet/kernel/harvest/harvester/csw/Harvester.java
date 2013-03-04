@@ -25,8 +25,10 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jeeves.exceptions.BadParameterEx;
@@ -51,8 +53,10 @@ import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 //=============================================================================
 
@@ -547,7 +551,7 @@ class Harvester
       	log.warning("Record doesn't have a uuid : "+ name);
 				return null; // skip this one
 			}
-
+			
 			String modified = dm.extractDateModified(schema, record); 
 			if (modified.length() == 0) modified = null;
             if(log.isDebugEnabled())
