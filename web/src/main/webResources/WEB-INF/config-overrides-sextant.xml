@@ -90,6 +90,11 @@
           <param name="filter" value="+_groupPublished:ATLAS_CHARM"/>
         </class>
       </service>
+      <service name="csw-CLUB_SIG_MAYOTTE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:CLUB_SIG_MAYOTTE"/>
+        </class>
+      </service>
       <service name="csw-DCSMM">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:DCSMM"/>
