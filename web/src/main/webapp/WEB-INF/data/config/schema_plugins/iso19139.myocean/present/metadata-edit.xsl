@@ -1043,17 +1043,69 @@
 										<xsl:with-param name="title" select="''"/>
 										<xsl:with-param name="text">
 											<xsl:variable name="id" select="gco:CharacterString/geonet:element/@ref"/>
-											<xsl:variable name="value" select="gco:CharacterString"/>
-											<xsl:variable name="start" select="replace(substring-before($value, '#'), 'P','')"/>
-											<xsl:variable name="end" select="replace(substring-after($value, '#'), 'P','')"/>
+											<xsl:variable name="value" select="replace(gco:CharacterString,'#','/')"/>
+											<xsl:variable name="start" select="substring-before($value, '/')"/>
+											<xsl:variable name="end" select="substring-after($value, '/')"/>
 											<xsl:variable name="start-negative" select="starts-with($start, '-')"/>
 											<xsl:variable name="end-negative" select="starts-with($end, '-')"/>
 											
+											<xsl:variable name="regex">
+												-?P{1}(([0-9]*)M{1})?(([0-9]*)D{1})?(T?([0-9]*)H{1})?
+											</xsl:variable>
+											
+											<xsl:variable name="start-months">
+												<xsl:analyze-string select="$start" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(2)) then regex-group(2) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>
+											<xsl:variable name="start-days">
+												<xsl:analyze-string select="$start" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(4)) then regex-group(4) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>
+											<xsl:variable name="start-hours">
+												<xsl:analyze-string select="$start" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(6)) then regex-group(6) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>											
+											<xsl:variable name="end-months">
+												<xsl:analyze-string select="$end" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(2)) then regex-group(2) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>
+											<xsl:variable name="end-days">
+												<xsl:analyze-string select="$end" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(4)) then regex-group(4) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>
+											<xsl:variable name="end-hours">
+												<xsl:analyze-string select="$end" regex="{$regex}" flags="mx">
+													<xsl:matching-substring>
+														<xsl:value-of select="if (regex-group(6)) then regex-group(6) else '0'"/>
+													</xsl:matching-substring>
+													<xsl:non-matching-substring><xsl:value-of select="'0'"/></xsl:non-matching-substring>
+												</xsl:analyze-string>
+											</xsl:variable>
+																																
 											<input class="md" type="hidden"
 												name="_{$id}" 
 												id="_{$id}"  
-												value="{$value}" size="30"/>
-											
+												value="{$value}" size="30"/>											
 											
 											<div class="slidingWindow">
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
@@ -1073,9 +1125,7 @@
 													id="_{$id}_s_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{if ($start-negative) 
-														then substring-before(substring-after($start, '-'), 'M')
-														else substring-before($start, 'M')}" size="5"/>
+													value="{$start-months}" size="5"/>
 												<label for="_{$id}_s_month">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
@@ -1083,7 +1133,7 @@
 													id="_{$id}_s_day" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before(substring-after($start, 'M'), 'D')}" size="5"/>
+													value="{$start-days}" size="5"/>
 												<label for="_{$id}_s_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
@@ -1091,7 +1141,7 @@
 													id="_{$id}_s_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before(substring-after($start, 'D'), 'H')}" size="5"/>
+													value="{$start-hours}" size="5"/>
 											</div>
 											<div class="slidingWindow">
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
@@ -1111,9 +1161,7 @@
 													id="_{$id}_e_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{if ($end-negative) 
-													then substring-before(substring-after($end, '-'), 'M')
-													else substring-before($end, 'M')}" size="5"/>
+													value="{$end-months}" size="5"/>
 												<label for="_{$id}_e_month">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
@@ -1121,7 +1169,7 @@
 													id="_{$id}_e_day" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before(substring-after($end, 'M'), 'D')}" size="5"/>
+													value="{$end-days}" size="5"/>
 												<label for="_{$id}_e_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
@@ -1129,11 +1177,12 @@
 													id="_{$id}_e_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
-													value="{substring-before(substring-after($end, 'D'), 'H')}" size="5"/>
+													value="{$end-hours}" size="5"/>
 											</div>
 										</xsl:with-param>
 									</xsl:apply-templates>
 								</xsl:for-each>
+					
 								
 								
 								<!--<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
