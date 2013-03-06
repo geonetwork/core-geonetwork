@@ -8,6 +8,7 @@
 	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
 	<xsl:import href="metadata-fop.xsl"/>
+	<xsl:include href="metadata-markup.xsl"/>
 
   <xsl:template name="iso19139.sextantBrief">
     <metadata>

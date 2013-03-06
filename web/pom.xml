@@ -1038,7 +1038,7 @@
       <activation>
         <property>
           <name>env</name>
-          <value>prod</value>
+          <value>dev</value>
         </property>
       </activation>
       <properties>

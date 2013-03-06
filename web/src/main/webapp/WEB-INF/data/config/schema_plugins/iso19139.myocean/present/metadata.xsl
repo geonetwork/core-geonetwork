@@ -8,6 +8,7 @@
 	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
 	<xsl:import href="metadata-fop.xsl"/>
+	<xsl:include href="metadata-markup.xsl"/>
 	
 	<!-- CSV export mode -->
 	<xsl:template mode="csv" match="gmd:MD_Metadata">
