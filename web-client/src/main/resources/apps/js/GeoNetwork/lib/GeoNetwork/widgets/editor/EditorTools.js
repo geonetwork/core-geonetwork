@@ -1032,12 +1032,12 @@ function updateSlidingWindow(targetElementId) {
     document.getElementById(targetElementId).value = 
         s_sign + "P" + 
         (s_month === "" ? "0" : s_month) + "M" +
-        (s_day === "" ? "0" : s_day) + "D" +
+        (s_day === "" ? "0" : s_day) + "DT" +
         (s_hour === "" ? "0" : s_hour) + "H" +
-        "#" + 
+        "/" + 
         e_sign + "P" + 
         (e_month === "" ? "0" : e_month) + "M" +
-        (e_day === "" ? "0" : e_day) + "D" +
+        (e_day === "" ? "0" : e_day) + "DT" +
         (e_hour === "" ? "0" : e_hour) + "H";
 }
 /**
