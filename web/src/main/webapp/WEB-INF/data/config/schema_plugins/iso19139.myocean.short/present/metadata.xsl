@@ -7,6 +7,8 @@
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 	
+	<xsl:include href="metadata-markup.xsl"/>
+	
 	<!-- Redirect to iso19139 default layout -->
 	<xsl:template name="metadata-fop-iso19139.myocean.short">
 		<xsl:param name="schema"/>
