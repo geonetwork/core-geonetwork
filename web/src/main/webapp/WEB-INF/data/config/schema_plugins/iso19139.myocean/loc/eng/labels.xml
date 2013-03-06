@@ -38,7 +38,16 @@
         <helper>
             <option value="N/A">Not known</option>
             <option value="daily mean">Daily mean</option>
+    		<option value="daily mean, hourly mean">Daily mean, hourly mean</option>
             <option value="hourly mean">Hourly mean</option>
+            <option value="3 hourly instantaneous">3 hourly instantaneous</option>
+            <option value="6 hourly mean">6 hourly mean</option>
+            <option value="hourly instantaneous">Hourly instantaneous</option>
+            <option value="instantaneous">Instantaneous</option>
+            <option value="monthly mean">Monthly mean</option>
+            <option value="weekly mean">Weekly mean</option>
+			<option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
+            <option value="Pluri-annual mean">Pluri-annual mean</option>
         </helper>
     </element>
     <element name="gmd:abstract" context="gmd:MD_DataIdentification">
@@ -135,12 +144,18 @@
         <help>
         </help>
         <condition>mandatory</condition>
-        <helper>
-            <!-- TODO ifremer : provide short list of code -->
+        <helper>            
             <option value="WGS 84 (EPSG 4326)">WGS 84 (EPSG 4326)</option>
-            <option value="WGS84 / Simple Mercator (EPSG:41001)">WGS84 / Simple Mercator (EPSG:41001)</option>
+            <option value="WGS 84 / Simple Mercator (EPSG 41001)">WGS 84 / Simple Mercator (EPSG 41001)</option>
             <option value="Lambert Azimuthal Equal Area (EPSG 3035)">Lambert Azimuthal Equal Area (EPSG 3035)</option>
             <option value="ETRS89 (EPSG 4258)">ETRS89 (EPSG 4258)</option>
+            <option value="WGS 84 / Plate Carree (EPSG 32662)">WGS 84 / Plate Carree (EPSG 32662)</option>
+            <option value="WGS 84 / World Mercator (EPSG 3395)">WGS 84 / World Mercator (EPSG 3395)</option>
+            <option value="MYO Arakawa-C ORCA025 native grid">MYO Arakawa-C ORCA025 native grid</option>
+            <option value="NSIDC Sea Ice Polar Stereographic North (EPSG 3411)">NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</option>
+            <option value="NSIDC Sea Ice Polar Stereographic South (EPSG 3412)">NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</option>
+            <option value="Spherical 3D CS (EPSG 6404)">Spherical 3D CS (EPSG 6404)</option>
+            <option value="WRF Lambert Conformal Conic (SR-ORG 29)">WRF Lambert Conformal Conic (SR-ORG 29)</option>
         </helper>
     </element>
     <element name="gmd:codeSpace" id="208.1">
