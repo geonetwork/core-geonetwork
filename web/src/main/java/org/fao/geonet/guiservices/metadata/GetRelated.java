@@ -44,6 +44,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
@@ -240,7 +241,7 @@ public class GetRelated implements Service {
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
         if (type.equals("") || type.contains("online") || type.contains("thumbnail")) {
-            relatedRecords.addContent(new Element("metadata").addContent(md));
+            relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
         }
         
         
