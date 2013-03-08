@@ -877,6 +877,18 @@ Ext.onReady(function() {
 	app.init();
 	catalogue = app.getCatalogue();
 
+	Ext.Ajax.request({
+		url: catalogue.services.getInspireInfo+'&type=harvester',
+		success: function(res) {
+			var enable = res.responseXML.getElementsByTagName("harvester")[0].getElementsByTagName("enable")[0];
+			if (enable.textContent) {
+				GeoNetwork.Settings.editor.editHarvested = enable.textContent;
+			} else {
+				GeoNetwork.Settings.editor.editHarvested = enable.innerText;
+			}
+		} 
+	});
+	
 	/* Focus on full text search field */
 	Ext.getDom('E_any').focus(true);
 	Ext.get('E_any').setHeight(28);
