@@ -34,6 +34,12 @@
         </inspire>
     </xsl:template>
 	
+    <xsl:template match="harvester">
+        <harvester>
+            <enable><xsl:value-of select="children/enableEditing/value"/></enable>
+        </harvester>
+    </xsl:template>
+	
 	<!-- ============================================================================================= -->
 
     <xsl:template match="isolanguages">
