@@ -321,7 +321,7 @@ GeoNetwork.Lang.fr = {
     'perThesaurus': " par thesaurus",
     'anyThesaurus': "Tous les thésaurus",
     'addFromThesaurus': 'Ajouter à partir du thesaurus ...',
-    'selectedKeywords': "Mots clés selectionnés",
+    'selectedKeywords': "Mots clés sélectionnés",
     'foundKeywords': "Mots clés trouvés",
     'clear': "Effacer",
     'publish': "Publier",
