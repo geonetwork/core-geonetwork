@@ -309,6 +309,7 @@ GeoNetwork.Lang.nl = {
     'searching': "Zoeken...",
     'perThesaurus': " per thesaurus",
     'anyThesaurus': "Elke thesaurus",
+    'addFromThesaurus': 'Add from thesaurus ...',
     'selectedKeywords': "Geselecteerde trefwoorden",
     'foundKeywords': "Gevonden trefwoorden",
     'clear': "Wis",

@@ -305,6 +305,7 @@ GeoNetwork.Lang.es = {
     'searching':'Buscar ...',
     'perThesaurus':'Por Tesauro',
     'anyThesaurus':'Cualquier Tesauro',
+    'addFromThesaurus': 'Add from thesaurus ...',
     'selectedKeywords':'Palabras clave seleccionadas',
     'foundKeywords':'Palabras clave disponibles',
     'clear':'Borrar',

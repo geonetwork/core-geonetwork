@@ -319,6 +319,7 @@ GeoNetwork.Lang.pl = {
     'searching': "Wyszukiwanie ...",
     'perThesaurus': " tezaurus",
     'anyThesaurus': "Dowolny tezaurus",
+    'addFromThesaurus': 'Add from thesaurus ...',
     'selectedKeywords': "Wybierz słowa kluczowe",
     'foundKeywords': "Dostępne słowa kluczowe",
     'clear': "Wyczyść",

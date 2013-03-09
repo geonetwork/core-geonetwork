@@ -321,6 +321,7 @@ GeoNetwork.Lang.en = {
     'searching': "Searching ...",
     'perThesaurus': " per thesaurus",
     'anyThesaurus': "Any thesaurus",
+    'addFromThesaurus': 'Add from thesaurus ...',
     'selectedKeywords': "Selected keywords",
     'foundKeywords': "Available keywords",
     'clear': "Clear",

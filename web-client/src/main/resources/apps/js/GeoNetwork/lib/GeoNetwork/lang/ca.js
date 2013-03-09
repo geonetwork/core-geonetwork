@@ -319,6 +319,7 @@ GeoNetwork.Lang.ca={
     'searching': "Buscant ...",
     'perThesaurus': " per tesaurus",
     'anyThesaurus': "Tots els tesaurus",
+    'addFromThesaurus': 'Add from thesaurus ...',
     'selectedKeywords': "Paraules clau seleccionades",
     'foundKeywords': "Paraules clau disponibles",
     'clear': "Esborrar",
