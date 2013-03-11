@@ -164,7 +164,7 @@ public class SpatialIndexWriter implements FeatureListener
                 SimpleFeature template = SimpleFeatureBuilder.template(schema,
                         SimpleFeatureBuilder.createDefaultFeatureId());
                 template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
-                template.setAttribute(_IDS_ATTRIBUTE_NAME, id);
+                template.setAttribute(_idColumn == null? _IDS_ATTRIBUTE_NAME : _idColumn.toString(), id);
                 features.add(template);
 
                 _featureStore.addFeatures(features);
