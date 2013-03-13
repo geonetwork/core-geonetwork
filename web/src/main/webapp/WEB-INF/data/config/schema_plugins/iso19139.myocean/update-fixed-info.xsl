@@ -380,6 +380,21 @@
 		</xsl:copy>
 	</xsl:template>
 	
+	
+	<!-- Remove indeterminatePosition attribute if a end position is defined. 
+	If not, add indeterminate position. -->
+	<xsl:template match="gml:endPosition[.='']">
+		<xsl:copy>
+			<xsl:attribute name="indeterminatePosition">unknown</xsl:attribute>
+		</xsl:copy>
+	</xsl:template>
+	<xsl:template match="gml:endPosition[.!='' and @indeterminatePosition='']">
+		<xsl:copy>
+			<xsl:value-of select="."/>
+		</xsl:copy>
+	</xsl:template>
+	
+	
 	<!-- ================================================================= -->
 	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
 		element. The assumption is that the name is in the format of  <ns:element> 

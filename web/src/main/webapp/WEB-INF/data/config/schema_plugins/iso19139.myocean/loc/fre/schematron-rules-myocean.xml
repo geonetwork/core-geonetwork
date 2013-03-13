@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <identification>Product identification</identification>
     <R1>Distribution fields are mandatory</R1>
     <alert.R1>
         <div>Check that the title is defined.</div>
@@ -32,7 +33,7 @@
     <alert.R8>
         <div>Check that the mission type is defined.</div>
     </alert.R8>
-    <report.R8>Mission date is:</report.R8>
+    <report.R8>Mission type is:</report.R8>
     <alert.R9>
         <div>Check that the area of benefit is defined.</div>
     </alert.R9>
@@ -80,18 +81,21 @@
     <alert.R20>
         <div>Check that the production center is defined.</div>
     </alert.R20>
-    <report.R20>Production center is:</report.R20>
+    <report.R20> production center(s) found.</report.R20>
     <alert.R21>
         <div>Check that the product manager is defined.</div>
     </alert.R21>
-    <report.R21>Product manager is:</report.R21>
+    <report.R21> product manager(s) found.</report.R21>
     <alert.R22>
         <div>Check that the local service desk is defined.</div>
     </alert.R22>
-    <report.R22>Local service desk is:</report.R22>
+    <report.R22> local service desk(s) found.</report.R22>
+    
+    <contentInfo>Feature type</contentInfo>
     <alert.R23>
         <div>Check that the features type is defined.</div>
     </alert.R23>
+    <crs>Coordinate reference system</crs>
     <report.R23>Features type system is:</report.R23>
     <alert.R24>
         <div>Check that the Coordinate reference system is defined.</div>
@@ -105,4 +109,5 @@
         <div>Check that the Temporal resolution is defined.</div>
     </alert.R26>
     <report.R26>Temporal resolution system is:</report.R26>
+    <contact>Organisations</contact>
 </strings>

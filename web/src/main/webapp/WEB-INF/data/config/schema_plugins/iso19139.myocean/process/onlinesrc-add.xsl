@@ -146,6 +146,7 @@ attached it to the metadata for data.
                         gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
                         gmd:citedResponsibleParty/gmd:CI_ResponsibleParty"/>
                 </gmd:distributorContact>
+                <gmd:distributorFormat/>
                 <gmd:distributorTransferOptions>
                     <gmd:MD_DigitalTransferOptions>
                         <xsl:apply-templates mode="onlinecopy" select="

@@ -104,9 +104,19 @@
 								<gmd:date>
 									<gmd:CI_Date>
 										<gmd:date>
-											<gco:Date>
-												<xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date"/>
-											</gco:Date>
+											<xsl:variable name="date" select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date"/>
+											<xsl:choose>
+												<xsl:when test="contains($date, 'T')">
+													<gco:DateTime>
+														<xsl:value-of select="$date"/>
+													</gco:DateTime>
+												</xsl:when>
+												<xsl:otherwise>
+													<gco:Date>
+														<xsl:value-of select="$date"/>
+													</gco:Date>
+												</xsl:otherwise>
+											</xsl:choose>
 										</gmd:date>
 										<gmd:dateType>
 											<gmd:CI_DateTypeCode
