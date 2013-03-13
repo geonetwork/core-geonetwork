@@ -1107,6 +1107,7 @@
       <xsl:variable name="relatedElementName" select="$helper/@rel"/>
       <xsl:variable name="relatedAttributeName" select="$helper/@relAtt"/>
       
+      
       <xsl:variable name="relatedElementAction">
         <xsl:if test="$relatedElementName!=''">
           <xsl:variable name="relatedElement"
@@ -1115,9 +1116,20 @@
             select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString/geonet:element/@ref"/>
           <xsl:variable name="relatedElementIsEmpty" select="normalize-space($relatedElement)=''"/>
           <!--<xsl:value-of select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value===&quot;&quot;) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/>-->
-          <xsl:value-of
-            select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
-          />
+          
+          <xsl:choose>
+            <!-- Layout with radio button -->
+            <xsl:when test="contains($mode, 'radio')">
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.title;')"
+              />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+              />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
       </xsl:variable>
       
@@ -1125,11 +1137,24 @@
         <xsl:if test="$relatedAttributeName!=''">
           <xsl:variable name="relatedAttributeRef"
             select="concat($refId, '_', $relatedAttributeName)"/>
-          <xsl:value-of
-            select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.options[this.selectedIndex].title;')"
-          />
+          
+          
+          <xsl:choose>
+            <!-- Layout with radio button -->
+            <xsl:when test="contains($mode, 'radio')">
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.title;')"
+              />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+              />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
       </xsl:variable>
+      
       
       
 
@@ -1142,7 +1167,8 @@
               <!-- Some helper may not contains values. That may be used to separate items.
               Don't put a radio in that case. -->
               <xsl:if test="@value">
-                <input class="md" type="radio" name="radio_{$refId}" id="radio_{$refId}{position()}" value="{@value}"
+                <input class="md" type="radio" name="radio_{$refId}" id="radio_{$refId}{position()}" 
+                  value="{@value}" title="{@title}"
                   onchange="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();">
                   <xsl:if test="@value=$value">
                     <xsl:attribute name="checked"/>
