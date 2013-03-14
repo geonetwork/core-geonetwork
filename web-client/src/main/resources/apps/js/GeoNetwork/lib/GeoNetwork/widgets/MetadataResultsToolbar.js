@@ -153,7 +153,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
  		   url: this.catalogue.services.mdSelect,
  		   success: function(response, opts) {
  			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
- 			  this.updateSelectionInfo(this.catalogue, numSelected);
+ 			  this.updateSelectionInfo(this.catalogue, parseInt(numSelected));
  		  },
  		  scope:this
  		});
