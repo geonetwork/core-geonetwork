@@ -130,7 +130,7 @@ public class SchemaManager {
 		this.defaultSchema = defaultSchema;
 		this.schemaPluginsCat = schemaPluginsCat;
 		
-		Element schemaPluginCatRoot = getSchemaPluginCatalog();
+		Element schemaPluginCatRoot = getSchemaPluginCatalogTemplate();
 
 		// -- check the plugin directory and add any schemas already in there
 		String[] saSchemas = new File(this.schemaPluginsDir).list();
@@ -988,6 +988,15 @@ public class SchemaManager {
 	private Element getSchemaPluginCatalog() throws Exception {
 		// -- open schemaPlugins catalog, get children named uri
         return Xml.loadFile(schemaPluginsCat);
+	}
+
+	/**
+    * Read the empty template for the schema plugins oasis catalog.
+    * @return
+    * @throws Exception
+    */
+	private Element getSchemaPluginCatalogTemplate() throws Exception {
+		return Xml.loadFile(basePath + FS + "WEB-INF" + FS + Geonet.File.SCHEMA_PLUGINS_CATALOG);
 	}
 
 
