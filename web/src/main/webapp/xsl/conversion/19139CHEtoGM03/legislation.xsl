@@ -8,7 +8,7 @@
                 exclude-result-prefixes="che gco gmd">
 
     <xsl:template mode="Legislation" match="che:CHE_MD_Legislation">
-        <GM03_2Comprehensive.Comprehensive.MD_Legislation TID='x{generate-id(.)}'>
+        <GM03_2_1Comprehensive.Comprehensive.MD_Legislation TID='x{generate-id(.)}'>
             <xsl:apply-templates mode="enumISO" select=".">
                 <xsl:with-param name="name">CodeISO.CountryCodeISO_</xsl:with-param>
                 <xsl:with-param name="element">country</xsl:with-param>
@@ -21,23 +21,23 @@
             <xsl:apply-templates mode="text" select="che:legislationType"/>
             <xsl:apply-templates mode="Legislation" select="che:internalReference"/>
             <xsl:apply-templates mode="Legislation" select="che:title"/>
-        </GM03_2Comprehensive.Comprehensive.MD_Legislation>
+        </GM03_2_1Comprehensive.Comprehensive.MD_Legislation>
     </xsl:template>
 
     <xsl:template mode="Legislation" match="che:title">
         <title REF="?">
-            <GM03_2Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+            <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
                 <xsl:apply-templates mode="RefSystem"/>
-            </GM03_2Comprehensive.Comprehensive.CI_Citation>
+            </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
         </title>
     </xsl:template>
 
     <xsl:template mode="Legislation" match="che:internalReference">
         <internalReference>
             <xsl:for-each select="gco:CharacterString">
-                <GM03_2Core.Core.CharacterString_>
+                <GM03_2_1Core.Core.CharacterString_>
                     <value><xsl:value-of select="."/></value>
-                </GM03_2Core.Core.CharacterString_>
+                </GM03_2_1Core.Core.CharacterString_>
             </xsl:for-each>
         </internalReference>
     </xsl:template>

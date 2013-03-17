@@ -137,7 +137,7 @@ public final class TransformationTestSupport {
     public static final File geonetworkWebapp = findWebappDir(data);
     public static final File toIsoStyleSheet = new File(geonetworkWebapp, "xsl/conversion/import/GM03-to-ISO19139CHE.xsl");
     public static final File toGm03StyleSheet = new File(geonetworkWebapp, "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
-    public static final File gm03Xsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2.xsd");
+    public static final File gm03Xsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd");
     public static final File isoXsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd");
 
     public static File transformGM03_1ToIso( File src, File outputDir ) throws Exception {

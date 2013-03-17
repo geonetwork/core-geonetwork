@@ -10,7 +10,7 @@
 
     <xsl:template mode="MaintenanceInfo" match="che:CHE_MD_MaintenanceInformation|gmd:MD_MaintenanceInformation">
         <xsl:param name="backRef"/>
-        <GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:maintenanceAndUpdateFrequency"/>
             <xsl:apply-templates mode="text" select="gmd:dateOfNextUpdate"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="gmd:userDefinedMaintenanceFrequency"/>
@@ -25,26 +25,26 @@
             <xsl:apply-templates mode="MaintenanceInfo" select="gmd:contact"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="che:historyConcept/che:CHE_MD_HistoryConcept"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="che:archiveConcept/che:CHE_MD_ArchiveConcept"/>
-        </GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformation>
+        </GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation>
     </xsl:template>
 
     <xsl:template mode="MaintenanceInfo" match="gmd:updateScopeDescription" >
-        <GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription TID="x{generate-id(.)}">
             <xsl:apply-templates mode="MaintenanceInfo" select="gmd:MD_ScopeDescription"/>            
             <BACK_REF name="MD_MaintenanceInformation"/>
-        </GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription>
+        </GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription>
     </xsl:template>
     
     <xsl:template mode="MaintenanceInfo" match="gmd:MD_ScopeDescription" >
         <updateScopeDescription REF="?">
-            <GM03_2Core.Core.MD_ScopeDescription  TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.MD_ScopeDescription  TID="x{generate-id(.)}">
                 <xsl:apply-templates mode="ObjRef" select="gmd:attributes"/>            
                 <xsl:apply-templates mode="ObjRef" select="gmd:feature"/>            
                 <xsl:apply-templates mode="ObjRef" select="gmd:featureInstances"/>            
                 <xsl:apply-templates mode="ObjRef" select="gmd:attributeInstances"/>            
                 <xsl:apply-templates mode="text" select="gmd:dataset"/>            
                 <xsl:apply-templates mode="text" select="gmd:other"/>            
-            </GM03_2Core.Core.MD_ScopeDescription>
+            </GM03_2_1Core.Core.MD_ScopeDescription>
         </updateScopeDescription>
     </xsl:template>
     
@@ -54,51 +54,51 @@
     </xsl:template>
     
     <xsl:template mode="MaintenanceInfo" match="che:historyConceptCitation" >
-        <GM03_2Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation TID="x{generate-id(.)}">
             <BACK_REF name="MD_HistoryConcept"/>
             <historyConceptCitation REF="?">
-               <GM03_2Comprehensive.Comprehensive.CI_Citation TID="x2{generate-id(.)}">
+               <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x2{generate-id(.)}">
                    <xsl:apply-templates mode="RefSystem"/>
-               </GM03_2Comprehensive.Comprehensive.CI_Citation>
+               </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
             </historyConceptCitation>
-        </GM03_2Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation>
+        </GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation>
     </xsl:template>
     
     <xsl:template mode="MaintenanceInfo" match="che:CHE_MD_HistoryConcept">
-        <GM03_2Comprehensive.Comprehensive.MD_HistoryConcept TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept TID="x{generate-id(.)}">
             <xsl:apply-templates mode="MaintenanceInfo" select="che:historyConceptCitation"/>
             <xsl:apply-templates mode="text" select="che:historyConceptURL"/>
             <BACK_REF name="MD_MaintenanceInformation"/>
-        </GM03_2Comprehensive.Comprehensive.MD_HistoryConcept>
+        </GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept>
     </xsl:template>
 
     <xsl:template mode="MaintenanceInfo" match="che:archiveConceptCitation">
-        <GM03_2Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation TID="x{generate-id(.)}">
             <BACK_REF name="MD_ArchiveConcept"/>
             <archiveConceptCitation REF="?">
-               <GM03_2Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+               <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
                    <xsl:apply-templates mode="RefSystem"/>
-               </GM03_2Comprehensive.Comprehensive.CI_Citation>
+               </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
             </archiveConceptCitation>
-        </GM03_2Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation>
+        </GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation>
     </xsl:template>
     
     <xsl:template mode="MaintenanceInfo" match="che:CHE_MD_ArchiveConcept">
-        <GM03_2Comprehensive.Comprehensive.MD_ArchiveConcept TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept TID="x{generate-id(.)}">
             <xsl:apply-templates mode="MaintenanceInfo" select="che:historyConceptCitation"/>
             <xsl:apply-templates mode="text" select="che:archiveConceptURL"/>
             <BACK_REF name="MD_MaintenanceInformation"/>
-        </GM03_2Comprehensive.Comprehensive.MD_ArchiveConcept>
+        </GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept>
     </xsl:template>
 
     <xsl:template mode="MaintenanceInfo" match="gmd:contact">
-        <GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformationcontact TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact TID="x{generate-id(.)}">
             <contact REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </contact>
             <BACK_REF name="MD_MaintenanceInformation"/>
             <xsl:apply-templates mode="RespPartyRole" select="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty"/>            
-        </GM03_2Comprehensive.Comprehensive.MD_MaintenanceInformationcontact>
+        </GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact>
     </xsl:template>
 
     <xsl:template mode="MaintenanceInfo" match="gmd:userDefinedMaintenanceFrequency">

@@ -14,9 +14,9 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:CHE_MD_DataIdentification|gmd:MD_DataIdentification">
-        <GM03_2Comprehensive.Comprehensive.MD_DataIdentification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification TID="x{util:randomId()}">
             <xsl:call-template name="dataIdentification"/>
-        </GM03_2Comprehensive.Comprehensive.MD_DataIdentification>
+        </GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification>
     </xsl:template>
 
     <xsl:template name="dataIdentification">
@@ -75,20 +75,20 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:aggregationInfo">
-        <GM03_2Comprehensive.Comprehensive.aggregationInfo_MD_Identification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification TID="x{util:randomId()}">
             <xsl:apply-templates mode="DataIdentification" select="gmd:MD_AggregateInformation"/>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Comprehensive.Comprehensive.aggregationInfo_MD_Identification>
+        </GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification>
     </xsl:template>
     
     <xsl:template mode="DataIdentification" match="gmd:MD_AggregateInformation">
         <aggregationInfo REF="?">
-            <GM03_2Comprehensive.Comprehensive.MD_AggregateInformation TID="x{util:randomId()}">
+            <GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:associationType"/>
             <xsl:apply-templates mode="text" select="gmd:initiativeType"/>
             <xsl:apply-templates mode="DataIdentification" select="gmd:aggregateDataSetIdentifier"/>
             <xsl:apply-templates mode="DataIdentification" select="gmd:aggregateDataSetName/CI_Citation"/>
-            </GM03_2Comprehensive.Comprehensive.MD_AggregateInformation>
+            </GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation>
         </aggregationInfo>
     </xsl:template>
     
@@ -99,21 +99,21 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:resourceSpecificUsage">
-        <GM03_2Comprehensive.Comprehensive.MD_Usage TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Usage TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:MD_Usage/gmd:usageDateTime"/>
             <xsl:apply-templates mode="text" select="gmd:MD_Usage/gmd:userDeterminedLimitations"/>
             <xsl:apply-templates mode="text" select="gmd:MD_Usage/gmd:specificUsage"/>
             <xsl:apply-templates mode="DataIdentification" select="gmd:MD_Usage/gmd:userContactInfo"/>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Comprehensive.Comprehensive.MD_Usage>
+        </GM03_2_1Comprehensive.Comprehensive.MD_Usage>
     </xsl:template>
     
     <xsl:template mode="DataIdentification" match="gmd:userContactInfo">
-        <GM03_2Comprehensive.Comprehensive.MD_UsageuserContactInfo TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo TID="x{util:randomId()}">
             <xsl:apply-templates mode="DataIdentification" select="che:CHE_CI_ResponsibleParty"/>
             <BACK_REF name="MD_Usage"/>
             <xsl:apply-templates mode="enum" select="che:CHE_CI_ResponsibleParty/gmd:role"/>
-        </GM03_2Comprehensive.Comprehensive.MD_UsageuserContactInfo>
+        </GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:CHE_CI_ResponsibleParty">
@@ -123,12 +123,12 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:graphicOverview">
-        <GM03_2Comprehensive.Comprehensive.MD_BrowseGraphic TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:MD_BrowseGraphic/gmd:fileName"/>
             <xsl:apply-templates mode="text" select="gmd:MD_BrowseGraphic/gmd:fileType"/>
             <xsl:apply-templates mode="text" select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Comprehensive.Comprehensive.MD_BrowseGraphic>
+        </GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:projectType">
@@ -138,23 +138,23 @@
     <xsl:template mode="DataIdentification" match="gmd:credit">
         <xsl:variable name="credit"><xsl:apply-templates mode="text" select="."/></xsl:variable>
         <credit>
-        <GM03_2Core.Core.CharacterString_>
+        <GM03_2_1Core.Core.CharacterString_>
             <value><xsl:value-of select="$credit"/></value>
-        </GM03_2Core.Core.CharacterString_>
+        </GM03_2_1Core.Core.CharacterString_>
         </credit>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:revision">
-        <GM03_2Comprehensive.Comprehensive.revisionMD_Identification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification TID="x{util:randomId()}">
             <revision REF="?">
                 <xsl:apply-templates mode="DataIdentification"/>
             </revision>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Comprehensive.Comprehensive.revisionMD_Identification>
+        </GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:CHE_MD_Revision">
-        <GM03_2Comprehensive.Comprehensive.MD_Revision TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Revision TID="x{util:randomId()}">
             <xsl:apply-templates mode="enum" select="che:revisionScope"/>
             <xsl:apply-templates mode="text" select="che:dateOfLastUpdate"/>
             <xsl:apply-templates mode="text" select="che:revisionNote"/>
@@ -162,20 +162,20 @@
             
             <xsl:apply-templates mode="DataIdentification" select="che:revisionScopeDescription"/>
             <xsl:apply-templates mode="DataIdentification" select="che:revisionContact"/>
-        </GM03_2Comprehensive.Comprehensive.MD_Revision>
+        </GM03_2_1Comprehensive.Comprehensive.MD_Revision>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:resourceConstraints|srv:restrictions">
-        <GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification TID="x{util:randomId()}">
             <resourceConstraints REF="?">
                 <xsl:apply-templates mode="DataIdentification"/>                
             </resourceConstraints>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
+        </GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_SecurityConstraints">
-        <GM03_2Comprehensive.Comprehensive.MD_SecurityConstraints TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints TID="x{util:randomId()}">
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">useLimitation</xsl:with-param>
             </xsl:apply-templates>
@@ -183,7 +183,7 @@
             <xsl:apply-templates mode="text" select="gmd:classificationSystem"/>
             <xsl:apply-templates mode="textGroup" select="gmd:userNote"/>
             <xsl:apply-templates mode="text" select="gmd:handlingDescription"/>
-        </GM03_2Comprehensive.Comprehensive.MD_SecurityConstraints>
+        </GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:classification">
@@ -193,7 +193,7 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="che:CHE_MD_LegalConstraints|gmd:MD_LegalConstraints">
-        <GM03_2Comprehensive.Comprehensive.MD_LegalConstraints TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints TID="x{util:randomId()}">
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">useLimitation</xsl:with-param>
             </xsl:apply-templates><!--
@@ -208,15 +208,15 @@
                 <xsl:with-param name="element">otherConstraints</xsl:with-param>
             </xsl:apply-templates>
             <xsl:apply-templates mode="DataIdentification" select="che:legislationConstraints"/>
-        </GM03_2Comprehensive.Comprehensive.MD_LegalConstraints>
+        </GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints>
     </xsl:template>
     
     <xsl:template mode="DataIdentification" match="gmd:MD_Constraints">
-        <GM03_2Comprehensive.Comprehensive.MD_Constraints TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Constraints TID="x{util:randomId()}">
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">useLimitation</xsl:with-param>
             </xsl:apply-templates>
-        </GM03_2Comprehensive.Comprehensive.MD_Constraints>
+        </GM03_2_1Comprehensive.Comprehensive.MD_Constraints>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:resourceMaintenance">
@@ -226,11 +226,11 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Resolution">
-        <GM03_2Core.Core.MD_Resolution TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.MD_Resolution TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:distance"/>
             <BACK_REF name="MD_DataIdentification"/>
             <xsl:apply-templates mode="DataIdentification" select="gmd:equivalentScale"/>
-        </GM03_2Core.Core.MD_Resolution>
+        </GM03_2_1Core.Core.MD_Resolution>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:equivalentScale">
@@ -240,68 +240,68 @@
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_RepresentativeFraction">
-        <GM03_2Core.Core.MD_RepresentativeFraction TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.MD_RepresentativeFraction TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:denominator"/>
-        </GM03_2Core.Core.MD_RepresentativeFraction>
+        </GM03_2_1Core.Core.MD_RepresentativeFraction>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:descriptiveKeywords">
-        <GM03_2Core.Core.descriptiveKeywordsMD_Identification TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.descriptiveKeywordsMD_Identification TID="x{util:randomId()}">
             <descriptiveKeywords REF='?'>
                 <xsl:apply-templates mode="DataIdentification" select="gmd:MD_Keywords"/>
             </descriptiveKeywords>
             <BACK_REF name="MD_Identification"/>
-        </GM03_2Core.Core.descriptiveKeywordsMD_Identification>
+        </GM03_2_1Core.Core.descriptiveKeywordsMD_Identification>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Keywords">
-        <GM03_2Core.Core.MD_Keywords TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.MD_Keywords TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:type"/>
             <!--<xsl:apply-templates mode="text" select="gmd:keyword"/>-->
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">keyword</xsl:with-param>
             </xsl:apply-templates>
             <xsl:apply-templates mode="DataIdentification" select="gmd:thesaurusName"/>
-        </GM03_2Core.Core.MD_Keywords>
+        </GM03_2_1Core.Core.MD_Keywords>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="gmd:thesaurusName">
     	<thesaurus REF='?'>
-	        <GM03_2Core.Core.MD_Thesaurus TID="x{util:randomId()}">
+	        <GM03_2_1Core.Core.MD_Thesaurus TID="x{util:randomId()}">
 	            <citation REF="?">
 	            	<xsl:apply-templates mode="DataIdentification" select="gmd:CI_Citation"/>
 	            </citation>
-	        </GM03_2Core.Core.MD_Thesaurus>
+	        </GM03_2_1Core.Core.MD_Thesaurus>
         </thesaurus>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:resourceFormat">
-        <GM03_2Comprehensive.Comprehensive.resourceFormatMD_Identification TID='x{util:randomId()}'>
+        <GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification TID='x{util:randomId()}'>
             <resourceFormat REF='?'>
                 <xsl:apply-templates mode="DataIdentification"/>
             </resourceFormat>
             <BACK_REF name="MD_Identification"/>
-      </GM03_2Comprehensive.Comprehensive.resourceFormatMD_Identification>
+      </GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Format">
-        <GM03_2Comprehensive.Comprehensive.MD_Format TID='x{util:randomId()}'>
+        <GM03_2_1Comprehensive.Comprehensive.MD_Format TID='x{util:randomId()}'>
             <xsl:apply-templates mode="text" select="gmd:name"/>
             <xsl:apply-templates mode="text" select="gmd:version"/>
             <xsl:apply-templates mode="text" select="gmd:amendmentNumber"/>
             <xsl:apply-templates mode="text" select="gmd:specification"/>
             <xsl:apply-templates mode="text" select="gmd:fileDecompressionTechnique"/>
             <xsl:apply-templates mode="DataIdentification" select="gmd:formatDistributor"/>
-      </GM03_2Comprehensive.Comprehensive.MD_Format>
+      </GM03_2_1Comprehensive.Comprehensive.MD_Format>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:pointOfContact">
-        <GM03_2Core.Core.MD_IdentificationpointOfContact TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.MD_IdentificationpointOfContact TID="x{util:randomId()}">
             <pointOfContact REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </pointOfContact>
             <BACK_REF name="MD_Identification"/>
             <xsl:apply-templates mode="RespPartyRole" select="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty"/>            
-        </GM03_2Core.Core.MD_IdentificationpointOfContact>
+        </GM03_2_1Core.Core.MD_IdentificationpointOfContact>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:topicCategory">
@@ -312,9 +312,9 @@
 		    	normalize-space(.) = 'geoscientificInformation' or
 		    	normalize-space(.) = 'environment'"></xsl:when>
     		<xsl:otherwise>
-		        <GM03_2Core.Core.MD_TopicCategoryCode_>
+		        <GM03_2_1Core.Core.MD_TopicCategoryCode_>
 		          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
-		        </GM03_2Core.Core.MD_TopicCategoryCode_>
+		        </GM03_2_1Core.Core.MD_TopicCategoryCode_>
     		</xsl:otherwise>
 		</xsl:choose>
     </xsl:template>
@@ -357,16 +357,16 @@
 
     
     <xsl:template mode="DataIdentification" match="gmd:CI_Citation">
-        <GM03_2Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
             <xsl:apply-templates mode="RefSystem" select=".">
                 <xsl:with-param name="showIdentifier" select="false()"/>
             </xsl:apply-templates>
             <xsl:apply-templates mode="DataIdentification" select="gmd:identifier"/>
-        </GM03_2Comprehensive.Comprehensive.CI_Citation>
+        </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:identifier">
-        <GM03_2Comprehensive.Comprehensive.CI_Citationidentifier TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier TID="x{util:randomId()}">
             <identifier REF='?'>
                 <xsl:choose>
                 <xsl:when test="gmd:RS_Identifier">
@@ -378,19 +378,19 @@
                 </xsl:choose>
             </identifier>
             <BACK_REF name="CI_Citation"/>
-        </GM03_2Comprehensive.Comprehensive.CI_Citationidentifier>
+        </GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier>
     </xsl:template>
 
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Identifier">
-        <GM03_2Core.Core.MD_Identifier TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.MD_Identifier TID="x{util:randomId()}">
             <xsl:apply-templates mode="textGroup" select="gmd:code"/>
-        </GM03_2Core.Core.MD_Identifier>
+        </GM03_2_1Core.Core.MD_Identifier>
     </xsl:template>
 
 
     <xsl:template mode="DataIdentification" match="che:CHE_SV_ServiceIdentification">
-        <GM03_2Comprehensive.Comprehensive.SV_ServiceIdentification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification TID="x{util:randomId()}">
             <xsl:call-template name="dataIdentification" />
             <xsl:apply-templates mode="DataIdentification" select="srv:credit"/>
             <xsl:apply-templates mode="DataIdentification" select="srv:inspireServiceType"/>
@@ -406,86 +406,86 @@
             </xsl:if>
             <xsl:apply-templates mode="DataIdentification" select="srv:serviceType"/>
             <xsl:apply-templates mode="DataIdentification" select="srv:containsOperations"/>
-        </GM03_2Comprehensive.Comprehensive.SV_ServiceIdentification>
+        </GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:couplingType">
             <couplingType><xsl:value-of select="srv:SV_CouplingType/@codeListValue"/></couplingType>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:operatesOn">
         <operatesOn>
-          <GM03_2Core.Core.CharacterString_>
+          <GM03_2_1Core.Core.CharacterString_>
             <value><xsl:value-of select="./@uuidref"/></value>
-          </GM03_2Core.Core.CharacterString_>
+          </GM03_2_1Core.Core.CharacterString_>
         </operatesOn>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:serviceType">
         <serviceType>
-            <GM03_2Comprehensive.Comprehensive.gml_CodeType>
+            <GM03_2_1Comprehensive.Comprehensive.gml_CodeType>
                 <code><xsl:value-of select="gco:LocalName"/></code>
                 <xsl:apply-templates mode="text" select="codeSpace"/>
-            </GM03_2Comprehensive.Comprehensive.gml_CodeType>
+            </GM03_2_1Comprehensive.Comprehensive.gml_CodeType>
         </serviceType>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:SV_CoupledResource">
-        <GM03_2Comprehensive.Comprehensive.SV_CoupledResource>
+        <GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource>
             <xsl:apply-templates mode="text" select="srv:identifier"/>
             <xsl:apply-templates mode="text" select="srv:operationName"/>
             <xsl:apply-templates mode="text" select="gco:ScopedName"/>
-        </GM03_2Comprehensive.Comprehensive.SV_CoupledResource>
+        </GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:containsOperations">
-        <GM03_2Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification TID="x{util:randomId()}">
             <containsOperations REF="?">
                 <xsl:apply-templates mode="DataIdentification"/>
             </containsOperations>
             <BACK_REF name="SV_ServiceIdentification"/>
-        </GM03_2Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification>
+        </GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification>
     </xsl:template>
     <xsl:template mode="DataIdentification" match="srv:SV_OperationMetadata">
-        <GM03_2Comprehensive.Comprehensive.SV_OperationMetadata TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata TID="x{util:randomId()}">
 	            <xsl:apply-templates mode="text" select="srv:operationName"/>
 	            <xsl:apply-templates mode="DataIdentification" select="srv:DCP"/>
 	            <xsl:apply-templates mode="text" select="srv:invocationName"/>
                 <xsl:apply-templates mode="textGroup" select="srv:operationDescription"/>
                 <xsl:apply-templates mode="DataIdentification" select="srv:connectPoint"/>
-        </GM03_2Comprehensive.Comprehensive.SV_OperationMetadata>
+        </GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="srv:connectPoint">
-        <GM03_2Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint TID="x{util:randomId()}">
             <BACK_REF name="SV_OperationMetadata"/>
             <connectPoint REF="?">
                 <xsl:apply-templates mode="distribution"><xsl:with-param name="backRef">false</xsl:with-param></xsl:apply-templates>
             </connectPoint>
-        </GM03_2Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint>
+        </GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint>
     </xsl:template>
 
     <xsl:template mode="DataIdentification" match="srv:DCP">
     <DCP>
-        <GM03_2Comprehensive.Comprehensive.DCPList_>
+        <GM03_2_1Comprehensive.Comprehensive.DCPList_>
 	        <xsl:for-each select="*">
 	            <value><xsl:value-of select="@codeListValue"/></value>
 	        </xsl:for-each>
-        </GM03_2Comprehensive.Comprehensive.DCPList_>
+        </GM03_2_1Comprehensive.Comprehensive.DCPList_>
     </DCP>
     </xsl:template>
     
     <xsl:template mode="DataIdentification" match="srv:extent">
-        <GM03_2Comprehensive.Comprehensive.extentSV_ServiceIdentification TID="x{util:randomId()}">
+        <GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification TID="x{util:randomId()}">
         <extent REF="?">
             <xsl:apply-templates mode="DataIdentification" select="gmd:EX_Extent"/>
         </extent>
             <BACK_REF name="SV_ServiceIdentification"/>
-        </GM03_2Comprehensive.Comprehensive.extentSV_ServiceIdentification>
+        </GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification>
     </xsl:template>
     
     <xsl:template mode="DataIdentification" match="gmd:EX_Extent">
-        <GM03_2Core.Core.EX_Extent TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.EX_Extent TID="x{util:randomId()}">
             <xsl:apply-templates mode="textGroup" select="gmd:description"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:temporalElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:verticalElement"/>
-        </GM03_2Core.Core.EX_Extent>
+        </GM03_2_1Core.Core.EX_Extent>
     </xsl:template>
 
 

@@ -16,37 +16,37 @@
     </xsl:template>
     
     <xsl:template mode="Extent" match="gmd:EX_Extent">
-        <GM03_2Core.Core.EX_Extent TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_Extent TID="x{generate-id(.)}">
             <xsl:apply-templates mode="textGroup" select="gmd:description"/>
             <BACK_REF name="MD_DataIdentification"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:temporalElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:verticalElement"/>
-        </GM03_2Core.Core.EX_Extent>
+        </GM03_2_1Core.Core.EX_Extent>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:geographicElement">
-        <GM03_2Core.Core.EX_ExtentgeographicElement TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{generate-id(.)}">
             <BACK_REF name="EX_Extent"/>
             <geographicElement REF="?">
                 <xsl:apply-templates mode="Extent"/>
             </geographicElement>
-        </GM03_2Core.Core.EX_ExtentgeographicElement>
+        </GM03_2_1Core.Core.EX_ExtentgeographicElement>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:temporalElement">
-        <GM03_2Core.Core.EX_ExtenttemporalElement TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_ExtenttemporalElement TID="x{generate-id(.)}">
             <BACK_REF name="EX_Extent"/>
             <temporalElement REF="?">
-	            <GM03_2Core.Core.EX_TemporalExtent TID="x{util:randomId()}">
+	            <GM03_2_1Core.Core.EX_TemporalExtent TID="x{util:randomId()}">
 		            <extent>
-		                <GM03_2Core.Core.TM_Primitive>
+		                <GM03_2_1Core.Core.TM_Primitive>
 		                    <xsl:apply-templates mode="TimePeriod"/>
-		                </GM03_2Core.Core.TM_Primitive>
+		                </GM03_2_1Core.Core.TM_Primitive>
 		            </extent>
-	            </GM03_2Core.Core.EX_TemporalExtent>
+	            </GM03_2_1Core.Core.EX_TemporalExtent>
             </temporalElement>
-        </GM03_2Core.Core.EX_ExtenttemporalElement>
+        </GM03_2_1Core.Core.EX_ExtenttemporalElement>
     </xsl:template>
     
     <xsl:template mode="TimePeriod" match="gml:begin">
@@ -61,20 +61,20 @@
             <xsl:apply-templates mode="explode-multipolygons" />
         </xsl:variable>
         <xsl:for-each select="$exploded/gmd:geographicElement">
-            <GM03_2Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
+            <GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
                 <BACK_REF name="EX_Extent"/>
                 <geographicElement REF="?">
                     <xsl:apply-templates mode="Extent"/>
                 </geographicElement>
-            </GM03_2Core.Core.EX_ExtentgeographicElement>
+            </GM03_2_1Core.Core.EX_ExtentgeographicElement>
         </xsl:for-each>
     </xsl:template>
     
     <xsl:template mode="Extent" match="gmd:EX_BoundingPolygon">
-        <GM03_2Core.Core.EX_BoundingPolygon TID="x{util:randomId()}">
+        <GM03_2_1Core.Core.EX_BoundingPolygon TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="Extent" select="gmd:polygon"/>
-        </GM03_2Core.Core.EX_BoundingPolygon>
+        </GM03_2_1Core.Core.EX_BoundingPolygon>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:polygon">
@@ -82,20 +82,20 @@
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_GeographicBoundingBox">
-        <GM03_2Core.Core.EX_GeographicBoundingBox TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_GeographicBoundingBox TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="text" select="gmd:northBoundLatitude"/>
             <xsl:apply-templates mode="text" select="gmd:southBoundLatitude"/>
             <xsl:apply-templates mode="text" select="gmd:eastBoundLongitude"/>
             <xsl:apply-templates mode="text" select="gmd:westBoundLongitude"/>
-        </GM03_2Core.Core.EX_GeographicBoundingBox>
+        </GM03_2_1Core.Core.EX_GeographicBoundingBox>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_GeographicDescription">
-        <GM03_2Core.Core.EX_GeographicDescription TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_GeographicDescription TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicIdentifier"/>
-        </GM03_2Core.Core.EX_GeographicDescription>
+        </GM03_2_1Core.Core.EX_GeographicDescription>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:geographicIdentifier">
@@ -105,10 +105,10 @@
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:MD_Identifier">
-        <GM03_2Core.Core.MD_Identifier TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_Identifier TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:code"/>
             <xsl:apply-templates mode="Extent" select="gmd:authority"/>
-        </GM03_2Core.Core.MD_Identifier>
+        </GM03_2_1Core.Core.MD_Identifier>
     </xsl:template>
 
     <xsl:template mode="Extent" match="*" priority="-100">
