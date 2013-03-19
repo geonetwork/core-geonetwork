@@ -176,7 +176,6 @@ public class Reject implements Service
                 }
             }
 
-
             metadataRecord.commit(dbms, context);
         }
         

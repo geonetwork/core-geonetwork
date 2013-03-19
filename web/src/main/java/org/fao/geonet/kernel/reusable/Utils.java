@@ -434,7 +434,7 @@ public final class Utils {
     }
 
     public static String translate( String appPath, String langCode, String key, String separator ) throws IOException, JDOMException {
-        String[] translations = {LangUtils.translate(appPath, "deu", key, ""), LangUtils.translate(appPath, "fra", key, ""),
+        String[] translations = {LangUtils.translate(appPath, "ger", key, ""), LangUtils.translate(appPath, "fre", key, ""),
                 LangUtils.translate(appPath, "eng", key, ""), LangUtils.translate(appPath, "ita", key, "")};
 
         StringBuilder result = new StringBuilder();
