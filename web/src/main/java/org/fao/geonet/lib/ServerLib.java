@@ -55,7 +55,10 @@ public class ServerLib
 		
 		InputStream stream = servletContext.getResourceAsStream(SERVER_PROPS);
 		if (stream == null) {
-			stream = new FileInputStream(appPath + SERVER_PROPS);
+			stream = servletContext.getResourceAsStream(SERVER_PROPS.replace("/",File.separator));
+			if(stream == null) {
+				stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
+			}
 		}
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 		
@@ -93,7 +96,7 @@ public class ServerLib
 	private String     appPath;
 	private Properties serverProps;
 
-	private static final String SERVER_PROPS = File.separator + "WEB-INF" + File.separator + "server.prop";
+	private static final String SERVER_PROPS = "/WEB-INF/server.prop";
 }
 
 //=============================================================================

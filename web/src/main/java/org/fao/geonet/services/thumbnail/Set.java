@@ -140,6 +140,9 @@ public class Set implements Service
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 
+			if(outFile.exists() && !outFile.delete()) {
+				throw new Exception("Unable to overwrite existing file: "+outFile);
+			}
 			try {
 				FileUtils.moveFile(inFile, outFile);
 			} catch (Exception e) {
