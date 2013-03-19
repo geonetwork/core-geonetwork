@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 # resolve links - so that script can be called from any dir
 PRG="$0"
 
