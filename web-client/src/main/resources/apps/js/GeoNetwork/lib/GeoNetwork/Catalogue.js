@@ -364,7 +364,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             xmlError: serviceUrl + 'xml.main.error',
             searchKeyword: serviceUrl + 'xml.search.keywords',
             getThesaurus: serviceUrl + 'xml.thesaurus.getList',
-            getStatus: serviceUrl + 'xml.metadata.status.values.list',
+            getStatus: serviceUrl + 'xml.info?type=status',
             getKeyword: serviceUrl + 'xml.keyword.get',
             searchCRS: serviceUrl + 'crs.search',
             getCRSTypes: serviceUrl + 'crs.types',
