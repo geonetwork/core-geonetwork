@@ -94,7 +94,7 @@ public class Unset implements Service
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"));
+		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"), true);
 		
 		
 		File thumbnail = new File(file);
