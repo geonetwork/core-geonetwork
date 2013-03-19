@@ -238,7 +238,7 @@ public class ConfigurationOverrides {
         for (Element file : files) {
             String expectedfileName = file.getAttributeValue(FILE_NAME_ATT_NAME);
 
-            if (Pattern.matches(expectedfileName, configFilePath)) {
+            if (Pattern.matches(expectedfileName, configFilePath.replace(File.separator, "/"))) {
             	Log.info(Log.JEEVES, "Overrides being applied to configuration file: " + expectedfileName);
 
                 List<Element> elements = file.getChildren();
