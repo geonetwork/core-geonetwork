@@ -30,7 +30,7 @@ Ext.namespace('GeoNetwork.data');
  *  A pre-configured `Ext.data.JsonStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
  *  for GeoNetwork metadata status including labels in different language.
  *
- *  :param url: ``String`` Usually the xml.metadata.status.values.list service URL. 
+ *  :param url: ``String`` Usually the xml.info?type=status service URL. 
  *              See `xml.info service description <../../../developers/xml_services/services_general.html#xml-info>`_ 
  *              for mode information.
  *  
@@ -65,10 +65,11 @@ GeoNetwork.data.StatusStore = function(url){
             url: url,
             disableCaching: false
         }),
-        record: 'record',
+        record: 'status',
         idPath: 'id',
         fields: [{
-            name: 'id'
+            name: 'id',
+						mapping: '@id'
         }, {
             name: 'name'
         }, {
