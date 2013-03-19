@@ -19,31 +19,11 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			
-			<!-- EMODNET <gmd:fileIdentifier>
+			<gmd:fileIdentifier>
 				<gco:CharacterString>
 					<xsl:value-of select="/root/env/uuid"/>
 				</gco:CharacterString>
-				</gmd:fileIdentifier>-->
-			<xsl:choose>
-				<xsl:when test="gmd:hierarchyLevelName/gmx:Anchor">
-					<gmd:fileIdentifier>
-						<gco:CharacterString>
-							SDN:<xsl:value-of select="substring(gmd:hierarchyLevelName/gmx:Anchor/@xlink:href,45)"/>:<xsl:value-of select="normalize-space(substring(substring-before(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']/gmd:organisationName/gco:CharacterString,'='),11))"/>:<xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
-						</gco:CharacterString>
-					</gmd:fileIdentifier>
-				</xsl:when>
-				<xsl:when test="gmd:fileIdentifier">
-					<xsl:copy-of select="gmd:fileIdentifier"/>
-				</xsl:when>
-				<xsl:when test="/root/env/uuid!=''">
-					<gmd:fileIdentifier>
-						<gco:CharacterString>
-							<xsl:value-of select="/root/env/uuid"/>
-						</gco:CharacterString>
-					</gmd:fileIdentifier>
-				</xsl:when>
-			</xsl:choose>
-			
+			</gmd:fileIdentifier>
 			
 			<xsl:apply-templates select="gmd:language"/>
 			<xsl:apply-templates select="gmd:characterSet"/>

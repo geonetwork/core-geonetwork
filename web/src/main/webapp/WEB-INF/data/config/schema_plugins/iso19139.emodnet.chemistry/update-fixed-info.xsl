@@ -6,7 +6,23 @@
 	exclude-result-prefixes="#all">
 
 	<xsl:include href="../iso19139/convert/functions.xsl"/>
-
+	
+	<xsl:variable name="computeMetadataUuid">
+		<xsl:if test="/root/gmd:MD_Metadata/gmd:hierarchyLevelName/gmx:Anchor and 
+			normalize-space(/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification
+			/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString) != ''">
+			<xsl:value-of select="concat(
+				'SDN:',
+				substring(/root/gmd:MD_Metadata/gmd:hierarchyLevelName/gmx:Anchor/@xlink:href,45),
+				':',
+				normalize-space(substring(substring-before(/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification
+				/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']
+				/gmd:organisationName/gco:CharacterString,'='),11)),
+				/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+				gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString)"/>
+		</xsl:if>
+	</xsl:variable>
+	
 	<!-- ================================================================= -->
 
 	<xsl:template match="/root">
@@ -19,21 +35,14 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			
-			<!-- EMODNET <gmd:fileIdentifier>
-				<gco:CharacterString>
-					<xsl:value-of select="/root/env/uuid"/>
-				</gco:CharacterString>
-				</gmd:fileIdentifier>-->
+			<!-- EMODNET -->
 			<xsl:choose>
-				<xsl:when test="gmd:hierarchyLevelName/gmx:Anchor">
+				<xsl:when test="normalize-space($computeMetadataUuid) != ''">
 					<gmd:fileIdentifier>
 						<gco:CharacterString>
-							SDN:<xsl:value-of select="substring(gmd:hierarchyLevelName/gmx:Anchor/@xlink:href,45)"/>:<xsl:value-of select="normalize-space(substring(substring-before(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']/gmd:organisationName/gco:CharacterString,'='),11))"/>:<xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+							<xsl:value-of select="$computeMetadataUuid"/>
 						</gco:CharacterString>
 					</gmd:fileIdentifier>
-				</xsl:when>
-				<xsl:when test="gmd:fileIdentifier">
-					<xsl:copy-of select="gmd:fileIdentifier"/>
 				</xsl:when>
 				<xsl:when test="/root/env/uuid!=''">
 					<gmd:fileIdentifier>
@@ -416,6 +425,20 @@
 
 
 	<!-- EMODNET -->
+	<!-- Update local thumbnail URL because that profil may have updated UUID according to metadata content -->
+	<xsl:template match="gmd:MD_BrowseGraphic[
+		contains(gmd:fileName/gco:CharacterString, 'resources.get')]">
+		<gmd:MD_BrowseGraphic>
+			<gmd:fileName>
+				<xsl:variable name="fileName" select="substring-after(gmd:fileName/gco:CharacterString, 'fname=')"/>
+				<gco:CharacterString>
+					<xsl:value-of select="concat(/root/env/siteURL,'/resources.get?uuid=', $computeMetadataUuid ,'&amp;fname=', $fileName)"/>
+				</gco:CharacterString>
+			</gmd:fileName>
+			<xsl:copy-of select="*[name(.) != 'gmd:fileName']"/>
+		</gmd:MD_BrowseGraphic>
+	</xsl:template>
+	
 	
 	<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle" priority="2">
 		<xsl:copy>
