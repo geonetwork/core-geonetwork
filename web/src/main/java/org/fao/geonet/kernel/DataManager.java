@@ -2125,7 +2125,7 @@ public class DataManager {
      * @param file
      * @throws Exception
      */
-	public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file) throws Exception {
+	public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
 		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
@@ -2141,7 +2141,7 @@ public class DataManager {
 		env.addContent(new Element("port").setText(port));
 		env.addContent(new Element("baseUrl").setText(baseUrl));
 		
-		manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
 	}
 
     /**
@@ -2151,10 +2151,10 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small) throws Exception {
+	public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, boolean indexAfterChange) throws Exception {
 		Element env = new Element("env");
 
-		manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL);
+		manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL, indexAfterChange);
 	}
 
     /**
@@ -2164,10 +2164,11 @@ public class DataManager {
      * @param small
      * @param env
      * @param styleSheet
+     * @param indexAfterChange 
      * @throws Exception
      */
 	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
-										  String styleSheet) throws Exception {
+										  String styleSheet, boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
@@ -2181,7 +2182,7 @@ public class DataManager {
 		//--- setup environment
 		String type = small ? "thumbnail" : "large_thumbnail";
 		env.addContent(new Element("type").setText(type));
-		transformMd(dbms,context,id,md,env,schema,styleSheet);
+		transformMd(dbms,context,id,md,env,schema,styleSheet, indexAfterChange);
 	}
 
     /**
@@ -2193,9 +2194,10 @@ public class DataManager {
      * @param env
      * @param schema
      * @param styleSheet
+     * @param indexAfterChange 
      * @throws Exception
      */
-	private void transformMd(Dbms dbms, ServiceContext context, String id, Element md, Element env, String schema, String styleSheet) throws Exception {
+	private void transformMd(Dbms dbms, ServiceContext context, String id, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
 		
 		if(env.getChild("host")==null){
 			String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
@@ -2222,11 +2224,13 @@ public class DataManager {
         
 		xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
 
-        // Notifies the metadata change to metatada notifier service
-        notifyMetadataChange(dbms, md, id);
+        if (indexAfterChange) {
+            // Notifies the metadata change to metatada notifier service
+            notifyMetadataChange(dbms, md, id);
 
-		//--- update search criteria
-        indexInThreadPoolIfPossible(dbms,id);
+            //--- update search criteria
+            indexInThreadPoolIfPossible(dbms,id);
+        }
 	}
 
     /**
@@ -2293,7 +2297,7 @@ public class DataManager {
 		md.detach();
 
 		String schema = getMetadataSchema(dbms, id);
-		transformMd(dbms,context,id,md,env,schema,styleSheet);
+		transformMd(dbms,context,id,md,env,schema,styleSheet,true);
 	}
 
 	//--------------------------------------------------------------------------
