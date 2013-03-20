@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -52,15 +53,16 @@ import java.util.Map;
 public class HarvestManager
 {
 	//---------------------------------------------------------------------------
-	//---
+	//---              searchProfiles
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestManager(ServiceContext context, SettingManager sm, DataManager dm) throws Exception
+	public HarvestManager(ServiceContext context, GeonetContext gc, SettingManager sm, DataManager dm) throws Exception
 	{
 		this.context = context;
-
+        this.readOnly = gc.isReadOnly();
+        System.out.println("HarvesterManager initalizing, READONLYMODE is " + this.readOnly);
 		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
 		settingMan = sm;
 		dataMan    = dm;
@@ -308,30 +310,48 @@ public class HarvestManager
 	//---------------------------------------------------------------------------
 
 	public OperResult run(Dbms dbms, String id) throws SQLException, SchedulerException {
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
-            Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id : "+ id);
+        // READONLYMODE
+        if(!this.readOnly) {
+            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+                Log.debug(Geonet.HARVEST_MAN, "Running harvesting with id: "+ id);
+            }
+            AbstractHarvester ah = hmHarvesters.get(id);
 
-		AbstractHarvester ah = hmHarvesters.get(id);
+            if (ah == null)
+                return OperResult.NOT_FOUND;
 
-		if (ah == null)
-			return OperResult.NOT_FOUND;
-
-		return ah.run(dbms);
+            return ah.run(dbms);
+        }
+        else {
+            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
+                Log.debug(Geonet.HARVEST_MAN, "GeoNetwork is running in read-only mode: skipping run of harvester with id: "+ id);
+            }
+            return null;
+        }
 	}
 
 	//---------------------------------------------------------------------------
 
-	public OperResult invoke(ResourceManager resourceManager, String id)
-	{
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
-            Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id : "+ id);
+	public OperResult invoke(ResourceManager resourceManager, String id) {
+        // READONLYMODE
+        if(!this.readOnly) {
+            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+                Log.debug(Geonet.HARVEST_MAN, "Invoking harvester with id: "+ id);
+            }
 
-		AbstractHarvester ah = hmHarvesters.get(id);
+            AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (ah == null)
-			return OperResult.NOT_FOUND;
+            if (ah == null)
+                return OperResult.NOT_FOUND;
 
-		return ah.invoke(resourceManager);
+            return ah.invoke(resourceManager);
+        }
+        else {
+            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
+                Log.debug(Geonet.HARVEST_MAN, "GeoNetwork is running in read-only mode: skipping invocation of harvester with id: "+ id);
+            }
+            return null;
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -367,7 +387,16 @@ public class HarvestManager
 		hmHarvesters.get(id).addInfo(node);
 	}
 
-	//---------------------------------------------------------------------------
+    public boolean isReadOnly() {
+        System.out.println("HarvestManager: readOnly is " + readOnly);
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        System.out.println("HarvestManager setting readOnly to " + readOnly);
+        this.readOnly = readOnly;
+    }
+//---------------------------------------------------------------------------
 	//---
 	//--- Vars
 	//---
@@ -377,10 +406,8 @@ public class HarvestManager
 	private SettingManager settingMan;
 	private DataManager    dataMan;
 	private ServiceContext context;
+    private boolean readOnly;
 
 	private HashMap<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
 	private HashMap<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
 }
-
-//=============================================================================
-

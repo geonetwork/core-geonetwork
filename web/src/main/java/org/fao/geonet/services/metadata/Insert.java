@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -45,13 +46,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//=============================================================================
-
-/** Inserts a new metadata to the system (data is validated)
-  */
-
-public class Insert implements Service
-{
+/**
+ * Inserts a new metadata to the system (data is validated).
+ */
+public class Insert extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -71,7 +69,7 @@ public class Insert implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -174,7 +172,3 @@ public class Insert implements Service
 			fixNamespace((Element) o, ns);
 	}
 }
-
-//=============================================================================
-
-

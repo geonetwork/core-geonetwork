@@ -495,7 +495,10 @@ public class Geonet {
 		public static final String RESOURCES_DIR = "resources";
 		public static final String SYSTEM_DATA_DIR = "geonetworkDataDir";
 		public static final String HIDE_WITHHELD_ELEMENTS = "hidewithheldelements";
-	}
+        public static final String DB_HEARTBEAT_ENABLED = "DBHeartBeatEnabled";
+        public static final String DB_HEARTBEAT_INITIALDELAYSECONDS = "DBHeartBeatInitialDelaySeconds";
+        public static final String DB_HEARTBEAT_FIXEDDELAYSECONDS = "DBHeartBeatFixedDelaySeconds";
+    }
 
     /**
      * Container for element values.

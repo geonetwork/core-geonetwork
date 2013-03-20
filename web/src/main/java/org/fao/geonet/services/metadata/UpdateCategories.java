@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * Stores all operations allowed for a metadata. Called by the metadata.admin service.
  */
-public class UpdateCategories implements Service {
+public class UpdateCategories extends NotInReadOnlyModeService {
 
     /**
      *
@@ -57,7 +58,7 @@ public class UpdateCategories implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();

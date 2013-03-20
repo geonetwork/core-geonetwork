@@ -24,14 +24,13 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashMap;
@@ -39,68 +38,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-//=============================================================================
-
-/** 
+/**
  * A simple service that returns a small report
  * about children update process. 
  *
  * @author m.coudert
  */
+public class UpdateChildren extends NotInReadOnlyModeService {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-public class UpdateChildren implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    public void init(String appPath, ServiceConfig params) throws Exception
+    {}
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{}
+    //--------------------------------------------------------------------------
+    //---
+    //--- API
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API
-	//---
-	//--------------------------------------------------------------------------
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
+    {
+        String parentUuid = Util.getParam(params,"parentUuid");
+        String childrenIds = Util.getParam(params, "childrenIds");
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String parentUuid = Util.getParam(params,"parentUuid");
-		String childrenIds = Util.getParam(params, "childrenIds");
+        // Transform params element into Map<String, String> for xsl transformation
+        List<Element> lstParams = params.getChildren();
+        Map<String, String> parameters = new HashMap<String, String>();
+        for (Element param : lstParams) {
+            parameters.put(param.getName(), param.getTextTrim());
+        }
 
-		// Transform params element into Map<String, String> for xsl transformation
-		List<Element> lstParams = params.getChildren();
-		Map<String, String> parameters = new HashMap<String, String>();
-		for (Element param : lstParams) {
-			parameters.put(param.getName(), param.getTextTrim());
-		}
-		
-		// Handle children IDs.
-		String[] children = childrenIds.split(",");
-		
-		// Update children
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
+        // Handle children IDs.
+        String[] children = childrenIds.split(",");
 
-		Set<String> untreatedChildren = dm.updateChildren(context, parentUuid, children, parameters);
-		
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		int treatedChildren = children.length;
-		String untreatedReport = "";
-		if (untreatedChildren.size() != 0) {
-			treatedChildren = children.length - untreatedChildren.size();
-			untreatedReport = untreatedChildren.size() +" child/children not updated";
-			for (String id : untreatedChildren)
-				untreatedReport += ", "+id;
-		}
-		
-		String report = treatedChildren + " child/children updated for metadata " + parentUuid + ". " + untreatedReport;
-		
-		return response.setText(report); 
-	}
+        // Update children
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager   dm = gc.getDataManager();
+
+        Set<String> untreatedChildren = dm.updateChildren(context, parentUuid, children, parameters);
+
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+        int treatedChildren = children.length;
+        String untreatedReport = "";
+        if (untreatedChildren.size() != 0) {
+            treatedChildren = children.length - untreatedChildren.size();
+            untreatedReport = untreatedChildren.size() +" child/children not updated";
+            for (String id : untreatedChildren)
+                untreatedReport += ", "+id;
+        }
+
+        String report = treatedChildren + " child/children updated for metadata " + parentUuid + ". " + untreatedReport;
+
+        return response.setText(report);
+    }
 }
-
-//=============================================================================

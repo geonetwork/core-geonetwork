@@ -32,16 +32,17 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Update the information of a category
-  */
-
-public class Update implements Service
+/**
+ * Update the information of a category.
+ */
+public class Update extends NotInReadOnlyModeService
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -49,7 +50,8 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String id   = params.getChildText(Params.ID);
 		String name = Util.getParam(params, Params.NAME);
@@ -77,6 +79,3 @@ public class Update implements Service
 		return elRes;
 	}
 }
-
-//=============================================================================
-

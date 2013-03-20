@@ -34,19 +34,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.util.List;
 import java.util.StringTokenizer;
 
-//=============================================================================
 
-/** Stores all operations allowed for a metadata. Called by the metadata.admin service
-  */
-
-public class UpdateAdminOper implements Service
-{
+/**
+ * Stores all operations allowed for a metadata. Called by the metadata.admin service.
+ */
+public class UpdateAdminOper extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -61,7 +60,7 @@ public class UpdateAdminOper implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();

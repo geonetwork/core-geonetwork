@@ -15,6 +15,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
@@ -22,7 +23,7 @@ import org.jdom.Element;
  * @author nicolas Ribot
  *
  */
-public class LastMonthSummary implements Service {
+public class LastMonthSummary extends NotInReadOnlyModeService{
 	private SimpleDateFormat dateFormat;
 	
 	//--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ public class LastMonthSummary implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
@@ -40,8 +42,12 @@ public class LastMonthSummary implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
 		// computes date range
 		Date d = new Date();
 		Calendar calendar = new GregorianCalendar();

@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -42,19 +43,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-//=============================================================================
 
-/** Assigns categories to metadata.  */
-
-public class BatchUpdateCategories implements Service
-{
+/**
+ * Assigns categories to metadata.
+ */
+public class BatchUpdateCategories extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -62,7 +64,7 @@ public class BatchUpdateCategories implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -126,6 +128,3 @@ public class BatchUpdateCategories implements Service
 						.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
 }
-
-//=============================================================================
-

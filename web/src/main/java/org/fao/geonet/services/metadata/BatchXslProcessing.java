@@ -37,13 +37,12 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-//=============================================================================
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -63,8 +62,7 @@ import java.util.Set;
  * 
  * @author fxprunayre
  */
-
-public class BatchXslProcessing implements Service {
+public class BatchXslProcessing extends NotInReadOnlyModeService{
 	private String _appPath;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
@@ -80,7 +78,14 @@ public class BatchXslProcessing implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		String process = Util.getParam(params, Params.PROCESS);
 
@@ -163,6 +168,3 @@ public class BatchXslProcessing implements Service {
         }
 	}
 }
-
-// =============================================================================
-
