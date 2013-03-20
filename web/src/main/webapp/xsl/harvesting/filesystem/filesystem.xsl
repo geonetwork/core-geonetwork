@@ -52,7 +52,7 @@
 				<td class="padded">
 					<select id="filesystem.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="filesystem.icon.image" src="" alt="" />
+					<img id="filesystem.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>			
 		</table>

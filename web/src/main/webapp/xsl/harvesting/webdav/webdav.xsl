@@ -55,7 +55,7 @@
 				<td class="padded">
 					<select id="wd.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="wd.icon.image" src="" alt="" />
+					<img id="wd.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

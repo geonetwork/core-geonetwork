@@ -30,7 +30,7 @@
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="logo">
-        <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>
+        <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo" class="logo"/>
       </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"
@@ -604,7 +604,7 @@
         else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
   
       <a href="{$url}" rel="lightbox-viewset">
-        <img class="logo" src="{$url}" alt="thumbnail"
+        <img class="thumbnail" src="{$url}" alt="thumbnail"
           title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
       </a>
     </xsl:if>

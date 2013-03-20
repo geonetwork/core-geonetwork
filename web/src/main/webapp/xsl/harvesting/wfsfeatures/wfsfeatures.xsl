@@ -45,7 +45,7 @@
 				<td class="padded">
 					<select id="wfsfeatures.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="wfsfeatures.icon.image" src="" alt="" />
+					<img id="wfsfeatures.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

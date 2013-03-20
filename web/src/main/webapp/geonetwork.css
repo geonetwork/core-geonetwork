@@ -1406,6 +1406,12 @@ div#privileges {
   padding: 4px;
 }
 
+img.logo {
+  max-height: 100px;
+  max-width: 100px;
+  margin: 5px;
+}
+
 div#editPanel * div table tr > td {
     max-width: 350px;
 }
