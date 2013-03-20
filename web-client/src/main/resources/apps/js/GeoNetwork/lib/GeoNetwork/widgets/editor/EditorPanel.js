@@ -1022,6 +1022,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
         this.updateViewMenu();
+        
+        // Restore editor vertical scroll
+        this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
     },
     /** private: method[validateMetadataField]
      * 
@@ -1246,12 +1249,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
+        // Save editor vertical scroll before updating the editor
         mgr.on('beforeupdate', function(el, url, params){
             this.position = this.editorMainPanel.getEl().parent().dom.scrollTop;
-        }, this);
-        
-        mgr.on('update', function(el, response){
-            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
         }, this);
         
         this.managerInitialized = true;
