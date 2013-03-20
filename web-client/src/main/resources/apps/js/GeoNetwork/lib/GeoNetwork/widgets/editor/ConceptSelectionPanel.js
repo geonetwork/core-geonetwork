@@ -484,14 +484,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 load: function (store, records, options) {
                     // Check that requested thesaurus is available
-                    var thesaurus = store.query('id', self.thesaurusIdentifier);
+                    var thesaurus = store.query('id', new RegExp("^" + self.thesaurusIdentifier + "$"));
                     if (thesaurus.getCount() === 1) {
                         self.thesaurusSelector.setValue(thesaurus.get(0).get('id'));
                         self.setThesaurusInfo(thesaurus.get(0));
                         self.thesaurusSelector.fireEvent('select');
                     } else {
                         // TODO : improve alert
-                        console.log('Error: thesaurus not found in catalog.');
+                        console.log('Error: thesaurus ' + self.thesaurusIdentifier + ' not found in catalog.');
                     }
                 }
             }
