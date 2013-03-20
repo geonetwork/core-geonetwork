@@ -898,9 +898,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.managerInitialized) {
             this.initManager();
         }
-        
         if (success) {
-            this.metadataLoaded();
+            this.metadataLoaded(true);
         } else {
             this.getError(response);
         }
@@ -949,13 +948,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Update editor content
      */
     updateEditor: function(html){
-        this.editorMainPanel.update(html, false, this.metadataLoaded.bind(this));
+        var panel = this;
+        this.editorMainPanel.update(html, false, function () {
+            panel.metadataLoaded(true);
+        });
     },
     /** private: method[metadataLoaded]
      * 
      *  Init editor after metadata loaded.
      */
-    metadataLoaded: function(){
+    metadataLoaded: function(restoreScroll){
         this.metadataSchema = document.mainForm.schema.value;
         this.metadataType = Ext.getDom('template');
         this.metadataId = document.mainForm.id.value;
@@ -1023,8 +1025,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         
         this.updateViewMenu();
         
-        // Restore editor vertical scroll
-        this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
+        if (restoreScroll) {
+            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
+        }
     },
     /** private: method[validateMetadataField]
      * 
@@ -1249,7 +1252,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
-        // Save editor vertical scroll before updating the editor
+        // Save editor scroll top before updating the editor
         mgr.on('beforeupdate', function(el, url, params){
             this.position = this.editorMainPanel.getEl().parent().dom.scrollTop;
         }, this);
