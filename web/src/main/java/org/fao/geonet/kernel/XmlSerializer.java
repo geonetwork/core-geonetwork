@@ -334,11 +334,11 @@ public abstract class XmlSerializer {
 
             info.append(indent).append("StackTrace: ");
             final String doubleIndent = "\n        ";
-            for (int i = stacktrace.length - 2; i >= 0; i--) {
+            for (int i = 0; i < stacktrace.length; i++) {
                 StackTraceElement traceElement = stacktrace[i];
                 if (traceElement.getClassName().startsWith("org.fao.geonet")) {
                     info.append(doubleIndent).append(traceElement.getClassName()).append('.').append(traceElement.getMethodName())
-                            .append('(').append(traceElement.getLineNumber());
+                            .append('(').append(traceElement.getLineNumber()).append(')');
                 }
             }
             Log.warning(Geonet.DATA_MANAGER, info.toString());
