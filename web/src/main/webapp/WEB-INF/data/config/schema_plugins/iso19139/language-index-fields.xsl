@@ -83,10 +83,21 @@
 				<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
 					<xsl:with-param name="langId" select="$poundLangId"/>
 				</xsl:apply-templates>
-		
+
+				<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
+					<xsl:with-param name="langId" select="$poundLangId"/>
+				</xsl:apply-templates>
 			</Document>
 	</xsl:template>
-
+	
+	<xsl:template mode="index" match="*|@*">
+		<xsl:param name="langId" />
+		
+		<xsl:apply-templates mode="index" select="*|@*">
+			<xsl:with-param name="langId" select="$langId"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<!-- ========================================================================================= -->
 
 	<xsl:template match="*" mode="metadata">
