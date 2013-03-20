@@ -1640,12 +1640,13 @@ public class SchemaManager {
                         Log.debug(Geonet.SCHEMA_MANAGER, "  Searching value for element: " + tempElement.getName());
 		            
 					String needleVal = needle.getValue();
-					String[] needleToken = needleVal.trim().split("\\|");
-                    String tempVal = tempElement.getValue();
+					String[] needleToken = StringUtils.deleteWhitespace(needleVal).split("\\|");
+          String tempVal = StringUtils.deleteWhitespace(tempElement.getValue());
                     
 					for (String t : needleToken) {
+											Log.debug(Geonet.SCHEMA_MANAGER, "    Comparing: '" + t + "' \n****with****\n '" + tempVal + "'");
 	                    if(tempVal!=null && needleVal!=null){
-	                        returnVal = t.equals(tempVal.trim());
+	                        returnVal = t.equals(tempVal);
 	                        if (returnVal) {
                                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                                     Log.debug(Geonet.SCHEMA_MANAGER, "    Found value: " + t + " for needle: " + needleName);
