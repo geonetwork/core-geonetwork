@@ -304,7 +304,7 @@
 				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
 
 			<xsl:apply-templates select="@*"/>
-			<xsl:if test="@id and (normalize-space(@id)='' or normalize-space(@id)!=$id)">
+			<xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
 				<xsl:attribute name="id">
 					<xsl:value-of select="$id"/>
 				</xsl:attribute>
