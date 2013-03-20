@@ -25,3 +25,6 @@ web-client/src/main/resources/apps/search/js/App-mini.js
 web-client/src/main/resources/apps/tabsearch/js/App-mini.js
 *.iml
 .idea/
+eclipse/
+web/src/main/webapp/WEB-INF/data/data
+web/src/main/webapp/WEB-INF/data/index
