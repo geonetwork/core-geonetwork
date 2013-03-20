@@ -32,10 +32,9 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-
-//=============================================================================
 
 /**
  *  For editing : update leaves information. Access is restricted
@@ -43,8 +42,7 @@ import org.jdom.Element;
  *  
  *  FIXME : id MUST be the id of the current metadata record in session ?
  */
-public class Validate implements Service
-{
+public class Validate extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 	//---
@@ -60,7 +58,7 @@ public class Validate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -84,6 +82,3 @@ public class Validate implements Service
 		return elResp;
 	}
 }
-
-//=============================================================================
-

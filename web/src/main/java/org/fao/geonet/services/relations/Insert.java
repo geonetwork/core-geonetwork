@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -43,8 +44,7 @@ import org.jdom.Element;
  * the time being, relation table is used to store link between iso19139 and
  * iso19110 metadata records.
  */
-
-public class Insert implements Service {
+public class Insert extends NotInReadOnlyModeService {
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
@@ -57,7 +57,7 @@ public class Insert implements Service {
 	 * jeeves.server.context.ServiceContext) Parameter name: parentId - Parent
 	 * metadata identifier Parameter name: childId - Child metadata identifier
 	 */
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		int parentId = Integer.parseInt(Utils.getIdentifierFromParameters(
 				params, context, Params.PARENT_UUID, Params.PARENT_ID));
@@ -91,6 +91,3 @@ public class Insert implements Service {
 		return response;
 	}
 }
-
-// =============================================================================
-

@@ -53,18 +53,17 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Element;
 
 // FIXME: this class could be moved to DataManager
 
-//=============================================================================
 
-/** Import all metadata found inside a given directory
-  */
-
-public class ImportFromDir implements Service
-{
+/**
+ * Import all metadata found inside a given directory.
+ */
+public class ImportFromDir extends NotInReadOnlyModeService{
 	private FilenameFilter filter = new FilenameFilter()
 	{
 		public boolean accept(File dir, String name)
@@ -136,7 +135,7 @@ public class ImportFromDir implements Service
 	 * 
 	 * Return the number of record inserted and the list of exceptions.
 	 */
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String dir  = Util.getParam(params, Params.DIR);
 		failOnError = Util.getParam(params, Params.FAIL_ON_ERROR, "off").equals("on");
@@ -598,6 +597,3 @@ class ImportConfig
 		defaultSchema = defaultTo;
 	}	
 }
-
-//=============================================================================
-

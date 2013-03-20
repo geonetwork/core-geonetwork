@@ -32,14 +32,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** This service returns some usefull information about GeoNetwork
-  */
-
-public class Env implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+/**
+ * This service returns some useful information about GeoNetwork.
+ */
+public class Env implements Service {
+    private static final String SYSTEM = "system";
+    private static final String READ_ONLY = "readonly";
+    private static final String XML_DIR = "/xml";
+    private static final String ENV_XSL = "/env.xsl";
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -51,12 +52,13 @@ public class Env implements Service
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
-		Element system  = gc.getSettingManager().get("system", -1);
+        String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS + XML_DIR;
+		Element system  = gc.getSettingManager().get(SYSTEM, -1);
 
-		return Xml.transform(system, xslPath +"/env.xsl");
+		Element response = Xml.transform(system, xslPath + ENV_XSL);
+        Element readOnly = new Element(READ_ONLY);
+        readOnly.setText(Boolean.toString(gc.isReadOnly()));
+        response.addContent(readOnly);
+        return response;
 	}
 }
-
-//=============================================================================
-

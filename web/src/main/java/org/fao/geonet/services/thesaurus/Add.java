@@ -34,17 +34,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
 /**
  * For editing : adds a tag to a thesaurus. Access is restricted
  */
-
-public class Add implements Service {
+public class Add extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
@@ -54,7 +52,7 @@ public class Add implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -94,6 +92,3 @@ public class Add implements Service {
 		return elResp;
 	}
 }
-
-// =============================================================================
-

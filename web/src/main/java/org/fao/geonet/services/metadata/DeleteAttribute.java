@@ -34,17 +34,25 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
  * For editing : removes an attribute from a metadata. Access is restricted
  * Metadata must be in current user session in edit mode.
  */
-public class DeleteAttribute implements Service {
+public class DeleteAttribute extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
-	public Element exec(Element params, ServiceContext context)
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -265,13 +265,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
-        
-        this.actionMenu.addItem(this.ownerAction);
-        this.actionMenu.addItem(this.updateCategoriesAction);
-        this.actionMenu.addItem(this.updatePrivilegesAction);
-        this.actionMenu.addItem(this.updateStatusAction);
-        this.actionMenu.addItem(this.updateVersionAction);
-        this.actionMenu.addItem(this.deleteAction);
+
+        if(!this.catalogue.isReadOnly()) {
+            this.actionMenu.addItem(this.ownerAction);
+            this.actionMenu.addItem(this.updateCategoriesAction);
+            this.actionMenu.addItem(this.updatePrivilegesAction);
+            this.actionMenu.addItem(this.updateStatusAction);
+            this.actionMenu.addItem(this.updateVersionAction);
+            this.actionMenu.addItem(this.deleteAction);
+        }
 
     },
     /** private: method[createAdminMenu] 
@@ -320,9 +322,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        
-        this.actionMenu.addItem(this.createMetadataAction);
-        
+        if(!this.catalogue.isReadOnly()) {
+            this.actionMenu.addItem(this.createMetadataAction);
+        }
+
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
             handler: function(){
@@ -331,8 +334,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
             });
-        this.actionMenu.addItem(this.mdImportAction);
-        
+        if(!this.catalogue.isReadOnly()) {
+            this.actionMenu.addItem(this.mdImportAction);
+        }
+
         this.adminAction = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
             handler: function(){

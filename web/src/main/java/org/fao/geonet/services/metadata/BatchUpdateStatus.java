@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -45,12 +46,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-//=============================================================================
-
-/** Assigns status to metadata.  */
-
-public class BatchUpdateStatus implements Service
-{
+/**
+ * Assigns status to metadata.
+ */
+public class BatchUpdateStatus extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -65,7 +64,7 @@ public class BatchUpdateStatus implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String status = Util.getParam(params, Params.STATUS);
 		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
@@ -126,6 +125,3 @@ public class BatchUpdateStatus implements Service
 						.addContent(new Element("noChange").setText(noChange.size()+""));
 	}
 }
-
-//=============================================================================
-

@@ -33,15 +33,13 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Update the profile of logged user
-  */
-
-public class InfoUpdate implements Service
-{
+/**
+ * Update the profile of logged user
+ */
+public class InfoUpdate extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -56,7 +54,7 @@ public class InfoUpdate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String surname  = Util.getParam(params, Params.SURNAME);
 		String name     = Util.getParam(params, Params.NAME);
@@ -90,6 +88,3 @@ public class InfoUpdate implements Service
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

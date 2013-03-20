@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Attribute;
@@ -61,13 +62,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-//=============================================================================
-
-/** Extracts subtemplates from a set of selected metadata records
-  */
-
-public class BatchExtractSubtemplates implements Service
-{
+/**
+ * Extracts subtemplates from a set of selected metadata records.
+ */
+public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	private Map<String,List> namespaceList = new HashMap<String,List>();
 
 	public void init(String appPath, ServiceConfig params) throws Exception {}
@@ -78,7 +76,7 @@ public class BatchExtractSubtemplates implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -334,6 +332,3 @@ public class BatchExtractSubtemplates implements Service
 	}
 
 }
-
-//=============================================================================
-

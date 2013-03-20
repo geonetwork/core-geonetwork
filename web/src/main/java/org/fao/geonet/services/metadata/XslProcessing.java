@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -51,8 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//=============================================================================
-
 /**
  * Process a metadata with an XSL transformation declared for the metadata
  * schema. All parameters sent to the service are forwarded to XSL process.
@@ -63,7 +62,7 @@ import java.util.Set;
  * <li>save: (optional) 1 to save the results (default), 0 to only process and return the processed record</li>
  * </ul>
  * <br/>
- * 
+ *
  * In each xml/schemas/schemaId directory, a process could be added in a
  * directory called process. Then the process could be called using the
  * following URL :
@@ -71,138 +70,144 @@ import java.util.Set;
  * =keywords-comma-exploder&url=http://xyz
  * <br/>
  * <br/>
- * 
+ *
  * In that example the process has to be named keywords-comma-exploder.xsl.
- * 
+ *
  * To retrieve parameters in XSL process use the following: 
  * <pre>
  * {@code
  *     <xsl:param name="url">http://localhost:8080/</xsl:param>
  * }
  * </pre>
- * 
- * 
+ *
+ *
  *  TODO : it could be nice to add an option to return a diff
  *  so we could preview the change before applying them.
- * 
+ *
  * @author fxprunayre
  */
+public class XslProcessing extends NotInReadOnlyModeService {
+    private String _appPath;
 
-public class XslProcessing implements Service {
-	private String _appPath;
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        _appPath = appPath;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		_appPath = appPath;
+        // TODO : here we could register process on startup
+        // in order to not to check process each time.
+    }
 
-		// TODO : here we could register process on startup
-		// in order to not to check process each time.
-	}
-
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+            throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager   dataMan = gc.getDataManager();
 
-		String process = Util.getParam(params, Params.PROCESS);
-		boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
+        String process = Util.getParam(params, Params.PROCESS);
+        boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
-		Set<Integer> notProcessFound = new HashSet<Integer>();
+        Set<Integer> metadata = new HashSet<Integer>();
+        Set<Integer> notFound = new HashSet<Integer>();
+        Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> notProcessFound = new HashSet<Integer>();
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		Element processedMetadata;
-		try {
-			processedMetadata = process(id, process, save, _appPath, params,
-				context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
-			if (processedMetadata == null) {
-				throw new BadParameterEx("Processing failed", 
-						"Not found:" + notFound.size() +
-						", Not owner:" + notOwner.size() +
-						", No process found:" + notProcessFound.size() +
-						".");
-			}
-		} catch (Exception e) {
-			throw e;
-		}
-		// -- return the processed metadata id
-		Element response = new Element(Jeeves.Elem.RESPONSE)
-                                .addContent(new Element(Geonet.Elem.ID).setText(id));
-		// and the processed metadata if not saved.
-		if (!save) {
-		    response.addContent(new Element("record").addContent(processedMetadata));
-		}
-		return response;
-		
-	}
+        String id = Utils.getIdentifierFromParameters(params, context);
+        Element processedMetadata;
+        try {
+            processedMetadata = process(id, process, save, _appPath, params,
+                    context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
+            if (processedMetadata == null) {
+                throw new BadParameterEx("Processing failed",
+                        "Not found:" + notFound.size() +
+                                ", Not owner:" + notOwner.size() +
+                                ", No process found:" + notProcessFound.size() +
+                                ".");
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        // -- return the processed metadata id
+        Element response = new Element(Jeeves.Elem.RESPONSE)
+                .addContent(new Element(Geonet.Elem.ID).setText(id));
+        // and the processed metadata if not saved.
+        if (!save) {
+            response.addContent(new Element("record").addContent(processedMetadata));
+        }
+        return response;
 
-	/**
-	 * Process a metadata record and add information about the processing
-	 * to one or more sets for reporting.
-	 * 
-	 * @param id		The metadata identifier corresponding to the metadata record to process
-	 * @param process	The process name
-	 * @param appPath	The application path (use to get the process XSL)
-	 * @param params	The input parameters
-	 * @param context	The current context
-	 * @param metadata	
-	 * @param notFound
-	 * @param notOwner
-	 * @param notProcessFound
-	 * @return
-	 * @throws Exception
-	 */	
-	public static Element process(String id, String process, boolean save,
-	        String appPath, Element params, ServiceContext context, 
-	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
-			Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		UserSession session = context.getUserSession();
-		DataManager dataMan = gc.getDataManager();
-		SchemaManager schemaMan = gc.getSchemamanager();
-		AccessManager accessMan = gc.getAccessManager();
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+    }
 
-		MdInfo info = dataMan.getMetadataInfo(dbms, id);
+    /**
+     * Process a metadata record and add information about the processing
+     * to one or more sets for reporting.
+     *
+     * @param id		The metadata identifier corresponding to the metadata record to process
+     * @param process	The process name
+     * @param appPath	The application path (use to get the process XSL)
+     * @param params	The input parameters
+     * @param context	The current context
+     * @param metadata
+     * @param notFound
+     * @param notOwner
+     * @param notProcessFound
+     * @return
+     * @throws Exception
+     */
+    public static Element process(String id, String process, boolean save,
+                                  String appPath, Element params, ServiceContext context,
+                                  Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
+                                  Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        UserSession session = context.getUserSession();
+        DataManager dataMan = gc.getDataManager();
+        SchemaManager schemaMan = gc.getSchemamanager();
+        AccessManager accessMan = gc.getAccessManager();
+        Dbms dbms = (Dbms) context.getResourceManager()
+                .open(Geonet.Res.MAIN_DB);
 
-		if (info == null) {
-			notFound.add(new Integer(id));
-		} else if (!accessMan.isOwner(context, id)) {
-			notOwner.add(new Integer(id));
-		} else {
+        MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
-			// -----------------------------------------------------------------------
-			// --- check processing exist for current schema
-			String schema = info.schemaId;
-            
-			String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
-			File xslProcessing = new File(filePath);
-			if (!xslProcessing.exists()) {
-				context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-				notProcessFound.add(new Integer(id));
-				return null;
-			}
-			// --- Process metadata
+        if (info == null) {
+            notFound.add(new Integer(id));
+        } else if (!accessMan.isOwner(context, id)) {
+            notOwner.add(new Integer(id));
+        } else {
+
+            // -----------------------------------------------------------------------
+            // --- check processing exist for current schema
+            String schema = info.schemaId;
+
+            String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
+            File xslProcessing = new File(filePath);
+            if (!xslProcessing.exists()) {
+                context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
+                notProcessFound.add(new Integer(id));
+                return null;
+            }
+            // --- Process metadata
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
             Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
             // -- here we send parameters set by user from URL if needed.
-			List<Element> children = params.getChildren();
-			Map<String, String> xslParameter = new HashMap<String, String>();
-	        xslParameter.put("guiLang", context.getLanguage());
-	        xslParameter.put("baseUrl", context.getBaseUrl());
-	        for (Element param : children) {
-				xslParameter.put(param.getName(), param.getTextTrim());
-			}
+            List<Element> children = params.getChildren();
+            Map<String, String> xslParameter = new HashMap<String, String>();
+            xslParameter.put("guiLang", context.getLanguage());
+            xslParameter.put("baseUrl", context.getBaseUrl());
+            for (Element param : children) {
+                xslParameter.put(param.getName(), param.getTextTrim());
+            }
 
             xslParameter.put("siteUrl", siteUrl);
 
-			Element processedMetadata = Xml.transform(md, filePath, xslParameter);
-			
-			// --- save metadata and return status
+            Element processedMetadata = Xml.transform(md, filePath, xslParameter);
+
+            // --- save metadata and return status
             if (save) {
                 Lib.resource.checkEditPrivilege(context, id);
 
@@ -213,18 +218,18 @@ public class XslProcessing implements Service {
                 // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
                 boolean updateDateStamp = true;
                 dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
-    			if (useIndexGroup) {
-    				dataMan.indexMetadata(dbms, id);
-    			}
+                if (useIndexGroup) {
+                    dataMan.indexMetadata(dbms, id);
+                }
                 else {
                     dataMan.indexInThreadPool(context, id, dbms);
-    			}
+                }
             }
 
-			metadata.add(new Integer(id));
+            metadata.add(new Integer(id));
 
-			return processedMetadata;
-		}
-		return null;
-	}
+            return processedMetadata;
+        }
+        return null;
+    }
 }

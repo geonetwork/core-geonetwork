@@ -137,7 +137,7 @@
 	-->
 
 	<resources>
-	  <resource enabled="true">
+	  <resource enabled="false">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -272,12 +272,12 @@
 		<!-- postgresql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<resource enabled="false">
+		<resource enabled="true">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>www-data</user>
-				<password>www-data</password>
+				<user>postgres</user>
+				<password>postgres</password>
 				<!-- we use org.postgis.DriverWrapper in place of
 				org.postgresql.Driver to support both postgresql and postgis -->
 				<driver>org.postgresql.Driver</driver>
@@ -292,7 +292,7 @@
 					jdbc:postgresql_postGIS://host:port/database
 					
 				-->
-				<url>jdbc:postgresql://localhost:5432/geonetwork</url>
+				<url>jdbc:postgresql://localhost:5432/readonly</url>
 				<poolSize>10</poolSize>
 				<validationQuery>SELECT 1</validationQuery>
 			</config>
@@ -363,8 +363,10 @@
 		<param name="maxWritesInTransaction" value="1" />
 
 		<param name="useSubversion" value="true"/>
-
-		<param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
+        <param name="DBHeartBeatEnabled" value="false"/>
+        <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
+        <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
+        <param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
 	</appHandler>
 
 	<!-- ====================================================================== -->

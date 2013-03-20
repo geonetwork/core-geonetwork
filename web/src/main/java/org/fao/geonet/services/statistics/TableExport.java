@@ -22,6 +22,7 @@ import jeeves.utils.Util;
 
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
@@ -29,7 +30,7 @@ import org.jdom.Element;
  * (currently, only CSV supported, full fields dump for the given table)
  * @author nicolas ribot
  */
-public class TableExport implements Service {
+public class TableExport extends NotInReadOnlyModeService{
     /** constant for CSV file export */
 	public final static String CSV = "CSV";
 
@@ -53,6 +54,7 @@ public class TableExport implements Service {
 	//---
 	//--------------------------------------------------------------------------
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
 		this.currentExportFormat = params.getValue("exportType");
 		this.csvSep = params.getValue("csvSeparator");
 		this.dumpHeader = "true".equalsIgnoreCase(params.getValue("dumpHeader"));
@@ -68,7 +70,12 @@ public class TableExport implements Service {
     /** Physically dumps the given table, writing it to the App tmp folder,
      * returning the URL of the file to get.
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
         String tableToExport = Util.getParam(params, "tableToExport");
 
         if (tableToExport == null ) {

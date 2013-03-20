@@ -36,16 +36,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** For editing : update leaves information. Access is restricted
-  */
-
-public class Update implements Service
-{
+/**
+ * For editing : update leaves information. Access is restricted.
+ */
+public class Update extends NotInReadOnlyModeService {
 	private ServiceConfig config;
 
 	//--------------------------------------------------------------------------
@@ -65,7 +63,7 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
         ajaxEditUtils.preprocessUpdate(params, context);
@@ -134,6 +132,3 @@ public class Update implements Service
 		return elResp;
 	}
 }
-
-//=============================================================================
-

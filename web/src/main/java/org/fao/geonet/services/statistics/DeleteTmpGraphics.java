@@ -8,6 +8,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
@@ -17,13 +18,18 @@ import org.jdom.Element;
  * @author nicolas Ribot
  *
  */
-public class DeleteTmpGraphics implements Service {
+public class DeleteTmpGraphics extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
 	//---
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
 		String message = "No files to delete";
 		
 		FileFilter pngFilter = new FileFilter()		{
@@ -51,7 +57,7 @@ public class DeleteTmpGraphics implements Service {
 	}
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		// TODO Auto-generated method stub
+		super.init(appPath, params);
 		
 	}
 }

@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
@@ -47,13 +48,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-//=============================================================================
-
-/** Removes a metadata from the system
-  */
-
-public class Delete implements Service
-{
+/**
+ * Removes a metadata from the system.
+ */
+public class Delete extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -62,7 +60,7 @@ public class Delete implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
@@ -135,6 +133,3 @@ public class Delete implements Service
 		new File(file).delete();
 	}
 }
-
-//=============================================================================
-

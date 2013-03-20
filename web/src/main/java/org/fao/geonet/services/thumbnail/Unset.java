@@ -35,14 +35,12 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
-public class Unset implements Service
-{
+public class Unset extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -57,8 +55,7 @@ public class Unset implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		String id      = Util.getParam(params, Params.ID);
 		String type    = Util.getParam(params, Params.TYPE);
 		String version = Util.getParam(params, Params.VERSION);
@@ -185,7 +182,3 @@ public class Unset implements Service
 		private static final String FNAME_PARAM   = "fname=";
 
 }
-
-//=============================================================================
-
-
