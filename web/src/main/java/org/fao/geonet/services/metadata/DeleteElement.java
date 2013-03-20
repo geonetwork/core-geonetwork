@@ -33,15 +33,13 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** For editing : removes a tag from a metadata. Access is restricted
-  */
-
-public class DeleteElement implements Service
-{
+/**
+ * For editing : removes a tag from a metadata. Access is restricted.
+ */
+public class DeleteElement extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -56,7 +54,7 @@ public class DeleteElement implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -78,6 +76,3 @@ public class DeleteElement implements Service
 		return cloned;
 	}
 }
-
-//=============================================================================
-

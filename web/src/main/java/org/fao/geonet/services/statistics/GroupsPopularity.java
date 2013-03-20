@@ -13,6 +13,7 @@ import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -25,7 +26,7 @@ import org.jfree.data.general.DefaultPieDataset;
  * @author nicolas Ribot
  *
  */
-public class GroupsPopularity implements Service {
+public class GroupsPopularity extends NotInReadOnlyModeService{
 	/** the SQL query to get results */
 	private String query;
 	/** should we generate and send tooltips to client (caution, can slow down the process if
@@ -53,6 +54,7 @@ public class GroupsPopularity implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
 		this.createLegend = Boolean.parseBoolean(params.getValue("createLegend"));
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
@@ -65,7 +67,12 @@ public class GroupsPopularity implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
 		String message = "";
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		

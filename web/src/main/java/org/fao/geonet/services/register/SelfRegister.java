@@ -51,15 +51,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-
-//=============================================================================
 
 /**
  * Register user.
  */
-
-public class SelfRegister implements Service {
+public class SelfRegister extends NotInReadOnlyModeService {
 
 	private static final String PROFILE_TEMPLATE = "profileTemplate";
 	private static final String PROFILE = "RegisteredUser";
@@ -85,7 +83,7 @@ public class SelfRegister implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 
 		String surname = Util.getParam(params, Params.SURNAME);
@@ -341,6 +339,3 @@ public class SelfRegister implements Service {
 	}
 
 }
-
-// =============================================================================
-

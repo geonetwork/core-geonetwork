@@ -42,13 +42,12 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.net.URL;
 import java.util.List;
-
-//=============================================================================
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
@@ -60,8 +59,7 @@ import java.util.List;
  * When a remote rating is applied, the local rating is not updated. It will be updated 
  * on the next harvest run (FIXME ?).
  */
-public class Rate implements Service
-{
+public class Rate extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 	//---
@@ -77,7 +75,7 @@ public class Rate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -175,6 +173,3 @@ public class Rate implements Service
 		return Integer.parseInt(response.getText());
 	}
 }
-
-//=============================================================================
-

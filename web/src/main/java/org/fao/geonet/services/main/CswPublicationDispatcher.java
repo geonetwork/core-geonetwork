@@ -32,6 +32,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.List;
@@ -39,15 +40,32 @@ import java.util.List;
 /**
  * Accepts CSW Publication operations.
  */
-public class CswPublicationDispatcher implements Service {
+public class CswPublicationDispatcher extends NotInReadOnlyModeService {
 	private Logger logger;
 
     private String cswServiceSpecificContraint;
-	
+
+    /**
+     *
+     * @param appPath
+     * @param config
+     * @throws Exception
+     */
+    @Override
 	public void init(String appPath, ServiceConfig config) throws Exception {
+        super.init(appPath, config);
 		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
 	}
-	public Element exec(Element params, ServiceContext context) throws Exception {
+
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		logger = context.getLogger();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -45,13 +46,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-//=============================================================================
 
-/** Sets new owner for a set of metadata records
-  */
-
-public class BatchNewOwner implements Service
-{
+/**
+ * Sets new owner for a set of metadata records.
+ */
+public class BatchNewOwner extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -60,7 +59,7 @@ public class BatchNewOwner implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm   = gc.getDataManager();
@@ -167,6 +166,3 @@ public class BatchNewOwner implements Service
 	}
 
 }
-
-//=============================================================================
-

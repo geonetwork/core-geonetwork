@@ -34,16 +34,14 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import java.util.List;
 
-//=============================================================================
-
-/** Removes a user from the system. It removes the relationship to a group too
-  */
-
-public class Remove implements Service
-{
+/**
+ * Removes a user from the system. It removes the relationship to a group too.
+ */
+public class Remove extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -58,7 +56,7 @@ public class Remove implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String id = Util.getParam(params, Params.ID);
 
@@ -106,6 +104,3 @@ public class Remove implements Service
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

@@ -19,6 +19,7 @@
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="remote" select="/root/response/summary/@type='remote'"/>
+    <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
 	
 	<!-- ================================================================================== -->
 	<!-- page content -->
@@ -131,43 +132,43 @@
 						</button>
 		
 						<div id="oAcOsEle" name="oAcOsEle" class="oAcEle" style="display:none;" onClick="oActions('oAcOs');">
-						<xsl:if test="java:isAccessibleService('metadata.batch.delete')">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.delete')">
 							<button onclick="batchOperation('metadata.batch.delete','{/root/gui/strings/batchDeleteTitle}',600,
 							    replaceStringParams('{/root/gui/strings/confirmBatchDelete}',[$('nbselected').innerHTML]))">
 								<xsl:value-of select="/root/gui/strings/delete"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.newowner')">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.newowner')">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.newowner.form','{/root/gui/strings/batchNewOwnerTitle}',800)">
 								<xsl:value-of select="/root/gui/strings/newOwner"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.update.categories') and /root/gui/config/category">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.update.categories') and /root/gui/config/category">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.category.form','{/root/gui/strings/batchUpdateCategoriesTitle}',300, null, 400)">
 								<xsl:value-of select="/root/gui/strings/updateCategories"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.update.privileges')">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.update.privileges')">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.admin.form','{/root/gui/strings/batchUpdatePrivilegesTitle}',800, null, 400)">
 								<xsl:value-of select="/root/gui/strings/updatePrivileges"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.update.status')">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.update.status')">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.status.form','{/root/gui/strings/batchUpdateStatusTitle}',800, null)">
 								<xsl:value-of select="/root/gui/strings/updateStatus"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.version') and /root/gui/svnmanager/enabled='true'">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.version') and /root/gui/svnmanager/enabled='true'">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.version','{/root/gui/strings/batchStartVersionTitle}',600, null)">
 								<xsl:value-of select="/root/gui/strings/startVersion"/>
 							</button>
 						</xsl:if>
-						<xsl:if test="java:isAccessibleService('metadata.batch.extract.subtemplates')">
+						<xsl:if test="not($readonly) and java:isAccessibleService('metadata.batch.extract.subtemplates')">
 						<!--xsl:text>&#160;</xsl:text-->
 							<button onclick="batchOperation('metadata.batch.extract.subtemplates.form','{/root/gui/strings/batchExtractSubtemplatesTitle}',800, null)">
 								<xsl:value-of select="/root/gui/strings/extractSubtemplates"/>
@@ -209,7 +210,7 @@
 		</tr-->
 	</xsl:template>
 	
-	<!-- ================================================================================== -->
+	<!-- ================================================   ================================== -->
 
 	<xsl:template name="formSeparator">
 		<xsl:comment>SEPARATOR</xsl:comment>
@@ -352,10 +353,11 @@
 							</xsl:if>
 
 							<!-- metadata rating -->
-							
-							<xsl:call-template name="rating">
-								<xsl:with-param name="info" select="$metadata/geonet:info"/>
-							</xsl:call-template>
+                            <xsl:if test="not($readonly)">
+                                <xsl:call-template name="rating">
+                                    <xsl:with-param name="info" select="$metadata/geonet:info"/>
+                                </xsl:call-template>
+                            </xsl:if>
 						
 							<br/> <!-- metadata thumbnail -->
 						

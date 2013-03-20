@@ -31,6 +31,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
@@ -41,10 +42,18 @@ import java.util.List;
  * Import MEF file.
  * 
  */
-public class Import implements Service {
+public class Import extends NotInReadOnlyModeService {
 	private String stylePath;
 
+    /**
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
+    @Override
 	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
 		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
 	}
 
@@ -63,7 +72,8 @@ public class Import implements Service {
 	 * @return List of imported ids.
 	 * 
 	 */
-	public Element exec(Element params, ServiceContext context)
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		String mefFile = Util.getParam(params, "mefFile");
         String fileType = Util.getParam(params, "file_type", "mef");
@@ -106,6 +116,3 @@ public class Import implements Service {
 		return result;
 	}
 }
-
-// =============================================================================
-

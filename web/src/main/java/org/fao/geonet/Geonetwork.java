@@ -33,6 +33,9 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 
@@ -46,6 +49,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.server.resources.ResourceManager;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -114,8 +118,7 @@ public class Geonetwork implements ApplicationHandler {
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
 	private Element dbConfiguration;
-
-	private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
+    private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
 	//---------------------------------------------------------------------------
@@ -167,6 +170,7 @@ public class Geonetwork implements ApplicationHandler {
 		String dataDir =  handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
 		String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
+
 		logger.info("Data directory: " + systemDataDir);
 
 		setProps(path, handlerConfig);
@@ -379,14 +383,6 @@ public class Geonetwork implements ApplicationHandler {
 		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
-		//--- initialize harvesting subsystem
-
-		logger.info("  - Harvest manager...");
-
-		harvestMan = new HarvestManager(context, settingMan, dataMan);
-		dataMan.setHarvestManager(harvestMan);
-
-		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
 
 		logger.info("  - Catalogue services for the web...");
@@ -425,7 +421,6 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.config      = handlerConfig;
 		gnContext.catalogDis  = catalogDis;
 		gnContext.settingMan  = settingMan;
-		gnContext.harvestMan  = harvestMan;
 		gnContext.thesaurusMan= thesaurusMan;
 		gnContext.oaipmhDis   = oaipmhDis;
 		gnContext.app_context = app_context;
@@ -436,6 +431,17 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
+
+        //------------------------------------------------------------------------
+        //--- initialize harvesting subsystem
+
+        logger.info("  - Harvest manager...");
+
+        harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        dataMan.setHarvestManager(harvestMan);
+
+        gnContext.harvestMan  = harvestMan;
+
 
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
@@ -460,8 +466,97 @@ public class Geonetwork implements ApplicationHandler {
 			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
 		}
 
+        //
+        // db heartbeat configuration -- for failover to readonly database
+        //
+        boolean dbHeartBeatEnabled = Boolean.parseBoolean(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_ENABLED, "false"));
+        if(dbHeartBeatEnabled) {
+            Integer dbHeartBeatInitialDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_INITIALDELAYSECONDS, "5"));
+            Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
+            createDBHeartBeat(context.getResourceManager(), gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
+        }
 		return gnContext;
 	}
+
+    /**
+     * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it can't, GeoNetwork will
+     * automatically switch to read-only mode.
+     */
+    private void createDBHeartBeat(final ResourceManager rm, final GeonetContext gc, Integer initialDelay, Integer fixedDelay) {
+        logger.info("creating DB heartbeat with initial delay of " + initialDelay + " s and fixed delay of " + fixedDelay + " s" );
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        Runnable DBHeartBeat = new Runnable() {
+            private static final String INSERT = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
+            private static final String REMOVE = "DELETE FROM Settings WHERE id=?";
+
+            /**
+             *
+             */
+            @Override
+            public void run() {
+                try {
+                    boolean readOnly = gc.isReadOnly();
+                    logger.debug("DBHeartBeat: GN is read-only ? " + readOnly);
+                    boolean canWrite = checkDBWrite();
+                    HarvestManager hm = gc.getHarvestManager();
+                    if(readOnly && canWrite) {
+                        logger.warning("GeoNetwork can write to the database, switching to read-write mode");
+                        readOnly = false;
+                        gc.setReadOnly(readOnly);
+                        hm.setReadOnly(readOnly);
+                    }
+                    else if(!readOnly && !canWrite) {
+                        logger.warning("GeoNetwork can not write to the database, switching to read-only mode");
+                        readOnly = true;
+                        gc.setReadOnly(readOnly);
+                        hm.setReadOnly(readOnly);
+                    }
+                    else {
+                        if(readOnly) {
+                            logger.info("GeoNetwork remains in read-only mode");
+                        }
+                        else {
+                            logger.debug("GeoNetwork remains in read-write mode");
+                        }
+                    }
+                }
+                // any uncaught exception would cause the scheduled execution to silently stop
+                catch(Throwable x) {
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
+                    x.printStackTrace();
+                }
+            }
+
+            /**
+             *
+             * @return
+             */
+            private boolean checkDBWrite() {
+                Dbms dbms = null;
+                try {
+                    Integer testId = new Integer("100000");
+                    dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+                    dbms.execute(INSERT, testId, new Integer("1"), "DBHeartBeat", "Yeah !");
+                    dbms.execute(REMOVE, testId);
+                    return true;
+                }
+                catch (Exception x) {
+                    logger.info("DBHeartBeat Exception: " + x.getMessage());
+                    return false;
+                }
+                finally {
+                    try {
+                        if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
+                    }
+                    catch (Exception x) {
+                        logger.error("DBHeartBeat failed to close DB connection. Your system is unstable! Error: " + x.getMessage());
+                        x.printStackTrace();
+                    }
+                }
+            }
+        };
+        scheduledExecutorService.scheduleWithFixedDelay(DBHeartBeat, initialDelay, fixedDelay, TimeUnit.SECONDS);
+    }
 
     /**
      *
@@ -864,5 +959,4 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
 		return ids;
 	}
-
 }

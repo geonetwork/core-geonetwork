@@ -34,19 +34,17 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Update;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
-/** Deletes an uploaded file from the database
-  */
-
-public class Remove implements Service
-{
+/**
+ * Deletes an uploaded file from the database.
+ */
+public class Remove extends NotInReadOnlyModeService {
 	private Element config;
 	private Update  update = new Update();
 
@@ -67,7 +65,7 @@ public class Remove implements Service
 	//---
 	//-----------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -104,6 +102,3 @@ public class Remove implements Service
 		return update.exec(params, context);
 	}
 }
-
-//=============================================================================
-
