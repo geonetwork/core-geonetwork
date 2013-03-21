@@ -91,7 +91,26 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             	var tokens = record.image[i].value.split(separator);
                 currentUri = tokens[1];
                 // Return the first URL even if not http (FIXME ?)
-                if (currentUri.indexOf('http') !== -1 || i === 0) {
+                if (tokens[0] == 'thumbnail' && currentUri.indexOf('http') !== -1 || i === 0) {
+                    uri = currentUri;
+                }
+            }
+        }
+        return uri;
+    }
+
+    function getOverview(v, record){
+        var i;
+        var uri = '';
+        var currentUri;
+        
+        if (record.image) {
+        
+            for (i = 0; i < record.image.length; i++) {
+            	var tokens = record.image[i].value.split(separator);
+                currentUri = tokens[1];
+                // Return the first URL even if not http (FIXME ?)
+                if (tokens[0] == 'overview' && currentUri.indexOf('http') !== -1 || i === 0) {
                     uri = currentUri;
                 }
             }
@@ -320,6 +339,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'thumbnail',
             convert: getThumbnails
+        }, {
+            name: 'overview',
+            convert: getOverview
         }, {
             name: 'links',
             convert: getLinks
