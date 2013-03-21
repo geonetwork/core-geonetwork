@@ -126,6 +126,8 @@ public class Thesaurus {
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
 		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 		
+		this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
+		
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
 	}
 
