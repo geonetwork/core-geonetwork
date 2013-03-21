@@ -62,7 +62,7 @@ public class HarvestManager
 	{
 		this.context = context;
         this.readOnly = gc.isReadOnly();
-        System.out.println("HarvesterManager initalizing, READONLYMODE is " + this.readOnly);
+        Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initalizing, READONLYMODE is " + this.readOnly);
 		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
 		settingMan = sm;
 		dataMan    = dm;

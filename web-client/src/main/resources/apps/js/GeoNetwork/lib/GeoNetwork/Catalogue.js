@@ -426,7 +426,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             var xml = request.responseXML.documentElement;
             ro = xml.getElementsByTagName('readonly')[0];
             if(ro) {
-                result = ro.childNodes[0].nodeValue;
+                result = ro.childNodes[0].nodeValue === "true";
             }
         }
         return result;

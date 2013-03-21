@@ -319,10 +319,11 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified() && 
-                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser');
+                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
+            isReadOnly = this.catalogue.isReadOnly();
 
         /* Actions and menu visibility for logged in user */
-        if (!identified || this.catalogue.isReadOnly()) {
+        if (!identified || isReadOnly) {
             this.editAction.hide();
             this.deleteAction.hide();
         } else {
@@ -333,16 +334,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
-        this.editAction.setDisabled(!isEditable || this.catalogue.isReadOnly());
-        this.adminAction.setDisabled((!isEditable && !isHarvested) || this.catalogue.isReadOnly());
+        this.editAction.setDisabled(!isEditable || isReadOnly);
+        this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.statusAction.setDisabled(!isEditable && !isHarvested);
-        this.versioningAction.setDisabled((!isEditable && !isHarvested) || this.catalogue.isReadOnly());
-        this.categoryAction.setDisabled((!isEditable && !isHarvested) || this.catalogue.isReadOnly());
-        this.deleteAction.setDisabled((!isEditable && !isHarvested) || this.catalogue.isReadOnly());
+        this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         
         if (this.ratingWidget) {
             this.ratingWidget.reset();
-            if ((isHarvested && harvesterType !== 'geonetwork') || this.catalogue.isReadOnly()) {
+            if ((isHarvested && harvesterType !== 'geonetwork') || isReadOnly) {
                 /* TODO : add tooltip message to explain why */
                 this.ratingWidget.disable();
             } else {
