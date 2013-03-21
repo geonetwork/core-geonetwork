@@ -247,12 +247,14 @@ public class GeoServerRest {
 					+ "<type>text/xml</type>"
 					+ "<metadataType>ISO19115:2003</metadataType>"
 					+ "<content>"
-						+ this.baseCatalogueUrl
-						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
-						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
-						+ // Geopublication only allowed for ISO19139* records. The
-							// outputSchema should always return a record.
-						"&amp;ID=" + metadataUuid 
+						+ this.baseCatalogueUrl + "?uuid=" + metadataUuid
+					+ "</content>" 
+				+ "</metadataLink>"
+				+ "<metadataLink>" 
+					+ "<type>text/xml</type>"
+					+ "<metadataType>TC211</metadataType>"
+					+ "<content>"
+						+ this.baseCatalogueUrl + "?uuid=" + metadataUuid
 					+ "</content>" 
 				+ "</metadataLink>"
 			+ "</metadataLinks>" 
@@ -570,12 +572,15 @@ public class GeoServerRest {
 						+ "<type>text/xml</type>"
 						+ "<metadataType>ISO19115:2003</metadataType>"
 						+ "<content>"
-							+ this.baseCatalogueUrl
-							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
-							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
-							+ // Geopublication only allowed for ISO19139* records. The
-							// outputSchema should always return a record.
-							"&amp;ID=" + metadataUuid + "</content>" 
+							+ this.baseCatalogueUrl + "?uuid=" + metadataUuid
+						+ "</content>" 
+					+ "</metadataLink>"
+					+ "<metadataLink>" 
+						+ "<type>text/xml</type>"
+						+ "<metadataType>TC211</metadataType>"
+						+ "<content>"
+							+ this.baseCatalogueUrl + "?uuid=" + metadataUuid
+						+ "</content>" 
 					+ "</metadataLink>"
 				+ "</metadataLinks>" 
 			+ "</featureType>";
@@ -632,7 +637,7 @@ public class GeoServerRest {
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, "UTF-8"));
 			}
 		} else if (method.equals(METHOD_DELETE)) {
 			m = new DeleteMethod(url);
@@ -640,7 +645,7 @@ public class GeoServerRest {
 			m = new PostMethod(url);
 			if (postData != null) {
 				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, "UTF-8"));
 			}
 
 		} else {
