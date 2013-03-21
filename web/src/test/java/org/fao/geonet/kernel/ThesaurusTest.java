@@ -32,7 +32,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     public void prepareEmptyThesaurus() throws ConfigurationException {
         File file = new File(this.thesaurusFile.getParentFile(), ThesaurusTest.class.getSimpleName()+"_empyt.rdf");
         file.delete();
-        this.writableThesaurus = new Thesaurus(isoLangMapper, file.getName(), Geonet.CodeList.LOCAL, file.getName(), file, null, true);
+        this.writableThesaurus = new Thesaurus(isoLangMapper, file.getName(), null, null, Geonet.CodeList.LOCAL, file.getName(), file, null, true);
         super.setRepository(writableThesaurus);
     }
     

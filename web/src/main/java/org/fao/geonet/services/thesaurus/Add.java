@@ -58,6 +58,8 @@ public class Add extends NotInReadOnlyModeService {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		String fname = Util.getParam(params, "fname");
+		String tname = Util.getParam(params, "tname");
+		String tnamespace = Util.getParam(params, "tns");
 		String dname = Util.getParam(params, "dname");
 		String type = Util.getParam(params, "type");
 		String activated = Util.getParam(params, "activated", "y");
@@ -74,8 +76,8 @@ public class Add extends NotInReadOnlyModeService {
 		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
 		
 		File rdfFile = new File(filePath);		
-		Thesaurus thesaurus = new Thesaurus(fname,type,dname,rdfFile,dm.getSiteURL());		
-		tm.addThesaurus(thesaurus);
+		Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, dm.getSiteURL(), false);
+		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database
 		String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
