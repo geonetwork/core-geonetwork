@@ -93,6 +93,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``boolean`` true by default.
          */
         autoHeight: true,
+        /** api: config[itemSelectorHeight] 
+         *  ``Integer`` The height of the item selector.
+         */
+        itemSelectorHeight: 250,
+        /** api: config[itemSelectorWidth] 
+         *  ``Integer`` The width of the item selector.
+         */
+        itemSelectorWidth: 350,
         loadingMask: null,
         /** api: config[thesaurusInfoTpl] 
          *  ``Ext.XTemplate`` template to use to render thesaurus information in the widget header.
@@ -255,8 +263,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             simpleSelect: true,
             multiSelect: this.mode === 'multiplelist' ? true : false,
             singleSelect: true,
-            width: 350,
-            height: 250,
+            width: this.itemSelectorWidth,
+            height: this.itemSelectorHeight,
             selectedClass: 'ux-mselect-selected',
             itemSelector: 'div.ux-mselect-item',
             listeners: {
@@ -316,8 +324,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             dataFields: ["value", "thesaurus"],
             //toData: [],
             toStore: this.selectedKeywordStore,
-            msWidth: 350,
-            msHeight: 260,
+            msWidth: this.itemSelectorWidth,
+            msHeight: this.itemSelectorHeight,
             valueField: "value",
             toSortField: undefined,
             fromTpl: this.keywordsTpl,
@@ -735,7 +743,9 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
                     xmlField: id + '_xml',
-                    renderTo: id + '_panel'
+                    renderTo: id + '_panel',
+                    itemSelectorWidth: jsonConfig.itemSelectorWidth,
+                    itemSelectorHeight: jsonConfig.itemSelectorHeight
                 });
             }
         }

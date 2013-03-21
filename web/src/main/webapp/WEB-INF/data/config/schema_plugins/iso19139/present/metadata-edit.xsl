@@ -1350,6 +1350,8 @@
     <xsl:param name="listOfKeywords"/>
     <xsl:param name="listOfTransformations"/>
     <xsl:param name="transformation"/>
+    <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
+    <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
     
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
@@ -1357,7 +1359,7 @@
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
-      }'}}"/>
+      }', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
     
     <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>
