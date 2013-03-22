@@ -28,7 +28,7 @@ GeoNetwork.loginApp = function() {
             Ext.get("login_button").on(
                     'click',
                     function(e) {
-                        user = catalogue.login(Ext.get("username").getValue(),
+                        app.loginApp.login(Ext.get("username").getValue(),
                                 Ext.get("password").getValue());
                     });
 
@@ -128,14 +128,84 @@ GeoNetwork.loginApp = function() {
                 status : 'warning',
                 target : document.body
             });
+        },// FIXME Until catalog is adapted to spring security login, use this
+        login : function(username, password) {
+            var app = this, user;
+            var intervalID;
+            var loginAttempts = 0;
+            var loginWindow;
+            Ext.Ajax.request({
+                url : catalogue.services.rootUrl + '/j_spring_security_check',
+                params : {
+                    username : username,
+                    password : password
+                },
+                headers : {
+                    "Content-Type" : "application/x-www-form-urlencoded"
+                },
+                success : this.isLoggedIn,
+                failure : this.isLoggedIn,
+                scope : this
+            });
+        },
+        /**
+         * api: method[isLoggedIn]
+         * 
+         * Get the xml.info for me. If user is not identified response xml will
+         * have a me element with an authenticated attribute. If catalogue URL
+         * is wrong, response status is 404 (check catalogue URL). In case of
+         * exception continue catalogue connection validation using the
+         * xml.main.error service (@see checkError).
+         */
+        isLoggedIn : function() {
+            var response = OpenLayers.Request.GET({
+                url : catalogue.services.rootUrl + 'xml.info?type=me',
+                async : false
+            }), exception, authenticated, me;
 
-            // Ext.Msg.show({
-            // title : OpenLayers.i18n('Login.error'),
-            // msg : OpenLayers.i18n('Login.error.message'),
-            // /* TODO : Get more info about the error */
-            // icon : Ext.MessageBox.ERROR,
-            // buttons : Ext.MessageBox.OK
-            // });
+            me = response.responseXML.getElementsByTagName('me')[0];
+            authenticated = me.getAttribute('authenticated') == 'true';
+
+            // Check status and also check than an Exception is not described in
+            // the HTML response
+            // in case of bad startup
+            exception = response.responseText.indexOf('Exception') !== -1;
+
+            if (response.status === 200 && authenticated) {
+
+                var username = me.getElementsByTagName('username')[0];
+                var name = me.getElementsByTagName('name')[0];
+                var surname = me.getElementsByTagName('surname')[0];
+                var role = me.getElementsByTagName('profile')[0];
+
+                catalogue.identifiedUser = {
+                    username : username.innerText || username.textContent
+                            || username.text,
+                    name : name.innerText || name.textContent || name.text,
+                    surname : surname.innerText || surname.textContent
+                            || surname.text,
+                    role : role.innerText || role.textContent || role.text
+                };
+                catalogue.onAfterLogin();
+                return true;
+            } else if (response.status === 404) {
+                this.showError(OpenLayers.i18n('connectIssue'), OpenLayers
+                        .i18n('connectIssueMsg')
+                        + catalogue.services.rootUrl + '.');
+            } else if (exception) {
+                catalogue.checkError();
+                return false;
+            } else {
+                // Reset user cookie information
+                if (cookie) {
+                    cookie.set('user', undefined);
+                }
+
+                catalogue.identifiedUser = undefined;
+                catalogue.onAfterBadLogin();
+
+                return false;
+            }
         }
     };
 };

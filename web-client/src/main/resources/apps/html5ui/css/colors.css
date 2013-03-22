@@ -9,8 +9,15 @@ html,button,input,select,textarea {
 	color: #222;
 }
 
-#header header,.main aside {
-	background: #E26F02;
+div#resultsPanel .x-panel-bbar table.x-toolbar-ct,.x-panel-header,div#big-map .x-panel-tbar table.x-toolbar-ct,div#resultsPanel table.x-toolbar-ct,div#resultsPanel button,nav a,.main aside
+	{
+	background: #47A8DD;
+	color: white;
+}
+
+nav a.selected {
+	background: #1F1E71; 
+	color: white;
 }
 
 #welcome-text {
@@ -18,12 +25,11 @@ html,button,input,select,textarea {
 }
 
 #header {
-	background-color: #fff;
 	border-bottom: #F6D4B1;
 }
 
-nav a.selected,div#advSearchTabs .x-panel-header {
-	background: #F6D4B1;
+div#advSearchTabs .x-panel-header,#header header {
+	background: #D4CC5F;
 }
 
 #lang-form div div form div input {
@@ -63,12 +69,6 @@ nav a.selected,div#advSearchTabs .x-panel-header {
 .grey,#printer-button,#rss-button,#lang-form,#sitemap-button,#feedback-site-button
 	{
 	color: #767B7E;
-}
-
-div#resultsPanel .x-panel-bbar table.x-toolbar-ct,.x-panel-header,div#big-map .x-panel-tbar table.x-toolbar-ct,div#resultsPanel table.x-toolbar-ct,div#resultsPanel button
-	{
-	background-color: #E26F02;
-	color: white;
 }
 
 div#advSearchTabs div.x-panel-bwrap div.x-panel-body.x-panel-body-noheader.x-panel-body-noborder.x-box-layout-ct div.x-box-inner div.x-panel.x-form-label-left.x-box-item div.x-panel-bwrap div.x-panel-body
@@ -121,7 +121,7 @@ div#tabs .x-tab-strip-active .x-tab-right {
 
 #show-advanced,#hide-advanced {
 	color: #214A78;
-	background-color: #FAEADA;
+	background-color: #D4D1A7;
 }
 
 /**

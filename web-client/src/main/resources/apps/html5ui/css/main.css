@@ -1423,13 +1423,6 @@ ul li.tag-cloud a {
 	height: 200px;
 }
 
-#mini-map {
-	position: fixed;
-	z-index: 10000;
-	top: 265px;
-	right: 6%;
-}
-
 /** Startup page */
 #popular-metadata input {
 	display: none;

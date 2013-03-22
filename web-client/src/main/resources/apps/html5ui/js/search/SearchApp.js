@@ -549,19 +549,10 @@ GeoNetwork.searchApp = function() {
             Ext.getCmp('facets-panel').refresh(response);
 
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
-            Ext.getCmp('previousBt_up')
-                    .setDisabled(catalogue.startRecord === 1);
             Ext
                     .getCmp('nextBt')
                     .setDisabled(
                             catalogue.startRecord + 50 > catalogue.metadataStore.totalLength);
-
-            Ext
-                    .getCmp('nextBt_up')
-                    .setDisabled(
-                            catalogue.startRecord + 50 > catalogue.metadataStore.totalLength);
-
-            Ext.getCmp("info_up").update(Ext.getCmp("info").el.dom.textContent);
 
             // Fix for width sortBy combo in toolbar
             // See this:
