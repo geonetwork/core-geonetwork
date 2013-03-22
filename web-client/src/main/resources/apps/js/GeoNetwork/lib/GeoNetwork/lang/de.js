@@ -306,6 +306,7 @@ GeoNetwork.Lang.de = {
 'searching':'Suche ...',
 'perThesaurus':'pro Thesaurus',
 'anyThesaurus':'Jeder Thesaurus',
+'addFromThesaurus': 'Add from thesaurus ...',
 'selectedKeywords':'Ausgewählte Schlagwörter',
 'foundKeywords':'Verfügbare Schlagwörter',
 'clear':'Löschen',

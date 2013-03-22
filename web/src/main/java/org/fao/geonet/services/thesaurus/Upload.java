@@ -241,7 +241,7 @@ public class Upload implements Service {
 					newFile));
 
 			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL());
-			thesaurusMan.addThesaurus(gst);
+			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			rdfFile.delete();
 			throw new Exception("Unknown format (Must be in SKOS format).");

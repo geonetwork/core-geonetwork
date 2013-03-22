@@ -130,6 +130,7 @@
             		<td class="padded">
                         <select class="content" size="1" id="csw.lang"  onchange="javascript:updateCswInfo(this.value)">
 						<xsl:for-each select="/root/gui/languages/record">
+							<xsl:sort select="name"/>
 							<option value="{id}">
 								<xsl:value-of select="name"/>
 							</option>

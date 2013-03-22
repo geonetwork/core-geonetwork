@@ -1350,6 +1350,8 @@
     <xsl:param name="listOfKeywords"/>
     <xsl:param name="listOfTransformations"/>
     <xsl:param name="transformation"/>
+    <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
+    <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
     
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
@@ -1357,7 +1359,7 @@
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
-      }'}}"/>
+      }', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
     
     <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>
@@ -2966,10 +2968,15 @@
         <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
       </xsl:variable>
     
+      <xsl:variable name="abstract">
+        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString"/>
+      </xsl:variable>
+    
       <button type="button" class="content repository" 
         onclick="javascript:Ext.getCmp('editorPanel').showGeoPublisherPanel('{/root/*/geonet:info/id}',
         '{/root/*/geonet:info/uuid}', 
         '{$title}',
+        '{$abstract}',
         '{$layer}', 
         '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
         alt="{/root/gui/strings/publishHelp}" 

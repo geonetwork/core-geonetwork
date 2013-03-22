@@ -10,6 +10,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
@@ -19,7 +20,7 @@ import org.jdom.Element;
  * @author Simon Pigot
  *
  */
-public class MostSearchedCategory implements Service {
+public class MostSearchedCategory extends NotInReadOnlyModeService{
 	private String luceneTermFields;
 	private int maxHits;
 	//--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ public class MostSearchedCategory implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
+
 		luceneTermFields = params.getValue("luceneTermFields");
 		maxHits = Integer.parseInt(params.getValue("maxHits"));
 	}
@@ -38,8 +41,12 @@ public class MostSearchedCategory implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         String query = "select termtext, count(*) as cnt from ";

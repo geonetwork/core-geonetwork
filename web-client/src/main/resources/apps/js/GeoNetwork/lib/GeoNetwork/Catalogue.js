@@ -359,12 +359,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getCategories: serviceUrl + 'xml.info?type=categories',
             getHarvesters: serviceUrl + 'xml.harvesting.get',
             rate: serviceUrl + 'xml.metadata.rate',
+            readOnly: serviceUrl + 'xml.info?type=readonly',
             xmlConfig: serviceUrl + 'xml.config.get',
             admin: serviceUrl + 'admin',
             xmlError: serviceUrl + 'xml.main.error',
             searchKeyword: serviceUrl + 'xml.search.keywords',
             getThesaurus: serviceUrl + 'xml.thesaurus.getList',
-            getStatus: serviceUrl + 'xml.metadata.status.values.list',
+            getStatus: serviceUrl + 'xml.info?type=status',
             getKeyword: serviceUrl + 'xml.keyword.get',
             searchCRS: serviceUrl + 'crs.search',
             getCRSTypes: serviceUrl + 'crs.types',
@@ -411,6 +412,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     isAdmin: function(){
         return this.adminUser;
+    },
+    /** api: method[isReadOnly]
+     *  Return true if GN is is read-only mode
+     */
+    isReadOnly: function(){
+        var request = OpenLayers.Request.GET({
+            url: this.services.readOnly,
+            async: false
+        }), ro, result = false;
+
+        if (request.responseXML) {
+            var xml = request.responseXML.documentElement;
+            ro = xml.getElementsByTagName('readonly')[0];
+            if(ro) {
+                result = ro.childNodes[0].nodeValue === "true";
+            }
+        }
+        return result;
     },
     /** api: method[onAfterLogin]
      *  :param e: ``Object``

@@ -40,6 +40,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @author James Dempsey <James.Dempsey@csiro.au>
  * @version $Revision: 1629 $
  */
-public class ShibLogin implements Service
+public class ShibLogin extends NotInReadOnlyModeService
 {
 	private static final String VIA_SHIBBOLETH = "Via Shibboleth";
 	private static final String SHIBBOLETH_FLAG = "SHIBBOLETH";
@@ -67,7 +68,9 @@ public class ShibLogin implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -78,7 +81,7 @@ public class ShibLogin implements Service
 	/* (non-Javadoc)
 	 * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
 	 */
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		// Get the header keys to lookup from the settings
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

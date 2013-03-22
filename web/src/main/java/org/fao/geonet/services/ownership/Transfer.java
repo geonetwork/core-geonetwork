@@ -31,6 +31,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -39,7 +40,7 @@ import java.util.*;
 /**
  *
  */
-public class Transfer implements Service {
+public class Transfer extends NotInReadOnlyModeService {
     /**
      *
      * @param appPath
@@ -55,7 +56,7 @@ public class Transfer implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
 		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
 		int targetUsr = Util.getParamAsInt(params, "targetUser");

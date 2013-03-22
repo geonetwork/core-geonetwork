@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel.search.function;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexableField;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import org.fao.geonet.kernel.search.SearchManager.LuceneFieldAttribute;
+import org.jdom.Element;
 
 /**
  * Compute a boost factor for document according to field custom field values.
@@ -78,16 +78,15 @@ public class ImportantDocument implements DocumentBoosting {
      * org.fao.geonet.kernel.search.function.DocumentBoosting#getBoost(org.apache
      * .lucene.document.Document)
      */
-    public Float getBoost(Document doc) {
+    public Float getBoost(Element doc) {
         Float documentBoost = null;
-
-        for (IndexableField field : doc.getFields()) {
-            String name = field.name();
-
+        for (Object o : doc.getChildren()) {
+            Element field = (Element) o;
+            String name = field.getAttributeValue(LuceneFieldAttribute.NAME.toString());
             HashMap<String, Float> fieldBoosts = config.get(name);
-
+            
             if (fieldBoosts != null) {
-                String value = field.stringValue();
+                String value = field.getAttributeValue(LuceneFieldAttribute.STRING.toString());
                 Float b = fieldBoosts.get(value);
                 if (b != null) {
                     documentBoost = addBoost(documentBoost, b);

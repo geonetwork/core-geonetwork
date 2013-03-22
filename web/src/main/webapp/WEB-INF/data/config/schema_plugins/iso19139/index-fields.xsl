@@ -60,8 +60,43 @@
             <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
 
 			<xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
+			
+			<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
+			
 		</Document>
 	</xsl:template>
+	
+	
+	<!-- Add index mode template in order to easily add new field in the index (eg. in profiles).
+        
+        For example, index some keywords from a specific thesaurus in a new field:
+        <xsl:template mode="index"
+            match="gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/
+                        gmd:title/gco:CharacterString='My thesaurus']/
+                        gmd:keyword[normalize-space(gco:CharacterString) != '']">
+            <Field name="myThesaurusKeyword" string="{string(.)}" store="true" index="true"/>
+        </xsl:template>
+        
+        Note: if more than one template match the same element in a mode, only one will be 
+        used (usually the last one).
+        
+        If matching a upper level element, apply mode to its child to further index deeper level if required:
+        <xsl:template mode="index" match="gmd:EX_Extent">
+            ... do something
+            ... and continue indexing
+            <xsl:apply-templates mode="index" select="*"/>
+        </xsl:template>
+            -->
+	<xsl:template mode="index" match="*|@*">
+		<xsl:apply-templates mode="index" select="*|@*"/>
+	</xsl:template>
+	
+	
+	<xsl:template mode="index"
+		match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
+		<Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
+	</xsl:template>
+	
 	
 	<!-- ========================================================================================= -->
 
@@ -365,11 +400,25 @@
 					<xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
 					<xsl:choose>
 						<xsl:when test="contains($fileName ,'://')">
-							<Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+							<xsl:choose>
+								<xsl:when test="string($fileDescr)='thumbnail'">
+									<Field  name="image" string="{concat('thumbnail|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:when test="string($fileDescr)='large_thumbnail'">
+									<Field  name="image" string="{concat('overview|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='thumbnail'">
 							<!-- FIXME : relative path -->
 							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+						</xsl:when>
+						<xsl:when test="string($fileDescr)='large_thumbnail'">
+							<!-- FIXME : relative path -->
+							<Field  name="image" string="{concat('overview', '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:if>
@@ -487,14 +536,18 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
+				<!-- If not defined, record is a dataset -->
 				<Field name="type" string="dataset" store="true" index="true"/>
 			</xsl:otherwise>
 		</xsl:choose>
-
-	    <xsl:choose>
-	     <xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">
-	     	<Field name="type" string="service" store="false" index="true"/>
-	     </xsl:when>
+		
+		
+		
+		<xsl:choose>
+			<!-- Check if metadata is a service metadata record -->
+			<xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">
+				<Field name="type" string="service" store="false" index="true"/>
+			</xsl:when>
 	     <!-- <xsl:otherwise>
 	      ... gmd:*_DataIdentification / hierachicalLevel is used and return dataset, serie, ... 
 	      </xsl:otherwise>-->

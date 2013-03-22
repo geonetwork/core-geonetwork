@@ -122,7 +122,7 @@
 				<td class="padded">
 					<select id="ogcwxs.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="ogcwxs.icon.image" src="" alt="" />
+					<img id="ogcwxs.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

@@ -36,15 +36,13 @@ import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Update the password of logged user
-  */
-
-public class PwUpdate implements Service
-{
+/**
+ * Update the password of logged user.
+ */
+public class PwUpdate extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -59,7 +57,7 @@ public class PwUpdate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String password    = Util.getParam(params, Params.PASSWORD);
 		ServletContext servletContext = context.getServlet().getServletContext();
@@ -78,6 +76,3 @@ public class PwUpdate implements Service
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

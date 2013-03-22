@@ -254,7 +254,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 						}
 
             try {
-                addThesaurus(gst);
+                addThesaurus(gst, false);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -317,8 +317,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 	/**
 	 * 
 	 * @param gst
+	 * @param writeTitle TODO
 	 */
-	public void addThesaurus(Thesaurus gst) throws Exception {
+	public void addThesaurus(Thesaurus gst, boolean writeTitle) throws Exception {
 
 		String thesaurusName = gst.getKey();
 
@@ -329,8 +330,13 @@ public class ThesaurusManager implements ThesaurusFinder {
 			throw new Exception ("A thesaurus exists with code " + thesaurusName);
 		}
 		
-		createThesaurusRepository(gst);	
+		createThesaurusRepository(gst);
 		thesauriMap.put(thesaurusName, gst);
+		
+		if (writeTitle) {
+		    gst.addTitleElement(gst.getTitle());
+		}
+
 	}
 	
 	/**

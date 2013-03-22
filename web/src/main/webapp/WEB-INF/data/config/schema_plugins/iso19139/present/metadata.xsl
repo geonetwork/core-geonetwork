@@ -3442,7 +3442,17 @@
 					<xsl:choose>
 						<!-- the thumbnail is an url -->
 						<xsl:when test="contains($fileName ,'://')">
-							<image type="unknown"><xsl:value-of select="$fileName"/></image>
+							<xsl:choose>
+								<xsl:when test="string($fileDescr)='thumbnail'">
+									<image type="thumbnail"><xsl:value-of select="$fileName"/></image>
+								</xsl:when>
+								<xsl:when test="string($fileDescr)='large_thumbnail'">
+									<image type="overview"><xsl:value-of select="$fileName"/></image>
+								</xsl:when>
+								<xsl:otherwise>
+									<image type="unknown"><xsl:value-of select="$fileName"/></image>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 
 						<!-- small thumbnail -->

@@ -64,7 +64,7 @@
 				<td class="padded">
 					<select id="arcsde.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="arcsde.icon.image" src="" alt="" />
+					<img id="arcsde.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>			
 		</table>

@@ -888,7 +888,7 @@ public class SearchManager {
 		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;
 	}
-    private enum LuceneFieldAttribute {
+    public enum LuceneFieldAttribute {
         NAME {
             @Override
             public String toString() {
@@ -1402,11 +1402,11 @@ public class SearchManager {
 		float documentBoost = 1;
         // Set boost to promote some types of document selectively according to DocumentBoosting class
         if (_documentBoostClass != null) {
-            Float f = (_documentBoostClass).getBoost(doc);
+            Float f = (_documentBoostClass).getBoost(xml);
             if (f != null) {
                 if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                     Log.debug(Geonet.INDEX_ENGINE, "Boosting document with boost factor: " + f);
-                documentBoost = 1;
+                documentBoost = f;
             }
         }
 
@@ -1453,14 +1453,18 @@ public class SearchManager {
                     
                     // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
                     // because there is no doc.setBoost method anymore.
-                    // Boost a particular field according to Lucene config. 
-                    Float boost = _luceneConfig.getFieldBoost(name);
-                    if (boost != null) {
-                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-                            Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost);
-                        f.setBoost(documentBoost * boost);
-                    } else if(documentBoost > -0.0001 && documentBoost < 0.0001) {
-                        f.setBoost(documentBoost);
+                    // Boost a particular field according to Lucene config.
+                    
+                    // You cannot set an index-time boost on an unindexed field, or one that omits norms
+                    if (bIndex && !f.fieldType().omitNorms()) {
+                        Float boost = _luceneConfig.getFieldBoost(name);
+                        if (boost != null) {
+                            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                                Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost + " x " + documentBoost);
+                            f.setBoost(documentBoost * boost);
+                        } else if(documentBoost != 1) {
+                            f.setBoost(documentBoost);
+                        }
                     }
                     doc.add(f);
                     

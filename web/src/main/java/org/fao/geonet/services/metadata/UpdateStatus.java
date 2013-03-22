@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -46,7 +47,7 @@ import java.util.Set;
 /**
  * Stores status on a metadata.
  */
-public class UpdateStatus implements Service {
+public class UpdateStatus extends NotInReadOnlyModeService{
 
     /**
      *
@@ -63,7 +64,7 @@ public class UpdateStatus implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();

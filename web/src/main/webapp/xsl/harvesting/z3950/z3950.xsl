@@ -57,7 +57,7 @@
 				<td class="padded">
 					<select id="z3950.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="z3950.icon.image" src="" alt="" />
+					<img id="z3950.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.search.function;
 
-import org.apache.lucene.document.Document;
+import org.jdom.Element;
 
 /**
  * A class which compute a document boost factor
@@ -16,6 +16,6 @@ public interface DocumentBoosting {
      * @param doc   The document to analyze
      * @return  The computed boost factor
      */
-    public abstract Float getBoost(Document doc);
+    public abstract Float getBoost(Element doc);
 
 }

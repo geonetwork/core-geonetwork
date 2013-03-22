@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.search;
 
 import java.io.IOException;
+import java.text.Collator;
 
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.TermsEnum;
@@ -74,6 +75,7 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
         private final String field;
         private String       bottom;
         private String searchLang;
+        private Collator collator;
         private DocTermsIndex shadowValues;
         private AtomicReaderContext context;
 
@@ -81,6 +83,7 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
             values = new String[numHits];
             this.field = field;
             this.searchLang = searchLang;
+            this.collator = Collator.getInstance();
         }
 
         @Override
@@ -99,8 +102,9 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
             } else if (val2 == null) {
                 return -1;
             }
-
-            return val1.compareToIgnoreCase(val2);
+            
+            return this.collator.compare(val1, val2);
+//            return val1.compareToIgnoreCase(val2);
         }
 
         @Override

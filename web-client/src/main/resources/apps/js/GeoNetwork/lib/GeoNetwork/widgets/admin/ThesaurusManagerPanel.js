@@ -166,7 +166,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             },
             columns: [{
                 id: 'title',
-                header: OpenLayers.i18n('ThesaurusName'),
+                header: OpenLayers.i18n('ThesaurusTitle'),
                 dataIndex: 'title',
                 editable: false
             }, {
@@ -670,8 +670,10 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                                   this.thesaurusStore.reload();
                               },
                               failure: function() { Ext.Msg.alert('Fail'); },
-                              xmlData: '<request><fname>' + Ext.getCmp('empty_thesaurusName').getValue()
-                                + '</fname><dname>' + Ext.getCmp('empty_themeCmb').getValue() + '</dname><type>'
+                              xmlData: '<request><tname>' + Ext.getCmp('empty_thesaurusTitle').getValue() 
+                                +'</tname><fname>' + Ext.getCmp('empty_thesaurusId').getValue()
+                                + '</fname><tns>' + Ext.getCmp('empty_thesaurusNs').getValue()
+                                + '</tns><dname>' + Ext.getCmp('empty_themeCmb').getValue() + '</dname><type>'
                                 + Ext.getCmp('empty_thesaurusType').getValue() + '</type></request>'
                               });
                         
@@ -782,21 +784,32 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
             autoHeight: true,
             baseCls: 'x-plain',
             labelWidth: 170,
+            defaults: {
+                xtype: 'textfield',
+                allowBlank: false,
+                anchor: '-15'
+            },
             split: true,
             items: [{
+                fieldLabel: OpenLayers.i18n('ThesaurusTitle'),
+                id: 'empty_thesaurusTitle',
+                name: 'tname'
+            }, {
+                fieldLabel: OpenLayers.i18n('ThesaurusId'),
+                id: 'empty_thesaurusId',
+                name: 'fname'
+            }, {
                 xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('ThesaurusName'),
-                id: 'empty_thesaurusName',
-                name: 'fname',
-                anchor: '-15'
+                fieldLabel: OpenLayers.i18n('ThesaurusNs'),
+                id: 'empty_thesaurusNs',
+                name: 'tns',
+                value: 'http://www.mysite.org/thesaurus'
             }, this.createTypeCombo('empty_themeCmb'), {
-                xtype: 'textfield',
                 fieldLabel: OpenLayers.i18n('thesaurusType'),
                 id: 'empty_thesaurusType',
                 name: 'type',
                 value: 'local',
-                hidden: true,
-                anchor: '-15'
+                hidden: true
             }]
         });
         return this.createEmptyThesaurusForm;

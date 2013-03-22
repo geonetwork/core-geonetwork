@@ -43,7 +43,7 @@
 				<td class="padded">
 					<select id="geoPREST.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="geoPREST.icon.image" src="" alt="" />
+					<img id="geoPREST.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 	

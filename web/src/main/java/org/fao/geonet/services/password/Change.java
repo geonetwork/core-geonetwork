@@ -55,15 +55,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
 /**
- * Change users password given the correct change key generated for the user 
+ * Change users password given the correct change key generated for the user.
  */
-
-public class Change implements Service {
+public class Change extends NotInReadOnlyModeService {
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -82,7 +80,7 @@ public class Change implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 
 		String username = Util.getParam(params, Params.USERNAME);
@@ -213,6 +211,3 @@ public class Change implements Service {
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 
 }
-
-// =============================================================================
-

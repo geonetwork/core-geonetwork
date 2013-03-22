@@ -163,7 +163,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                 grid.getView().focusEl.focus();
             }, grid);
             cmp.push(grid);
-            this.catalogue.search({E_template: 'y'}, null, null, 1, true, this.tplStore, null);
+            this.catalogue.search({E_template: 'y', E_hitsperpage: 150}, null, null, 1, true, this.tplStore, null);
         }
         
         cmp.push(new Ext.form.ComboBox({

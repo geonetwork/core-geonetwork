@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import javax.imageio.ImageIO;
@@ -46,10 +47,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-//=============================================================================
-
-public class Set implements Service
-{
+public class Set extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -64,7 +62,7 @@ public class Set implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String  id            = Util.getParam     (params, Params.ID);
 		String  type          = Util.getParam     (params, Params.TYPE);
@@ -110,15 +108,15 @@ public class Set implements Service
 			String inFile    = context.getUploadDir() + file;
 			String outFile   = dataDir + smallFile;
 
-			removeOldThumbnail(context, dbms, id, "small");
+			removeOldThumbnail(context, dbms, id, "small", false);
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, dbms, id, true, smallFile);
+			dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
 		}
 
 		//-----------------------------------------------------------------------
 		//--- create the requested thumbnail, removing the old one
 
-		removeOldThumbnail(context, dbms, id, type);
+		removeOldThumbnail(context, dbms, id, type, false);
 
 		if (scaling)
 		{
@@ -131,7 +129,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile, false);
 		}
 		else
 		{
@@ -140,6 +138,9 @@ public class Set implements Service
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 
+			if(outFile.exists() && !outFile.delete()) {
+				throw new Exception("Unable to overwrite existing file: "+outFile);
+			}
 			try {
 				FileUtils.moveFile(inFile, outFile);
 			} catch (Exception e) {
@@ -148,9 +149,10 @@ public class Set implements Service
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file, false);
 		}
 
+		dataMan.indexInThreadPool(context, id, dbms);
 		//-----------------------------------------------------------------------
 
 		Element response = new Element("a");
@@ -194,7 +196,7 @@ public class Set implements Service
 			String outFile   = dataDir + smallFile;
 			// FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, dbms, id, true, smallFile);
+			dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
 		}
 
 		//-----------------------------------------------------------------------
@@ -212,7 +214,7 @@ public class Set implements Service
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile, false);
 		}
 		else
 		{
@@ -228,11 +230,11 @@ public class Set implements Service
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 			
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
+			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file, false);
 		}
 
 		//-----------------------------------------------------------------------
-
+		dataMan.indexInThreadPool(context, id, dbms);
 		Element response = new Element("Response");
 		response.addContent(new Element("id").setText(id));
 		// NOT NEEDEDresponse.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
@@ -264,15 +266,15 @@ public class Set implements Service
                 String smallFile = getFileName(file, true);
                 String inFile    = context.getUploadDir() + file;
                 String outFile   = dataDir + smallFile;
-                removeOldThumbnail(context,dbms,id,"small");
+                removeOldThumbnail(context,dbms,id,"small", false);
                 createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-                dataMan.setThumbnail(context, dbms, id, true, smallFile);
+                dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
             }
 
             //-----------------------------------------------------------------------
             //--- create the requested thumbnail
             
-            removeOldThumbnail(context,dbms,id,type);
+            removeOldThumbnail(context,dbms,id,type, false);
 
             if (scaling) {
                 String newFile = getFileName(file, type.equals("small"));
@@ -281,7 +283,7 @@ public class Set implements Service
                 
                 createThumbnail(inFile, outFile, scalingFactor, scalingDir);
                 if (!new File(inFile).delete()) context.error("Error while deleting thumbnail : "+inFile);
-                dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile);
+                dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile, false);
             } else {
                 //--- move uploaded file to destination directory
                 File inFile  = new File(context.getUploadDir(), file);
@@ -294,14 +296,15 @@ public class Set implements Service
                     throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
                 }
 			
-                dataMan.setThumbnail(context, dbms, id, type.equals("small"), file);
+                dataMan.setThumbnail(context, dbms, id, type.equals("small"), file, false);
             }
+            dataMan.indexInThreadPool(context, id, dbms);
         }
         
         public void removeHarvested(Element params, ServiceContext context, Dbms dbms) throws Exception {
             String  id   = Util.getParam(params, Params.ID);
             String  type = Util.getParam(params, Params.TYPE);
-            removeOldThumbnail(context,dbms,id,type);
+            removeOldThumbnail(context,dbms,id,type, true);
         }
 
 	//--------------------------------------------------------------------------
@@ -310,7 +313,7 @@ public class Set implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private void removeOldThumbnail(ServiceContext context, Dbms dbms, String id, String type) throws Exception
+	private void removeOldThumbnail(ServiceContext context, Dbms dbms, String id, String type, boolean indexAfterChange) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -331,7 +334,7 @@ public class Set implements Service
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"));
+		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"), indexAfterChange);
 
 		//--- remove file
 
@@ -454,7 +457,3 @@ public class Set implements Service
 	private static final String FNAME_PARAM   = "fname=";
 
 }
-
-//=============================================================================
-
-

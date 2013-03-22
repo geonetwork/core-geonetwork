@@ -132,7 +132,7 @@ public class SchemaManager {
 		this.defaultSchema = defaultSchema;
 		this.schemaPluginsCat = schemaPluginsCat;
 		
-		Element schemaPluginCatRoot = getSchemaPluginCatalog();
+		Element schemaPluginCatRoot = getSchemaPluginCatalogTemplate();
 
 		// -- check the plugin directory and add any schemas already in there
 		String[] saSchemas = new File(this.schemaPluginsDir).list();
@@ -974,6 +974,15 @@ public class SchemaManager {
         return Xml.loadFile(schemaPluginsCat);
 	}
 
+	/**
+    * Read the empty template for the schema plugins oasis catalog.
+    * @return
+    * @throws Exception
+    */
+  private Element getSchemaPluginCatalogTemplate() throws Exception {
+    return Xml.loadFile(basePath + FS + "WEB-INF" + FS + Geonet.File.SCHEMA_PLUGINS_CATALOG);
+  }
+    
     /**
      * Build a path to the schema plugin folder
      *
@@ -1629,12 +1638,13 @@ public class SchemaManager {
                         Log.debug(Geonet.SCHEMA_MANAGER, "  Searching value for element: " + tempElement.getName());
 		            
 					String needleVal = needle.getValue();
-					String[] needleToken = needleVal.trim().split("\\|");
-                    String tempVal = tempElement.getValue();
+					String[] needleToken = StringUtils.deleteWhitespace(needleVal).split("\\|");
+          String tempVal = StringUtils.deleteWhitespace(tempElement.getValue());
                     
 					for (String t : needleToken) {
+											Log.debug(Geonet.SCHEMA_MANAGER, "    Comparing: '" + t + "' \n****with****\n '" + tempVal + "'");
 	                    if(tempVal!=null && needleVal!=null){
-	                        returnVal = t.equals(tempVal.trim());
+	                        returnVal = t.equals(tempVal);
 	                        if (returnVal) {
                                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                                     Log.debug(Geonet.SCHEMA_MANAGER, "    Found value: " + t + " for needle: " + needleName);

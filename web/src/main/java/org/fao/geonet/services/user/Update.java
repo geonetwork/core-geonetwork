@@ -33,6 +33,7 @@ import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -40,13 +41,10 @@ import java.util.HashSet;
 
 import javax.servlet.ServletContext;
 
-//=============================================================================
-
-/** Update the information of a user
-  */
-
-public class Update implements Service
-{
+/**
+ * Update the information of a user.
+ */
+public class Update extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -61,7 +59,7 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String operation = Util.getParam(params, Params.OPERATION);
 		String id       = params.getChildText(Params.ID);
@@ -218,6 +216,3 @@ public class Update implements Service
                  userId, groupId, profile);
     }
 }
-
-//=============================================================================
-

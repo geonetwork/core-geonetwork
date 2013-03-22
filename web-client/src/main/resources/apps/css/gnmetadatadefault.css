@@ -17,6 +17,12 @@
 .metadata * img.logo {
   max-height : 100px;
   max-width : 100px;
+  margin : 5px;
+}
+
+.metadata * img.thumbnail {
+  max-height : 100px;
+  max-width : 100px;
   border : 1px solid #B3D4E6;
   margin : 5px;
 }

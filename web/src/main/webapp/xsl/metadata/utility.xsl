@@ -303,7 +303,7 @@
   -->
   <xsl:template match="@*|node()[namespace-uri()!='http://www.fao.org/geonetwork']" mode="geonet-cleaner">
     <xsl:copy>
-      <xsl:copy-of select="@*"/>
+      <xsl:copy-of select="@*[namespace-uri()!='http://www.fao.org/geonetwork']"/>
       <xsl:apply-templates select="node()" mode="geonet-cleaner"/>
     </xsl:copy>
   </xsl:template>

@@ -20,6 +20,7 @@ import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
@@ -37,7 +38,7 @@ import org.jfree.data.time.Year;
  * @author nicolas Ribot
  *
  */
-public class RequestsByDate implements Service {
+public class RequestsByDate extends NotInReadOnlyModeService{
 	public static final String BY_YEAR = "YEAR";
 	public static final String BY_MONTH = "MONTH";
 	public static final String BY_DAY = "DAY";
@@ -99,6 +100,7 @@ public class RequestsByDate implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
 		this.createLegend = Boolean.parseBoolean(params.getValue("createLegend"));
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.tickUnit = Integer.parseInt(params.getValue("tickUnit"));
@@ -123,7 +125,12 @@ public class RequestsByDate implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-	public Element exec(Element params, ServiceContext context) throws Exception {
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        boolean readOnlyMode = super.exec(params, context) == null;
+        if(readOnlyMode) {
+            return null;
+        }
         if (! this.lang.equalsIgnoreCase(context.getLanguage()) ) {
             // user changed the language, must reload strings file to get translated values
             this.lang = context.getLanguage();

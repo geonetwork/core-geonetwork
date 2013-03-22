@@ -291,13 +291,7 @@
 	  <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
-  
-	  <dependency>
-      <groupId>ch.thus</groupId>
-      <artifactId>pvalsecc</artifactId>
-      <version>0.9.2</version>
+      <version>1.2.0</version>
     </dependency>
   
     <!-- ====================== -->

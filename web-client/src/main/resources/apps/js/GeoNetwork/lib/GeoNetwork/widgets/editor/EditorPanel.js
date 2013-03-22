@@ -298,7 +298,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param  extent: ``String`` Initial map extent.
      *
      */
-    showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
+    showGeoPublisherPanel: function(id, uuid, title, mdabstract, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
         var editorPanel = this;
         
@@ -362,7 +362,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 iconCls: 'repository'
             });
         }
-        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, name, accessStatus);
+        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, mdabstract, name, accessStatus);
         this.geoPublisherWindow.setTitle(OpenLayers.i18n('geoPublisherWindowTitle') + " " + name);
         this.geoPublisherWindow.show();
         
@@ -898,9 +898,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.managerInitialized) {
             this.initManager();
         }
-        
         if (success) {
-            this.metadataLoaded();
+            this.metadataLoaded(true);
         } else {
             this.getError(response);
         }
@@ -949,13 +948,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Update editor content
      */
     updateEditor: function(html){
-        this.editorMainPanel.update(html, false, this.metadataLoaded.bind(this));
+        var panel = this;
+        this.editorMainPanel.update(html, false, function () {
+            panel.metadataLoaded(true);
+        });
     },
     /** private: method[metadataLoaded]
      * 
      *  Init editor after metadata loaded.
      */
-    metadataLoaded: function(){
+    metadataLoaded: function(restoreScroll){
         this.metadataSchema = document.mainForm.schema.value;
         this.metadataType = Ext.getDom('template');
         this.metadataId = document.mainForm.id.value;
@@ -1022,6 +1024,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
         this.updateViewMenu();
+        
+        if (restoreScroll) {
+            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
+        }
     },
     /** private: method[validateMetadataField]
      * 
@@ -1246,12 +1252,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
+        // Save editor scroll top before updating the editor
         mgr.on('beforeupdate', function(el, url, params){
             this.position = this.editorMainPanel.getEl().parent().dom.scrollTop;
-        }, this);
-        
-        mgr.on('update', function(el, response){
-            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
         }, this);
         
         this.managerInitialized = true;

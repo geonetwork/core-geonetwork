@@ -50,7 +50,7 @@
 				<td class="padded">
 					<select id="oai.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="oai.icon.image" src="" alt="" />
+					<img id="oai.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

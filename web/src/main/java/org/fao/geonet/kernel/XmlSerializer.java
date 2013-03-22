@@ -27,12 +27,12 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -40,6 +40,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 
+import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -48,6 +49,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.jdom.filter.Filter;
 
 /**
  * This class is responsible of reading and writing xml on the database. 
@@ -56,6 +58,23 @@ import org.jdom.Namespace;
 public abstract class XmlSerializer {
 
 	private static final List<Namespace> XML_SELECT_NAMESPACE = Arrays.asList(Geonet.Namespaces.GCO);
+	private static final String WITHHELD = "withheld";	
+	@SuppressWarnings("serial")
+	private static final Filter EMPTY_WITHHELD = new Filter() {
+		
+		@Override
+		public boolean matches(Object obj) {
+			if (obj instanceof Element) {
+				Element elem = (Element) obj;
+				String withheld = elem.getAttributeValue("nilReason", Geonet.Namespaces.GCO);
+				if(WITHHELD.equalsIgnoreCase(withheld) && elem.getChildren().size() == 0 && elem.getTextTrim().isEmpty()) {
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+	
 	protected SettingManager sm;
 
 	public static class ThreadLocalConfiguration {
@@ -131,8 +150,10 @@ public abstract class XmlSerializer {
 		String xmlData = record.getChildText("data");
 		Element metadata = Xml.loadString(xmlData, false);
 
+		logEmptyWithheld(id, metadata, "XmlSerializer.internalSelect");
+		
 		if (!isIndexingTask) { 
-    		boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+			boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
     		if(ServiceContext.get() != null) {
     			ServiceContext context = ServiceContext.get();
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -148,9 +169,44 @@ public abstract class XmlSerializer {
 		return (Element) metadata.detach();
 	}
 
-    public static void removeWithheldElements(Element metadata, SettingManager sm) throws JDOMException {
+    private boolean logEmptyWithheld(String id, Element metadata, String methodName) {
+        boolean hideWithheldElements = sm.getValueAsBool("system/" + Geonet.Config.HIDE_WITHHELD_ELEMENTS + "/enable", false);
+        if (hideWithheldElements && Log.isEnabledFor(Geonet.DATA_MANAGER, Priority.WARN_INT)) {
+            Iterator<?> emptyWithheld = metadata.getDescendants(EMPTY_WITHHELD);
+            if (emptyWithheld.hasNext()) {
+                StringBuilder withheld = new StringBuilder();
+                while (emptyWithheld.hasNext()) {
+                    Element next = (Element) emptyWithheld.next();
+                    withheld.append("\n    ");
+                    xpath(withheld, next);
+                }
+                Log.warning(Geonet.DATA_MANAGER, "[" + WITHHELD + "] " + "In method [" + methodName + "] Metadata id=" + id
+                        + " has withheld elements that don't contain any data: " + withheld);
+                return true;
+            }
+        }
+        return false;
+    }
+    private void xpath(StringBuilder buffer, Element next) {
+		if(next.getParentElement() != null) {
+			xpath(buffer, next.getParentElement());
+			buffer.append("/");
+		}
+		
+		String name = next.getName();
+		Namespace namespace = next.getNamespace();
+		buffer.append(namespace.getPrefix()).append(":").append(name);
+		if(next.getParentElement() != null) {
+			List<?> children = next.getParentElement().getChildren(name, namespace);
+			if(children.size() > 1) {
+				buffer.append('[').append(children.indexOf(next)+1).append(']');
+			}
+		}
+	}
+
+	public static void removeWithheldElements(Element metadata, SettingManager sm) throws JDOMException {
         boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
-        List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = 'withheld'] | *//*[@gco:nilReason = 'withheld']", XML_SELECT_NAMESPACE);
+        List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = '"+WITHHELD+"'] | *//*[@gco:nilReason = '"+WITHHELD+"']", XML_SELECT_NAMESPACE);
         for (Object object : nodes) {
         	if (object instanceof Element) {
         		Element element = (Element) object;
@@ -259,6 +315,34 @@ public abstract class XmlSerializer {
      */
 	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
+        if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb")) {
+            StackTraceElement[] stacktrace = new Exception("").getStackTrace();
+            StringBuffer info = new StringBuffer();
+            info.append('[').append(WITHHELD).append(']');
+            info.append("Extra information related to updating the metadata with an empty withheld element:");
+            final String indent = "\n    ";
+            ServiceContext serviceContext = ServiceContext.get();
+            if (serviceContext != null) {
+                UserSession userSession = serviceContext.getUserSession();
+                if (userSession != null) {
+                    UserSession session = userSession;
+                    info.append(indent).append("User: ").append(session.getUsername());
+                    info.append(indent).append("Userid: ").append(session.getUserId());
+                }
+                info.append(indent).append("IP: ").append(serviceContext.getIpAddress());
+            }
+
+            info.append(indent).append("StackTrace: ");
+            final String doubleIndent = "\n        ";
+            for (int i = 0; i < stacktrace.length; i++) {
+                StackTraceElement traceElement = stacktrace[i];
+                if (traceElement.getClassName().startsWith("org.fao.geonet")) {
+                    info.append(doubleIndent).append(traceElement.getClassName()).append('.').append(traceElement.getMethodName())
+                            .append('(').append(traceElement.getLineNumber()).append(')');
+                }
+            }
+            Log.warning(Geonet.DATA_MANAGER, info.toString());
+        }
 
 		fixCR(xml);
 		String metadata = Xml.getString(xml);
@@ -307,7 +391,7 @@ public abstract class XmlSerializer {
      * @param xml
      */
 	private void fixCR(Element xml) {
-		List list = xml.getChildren();
+		List<?> list = xml.getChildren();
 		if (list.size() == 0) {
 			String text = xml.getText();
 			xml.setText(Util.replaceString(text, "\r\n", "\n"));
