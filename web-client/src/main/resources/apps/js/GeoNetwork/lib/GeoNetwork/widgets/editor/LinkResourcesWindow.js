@@ -877,7 +877,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     itemSelector.reset.call(i);
                 },
                 scope: this
-            }],
+            }]
         });
         
         // Add the initiativeType and associationType info to
