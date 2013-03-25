@@ -192,15 +192,15 @@ GeoNetwork.HTML5UI.Templates.DOWNLOAD =
     '<div>\
   <button class="bookmark-icon" title="{[OpenLayers.i18n("saveXml") ]}"\
    onclick="catalogue.metadataXMLShow(\'{uuid}\', \'{schema}\');">\
-          <img src="{[catalogue.URL]}/apps/ngr2/images/default/page_code.png"/>\
+          <img src="{[catalogue.URL]}/apps/html5ui/images/default/page_code.png"/>\
       </button>\
       <button class="bookmark-icon" title="{[OpenLayers.i18n("printSel")]}"\
      onclick="catalogue.metadataPrint(\'{uuid}\');">\
-          <img src="{[catalogue.URL]}/apps/ngr2/images/default/page_white_acrobat.png"/>\
+          <img src="{[catalogue.URL]}/apps/html5ui/images/default/page_white_acrobat.png"/>\
       </button>\
       <button class="bookmark-icon" title="{[OpenLayers.i18n(""getMEF")]}"\
      onclick="catalogue.metadataMEF(\'{uuid}\');">\
-                <img src="{[catalogue.URL]}/apps/ngr2/images/default/page_white_zip.png"/>\
+                <img src="{[catalogue.URL]}/apps/html5ui/images/default/page_white_zip.png"/>\
             </button>\
             <div class="md-links" id="md-links-{id}"/>\
         </div>';
@@ -213,8 +213,8 @@ GeoNetwork.HTML5UI.Templates.DOWNLOAD =
 GeoNetwork.HTML5UI.Templates.VALID =
     '<tpl if="valid != \'-1\'">\
     <div class="validStatus">\
-    <tpl if="valid == \'1\'"><img src="../../apps/ngr2/img/valid_metadata.png"</tpl>\
-    <tpl if="valid == \'0\'"><img src="../../apps/ngr2/img/invalid_metadata.png"</tpl>\
+    <tpl if="valid == \'1\'"><img src="../../apps/html5ui/img/valid_metadata.png"</tpl>\
+    <tpl if="valid == \'0\'"><img src="../../apps/html5ui/img/invalid_metadata.png"</tpl>\
     " title="{[OpenLayers.i18n("validityInfo")]}\
     <tpl for="valid_details">\
    {values.type}: \
@@ -244,7 +244,7 @@ GeoNetwork.HTML5UI.Templates.WFS_VALID = "";
 GeoNetwork.HTML5UI.Templates.BOOKMARK =
     '<button class="bookmark-icon" value="{title}" \
     onclick="javascript:catalogue.metadataAddToBookmarks(\'{title}\', \'{uuid}\');">\
-        <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/ngr2/img/bookmark-add-icon.png"/>\
+        <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/html5ui/img/bookmark-add-icon.png"/>\
     </button>';
 
 /**
@@ -255,7 +255,7 @@ GeoNetwork.HTML5UI.Templates.COPYTOCLIPBOARD =
     '<tpl if="Ext.isIE"> \
      <button class="bookmark-icon" value="{title}" title="{[OpenLayers.i18n("Copy to Clipboard")]}" \
         onclick="copyToClipboard(metadataViewURL(\'{uuid}\'));">\
-        <img src="../../apps/ngr2/img/clipboard.png"/>\
+        <img src="../../apps/html5ui/img/clipboard.png"/>\
     </button> \
     </tpl>';
 

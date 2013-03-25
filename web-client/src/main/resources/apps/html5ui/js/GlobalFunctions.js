@@ -248,13 +248,9 @@ function showAdvancedSearch() {
         cookie.set('user', {});
         cookie.get('user').searchTemplate = 'FULL';
     }
-    if (catalogue && catalogue.resultsView) {
+    if (catalogue && catalogue.resultsView && catalogue.resultsView.autoSelectTemplate) {
         catalogue.resultsView.autoSelectTemplate();
     }
-
-    Ext.get("advSearchBtnBlank").setStyle("visibility", "hidden");
-    Ext.get("advSearchBtnBlank").setStyle("width",
-            (Ext.getBody().getWidth() - 280) + "px");
 }
 
 function hideAdvancedSearch(updateSearch) {
