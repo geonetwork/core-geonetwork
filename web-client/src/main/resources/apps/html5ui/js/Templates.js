@@ -28,13 +28,13 @@ Ext.namespace('GeoNetwork');
  *  base_link = `Ext.XTemplate <http://extjs.com/deploy/dev/docs/?class=Ext.XTemplate>`_
  */
 /** api: constructor
- *  .. class:: GeoNetwork.Ngr.Templates()
+ *  .. class:: GeoNetwork.HTML5UI.Templates()
  *
  *   A template for harvester (experimental)
  */
-GeoNetwork.Ngr = {};
+GeoNetwork.HTML5UI = {};
 
-GeoNetwork.Ngr.Templates = Ext.extend(Ext.XTemplate, {
+GeoNetwork.HTML5UI.Templates = Ext.extend(Ext.XTemplate, {
     compiled: false,
     disableFormats: false,
     catalogue : null,
@@ -104,7 +104,7 @@ GeoNetwork.Ngr.Templates = Ext.extend(Ext.XTemplate, {
         // TODO : other properties - display if available depends on harvester
     ],
     initComponent: function() {
-        GeoNetwork.Ngr.Templates.superclass.initComponent.call(this);
+        GeoNetwork.HTML5UI.Templates.superclass.initComponent.call(this);
     },
     /** api: method[getHarvesterTemplate]
      *
@@ -122,12 +122,12 @@ GeoNetwork.Ngr.Templates = Ext.extend(Ext.XTemplate, {
 /**
  * Shows Detailed Metadata on a new tab
  */
-GeoNetwork.Ngr.Templates.DETAILED_METADATA =
+GeoNetwork.HTML5UI.Templates.DETAILED_METADATA =
     '<li class="{type}">',
     '<button onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</button>',
     '</li>';
 
-GeoNetwork.Ngr.Templates.RATING = 
+GeoNetwork.HTML5UI.Templates.RATING = 
     '<div class="rating-wd" id="rating-{id}" title="{[OpenLayers.i18n("RatingText")]}">',
     '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' +
     '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' +
@@ -139,12 +139,12 @@ GeoNetwork.Ngr.Templates.RATING =
 /**
  * Title of the Metadata
  */
-GeoNetwork.Ngr.Templates.SHORT_TITLE =
+GeoNetwork.HTML5UI.Templates.SHORT_TITLE =
     '<h1 style="height:60px" >\
     <a href="javascript:void(0);" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">\
     {[Ext.util.Format.ellipsis(values.title, 30, true)]}</a>\
     </h1>';
-GeoNetwork.Ngr.Templates.TITLE =
+GeoNetwork.HTML5UI.Templates.TITLE =
     '<h1>\
        <a href="javascript:void(0);" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
     </h1>';
@@ -153,7 +153,7 @@ GeoNetwork.Ngr.Templates.TITLE =
 /**
  * Rating (stars) for metadata
  */
-GeoNetwork.Ngr.Templates.RATING_TPL = '<div class="rating">' +
+GeoNetwork.HTML5UI.Templates.RATING_TPL = '<div class="rating">' +
     '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'1\'">checked="true"</tpl> value="1"/>' +
     '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'2\'">checked="true"</tpl> value="2"/>' +
     '<input type="radio" name="rating{values.uuid}" <tpl if="rating==\'3\'">checked="true"</tpl> value="3"/>' +
@@ -164,7 +164,7 @@ GeoNetwork.Ngr.Templates.RATING_TPL = '<div class="rating">' +
 /**
  * Source logo
  */
-GeoNetwork.Ngr.Templates.LOGO =
+GeoNetwork.HTML5UI.Templates.LOGO =
     '<div class="md-logo">\
         <img src="{[catalogue.URL]}/images/harvesting/{groupName}.png"/>\
     </div>';
@@ -173,7 +173,7 @@ GeoNetwork.Ngr.Templates.LOGO =
 /**
  * Button to put the metadata on the map
  */
-GeoNetwork.Ngr.Templates.SHOW_ON_MAP =
+GeoNetwork.HTML5UI.Templates.SHOW_ON_MAP =
     '<tpl for="links">\
         <tpl if="values.type == \'application/vnd.ogc.wms_xml\'">\
             <button class="addLayer" title="{title}" alt="{title}" onclick="app.getIMap().addWMSLayer([[\'{title}\', \'{href}\', \'{name}\', \'{uuid}\']]);">\
@@ -182,13 +182,13 @@ GeoNetwork.Ngr.Templates.SHOW_ON_MAP =
         </tpl>\
     </tpl>';
 
-GeoNetwork.Ngr.Templates.LINKCONTAINER = 
+GeoNetwork.HTML5UI.Templates.LINKCONTAINER = 
     '<div class="md-links" id="md-links-{id}">\
     </div>';
 /**
  * Button to download metadata
  */
-GeoNetwork.Ngr.Templates.DOWNLOAD =
+GeoNetwork.HTML5UI.Templates.DOWNLOAD =
     '<div>\
   <button class="bookmark-icon" title="{[OpenLayers.i18n("saveXml") ]}"\
    onclick="catalogue.metadataXMLShow(\'{uuid}\', \'{schema}\');">\
@@ -210,7 +210,7 @@ GeoNetwork.Ngr.Templates.DOWNLOAD =
  * Shows if the metadata is valid
  * Validity and category information
  */
-GeoNetwork.Ngr.Templates.VALID =
+GeoNetwork.HTML5UI.Templates.VALID =
     '<tpl if="valid != \'-1\'">\
     <div class="validStatus">\
     <tpl if="valid == \'1\'"><img src="../../apps/ngr2/img/valid_metadata.png"</tpl>\
@@ -231,34 +231,17 @@ GeoNetwork.Ngr.Templates.VALID =
  * 
  * WMS validation is made by MetadataResultsView.dislayLinks
  */
-GeoNetwork.Ngr.Templates.WMS_VALID = "";
+GeoNetwork.HTML5UI.Templates.WMS_VALID = "";
 
 /**
  * Shows if the WFS is valid. WFS validation is made by MetadataResultsView.dislayLinks
  */
-GeoNetwork.Ngr.Templates.WFS_VALID = "";
-
-
-/**
- * Shows if there are other licenses (and which ones)
- */
-GeoNetwork.Ngr.Templates.OTHER_LICENSES =
-    '<tpl if="license != \'\' && license != \'otherConstraints\'">\
-        <div class="otherLicenses">\
-          <tpl if="licenseLink != \'\'"><a target="_blank" href="{[values.licenseLink]}"></tpl>\
-            <tpl if="license == \'OtherConstraints\'"><img title="{[OpenLayers.i18n("Other Restrictions")]}" src="../../apps/ngr2/img/icon_access-restrictions.png" /></tpl>\
-            <tpl if="license == \'CC0\'"><img title="{[OpenLayers.i18n("Creative Commons Zero")]}" src="../../apps/ngr2/img/icon_creative_commons.png" /></tpl>\
-            <tpl if="license == \'Public Domain\'"><img title="{[OpenLayers.i18n("Public Domain")]}" src="../../apps/ngr2/img/icon_public_domein.png" /></tpl>\
-            <tpl if="license == \'Geo Gedeeld licentie\'"><img src="../../apps/ngr2/img/icon_gebruiksvoorwaarden.png" /></tpl>\
-          <tpl if="licenseLink != \'\'"></a></tpl>\
-        </div>\
-    </tpl>';
-//<img src="../../apps/ngr2/img/icon_gebruiksvoorwaarden.png" /><span>{license}</span>\
+GeoNetwork.HTML5UI.Templates.WFS_VALID = "";
 
 /**
  * Shows Add to favourites
  */
-GeoNetwork.Ngr.Templates.BOOKMARK =
+GeoNetwork.HTML5UI.Templates.BOOKMARK =
     '<button class="bookmark-icon" value="{title}" \
     onclick="javascript:catalogue.metadataAddToBookmarks(\'{title}\', \'{uuid}\');">\
         <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/ngr2/img/bookmark-add-icon.png"/>\
@@ -268,7 +251,7 @@ GeoNetwork.Ngr.Templates.BOOKMARK =
  * Display copy to clipboard icon if you are using IE.
  * @type {String}
  */
-GeoNetwork.Ngr.Templates.COPYTOCLIPBOARD =
+GeoNetwork.HTML5UI.Templates.COPYTOCLIPBOARD =
     '<tpl if="Ext.isIE"> \
      <button class="bookmark-icon" value="{title}" title="{[OpenLayers.i18n("Copy to Clipboard")]}" \
         onclick="copyToClipboard(metadataViewURL(\'{uuid}\'));">\
@@ -279,7 +262,7 @@ GeoNetwork.Ngr.Templates.COPYTOCLIPBOARD =
 /**
  * Thumbnails
  */
-GeoNetwork.Ngr.Templates.THUMB =
+GeoNetwork.HTML5UI.Templates.THUMB =
     '<div style="height:150px" class="thumbnail">\
         <tpl if="thumbnail">\
             <a href="javascript:catalogue.metadataShow(\'{uuid}\');return false;">\
@@ -288,7 +271,7 @@ GeoNetwork.Ngr.Templates.THUMB =
         </tpl>\
     </div>';
 
-GeoNetwork.Ngr.Templates.CHANGE_DATE = 
+GeoNetwork.HTML5UI.Templates.CHANGE_DATE = 
     '<tpl if="edit==\'false\' || isharvested==\'y\'">\
         <div> {[OpenLayers.i18n("lastUpdate")]} {[values.changedate.split(\'T\')[0]]}</div>\
     </tpl>';
@@ -296,7 +279,7 @@ GeoNetwork.Ngr.Templates.CHANGE_DATE =
 /**
  * Shows contact info.
  */
-GeoNetwork.Ngr.Templates.CONTACT_INFO =
+GeoNetwork.HTML5UI.Templates.CONTACT_INFO =
     '<div class="md-contact">\
 <tpl for="contact">\
  <tpl if="applies==\'resource\'">\
@@ -310,16 +293,16 @@ GeoNetwork.Ngr.Templates.CONTACT_INFO =
 <tpl if="edit==\'true\' && isharvested!=\'y\'">\
  <div class="md-mn md-mn-user" title="{[OpenLayers.i18n("ownerName")]}">{ownername} -  {[OpenLayers.i18n("lastUpdate")]}{[values.changedate.split(\'T\')[0]]}</div>\
         </tpl>' +
-    GeoNetwork.Ngr.Templates.CHANGE_DATE + 
+    GeoNetwork.HTML5UI.Templates.CHANGE_DATE + 
     '</div>';
 
-GeoNetwork.Ngr.Templates.CONTACT_INFO_TOOLTIP =
+GeoNetwork.HTML5UI.Templates.CONTACT_INFO_TOOLTIP =
   '<tpl for="contact"><tpl if="applies==\'resource\'"> - {name} ({role}) \n</tpl>\</tpl>';	// In one line to avoid extra space in tooltip
 
 /**
  * Description
  */
-GeoNetwork.Ngr.Templates.SUBJECT =
+GeoNetwork.HTML5UI.Templates.SUBJECT =
     '<tpl if="subject">\
         <span class="subject">\
         <tpl for="subject">\
@@ -331,7 +314,7 @@ GeoNetwork.Ngr.Templates.SUBJECT =
 /**
  * Description
  */
-GeoNetwork.Ngr.Templates.CATEGORIES =
+GeoNetwork.HTML5UI.Templates.CATEGORIES =
     '<td class="icon" title="{[OpenLayers.i18n("metadataCategories")]}">',
     '<tpl for="category">',
     '<div class="md-mn cat-{value}" title="{value}">&nbsp;</div>',
@@ -341,39 +324,39 @@ GeoNetwork.Ngr.Templates.CATEGORIES =
 /**
  * Related metadata
  */
-GeoNetwork.Ngr.Templates.RELATED_DATASETS =
+GeoNetwork.HTML5UI.Templates.RELATED_DATASETS =
     '<div class="relation" title="{[OpenLayers.i18n("relateddatasets")]}">\
     <span></span>\
     <ul id="md-relation-{id}"></ul>\
 </div>';
 
 /** api: constructor
- *  .. class:: GeoNetwork.Ngr.Templates.SIMPLE()
+ *  .. class:: GeoNetwork.HTML5UI.Templates.SIMPLE()
  *
- *   An instance of a pre-configured GeoNetwork.Ngr.Templates with title and
+ *   An instance of a pre-configured GeoNetwork.HTML5UI.Templates with title and
  *   keywords with abstract in tooltip.
  */
-GeoNetwork.Ngr.Templates.SIMPLE = new Ext.XTemplate(
+GeoNetwork.HTML5UI.Templates.SIMPLE = new Ext.XTemplate(
     '<ul>',
     '<tpl for=".">',
     '<li class="md md-simple" title="{abstract}" style="{featurecolorCSS}">',
     '<table>\
 <tr>',
    '<td style="width:40px;">',
-    GeoNetwork.Ngr.Templates.LOGO,
+    GeoNetwork.HTML5UI.Templates.LOGO,
     '</td>',
    '<td id="{uuid}">',
-    GeoNetwork.Ngr.Templates.TITLE,
+    GeoNetwork.HTML5UI.Templates.TITLE,
     '</td>\
         </tr>\
     </table>',
     '<table>\
 <tr>\
     <td>',
-    GeoNetwork.Ngr.Templates.SUBJECT,
+    GeoNetwork.HTML5UI.Templates.SUBJECT,
     '</td>\
     <td>',
-    GeoNetwork.Ngr.Templates.CONTACT_INFO,
+    GeoNetwork.HTML5UI.Templates.CONTACT_INFO,
     '</td>\
         </tr>\
     </table>',
@@ -383,17 +366,17 @@ GeoNetwork.Ngr.Templates.SIMPLE = new Ext.XTemplate(
 //    Add to map and download link are handled by the JS
 //    based on the store content to create list menu instead
 //    of a long list of buttons.
-//    GeoNetwork.Ngr.Templates.SHOW_ON_MAP,
+//    GeoNetwork.HTML5UI.Templates.SHOW_ON_MAP,
 //    '</td>\
 //    <td>',
-//    GeoNetwork.Ngr.Templates.DOWNLOAD,
+//    GeoNetwork.HTML5UI.Templates.DOWNLOAD,
 //    '</td>\
 //     <td>',
-    GeoNetwork.Ngr.Templates.BOOKMARK,
-    GeoNetwork.Ngr.Templates.LINKCONTAINER,
+    GeoNetwork.HTML5UI.Templates.BOOKMARK,
+    GeoNetwork.HTML5UI.Templates.LINKCONTAINER,
     '</td>\
      <td>',
-    GeoNetwork.Ngr.Templates.COPYTOCLIPBOARD,
+    GeoNetwork.HTML5UI.Templates.COPYTOCLIPBOARD,
     '</td>\
      </tr>\
     </table>',
@@ -405,22 +388,22 @@ GeoNetwork.Ngr.Templates.SIMPLE = new Ext.XTemplate(
 
 
 /** api: constructor
- *  .. class:: GeoNetwork.Ngr.Templates.THUMBNAIL()
+ *  .. class:: GeoNetwork.HTML5UI.Templates.THUMBNAIL()
  *
- *   An instance of a pre-configured GeoNetwork.Ngr.Templates with thumbnail view
+ *   An instance of a pre-configured GeoNetwork.HTML5UI.Templates with thumbnail view
  */
-GeoNetwork.Ngr.Templates.THUMBNAIL = new Ext.XTemplate(
+GeoNetwork.HTML5UI.Templates.THUMBNAIL = new Ext.XTemplate(
     '<ul>',
     '<tpl for=".">',
     '<li class="md md-thumbnail" style="{featurecolorCSS}">',
     '<div class="md-wrap" id="{uuid}" title="{abstract}\n',
-    GeoNetwork.Ngr.Templates.CONTACT_INFO_TOOLTIP,
+    GeoNetwork.HTML5UI.Templates.CONTACT_INFO_TOOLTIP,
     '">',
-    GeoNetwork.Ngr.Templates.SHORT_TITLE,
-    GeoNetwork.Ngr.Templates.THUMB,
-    GeoNetwork.Ngr.Templates.LINKCONTAINER,
+    GeoNetwork.HTML5UI.Templates.SHORT_TITLE,
+    GeoNetwork.HTML5UI.Templates.THUMB,
+    GeoNetwork.HTML5UI.Templates.LINKCONTAINER,
       '<div class="md-contact">',
-      GeoNetwork.Ngr.Templates.CHANGE_DATE,
+      GeoNetwork.HTML5UI.Templates.CHANGE_DATE,
       '</div>',
     '</div>',
     '</li>',
@@ -430,21 +413,21 @@ GeoNetwork.Ngr.Templates.THUMBNAIL = new Ext.XTemplate(
 
 
 /** api: constructor
- *  .. class:: GeoNetwork.Ngr.Templates.FULL()
+ *  .. class:: GeoNetwork.HTML5UI.Templates.FULL()
  *
- *   An instance of a pre-configured GeoNetwork.Ngr.Templates with full view
+ *   An instance of a pre-configured GeoNetwork.HTML5UI.Templates with full view
  */
-GeoNetwork.Ngr.Templates.FULL = new Ext.XTemplate(
+GeoNetwork.HTML5UI.Templates.FULL = new Ext.XTemplate(
     '<ul>',
     '<tpl for=".">',
     '<li class="md md-full" style="{featurecolorCSS}">',
     '<table>\
         <tr>',
             '<td class="left">',
-            GeoNetwork.Ngr.Templates.LOGO,
+            GeoNetwork.HTML5UI.Templates.LOGO,
             '</td>',
             '<td id="{uuid}" style="width:80%;">',
-                GeoNetwork.Ngr.Templates.TITLE,
+                GeoNetwork.HTML5UI.Templates.TITLE,
                 '<p class="abstract">\
                 <tpl if="values.abstract.length &gt;350">\
                 {[values.abstract.substring(0, 350)]}...\
@@ -453,39 +436,37 @@ GeoNetwork.Ngr.Templates.FULL = new Ext.XTemplate(
                 {values.abstract}\
                 </tpl>\
                 </p>',    // FIXME : 250 as parameters
-                GeoNetwork.Ngr.Templates.SUBJECT,
-                GeoNetwork.Ngr.Templates.LICENSE,
+                GeoNetwork.HTML5UI.Templates.SUBJECT,
             '</td>\
             <td class="thumb">',
-                GeoNetwork.Ngr.Templates.RATING_TPL,
-                GeoNetwork.Ngr.Templates.THUMB,
-                GeoNetwork.Ngr.Templates.CONTACT_INFO,
+                GeoNetwork.HTML5UI.Templates.RATING_TPL,
+                GeoNetwork.HTML5UI.Templates.THUMB,
+                GeoNetwork.HTML5UI.Templates.CONTACT_INFO,
             '</td>',
-            GeoNetwork.Ngr.Templates.CATEGORIES,
+            GeoNetwork.HTML5UI.Templates.CATEGORIES,
         '</tr>',
     '</table>',
     '<table><tr>',
             '<td>',
-            GeoNetwork.Ngr.Templates.BOOKMARK,
-            GeoNetwork.Ngr.Templates.COPYTOCLIPBOARD,
+            GeoNetwork.HTML5UI.Templates.BOOKMARK,
+            GeoNetwork.HTML5UI.Templates.COPYTOCLIPBOARD,
             '</td>',
             '<td class="icon" colspan="2">',
 
-            GeoNetwork.Ngr.Templates.OTHER_LICENSES,
-            GeoNetwork.Ngr.Templates.WMS_VALID,
-            GeoNetwork.Ngr.Templates.WFS_VALID,
-            GeoNetwork.Ngr.Templates.LINKCONTAINER,
-            GeoNetwork.Ngr.Templates.VALID,
-            GeoNetwork.Ngr.Templates.RATING,
+            GeoNetwork.HTML5UI.Templates.WMS_VALID,
+            GeoNetwork.HTML5UI.Templates.WFS_VALID,
+            GeoNetwork.HTML5UI.Templates.LINKCONTAINER,
+            GeoNetwork.HTML5UI.Templates.VALID,
+            GeoNetwork.HTML5UI.Templates.RATING,
 
-        //    GeoNetwork.Ngr.Templates.SHOW_ON_MAP,
-        //    GeoNetwork.Ngr.Templates.DOWNLOAD,
+        //    GeoNetwork.HTML5UI.Templates.SHOW_ON_MAP,
+        //    GeoNetwork.HTML5UI.Templates.DOWNLOAD,
             '</td>',
         '</tr>',
         '<tr>',
             '<td>',
-            GeoNetwork.Ngr.Templates.RELATED_DATASETS,
-            GeoNetwork.Ngr.Templates.DETAILED_METADATA,
+            GeoNetwork.HTML5UI.Templates.RELATED_DATASETS,
+            GeoNetwork.HTML5UI.Templates.DETAILED_METADATA,
             '</td>',
         '</tr>\
     </table>',
@@ -524,7 +505,7 @@ GeoNetwork.Ngr.Templates.FULL = new Ext.XTemplate(
     }
 );
 
-GeoNetwork.Ngr.Templates.Relation = {
+GeoNetwork.HTML5UI.Templates.Relation = {
     SHORT: ['<li class="{type}">',
         '<button onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;" title="{abstract}">{title}</button>',
         '</li>']

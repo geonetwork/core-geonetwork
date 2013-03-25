@@ -77,11 +77,11 @@ div#advSearchTabs div.x-panel-bwrap div.x-panel-body.x-panel-body-noheader.x-pan
 }
 
 #big-map .x-layout-collapsed {
-	background-color: #F6D4B1 !important;
+	background-color: #47A8DD;
 }
 
 #big-map .x-layout-split,#big-map .x-layout-collapsed-over {
-	background-color: #E26F02 !important;
+	background-color: #47A8DD;
 }
 
 div#tabs ul.x-tab-strip-top {
@@ -102,7 +102,7 @@ div#tabs .x-tab-strip-active .x-tab-right,div#tabs .x-tab-strip-active .x-tab-le
 
 div#tabs .x-tab-strip-active .x-tab-right {
 	box-shadow: rgba(0, 0, 0, 0.5);
-	border-top: #E26F02;
+	border-top: #47A8DD;
 }
 
 #legend-search {
@@ -129,7 +129,7 @@ div#tabs .x-tab-strip-active .x-tab-right {
  */
 div.facets>ul>li {
 	border-top: #CCC;
-	color: #E26F02;
+	color: #47A8DD;
 }
 
 .facet-count {
@@ -137,11 +137,11 @@ div.facets>ul>li {
 }
 
 div.facets * .facet-more-bt,div.facets * .facet-less-bt {
-	color: #E26F02;
+	color: #47A8DD;
 }
 
 .breadcrumb * button {
-	color: #E26F02;
+	color: #47A8DD;
 }
 
 .breadcrumb * button:hover {
