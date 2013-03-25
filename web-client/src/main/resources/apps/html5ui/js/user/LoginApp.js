@@ -42,7 +42,6 @@ GeoNetwork.loginApp = function() {
                             function(e) {
                                 cookie.set('user', catalogue.identifiedUser);
                                 hide("login-form");
-                                Ext.getCmp('other-actions-mdrv').show();
                                 Ext.getCmp('md-selection-info').show();
 
                                 var user = catalogue.identifiedUser;
@@ -66,7 +65,7 @@ GeoNetwork.loginApp = function() {
                                     Ext.get("profile_label").update(
                                             "(" + user.role + ")");
                                 }
-                                Ext.get("user-button").dom.href = "javascript:catalogue.logout();";
+                                Ext.get("user-button").dom.href = "javascript:app.loginApp.logout();";
 
                                 show("administration_button");
 
@@ -79,7 +78,6 @@ GeoNetwork.loginApp = function() {
             catalogue.on('afterLogout', function() {
                 cookie.set('user', undefined);
 
-                Ext.getCmp('other-actions-mdrv').hide();
                 Ext.getCmp('md-selection-info').hide();
                 hide("administration_button");
                 if (Ext.isIE) {
@@ -135,7 +133,7 @@ GeoNetwork.loginApp = function() {
             var loginAttempts = 0;
             var loginWindow;
             Ext.Ajax.request({
-                url : catalogue.services.rootUrl + '/j_spring_security_check',
+                url : catalogue.services.rootUrl + '../../j_spring_security_check',
                 params : {
                     username : username,
                     password : password
@@ -145,6 +143,17 @@ GeoNetwork.loginApp = function() {
                 },
                 success : this.isLoggedIn,
                 failure : this.isLoggedIn,
+                scope : this
+            });
+        },// FIXME Until catalog is adapted to spring security login, use this
+        logout : function() {
+            Ext.Ajax.request({
+                url : catalogue.services.rootUrl + '../../j_spring_security_logout',
+                headers : {
+                    "Content-Type" : "application/x-www-form-urlencoded"
+                },
+                success : catalogue.onAfterLogout(),
+                failure : catalogue.onAfterBadLogout(),
                 scope : this
             });
         },

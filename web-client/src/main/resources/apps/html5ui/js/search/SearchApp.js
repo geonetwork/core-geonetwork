@@ -492,11 +492,11 @@ GeoNetwork.searchApp = function() {
                 displaySerieMembers : true,
                 autoScroll : true,
                 autoWidth : false,
-                tpl : GeoNetwork.Ngr.Templates.FULL,
+                tpl : GeoNetwork.HTML5UI.Templates.FULL,
                 templates : {
-                    SIMPLE : GeoNetwork.Ngr.Templates.SIMPLE,
-                    THUMBNAIL : GeoNetwork.Ngr.Templates.THUMBNAIL,
-                    FULL : GeoNetwork.Ngr.Templates.FULL
+                    SIMPLE : GeoNetwork.HTML5UI.Templates.SIMPLE,
+                    THUMBNAIL : GeoNetwork.HTML5UI.Templates.THUMBNAIL,
+                    FULL : GeoNetwork.HTML5UI.Templates.FULL
                 },
                 featurecolor : GeoNetwork.Settings.results.featurecolor,
                 colormap : GeoNetwork.Settings.results.colormap,

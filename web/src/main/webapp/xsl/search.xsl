@@ -137,14 +137,12 @@
 			<body>
 			  <div class="grey">
                 <a href="javascript:window.print();" id="printer-button"><xsl:value-of select="/root/gui/strings/print" /></a> 
-                <a href="#" onclick="new GeoNetwork.FeedbackForm().show();" id="feedback-site-button">
-                    <xsl:value-of select="/root/gui/strings/feedback" />
-                </a>
+              
                 <a id="rss-button">
                     <xsl:attribute name="href"><xsl:value-of
                         select="$baseUrl" />/srv/<xsl:value-of
                         select="/root/gui/language" />/rss.search</xsl:attribute>
-                    RSS
+                    
                 </a>
                <!--  <a id="sitemap-button">
                     <xsl:attribute name="href"><xsl:value-of
@@ -172,7 +170,7 @@
 	                                    <xsl:value-of select="/root/gui/strings/login" />
 	                                </xsl:when>
 	                                <xsl:otherwise>
-	                                     <xsl:attribute name="href">javascript:catalogue.logout();</xsl:attribute>
+	                                     <xsl:attribute name="href">javascript:app.loginApp.logout();</xsl:attribute>
                                          <xsl:value-of select="/root/gui/strings/logout" />
 	                                </xsl:otherwise>
                                 </xsl:choose>
