@@ -1,20 +1,43 @@
 package org.fao.geonet.services.gm03;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
-import javax.xml.transform.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import jeeves.server.context.ServiceContext;
+import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AxisIterator;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.pattern.NodeKindTest;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.fao.geonet.util.XslUtil;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class TranslateAndValidate {
 	public static final SchemaFactory SCHEMA_FACTORY = SchemaFactory
@@ -70,10 +93,10 @@ public class TranslateAndValidate {
             final String xmlFilenameOnly = new File(xmlFilename).getName();
             final StreamSource source = new StreamSource(xmlFilename);
             
-            StringBuffer doc = translate(xmlFilename, source, xslt, false);
+            StringBuffer doc = translate(xmlFilename, source, xslt, false, null);
             saveFile(doc, "result_" + xmlFilenameOnly);
             if(debug ) {
-                saveFile(translate(xmlFilename, source, xslt, true), "intermediate_"
+                saveFile(translate(xmlFilename, source, xslt, true, null), "intermediate_"
                     + xmlFilenameOnly);
             }
             if (schema != null)
@@ -108,24 +131,31 @@ public class TranslateAndValidate {
         Transformer xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(
                 xslFilename));
 
-        StringBuffer doc = translate("unknown", source, xslt, false);
+        StringBuffer doc = translate("unknown", source, xslt, false, null);
         saveFile(doc, "result_");
         if(debug ) {
-            saveFile(translate("unknown", source, xslt, true), "intermediate_");
+            saveFile(translate("unknown", source, xslt, true, null), "intermediate_");
         }
         if (schema != null)
             validate(schema, "", doc, xslt);
     }
 
 	private StringBuffer translate(String xmlFilename, Source source, Transformer xslt,
-			boolean debug) {
+			boolean debug, String uuid) {
 		final StringWriter result = new StringWriter();
 		StreamResult transformed = new StreamResult(result);
 		xslt.setParameter("DEBUG", debug ? "1" : "0");
+		if(uuid != null) {
+			xslt.setParameter("uuid", uuid);
+		}
 		try {
 			xslt.transform(source, transformed);
 		} catch (TransformerException ex) {
-			System.out.println("Errors in " + xmlFilename + ":");
+			if(xmlFilename != null) {
+				System.out.println("Errors in " + xmlFilename + ":");
+			} else {
+				System.out.println("Errors:");
+			}
 			ex.printStackTrace(System.out);
 			throw new AssertionError(ex);
 		}
@@ -149,13 +179,17 @@ public class TranslateAndValidate {
 				errorHandler.printError(System.out);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				errorHandler.printError(new PrintStream(out));
-				generateTempFiles(doc, xslt, xmlFilename);
+				if(xmlFilename != null) {
+					generateTempFiles(doc, xslt, xmlFilename);
+				}
 				throw new AssertionError(out.toString());
 			} else {
 				// System.out.println(xmlFilename + " is valid.");
 			}
 		} catch (SAXException ex) {
-			generateTempFiles(doc, xslt, xmlFilename);
+			if(xmlFilename != null) {
+				generateTempFiles(doc, xslt, xmlFilename);
+			}
 			errorHandler.throwErrors();
 		}
 	}
@@ -193,7 +227,7 @@ public class TranslateAndValidate {
 		saveFile(doc, "errorResult.xml");
        final StreamSource source = new StreamSource(xmlFilename);
 
-		saveFile(translate(xmlFilename, source, xslt, true), "errorDebug.xml");
+		saveFile(translate(xmlFilename, source, xslt, true, null), "errorDebug.xml");
 	}
 
 	protected void saveFile(StringBuffer doc, String fileName) throws IOException {
@@ -259,4 +293,80 @@ public class TranslateAndValidate {
 				.getAbsolutePath() : null), xmlFilenames);
 
 	}
+
+	public static NodeInfo toCheBootstrap(NodeInfo doc, String uuid,
+			String validate, String debugFileName, String webappDir)
+			throws Exception {
+
+    	final String SEP = File.separator;
+    	StringBuilder xslFileName = new StringBuilder(SEP).
+    			append("xsl").
+    			append(SEP).
+    			append("conversion").
+    			append(SEP).
+    			append("GM03to19139CHE" ).
+    			append( SEP);
+    	
+    	if(webappDir == null) {
+    		xslFileName.insert(0, ServiceContext.get().getAppPath());
+    	} else {
+    		xslFileName.insert(0, webappDir);
+    	}
+    	
+    	String xml = XslUtil.writeXml(doc.getRoot());
+    	AxisIterator iter = doc.iterateAxis(Axis.DESCENDANT, NodeKindTest.ELEMENT);
+    	while(iter.moveNext()) {
+    		NodeInfo next = (NodeInfo) iter.next();
+    		if(next == null) {
+    			break;
+    		}
+    		String lp = next.getLocalPart();
+    		if(lp.startsWith("GM03_2_1")) {
+    			// basic dir will work
+    			xslFileName.append("version2_1"+SEP);
+    			break;
+    		} else if(lp.startsWith("GM03_2")) {
+    			xslFileName.append("version2"+SEP);
+    			break;
+	    	} else if(lp.equals("GM03Comprehensive.Comprehensive") || lp.equals("GM03Core.Core.MD_Metadata")) {
+	    		break;
+	    	}
+    		
+    	}
+    			
+    			
+    	if(xml.trim().isEmpty()) {
+    	}
+
+		xslFileName.append("CHE03-to-19139.xsl");
+
+    	Transformer xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(xslFileName.toString()));
+    	
+		byte[] bytes = xml.getBytes("UTF-8");
+		StreamSource source = new StreamSource(new ByteArrayInputStream(bytes));
+    	
+    	TranslateAndValidate instance = new TranslateAndValidate();
+		StringBuffer result = instance.translate(debugFileName, source, xslt, false, uuid);
+		if (debugFileName != null) {
+			File outFile = new File(debugFileName);
+			instance.outputDir = outFile.getParentFile();
+			instance.outputDir.mkdirs();
+			
+			instance.saveFile(result, "result_"+outFile.getName());
+			
+			source = new StreamSource(new ByteArrayInputStream(bytes));
+			instance.saveFile(instance.translate(null, source, xslt, true, uuid), "intermediate_"+outFile.getName());
+		}
+		
+
+        if (validate != null && !validate.trim().isEmpty()) {
+        	File schemaLocation = new File(validate);
+            Schema schema = SCHEMA_FACTORY.newSchema(schemaLocation);
+            instance.validate(schema, null, result, xslt);
+        }
+        
+		Source xmlSource = new StreamSource(new ByteArrayInputStream(result.toString().getBytes("UTF-8")));
+        return doc.getConfiguration().buildDocument(xmlSource);
+    }
+
 }

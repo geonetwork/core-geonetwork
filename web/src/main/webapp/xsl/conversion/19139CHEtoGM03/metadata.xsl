@@ -8,7 +8,7 @@
                 exclude-result-prefixes="che gco gmd">
 
     <xsl:template mode="metadata" match="che:CHE_MD_Metadata|gmd:MD_Metadata">
-        <GM03_2Core.Core.MD_Metadata TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_Metadata TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:fileIdentifier"/>
             <xsl:apply-templates mode="metadata" select="gmd:language"/>
             <xsl:apply-templates mode="text" select="gmd:characterSet"/>
@@ -18,7 +18,7 @@
             <xsl:if test="gmd:hierarchyLevel">
                 <hierarchyLevel>
                     <xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode">
-                        <xsl:element name="GM03_2Core.Core.MD_ScopeCode_">
+                        <xsl:element name="GM03_2_1Core.Core.MD_ScopeCode_">
                             <value><xsl:value-of select="@codeListValue"/></value>
                         </xsl:element>
                     </xsl:for-each>
@@ -50,7 +50,7 @@
             <xsl:apply-templates mode="metadata" select="gmd:featureType"/>
             <xsl:apply-templates mode="metadata" select="gmd:featureAttribute"/>
             <xsl:apply-templates mode="metadata" select="che:legislationInformation"/>
-        </GM03_2Core.Core.MD_Metadata>
+        </GM03_2_1Core.Core.MD_Metadata>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:parentIdentifier">
@@ -58,12 +58,12 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="che:legislationInformation">
-        <GM03_2Comprehensive.Comprehensive.MD_MetadatalegislationInformation TID='x{generate-id(.)}'>
+        <GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation TID='x{generate-id(.)}'>
             <BACK_REF name="MD_Metadata"/>
             <legislationInformation REF="?">
                 <xsl:apply-templates mode="Legislation"/>
             </legislationInformation>
-        </GM03_2Comprehensive.Comprehensive.MD_MetadatalegislationInformation>
+        </GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:metadataMaintenance|che:CHE_MD_MaintenanceInformation">
@@ -81,19 +81,19 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:portrayalCatalogueInfo">
-        <GM03_2Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata TID="x{generate-id(.)}">
             <portrayalCatalogueInfo REF="?">
                 <xsl:apply-templates mode="metadata"/>
             </portrayalCatalogueInfo>
             <BACK_REF name="MD_Metadata"/>
-        </GM03_2Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata>
+        </GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:MD_PortrayalCatalogueReference|che:CHE_MD_PortrayalCatalogueReference">
-        <GM03_2Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID="x{generate-id(.)}">
             <!-- portrayalCatalogueURL? -->
             <xsl:apply-templates mode="metadata" select="gmd:portrayalCatalogueCitation"/>
-        </GM03_2Comprehensive.Comprehensive.MD_PortrayalCatalogueReference>
+        </GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:portrayalCatalogueCitation">
@@ -101,10 +101,10 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:CI_Citation">
-        <GM03_2Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
             <xsl:apply-templates mode="RefSystem" select="."/>
             <BACK_REF name="MD_PortrayalCatalogReference"/>
-        </GM03_2Comprehensive.Comprehensive.CI_Citation>
+        </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:dataQualityInfo">
@@ -112,13 +112,13 @@
     </xsl:template>
 
    <xsl:template mode="metadata" match="gmd:contact">
-        <GM03_2Core.Core.MD_Metadatacontact TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_Metadatacontact>
             <contact REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </contact>
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="RespPartyRole" select="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty"/>
-        </GM03_2Core.Core.MD_Metadatacontact>
+        </GM03_2_1Core.Core.MD_Metadatacontact>
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:language">
@@ -127,9 +127,9 @@
 
     <xsl:template mode="metadata" match="gmd:hierarchyLevelName">
         <xsl:for-each select="gco:CharacterString">
-            <GM03_2Core.Core.CharacterString_>
+            <GM03_2_1Core.Core.CharacterString_>
                 <value><xsl:value-of select="."/></value>
-            </GM03_2Core.Core.CharacterString_>
+            </GM03_2_1Core.Core.CharacterString_>
         </xsl:for-each>
     </xsl:template>
 

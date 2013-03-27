@@ -99,70 +99,74 @@ val specifics = Map(
 )
 
 
-val dir = new File("version2/")
-val shaFile = "lastModification.sha"
-
 def rmtree(f:File) : Boolean = {
   if(f.isDirectory) f.listFiles.foreach(rmtree)
   f.delete
 }
 
-rmtree(dir)
-dir.mkdirs
+def copy(prefix:String, dir: File) {
 
-val exprs = List(
-  Expr(("""select\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r),
-  Expr(("""match\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r),
-  Expr(("""test\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r)
-)
-
-for (file <- new File(".").listFiles;
-     if file.getName.endsWith(".xsl") ) {
-
-  val found = collection.mutable.Set[String]()
-  var styleSheetTag = false
-  var wroteExcludes = false
-
-  val out = new FileWriter(new File(dir, file.getName))
-  Source.fromFile(file) getLines() foreach { l =>
-    var line = l
-    var write = true
-
-    if (line contains "<xsl:stylesheet") styleSheetTag = true
-    if (line contains "exclude-result-prefixes") {
-      val Array(prefix, att) = line split ("\"",2)
-      line = "%s\"int %s".format(prefix,att)
-      wroteExcludes = true
-    }
-
-    if(styleSheetTag && (line contains '>')) {
-      styleSheetTag = false
-      out.write("                xmlns:int=\"http://www.interlis.ch/INTERLIS2.3\"\n")
-      if (!wroteExcludes) out.write("                exclude-result-prefixes=\"int\"\n")
-    }
-    if (line contains "<xsl:include href=\"version2") write=false
-
-    for {map <- specifics.get(file.getName)
-         (toReplace,replacement) <- map
-         if line contains toReplace } {
-           line = line.replace(toReplace, replacement)
-           found += toReplace
-    }
-
-    line = line.replace("GM03","int:GM03_2").
-        replace("TRANSFER", "int:TRANSFER").
-        replace("DATASECTION", "int:DATASECTION").
-        replace("comp:int", "comp")
-
-
-    for (expr <- exprs) line = expr.replace(line)
-
-    if(write) out.write(line+"\n")
-  }
-  out.close()
-
-  specifics.get(file.getName) foreach {m =>
-    if (m.size != found.size)
-      println ("ERROR:  --- Not all replacements were matched:"+" filename="+file.getName+" -> "+(m.keySet -- found mkString ", "))
-  }
+	val shaFile = "lastModification.sha"
+	rmtree(dir)
+	dir.mkdirs
+	
+	val exprs = List(
+	  Expr(("""select\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r),
+	  Expr(("""match\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r),
+	  Expr(("""test\s*=\s*"\s*(int:)?([\w"""+Excludes+"""]+)""").r)
+	)
+	
+	for (file <- new File(".").listFiles;
+	     if file.getName.endsWith(".xsl") ) {
+	
+	  val found = collection.mutable.Set[String]()
+	  var styleSheetTag = false
+	  var wroteExcludes = false
+	
+	  val out = new FileWriter(new File(dir, file.getName))
+	  Source.fromFile(file) getLines() foreach { l =>
+	    var line = l
+	    var write = true
+	
+	    if (line contains "<xsl:stylesheet") styleSheetTag = true
+	    if (line contains "exclude-result-prefixes") {
+	      val Array(prefix, att) = line split ("\"",2)
+	      line = "%s\"int %s".format(prefix,att)
+	      wroteExcludes = true
+	    }
+	
+	    if(styleSheetTag && (line contains '>')) {
+	      styleSheetTag = false
+	      out.write("                xmlns:int=\"http://www.interlis.ch/INTERLIS2.3\"\n")
+	      if (!wroteExcludes) out.write("                exclude-result-prefixes=\"int\"\n")
+	    }
+	    if (line contains "<xsl:include href=\"version2") write=false
+	
+	    for {map <- specifics.get(file.getName)
+	         (toReplace,replacement) <- map
+	         if line contains toReplace } {
+	           line = line.replace(toReplace, replacement)
+	           found += toReplace
+	    }
+	
+	    line = line.replace("GM03","int:"+prefix).
+	        replace("TRANSFER", "int:TRANSFER").
+	        replace("DATASECTION", "int:DATASECTION").
+	        replace("comp:int", "comp")
+	
+	
+	    for (expr <- exprs) line = expr.replace(line)
+	
+	    if(write) out.write(line+"\n")
+	  }
+	  out.close()
+	
+	  specifics.get(file.getName) foreach {m =>
+	    if (m.size != found.size)
+	      println ("ERROR:  --- Not all replacements were matched:"+" filename="+file.getName+" -> "+(m.keySet -- found mkString ", "))
+	  }
+	}
 }
+
+copy("GM03_2", new File("version2/"))
+copy("GM03_2_1", new File("version2_1/"))

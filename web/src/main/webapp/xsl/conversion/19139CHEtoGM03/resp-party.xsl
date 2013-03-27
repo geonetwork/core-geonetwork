@@ -9,7 +9,7 @@
                 exclude-result-prefixes="che gco gmd">
 
     <xsl:template mode="RespParty" match="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty">
-        <GM03_2Core.Core.CI_ResponsibleParty TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_ResponsibleParty TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="che:individualFirstName"/>
             <xsl:apply-templates mode="text" select="che:individualLastName"/>
             <xsl:if test="gmd:contactInfo/gmd:CI_Contact/gmd:address/*/gmd:electronicMailAddress and
@@ -28,22 +28,22 @@
             <xsl:apply-templates mode="RespParty" select="che:parentResponsibleParty"/>
 
             <xsl:apply-templates mode="RespParty" select="gmd:contactInfo/gmd:CI_Contact/gmd:phone/che:CHE_CI_Telephone"/>
-        </GM03_2Core.Core.CI_ResponsibleParty>
+        </GM03_2_1Core.Core.CI_ResponsibleParty>
     </xsl:template>
 
     <xsl:template mode="RespParty" match="che:parentResponsibleParty">
-        <GM03_2Core.Core.CI_ResponsiblePartyparentinfo TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo TID="x{generate-id(.)}">
             <parentResponsibleParty REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </parentResponsibleParty>
             <BACK_REF name="CI_ResponsibleParty"/>
-        </GM03_2Core.Core.CI_ResponsiblePartyparentinfo>
+        </GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo>
     </xsl:template>
 
     <xsl:template mode="RespParty" match="gmd:electronicMailAddress">
-        <GM03_2Core.Core.URL_>
+        <GM03_2_1Core.Core.URL_>
             <value><xsl:value-of select="gco:CharacterString/text()"/></value>
-        </GM03_2Core.Core.URL_>
+        </GM03_2_1Core.Core.URL_>
     </xsl:template>
 
     <xsl:template mode="RespParty" match="gmd:onlineResource">
@@ -52,32 +52,32 @@
 
     <xsl:template mode="RespParty" match="che:CHE_CI_Telephone">
         <xsl:for-each select="gmd:voice[normalize-space(.) != '']">
-            <GM03_2Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>mainNumber</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
-            </GM03_2Core.Core.CI_Telephone>
+            </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="gmd:facsimile[normalize-space(.) != '']">
-            <GM03_2Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>facsimile</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
-            </GM03_2Core.Core.CI_Telephone>
+            </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="che:directNumber[normalize-space(.) != '']">
-            <GM03_2Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>directNumber</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
-            </GM03_2Core.Core.CI_Telephone>
+            </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="che:mobile[normalize-space(.) != '']">
-            <GM03_2Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>mobile</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
-            </GM03_2Core.Core.CI_Telephone>
+            </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
     </xsl:template>
 
@@ -88,7 +88,7 @@
     </xsl:template>
 
     <xsl:template mode="RespParty" match="che:CHE_CI_Address|gmd:CI_Address">
-        <GM03_2Core.Core.CI_Address TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_Address TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="che:streetName"/>
             <xsl:apply-templates mode="text" select="che:streetNumber"/>
             <xsl:apply-templates mode="text" select="che:addressLine"/>
@@ -97,7 +97,7 @@
             <xsl:apply-templates mode="text" select="gmd:city"/>
             <xsl:apply-templates mode="text" select="gmd:administrativeArea"/>
             <xsl:apply-templates mode="RespParty" select="gmd:country"/>
-        </GM03_2Core.Core.CI_Address>
+        </GM03_2_1Core.Core.CI_Address>
     </xsl:template>
 
     <xsl:template mode="RespParty" match="gmd:country">
@@ -117,10 +117,10 @@
     </xsl:template>
 
     <xsl:template mode="RespParty" match="gmd:CI_Contact">
-        <GM03_2Core.Core.CI_Contact TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_Contact TID="x{generate-id(.)}">
             <xsl:apply-templates mode="text" select="gmd:hoursOfService"/>
             <xsl:apply-templates mode="textGroup" select="gmd:contactInstructions"/>
-        </GM03_2Core.Core.CI_Contact>
+        </GM03_2_1Core.Core.CI_Contact>
     </xsl:template>
 
     <xsl:template mode="RespParty" match="*" priority="-100">

@@ -7,7 +7,6 @@ import java.io.File;
 import javax.xml.validation.Schema;
 
 
-import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.services.gm03.TranslateAndValidate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -160,7 +159,7 @@ public class GM03Iso19139RountripTest
         switch (control)
         {
         case FIRST_PASS:
-            TransformationTestSupport.transformGM03_1ToIso(src, outputDir);
+            TransformationTestSupport.transformGM03toIso(src, outputDir);
             if(schematronValidate){
                 TransformationTestSupport.schematronValidation(isoResult);
             }
@@ -184,7 +183,7 @@ public class GM03Iso19139RountripTest
             System.out.println("Finished validating input iso file");
             break;
         case SECOND_PASS:
-            TransformationTestSupport.transformGM03_2toIso(src, outputDir);
+            TransformationTestSupport.transformGM03toIso(src, outputDir);
             if(schematronValidate){
                 TransformationTestSupport.schematronValidation(isoResult);
             }

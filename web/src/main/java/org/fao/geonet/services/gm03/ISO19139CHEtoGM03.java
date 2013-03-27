@@ -158,9 +158,9 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
     }
 
     private Node getRootNode(Document doc) throws FlattenerException {
-        NodeList root = doc.getElementsByTagNameNS(NS, "GM03_2Comprehensive.Comprehensive");
+        NodeList root = doc.getElementsByTagNameNS(NS, "GM03_2_1Comprehensive.Comprehensive");
         if (root.getLength() != 1) {
-            throw new FlattenerException("Not 1 and only 1 GM03_2Comprehensive.Comprehensive");
+            throw new FlattenerException("Not 1 and only 1 GM03_2_1Comprehensive.Comprehensive");
         }
         final Node start = root.item(0);
         return start;
