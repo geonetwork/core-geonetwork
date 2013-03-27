@@ -98,8 +98,8 @@ GeoNetwork.mapApp = function() {
             controls : []
         });
 
-        Ext.each(GeoNetwork.map.MAP_OPTIONS.controls, function(control) {
-            map2.addControl(control.clone());
+        Ext.each(GeoNetwork.map.MAP_OPTIONS.controls_, function(control) {
+            map2.addControl(new control());
         });
 
         Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
@@ -1838,9 +1838,9 @@ GeoNetwork.mapApp = function() {
                         .clone()
             });
 
-            Ext.each(GeoNetwork.map.MAP_OPTIONS.controls, function(control) {
-                if (control.clone) {
-                    map.addControl(control.clone());
+            Ext.each(GeoNetwork.map.MAP_OPTIONS.controls_, function(control) {
+                if (control) {
+                    map.addControl(new control());
                 }
             });
 

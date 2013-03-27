@@ -62,7 +62,7 @@ GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
 GeoNetwork.Settings.facetMaxItems = 7;
 
 GeoNetwork.MapModule = true;
-GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)'], ['EPSG:28992', 'EPSG:28992']];
+GeoNetwork.ProjectionList = [['EPSG:4326', 'WGS84 (lat/lon)']];
 GeoNetwork.WMSList = [];
 
 GeoNetwork.defaultViewMode = 'view-simple';
