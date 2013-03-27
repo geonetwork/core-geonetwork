@@ -113,7 +113,7 @@
 
    <xsl:template mode="metadata" match="gmd:contact">
         <GM03_2_1Core.Core.MD_Metadatacontact>
-            <contact >
+            <contact REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </contact>
             <BACK_REF name="MD_Metadata"/>

@@ -4,6 +4,7 @@ import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -80,10 +81,62 @@ public abstract class ISO19139CHEtoGM03Base {
         flatten(doc);
         convertCoordinates(doc);
         removeDuplicates(doc);
+        removeUnwantedTID(doc);
         return doc;
     }
 
-    public void convert(String xmlFilename, String group) throws FlattenerException, IOException, TransformerException, SAXException {
+    private static final String[] TID_LESS_ELEMS = {
+    	"GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat",
+    	"GM03_2_1Core.Core.MD_DistributiondistributionFormat",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor",
+    	"GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo",
+    	"GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor",
+    	"GM03_2_1Core.Core.CI_ResponsiblePartyparentinfoGM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+    	"GM03_2_1Core.Core.MD_IdentificationpointOfContact",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
+    	"GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification",
+    	"GM03_2_1Core.Core.descriptiveKeywordsMD_Identification",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo",
+    	"GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification",
+    	"GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification",
+    	"GM03_2_1Core.Core.EX_ExtentgeographicElement",
+    	"GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification",
+    	"GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription",
+    	"GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType",
+    	"GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+    	"GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent",
+    	"GM03_2_1Core.Core.EX_ExtentgeographicElement",
+    	"GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality",
+    	"GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+    	"GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
+    	"GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation",
+    	"GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"
+    };
+    private void removeUnwantedTID(Document doc) {
+    	for (String tagname : TID_LESS_ELEMS) {
+    		NodeList elementsByTagName = doc.getElementsByTagName(tagname);
+    		for(int i = elementsByTagName.getLength()-1; i >= 0; i -- ){
+    			Node item = elementsByTagName.item(i);
+    			NamedNodeMap attributes = item.getAttributes();
+    			if(attributes.getNamedItem("TID") != null) {
+    				attributes.removeNamedItem("TID");
+    			}
+    		}
+		}
+		
+	}
+
+	public void convert(String xmlFilename, String group) throws FlattenerException, IOException, TransformerException, SAXException {
         File xmlFile = new File(xmlFilename);
         String parent = xmlFile.getParent();
         if (parent == null) parent = ".";

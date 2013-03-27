@@ -31,14 +31,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
+import net.sf.saxon.om.NodeInfo;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -66,16 +71,27 @@ public final class TransformationTestSupport {
     static {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
     }
-    static File transformGM03_2toIso( File src, File outputDir ) throws Exception {
-        return transformGM03_2toIso(src, outputDir, true);
+    static File transformGM03toIso( File src, File outputDir ) throws Exception {
+        return transformGM03toIso(src, outputDir, true);
     }
-    static File transformGM03_2toIso( File src, File outputDir, boolean testValidity ) throws Exception {
+    static File transformGM03toIso( File src, File outputDir, boolean testValidity ) throws Exception {
         try {
             TranslateAndValidate transformer = new TranslateAndValidate();
             transformer.outputDir = outputDir;
             transformer.debug = true;
-            transformer.run(new File(TransformationTestSupport.geonetworkWebapp, "xsl/conversion/import/GM03_2-to-ISO19139CHE.xsl"),
-                    TransformationTestSupport.isoXsd, new String[]{src.getAbsolutePath()});
+            
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("uuid", "1234");
+            params.put("validate", TransformationTestSupport.isoXsd.getAbsolutePath());
+            params.put("debugFileName", outputDir.getAbsolutePath()+File.separator+src.getName());
+            params.put("webappDir", TransformationTestSupport.geonetworkWebapp.getAbsolutePath());
+            
+            Element xml = Xml.loadFile(src);
+			Xml.transform(xml, TransformationTestSupport.geonetworkWebapp+"/xsl/conversion/import/GM03-to-ISO19139CHE.xsl", params );
+
+//            transformer.run(new File(TransformationTestSupport.geonetworkWebapp, "xsl/conversion/import/GM03_2-to-ISO19139CHE.xsl"),
+//                    TransformationTestSupport.isoXsd, new String[]{src.getAbsolutePath()});
+            
         } catch (AssertionError e) {
             if (testValidity) throw e;
         }
@@ -139,23 +155,6 @@ public final class TransformationTestSupport {
     public static final File toGm03StyleSheet = new File(geonetworkWebapp, "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
     public static final File gm03Xsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd");
     public static final File isoXsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd");
-
-    public static File transformGM03_1ToIso( File src, File outputDir ) throws Exception {
-        return transformGM03_1ToIso(src, outputDir, true);
-    }
-    public static File transformGM03_1ToIso( File src, File outputDir, boolean testValidity ) throws Exception {
-
-        try {
-            TranslateAndValidate transformer = new TranslateAndValidate();
-            transformer.outputDir = outputDir;
-            transformer.run(toIsoStyleSheet, isoXsd, new String[]{src.getAbsolutePath()});
-        } catch (AssertionError e) {
-            if (testValidity) {
-                throw e;
-            }
-        }
-        return new File(outputDir, "result_" + src.getName());
-    }
 
     public static Element transform( Class root, String pathToXsl, String testData ) throws IOException, JDOMException, Exception {
         Element xml = getXML(root, testData);
@@ -247,4 +246,5 @@ public final class TransformationTestSupport {
         return new File(root.getResource(fileName).getFile());
 
     }
+    
 }

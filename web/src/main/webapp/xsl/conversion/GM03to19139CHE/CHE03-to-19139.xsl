@@ -24,6 +24,7 @@
     <xsl:include href="ref-system.xsl"/>
     <xsl:include href="legislation.xsl"/>
 
+	<xsl:param name="uuid"/>
     <xsl:param name="DEBUG">0</xsl:param>
     <xsl:template match="/comp:TRANSFER/comp:DATASECTION/comp:GM03Comprehensive.Comprehensive|/comp:TRANSFER/comp:DATASECTION/comp:GM03Core.Core"
                   priority="10">

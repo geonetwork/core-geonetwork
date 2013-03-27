@@ -762,7 +762,7 @@ public class ValidateTransformationTest
     {
         File file = new File(data, "gm03/ProblematicTransferOption.xml");
         assertTrue(file.exists());
-        file = TransformationTestSupport.transformGM03_1ToIso(file, outputDir);
+        file = TransformationTestSupport.transformGM03toIso(file, outputDir);
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
         rules.put("GM03_2Core.Core.CI_OnlineResource", new Exists(new Finder("MD_DigitalTransferOptions")));
         testFile(file, Control.ISO_GM03, rules, true);
@@ -851,12 +851,12 @@ public class ValidateTransformationTest
         {
         case GM03_1_ISO:
         {
-            transformed = TransformationTestSupport.transformGM03_1ToIso(file, outputDir, testValidity);
+            transformed = TransformationTestSupport.transformGM03toIso(file, outputDir, testValidity);
             break;
         }
         case GM03_2_ISO:
         {
-            transformed = TransformationTestSupport.transformGM03_2toIso(file, outputDir, testValidity);
+            transformed = TransformationTestSupport.transformGM03toIso(file, outputDir, testValidity);
             break;
         }
         case ISO_GM03:
@@ -873,7 +873,7 @@ public class ValidateTransformationTest
         case GMO_1_ISO_GM03:
         {
 
-            transformed = TransformationTestSupport.transformGM03_1ToIso(file, outputDir, testValidity);
+            transformed = TransformationTestSupport.transformGM03toIso(file, outputDir, testValidity);
             transformed = TransformationTestSupport.transformIsoToGM03(transformed, outputDir, testValidity);
             break;
         }
