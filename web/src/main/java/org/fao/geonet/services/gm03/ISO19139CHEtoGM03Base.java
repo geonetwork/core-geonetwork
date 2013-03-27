@@ -120,7 +120,11 @@ public abstract class ISO19139CHEtoGM03Base {
     	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
     	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
     	"GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation",
-    	"GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"
+    	"GM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
+    	"GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor",
+    	"GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification",
+    	"GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification",
+    	"GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"
     };
     private void removeUnwantedTID(Document doc) {
     	for (String tagname : TID_LESS_ELEMS) {

@@ -28,7 +28,7 @@
 
 	<xsl:param name="uuid"/>
     <xsl:param name="DEBUG">0</xsl:param>
-    <xsl:template match="/comp:TRANSFER/comp:DATASECTION/comp:GM03_2Comprehensive.Comprehensive|/comp:TRANSFER/comp:DATASECTION/comp:GM03_2Core.Core"
+    <xsl:template match="/comp:TRANSFER/comp:DATASECTION/comp:GM03_2_1Comprehensive.Comprehensive|/comp:TRANSFER/comp:DATASECTION/comp:GM03_2_1Core.Core"
                   priority="10">
         <xsl:variable name="noNamespace">
             <xsl:apply-templates mode="remove-namespace" select="/"/>
@@ -56,7 +56,7 @@
         </xsl:attribute>
      </xsl:template>
 
-    <xsl:template match="/int:TRANSFER/int:DATASECTION/int:GM03_2Comprehensive.Comprehensive|/int:TRANSFER/int:DATASECTION/int:GM03_2Core.Core">
+    <xsl:template match="/int:TRANSFER/int:DATASECTION/int:GM03_2_1Comprehensive.Comprehensive|/int:TRANSFER/int:DATASECTION/int:GM03_2_1Core.Core">
         <xsl:choose>
             <xsl:when test="$DEBUG=1">
                 <xsl:apply-templates select="." mode="ResolveRefs"/>
@@ -78,17 +78,17 @@
         <xsl:apply-templates mode="root"/>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Comprehensive.Comprehensive|int:GM03_2Core.Core" mode="root">
+    <xsl:template match="int:GM03_2_1Comprehensive.Comprehensive|int:GM03_2_1Core.Core" mode="root">
         <che:CHE_MD_Metadata gco:isoType="gmd:MD_Metadata">
             <xsl:apply-templates mode="root"/>
         </che:CHE_MD_Metadata>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Core.Core.MD_Metadata" mode="root">
+    <xsl:template match="int:GM03_2_1Core.Core.MD_Metadata" mode="root">
         <xsl:apply-templates select="." mode="MetaData"/>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Comprehensive.Comprehensive.formatDistributordistributorFormat" mode="root"/>
+    <xsl:template match="int:GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat" mode="root"/>
 
     <xsl:template match="*" mode="root">
         <ERROR mode="root" tag="{name(..)}/{name(.)}"/>
@@ -96,8 +96,8 @@
     
     <xsl:template name="mainLanguage">
         <xsl:choose>
-            <xsl:when test="//int:GM03_2Core.Core.MD_Metadata/int:language">
-                <xsl:value-of select="//int:GM03_2Core.Core.MD_Metadata/int:language"/>
+            <xsl:when test="//int:GM03_2_1Core.Core.MD_Metadata/int:language">
+                <xsl:value-of select="//int:GM03_2_1Core.Core.MD_Metadata/int:language"/>
             </xsl:when>
             <xsl:otherwise>de</xsl:otherwise>
         </xsl:choose>
@@ -129,15 +129,15 @@
         <xsl:call-template name="mainLanguage"/>
     </xsl:variable>
 
-    <xsl:template match="int:GM03_2Core.Core.PT_FreeURL" mode="language">
+    <xsl:template match="int:GM03_2_1Core.Core.PT_FreeURL" mode="language">
         <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
 
         <che:PT_FreeURL>
-            <xsl:apply-templates mode="language" select="int:URLGroup/int:GM03_2Core.Core.PT_URLGroup"/>
+            <xsl:apply-templates mode="language" select="int:URLGroup/int:GM03_2_1Core.Core.PT_URLGroup"/>
         </che:PT_FreeURL>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Core.Core.PT_URLGroup" mode="language">
+    <xsl:template match="int:GM03_2_1Core.Core.PT_URLGroup" mode="language">
 
         <xsl:variable name="lang">
             <xsl:call-template name="locale"/>
@@ -157,25 +157,25 @@
                      namespace="http://www.isotc211.org/2005/gmd">
             <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
 
-            <xsl:if test="*[local-name()=$element]/int:GM03_2Core.Core.PT_FreeText/int:textGroup/int:GM03_2Core.Core.PT_Group">
+            <xsl:if test="*[local-name()=$element]/int:GM03_2_1Core.Core.PT_FreeText/int:textGroup/int:GM03_2_1Core.Core.PT_Group">
                 <gmd:PT_FreeText>
-                    <xsl:apply-templates select="*[local-name()=$element]/int:GM03_2Core.Core.PT_FreeText/int:textGroup/int:GM03_2Core.Core.PT_Group" mode="language"/>
+                    <xsl:apply-templates select="*[local-name()=$element]/int:GM03_2_1Core.Core.PT_FreeText/int:textGroup/int:GM03_2_1Core.Core.PT_Group" mode="language"/>
                 </gmd:PT_FreeText>
             </xsl:if>
            </xsl:element>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Core.Core.PT_FreeText" mode="language">
+    <xsl:template match="int:GM03_2_1Core.Core.PT_FreeText" mode="language">
         <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
 
-        <xsl:if test="int:textGroup/int:GM03_2Core.Core.PT_Group">
+        <xsl:if test="int:textGroup/int:GM03_2_1Core.Core.PT_Group">
             <gmd:PT_FreeText>
-                <xsl:apply-templates select="int:textGroup/int:GM03_2Core.Core.PT_Group" mode="language"/>
+                <xsl:apply-templates select="int:textGroup/int:GM03_2_1Core.Core.PT_Group" mode="language"/>
             </gmd:PT_FreeText>
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="int:GM03_2Core.Core.PT_Group" mode="language">
+    <xsl:template match="int:GM03_2_1Core.Core.PT_Group" mode="language">
         <xsl:variable name="lang">
             <xsl:call-template name="locale"/>
         </xsl:variable>
@@ -282,16 +282,16 @@
     <xsl:template mode="text" match="*">
        <xsl:param name="prefix">gmd</xsl:param>
         <xsl:choose>
-            <xsl:when test="int:GM03_2Core.Core.PT_FreeText">
-                <xsl:for-each select="int:GM03_2Core.Core.PT_FreeText">
+            <xsl:when test="int:GM03_2_1Core.Core.PT_FreeText">
+                <xsl:for-each select="int:GM03_2_1Core.Core.PT_FreeText">
                     <xsl:element name="{$prefix}:{local-name(..)}">
                         <xsl:apply-templates mode="language" select="."/>
                     </xsl:element>
                 </xsl:for-each>
             </xsl:when>
-            <xsl:when test="int:GM03_2Core.Core.CharacterString_">
+            <xsl:when test="int:GM03_2_1Core.Core.CharacterString_">
                 <xsl:element name="{$prefix}:{local-name(.)}">
-                    <xsl:for-each select="int:GM03_2Core.Core.CharacterString_">
+                    <xsl:for-each select="int:GM03_2_1Core.Core.CharacterString_">
                         <gco:CharacterString>
                             <xsl:value-of select="int:value"/>
                         </gco:CharacterString>
@@ -308,16 +308,16 @@
 
     <xsl:template mode="textCHE" match="*">
         <xsl:choose>
-            <xsl:when test="int:GM03_2Core.Core.PT_FreeText">
-                <xsl:for-each select="int:GM03_2Core.Core.PT_FreeText">
+            <xsl:when test="int:GM03_2_1Core.Core.PT_FreeText">
+                <xsl:for-each select="int:GM03_2_1Core.Core.PT_FreeText">
                     <xsl:element name="che:{local-name(..)}">
                         <xsl:apply-templates mode="language" select="."/>
                     </xsl:element>
                 </xsl:for-each>
             </xsl:when>
-            <xsl:when test="int:GM03_2Core.Core.CharacterString_">
+            <xsl:when test="int:GM03_2_1Core.Core.CharacterString_">
                 <xsl:element name="che:{local-name(.)}">
-                    <xsl:for-each select="int:GM03_2Core.Core.CharacterString_">
+                    <xsl:for-each select="int:GM03_2_1Core.Core.CharacterString_">
                         <gco:CharacterString>
                             <xsl:value-of select="int:value"/>
                         </gco:CharacterString>

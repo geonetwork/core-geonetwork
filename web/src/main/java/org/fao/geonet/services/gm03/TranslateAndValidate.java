@@ -1,26 +1,43 @@
 package org.fao.geonet.services.gm03;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import jeeves.server.context.ServiceContext;
+import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.pattern.NodeKindTest;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.fao.geonet.util.XslUtil;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import jeeves.server.context.ServiceContext;
 
 public class TranslateAndValidate {
 	public static final SchemaFactory SCHEMA_FACTORY = SchemaFactory
@@ -296,16 +313,36 @@ public class TranslateAndValidate {
     		xslFileName.insert(0, webappDir);
     	}
     	
-    	String uri = doc.getRoot().getURI();
-
-    	if(uri.trim().isEmpty()) {
+    	String xml = XslUtil.writeXml(doc.getRoot());
+    	AxisIterator iter = doc.iterateAxis(Axis.DESCENDANT, NodeKindTest.ELEMENT);
+    	while(iter.moveNext()) {
+    		NodeInfo next = (NodeInfo) iter.next();
+    		if(next == null) {
+    			break;
+    		}
+    		String lp = next.getLocalPart();
+    		if(lp.startsWith("GM03_2_1")) {
+    			// basic dir will work
+    			xslFileName.append("version2_1"+SEP);
+    			break;
+    		} else if(lp.startsWith("GM03_2")) {
+    			xslFileName.append("version2"+SEP);
+    			break;
+	    	} else if(lp.equals("GM03Comprehensive.Comprehensive") || lp.equals("GM03Core.Core.MD_Metadata")) {
+	    		break;
+	    	}
+    		
+    	}
+    			
+    			
+    	if(xml.trim().isEmpty()) {
     	}
 
 		xslFileName.append("CHE03-to-19139.xsl");
 
     	Transformer xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(xslFileName.toString()));
     	
-    	byte[] bytes = XslUtil.writeXml(doc.getRoot()).getBytes("UTF-8");
+		byte[] bytes = xml.getBytes("UTF-8");
 		StreamSource source = new StreamSource(new ByteArrayInputStream(bytes));
     	
     	TranslateAndValidate instance = new TranslateAndValidate();
@@ -322,10 +359,10 @@ public class TranslateAndValidate {
 		}
 		
 
-        if (validate != null) {
+        if (validate != null && !validate.trim().isEmpty()) {
         	File schemaLocation = new File(validate);
             Schema schema = SCHEMA_FACTORY.newSchema(schemaLocation);
-            instance.validate(schema, debugFileName, result, xslt);
+            instance.validate(schema, null, result, xslt);
         }
         
 		Source xmlSource = new StreamSource(new ByteArrayInputStream(result.toString().getBytes("UTF-8")));

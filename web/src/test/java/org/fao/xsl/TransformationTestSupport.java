@@ -82,7 +82,7 @@ public final class TransformationTestSupport {
             
             Map<String, String> params = new HashMap<String, String>();
             params.put("uuid", "1234");
-            params.put("validate", TransformationTestSupport.isoXsd.getAbsolutePath());
+            params.put("validate", testValidity ? TransformationTestSupport.isoXsd.getAbsolutePath(): null);
             params.put("debugFileName", outputDir.getAbsolutePath()+File.separator+src.getName());
             params.put("webappDir", TransformationTestSupport.geonetworkWebapp.getAbsolutePath());
             

@@ -323,8 +323,8 @@
             <xsl:when test="gco:Record/node()">
                 <value>
                   <GM03_2_1Comprehensive.Comprehensive.Record_>
-                    <value REF="?">
-                         <XMLBLBOX TID="x{generate-id(.)}">
+                    <value>
+                         <XMLBLBOX>
                             <xsl:copy-of select="gco:Record/*"/>
                          </XMLBLBOX>
                      </value>

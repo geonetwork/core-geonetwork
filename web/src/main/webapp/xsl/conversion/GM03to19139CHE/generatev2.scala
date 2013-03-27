@@ -149,7 +149,7 @@ def copy(prefix:String, dir: File) {
 	           found += toReplace
 	    }
 	
-	    line = line.replace("GM03",prefix).
+	    line = line.replace("GM03","int:"+prefix).
 	        replace("TRANSFER", "int:TRANSFER").
 	        replace("DATASECTION", "int:DATASECTION").
 	        replace("comp:int", "comp")
