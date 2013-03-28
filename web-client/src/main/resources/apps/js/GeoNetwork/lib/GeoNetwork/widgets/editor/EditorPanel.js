@@ -970,7 +970,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             this.setDisabled(false);
         }
         
-        this.onMetadataUpdated();
         
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
@@ -1028,6 +1027,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (restoreScroll) {
             this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
         }
+        
+        this.onMetadataUpdated();
     },
     /** private: method[validateMetadataField]
      * 
@@ -1382,7 +1383,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         };
         this.add(optionsPanel);
         /** private: event[metadataUpdated] 
-         *  Fires after the metadata is refreshed (save, reset, change view mode).
+         *  Fires after the metadata form is loaded (save, reset, change view mode)
+         *  and the form is initialized (eg. calendar, map widget).
          */
         /** private: event[editorClosed] 
          *  Fires before the editor is closed.
