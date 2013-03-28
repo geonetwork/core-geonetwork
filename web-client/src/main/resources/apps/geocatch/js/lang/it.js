@@ -33,9 +33,9 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'service-OGC:WFS': ' + WFS Services',
 	'owner': 'Proprietario',
 
-	'withinGeo': 'Completely within or equal',
-	'intersectGeo': 'Intersects',
-	'containsGeo': 'Contains at least',
+	'withinGeo': 'Completamente all interno o uguale' ,
+	'intersectGeo': 'Interseca',
+	'containsGeo': 'Contiene almeno',
     'Login.error.message': 'Login failed. Check your username and password.',
 
     'kantone': 'Cantone',
@@ -43,12 +43,12 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'showAdvancedOptions' : 'Ricerca avanzata',
     'hideAdvancedOptions' : 'Nascondere opzioni avanzati',
 
-    'what': 'What?',
+    'what': 'Cosa',
     'searchText': 'Ricerca testuale',
     'rtitle': 'Titolo',
-    'Abstract': 'Abstract',
+    'Abstract': 'Descrizione',
     'keyword': 'Parola chiave',
-    'theme': 'Temi',
+    'theme': 'Tema',
     'contact': 'Contatto',
     'organisationName': 'Organizzazione',
 
@@ -58,12 +58,12 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'toEdit': 'Da adattare',
     'toPublish': 'Da pubblicare',
 
-    'where': 'Where?',
+    'where': 'Dove',
     'wherenone': 'Dappertutto',
     'bbox': 'BBOX',
     'adminUnit': 'Unità amministrativa',
-    'drawOnMap': 'Disegna sulla carta',
-    'when': 'When?',
+    'drawOnMap': 'Disegnare sulla carta',
+    'when': 'Quando',
 
     'source': 'Provenienza?',
     'catalog': 'Catalogo',
