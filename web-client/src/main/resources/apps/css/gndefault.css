@@ -143,6 +143,11 @@ ul.main {
   background-color : #fff;
 }
 
+/* Center map widget in view and edit mode */
+table.map {
+    margin: auto;
+}
+
 #infoContent {
   vertical-align : bottom;
 }
