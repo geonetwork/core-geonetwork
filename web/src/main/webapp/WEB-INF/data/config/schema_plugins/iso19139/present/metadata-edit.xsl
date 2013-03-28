@@ -3718,6 +3718,7 @@
         <xsl:when test="name(.)='gmd:abstract'">large</xsl:when>
         <xsl:when test="name(.)='gmd:supplementalInformation'
           or name(.)='gmd:purpose'
+          or name(.)='gmd:orderingInstructions'
           or name(.)='gmd:statement'">medium</xsl:when>
         <xsl:when test="name(.)='gmd:description'
           or name(.)='gmd:specificUsage'
