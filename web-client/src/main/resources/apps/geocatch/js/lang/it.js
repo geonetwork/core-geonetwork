@@ -84,7 +84,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'denominators' : 'Risoluzione spaziale',
     'orgName' : 'organizzazione',
     'orgNames' : 'Organizzazioni',
-    'serviceTypes' : 'Tipi di servizio',
+    'serviceTypes' : 'Tipo di servizio',
     'facetMore' : '+ Mostra di più',
     'facetLess' : '- Mostra meno',
     'topicCat' : 'Categoria',
