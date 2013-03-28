@@ -2951,5 +2951,53 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element> 
+    </element>
+    <element name="gml:axis">
+        <label>Axis</label>
+    </element>
+    <element name="gml:axisAbbrev">
+        <label>Axis abbreviation</label>
+    </element>
+    <element name="gml:axisDirection">
+        <label>Axis direction</label>
+    </element>
+    <element name="gml:maximumValue">
+        <label>Maximum value</label>
+    </element>
+    <element name="gml:minimumValue">
+        <label>Minimum value</label>
+    </element>
+    <element name="gml:scope">
+        <label>Scope</label>
+    </element>
+    <element name="gml:VerticalCRS">
+        <label>Vertical CRS</label>
+    </element>
+    <element name="gml:remarks">
+        <label>Remarks</label>
+    </element>
+    <element name="gml:domainOfValidity">
+        <label>Domain of validity</label>
+    </element>
+    <element name="gml:verticalCS">
+        <label>Vertical CS</label>
+    </element>
+    <element name="gml:VerticalCS">
+        <label>Vertical CS</label>
+    </element>
+    <element name="gml:CoordinateSystemAxis">
+        <label>Coordinate system axis</label>
+    </element>
+    <element name="gml:rangeMeaning">
+        <label>Range meaning</label>
+    </element>
+    <element name="gml:verticalDatum">
+        <label>Vertical datum</label>
+    </element>
+    <element name="gml:VerticalDatum">
+        <label>Vertical datum</label>
+    </element>
+    <element name="gml:realizationEpoch">
+        <label>Realization epoch</label>
+    </element>
 </labels>

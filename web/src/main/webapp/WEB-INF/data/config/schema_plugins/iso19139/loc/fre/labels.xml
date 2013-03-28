@@ -59,7 +59,12 @@
     <description>Type de données pour des dates de références et des événements avec lesquels la date est en relation</description>
     <help>Type de données intégrant la date de référence et le type de référence de la source citée.</help>
     <condition/>
-    
+  </element>
+  <element name="gco:DateTime">
+    <label>Date et heure</label>
+    <description>Type de données pour des dates de références et des événements avec lesquels la date est en relation</description>
+    <help>Type de données intégrant la date de référence et le type de référence de la source citée.</help>
+    <condition/>
   </element>
   <element name="gco:DateTime" id="64.0" context="gmd:MD_Usage">
     <label>Période de l'utilisation</label>
@@ -2841,7 +2846,9 @@ période de temps couverte par le service.
     <description>Autres restrictions et prérequis légaux pour accéder et utiliser les ressources où de métadonnées</description>
     <help>Autres restrictions et conditions préalables de nature juridique concernant l'accès et l'utilisation de la ressource ou des métadonnées. Ce champ doit être complété dès lors que l'un des deux champs précédents (accessConstraints, useConstraints) porte la mention "Autres restrictions".</help>
     <condition>Condition</condition>
-    <helper editorMode="radio_withdesc">
+    <!--
+      Only relevant for France
+      <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
         title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
@@ -2861,7 +2868,7 @@ période de temps couverte par le service.
         title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
       <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
         title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
-    </helper>
+    </helper>-->
   </element>
   <element name="gmd:page" id="406.0">
     <label>Page</label>
@@ -4804,5 +4811,53 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element> 
+    </element>
+    <element name="gml:axisAbbrev">
+        <label>Axe (abréviation)</label>
+    </element>
+    <element name="gml:axisDirection">
+        <label>Direction de l'axe</label>
+    </element>
+    <element name="gml:maximumValue">
+        <label>Valeur maximum</label>
+    </element>
+    <element name="gml:minimumValue">
+        <label>Valeur minimum</label>
+    </element>
+    <element name="gml:scope">
+      <label>Domaine</label>
+    </element>
+    <element name="gml:VerticalCRS">
+        <label>CRS Vertical</label>
+    </element>
+    <element name="gml:axis">
+      <label>Axe</label>
+    </element>
+    <element name="gml:remarks">
+        <label>Remarque</label>
+    </element>
+    <element name="gml:domainOfValidity">
+        <label>Domaine de validité</label>
+    </element>
+    <element name="gml:verticalCS">
+        <label>CS Vertical</label>
+    </element>
+    <element name="gml:VerticalCS">
+        <label>CS Vertical</label>
+    </element>
+    <element name="gml:CoordinateSystemAxis">
+      <label>Coordinate system axis</label>
+    </element>
+    <element name="gml:rangeMeaning">
+        <label>Signification de l'interval</label>
+    </element>
+    <element name="gml:verticalDatum">
+        <label>Vertical datum</label>
+    </element>
+    <element name="gml:VerticalDatum">
+        <label>Vertical datum</label>
+    </element>
+    <element name="gml:realizationEpoch">
+        <label>Époque de réalisation</label>
+    </element>
 </labels>
