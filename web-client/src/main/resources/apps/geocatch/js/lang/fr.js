@@ -49,9 +49,9 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'startNewPolygonHelp' : 'Dessiner un polygone (Double clique pour terminer)',
     'deletePolygonHelp' : 'Dessiner un nouveau polygone',
 
-    'Login.error.message': 'Login failed. Check your username and password.',
+    'Login.error.message': 'Echec de la connexion. Vérifiez votre nom d\'utilisateur et votre mot de passe.',
 
-    'what': 'What?',
+    'what': 'Quoi?',
     'searchText': 'Recherche libre',
     'rtitle': 'Titre',
     'Abstract': 'Résumé',
@@ -85,9 +85,9 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'changeDate': 'Metadata revision',
 
     'Search': 'Rechercher',
-    'refineSearch': 'Preciséz votre recherche',
+    'refineSearch': 'Precisez votre recherche',
     
-    'removeLayers' : 'Enlever toutes les couches et de réinitialiser la carte',
+    'removeLayers' : 'Enlever toutes les couches et réinitialiser la carte',
     'linklabel-OGC:WMS': ' ',
     'topicCats' : 'Thématique',
     'topicCat' : 'Thématique',
@@ -98,12 +98,12 @@ GeoNetwork.GeoCatCh.Lang.fr = {
     'country': 'Pays',
     'city': 'Ville',
     'body': 'Body',
-    'bodyError': 'Error',
-    'subject': 'Subject',
+    'bodyError': 'Erreur',
+    'subject': 'Sujet',
     'composeMessage': 'Compose Message',
-    'send': 'Send',
-    'cancel': 'Cancel',
-    'nonEmptyField': "Field cannot be empty"
+    'send': 'Envoyer',
+    'cancel': 'Abandonner',
+    'nonEmptyField': "Le champ ne peut pas être vide"
 
 };
 
