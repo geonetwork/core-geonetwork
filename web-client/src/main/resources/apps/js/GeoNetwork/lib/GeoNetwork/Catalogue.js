@@ -1095,10 +1095,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
-                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
-                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
-                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
+                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent || me.getElementsByTagName('username')[0].text,
+                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent || me.getElementsByTagName('name')[0].text,
+                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent || me.getElementsByTagName('surname')[0].text,
+                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent || me.getElementsByTagName('profile')[0].text
             };
             this.onAfterLogin();
             return true;
