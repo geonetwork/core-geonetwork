@@ -210,6 +210,8 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 								} else {
 									profileList.add(profile);
 								}
+							} else {
+								Log.info(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 							}
 						}
 					}
