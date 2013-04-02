@@ -29,3 +29,6 @@ web-client/src/main/resources/apps/js/GeoNetwork-mini.js
 web-client/src/main/resources/apps/js/ext-ux/css/ext-ux.css
 *.iml
 .idea/
+eclipse/
+web/src/main/webapp/WEB-INF/data/data
+web/src/main/webapp/WEB-INF/data/index

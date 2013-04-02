@@ -44,7 +44,7 @@ GeoNetwork.data.ThesaurusStore = function(config){
         name: 'id',
         mapping: 'key'
     }, {
-        name: 'defaultNamespace',
+        name: 'defaultNamespace'
     }, {
         name: 'type'
     }, {
