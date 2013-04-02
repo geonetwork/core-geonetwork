@@ -211,8 +211,6 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 									profileList.add(profile);
 								}
 							}
-						} else {
-							Log.error(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition + "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 						}
 					}
 					String highestUserProfile = profileManager.getHighestProfile(profileList.toArray(new String[0]));
