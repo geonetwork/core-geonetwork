@@ -47,7 +47,7 @@ GeoNetwork.app = function() {
         });
         latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
         catalogue.kvpSearch(
-                "fast=index&from=1&to=4&sortBy=changeDate&hasimage=true",
+                "fast=index&from=1&to=4&sortBy=changeDate",
                 function(e) {
                     Ext.each(Ext.DomQuery.select('.md-action-menu'), function(
                             el) {
@@ -86,7 +86,7 @@ GeoNetwork.app = function() {
         });
         latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
         catalogue.kvpSearch(
-                "fast=index&from=1&to=4&sortBy=popularity&hasimage=true",
+                "fast=index&from=1&to=5&sortBy=popularity",
                 function(e) {
                     Ext.each(Ext.DomQuery.select('.md-action-menu'), function(
                             el) {

@@ -1351,4 +1351,6 @@
 	
 	<advancedOptions.show>show advanced options</advancedOptions.show>
 	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
 </strings>
