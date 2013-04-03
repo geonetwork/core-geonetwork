@@ -1412,6 +1412,10 @@ ul li.tag-cloud a {
 	display: none;
 }
 
+#popular-metadata {
+	padding-left: 25px;
+}
+
 #latest-metadata input {
 	display: none;
 }
