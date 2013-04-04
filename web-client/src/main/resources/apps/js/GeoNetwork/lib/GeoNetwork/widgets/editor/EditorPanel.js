@@ -1144,23 +1144,31 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             Ext.applyIf(obj, syntaxForm.emptyValue);
         }
         
+        item.focus();
+        
         if (item.setSelectionRange) {
             Ext.applyIf(obj, {
                 before: item.value.substring(0, item.selectionStart), 
                 after: item.value.substring(item.selectionEnd, item.value.length)
             });
             item.value = OpenLayers.String.format(syntaxForm.pattern, obj);
+            item.selectionStart = item.value.indexOf(obj.text);
+            item.selectionEnd = item.selectionStart + obj.text.length;
         }
         else {
             // IE
-            selectedText = document.selection.createRange().text; 
+            textRange = document.selection.createRange();
+            selectedText = textRange.text; 
             if (selectedText != "") {
                 Ext.applyIf(obj, {
                     before: '', 
                     after: ''
                 });
-                document.selection.createRange().text = OpenLayers.String.format(syntaxForm.pattern, obj); 
+                textRange.text = OpenLayers.String.format(syntaxForm.pattern, obj); 
             }
+            textRange.moveStart('character', item.value.indexOf(obj.text));
+            textRange.moveEnd('character', obj.text.length);
+            textRange.select();
         }
     },
     /** private: method[validateMetadataField]
