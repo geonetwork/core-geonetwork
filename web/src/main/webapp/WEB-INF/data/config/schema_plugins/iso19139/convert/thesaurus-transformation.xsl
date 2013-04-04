@@ -94,8 +94,6 @@
 									</gco:CharacterString>
 								</gmd:title>
 								
-								
-								
 								<xsl:variable name="thesaurusDate" select="normalize-space(/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date)"/>
 								
 								<xsl:if test="$thesaurusDate != ''">
