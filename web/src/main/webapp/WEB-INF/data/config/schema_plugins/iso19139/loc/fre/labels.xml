@@ -1474,7 +1474,7 @@
     <condition/>
   </element>
   <element name="gmd:descriptiveKeywords" id="33.0">
-    <label>Mots clés descriptifs</label>
+    <label>Mots clés</label>
     <description>Catégorie, type et source de référence des mots clés</description>
     <help>
       En Europe, si la ressource est une série de données géographiques ou un ensemble de séries de données géographiques, il
