@@ -1955,22 +1955,27 @@
           <items>
             <xsl:for-each select="geonet:element/geonet:text">
               <xsl:variable name="choiceValue" select="string(@value)"/>
-              <xsl:variable name="label"
+              <xsl:variable name="schemaLabel"
                 select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
-
+              
+              <xsl:variable name="label">
+                <xsl:choose>
+                  <xsl:when test="normalize-space($schemaLabel) = '' and starts-with($schema, 'iso19139.')">
+                    <!-- Check iso19139 label -->
+                    <xsl:value-of
+                      select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+                  </xsl:when>
+                  <xsl:when test="$schemaLabel"><xsl:value-of select="$schemaLabel"/></xsl:when>
+                  <xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+                </xsl:choose>
+              </xsl:variable>
+              
               <item>
                 <value>
                   <xsl:value-of select="@value"/>
                 </value>
                 <label>
-                  <xsl:choose>
-                    <xsl:when test="$label">
-                      <xsl:value-of select="$label"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$choiceValue"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
+                  <xsl:value-of select="$label"/>
                 </label>
               </item>
             </xsl:for-each>

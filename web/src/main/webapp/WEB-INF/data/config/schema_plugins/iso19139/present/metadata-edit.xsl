@@ -99,13 +99,16 @@
   <!-- these elements should be boxed -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|
+  <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|
+              gmd:portrayalCatalogueInfo|gmd:portrayalCatalogueCitation|
+              gmd:descriptiveKeywords|gmd:thesaurusName|
               *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
               srv:containsOperations|srv:SV_CoupledResource|
-              gmd:metadataConstraints|gmd:aggregationInfo|gmd:report/*|gmd:result/*">
+              gmd:metadataConstraints|gmd:aggregationInfo|gmd:report/*|gmd:result/*|
+              gmd:processStep|gmd:lineage">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
     
@@ -1462,10 +1465,11 @@
 									</xsl:choose>
 
               </xsl:for-each>
-              <xsl:if test="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue!=''">
-                <xsl:text> (</xsl:text>
-                <xsl:value-of select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
-                <xsl:text>)</xsl:text>
+              <xsl:variable name="type" select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
+              <xsl:if test="$type">
+                (<xsl:value-of
+                  select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
+                  entry[code = $type]/label"/>)
               </xsl:if>
               <xsl:text>.</xsl:text>
             </xsl:variable>
