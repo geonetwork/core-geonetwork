@@ -546,10 +546,12 @@
 
 	<xsl:template match="*[@xlink:href and @xlink:role = 'http://www.geonetwork.org/non_valid_obj']" mode="xlinks">
 		<xsl:apply-templates select="." mode="non-valid-xlink"/>
+		<xsl:apply-templates />
 	</xsl:template>
 
 	<xsl:template match="*[@xlink:href and not(@xlink:role = 'http://www.geonetwork.org/non_valid_obj')]" mode="xlinks">
 		<xsl:apply-templates select="." mode="valid-xlink"/>
+		<xsl:apply-templates />
 	</xsl:template>
 	
 	<xsl:template match="*" mode="xlinks">

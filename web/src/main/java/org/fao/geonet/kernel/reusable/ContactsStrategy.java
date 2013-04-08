@@ -508,6 +508,10 @@ public final class ContactsStrategy extends ReplacementStrategy
     public String[] getInvalidXlinkLuceneField() {
         return new String[]{"invalid_xlink_contact"};
     }
+    @Override
+    public String[] getValidXlinkLuceneField() {
+    	return new String[]{"valid_xlink_contact"};
+    }
 
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {

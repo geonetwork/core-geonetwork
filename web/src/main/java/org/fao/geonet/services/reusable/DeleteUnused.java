@@ -24,6 +24,8 @@
 package org.fao.geonet.services.reusable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -83,12 +85,15 @@ public class DeleteUnused implements Service {
         List<Element> nonValidated = strategy.findNonValidated(userSession).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
-
+        
+	    List<String> luceneFields = new LinkedList<String>();
+	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+	
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-            Set<MetadataRecord> md = Utils
-                    .getReferencingMetadata(context, strategy.getInvalidXlinkLuceneField(), objId, false, idConverter);
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, luceneFields, objId, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(objId);
             }
@@ -104,10 +109,12 @@ public class DeleteUnused implements Service {
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = ReplacementStrategy.ID_FUNC;
 
+        List<String> fields = Arrays.asList(DeletedObjects.getLuceneIndexField());
+
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.getLuceneIndexField(), objId, false, idConverter);
+			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, objId, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(objId);
             }

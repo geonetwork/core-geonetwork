@@ -141,6 +141,11 @@ public abstract class ReplacementStrategy
     public abstract String[] getInvalidXlinkLuceneField();
 
     /**
+     * Return the field that contains the xlinks references to valid metadata
+     */
+    public abstract String[] getValidXlinkLuceneField();
+
+    /**
      * Create a default shared object as defined by href
      */
     public abstract String createAsNeeded(String href, UserSession session) throws Exception;

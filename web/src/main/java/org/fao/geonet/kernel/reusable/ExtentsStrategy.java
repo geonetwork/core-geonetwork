@@ -1072,6 +1072,11 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     public String[] getInvalidXlinkLuceneField() {
         return new String[]{"invalid_xlink_extent"};
     }
+    
+    @Override
+    public String[] getValidXlinkLuceneField() {
+    	return new String[]{"valid_xlink_extent"};
+    }
 
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {

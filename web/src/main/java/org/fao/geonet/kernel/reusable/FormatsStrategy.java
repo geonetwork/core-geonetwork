@@ -341,6 +341,11 @@ public final class FormatsStrategy extends ReplacementStrategy
     public String[] getInvalidXlinkLuceneField() {
         return new String[]{"invalid_xlink_format"};
     }
+    
+    @Override
+    public String[] getValidXlinkLuceneField() {
+    	return new String[]{"valid_xlink_format"};
+    }
 
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {

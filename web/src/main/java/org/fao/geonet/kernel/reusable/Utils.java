@@ -39,7 +39,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -48,7 +47,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -88,45 +86,6 @@ public final class Utils {
 
     public static final GMLConfiguration gml3Conf = new GMLConfiguration();
     public static final org.geotools.gml2.GMLConfiguration gml2Conf = new org.geotools.gml2.GMLConfiguration();
-
-    public static Element updateXLink( ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
-            boolean validated ) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-        UserSession session = context.getUserSession();
-        final String[] luceneFields = strategy.getInvalidXlinkLuceneField();
-
-        final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
-        Set<MetadataRecord> results = getReferencingMetadata(context, luceneFields, id, true, idConverter);
-
-        for( MetadataRecord metadataRecord : results ) {
-
-            for( String xlinkHref : metadataRecord.xlinks ) {
-
-                @SuppressWarnings("unchecked")
-                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(xlinkHref));
-                while( xlinks.hasNext() ) {
-                    Element xlink = xlinks.next();
-                    xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
-
-                    String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
-                    String newId = idMapping.get(id);
-                    if (newId == null) {
-                        newId = id;
-                    }
-                    String validateHRef = strategy.updateHrefId(oldHref, newId, session);
-                    if (validated) {
-                        xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
-                    }
-                }
-
-            }
-            metadataRecord.commit(dbms, context);
-        }
-        Element e = new Element("id");
-        e.setText(id);
-        return e;
-    }
 
     public static String id( String href ) {
         if (href.indexOf("id=") < 0) {
@@ -215,7 +174,7 @@ public final class Utils {
      *
      * @param context
      */
-    public static Set<MetadataRecord> getReferencingMetadata( ServiceContext context, String[] luceneFields, String id,
+    public static Set<MetadataRecord> getReferencingMetadata( ServiceContext context, List<String> fields, String id,
             boolean loadMetadata, Function<String, String> idConverter ) throws Exception {
 
         String concreteId = idConverter.apply(id);
@@ -237,7 +196,7 @@ public final class Utils {
 
             });
 
-            for( String field : luceneFields ) {
+            for( String field : fields ) {
                 Set<String> requiredFields = new HashSet<String>();
                 requiredFields.add("_id");
                 requiredFields.add("_owner");
@@ -249,11 +208,10 @@ public final class Utils {
                 for( ScoreDoc sdoc : tdocs.scoreDocs ) {
                     Document element = reader.document(sdoc.doc, requiredFields);
 
-                    List<String> xlinks = new ArrayList<String>();
+                    HashSet<String> xlinks = new HashSet<String>();
                     for( String value : element.getValues(field) ) {
                         if (equalIds(value, concreteId)) {
                             xlinks.add(value);
-                            break;
                         }
                     }
                     if (!xlinks.isEmpty()) {

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +53,6 @@ import org.fao.geonet.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.kernel.reusable.Utils;
 import org.fao.geonet.kernel.reusable.Utils.FindXLinks;
-import org.jdom.Comment;
 import org.jdom.Element;
 
 import com.google.common.base.Function;
@@ -107,13 +107,16 @@ public class Reject implements Service
     {
 
         final Function<String,String> idConverter = strategy.numericIdToConcreteId(session);
-        final String[] invalidXlinkLuceneField = strategy.getInvalidXlinkLuceneField();
 
+	    List<String> luceneFields = new LinkedList<String>();
+	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+	
         Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
         List<Element> result = new ArrayList<Element>();
         ArrayList<String> allAffectedMdIds = new ArrayList<String>();
         for (String id : ids) {
-            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, invalidXlinkLuceneField, id, true, idConverter);
+            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
 
             // compile a list of email addresses for notifications
             for (MetadataRecord record : results) {
@@ -160,6 +163,18 @@ public class Reject implements Service
                     if (!updatedHrefs.containsKey(oldHRef)) {
                         Element fragment = Processor.resolveXLink(oldHRef,context);
                         fragment.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
+                        
+                        Iterator iter = fragment.getDescendants();
+                        while(iter.hasNext()) {
+                        	Object next = iter.next();
+                        	if (next instanceof Element) {
+								Element e = (Element) next;
+								e.removeAttribute("href", XLink.NAMESPACE_XLINK);
+								e.removeAttribute("show", XLink.NAMESPACE_XLINK);
+								e.removeAttribute("role", XLink.NAMESPACE_XLINK);
+								
+							}
+                        }
                         // update xlink service
                         int newId = DeletedObjects.insert(dbms, context.getSerialFactory(), Xml.getString(fragment), href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));

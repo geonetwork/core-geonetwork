@@ -128,7 +128,6 @@
 									<xsl:with-param name="displayLink" select="false()"/>
 									<xsl:with-param name="title" select="/root/gui/strings/quickSearch"/>
 									<xsl:with-param name="content">
-										<h1>Non-functional until we have new UI</h1>
 										<ul>
 											<li>
 											  <a href="{concat(/root/gui/config/client/@url, '?hl=', /root/gui/language, '&amp;s_search&amp;', /root/gui/config/client/@stateId, '_E__owner=', /root/gui/session/userId)}">

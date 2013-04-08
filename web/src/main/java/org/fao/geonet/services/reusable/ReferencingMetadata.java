@@ -26,6 +26,8 @@ package org.fao.geonet.services.reusable;
 import static org.fao.geonet.kernel.reusable.Utils.addChild;
 import static org.fao.geonet.util.LangUtils.iso19139DefaultLang;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Function;
@@ -42,6 +44,8 @@ import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
+import scala.actors.threadpool.Arrays;
+
 /**
  * Return the metadata that references the reusable object
  *
@@ -50,22 +54,24 @@ import org.jdom.Element;
 public class ReferencingMetadata implements Service
 {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
+    @SuppressWarnings("unchecked")
+	public Element exec(Element params, ServiceContext context) throws Exception
     {
 
         String id = Util.getParam(params, "id");
         String type = Util.getParam(params, "type");
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        String[] fields;
+        List<String> fields = new LinkedList<String>();
         Function<String,String> idConverter;
         if (type.equalsIgnoreCase("deleted")) {
-            fields = DeletedObjects.getLuceneIndexField();
+            fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
             idConverter= ReplacementStrategy.ID_FUNC;
         } else {
 
             final ReplacementStrategy replacementStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
-            fields = replacementStrategy.getInvalidXlinkLuceneField();
+            fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
+            fields.addAll(Arrays.asList(replacementStrategy.getValidXlinkLuceneField()));
             idConverter=replacementStrategy.numericIdToConcreteId(context.getUserSession());
         }
 

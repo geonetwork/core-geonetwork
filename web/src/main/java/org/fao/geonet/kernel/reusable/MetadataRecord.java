@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.reusable;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,17 +40,17 @@ public class MetadataRecord
      */
     public final Element xml;
 
-    public final List<String> xlinks;
+    public final Collection<String> xlinks;
     private String ownerEmail = null;
     private String ownerName = null;
     private XmlSerializer xmlSerializer;
 
-    public MetadataRecord(XmlSerializer xmlSerializer, Document element, List<String> xlinks, Dbms dbms, boolean loadMetadata) throws Exception
+    public MetadataRecord(XmlSerializer xmlSerializer, Document element, Collection<String> xlinks, Dbms dbms, boolean loadMetadata) throws Exception
     {
         this.xmlSerializer = xmlSerializer;
         id = element.get("_id");
         ownerId = element.get("_owner");
-        this.xlinks = Collections.unmodifiableList(xlinks);
+        this.xlinks = Collections.unmodifiableCollection(xlinks);
         if(loadMetadata) {
             data = ((Element) dbms.select("select data from metadata where id="+id).getChildren().get(0)).getChildTextTrim("data");
             xml = jeeves.utils.Xml.loadString(data, false);

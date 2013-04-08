@@ -1729,7 +1729,7 @@ public class DataManager {
 	}
 	public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide, boolean allowDbmsClosing) throws Exception {
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-		boolean doXLinks = xmlSerializer.resolveXLinks();
+		boolean doXLinks = true;
 		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false, srvContext);
 		if (md == null) return null;
 
