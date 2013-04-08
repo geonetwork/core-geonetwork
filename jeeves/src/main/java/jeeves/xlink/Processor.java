@@ -354,6 +354,7 @@ public final class Processor {
 		for (Attribute xlink : xlinks) {
 			Element element = xlink.getParent(); 
 			if (action.equals(ACTION_REMOVE)) {
+				element.getParentElement().removeAttribute("show", XLink.NAMESPACE_XLINK);
 				element.removeContent();
 			} else {
 				String idSearch = xlink.getValue().substring(1);
