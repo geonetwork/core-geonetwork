@@ -12,7 +12,7 @@
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
 	<fees>Frais</fees>
-	<accessConstraints>Constraintes d'accès</accessConstraints>
+	<accessConstraints>Contraintes d'accès</accessConstraints>
     <cswMetadataPublic>Métadonnées insérées sont publiques</cswMetadataPublic>
 	
 	<userSelfRegistration>Enregistrement libre des internautes</userSelfRegistration>

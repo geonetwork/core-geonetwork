@@ -874,7 +874,7 @@
     <inspireTab>Vue INSPIRE</inspireTab>
     <inspireSection>
         <identification>
-            <title>Identification</title>
+        	<title>Identification de la ressource</title>
         <help>
 				<div>
 				The following metadata elements shall be provided:
@@ -898,7 +898,7 @@
 			</help>
 		</identification>
         <classification>
-            <title>Classification des données ou services</title>
+        	<title>Classification des données et services géographiques</title>
         <help>
 				<div>
 					<ul>
@@ -913,7 +913,7 @@
 			</help>
 		</classification>
         <keywords>
-            <title>Mots-clés &amp; thèmes INSPIRE</title>
+        	<title>Mots clés, thème INSPIRE et catégorie de service</title>
         <help>
 				<div>
 					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
@@ -925,7 +925,7 @@
 			</help>
 		</keywords>
         <geoloc>
-            <title>Localisation géographique</title>
+        	<title>Situation géographique</title>
         <help>
 				<div>
 					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
@@ -985,7 +985,7 @@
 			</help>
 		</conformity>
         <constraint>
-            <title>Constrainte d'accès et d'utilisation</title>
+        	<title>Contraintes en matière d'accès et d'utilisation de la ressource</title>
         <help>
 				<div>
 					A constraint related to access and use shall be either or both of the following:
