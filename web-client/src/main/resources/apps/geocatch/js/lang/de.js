@@ -26,7 +26,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'basicgeodata-cantonal': ' + Geobasisdaten - Kanton',
 	'basicgeodata-communal': ' + Geobasisdaten - Gemeinde',
 	'basicgeodata-other': ' + Geobasisdaten - Andere',
-	'service': 'Dieste',
+	'service': 'Dienste',
 	'service-OGC:WMS': ' + WMS',
 	'service-OGC:WFS': ' + WFS',
 	'owner': 'Besitzer',
