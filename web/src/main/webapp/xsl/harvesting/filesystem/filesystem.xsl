@@ -30,21 +30,21 @@
 
 		<table>
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/name"/></td>
+				<td class="padded"><label for="filesystem.name"><xsl:value-of select="/root/gui/harvesting/name"/></label></td>
 				<td class="padded"><input id="filesystem.name" class="content" type="text" value="" size="200"/></td>
 			</tr>
 			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/directoryname"/></td>
+				<td class="padded"><label for="filesystem.directoryname"><xsl:value-of select="/root/gui/harvesting/directoryname"/></label></td>
 				<td class="padded"><input id="filesystem.directoryname" class="content" type="text" value="" size="300"/></td>
 			</tr>
 			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/recurse"/></td>
+				<td class="padded"><label for="filesystem.recurse"><xsl:value-of select="/root/gui/harvesting/recurse"/></label></td>
 				<td class="padded"><input id="filesystem.recurse" type="checkbox" checked="on"/></td>
 			</tr>	
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/nodelete"/></td>
+				<td class="padded"><label for="filesystem.nodelete"><xsl:value-of select="/root/gui/harvesting/nodelete"/></label></td>
 				<td class="padded"><input id="filesystem.nodelete" type="checkbox" checked="on"/></td>
 			</tr>			
 			<tr>
@@ -73,7 +73,7 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><label for="filesystem.validate"><xsl:value-of select="/root/gui/harvesting/validate"/></label></td>
 				<td class="padded"><input id="filesystem.validate" type="checkbox" value=""/></td>
 			</tr>
 		</table>
