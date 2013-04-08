@@ -377,7 +377,7 @@ Ext.onReady(function() {
 
         // E__owner
         if (OpenLayers.Util.getParameters().hasOwnProperty("_E__owner")) {
-            Ext.each(Ext.query("input[name=E_owner]"), function(input) {
+            Ext.each(Ext.query("input[name=E__owner]"), function(input) {
                 Ext.getCmp(input.id).setValue(
                         OpenLayers.Util.getParameters()._E__owner);
             });

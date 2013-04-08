@@ -342,7 +342,7 @@ GeoNetwork.searchApp = function() {
             // Hidden fields (for links from the admin)
             f = f.concat([ {
                 xtype : "hidden",
-                name : "E_owner"
+                name : "E__owner"
             }, {
                 xtype : "hidden",
                 name : "E_siteId"
