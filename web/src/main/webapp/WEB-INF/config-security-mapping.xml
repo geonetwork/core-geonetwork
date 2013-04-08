@@ -130,13 +130,13 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.batch.newowner.form!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.usergroups.list!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.batch.processing!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.register!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.remove!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.download!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.admin!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.register!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.download!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.get!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.category!?.*" access="hasRole('Editor')"></sec:intercept-url>
