@@ -28,6 +28,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.NodeInfo;
@@ -307,11 +308,18 @@ public class TranslateAndValidate {
     			append("GM03to19139CHE" ).
     			append( SEP);
     	
-    	if(webappDir == null) {
-    		xslFileName.insert(0, ServiceContext.get().getAppPath());
+    	String finalWebappDir;
+		if(webappDir == null || webappDir.isEmpty()) {
+    		finalWebappDir = ServiceContext.get().getAppPath();
     	} else {
-    		xslFileName.insert(0, webappDir);
+    		finalWebappDir = webappDir;
     	}
+		
+		if(finalWebappDir.endsWith(SEP)) {
+			xslFileName.deleteCharAt(0);
+		}
+		
+		xslFileName.insert(0, finalWebappDir);
     	
     	String xml = XslUtil.writeXml(doc.getRoot());
     	AxisIterator iter = doc.iterateAxis(Axis.DESCENDANT, NodeKindTest.ELEMENT);
@@ -336,18 +344,19 @@ public class TranslateAndValidate {
     			
     			
     	if(xml.trim().isEmpty()) {
+    		throw new IllegalArgumentException("XML document does not seem to be a GM03 variant");
     	}
 
 		xslFileName.append("CHE03-to-19139.xsl");
 
-    	Transformer xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(xslFileName.toString()));
+    	Transformer xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFileName.toString()));
     	
 		byte[] bytes = xml.getBytes("UTF-8");
 		StreamSource source = new StreamSource(new ByteArrayInputStream(bytes));
     	
     	TranslateAndValidate instance = new TranslateAndValidate();
 		StringBuffer result = instance.translate(debugFileName, source, xslt, false, uuid);
-		if (debugFileName != null) {
+		if (debugFileName != null && !debugFileName.isEmpty()) {
 			File outFile = new File(debugFileName);
 			instance.outputDir = outFile.getParentFile();
 			instance.outputDir.mkdirs();

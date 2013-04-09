@@ -29,6 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import jeeves.utils.Log;
+import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
@@ -724,7 +725,7 @@ public final class XslUtil {
         Result result = new StreamResult(out);
 
         // Write the DOM document to the file
-        Transformer xformer = TransformerFactory.newInstance().newTransformer();
+        Transformer xformer = TransformerFactoryFactory.getTransformerFactory().newTransformer();
         xformer.transform(source, result);
         return out.toString("utf-8");
     }
@@ -734,9 +735,8 @@ public final class XslUtil {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			// Prepare the output file
 			Result result = new StreamResult(out);
-
 			// Write the DOM document to the file
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			Transformer xformer = TransformerFactoryFactory.getTransformerFactory().newTransformer();
 
 			xformer.transform(doc, result);
 			return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "");
