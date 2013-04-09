@@ -108,7 +108,7 @@ public class Show implements Service
 		}
 		
 		boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
-		if (witholdWithheldElements) {
+		if (XmlSerializer.getThreadLocal(false) != null || witholdWithheldElements) {
 		   XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
 		}
 		if (id == null)
