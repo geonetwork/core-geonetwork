@@ -1445,17 +1445,7 @@ GeoNetwork.searchApp = function() {
                 id : 'previousBt',
                 text : '&lt;&lt;',
                 handler : function() {
-                    var from = catalogue.startRecord
-                            - parseInt(Ext.getCmp('E_hitsperpage').getValue(),
-                                    10);
-                    if (from > 0) {
-                        catalogue.startRecord = from;
-                        catalogue.search(
-                                'advanced-search-options-content-form',
-                                app.searchApp.loadResults, null,
-                                catalogue.startRecord, true);
-                    }
-                },
+                	Ext.getCmp("previousBt_up").handler();},
                 scope : this
             });
 
@@ -1463,11 +1453,7 @@ GeoNetwork.searchApp = function() {
                 id : 'nextBt',
                 text : '&gt;&gt;',
                 handler : function() {
-                    catalogue.startRecord += parseInt(Ext.getCmp(
-                            'E_hitsperpage').getValue(), 10);
-                    catalogue.search('advanced-search-options-content-form',
-                            app.searchApp.loadResults, null,
-                            catalogue.startRecord, true);
+                	Ext.getCmp("nextBt_up").handler();
                 },
                 scope : this
             });
