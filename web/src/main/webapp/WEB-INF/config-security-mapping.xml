@@ -263,7 +263,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/pdf.selection.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/pdf.present!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/pdf!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/intermap.wmc.setWmcContext!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.search.keywords!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadata.get!?.*" access="permitAll"></sec:intercept-url>
@@ -353,6 +352,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/isolanguages!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/wmc/load.wmc" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/robots.txt" access="permitAll"></sec:intercept-url>
 
