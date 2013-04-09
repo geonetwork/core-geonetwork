@@ -36,7 +36,8 @@
 					</gco:CharacterString>
 				</xsl:when>
 				<xsl:otherwise>
-					<gco:CharacterString gco:nilReason="missing"></gco:CharacterString>
+					<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+					<gco:CharacterString />
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:copy-of select="gmd:PT_FreeText"></xsl:copy-of>
