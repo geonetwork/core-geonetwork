@@ -132,7 +132,11 @@ Ext.extend(GeoNetwork.LoadWmcWindow, GeoNetwork.BaseWindow, {
         var o = Ext.decode(json);
         if (o.success) {
             var cb = OpenLayers.Function.bind(this.parseWMCLoad, this);
-            OpenLayers.loadURL(o.url, null, null, cb);
+            OpenLayers.Request.GET({
+                url: o.url, 
+                scope: this,
+                callback: cb
+            });
         } else {
             this.onAjaxFailure();
         }
