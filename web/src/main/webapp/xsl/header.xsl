@@ -10,7 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 
 		<!-- title -->
-		<title><xsl:value-of select="/root/gui/strings/title"/></title>
+		<title><xsl:value-of select="/root/gui/env/site/name"/></title>
 		<link rel="shortcut icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
 		<link rel="icon" type="image/x-icon" href="{/root/gui/url}/images/logos/favicon.gif"/>
 
