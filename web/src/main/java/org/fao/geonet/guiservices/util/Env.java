@@ -29,7 +29,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.jdom.Element;
 
 /**
@@ -50,6 +50,9 @@ public class Env implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+		// reset the thread local
+		XmlSerializer.clearThreadLocal();
+
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS + XML_DIR;
