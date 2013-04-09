@@ -169,6 +169,8 @@ var searchTemp =
 '      <keywords>{KEYWORDS}</keywords>'+
 '      <digital>{DIGITAL}</digital>'+
 '      <hardcopy>{HARDCOPY}</hardcopy>'+
+'      <anyField>{ANYFIELD}</anyField>'+
+'      <anyValue>{ANYVALUE}</anyValue>'+
 '      <source>'+
 '         <uuid>{SOURCE_UUID}</uuid>'+
 '         <name>{SOURCE_NAME}</name>'+

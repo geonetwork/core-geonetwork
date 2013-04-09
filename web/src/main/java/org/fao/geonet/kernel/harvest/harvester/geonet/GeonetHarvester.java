@@ -166,6 +166,8 @@ public class GeonetHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "hardcopy",   s.hardcopy);
 			settingMan.add(dbms, "id:"+searchID, "sourceUuid", s.sourceUuid);
 			settingMan.add(dbms, "id:"+searchID, "sourceName", s.sourceName);
+			settingMan.add(dbms, "id:"+searchID, "anyField",   s.anyField);
+			settingMan.add(dbms, "id:"+searchID, "anyValue",   s.anyValue);
 		}
 
 		//--- store group mapping

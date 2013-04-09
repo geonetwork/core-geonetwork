@@ -29,6 +29,8 @@
 					<keywords><xsl:value-of select="children/keywords/value" /></keywords>
 					<digital><xsl:value-of  select="children/digital/value" /></digital>
 					<hardcopy><xsl:value-of select="children/hardcopy/value" /></hardcopy>
+					<anyField><xsl:value-of  select="children/anyField/value" /></anyField>
+					<anyValue><xsl:value-of select="children/anyValue/value" /></anyValue>
 					<source>
 						<uuid><xsl:value-of select="children/sourceUuid/value" /></uuid>
 						<name><xsl:value-of select="children/sourceName/value" /></name>

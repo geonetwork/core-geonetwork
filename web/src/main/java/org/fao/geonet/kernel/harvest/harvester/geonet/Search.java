@@ -50,7 +50,9 @@ class Search
 		keywords = Util.getParam(search, "keywords", "");
 		digital  = Util.getParam(search, "digital",  false);
 		hardcopy = Util.getParam(search, "hardcopy", false);
-
+		anyField = Util.getParam(search, "anyField", "");
+		anyValue = Util.getParam(search, "anyValue", "");
+		
 		Element source = search.getChild("source");
 
 		sourceUuid = Util.getParam(source, "uuid", "");
@@ -75,6 +77,8 @@ class Search
 		s.hardcopy  = hardcopy;
 		s.sourceUuid= sourceUuid;
 		s.sourceName= sourceName;
+		s.anyField  = anyField;
+		s.anyValue  = anyValue;
 
 		return s;
 	}
@@ -90,6 +94,7 @@ class Search
 		add(req, "abstract", abstrac);
 		add(req, "themekey", keywords);
 		add(req, "siteId",   sourceUuid);
+		add(req, anyField, anyValue);
 
 		if (digital)
 			Lib.element.add(req, "digital", "on");
@@ -133,6 +138,8 @@ class Search
 	public boolean hardcopy;
 	public String  sourceUuid;
 	public String  sourceName;
+	public String anyField;
+	public String anyValue;
 }
 
 //=============================================================================
