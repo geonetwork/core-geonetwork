@@ -1353,6 +1353,24 @@
 		<help>z.B. TXT, PDF, TIFF, SHAPE etc., aber auch ZIP</help>
 		<condition>Obligatorisch</condition>
 		<description>Bezeichnung des Datenformats</description>
+		<helper rel="gmd:version">
+			<option value="Text">Text</option>
+			<option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+			<option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
+			<option value="Mapinfo TAB">Mapinfo TAB</option>
+			<option value="KML">KML</option>
+			<option value="GML" title="3.2.1">GML</option>
+			<option value="GeoTIFF" title="1.0">GeoTIFF</option>
+			<option value="TIFF">TIFF</option>
+			<option value="ECW">ECW</option>
+			<option value="JPEG2000">JPEG2000</option>
+			<option value="ZIP">ZIP</option>
+			<option value="PDF">PDF</option>
+			<option value="PNG">PNG</option>
+			<option value="JPEG">JPEG</option>
+			<option value="OGC:WMC">OGC:WMC</option>
+			<option value="OGC:OWS Context">OGC:OWS Context</option>
+		</helper>
 	</element>
 	<element name="gmd:version" context="gmd:MD_Format" id="286">
 		<label>Version</label>

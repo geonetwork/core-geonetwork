@@ -1038,6 +1038,8 @@ GeoNetwork.util.SearchFormTools = {
         var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 
                                ['series', OpenLayers.i18n('series')],
                                ['service', OpenLayers.i18n('service')],
+                               ['interactiveMap', OpenLayers.i18n('interactiveMap')],
+                               ['staticMap', OpenLayers.i18n('staticMap')],
                                ['featureCatalog', OpenLayers.i18n('featureCat')]],
             config = {
                     name: 'E_type',
@@ -1063,6 +1065,31 @@ GeoNetwork.util.SearchFormTools = {
         } else {
             return new Ext.form.ComboBox(config);
         }
+    },
+    getTypesFieldWithAutocompletion: function (services) {
+        var resourceTypeStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+            url: services.opensearchSuggest,
+            rootId: 1,
+            baseParams: {
+                field: 'type'
+            }
+        });
+        var resourceTypeField = new Ext.ux.form.SuperBoxSelect({
+            hideLabel: false,
+            minChars: 0,
+            queryParam: 'q',
+            hideTrigger: false,
+            id: 'E_type',
+            name: 'E_type',
+            store: resourceTypeStore,
+            valueField: 'value',
+            displayField: 'value',
+            valueDelimiter: ' or ',
+            tpl: '<tpl for="."><div class="x-combo-list-item">{[OpenLayers.i18n(values.value)]}</div></tpl>',
+            fieldLabel: OpenLayers.i18n('resourceType')
+        });
+        
+        return resourceTypeField;
     },
     /** api:method[getSpatialRepresentationTypeField]
      *  :param codeList: ``Array`` of values 

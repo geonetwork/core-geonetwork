@@ -324,11 +324,22 @@ GeoNetwork.app = function () {
             mapOptions = GeoNetwork.map.MAP_OPTIONS;
         }
         
+        
         var formItems = [];
-        formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
-                    GeoNetwork.map.BACKGROUND_LAYERS, mapOptions, true, 
-                    GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-                    adv, GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined));
+        formItems.push(
+                new GeoNetwork.form.OpenSearchSuggestionTextField({
+                    hideLabel: true,
+                    minChars: 2,
+                    loadingText: '...',
+                    hideTrigger: true,
+                    url: catalogue.services.opensearchSuggest
+                }),
+                GeoNetwork.util.SearchFormTools.getTypesFieldWithAutocompletion(catalogue.services),
+                GeoNetwork.util.SearchFormTools.getSimpleMap(GeoNetwork.map.BACKGROUND_LAYERS, mapOptions, 
+                GeoNetwork.searchDefault.activeMapControlExtent, {width: 290}),
+                adv, 
+                GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined)
+        );
         // Add advanced mode criteria to simple form - end
         
         

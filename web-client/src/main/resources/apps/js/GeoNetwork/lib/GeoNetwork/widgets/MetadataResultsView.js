@@ -600,6 +600,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                         }
                                     });
                                 }
+                            } else if (currentType === 'application/vnd.ogc.wmc') {
+                                linkButton.push({
+                                    text: record.get('title') || record.get('name'),
+                                    handler: function (b, e) {
+                                        // FIXME : ref to app
+                                        app.switchMode('1', true);
+                                        app.getIMap().addWMC(record.get('href'));
+                                    }
+                                });
                             } else {
                                 // If link is uploaded to GeoNetwork the resources.get service is used
                                 // Check if allowDownload 

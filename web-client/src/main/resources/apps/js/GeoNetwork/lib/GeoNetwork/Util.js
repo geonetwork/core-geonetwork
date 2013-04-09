@@ -126,6 +126,7 @@ GeoNetwork.Util = {
      */
     protocolToCSS: {
         'application/vnd.ogc.wms_xml': 'addLayerIcon',
+        'application/vnd.ogc.wmc': 'addLayerIcon',
         'OGC:WMS': 'addLayer',
         'application/vnd.google-earth.kml+xml': 'md-mn-kml',
         'application/zip': 'md-mn-zip',

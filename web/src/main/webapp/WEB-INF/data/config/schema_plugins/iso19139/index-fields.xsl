@@ -469,8 +469,13 @@
 					<Field name="link" string="{concat($title, '|', $desc, '|', 
 						'../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title, 
 						'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>					
-				</xsl:if>					
+				</xsl:if>
 				
+				<!-- Try to detect Web Map Context by checking protocol or file extension -->
+				<xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
+					<Field name="link" string="{concat($title, '|', $desc, '|', 
+						$linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc')}" store="true" index="false"/>
+				</xsl:if>   
 			</xsl:for-each>  
 		</xsl:for-each>
 
@@ -542,7 +547,30 @@
 		</xsl:choose>
 		
 		
+		<!-- Metadata on maps -->
+		<xsl:variable name="isDataset" select="count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='dataset']) > 0"/>
+		<xsl:variable name="isMapDigital" select="count(gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
+			gmd:presentationForm[gmd:CI_PresentationFormCode/@codeListValue = 'mapDigital']) > 0"/>
+		<xsl:variable name="isStatic" select="count(gmd:distributionInfo/gmd:MD_Distribution/
+			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'PDF') or contains(., 'PNG') or contains(., 'JPEG')]) > 0"/>
+		<xsl:variable name="isInteractive" select="count(gmd:distributionInfo/gmd:MD_Distribution/
+			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS')]) > 0"/>
+		<xsl:variable name="isPublishedWithWMCProtocol" select="count(gmd:distributionInfo/gmd:MD_Distribution/
+			gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol[starts-with(gco:CharacterString, 'OGC:WMC')]) > 0"/>
 		
+		<xsl:if test="$isDataset and $isMapDigital and ($isStatic or $isInteractive or $isPublishedWithWMCProtocol)">
+			<Field name="type" string="map" store="true" index="true"/>
+			<xsl:choose>
+				<xsl:when test="$isStatic">
+					<Field name="type" string="staticMap" store="true" index="true"/>
+				</xsl:when>
+				<xsl:when test="$isInteractive or $isPublishedWithWMCProtocol">
+					<Field name="type" string="interactiveMap" store="true" index="true"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:if>
+		
+
 		<xsl:choose>
 			<!-- Check if metadata is a service metadata record -->
 			<xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">
