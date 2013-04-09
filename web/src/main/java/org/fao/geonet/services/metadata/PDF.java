@@ -56,6 +56,7 @@ public class PDF implements Service {
         try {
                 ITextRenderer renderer = new ITextRenderer();
                 String siteUrl = new SettingInfo(context).getSiteUrl();
+                renderer.getSharedContext().setDotsPerPixel(13);
                 renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
                 renderer.setDocumentFromString(htmlContent, siteUrl);
                 renderer.layout();

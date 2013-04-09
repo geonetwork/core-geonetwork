@@ -42,11 +42,13 @@
 				<xsl:call-template name="header"/>
 				
 				<style type="text/css">
+					/*@page land { size:landscape; }*/
 					body {
 						height:100%;
-						width:100%;
+						width:1024px;
 						border:0px;
 						padding:0px;
+						/*page:land;*/
 					}
 				</style>
 			</head>
@@ -64,7 +66,7 @@
 		            </tr>
 		
 					</table>
-				<div id="content_container">
+				<div id="content_container" style="padding-right: 0px">
 					<xsl:call-template name="content"/>
 				</div>
 
