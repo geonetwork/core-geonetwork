@@ -22,7 +22,7 @@ if the widgets profile is not active
 	<file name=".*/WEB-INF/config-gui.xml">
 		<replaceAtt xpath="client" attName="widget" value="true"/>
 		<replaceAtt xpath="client" attName="url" value="../../apps/search/"/>
-		<replaceAtt xpath="client" attName="createParameter" value="#create"/>
+		<replaceAtt xpath="client" attName="createParameter" value="&amp;create"/>
 		<replaceAtt xpath="client" attName="stateId" value="s"/>
 	</file>
 </overrides>
