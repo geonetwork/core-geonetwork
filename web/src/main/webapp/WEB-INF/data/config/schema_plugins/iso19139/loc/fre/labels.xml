@@ -771,6 +771,13 @@ responsable du service.</li>
     <condition/>
     
   </element>
+  
+  <element name="gmd:RS_Identifier" id="208.0" context="gmd:identifier">
+    <label>Identifiant de la ressource</label>
+    <description></description>
+    <help></help>
+    <condition/>
+  </element>
   <element name="gmd:RS_Identifier" id="208.0">
     <label>Identifiant du système de référence</label>
     <description>Classe pour l'identifiant utilisé pour les systèmes de référence</description>
@@ -971,7 +978,7 @@ de métadonnées de données « BD Carthage métropole »
     
   </element>
   <element name="gmd:alternateTitle" id="361.0">
-    <label>Titre court</label>
+    <label>Autres appellations ou acronymes</label>
     <description>Nom raccourci ou autre façon d'écrire le nom, sous lequel l'information des informations de références est connue. Exemple : DCW pour "Digital Chart of the World"</description>
     <help>Nom abrégé ou orthographe du titre/nom différente de celle sous laquelle l'information correspondante est connue. Exemple : DCW pour "Digital Chart of the World"</help>
     <condition/>
@@ -1411,7 +1418,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   
   <element name="gmd:date" id="362.0" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
-    <label>Date</label>
+    <label>Date de référence</label>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création, publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe du même nom.</help>
     
@@ -1461,7 +1468,7 @@ date de mise en ligne du service, en tant que date de publication.
     </help>
   </element>
   <element name="gmd:date" id="362.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
-    <label>Date</label>
+    <label>Date de référence</label>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création, publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe du même nom.</help>
     
@@ -1584,6 +1591,7 @@ date de mise en ligne du service, en tant que date de publication.
     <help>La valeur se trouvant sous la barre de fraction. Il s'agit ici de l'échelle : dans le cas d'une carte à l'échelle du 1:25000, seul le terme "25000" est entré. Cette valeur peut également représenter une indication de précision dans le cas d'un jeu de données vectorielles. Exemple : des limites saisies à une échelle de 1:25'000 et présentant ce niveau de précision.</help>
     <condition>Il faut saisir ou une échelle ou une distance</condition>
     <helper>
+        <option value="1000">1:1 000</option>
         <option value="5000">1:5 000</option>
         <option value="10000">1:10 000</option>
         <option value="25000">1:25 000</option>
@@ -2066,8 +2074,8 @@ période de temps couverte par le service.
     
   </element>
   <element name="gmd:fileIdentifier" id="2.0">
-    <label>Identifiant du fichier</label>
-    <description>Identifiant unique pour ce fichier de métadonnées</description>
+    <label>Identifiant de la fiche</label>
+    <description>Identifiant unique pour la fiche de métadonnées. Il est généré automatiquement par l'application.</description>
     <help>Identifiant unique pour ce fichier de métadonnées. Il correspond à un et un seul nom de fichier.</help>
     <condition/>
     
@@ -2624,7 +2632,13 @@ période de temps couverte par le service.
       <option value="GeoTIFF" title="1.0">GeoTIFF</option>
       <option value="TIFF">TIFF</option>
       <option value="ECW">ECW</option>
+      <option value="JPEG2000">JPEG2000</option>
       <option value="ZIP">ZIP</option>
+      <option value="PDF">PDF</option>
+      <option value="PNG">PNG</option>
+      <option value="JPEG">JPEG</option>
+      <option value="OGC:WMC">OGC:WMC</option>
+      <option value="OGC:OWS Context">OGC:OWS Context</option>
     </helper>
   </element>
   <element name="gmd:name" id="307.0" context="gmd:MD_ExtendedElementInformation">
@@ -2895,9 +2909,13 @@ période de temps couverte par le service.
     
   </element>
   <element name="gmd:parentIdentifier" id="5.0">
-    <label>Identifiant du parent</label>
-    <description>Identifiant du fichier de métadonnées parent.</description>
-    <help>Nom unique du fichier de métadonnées parent ou origine. Il peut s'agir d'un modèle prédéfini ou de données de rang supérieur (dans le cas par exemple d'une carte nationale au 1:25''000, le parent peut être la série de toutes les cartes au 1:25''000).</help>
+    <label>Identifiant de la fiche de métadonnées parent</label>
+    <description>L'identifiant de la fiche de métadonnées parent permet d'effectuer un lien entre les fiches descriptives de
+      ressources liées hiérarchiquement. Ce mécanisme est utilisé notamment dans le cas de relations entre
+      des jeux de données (niveau inférieur - enfant) et des séries de jeux de données (niveau supérieur -
+      parent).</description>
+    <help>Nom unique du fichier de métadonnées parent ou origine. Il peut s'agir d'un modèle prédéfini ou de
+      données de rang supérieur (dans le cas par exemple d'une carte nationale au 1:25''000, le parent peut être la série de toutes les cartes au 1:25''000).</help>
     <condition>Condition</condition>
   </element>
   <element name="gmd:pass" id="132.0">

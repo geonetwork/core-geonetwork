@@ -1235,44 +1235,44 @@
 	<codelist name="gmd:MD_ProgressCode">
 		<entry>
 			<code>completed</code>
-			<label>Terminé</label>
-			<description>La production du jeu de données est terminée</description>
+			<label>Finalisé</label>
+			<description>Production de la ressource finalisée</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>historicalArchive</code>
-			<label>Données historiques</label>
-			<description>Jeu de données historique</description>
+			<label>Archivé</label>
+			<description>Ressource archivée hors ligne</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>obsolete</code>
 			<label>Obsolète</label>
-			<description>Jeu de données obsolète</description>
+			<description>Ressource obsolète</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>onGoing</code>
-			<label>Mis à jour</label>
-			<description>Jeu de données ayant des mises à jour continues</description>
+			<label>Mis à jour continue</label>
+			<description>Ressource continuellement mise à jour</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planned</code>
 			<label>Planifié</label>
-			<description>Jeu de données planifié</description>
+			<description>Ressource créée ou mise à jour sur base d'une date fixée</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>required</code>
-			<label>Requis</label>
-			<description>Jeu de données devant être produit</description>
+			<label>Création ou mise à jour requise</label>
+			<description>Ressource qui doit être générée ou mise à jour</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>underDevelopment</code>
-			<label>En cours</label>
-			<description>Jeu de données en cours d’élaboration</description>
+			<label>En cours de création</label>
+			<description>Ressource en cours de création</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -1452,25 +1452,25 @@
 		<entry>
 			<code>grid</code>
 			<label>Raster</label>
-			<description>Donnée raster</description>
+			<description>Donnée raster ou matricielle</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>textTable</code>
-			<label>Table texte</label>
-			<description>Texte ou donnée tabulaire</description>
+			<label>Tabulaire</label>
+			<description>Fichier texte ou table</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>tin</code>
-			<label>Tin</label>
+			<label>TIN</label>
 			<description>Réseau de triangle irrégulier (Triangulated Irregular Network)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>stereoModel</code>
-			<label>Vue 3D</label>
-			<description>Vue en 3 dimensions</description>
+			<label>Modèle stéréoscopique</label>
+			<description>Vue tridimensionnelle formée par l'intersection des rayons homologues d'une paire d'images se recouvrant</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
