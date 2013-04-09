@@ -43,6 +43,7 @@ import jeeves.xlink.Processor;
 import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.XmlSerializer.ThreadLocalConfiguration;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
@@ -99,7 +100,10 @@ public abstract class XmlSerializer {
 	    
 	    return config;
 	}
-	
+	public static void clearThreadLocal() {
+		configThreadLocal.set(null);
+	}
+
     /**
      *
      * @param sMan
