@@ -238,7 +238,7 @@ public class SearchController {
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
 		    	return null;
-        //
+        
 		// apply stylesheet according to setName and schema
         //
         // OGC 07-045 :
@@ -288,7 +288,7 @@ public class SearchController {
         if (outputSchema == OutputSchema.OGC_CORE) {
             prefix = "ogc";
         }
-        else if (outputSchema == OutputSchema.ISO_PROFILE) {
+        else if (outputSchema == OutputSchema.ISO_PROFILE || outputSchema == OutputSchema.OWN) {
             prefix = "iso";
         }
         else {
