@@ -108,7 +108,7 @@
            it is nested in a SV_ServiceIdentification class -->
 
 		<xsl:for-each select="gmd:identificationInfo//gmd:MD_DataIdentification|
-			gmd:identificationInfo//*[@gco:isoType='gmd:MD_DataIdentification']|
+			gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
 			gmd:identificationInfo/srv:SV_ServiceIdentification">
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">

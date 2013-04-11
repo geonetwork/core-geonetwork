@@ -79,15 +79,12 @@
   <xsl:template match="geonet:*" priority="2"/>
 
   <xsl:template
-    match="gmd:identificationInfo/gmd:MD_DataIdentification|
-        gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-        gmd:identificationInfo/srv:SV_ServiceIdentification|
-        gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"
+    match="gmd:identificationInfo/*"
     priority="2">
 
     <xsl:variable name="srv"
       select="local-name(.)='SV_ServiceIdentification'
-            or @gco:isoType='srv:SV_ServiceIdentification'"/>
+            or contains(@gco:isoType, 'SV_ServiceIdentification')"/>
     
     <xsl:copy>
       <xsl:copy-of select="@*"/>

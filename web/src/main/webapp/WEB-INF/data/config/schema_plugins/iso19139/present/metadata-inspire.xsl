@@ -14,10 +14,7 @@
 		<xsl:param name="dataset" />
 
 		<xsl:for-each
-			select="gmd:identificationInfo/gmd:MD_DataIdentification|
-				gmd:identificationInfo/srv:SV_ServiceIdentification|
-				gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+			select="gmd:identificationInfo/*">
 
 
 			<xsl:call-template name="complexElementGuiWrapper">

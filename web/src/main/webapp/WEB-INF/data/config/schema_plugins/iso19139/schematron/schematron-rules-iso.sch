@@ -285,7 +285,7 @@ USA.
 	<!-- TEST  1 -->
 	<sch:pattern>
 		<sch:title>$loc/strings/M21</sch:title>
-		<sch:rule context="//gmd:MD_DataIdentification|//*[@gco:isoType='gmd:MD_DataIdentification']">
+		<sch:rule context="//gmd:MD_DataIdentification|//*[contains(@gco:isoType, 'MD_DataIdentification')]">
 			<sch:let name="extent" value="(not(../../gmd:hierarchyLevel) 
 				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' 
 				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='') 
@@ -302,7 +302,7 @@ USA.
 	<!-- TEST  2 -->
 	<sch:pattern>
 		<sch:title>$loc/strings/M22</sch:title>
-		<sch:rule context="//gmd:MD_DataIdentification|//*[@gco:isoType='gmd:MD_DataIdentification']">
+		<sch:rule context="//gmd:MD_DataIdentification|//*[contains(@gco:isoType, 'MD_DataIdentification')]">
 			<sch:let name="topic" value="(not(../../gmd:hierarchyLevel) 
 				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='dataset' 
 				or ../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='series'  

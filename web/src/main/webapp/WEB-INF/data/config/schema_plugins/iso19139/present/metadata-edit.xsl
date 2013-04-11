@@ -1867,17 +1867,14 @@
 
     <!-- dataset or resource info in its own box -->
   
-    <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-            gmd:identificationInfo/srv:SV_ServiceIdentification|
-            gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-            gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+    <xsl:for-each select="gmd:identificationInfo/*">
       <xsl:call-template name="complexElementGuiWrapper">
         <xsl:with-param name="title">
         <xsl:choose>
           <xsl:when test="$dataset=true()">
             <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:MD_DataIdentification']/label"/>
           </xsl:when>
-          <xsl:when test="local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification'">
+          <xsl:when test="local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')">
             <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='srv:SV_ServiceIdentification']/label"/>
           </xsl:when>
           <xsl:otherwise>
@@ -3037,7 +3034,7 @@
         </xsl:call-template>
       </xsl:variable>
       
-      <xsl:apply-templates mode="briefster" select="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|gmd:identificationInfo/srv:SV_ServiceIdentification">
+      <xsl:apply-templates mode="briefster" select="gmd:identificationInfo/*">
         <xsl:with-param name="id" select="$id"/>
         <xsl:with-param name="langId" select="$langId"/>
         <xsl:with-param name="info" select="$info"/>
