@@ -96,7 +96,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
 
         var form = this;
         var loginBt = new Ext.Button({
-                width: 50,
+                width: 85,
                 text: OpenLayers.i18n('login'),
                 iconCls: 'md-mn mn-login',
                 id: 'btnLoginForm',
@@ -108,7 +108,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 }
             }),
             adminBt = new Ext.Button({
-                width: 80,
+                width: 75,
                 text: OpenLayers.i18n('administration'),
                 //iconCls : 'md-mn md-mn-advanced',
                 listeners: {
@@ -119,7 +119,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 }
             }),
             logoutBt = new Ext.Button({
-                width: 80,
+                width: 95,
                 text: OpenLayers.i18n('logout'),
                 iconCls: 'md-mn mn-logout',
                 listeners: {
@@ -132,7 +132,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         this.username = new Ext.form.TextField({
             id: 'username',
             name: 'username',
-            width: 70,
+            width: 85,
             autoCreate: {tag: 'input'},
             hideLabel: false,
             allowBlank: false,
@@ -141,7 +141,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         });
         this.password = new Ext.form.TextField({
             name: 'password',
-            width: 70,
+            width: 85,
             hideLabel: false,
             allowBlank: false,
             fieldLabel: OpenLayers.i18n('password'),
