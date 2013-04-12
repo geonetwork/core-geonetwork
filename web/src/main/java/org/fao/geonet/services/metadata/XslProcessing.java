@@ -170,7 +170,7 @@ public class XslProcessing implements Service {
 		
 		if (info == null) {
 			notFound.add(new Integer(id));
-		} else if (!accessMan.hasEditPermission(context, id)) {
+		} else if (!accessMan.canEdit(context, id)) {
 			notEditable.add(new Integer(id));
 		} else {
 
