@@ -1,0 +1,17 @@
+<overrides>
+  <properties>
+    <!--<db.user>www-data</db.user>
+    <db.pass>www-data</db.pass>
+    <db.driver>org.postgresql.Driver</db.driver>
+    <db.url>jdbc:postgresql://localhost:5432/geonetwork-myocean-ro</db.url>
+    -->
+    
+    <db.user>sxtcatal</db.user>
+    <db.pass>sxtdba</db.pass>
+    <db.driver>org.h2.Driver</db.driver>
+    <db.url>jdbc:h2:${gn.webappdir}/geonetwork-myocean-ro;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE</db.url>
+    
+    <widget.url>../../apps/sextant/index_debug.html</widget.url>
+    <widget.parameters>hl=eng</widget.parameters>
+  </properties>
+</overrides>

@@ -1,0 +1,3 @@
+<overrides>
+    <override>/WEB-INF/config-overrides-${overrides}.xml</override>
+</overrides>
