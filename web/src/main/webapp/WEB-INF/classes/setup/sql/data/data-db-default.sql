@@ -403,7 +403,7 @@ INSERT INTO Settings VALUES (16,14,'subVersion','geocat');
 INSERT INTO Settings VALUES (17,10,'svnUuid','');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
 INSERT INTO Settings VALUES (21,20,'host','localhost');
-INSERT INTO Settings VALUES (22,20,'port','8090');
+INSERT INTO Settings VALUES (22,20,'port','8190');
 INSERT INTO Settings VALUES (24,20,'securePort','8493');
 INSERT INTO Settings VALUES (23,20,'protocol','http');
 INSERT INTO Settings VALUES (30,1,'intranet',NULL);

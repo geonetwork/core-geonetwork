@@ -5,13 +5,17 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.utils.BinaryFile;
 
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
@@ -46,7 +50,7 @@ public class PDF implements Service {
         
         context.executeOnly(request);
         String htmlContent = request.getResultString();
-        
+
         File tempDir = (File) context.getServlet().getServletContext().
                        getAttribute( "javax.servlet.context.tempdir" );
 
@@ -65,7 +69,10 @@ public class PDF implements Service {
         finally {
                 os.close();
         }
-        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+		dm.increasePopularity(context, id);
+
         Element res = BinaryFile.encode(200, tempFile.getAbsolutePath(), true);
         return res;
     }

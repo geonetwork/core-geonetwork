@@ -459,6 +459,7 @@
 				<param name="addRefs" value="y" />
 				<param name="cache" value="n" />
 				<param name="keepXLinks" value="y" />
+				<param name="skipPopularity" value="y" />
 			</class>
 
 			<output sheet="metadata-show-xml.xsl" contentType="text/xml; charset=UTF-8">
