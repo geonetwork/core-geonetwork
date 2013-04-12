@@ -114,18 +114,18 @@ public class XslProcessing extends NotInReadOnlyModeService {
 
         Set<Integer> metadata = new HashSet<Integer>();
         Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> notEditable = new HashSet<Integer>();
         Set<Integer> notProcessFound = new HashSet<Integer>();
 
         String id = Utils.getIdentifierFromParameters(params, context);
         Element processedMetadata;
         try {
             processedMetadata = process(id, process, save, _appPath, params,
-                    context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
+                    context, metadata, notFound, notEditable, notProcessFound, false, dataMan.getSiteURL());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed",
                         "Not found:" + notFound.size() +
-                                ", Not owner:" + notOwner.size() +
+                                ", Not owner:" + notEditable.size() +
                                 ", No process found:" + notProcessFound.size() +
                                 ".");
             }
@@ -154,14 +154,14 @@ public class XslProcessing extends NotInReadOnlyModeService {
      * @param context	The current context
      * @param metadata
      * @param notFound
-     * @param notOwner
+     * @param notEditable
      * @param notProcessFound
      * @return
      * @throws Exception
      */
     public static Element process(String id, String process, boolean save,
                                   String appPath, Element params, ServiceContext context,
-                                  Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
+                                  Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notEditable,
                                   Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         UserSession session = context.getUserSession();
@@ -175,8 +175,8 @@ public class XslProcessing extends NotInReadOnlyModeService {
 
         if (info == null) {
             notFound.add(new Integer(id));
-        } else if (!accessMan.isOwner(context, id)) {
-            notOwner.add(new Integer(id));
+        } else if (!accessMan.canEdit(context, id)) {
+            notEditable.add(new Integer(id));
         } else {
 
             // -----------------------------------------------------------------------
