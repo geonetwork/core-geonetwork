@@ -232,7 +232,7 @@
 				-->
 			<xsl:for-each select="
 				gmd:identificationInfo/srv:SV_ServiceIdentification[srv:serviceType/gco:LocalName='OGC:WMS']|
-				gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification)' and srv:serviceType/gco:LocalName='OGC:WMS']">
+				gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification') and srv:serviceType/gco:LocalName='OGC:WMS'] ">
 				
 				<xsl:variable name="connectPoint" select="srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
 				<xsl:variable name="serviceUrl">
