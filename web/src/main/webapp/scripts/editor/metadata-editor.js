@@ -916,7 +916,7 @@ function validateMetadataFields() {
 				// element
 				// in GUI language. If none, default language is selected.
 				for (i = 0; i < input.options.length; i++) {
-					if (input.options[i].getAttribute("code") == Env.shortLang) {
+					if (input.options[i].getAttribute("code").toLowerCase() == Env.lang) {
 						input.options[i].selected = true;
 					}
 				}
