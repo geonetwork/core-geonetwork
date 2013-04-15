@@ -541,7 +541,7 @@ public class ValidateTransformationTest
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
 
-    @Test @Ignore
+    @Test //@Ignore
     public void importXMLBLBBOX() throws Throwable
     {
         File file = new File(data, "iso19139/XMLBLBOX.xml");

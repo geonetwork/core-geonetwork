@@ -59,4 +59,20 @@
             <sch:report test="not($emptyTitle)"><sch:value-of select="$loc/strings/report.M103/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
+    <sch:pattern>
+        <sch:title>$loc/strings/M104</sch:title>
+        <sch:rule
+            context="//gmd:topicCategory">
+            <sch:let name="code" value="gmd:MD_TopicCategoryCode[
+            	normalize-space(.)='planningCadastre' or
+            	normalize-space(.)='geoscientificInformation' or
+            	normalize-space(.)='imageryBaseMapsEarthCover' or
+            	normalize-space(.)='environment']"/>
+        	<sch:let name="sibling" value="../gmd:topicCategory/gmd:MD_TopicCategoryCode[starts-with(normalize-space(.), concat(normalize-space($code), '_'))]"/>
+   
+            <!--  Check that basicGeodataId is defined -->
+            <sch:assert test="($code and $sibling) or not($code)">$loc/strings/alert.M104</sch:assert>
+            <sch:report test="($code and $sibling) or not($code)"><sch:value-of select="$loc/strings/report.M104/div"/></sch:report>
+        </sch:rule>
+    </sch:pattern>
 </sch:schema>

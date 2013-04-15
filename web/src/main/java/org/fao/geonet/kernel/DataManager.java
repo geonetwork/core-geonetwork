@@ -990,8 +990,11 @@ public class DataManager {
     				int invalidRules = 0;
                     i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
                     while (i.hasNext()) {
-                        i.next();
-                        invalidRules ++;
+                        Element ruleRule = i.next(); 
+                        Element text = ruleRule.getChild("text", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl"));
+                        if(text == null || !(ruleId.equals("schematron-rules-iso-che") && text.getChild("alert.M104") != null)) {
+                        	invalidRules ++;
+                        }
                     }
     				Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
     				if (valTypeAndStatus != null) {
