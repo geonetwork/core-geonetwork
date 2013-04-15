@@ -70,7 +70,7 @@
 							<a id="remove_{$id}" style="display:none;cursor:hand;cursor:pointer;"  onclick="if (noDoubleClick()) {$linkTokens[1]}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
 						</xsl:when>
 						<xsl:when test="name(.) = 'gmd:name'">
-							<xsl:variable name="nameRemLink" select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',0',');')"></xsl:variable>
+							<xsl:variable name="nameRemLink" select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',$apos,geonet:element/@ref,$apos,',',geonet:element/@parent,',',$apos,$id,$apos,',0',');')"></xsl:variable>
 							<a id="remove_{$id}"  style="cursor:hand;cursor:pointer;" onclick="if (noDoubleClick()) {$nameRemLink}" target="_blank"><img src="{/root/gui/url}/images/del.gif" alt="{/root/gui/strings/del}" title="{/root/gui/strings/del}"/></a>
 						</xsl:when>
 						<xsl:otherwise>

@@ -493,7 +493,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="removeLink">
-			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',$apos,geonet:element/@ref,$apos,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
 			<xsl:if test="not(geonet:element/@del='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
@@ -715,7 +715,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="removeLink">
-			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',geonet:element/@ref,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
+			<xsl:value-of select="concat('doRemoveElementAction(',$apos,'/metadata.elem.delete',$apos,',',$apos,geonet:element/@ref,$apos,',',geonet:element/@parent,',',$apos,$id,$apos,',',geonet:element/@min,');')"/>
 			<xsl:if test="not(geonet:element/@del='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
