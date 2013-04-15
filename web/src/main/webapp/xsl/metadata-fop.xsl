@@ -181,7 +181,7 @@
         <xsl:apply-templates mode="brief" select="."/>
       </xsl:variable>
       <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-      <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
+      <xsl:variable name="source" select="string($metadata/geonet:info/groupLogoUuid)"/>
 
 
       <xsl:if test="$metadata/geonet:info/id != ''">
