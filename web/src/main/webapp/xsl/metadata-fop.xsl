@@ -245,11 +245,6 @@
                             </xsl:call-template>
 
 
-                            <xsl:call-template name="info-rows">
-                              <xsl:with-param name="label" select="$gui/strings/schema"/>
-                              <xsl:with-param name="value" select="$metadata/geonet:info/schema"/>
-                            </xsl:call-template>
-
                             <xsl:call-template name="metadata-resources">
                               <xsl:with-param name="gui" select="$gui"/>
                               <xsl:with-param name="server" select="$server"/>
