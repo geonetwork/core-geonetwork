@@ -1889,10 +1889,17 @@
       <xsd:extension base="xsd:string"/>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Record">
-    <xsd:simpleContent>
-      <xsd:extension base="xsd:string"/>
-    </xsd:simpleContent>
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Record"  mixed="true">
+	<xsd:sequence >
+   		<xsd:element name="XMLBLBOX" minOccurs="0">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:any minOccurs="0" maxOccurs="unbounded"
+						processContents="lax" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
   </xsd:complexType>
   <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.RecordType">
     <xsd:simpleContent>
