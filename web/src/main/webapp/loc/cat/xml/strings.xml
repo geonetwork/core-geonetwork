@@ -1329,7 +1329,33 @@
     <cswServerFees>Tarifes</cswServerFees>
     <cswServerAccessConstraints>Restriccions d'accés</cswServerAccessConstraints>
     <cswServerContact>Contacte</cswServerContact>
-
+	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
+	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
+	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
+	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
+	<virtualcswServiceName>Service name</virtualcswServiceName>
+	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
+	<virtualcswClassName>Class</virtualcswClassName>
+	<virtualcswNewService>Add a service</virtualcswNewService>
+	<virtualcswParamName>Filter type</virtualcswParamName>
+	<virtualcswParamValue>Filter value</virtualcswParamValue>
+	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+	
+	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+	
+	<virtualcswAny>Free text</virtualcswAny>
+	<virtualcswTitle>Title</virtualcswTitle>
+	<virtualcswAbstract>Abstract</virtualcswAbstract>
+	<virtualcswKeywords>Keyword</virtualcswKeywords>
+	<virtualcswDenominator>Denominator</virtualcswDenominator>
+	<virtualcswCatalog>Catalog</virtualcswCatalog>
+	<virtualcswGroup>Group</virtualcswGroup>
+	<virtualcswCategory>Category</virtualcswCategory>
+	<virtualcswType>Resource type</virtualcswType>
     <customize-elementset>Personalitzar conjunt d'elements</customize-elementset>
     <csw-server-disabled>servidor de la CSW es desactiva.</csw-server-disabled>
     <custom-elementset-intro>Definir els elements que s'han d'incloure en l'element personalitzat ajustat aquí. Cada element ha de ser identificat per la seva XPath total de l'arrel del document. Aquests elements i els seus descendents seran inclosos en les respostes a les sol licituds CSW GetRecord amb ElementSetName = FULL.</custom-elementset-intro>

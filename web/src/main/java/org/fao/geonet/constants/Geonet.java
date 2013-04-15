@@ -120,6 +120,8 @@ public class Geonet {
         public static final String JUSTCREATED = "JUSTCREATED";
         public static final String FILTER     = "filter";
         public static final String ENABLED    = "enabled";
+        public static final String VALUE       = "value";
+        public static final String VIRTUAL_CSW     = "virtualcsw";
 	}
 
     /**

@@ -10,7 +10,6 @@
             <class name=".services.main.CswDiscoveryDispatcher" />
         </service>
 
-
         <!-- Additional CSW entry points can be defined with a filter condition which applies extra criteria
             to the CSW request. The filter condition should be defined using Lucene query syntax
             ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).

@@ -180,6 +180,11 @@ public class ServiceManager
 		if (al == null) {
 			al = new ArrayList<ServiceInfo>();
 			htServices.put(name, al);
+		} else {
+		    info("Service " + name + " already exist, re-register it.");
+		    htServices.remove(name);
+		    al = new ArrayList<ServiceInfo>();
+		    htServices.put(name, al);
 		}
 
 		al.add(si);

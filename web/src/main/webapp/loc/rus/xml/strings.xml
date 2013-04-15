@@ -1336,7 +1336,33 @@ ISO 19115 не позволяет иметь более одного.
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
-
+	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
+	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
+	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
+	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
+	<virtualcswServiceName>Service name</virtualcswServiceName>
+	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
+	<virtualcswClassName>Class</virtualcswClassName>
+	<virtualcswNewService>Add a service</virtualcswNewService>
+	<virtualcswParamName>Filter type</virtualcswParamName>
+	<virtualcswParamValue>Filter value</virtualcswParamValue>
+	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+	
+	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+	
+	<virtualcswAny>Free text</virtualcswAny>
+	<virtualcswTitle>Title</virtualcswTitle>
+	<virtualcswAbstract>Abstract</virtualcswAbstract>
+	<virtualcswKeywords>Keyword</virtualcswKeywords>
+	<virtualcswDenominator>Denominator</virtualcswDenominator>
+	<virtualcswCatalog>Catalog</virtualcswCatalog>
+	<virtualcswGroup>Group</virtualcswGroup>
+	<virtualcswCategory>Category</virtualcswCategory>
+	<virtualcswType>Resource type</virtualcswType>
     <customize-elementset>Настройка элемента множества</customize-elementset>
     <csw-server-disabled>КПЖ сервер отключен.</csw-server-disabled>
     <custom-elementset-intro>Определить элементы должны быть включены в пользовательский набор элементов здесь. Каждый элемент должен быть идентифицирован по полной XPATH от корня документа. Эти элементы и их потомки будут включены в ответах на запросы КПЖ GetRecord с ElementSetName = FULL.</custom-elementset-intro>

@@ -1286,7 +1286,42 @@
 				</call>
 			</output>
 		</service>
-
+		
+		<service name="virtualcsw.config">
+			<output sheet="csw/config-virtualcsw.xsl">
+				<call name="services" class=".guiservices.csw.virtual.List"/>
+			</output>
+		</service>
+		
+		<service name="virtualcsw.config.get">
+			<output sheet="csw/virtualcsw-new.xsl">
+				<call name="services" class=".guiservices.csw.virtual.Get"/>
+				<call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="categories" class=".services.category.List" />
+                <call name="sources" class=".guiservices.util.Sources" />
+			</output>
+		</service>
+		
+		<service name="virtualcsw.config.update">
+			<class name=".guiservices.csw.virtual.Update" />
+			<output forward="virtualcsw.config" />
+		</service>
+		
+		
+		<service name="virtualcsw.config.edit">
+			<output sheet="csw/virtualcsw-update.xsl">
+				<call name="services" class=".guiservices.csw.virtual.Get"/>
+				<call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="categories" class=".services.category.List" />
+                <call name="sources" class=".guiservices.util.Sources" />
+			</output>
+		</service>		
+		
+		<service name="virtualcsw.config.delete">
+			<class name=".guiservices.csw.virtual.Delete"/>
+			<output forward="virtualcsw.config" />
+		</service>
+		
 		<service name="csw.config.set">
 			<class name=".guiservices.csw.Set" />
 

@@ -1324,7 +1324,33 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
-
+	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
+	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
+	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
+	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
+	<virtualcswServiceName>Service name</virtualcswServiceName>
+	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
+	<virtualcswClassName>Class</virtualcswClassName>
+	<virtualcswNewService>Add a service</virtualcswNewService>
+	<virtualcswParamName>Filter type</virtualcswParamName>
+	<virtualcswParamValue>Filter value</virtualcswParamValue>
+	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+	
+	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+	
+	<virtualcswAny>Free text</virtualcswAny>
+	<virtualcswTitle>Title</virtualcswTitle>
+	<virtualcswAbstract>Abstract</virtualcswAbstract>
+	<virtualcswKeywords>Keyword</virtualcswKeywords>
+	<virtualcswDenominator>Denominator</virtualcswDenominator>
+	<virtualcswCatalog>Catalog</virtualcswCatalog>
+	<virtualcswGroup>Group</virtualcswGroup>
+	<virtualcswCategory>Category</virtualcswCategory>
+	<virtualcswType>Resource type</virtualcswType>
     <customize-elementset>自定义元素集</customize-elementset>
     <csw-server-disabled>妇女地位委员会服务器被禁用。</csw-server-disabled>
     <custom-elementset-intro>定义元素被包含在这里设置的自定义元素。每个元素都必须确定其从文档根完整的XPath。这些元素和他们的后裔将被纳入到妇女地位委员会GetRecord与ElementSetName=完全请求的响应。</custom-elementset-intro>

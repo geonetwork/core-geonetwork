@@ -1339,7 +1339,7 @@
 
     <cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>
-    <cswServerConfig>Configuration du serveur CSW</cswServerConfig>
+	<cswServerConfig>Configuration du serveur CSW</cswServerConfig>
     <cswServerEnable>Activer</cswServerEnable>
     <cswServerMetadataPublic>Publier les métadonnées insérées via CSW (Transaction)</cswServerMetadataPublic>
     <cswServerTitle>Titre</cswServerTitle>
@@ -1347,6 +1347,34 @@
     <cswServerFees>Frais</cswServerFees>
     <cswServerAccessConstraints>Contraintes d'accès</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+	<virtualcswServer>Ajouter un point d'accès CSW</virtualcswServer>
+	<virtualcswServerDes>Configuration des serveurs CSW virtuels</virtualcswServerDes>
+    <virtualcswServerConfig>Configuration des serveurs CSW virtuels</virtualcswServerConfig>
+    <virtualcswInsert>Configuration du serveur CSW virtuel</virtualcswInsert>
+    <virtualcswServiceName>Nom du service</virtualcswServiceName>
+    <virtualcswServiceDescription>Description du service</virtualcswServiceDescription>
+    <virtualcswClassName>Classe</virtualcswClassName>
+    <virtualcswNewService>Ajouter un service</virtualcswNewService>
+    <virtualcswParamName>Type de filtre</virtualcswParamName>
+    <virtualcswParamValue>Valeur du filtre</virtualcswParamValue>
+    <virtualcswServicenameMandatory>Le nom de service est obligatoire.</virtualcswServicenameMandatory>
+    <virtualcswServicenameTooLong>Le nom de service est trop long (48 caractères max)</virtualcswServicenameTooLong>
+    <virtualcswServicenameSpecialChars>Le nom de service ne doit pas contenir de caractères accentués.</virtualcswServicenameSpecialChars>
+    <virtualcswClassnameMandatory>La classe est obligatoire.</virtualcswClassnameMandatory>
+    <virtualcswServiceNameStartsWith>Le nom du service doit commencer par \"csw-\".</virtualcswServiceNameStartsWith>
+    
+    <virtualcswUpdateService>Mise à jour d'un serveur CSW virtuel</virtualcswUpdateService>
+    
+    <virtualcswAny>Texte libre</virtualcswAny>
+    <virtualcswTitle>Titre</virtualcswTitle>
+	<virtualcswAbstract>Résumé</virtualcswAbstract>
+	<virtualcswKeywords>Mot-clé</virtualcswKeywords>
+	<virtualcswDenominator>Échelle</virtualcswDenominator>
+	<virtualcswCatalog>Catalogue</virtualcswCatalog>
+	<virtualcswGroup>Groupe</virtualcswGroup>
+	<virtualcswCategory>Catégorie</virtualcswCategory>
+	<virtualcswType>Type de ressource</virtualcswType>
 
     <customize-elementset>Personnaliser ensemble d'éléments</customize-elementset>
     <csw-server-disabled>Serveur CSW est désactivé.</csw-server-disabled>

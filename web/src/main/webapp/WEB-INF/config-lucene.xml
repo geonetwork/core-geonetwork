@@ -198,6 +198,8 @@
     <Field name="keyword" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_source" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    
   </fieldSpecificAnalyzer>
   
   <fieldSpecificSearchAnalyzer>
