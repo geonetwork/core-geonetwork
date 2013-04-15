@@ -1169,7 +1169,7 @@
               <xsl:if test="@value">
                 <input class="md" type="radio" name="radio_{$refId}" id="radio_{$refId}{position()}" 
                   value="{@value}" title="{@title}"
-                  onchange="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();">
+                  onchange="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();{$relatedElementAction} {$relatedAttributeAction} {$jsAction}">
                   <xsl:if test="@value=$value">
                     <xsl:attribute name="checked"/>
                   </xsl:if>
