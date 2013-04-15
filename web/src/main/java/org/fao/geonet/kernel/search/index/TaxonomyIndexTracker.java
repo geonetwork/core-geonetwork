@@ -18,9 +18,7 @@ import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NRTCachingDirectory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -40,24 +38,45 @@ class TaxonomyIndexTracker {
     private final LuceneConfig luceneConfig;
     private NRTCachingDirectory cachedFSDir;
     
-    public TaxonomyIndexTracker(File taxonomyDir, LuceneConfig luceneConfig) throws CorruptIndexException, LockObtainFailedException, IOException {
+    public TaxonomyIndexTracker(File taxonomyDir, LuceneConfig luceneConfig) throws Exception {
         this.taxonomyDir = taxonomyDir;
         this.luceneConfig = luceneConfig;
         init();
     }
-    private void init() throws CorruptIndexException, LockObtainFailedException, IOException {
-        taxonomyDir.mkdirs();
+    private void init() throws Exception {
+		try {
+			taxonomyDir.mkdirs();
 
-        FSDirectory fsDir = FSDirectory.open(taxonomyDir);
+			FSDirectory fsDir = FSDirectory.open(taxonomyDir);
 
-        double maxMergeSizeMD = luceneConfig.getMergeFactor();
-        double maxCachedMB = luceneConfig.getRAMBufferSize();
-        this.cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD, maxCachedMB);
+			double maxMergeSizeMD = luceneConfig.getMergeFactor();
+			double maxCachedMB = luceneConfig.getRAMBufferSize();
+			this.cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD,
+					maxCachedMB);
 
-        this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
-//        taxonomyWriter.commit(); // create index if not existing yet
-        this.taxonomyReader = null;
+			this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
+			taxonomyWriter.commit(); // create index if not existing yet
+
+			this.taxonomyReader = null;
+			try {
+				acquire(); // just check the validity of the index
+			} finally {
+				IOUtils.closeQuietly(this.taxonomyReader);
+				this.taxonomyReader = null;
+			}
+		} catch (Exception e) {
+    		Log.error(Geonet.INDEX_ENGINE, "An error occurred while openning taxonomy readers/writers", e);
+    		ArrayList<Throwable> errors = new ArrayList<Throwable>();
+			close(errors);
+            if (!errors.isEmpty()) {
+                for (Throwable throwable : errors) {
+                    Log.error(Geonet.LUCENE, "Failure while closing luceneIndexLanguageTracker", throwable);
+                }
+            }
+    		throw e;
+    	}
     }
+    
     TaxonomyReader acquire() throws IOException {
         if(taxonomyReader == null) {
             this.taxonomyReader = new DirectoryTaxonomyReader(taxonomyWriter);
@@ -119,7 +138,7 @@ class TaxonomyIndexTracker {
     }
 
     
-    void reset() throws IOException {
+    void reset() throws Exception {
         List<Throwable> errors = new ArrayList<Throwable>(5);
         close(errors);
 
@@ -144,7 +163,7 @@ class TaxonomyIndexTracker {
             try {
                 Log.error(Geonet.LUCENE, "OOM Error committing taxonomy: "+taxonomyWriter, e);
                 reset();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 Log.error(Geonet.LUCENE, "Error resetting lucene indices", e);
             }
             throw new RuntimeException(e);
