@@ -1295,38 +1295,42 @@ public class SearchManager {
 	    boolean badIndex = false;
 
 	    if (_tracker == null) {
-	        boolean badIndex1 = false;
             try {
                 _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
-            } catch (Throwable e) {
-                badIndex1 = true;
-                Log.error(Geonet.INDEX_ENGINE,
-                        "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
-            }
-            _indexReader = new LuceneIndexReaderFactory(_tracker);
-            _indexWriter = new LuceneIndexWriterFactory(_tracker);
-            try {
+                _indexReader = new LuceneIndexReaderFactory(_tracker);
+                _indexWriter = new LuceneIndexWriterFactory(_tracker);
                 IndexAndTaxonomy reader = _indexReader.acquire(null, -1);
                 _indexReader.release(reader.indexReader);
             } catch (Throwable e) {
-                badIndex1 = true;
+                badIndex = true;
                 Log.error(Geonet.INDEX_ENGINE,
-                        "Exception while opening lucene index, going to rebuild it: " + e.getMessage());
-            } finally {
+                        "Exception while opening lucene index, going to rebuild it: " , e);
             }
-            badIndex = badIndex1;
 	    }
 
 	    // if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 			if (_tracker==null) {
-			    FileUtils.deleteDirectory(_luceneDir);
-			    FileUtils.deleteDirectory(_luceneTaxonomyDir);
+				try {
+					FileUtils.deleteDirectory(_luceneDir);
+					FileUtils.deleteDirectory(_luceneTaxonomyDir);
+				} catch (IOException e) {
+			    	Log.warning(Geonet.INDEX_ENGINE, "Unable to delete all files in the lucene index files during rebuild.  This might not be an problem but if there are odd bugs then shutdown server.  Delete index directory and restart server", e);
+			    }
+
 			    _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
+	            _indexReader = new LuceneIndexReaderFactory(_tracker);
+	            _indexWriter = new LuceneIndexWriterFactory(_tracker);
 			}
 			_tracker.reset();
-			if (_spatial != null) _spatial.writer().reset();
+			if (_spatial != null){
+				try {
+				_spatial.writer().reset();
+				} catch (Exception e) {
+					Log.error(Geonet.INDEX_ENGINE, "Failure resetting spatial index.", e);
+				}
+			}
 			_indexWriter.createDefaultLocale();
 		}
 	}
@@ -1347,12 +1351,9 @@ public class SearchManager {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		try {
-//			if (_indexWriter.isOpen()) {
-//				throw new Exception("Cannot rebuild index while it is being updated - please wait till later");
-//			}
 			if (reset) {
 				synchronized (_tracker) {
-			        setupIndex(true);
+			        setupIndex(false);
                 }
 			}
 			if (!xlinks) {
@@ -1368,7 +1369,7 @@ public class SearchManager {
 		}
         catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Exception while rebuilding lucene index, going to rebuild it: " +
-                    e.getMessage());
+                    e.getMessage(), e);
 			return false;
 		}
 	}

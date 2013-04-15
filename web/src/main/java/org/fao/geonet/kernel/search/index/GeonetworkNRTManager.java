@@ -1,9 +1,11 @@
 package org.fao.geonet.kernel.search.index;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import jeeves.utils.Log;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.NRTManager;
 import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
@@ -16,7 +18,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 
 import com.google.common.base.Predicate;
 
-class GeonetworkNRTManager {
+class GeonetworkNRTManager implements Closeable {
 
     private NRTManagerReopenThread reopenThread;
     private NRTManager actualManager;
@@ -51,10 +53,10 @@ class GeonetworkNRTManager {
         return "NRT Manager for " + language + " index";
     }
 
-    protected void close() throws IOException {
-        reopenThread.close();
-        lifetimeManager.close();
-        actualManager.close();
+    public void close() {
+        IOUtils.closeQuietly(reopenThread);
+        IOUtils.closeQuietly(lifetimeManager);
+        IOUtils.closeQuietly(actualManager);
     }
 
     /**
