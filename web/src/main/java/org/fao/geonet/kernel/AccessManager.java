@@ -568,12 +568,16 @@ public class AccessManager {
      * @return
      */
 	private long getAddress(String ip) {
-		StringTokenizer st = new StringTokenizer(ip, ".");
-		long a1 = Integer.parseInt(st.nextToken());
-		long a2 = Integer.parseInt(st.nextToken());
-		long a3 = Integer.parseInt(st.nextToken());
-		long a4 = Integer.parseInt(st.nextToken());
-		return a1<<24 | a2<<16 | a3<<8 | a4;
+		if(ip.trim().equals("?")) {
+			return 0;
+		} else {
+			StringTokenizer st = new StringTokenizer(ip, ".");
+			long a1 = Integer.parseInt(st.nextToken());
+			long a2 = Integer.parseInt(st.nextToken());
+			long a3 = Integer.parseInt(st.nextToken());
+			long a4 = Integer.parseInt(st.nextToken());
+			return a1<<24 | a2<<16 | a3<<8 | a4;
+		}
 	}
 
 	//--------------------------------------------------------------------------

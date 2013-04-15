@@ -23,6 +23,8 @@
 
 package jeeves.utils;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 //=============================================================================
@@ -119,6 +121,11 @@ public final class Log
 	{
 		Logger.getLogger(module).warn(message);
 	}
+	
+	public static void warning(String module, Object message, IOException e) {
+		Logger.getLogger(module).warn(message, e);
+	}
+
 
 	//---------------------------------------------------------------------------
 
@@ -154,6 +161,7 @@ public final class Log
 			public void fatal  (String message) { Log.fatal  (module, message); }
 		};
 	}
+
 }
 
 //=============================================================================
