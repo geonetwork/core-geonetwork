@@ -146,6 +146,7 @@
             "GeoNetwork/widgets/editor/HelpPanel.js",
             "GeoNetwork/widgets/editor/GeoPublisherPanel.js",
             "GeoNetwork/widgets/editor/ThumbnailPanel.js",
+            "GeoNetwork/widgets/editor/LinkResourcesWindow.js",
             "GeoNetwork/widgets/editor/LinkedMetadataPanel.js",
             "GeoNetwork/widgets/editor/ValidationPanel.js",
             "GeoNetwork/widgets/editor/EditorPanel.js",

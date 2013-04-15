@@ -42,118 +42,131 @@ import java.util.Iterator;
 
 //=============================================================================
 
-/** Handles the file upload
-  */
+/**
+ * Handles the file upload when a record is in editing mode.
+ */
 
-public class Upload implements Service
-{
-	private Element config;
+public class Upload implements Service {
+    private Element config;
 
-	//----------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // ----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//----------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // ----------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String uploadDir = context.getUploadDir();
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        String uploadDir = context.getUploadDir();
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		String ref    		= Util.getParam(params, Params.REF);
-		String access 		= Util.getParam(params, Params.ACCESS);
-		String overwrite	= Util.getParam(params, Params.OVERWRITE, "no");
+        String id = Utils.getIdentifierFromParameters(params, context);
+        String ref = Util.getParam(params, Params.REF);
+        String access = Util.getParam(params, Params.ACCESS);
+        String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
 
-		Lib.resource.checkEditPrivilege(context, id);
+        Lib.resource.checkEditPrivilege(context, id);
 
-		// get info to log the upload
+        // get info to log the upload
 
-		UserSession session = context.getUserSession();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String username = session.getUsername();
-		if (username == null) username = "unknown (this shouldn't happen?)";
+        UserSession session = context.getUserSession();
+        Dbms dbms = (Dbms) context.getResourceManager()
+                .open(Geonet.Res.MAIN_DB);
+        String username = session.getUsername();
+        if (username == null)
+            username = "unknown (this shouldn't happen?)";
 
-		StringBuffer query = new StringBuffer();
-		query.append("SELECT m.id, m.source, m.uuid ");
-		query.append("FROM   Metadata m ");
-		query.append("WHERE  m.id = ?");
+        StringBuffer query = new StringBuffer();
+        query.append("SELECT m.id, m.source, m.uuid ");
+        query.append("FROM   Metadata m ");
+        query.append("WHERE  m.id = ?");
 
-		String siteId = "unknown";
-		String mdUuid = "unknown";
-		Element sites = dbms.select(query.toString(), new Integer(id));
-		if (sites != null) {
-			for (Iterator i = sites.getChildren().iterator(); i.hasNext(); ) {
-				Element site = (Element)i.next();
-				siteId = site.getChildText("source");
-				mdUuid = site.getChildText("uuid");
-				if (siteId == null) siteId = "unknown";
-				if (mdUuid == null) mdUuid = "unknown";
-			}
-		}
+        String siteId = "unknown";
+        String mdUuid = "unknown";
+        Element sites = dbms.select(query.toString(), new Integer(id));
+        if (sites != null) {
+            for (Iterator i = sites.getChildren().iterator(); i.hasNext();) {
+                Element site = (Element) i.next();
+                siteId = site.getChildText("source");
+                mdUuid = site.getChildText("uuid");
+                if (siteId == null)
+                    siteId = "unknown";
+                if (mdUuid == null)
+                    mdUuid = "unknown";
+            }
+        }
 
-		// move uploaded file to destination directory
-		// note: uploadDir and rootDir must be in the same volume
+        // Jeeves will place the uploaded file name in the f_{ref} element
+        // we do it this way because Jeeves will sanitize the name to remove
+        // characters that may cause problems
+        Element fnameElem = params.getChild("f_" + ref);
+        String fname = fnameElem.getText();
+        String fsize = fnameElem.getAttributeValue("size");
+        if (fsize == null)
+            fsize = "0";
 
-		File dir = new File(Lib.resource.getDir(context, access, id));
-		dir.mkdirs();
+        File dir = new File(Lib.resource.getDir(context, access, id));
+        moveFile(context, uploadDir, fname, dir, overwrite);
 
-		// Jeeves will place the uploaded file name in the f_{ref} element
-		// we do it this way because Jeeves will sanitize the name to remove
-		// characters that may cause problems
-		Element fnameElem = params.getChild("f_"+ref);
-		String fname = fnameElem.getText();
-		String fsize = fnameElem.getAttributeValue("size");
-		if (fsize == null) fsize="0";
+        context.info("UPLOADED:" + fname + "," + id + "," + mdUuid + ","
+                + context.getIpAddress() + "," + username);
 
-		// get ready to move uploaded file to destination directory
-		File oldFile = new File(uploadDir, fname);
-		File newFile = new File(dir,       fname);
+        // update the metadata
+        Element elem = new Element("_" + ref);
+        params.addContent(elem);
+        elem.setText(fname);
+        return new Element("response").addContent(
+                new Element("fname").setText(fname)).addContent(
+                new Element("fsize").setText(fsize));
+    }
 
-		context.info("Source : "+oldFile.getAbsolutePath());
-		context.info("Destin : "+newFile.getAbsolutePath());
+    protected static void moveFile(ServiceContext context, String sourceDir,
+            String filename, File targetDir, String overwrite) throws Exception {
+        // move uploaded file to destination directory
+        // note: uploadDir and rootDir must be in the same volume
+        targetDir.mkdirs();
 
-		if (!oldFile.exists()) {
-			throw new Exception("File upload unsuccessful "+oldFile.getAbsolutePath()+" does not exist");
-		}
+        // get ready to move uploaded file to destination directory
+        File oldFile = new File(sourceDir, filename);
+        File newFile = new File(targetDir, filename);
 
-		// check if file already exists and do whatever overwrite wants
-		if (newFile.exists() && overwrite.equals("no")) {
-			throw new Exception("File upload unsuccessful because "+newFile.getName()+" already exists and overwrite was not permitted");
-		}
+        context.info("Source : " + oldFile.getAbsolutePath());
+        context.info("Destin : " + newFile.getAbsolutePath());
 
-	
-		// move uploaded file to destination directory - have two goes
-		try {
-			FileUtils.moveFile(oldFile, newFile);
-		} catch (Exception e) {
-			oldFile.delete();
-			context.warning("Cannot move uploaded file");
-			context.warning(" (C) Source : "+oldFile.getAbsolutePath());
-			context.warning(" (C) Destin : "+newFile.getAbsolutePath());
-			oldFile.delete();
-			throw new Exception("Unable to move uploaded file to destination directory");
-		}
+        if (!oldFile.exists()) {
+            throw new Exception("File upload unsuccessful "
+                    + oldFile.getAbsolutePath() + " does not exist");
+        }
 
-		// log the upload
-		context.info("UPLOADED:"+fname+","+id+","+mdUuid+","+context.getIpAddress()+","+username);
+        // check if file already exists and do whatever overwrite wants
+        if (newFile.exists() && overwrite.equals("no")) {
+            throw new Exception("File upload unsuccessful because "
+                    + newFile.getName()
+                    + " already exists and overwrite was not permitted");
+        }
 
-		// update the metadata
-		Element elem = new Element("_" + ref);
-		params.addContent(elem);
-		elem.setText(fname);
-		return new Element("response")
-					.addContent(new Element("fname").setText(fname))
-					.addContent(new Element("fsize").setText(fsize));
-	}
+        // move uploaded file to destination directory - have two goes
+        try {
+            FileUtils.moveFile(oldFile, newFile);
+        } catch (Exception e) {
+            oldFile.delete();
+            context.warning("Cannot move uploaded file");
+            context.warning(" (C) Source : " + oldFile.getAbsolutePath());
+            context.warning(" (C) Destin : " + newFile.getAbsolutePath());
+            oldFile.delete();
+            throw new Exception(
+                    "Unable to move uploaded file to destination directory");
+        }
+    }
 }
 
-//=============================================================================
+// =============================================================================
 

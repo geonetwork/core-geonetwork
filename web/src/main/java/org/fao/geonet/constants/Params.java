@@ -119,6 +119,7 @@ public class Params {
     public static final String DOCHANGES = "doChanges";
     
     public static final String FULL_PRIVILEGES = "fullPrivileges";
+    public static final String FILENAME = "filename";
 
     /**
      * TODO javadoc.

@@ -42,7 +42,7 @@ import org.jdom.Element;
 import java.io.File;
 
 /**
- * Deletes an uploaded file from the database.
+ * Deletes an uploaded file from the database when a record is in editing mode.
  */
 public class Remove extends NotInReadOnlyModeService {
 	private Element config;

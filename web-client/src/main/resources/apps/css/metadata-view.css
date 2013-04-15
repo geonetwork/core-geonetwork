@@ -58,6 +58,10 @@ table.related * li {
   padding: 2px;
 }
 
+div.linkPanel div#add-menu-content{
+  float: right !important;
+}
+
 .md-view * a {
   text-decoration : none;
   color : #0076A1;

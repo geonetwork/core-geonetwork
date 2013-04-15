@@ -477,6 +477,9 @@ div.button {
 }
 .valid--1 {
 }
+.addMenu {
+  background-image : url(../images/default/add.png) !important;
+}
 .cat-children, .cat-parent, .cat-sibling {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
@@ -524,6 +527,10 @@ div.button {
 }
 .lightBox {
   background-image : url(../images/default/map/icon_zoomin.png) !important;
+}
+
+.cat-thumbnail {
+  background-image : url(../images/default/picture_go.png) !important;
 }
 .cat-applications {
   background-image : url(../images/default/category/applications.png) !important;
