@@ -784,7 +784,7 @@
 	<codelist name="gmd:MD_GeometricObjectTypeCode">
 		<entry>
 			<code>complex</code>
-			<label>Complexes</label>
+			<label>Complexe</label>
 			<description>Ensemble de primitives géométriques représentées comme l'union d'autres primitives</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -796,7 +796,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>curve</code>
-			<label>Lignes</label>
+			<label>Ligne</label>
 			<description>Primitive géométrique à une dimension représentant une image continue d'une ligne</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

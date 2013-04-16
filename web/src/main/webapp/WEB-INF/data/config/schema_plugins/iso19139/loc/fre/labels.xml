@@ -2136,7 +2136,7 @@ période de temps couverte par le service.
     
   </element>
   <element name="gmd:geometricObjectType" id="184.0">
-    <label>Type d'objets géométriques</label>
+    <label>Type de géométries des objets</label>
     <description>Nom des objets spatiaux point et vecteur utilisés pour localiser les positions à zéro, une, deux et trois dimensions dans le jeu de données</description>
     <help>Nom du type d'objet géométrique. Sélection dans la liste suivante : complexe, combinaison, ligne ouverte, point, primitive en 3D, ligne fermée.</help>
     <condition/>
