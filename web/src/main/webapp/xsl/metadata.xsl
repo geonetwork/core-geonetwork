@@ -499,13 +499,13 @@
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="upLink">
-			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',$apos,geonet:element/@ref,$apos,',',$apos,$id,$apos,');')"/>
 			<xsl:if test="not(geonet:element/@up='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="downLink">
-			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',$apos,geonet:element/@ref,$apos,',',$apos,$id,$apos,');')"/>
 			<xsl:if test="not(geonet:element/@down='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
@@ -721,13 +721,13 @@
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="upLink">
-			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.up',$apos,',',$apos,geonet:element/@ref,$apos,',',$apos,$id,$apos,');')"/>
 			<xsl:if test="not(geonet:element/@up='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="downLink">
-			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',geonet:element/@ref,',',$apos,$id,$apos,');')"/>
+			<xsl:value-of select="concat('doMoveElementAction(',$apos,'/metadata.elem.down',$apos,',',$apos,geonet:element/@ref,$apos,',',$apos,$id,$apos,');')"/>
 			<xsl:if test="not(geonet:element/@down='true')">
 				<xsl:text>!OPTIONAL</xsl:text>
 			</xsl:if>
