@@ -230,15 +230,9 @@ class Harvester {
 			} catch (NoSchemaMatchesException e) {
                 if (md.getName() == "TRANSFER") {
                     // we need to convert to CHE
-                    try {
-                        String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03_2-to-ISO19139CHE.xsl";
-                        Element tmp = Xml.transform(md, styleSheetPath);
-                        md = tmp;
-                    } catch (Throwable e2) {
-                        String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
-                        Element tmp = Xml.transform(md, styleSheetPath);
-                        md = tmp;
-                    }
+                    String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
+                    Element tmp = Xml.transform(md, styleSheetPath);
+                    md = tmp;
                 }
                 schema = dataMan.autodetectSchema(md);
 			}
