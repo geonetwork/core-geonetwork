@@ -74,19 +74,20 @@ GeoNetwork.searchApp = function() {
             return searchForm;
         },
 
-        fireSearch : function() {
+        fireSearch : function(keepUrlParams) {
 
             var searchForm = this.getSearchForm();
-            Ext.each(Ext.query("input[name=E__owner]"), function(input) {
-                Ext.getCmp(input.id).setValue("");
-            });
-            Ext.each(Ext.query("input[name=E_siteId]"), function(input) {
-            	Ext.getCmp(input.id).setValue("");
-            });
-            Ext.each(Ext.query("input[name=E__isHarvested]"), function(input) {
-                Ext.getCmp(input.id).setValue("");
-            });
-            
+            if(keepUrlParams === undefined || !keepUrlParams) {
+	            Ext.each(Ext.query("input[name=E__owner]"), function(input) {
+	                Ext.getCmp(input.id).setValue("");
+	            });
+	            Ext.each(Ext.query("input[name=E_siteId]"), function(input) {
+	            	Ext.getCmp(input.id).setValue("");
+	            });
+	            Ext.each(Ext.query("input[name=E__isHarvested]"), function(input) {
+	                Ext.getCmp(input.id).setValue("");
+	            });
+            }
             searchForm.fireEvent('search');
 
             // Maximize Search Results Panel

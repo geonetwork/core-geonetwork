@@ -268,7 +268,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             displayField: 'id',
             listeners: {
                 select: function(cb, record, idx){
-                    app.searchApp.fireSearch();
+                    app.searchApp.fireSearch(true);
                 },
                 scope: tb
             }
