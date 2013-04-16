@@ -48,9 +48,11 @@
 		<label>Planned Available Date / Time</label>
 		<help>date and time when theresource will be available</help>
 	</element>
-	<!--<element name="gmd:dateTime"> <label>DateTime</label> <description>Date 
-		and time or range of date and time on or over which the process step occurred 
-		(YYYY-MM-DDThh:mm:ss)</description> </element> -->
+	<element name="gco:DateTime">
+		<label>Date and time</label>
+		<description>Date and time or range of date and time on or over which the process step occurred 
+		(YYYY-MM-DDThh:mm:ss)</description> 
+	</element>
 	<element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
 		<label>Name of Measure</label>
 		<description>Name of the test applied to the data</description>
