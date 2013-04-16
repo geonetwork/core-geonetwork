@@ -181,7 +181,16 @@
         <xsl:apply-templates mode="brief" select="."/>
       </xsl:variable>
       <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-      <xsl:variable name="source" select="string($metadata/geonet:info/groupLogoUuid)"/>
+      <xsl:variable name="source" >
+      	<xsl:choose>
+      		<xsl:when test="$metadata/geonet:info/groupLogoUuid">
+      			<xsl:value-of select="string($metadata/geonet:info/groupLogoUuid)"/>
+      		</xsl:when>
+      		<xsl:otherwise>
+      			<xsl:value-of select="string($metadata/geonet:info/source)"/>
+      		</xsl:otherwise>
+      	</xsl:choose>
+      </xsl:variable>
 
 
       <xsl:if test="$metadata/geonet:info/id != ''">
