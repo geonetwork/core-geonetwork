@@ -26,10 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import jeeves.utils.TransformerFactoryFactory;
+
 public abstract class ISO19139CHEtoGM03Base {
     protected static final String NS = "http://www.interlis.ch/INTERLIS2.3";
     protected static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    protected static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
     protected static final Pattern EMPTY = Pattern.compile("^[\\s\n\r]*$");
     protected final Schema schema;
     protected Transformer xslt;
@@ -40,7 +41,7 @@ public abstract class ISO19139CHEtoGM03Base {
         } else {
             schema = null;
         }
-        xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(xslFilename));
+        xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFilename));
     }
 
     protected void convert(String[] xmlFilenames, String group) {

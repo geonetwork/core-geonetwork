@@ -124,6 +124,19 @@ public class ValidateTransformationTest
         rules.put("GM03_2_1Comprehensive.Comprehensive.CI_Citation", new Count(1, new Finder("presentationForm")));
         file = testFile(file, Control.ISO_GM03, rules, false);
     }
+    
+    @Test
+    public void removeDuplicateTranslation() throws Throwable
+    {
+    	File file = new File(data, "non_validating/iso19139che/withCharstringAndPtFreeText.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.CI_Citation/title/GM03_2_1Core.Core.PT_FreeText",
+    			new Count(1, new Finder("GM03_2_1Core.Core.PT_Group/language", new EqualText("de"))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.CI_Citation/title/GM03_2_1Core.Core.PT_FreeText",
+    			new Count(1, new Finder("GM03_2_1Core.Core.PT_Group/language", new EqualText("fr"))));
+    	testFile(file, Control.ISO_GM03, rules, false);
+    }
 
     @Test
     public void contactLinkageNotImported() throws Throwable

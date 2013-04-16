@@ -129,7 +129,7 @@
                             <plainText></plainText>
                         </GM03_2_1Core.Core.PT_Group>
                     </xsl:if>
-                    <xsl:for-each select="gco:CharacterString[normalize-space(.) != '']">
+                    <xsl:for-each select="gco:CharacterString[normalize-space(.) != '' and not(../gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[lower-case(@locale) = concat('#',$defaultLanguage)])] ">
                         <GM03_2_1Core.Core.PT_Group>
                             <language><xsl:value-of select="$defaultLanguage"/></language>
                             <plainText><xsl:value-of select="."/></plainText>
