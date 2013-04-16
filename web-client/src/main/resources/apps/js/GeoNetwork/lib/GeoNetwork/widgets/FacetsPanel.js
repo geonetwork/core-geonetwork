@@ -325,7 +325,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             id: id, 
             facet: r.get('facet'), 
             value: r.get('node'), 
-            label: r.get('label'),
+            label: r.get('label') || r.get('node'),
             bcid: 'bc_' + id, 
             fieldid: 'field_' + id
         };
