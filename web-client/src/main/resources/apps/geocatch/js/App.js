@@ -427,7 +427,6 @@ Ext.onReady(function() {
         showAdvancedSearch();
 
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
-        Ext.getCmp('advanced-search-options-content-form').getForm().reset();
     }
 
     if (OpenLayers.Util.getParameters().hasOwnProperty("uuid")) {

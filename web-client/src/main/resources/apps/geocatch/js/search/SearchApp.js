@@ -77,7 +77,16 @@ GeoNetwork.searchApp = function() {
         fireSearch : function() {
 
             var searchForm = this.getSearchForm();
-
+            Ext.each(Ext.query("input[name=E__owner]"), function(input) {
+                Ext.getCmp(input.id).setValue("");
+            });
+            Ext.each(Ext.query("input[name=E_siteId]"), function(input) {
+            	Ext.getCmp(input.id).setValue("");
+            });
+            Ext.each(Ext.query("input[name=E__isHarvested]"), function(input) {
+                Ext.getCmp(input.id).setValue("");
+            });
+            
             searchForm.fireEvent('search');
 
             // Maximize Search Results Panel
