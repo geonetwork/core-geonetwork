@@ -89,9 +89,6 @@ public final class TransformationTestSupport {
             Element xml = Xml.loadFile(src);
 			Xml.transform(xml, TransformationTestSupport.geonetworkWebapp+"/xsl/conversion/import/GM03-to-ISO19139CHE.xsl", params );
 
-//            transformer.run(new File(TransformationTestSupport.geonetworkWebapp, "xsl/conversion/import/GM03_2-to-ISO19139CHE.xsl"),
-//                    TransformationTestSupport.isoXsd, new String[]{src.getAbsolutePath()});
-            
         } catch (AssertionError e) {
             if (testValidity) throw e;
         }
