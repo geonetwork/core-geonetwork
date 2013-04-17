@@ -115,6 +115,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
             searchBt: new Ext.Button({
                 text: OpenLayers.i18n('search'),
                 iconCls : 'md-mn-find',
+                ctCls: 'gn-bt-main',
                 iconAlign: 'right'
             }),
             resetBt: new Ext.Button({

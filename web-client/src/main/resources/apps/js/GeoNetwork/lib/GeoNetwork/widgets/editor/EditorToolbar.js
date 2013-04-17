@@ -85,6 +85,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         this.saveAction = new Ext.Action({
             text: OpenLayers.i18n('save'),
             iconCls: 'saveMetadata',
+            ctCls: 'gn-bt-main',
             handler: function(){
                 this.save();
             },
