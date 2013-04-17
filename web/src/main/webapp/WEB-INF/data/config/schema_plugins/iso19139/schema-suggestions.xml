@@ -117,10 +117,42 @@
 	
 	
 	
-	
+	<!-- Expand optional element gmd:type (gmd:keyword is mandatory and will be expanded) -->
 	<field name="gmd:MD_Keywords">
 		<suggest name="gmd:type"/>
 	</field>
+	
+	<!-- Expand optional element gmd:type and gmd:thesaurusName. gmd:thesaurusName will
+	be expanded including all its mandatory children and optional suggestion. In that
+	case, thesaurus title and date type will be expanded. Unfortunately, the date is a choice
+	between date and dateTime and will not be expanded. -->
+<!--	<field name="gmd:MD_Keywords">
+		<suggest name="gmd:type"/>
+		<suggest name="gmd:thesaurusName"/>
+	</field>-->
+	
+	<!--
+		This is not supported because gmd:date is an OR element with Date or DateTime choice.
+		<field name="gmd:date">
+		<suggest name="gco:Date"/>
+	</field>-->
+	
+	<!-- Control substitute of gco:CharacterString -->
+	<!-- Only propose gco:CharacterString and expand it when gmd:keyword is created. For this,
+	set no suggestion. Adding :
+	<field name="gmd:keyword">
+		<suggest name="gco:CharacterString"/>
+	</field>
+	will not change anything because gco:CharacterString is the default element.
+	-->
+	
+	<!-- Propose 2 substitutes. A selection list will be displayed to choose between the 2 elements -->
+	<!--<field name="gmd:keyword">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmx:Anchor"/>
+	</field>-->
+	
+	
 	
 	<field name="gmd:EX_Extent">
 		<suggest name="gmd:temporalElement"/>

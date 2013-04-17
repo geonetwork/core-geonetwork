@@ -31,6 +31,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
@@ -162,18 +163,6 @@ public class EditLib {
      */
 	public void fillElement(String schema, Element parent, Element md) throws Exception {
 		fillElement(scm.getSchema(schema), scm.getSchemaSuggestions(schema), parent, md);
-	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @param schema
-     * @param parentName
-     * @param md
-     * @throws Exception
-     */
-	public void fillElement(String schema, String parentName, Element md) throws Exception {
-		fillElement(scm.getSchema(schema), scm.getSchemaSuggestions(schema), parentName, md);
 	}
 
     /**
@@ -427,143 +416,186 @@ public class EditLib {
      * @param schema
      * @param sugg
      * @param parent
-     * @param md
+     * @param element
      * @throws Exception
      */
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element md) throws Exception {
-        if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
-		String parentName = parent.getQualifiedName();
-		fillElement(schema,sugg,parentName,md);
-	}
+	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element element) throws Exception {
+        String parentName = parent.getQualifiedName();
+        fillElement(schema, sugg, parentName, element);
+    }
 
     /**
      * TODO javadoc.
      *
-     * @param schema
-     * @param sugg
-     * @param parentName
-     * @param md
+     * @param schema    The metadata schema
+     * @param sugg  The suggestion configuration for the schema
+     * @param parentName  The name of the parent
+     * @param element    The element to fill
+     * 
      * @throws Exception
      */
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element md) throws Exception {
-        if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
-		String elemName = md.getQualifiedName();
-
+    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element) throws Exception {
+        String elemName = element.getQualifiedName();
+        
+        boolean isSimpleElement = schema.isSimpleElement(elemName,parentName);
+        
         if(Log.isDebugEnabled(Geonet.EDITOR)) {
+            Log.debug(Geonet.EDITOR,"#### Entering fillElement()");
             Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName);
             Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName);
-            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName));
+            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + isSimpleElement);
         }
-
-		if (schema.isSimpleElement(elemName,parentName))
-			return;
-
-		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
-		boolean useSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
-
+        
+        
+        // Nothing to fill - eg. gco:CharacterString
+        if (isSimpleElement) {
+            return;
+        }
+        
+        MetadataType type = schema.getTypeInfo(schema.getElementType(elemName, parentName));
+        boolean hasSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
+//        List<String> elementSuggestion = sugg.getSuggestedElements(elemName);
+//        boolean hasSuggestion = elementSuggestion.size() != 0;
+        
+        
         if(Log.isDebugEnabled(Geonet.EDITOR)) {
-            Log.debug(Geonet.EDITOR,"#### - type:");
+            Log.debug(Geonet.EDITOR,"#### - Type:");
             Log.debug(Geonet.EDITOR,"####   - name = " + type.getName());
             Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount());
             Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount());
             Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType());
             Log.debug(Geonet.EDITOR,"####   - type = " + type);
+            Log.debug(Geonet.EDITOR,"#### - Has suggestion = " + hasSuggestion);
         }
-
-		//-----------------------------------------------------------------------
-		//--- handle attributes
-
-		for(int i=0; i<type.getAttributeCount(); i++)
-		{
-			MetadataAttribute attr = type.getAttributeAt(i);
-
+        
+        
+        //-----------------------------------------------------------------------
+        //--- handle attributes if mandatory or suggested
+        //
+        for(int i=0; i<type.getAttributeCount(); i++) {
+            MetadataAttribute attr = type.getAttributeAt(i);
+            
             if(Log.isDebugEnabled(Geonet.EDITOR)) {
                 Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name);
                 Log.debug(Geonet.EDITOR,"####     - required = " + attr.required);
                 Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
             }
-			if (attr.required || sugg.isSuggested(elemName, attr.name))
-			{
-				String value = "";
-
-				if (attr.defValue != null) {
-					value = attr.defValue;
-                    if(Log.isDebugEnabled(Geonet.EDITOR))
+            
+            if (attr.required || sugg.isSuggested(elemName, attr.name)) {
+                String value = "";
+                
+                if (attr.defValue != null) {
+                    value = attr.defValue;
+                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
                         Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue);
-				}
-
-				String uname = getUnqualifiedName(attr.name);
-				String ns     = getNamespace(attr.name, md, schema);
-				String prefix = getPrefix(attr.name);
-				if (!prefix.equals(""))
-					md.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
-				else
-					md.setAttribute(new Attribute(uname, value));
-			}
-		}
-
-		//-----------------------------------------------------------------------
-		//--- add mandatory children
-
-		if (!type.isOrType()) {
-			for(int i=0; i<type.getElementCount(); i++) {
-				int    minCard   = type.getMinCardinAt(i);
-				String childName = type.getElementAt(i);
-				boolean hasSuggestion = sugg.hasSuggestion(childName, type.getElementList());
-
+                    }
+                }
+                
+                String uname = getUnqualifiedName(attr.name);
+                String ns     = getNamespace(attr.name, element, schema);
+                String prefix = getPrefix(attr.name);
+                if (!prefix.equals(""))
+                    element.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
+                else
+                    element.setAttribute(new Attribute(uname, value));
+            }
+        }
+        
+        
+        //-----------------------------------------------------------------------
+        //--- add mandatory children
+        //
+        //     isOrType if element has substitutes and one of them should be chosen
+        if (!type.isOrType()) {
+            for(int i=0; i<type.getElementCount(); i++) {
+                String childName = type.getElementAt(i);
+                boolean childIsMandatory = type.getMinCardinAt(i) > 0;
+                boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                
                 if(Log.isDebugEnabled(Geonet.EDITOR)) {
                     Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName);
-                    Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, childName));
-                    Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
+                    Log.debug(Geonet.EDITOR,"####     - suggested = " + childIsSuggested);
+                    Log.debug(Geonet.EDITOR,"####     - is mandatory = " + childIsMandatory);
                 }
-
-                if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
-					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
-
-					//--- There can be 'or' elements with other 'or' elements inside them.
-					//--- In this case we cannot expand the inner 'or' elements so the
-					//--- only way to solve the problem is to avoid the creation of them
-
-					if (
-							(schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) ||
-							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion && minCard == 0)
-						) {
-						String name   = getUnqualifiedName(childName);
-						String ns     = getNamespace(childName, md, schema);
-						String prefix = getPrefix(childName);
-
-						Element child = new Element(name, prefix, ns);
-
-						md.addContent(child);
-						fillElement(schema, sugg, md, child);
-					} else {
-						if (elemType.isOrType()) {
-							if (elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
-                                if(Log.isDebugEnabled(Geonet.EDITOR))
-                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
-							} else {
-                                if(Log.isDebugEnabled(Geonet.EDITOR))
+                
+                
+                
+                if (childIsMandatory || childIsSuggested) {
+                    
+                    MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName, elemName));
+                    List<String> childSuggestion = sugg.getSuggestedElements(childName);
+                    boolean childHasSuggestion = childSuggestion.size() != 0;
+                    boolean childHasOnlyCharacterStringSuggestion = childSuggestion.size() == 1 && childSuggestion.contains("gco:CharacterString");
+                    
+                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                        Log.debug(Geonet.EDITOR,"####     - is or type = "+ elemType.isOrType());
+                        Log.debug(Geonet.EDITOR,"####     - has suggestion = "+ childHasSuggestion);
+                        Log.debug(Geonet.EDITOR,"####     - elem type list = " + elemType.getElementList());
+                        Log.debug(Geonet.EDITOR,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
+                    }
+                    
+                    //--- There can be 'or' elements with other 'or' elements inside them.
+                    //--- In this case we cannot expand the inner 'or' elements so the
+                    //--- only way to solve the problem is to avoid the creation of them
+                    if (
+                        schema.isSimpleElement(elemName, childName) ||  // eg. gco:Decimal
+                        !elemType.isOrType() ||                         // eg. gmd:EX_Extent
+                        (elemType.isOrType() && (                       // eg. depends on schema-suggestions.xml
+                            childSuggestion.size() == 1 ||              //   expand the only one suggestion - TODO - this needs improvements
+                            (childSuggestion.size() == 0 && elemType.getElementList().contains("gco:CharacterString")))
+                                                                        //   expand element which have no suggestion
+                                                                        // and have a gco:CharacterString substitute.
+                                                                        // gco:CharacterString is the default.
+                        )
+                    ) {
+                        // Create the element
+                        String name   = getUnqualifiedName(childName);
+                        String ns     = getNamespace(childName, element, schema);
+                        String prefix = getPrefix(childName);
+                        
+                        Element child = new Element(name, prefix, ns);
+                        
+                        // Add it to the element
+                        element.addContent(child);
+                        
+                        if (childHasOnlyCharacterStringSuggestion) {
+                            child.addContent(new Element("CharacterString", Namespaces.GCO));
+                        }
+                        
+                        // Continue ....
+                        fillElement(schema, sugg, element, child);
+                    } else {
+                        // Logging some cases to avoid
+                        if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                            if (elemType.isOrType()) {
+                                 if (elemType.getElementList().contains("gco:CharacterString") 
+                                         && !childHasSuggestion) {
+                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+                                 } else {
                                     Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
+                                }
                             }
-						}
-					}
-				}
-			}
-		}
-		else if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
-			// Here we could probably expand element having one and only one suggestion for 
-			// an or element - then we force to expand that only one suggestion ? 
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR,"####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
-			Element child = new Element("CharacterString", "gco", "http://www.isotc211.org/2005/gco");
-			md.addContent(child);
-		} else {
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR,"####   - WARNING : requested expansion of an OR element : " +md.getName());
+                        }
+                    }
+                }
+            }
+        } else if (type.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
+            // expand element which have no suggestion
+            // and have a gco:CharacterString substitute.
+            // gco:CharacterString is the default.
+            if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                Log.debug(Geonet.EDITOR, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            }
+            Element child = new Element("CharacterString", Namespaces.GCO);
+            element.addContent(child);
+        } else {
+            // TODO: this could be supported if only one suggestion defined for an or element ?
+            // It will require to get the proper namespace for the element
+            if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                Log.debug(Geonet.EDITOR, "####   - WARNING : requested expansion of an OR element : " + element.getName());
+            }
         }
-	}
+    }
 
 	//--------------------------------------------------------------------------
 	//---

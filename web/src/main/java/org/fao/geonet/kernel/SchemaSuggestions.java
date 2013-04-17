@@ -46,7 +46,8 @@ public class SchemaSuggestions
 	public SchemaSuggestions(String xmlSuggestFile) throws Exception
 	{
 		Element sugg = Xml.loadFile(xmlSuggestFile);
-
+		// TODO: it could be good to check that suggested elements are 
+		// fine for the element type
 		List list = sugg.getChildren();
 
         for (Object aList : list) {
@@ -114,6 +115,32 @@ public class SchemaSuggestions
 			return false;
 		}
 	}
+	
+	/**
+	 * Return the list of suggestion for an element.
+	 * 
+	 * @param elementName  The name of the element
+	 * @return The list of element names
+	 */
+    public List<String> getSuggestedElements(String elementName) {
+        Element suggestionConfig = htFields.get(elementName);
+        List<String> suggestedElement = new ArrayList<String>();
+        
+        if (suggestionConfig == null) {
+            return suggestedElement;
+        }
+        
+        
+        for (Object object : suggestionConfig.getChildren()) {
+            Element suggestion = (Element) object;
+            
+            if (suggestion.getName().equals("suggest")) {
+                String name = suggestion.getAttributeValue("name");
+                suggestedElement.add(name);
+            }
+        }
+        return suggestedElement;
+    }
 }
 
 //=============================================================================
