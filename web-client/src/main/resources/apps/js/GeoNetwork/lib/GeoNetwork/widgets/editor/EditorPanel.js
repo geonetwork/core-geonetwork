@@ -956,6 +956,14 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.metadataId = document.mainForm.id.value;
         this.versionId = document.mainForm.version.value;
         
+        // Make height = 100%  for textarea in XML mode
+        var currTab = document.mainForm.currTab.value;
+        if (currTab === 'xml') {
+            var area = Ext.DomQuery.selectNode('textarea.xml', this.body.dom);
+            Ext.get(area).setStyle('min-height', this.editorMainPanel.ownerCt.getInnerHeight() - 5 + 'px');
+        }
+        
+        
         this.toolbar.setIsMinor(document.mainForm.minor.value);
         this.toolbar.setIsTemplate(this.metadataType.value);
         // If panel was disabled on startup, enable it after initialization
@@ -1317,7 +1325,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             split: true,
             autoScroll: true,
             tbar: this.toolbar,
-            minHeigth: 400,
+//            minHeigth: 400,
             items: [this.editorMainPanel]
         };
         this.add(editorPanel);
