@@ -271,10 +271,12 @@ for long description */
 .metadata * textarea.large {
   height : 240px;
 }
-.metadata * textarea.xml {
-  width : 100% !important;
-  min-height : 700px; /* FIXME : Auto height*/
-  height : 100% !important;
+
+.metadata.xml * textarea.xml {
+  width : 99% !important;
+  font-size: 80%;
+  border: none;
+  height : 100% !important; /* Don't work */
 }
 
 /* Form - end */
@@ -409,15 +411,19 @@ span.buttons a.small span {
 }
 .buttons a.add span {
   background-image : url(../images/default/bullet_toggle_plus.png);
+  background-size: 8px;
 }
 .buttons a.del span {
   background-image : url(../images/default/bullet_toggle_minus.png);
+  background-size: 8px;
 }
 .buttons a.up span {
   background-image : url(../images/default/bullet_arrow_up.png);
+  background-size: 8px;
 }
 .buttons a.down span {
   background-image : url(../images/default/bullet_arrow_down.png);
+  background-size: 8px;
 }
 
 div.button {

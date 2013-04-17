@@ -417,44 +417,6 @@ GeoNetwork.app = function () {
             initMap();
         }
     }
-    /**
-     * Bottom bar
-     *
-     * @return
-     */
-    function createBBar() {
-        var previousAction = new Ext.Action({
-            id: 'previousBt',
-            text: '&lt;&lt;',
-            handler: function () {
-                var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                if (from > 0) {
-                    catalogue.startRecord = from;
-                    search();
-                }
-            },
-            scope: this
-        });
-        
-        var nextAction = new Ext.Action({
-            id: 'nextBt',
-            text: '&gt;&gt;',
-            handler: function () {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                search();
-            },
-            scope: this
-        });
-        
-        return new Ext.Toolbar({
-            items: [previousAction, '|', nextAction, '|', {
-                xtype: 'tbtext',
-                text: '',
-                id: 'info'
-            }]
-        });
-        
-    }
     
     /**
      * Results panel layout with top, bottom bar and DataView
@@ -479,10 +441,11 @@ GeoNetwork.app = function () {
             searchFormCmp: Ext.getCmp('searchForm'),
             sortByCmp: Ext.getCmp('E_sortBy'),
             metadataResultsView: metadataResultsView,
-            permalinkProvider: permalinkProvider
+            permalinkProvider: permalinkProvider,
+            withPaging: true,
+            searchCb: search
         });
         
-        bBar = createBBar();
         
         var resultPanel = new Ext.Panel({
             id: 'resultsPanel',
@@ -492,9 +455,7 @@ GeoNetwork.app = function () {
             autoWidth: true,
             layout: 'fit',
             tbar: tBar,
-            items: metadataResultsView,
-            // paging bar on the bottom
-            bbar: bBar
+            items: metadataResultsView
         });
         return resultPanel;
     }
@@ -721,7 +682,7 @@ GeoNetwork.app = function () {
     
     function createHeader() {
         var info = catalogue.getInfo();
-        Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/>&nbsp;' + info.name;
+        Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/><div>' + info.name + '</div>';
         document.title = info.name;
     }
     
@@ -771,8 +732,11 @@ GeoNetwork.app = function () {
             
             // Extra stuffs
             infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
-            
+            try {
+                helpPanel = createHelpPanel();
+            } catch (e) {
+                // TODO: IE7 does not support help panel
+            }
             createHeader();
             
             // Search form
@@ -815,7 +779,8 @@ GeoNetwork.app = function () {
                     region: 'west',
                     id: 'west',
                     split: true,
-                    minWidth: 300,
+                    border: false,
+                    minWidth: 200,
                     width: 300,
                     maxWidth: 400,
                     autoScroll: true,
@@ -833,6 +798,7 @@ GeoNetwork.app = function () {
                     region: 'center',
                     id: 'center',
                     split: true,
+                    border: false,
                     margins: margins,
                     items: [infoPanel, resultsPanel]
                 }, {
@@ -840,6 +806,7 @@ GeoNetwork.app = function () {
                     id: 'east',
                     layout: 'fit',
                     split: true,
+                    border: false,
                     collapsible: true,
                     hideCollapseTool: true,
                     collapseMode: 'mini',

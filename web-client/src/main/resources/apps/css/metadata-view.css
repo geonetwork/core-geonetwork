@@ -2,13 +2,14 @@
   background-color : #FFFFFF;
 }
 .md-view {
-  background-color : #FFFFFF;
+  /*background-color : #FFFFFF;*/
   text-shadow : 0 1px 0 #FFFFFF;
 }
 .md-view ul {
   display : block;
   height : auto;
   position : relative;
+  padding: 5px 0px 5px 7px;;
 }
 /*.md-view ul li img {
   margin-bottom : 1px;
@@ -79,7 +80,7 @@ div.linkPanel div#add-menu-content{
 }
 .md-view td.icon {
   width : 16px;
-  border-left : 1px dashed #e1e1e1;
+  border-left : 1px solid #ececec;
   text-align : center;
 }
 .md-view ul li * .md-logo img {
@@ -109,6 +110,7 @@ div.linkPanel div#add-menu-content{
 }
 .md-thumbnail * h1 {
   font-size : smaller !important;
+  height: 35px;
 }
 
 
@@ -137,14 +139,15 @@ div.linkPanel div#add-menu-content{
 .md-view * div.rating,
 .md-view * div.thumbnail {
   clear : both;
-  width : 182px;
+  width : 158px;
+  text-align: center;
 }
 
 .md-view * div.thumbnail img {
   border : 1px solid #e7e5e5;
   padding : 1px;
-  max-width : 180px;
-  max-height : 140px;
+  max-width : 152px;
+  max-height : 152px;
   min-height : 40px;
   height: auto;
 }
@@ -181,13 +184,14 @@ span.md-action-menu {
   background-color:rgba(100, 100, 100, 0.15);
   border-top:1px solid rgba(0, 0, 0, 0.15);
  */
-  background-color : rgba(217, 210, 123, 0.85);
+  background-color : rgba(217, 210, 123, 0.25);
   border : 1px solid rgba(0, 51, 102, 0.25);
 }
 .md-view ul li.md-over {
   -moz-border-radius : 4px 4px 4px 4px;
-  background-color : rgba(10, 10, 10, 0.15);
-  border-top : 1px solid rgba(0, 0, 0, 0.15);
+  background-color : rgba(10, 10, 10, 0.10);
+  border-top : 1px solid rgba(0, 0, 0, 0.10);
+  box-shadow: 2px 2px 14px -2px;
 }
 .md-view li strong {
   color : #000000;
@@ -236,7 +240,7 @@ Display hyperlink as text next to element
 
 .md-view * p.abstract {
 }
-.md-view * p.subject {
+.md-view * .subject {
   font-size : 80%;
   text-transform : uppercase;
 }

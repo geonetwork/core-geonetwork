@@ -48,10 +48,50 @@ pre.code {
 /* Overide ext style */
 .x-layout-split,
 .x-layout-collapsed {
-  /*background-color : #003366;*/
-  background-color : #eeeeee;
-  width : 3px;
+  background-color : #ececec;
 }
+.x-layout-split {
+  width : 3px;
+/*  border-right: 1px solid #777777; */
+}
+.x-layout-collapsed {
+  width : 10px !important;
+}
+.x-layout-split-west {
+  box-shadow: 2px 0px 10px 0px #777777
+}
+.x-layout-split-east {
+  box-shadow: -2px 0px 10px 0px #777777
+}
+/* Disable shadow for layer manager */
+#editorPanel .x-layout-split-east, 
+#east .x-layout-split-east {
+  box-shadow: none;
+}
+.x-layout-split-west .x-layout-mini {
+  left: -10px;
+}
+.x-layout-split-east .x-layout-mini {
+  left: 2px;
+}
+.x-layout-cmini-west .x-layout-mini,
+.x-layout-cmini-east .x-layout-mini {
+/*  top: 0px;
+  left: -10px;
+*/}
+
+
+.x-layout-mini {
+  height: 50px;
+  width: 9px;
+  opacity: .9;
+  background-size: 100% 100%;
+}
+x-layout-cmini-east {
+  border: 0 none;
+  width: 25px!important;
+}
+
 .md-info {
   background-color : #FFF;
   /*padding: 5px;*/
@@ -88,7 +128,8 @@ pre.code {
   -webkit-border-radius : 0px 0px 54px 0px;
   border-radius : 0px 0px 54px 0px;
   background-color : rgba(217, 210, 123, 0.85);
-  border : 1px solid rgba(0, 51, 102, 0.25);
+  box-shadow: 2px 0px 10px 0px #777777;
+ /* border : 1px solid rgba(0, 51, 102, 0.25);*/
   padding : 3px;
   margin : 13px;
 }
@@ -148,6 +189,15 @@ ul.main {
 table.map {
     margin: auto;
 }
+#infoPanel {
+  color: #777777;
+}
+#infoPanel h3 {
+  color: #000000;
+}
+#infoPanel ul.main {
+    margin-left: 30px;
+}
 
 #infoContent {
   vertical-align : bottom;
@@ -168,17 +218,19 @@ table.map {
 }
 #header {
   /*background-image : url(../images/default/header-bg.png);*/
-  border-bottom : 3px solid #0076A1;
   height : 33px;
+  border-bottom: 1px solid #ececec;
 }
 
 #header .catLogo {
-  max-height : 31px;
+  max-height : 33px;
+  float : left;
 }
 #header div {
-  float : left;
   width : auto;
   display : inline;
+  height: 33px;
+  vertical-align: middle;
 }
 
 #footer {
@@ -209,16 +261,15 @@ table.map {
   position : absolute;
   top : 0px;
   right : 5px;
-  height : 30px;
+  height : 33px;
 }
 .pipe {
   float : right;
   width : auto;
   height : inherit;
-  border-left : 1px solid #C6E09B;
   display : inline;
   margin : 0;
-  padding : 0 8px;
+  padding: 3px;
 }
 .pipe div {
 }
@@ -434,6 +485,10 @@ dl.xml * dd {
   padding-left : 2px;
 }
 
+div.facets {
+    padding: 5px;
+}
+
 div.facets * ul,
 div.facets * li {
     list-style: none;
@@ -442,16 +497,14 @@ div.facets * li {
  * Facet category label
  */
 div.facets > ul > li {
-    margin: 0px;
-    padding: 0px;
-    border-top: 1px solid #CCC;
+    margin: 0px 15px 0px 0px;
+/*    border-top: 1px solid #CCC;*/
     font-weight: bold;
 }
 /**
  * Facet sub elements
  */
 div.facets ul ul {
-    margin-left: 5px;
     margin-bottom: 5px;
     font-size: 85%;
 }
@@ -470,8 +523,13 @@ div.facets * a {
 }
 div.facets * .facet-more-bt, 
 div.facets * .facet-less-bt {
-    color: #71C0DD;
+    margin-bottom: 10px;
 }
+div.facets * .facet-more-bt a, 
+div.facets * .facet-less-bt a {
+    color: #777777 !important;
+}
+
 .breadcrumb * .x-btn-tl, 
 .breadcrumb * .x-btn-tr, 
 .breadcrumb * .x-btn-tc, 
@@ -512,8 +570,10 @@ div.facets * .facet-less-bt {
 .tplDesc {
     white-space: normal !important;
 }
-.gn-bt-main * button {
-    font-weight: bold;
+.gn-bt-main * button ,
+.gn-bt-main * span {
+    /*font-weight: bold;*/
+    text-shadow: 0 0 0.1em grey;
 }
 .alert {
     padding: 8px 35px 8px 14px;
