@@ -98,8 +98,27 @@ function getUpdateRequest(data)
 	var list = data.SEARCH_LIST;
 	var text = '';
 		
-	for (var i=0; i<list.length; i++)
+	for (var i=0; i<list.length; i++){
+		text += str.substitute(data.SEARCH_TEMP, list[i]);
+	}
+	
+	request = str.replace(request, '{SEARCH_LIST}', text);
+	
+	return this.substituteCommon(data, request);
+}
+
+//=====================================================================================
+
+function getUpdateRequestOld(data)
+{
+	var request = str.substitute(updateTemp, data);
+	
+	var list = data.SEARCH_LIST;
+	var text = '';
+		
+	for (var i=0; i<list.length; i++){
 		text += str.substitute(searchTemp, list[i]);
+	}
 	
 	request = str.replace(request, '{SEARCH_LIST}', text);
 	
@@ -152,7 +171,7 @@ var updateTemp =
 
 var searchTemp = 
 '    <search>'+
-'      <freeText>{ANY_TEXT}</freeText>'+
+'      <freeText>{REVISION_DATE}</freeText>'+
 '      <title>{TITLE}</title>'+
 '      <abstract>{ABSTRACT}</abstract>'+
 '      <subject>{SUBJECT}</subject>'+

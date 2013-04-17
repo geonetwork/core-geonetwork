@@ -1,43 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+	
 	<!-- ============================================================================================= -->
 
-	<xsl:import href="common.xsl"/>	
 
 	<!-- ============================================================================================= -->
-	<!-- === CSW harvesting node -->
+	<!-- === Generate a table that represents a search on the remote node -->
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="*" mode="site">
-		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
-		<icon><xsl:value-of select="icon/value" /></icon>
-		<rejectDuplicateResource><xsl:value-of select="rejectDuplicateResource/value"/></rejectDuplicateResource>
+	<xsl:template match="/root/search">
+			<xsl:apply-templates select="." mode="data"/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+		
+	<xsl:template match="*" mode="data">
+	<xsl:copy-of select="."/>
+ 	 <xsl:apply-templates/>
+   		<!-- 
+   		<xsl:for-each select="/root/search/*">
+		&lt;<xsl:value-of select="local-name()"/>&gt; {<xsl:value-of select="local-name()"/>}&lt;/<xsl:value-of select="local-name()"/>&gt;
+		</xsl:for-each>
+		-->
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="*" mode="options"/>
-
-	<!-- ============================================================================================= -->
-
-
-		
-	<xsl:template match="*" mode="searches">
-		
-		<searches>
-		<search>
-			<xsl:apply-templates select="children" />
-		</search>
-		</searches>
-	
-	</xsl:template>
-		
-	<xsl:template match="children">
-		 <xsl:copy-of select="search/children/child::*"/>
-	</xsl:template>	
-	
+	<!-- 
+	<xsl:template match="strings"/>
+	<xsl:template match="env"/>
+	-->
 	
 	<!-- ============================================================================================= -->
 

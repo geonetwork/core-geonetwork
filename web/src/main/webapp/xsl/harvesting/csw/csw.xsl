@@ -79,7 +79,7 @@
 		<xsl:call-template name="schedule-widget">
 			<xsl:with-param name="type">csw</xsl:with-param>
 		</xsl:call-template>
-		</xsl:template>
+	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 

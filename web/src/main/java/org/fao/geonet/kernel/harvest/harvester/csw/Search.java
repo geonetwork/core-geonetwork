@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.utils.Util;
 import org.jdom.Element;
 
@@ -48,6 +51,14 @@ class Search
 		subject  = Util.getParam(search, "subject",  "").trim();
 		minscale  = Util.getParam(search, "minscale",  "").trim();
 		maxscale  = Util.getParam(search, "maxscale",  "").trim();
+	}
+	
+	
+	public void addAttribute(String elementName, String elementValue)
+	{
+		if (elementValue!=null && !elementValue.equals("")){
+			attributesMap.put(elementName, elementValue);
+		}
 	}
 
 	//---------------------------------------------------------------------------
@@ -89,6 +100,11 @@ class Search
 	public String subject;
 	public String minscale;
 	public String maxscale;
+	
+	public Map<String, String> attributesMap = new HashMap<String, String>();
+	
+	
+
 }
 
 //=============================================================================

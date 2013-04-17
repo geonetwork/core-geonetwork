@@ -38,6 +38,8 @@ import org.jdom.Element;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 //=============================================================================
@@ -146,14 +148,26 @@ public class CswHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		CswParams params = (CswParams) p;
-
+		
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
-        settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+                settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+		
+		//--- store dynamic search nodes
+		
+		
+		String  searchID = settingMan.add(dbms, path, "search", "");	
+		
+		if (params.eltSearches!=null){
+			for (Element element : params.eltSearches) {
+				if (!element.getName().startsWith("parser")){
+					settingMan.add(dbms, "id:"+searchID, element.getName(), element.getText());
+				}
+			}
+		}
 
 		//--- store search nodes
-
-		for (Search s : params.getSearches())
+		/*for (Search s : params.getSearches())
 		{
 			String  searchID = settingMan.add(dbms, path, "search", "");
 
@@ -163,7 +177,7 @@ public class CswHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "subject",  s.subject);
 			settingMan.add(dbms, "id:"+searchID, "minscale", s.minscale);
 			settingMan.add(dbms, "id:"+searchID, "maxscale", s.maxscale);
-		}
+		}*/
 	}
 
 	//---------------------------------------------------------------------------

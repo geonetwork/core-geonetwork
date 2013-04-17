@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+	
 	<!-- ============================================================================================= -->
 
-	<xsl:import href="common.xsl"/>	
+	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 	<!-- ============================================================================================= -->
-	<!-- === CSW harvesting node -->
+	<!-- === Generate a table that represents a search on the remote node -->
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="*" mode="site">
-		<capabilitiesUrl><xsl:value-of select="capabUrl/value" /></capabilitiesUrl>
-		<icon><xsl:value-of select="icon/value" /></icon>
-		<rejectDuplicateResource><xsl:value-of select="rejectDuplicateResource/value"/></rejectDuplicateResource>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="*" mode="options"/>
-
-	<!-- ============================================================================================= -->
-
-
-		
-	<xsl:template match="*" mode="searches">
-		
-		<searches>
-		<search>
-			<xsl:apply-templates select="children" />
+	<xsl:template match="/root/search">
+		<search id="{@id}">
+			<xsl:apply-templates select="." mode="data"/>
 		</search>
-		</searches>
-	
 	</xsl:template>
+
+	<!-- ============================================================================================= -->
 		
-	<xsl:template match="children">
-		 <xsl:copy-of select="search/children/child::*"/>
-	</xsl:template>	
-	
-	
+	<xsl:template match="*" mode="data">
+		<xsl:for-each select="/root/search/*">
+		
+		<capability>
+			<xsl:attribute name="name">
+				<xsl:value-of select="local-name()" />
+			</xsl:attribute>
+		
+				<xsl:value-of select="concat('csw.',local-name())" />
+		
+		</capability>
+		</xsl:for-each>
+		
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="strings"/>
+	<xsl:template match="env"/>
+
 	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>

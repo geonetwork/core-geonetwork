@@ -22,14 +22,25 @@
 
 	<!-- ============================================================================================= -->
 
+
+	<xsl:variable name="widgetPath">../../apps</xsl:variable>
+			
+			
 	<xsl:template mode="script" match="/">
+        
         <link rel="stylesheet" type="text/css" href="../../scripts/ext/resources/css/ext-all.css"/>
+        
         <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/>
         <script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"></script>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/gui/gui.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/sarissa.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/harvesting/harvesting.js"/>
+
+		<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/>
+		
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

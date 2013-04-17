@@ -16,6 +16,7 @@ function Csw(xmlLoader)
 	//--- call super constructor
 	Harvester.call(this);
 	
+	
 	var loader= xmlLoader;
 	var model = new csw.Model(loader);
 	var view  = new csw.View(loader);
