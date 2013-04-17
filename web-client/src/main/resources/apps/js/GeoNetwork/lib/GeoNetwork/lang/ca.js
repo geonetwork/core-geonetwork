@@ -564,6 +564,7 @@ GeoNetwork.Lang.ca={
     'linklabel-OGC:WMS': 'Add to map',
     'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
     'linklabel-application/zip': 'Download',
+    'linklabel-application/octet-stream': 'Download',
     'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
     'linklabel-application/x-compressed': 'Download',
     'linklabel-text/html': 'Web link',

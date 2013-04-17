@@ -569,6 +569,7 @@ GeoNetwork.Lang.es = {
     'linklabel-application/zip': 'Download',
     'linklabel-WWW:DOWNLOAD-1.0-http--download': 'Download',
     'linklabel-application/x-compressed': 'Download',
+    'linklabel-application/octet-stream': 'Download',
     'linklabel-text/html': 'Web link',
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',

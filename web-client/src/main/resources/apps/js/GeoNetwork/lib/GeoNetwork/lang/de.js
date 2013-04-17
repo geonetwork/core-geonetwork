@@ -571,6 +571,7 @@ GeoNetwork.Lang.de = {
 'linklabel-OGC:WMC-1.1.0-http-get-capabilities': 'Download Web Map Context',
 'linklabel-application/pdf': 'PDF',
 'linklabel-OGC:WMS': 'Add to map',
+'linklabel-application/octet-stream': 'Download',
 'linklabel-OGC:WFS': 'WFS link',
 'linklabel-application/vnd.google-earth.kml+xml': 'View in Google Earth',
 'linklabel-application/zip': 'Download',
