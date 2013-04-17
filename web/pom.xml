@@ -999,6 +999,21 @@
       </properties>
     </profile>
     <profile>
+      <id>ifr-myocean-ro-exp</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+        <server>ifr-myocean-ro-exp</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+        <geonetwork.webapp.name>geonetwork-myocean-ro-exp</geonetwork.webapp.name>
+      </properties>
+    </profile>
+    <profile>
       <id>ifr-myocean-ro-visi1-sextant5</id>
       <activation>
         <property>
@@ -1010,7 +1025,7 @@
         <env>prod</env>
         <server>ifr-myocean-ro-visi1-sextant5</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
+        <geonetwork.webapp.name>geonetwork-myocean-ro-visi1-sextant5</geonetwork.webapp.name>
       </properties>
     </profile>
     <profile>
