@@ -1,0 +1,16 @@
+<FindBugsFilter>
+	<!-- Provider matchers that define which classes should *NOT* be analyzed by find bugs.
+		See http://findbugs.sourceforge.net/manual/filter.html
+		for the docs on include and exclude filter files
+	-->
+
+	<Match>
+		<Class name="~.*\..*Test" />
+	</Match>
+<!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
+	<Match>
+		<Class name="~org\.fao\.geonet\..*" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+	</Match>
+	-->
+</FindBugsFilter>
