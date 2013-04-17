@@ -113,6 +113,8 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
     }
 });
 
+GeoNetwork.Templates.SHORT_TITLE ='<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{[Ext.util.Format.ellipsis(values.title, 50, true)]}</a>' +
+                                    '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
 
 GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +
                                 '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
@@ -161,7 +163,7 @@ GeoNetwork.Templates.THUMBNAIL = new Ext.XTemplate(
             '<tpl for=".">',
                 '<li class="md md-thumbnail" style="{featurecolorCSS}">',
                 '<div class="md-wrap" id="{uuid}" title="{abstract}">',
-                    GeoNetwork.Templates.TITLE,
+                    GeoNetwork.Templates.SHORT_TITLE,
                     '<div class="thumbnail">',
                         '<tpl if="thumbnail">',
                             '<a rel="lightbox" href="{overview}"><img src="{thumbnail}" alt="Thumbnail"/></a>', 
@@ -212,21 +214,25 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                             '</tpl>',
                             '<tpl if="thumbnail==\'\'"></tpl>',
                         '</div>',
-                '</td><td class="icon">',
+                '</td>',
                 // Validity and category information
-                '<tpl if="valid != \'-1\'">',
-                    '<span class="badge badge-',
-                        '<tpl if="valid == \'1\'">success</tpl>',
-                        '<tpl if="valid == \'0\'">error</tpl>',
-                        '" title="' + OpenLayers.i18n('validityInfo'),
-                        '<tpl for="valid_details">',
-                          '{values.type}: ',
-                            '<tpl if="values.valid == \'1\'">' + OpenLayers.i18n('valid')  + '</tpl>',
-                            '<tpl if="values.valid == \'0\'">' + OpenLayers.i18n('notValid')  + '</tpl>',
-                            '<tpl if="values.valid == \'-1\'">' + OpenLayers.i18n('notDetermined')  + '</tpl>',
-                            '<tpl if="values.ratio != \'\'"> ({values.ratio}) </tpl> - ',
-                        '</tpl>',
-                    '">&nbsp;</span>',
+                '<tpl if="catalogue.isIdentified()">',
+                  '<td>',
+                    '<tpl if="catalogue.isIdentified() && valid != \'-1\'">',
+                        '<span class="badge badge-',
+                            '<tpl if="valid == \'1\'">success</tpl>',
+                            '<tpl if="valid == \'0\'">error</tpl>',
+                            '" title="' + OpenLayers.i18n('validityInfo'),
+                            '<tpl for="valid_details">',
+                              '{values.type}: ',
+                                '<tpl if="values.valid == \'1\'">' + OpenLayers.i18n('valid')  + '</tpl>',
+                                '<tpl if="values.valid == \'0\'">' + OpenLayers.i18n('notValid')  + '</tpl>',
+                                '<tpl if="values.valid == \'-1\'">' + OpenLayers.i18n('notDetermined')  + '</tpl>',
+                                '<tpl if="values.ratio != \'\'"> ({values.ratio}) </tpl> - ',
+                            '</tpl>',
+                        '">&nbsp;</span>',
+                    '</tpl>',
+                  '</td>',
                 '</tpl>',
                 '</td><td class="icon" title="' + OpenLayers.i18n('metadataCategories') + '">',
                 '<tpl for="category">',
