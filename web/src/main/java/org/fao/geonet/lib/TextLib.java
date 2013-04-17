@@ -59,7 +59,7 @@ public class TextLib
 		FileInputStream is = new FileInputStream(file);
 		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
 
-		return ConfigurationOverrides.loadTextFileAndUpdate(file, servletContext, appPath, ir);
+		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file, servletContext, appPath, ir);
 	}
 	
 	//---------------------------------------------------------------------------

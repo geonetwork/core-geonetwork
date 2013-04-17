@@ -135,7 +135,7 @@ public class JeevesEngine
             ServletContext servletContext = null;
             if(servlet != null) servletContext= servlet.getServletContext();
 
-            ConfigurationOverrides.updateLoggingAsAccordingToOverrides(servletContext, appPath);
+            ConfigurationOverrides.DEFAULT.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
             monitorManager = new MonitorManager(servletContext, baseUrl);
 			this.appPath = appPath;
@@ -299,7 +299,7 @@ public class JeevesEngine
 
 		Element configRoot = Xml.loadFile(file);
 
-        ConfigurationOverrides.updateWithOverrides(file, servletContext, appPath, configRoot);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(file, servletContext, appPath, configRoot);
 
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);

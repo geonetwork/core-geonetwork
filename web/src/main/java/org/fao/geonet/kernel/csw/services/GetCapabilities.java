@@ -115,7 +115,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if(context.getServlet() != null) {
                 servletContext = context.getServlet().getServletContext();
             }
-			ConfigurationOverrides.updateWithOverrides(file, servletContext, context.getAppPath(), capabilities);
+			ConfigurationOverrides.DEFAULT.updateWithOverrides(file, servletContext, context.getAppPath(), capabilities);
 
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 			setKeywords(capabilities, context, cswServiceSpecificContraint);

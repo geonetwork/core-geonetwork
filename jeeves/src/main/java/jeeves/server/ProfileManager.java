@@ -83,7 +83,7 @@ public class ProfileManager
 	{
 		Element elProfiles = Xml.loadFile(profilesFile);
 		if (servletContext != null) {
-		      ConfigurationOverrides.updateWithOverrides(profilesFile, servletContext, appPath, elProfiles);
+		      ConfigurationOverrides.DEFAULT.updateWithOverrides(profilesFile, servletContext, appPath, elProfiles);
 		}
 		htProfiles  = new Hashtable<String, Element>(50);
 

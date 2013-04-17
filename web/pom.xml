@@ -865,6 +865,14 @@
           <stopPort>8090</stopPort>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
   
@@ -948,5 +956,6 @@
     <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
     <widgets.webapp.resources></widgets.webapp.resources>
     <system.specific.overrides></system.specific.overrides>
+    <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>
 </project>

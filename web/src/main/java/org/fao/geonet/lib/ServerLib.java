@@ -63,7 +63,7 @@ public class ServerLib
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 		
 		try {
-			List<String> lines = ConfigurationOverrides.loadTextFileAndUpdate(
+			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(
                     SERVER_PROPS, servletContext, appPath, reader);
 			StringBuilder b = new StringBuilder();
 			for (String string : lines) {

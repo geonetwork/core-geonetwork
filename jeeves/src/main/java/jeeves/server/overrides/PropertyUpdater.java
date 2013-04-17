@@ -39,7 +39,7 @@ abstract class PropertyUpdater extends BeanUpdater {
         Object value = valueLoader.load(applicationContext, properties);
         if (value instanceof String) {
             String string = (String) value;
-            value = ConfigurationOverrides.updatePropertiesInText(properties, string);
+            value = ConfigurationOverrides.DEFAULT.updatePropertiesInText(properties, string);
         }
         PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
         
