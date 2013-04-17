@@ -1202,7 +1202,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 
                 // Remove mode and children tabs if not in current mode
                 if (!activeMode) {
-                    Ext.get(modes[i]).parent().remove();
+                    var p = Ext.get(modes[i]).parent();
+                    p.setVisibilityMode(Ext.Element.DISPLAY);
+                    p.setVisible(false);
                 } else {
                     // Remove tab if only one tab in that mode
                     if (next && tabs.length === 1) {
