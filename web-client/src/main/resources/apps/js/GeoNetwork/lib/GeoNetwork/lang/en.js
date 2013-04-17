@@ -596,6 +596,7 @@ GeoNetwork.Lang.en = {
     'linklabel-text/html': 'Web link',
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
+    'linklabel-image/jpeg': 'Image link',
     'linklabel-website': 'Web link',
     'linklabel-application/octet-stream': 'Link',
     'linklabel-': 'Link'

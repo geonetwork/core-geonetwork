@@ -580,6 +580,7 @@ GeoNetwork.Lang.de = {
 'linklabel-text/html': 'Web link',
 'linklabel-text/plain': 'Web link',
 'linklabel-image/png': 'Image link',
+'linklabel-image/jpeg': 'Image link',
 'linklabel-': 'Link'
 };
 
