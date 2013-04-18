@@ -23,6 +23,7 @@ import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.joda.time.DateTime;
 
@@ -110,6 +111,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         
         if (published) {
             Element report = dataManager.doValidate(null, dbms, schema, id, md, "eng", false).one();
+
             Pair<String,String> failureReport = failureReason(report);
             String failureRule = failureReport.one();
             String failureReasons = failureReport.two();
@@ -176,24 +178,30 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
     private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
+        StringBuilder failure = new StringBuilder();
         if (!reportType.equals(Geocat.INSPIRE_SCHEMATRON_ID)) {
             @SuppressWarnings("unchecked")
             Iterator<Element> errors = report.getDescendants(new ErrorFinder());
-            if (errors.hasNext()) {
+
+            while (errors.hasNext()) {
+                if (failure.length() > 0 || failures.length() > 0)
+                    failure.append('\n');
+
+                Element error = errors.next();
+
+                Element text = error.getChild("text", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl"));
+                if (text == null || !(reportType.equals("schematron-rules-iso-che") && text.getChild("alert.M104") != null)) {
+                    failure.append(error.getAttributeValue("test"));
+                    failure.append(" xpath[");
+                    failure.append(error.getAttributeValue("location"));
+                    failure.append("]");
+                }
+            }
+
+            if (failure.length() > 0) {
                 if (rules.length() > 0)
                     rules.append("\n");
                 rules.append(reportType);
-            }
-            
-            while (errors.hasNext()) {
-                if (failures.length() > 0)
-                    failures.append('\n');
-                
-                Element error = errors.next();
-                failures.append (error.getAttributeValue("test"));
-                failures.append (" xpath[");
-                failures.append (error.getAttributeValue("location"));
-                failures.append ("]");
             }
         }
     }

@@ -83,6 +83,7 @@ public class GetAdminOper implements Service
 
 		Element ownerId = new Element("ownerid").setText(info.owner);
 		Element groupOwner = new Element("groupOwner").setText(info.groupOwner);
+		Element schema = new Element("schema").setText(info.schemaId);
 		Element hasOwner = new Element("owner"); 
 		if (am.isOwner(context,id)) 
 			hasOwner.setText("true");
@@ -170,6 +171,7 @@ public class GetAdminOper implements Service
 										.addContent(elGroup)
 										.addContent(ownerId)
 										.addContent(hasOwner)
+										.addContent(schema)
 										.addContent(groupOwner);
 
 		return elRes;
