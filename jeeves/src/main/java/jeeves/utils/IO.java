@@ -24,8 +24,13 @@
 package jeeves.utils;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 //=============================================================================
 
@@ -50,9 +55,12 @@ public final class IO
 	{
 		StringBuffer sb = new StringBuffer();
 
+		FileInputStream in = null;
+		BufferedReader	rdr = null;
 		try
 		{
-			BufferedReader	rdr = new BufferedReader(new FileReader(name));
+            in = new FileInputStream(name);
+            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
 
 			String inputLine;
 
@@ -61,13 +69,18 @@ public final class IO
 				sb.append('\n');
 			}
 
-			rdr.close();
-
 			return sb.toString();
 		}
 		catch (IOException e)
 		{
 			return null;
+		} finally {
+		    if (in != null) {
+		        IOUtils.closeQuietly(in);
+		    }
+		    if (rdr != null) {
+		        IOUtils.closeQuietly(rdr);
+		    }
 		}
 	}
 }

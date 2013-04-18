@@ -72,7 +72,7 @@ class Harvester
 	public Z3950ConfigResult harvest() throws Exception
 	{
 
-		XmlRequest req = new XmlRequest(params.host, new Integer(params.port));
+		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
 
 		Lib.net.setupProxy(context, req);
 

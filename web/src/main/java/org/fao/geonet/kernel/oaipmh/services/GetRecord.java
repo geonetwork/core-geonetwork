@@ -137,7 +137,7 @@ public class GetRecord implements OaiPmhService
 
 		query = "SELECT name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
 
-		list = dbms.select(query, new Integer(id)).getChildren();
+		list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		for (Object o : list)
 		{

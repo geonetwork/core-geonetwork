@@ -88,9 +88,9 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 			//--- check access
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 				//--- remove old operations
@@ -124,7 +124,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 						dm.setOperation(context, dbms, id, groupId, operId);
 					}
 				}
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}

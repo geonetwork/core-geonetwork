@@ -109,7 +109,7 @@ public class ScheduleManager
     public SerialFactory getSerialFact() {return serialFact;}
     public MonitorManager getMonitorManager() {return monitorManager;}
     public JeevesApplicationContext getApplicationContext() { return jeevesApplicationContext; }
-    public Hashtable<String, Object> getHtContexts() {return htContexts;}
+    public Hashtable<String, Object> getHtContexts() {return new Hashtable<String, Object>(htContexts);}
 
     //--------------------------------------------------------------------------
 

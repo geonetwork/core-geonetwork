@@ -189,7 +189,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         Element e = dbms.select(query, LDAPConstants.LDAP_FLAG);
         for (Object record : e.getChildren("record")) {
             Element r = (Element) record;
-            int userId = new Integer(r.getChildText("id"));
+            int userId = Integer.valueOf(r.getChildText("id"));
             Log.debug(Geonet.LDAP, "  - Removing user: " + userId);
             try {
                 dbms.execute("DELETE FROM UserGroups WHERE userId=?", userId);
@@ -249,8 +249,8 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 // If LDAP group does not exist in local database, create it
                 groupId = serialFactory.getSerial(dbms, "Groups") + "";
                 String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, new Integer(groupId), groupName);
-                Lib.local.insert(dbms, "Groups", new Integer(groupId),
+                dbms.execute(query, Integer.valueOf(groupId), groupName);
+                Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId),
                         groupName);
             } else if (groupRecord != null) {
                 groupId = groupRecord.getChildText("id");

@@ -89,7 +89,7 @@ public class GetCategories implements Service
 
 		HashSet hsMetadataCat = new HashSet();
 
-		List mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",new Integer(id)).getChildren();
+		List mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",Integer.valueOf(id)).getChildren();
 
 		for(int i=0; i<mdCat.size(); i++)
 		{

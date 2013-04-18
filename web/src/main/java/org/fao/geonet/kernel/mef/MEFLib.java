@@ -408,7 +408,7 @@ public class MEFLib {
 		String query = "SELECT name FROM MetadataCateg, Categories "
 				+ "WHERE categoryId = id AND metadataId = ?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		for (int i = 0; i < list.size(); i++) {
 			Element record = (Element) list.get(i);
@@ -437,7 +437,7 @@ public class MEFLib {
 				.open(Geonet.Res.MAIN_DB);
 
 		String id = md.getChildText("id");
-		int iId = new Integer(id);
+		int iId = Integer.valueOf(id);
 		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
 				+ "FROM   OperationAllowed, Groups, Operations "
 				+ "WHERE  groupId = Groups.id "

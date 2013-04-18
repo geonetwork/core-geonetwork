@@ -181,6 +181,8 @@ public class XmlElementReader implements Iterator<Element> {
 	            	
 	            	element.addContent(readElement());
 	                break;
+	            default:
+	                throw new IllegalStateException("Not a recognized value");
             }
 	
         	currentEvent = (XMLEvent) reader.next();
@@ -270,26 +272,26 @@ public class XmlElementReader implements Iterator<Element> {
 	final static HashMap<String, Integer> attrTypes = new HashMap<String, Integer>(32);
 	
 	static {
-	    attrTypes.put("CDATA", new Integer(org.jdom.Attribute.CDATA_TYPE));
-	    attrTypes.put("cdata", new Integer(org.jdom.Attribute.CDATA_TYPE));
-	    attrTypes.put("ID", new Integer(org.jdom.Attribute.ID_TYPE));
-	    attrTypes.put("id", new Integer(org.jdom.Attribute.ID_TYPE));
-	    attrTypes.put("IDREF", new Integer(org.jdom.Attribute.IDREF_TYPE));
-	    attrTypes.put("idref", new Integer(org.jdom.Attribute.IDREF_TYPE));
-	    attrTypes.put("IDREFS", new Integer(org.jdom.Attribute.IDREFS_TYPE));
-	    attrTypes.put("idrefs", new Integer(org.jdom.Attribute.IDREFS_TYPE));
-	    attrTypes.put("ENTITY", new Integer(org.jdom.Attribute.ENTITY_TYPE));
-	    attrTypes.put("entity", new Integer(org.jdom.Attribute.ENTITY_TYPE));
-	    attrTypes.put("ENTITIES", new Integer(org.jdom.Attribute.ENTITIES_TYPE));
-	    attrTypes.put("entities", new Integer(org.jdom.Attribute.ENTITIES_TYPE));
-	    attrTypes.put("NMTOKEN", new Integer(org.jdom.Attribute.NMTOKEN_TYPE));
-	    attrTypes.put("nmtoken", new Integer(org.jdom.Attribute.NMTOKEN_TYPE));
-	    attrTypes.put("NMTOKENS", new Integer(org.jdom.Attribute.NMTOKENS_TYPE));
-	    attrTypes.put("nmtokens", new Integer(org.jdom.Attribute.NMTOKENS_TYPE));
-	    attrTypes.put("NOTATION", new Integer(org.jdom.Attribute.NOTATION_TYPE));
-	    attrTypes.put("notation", new Integer(org.jdom.Attribute.NOTATION_TYPE));
-	    attrTypes.put("ENUMERATED", new Integer(org.jdom.Attribute.ENUMERATED_TYPE));
-	    attrTypes.put("enumerated", new Integer(org.jdom.Attribute.ENUMERATED_TYPE));
+	    attrTypes.put("CDATA", Integer.valueOf(org.jdom.Attribute.CDATA_TYPE));
+	    attrTypes.put("cdata", Integer.valueOf(org.jdom.Attribute.CDATA_TYPE));
+	    attrTypes.put("ID", Integer.valueOf(org.jdom.Attribute.ID_TYPE));
+	    attrTypes.put("id", Integer.valueOf(org.jdom.Attribute.ID_TYPE));
+	    attrTypes.put("IDREF", Integer.valueOf(org.jdom.Attribute.IDREF_TYPE));
+	    attrTypes.put("idref", Integer.valueOf(org.jdom.Attribute.IDREF_TYPE));
+	    attrTypes.put("IDREFS", Integer.valueOf(org.jdom.Attribute.IDREFS_TYPE));
+	    attrTypes.put("idrefs", Integer.valueOf(org.jdom.Attribute.IDREFS_TYPE));
+	    attrTypes.put("ENTITY", Integer.valueOf(org.jdom.Attribute.ENTITY_TYPE));
+	    attrTypes.put("entity", Integer.valueOf(org.jdom.Attribute.ENTITY_TYPE));
+	    attrTypes.put("ENTITIES", Integer.valueOf(org.jdom.Attribute.ENTITIES_TYPE));
+	    attrTypes.put("entities", Integer.valueOf(org.jdom.Attribute.ENTITIES_TYPE));
+	    attrTypes.put("NMTOKEN", Integer.valueOf(org.jdom.Attribute.NMTOKEN_TYPE));
+	    attrTypes.put("nmtoken", Integer.valueOf(org.jdom.Attribute.NMTOKEN_TYPE));
+	    attrTypes.put("NMTOKENS", Integer.valueOf(org.jdom.Attribute.NMTOKENS_TYPE));
+	    attrTypes.put("nmtokens", Integer.valueOf(org.jdom.Attribute.NMTOKENS_TYPE));
+	    attrTypes.put("NOTATION", Integer.valueOf(org.jdom.Attribute.NOTATION_TYPE));
+	    attrTypes.put("notation", Integer.valueOf(org.jdom.Attribute.NOTATION_TYPE));
+	    attrTypes.put("ENUMERATED", Integer.valueOf(org.jdom.Attribute.ENUMERATED_TYPE));
+	    attrTypes.put("enumerated", Integer.valueOf(org.jdom.Attribute.ENUMERATED_TYPE));
 	}
 
 	//---------------------------------------------------------------------------
@@ -298,7 +300,7 @@ public class XmlElementReader implements Iterator<Element> {
      * Could be generalised to allow different matching algorithms 
      */
 	
-	private class MatchExpression {
+	private static class MatchExpression {
 		private boolean absolute;
 		private NameTest[] tests;
 

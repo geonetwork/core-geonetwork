@@ -122,7 +122,7 @@ public abstract class JeevesException extends AuthenticationException
 
 			at.setAttribute("class",  (clas == null) ? "???" : clas);
 			at.setAttribute("file",   (file == null) ? "???" : file);
-			at.setAttribute("line",   (line == null) ? "???" : line);
+			at.setAttribute("line",   line);
 			at.setAttribute("method", (meth == null) ? "???" : meth);
 
 

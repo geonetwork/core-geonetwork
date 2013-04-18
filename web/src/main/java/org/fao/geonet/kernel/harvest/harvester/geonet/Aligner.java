@@ -329,11 +329,11 @@ public class Aligner
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), iId);
 		}
 		
 		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), iId);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -617,11 +617,11 @@ public class Aligner
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), new Integer(id));
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), Integer.valueOf(id));
 		}
 		
 		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), new Integer(id));
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), Integer.valueOf(id));
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 		addCategories(id);

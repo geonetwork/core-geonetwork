@@ -202,16 +202,21 @@ public class Dbms
                 Log.debug(Log.Dbms.SELECT, "Args  : "+ getArgs(args));
         }
 
-		PreparedStatement stmt = conn.prepareStatement(query);
-
-		if (args != null)
-			for(int i=0; i<args.length; i++)
-				setObject(stmt, i, args[i]);
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
 
 		try
 		{
+		    stmt = conn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    setObject(stmt, i, args[i]);
+                }
+            }
 			long start = System.currentTimeMillis();
-			Element result = buildResponse(stmt.executeQuery(), formats);
+            resultSet = stmt.executeQuery();
+			
+            Element result = buildResponse(resultSet, formats);
 			long end = System.currentTimeMillis();
 
 			float time = end - start;
@@ -223,7 +228,15 @@ public class Dbms
 		}
 		finally
 		{
-			stmt.close();
+		    try {
+		        if (resultSet != null) {
+		            resultSet.close();
+		        }
+		    } finally {
+    			if(stmt != null) {
+    			    stmt.close();
+    			}
+		    }
 		}
 	}
 
@@ -254,14 +267,16 @@ public class Dbms
                 Log.debug(Log.Dbms.EXECUTE, "Args     : "+ getArgs(args));
         }
 
-		PreparedStatement stmt = conn.prepareStatement(query);
-
-		if (args != null)
-			for(int i=0; i<args.length; i++)
-				setObject(stmt, i, args[i]);
-
+		PreparedStatement stmt = null;
 		try
 		{
+		    stmt = conn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    setObject(stmt, i, args[i]);
+                }
+            }
+
 			long start = System.currentTimeMillis();
 			int result = stmt.executeUpdate();
 			long end = System.currentTimeMillis();
@@ -275,7 +290,9 @@ public class Dbms
 		}
 		finally
 		{
-			stmt.close();
+			if(stmt != null) { 
+			    stmt.close();
+			}
 		}
 	}
 
@@ -299,7 +316,7 @@ public class Dbms
 		for (int i = 0; i < colNum; i++)
 		{
 			vHeaders.add(md.getColumnLabel(i + 1).toLowerCase());
-			vTypes.add(new Integer(md.getColumnType(i + 1)));
+			vTypes.add(Integer.valueOf(md.getColumnType(i + 1)));
 		}
 
 		//--- build the jdom tree

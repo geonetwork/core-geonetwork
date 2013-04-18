@@ -30,7 +30,7 @@ package jeeves.constants;
 
 public class Profiles
 {
-	public final class Elem
+	public static final class Elem
 	{
 		/**
        * Default constructor.
@@ -44,7 +44,7 @@ public class Profiles
 
 	//--------------------------------------------------------------------------
 
-	public final class Attr
+	public static final class Attr
 	{
 		/**
        * Default constructor.

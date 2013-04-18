@@ -28,9 +28,12 @@ import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Map;
 
 //=============================================================================
 
@@ -43,11 +46,11 @@ public class BasicContext
 	private ProviderManager provMan;
 	private SerialFactory   serialFact;
 
-	protected Logger logger;
+	protected Logger logger = Log.createLogger(Log.JEEVES);
 	private   String baseUrl;
 	private   String appPath;
 
-	protected Hashtable<String, Object> htContexts;
+	protected Map<String, Object> htContexts;
     private MonitorManager monitorManager;
     private final JeevesApplicationContext jeevesApplicationContext;
 
@@ -57,7 +60,7 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Map<String, Object> contexts)
 	{
 		resMan = new ResourceManager(mm, pm);
 
@@ -65,7 +68,7 @@ public class BasicContext
         this.monitorManager = mm;
 		provMan    = pm;
 		serialFact = sf;
-		htContexts = contexts;
+		htContexts = Collections.unmodifiableMap(contexts);
 	}
 
 	//--------------------------------------------------------------------------

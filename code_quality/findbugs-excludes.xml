@@ -7,7 +7,23 @@
 	<Match>
 		<Class name="~.*\..*Test" />
 	</Match>
-<!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
+  <Match>
+		<Class name="~org\.fao\.geonet\..*" />
+	</Match>
+  <Match>
+		<Class name="~org\.geonetwork\..*" />
+	</Match>
+	<Match>
+		<Class name="jeeves.server.JeevesEngine" />
+    <Method name="setDBServicesElement" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+	</Match>
+ 	<Match>
+		<Class name="jeeves.server.dispatchers.ServiceManager" />
+    <Method name="dispatch" />
+		<Bug pattern="BC_UNCONFIRMED_CAST" />
+	</Match>
+  <!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
 	<Match>
 		<Class name="~org\.fao\.geonet\..*" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />

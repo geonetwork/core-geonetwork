@@ -58,7 +58,7 @@ public class Remove extends NotInReadOnlyModeService {
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		int iId = new Integer(id);
+		int iId = Integer.valueOf(id);
 		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId=?";
 
 		List<Element> reindex = dbms.select(query, iId).getChildren();

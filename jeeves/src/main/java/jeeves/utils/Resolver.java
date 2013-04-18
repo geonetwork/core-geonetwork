@@ -40,7 +40,6 @@ import java.util.Vector;
 public final class Resolver implements ProxyInfoObserver
 {
 
-	private Resolver resolver;
 	private ProxyInfo proxyInfo;
 	private XmlResolver xmlResolver;
 	private CatalogResolver catResolver;
@@ -145,7 +144,7 @@ public final class Resolver implements ProxyInfoObserver
 		beforeWrite();
 		try {
 			this.proxyInfo = proxyInfo;
-			ProxyParams proxyParams = proxyInfo.getProxyParams();
+			proxyInfo.getProxyParams();  // call to initialize
 			setUpXmlResolver();
 		} finally {
 			afterWrite();

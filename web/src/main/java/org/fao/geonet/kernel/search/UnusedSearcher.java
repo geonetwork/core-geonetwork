@@ -171,7 +171,7 @@ class UnusedSearcher extends MetaSearcher
 	{
 		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		Element record = (Element) list.get(0);
 

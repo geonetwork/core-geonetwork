@@ -187,7 +187,7 @@ public class ShibLogin extends NotInReadOnlyModeService
             } else {
                 String gi = ((Element) list.get(0)).getChildText("id");
 
-                groupId = new Integer(gi).intValue();
+                groupId = Integer.valueOf(gi).intValue();
             }
         }
 		//--- update user information into the database

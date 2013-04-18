@@ -372,11 +372,11 @@ public class Importer {
 
 				if (rating != null)
 					dbms.execute("UPDATE Metadata SET rating=? WHERE id=?",
-							new Integer(rating), iId);
+							Integer.valueOf(rating), iId);
 
 				if (popularity != null)
 					dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?",
-							new Integer(popularity), iId);
+							Integer.valueOf(popularity), iId);
 
 				dm.setTemplateExt(dbms, iId, isTemplate, null);
 				dm.setHarvestedExt(dbms, iId, null);

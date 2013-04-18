@@ -463,7 +463,7 @@ public class Geonetwork implements ApplicationHandler {
 			String  proxyPort      = settingMan.getValue("system/proxy/port");
 			String  username       = settingMan.getValue("system/proxy/username");
 			String  password       = settingMan.getValue("system/proxy/password");
-			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
 		}
 
         //
@@ -534,9 +534,9 @@ public class Geonetwork implements ApplicationHandler {
             private boolean checkDBWrite() {
                 Dbms dbms = null;
                 try {
-                    Integer testId = new Integer("100000");
+                    Integer testId = Integer.valueOf("100000");
                     dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-                    dbms.execute(INSERT, testId, new Integer("1"), "DBHeartBeat", "Yeah !");
+                    dbms.execute(INSERT, testId, Integer.valueOf("1"), "DBHeartBeat", "Yeah !");
                     dbms.execute(REMOVE, testId);
                     return true;
                 }

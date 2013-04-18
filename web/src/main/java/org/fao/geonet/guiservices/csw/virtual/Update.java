@@ -92,7 +92,7 @@ public class Update implements Service {
             serviceId = String.format("%s",
                     context.getSerialFactory().getSerial(dbms, "Services"));
             query = "INSERT INTO services (id, name, class, description) VALUES (?, ?, ?, ?)";
-            dbms.execute(query, new Integer(serviceId), servicename, classname,
+            dbms.execute(query, Integer.valueOf(serviceId), servicename, classname,
                     servicedescription);
 
             for (Map.Entry<String, String> filter : filters.entrySet()) {
@@ -100,7 +100,7 @@ public class Update implements Service {
                     paramId = String.format("%s", context.getSerialFactory()
                             .getSerial(dbms, "ServiceParameters"));
                     query = "INSERT INTO serviceParameters (id, service, name, value) VALUES (?, ?, ?, ?)";
-                    dbms.execute(query, new Integer(paramId), new Integer(serviceId),
+                    dbms.execute(query, Integer.valueOf(paramId), Integer.valueOf(serviceId),
                             filter.getKey(), filter.getValue());
                 }
             }
@@ -111,28 +111,28 @@ public class Update implements Service {
             for (Map.Entry<String, String> filter : filters.entrySet()) {
 
                 String query = "SELECT * FROM ServiceParameters WHERE service=? AND name=?";
-                Element testParams = dbms.select(query, new Integer(serviceId),
+                Element testParams = dbms.select(query, Integer.valueOf(serviceId),
                         filter.getKey());
 
                 if (testParams.getChildren().size() != 0) {
                     query = "UPDATE serviceParameters SET value=? WHERE service=? AND name=?";
-                    dbms.execute(query, filter.getValue(), new Integer(serviceId),
+                    dbms.execute(query, filter.getValue(), Integer.valueOf(serviceId),
                             filter.getKey());
                 } else {
                     paramId = String.format("%s", context.getSerialFactory()
                             .getSerial(dbms, "ServiceParameters"));
                     query = "INSERT INTO serviceParameters (id, service, name, value) VALUES (?, ?, ?, ?)";
-                    dbms.execute(query, new Integer(paramId), new Integer(serviceId),
+                    dbms.execute(query, Integer.valueOf(paramId), Integer.valueOf(serviceId),
                             filter.getKey(), filter.getValue());
                 }
 
                 query = "UPDATE services SET description=?, name=? WHERE id=?";
-                dbms.execute(query, servicedescription, servicename, new Integer(serviceId));
+                dbms.execute(query, servicedescription, servicename, Integer.valueOf(serviceId));
             }
         }
 
         // launching the service on the fly
-        initService(context, dbms, new Integer(serviceId));
+        initService(context, dbms, Integer.valueOf(serviceId));
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

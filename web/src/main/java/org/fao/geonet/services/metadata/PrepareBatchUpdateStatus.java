@@ -87,7 +87,7 @@ public class PrepareBatchUpdateStatus implements Service
 			//--- check access, if owner then process 
 			
 			if (am.isOwner(context, id)) {
-				ids.add(new Integer(id));
+				ids.add(Integer.valueOf(id));
 			}
 		}
 		}

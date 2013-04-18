@@ -71,7 +71,7 @@ public class Update extends NotInReadOnlyModeService
 		}
 		else 	//--- For Update
 		{
-			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, new Integer(id));
+			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, Integer.valueOf(id));
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

@@ -280,7 +280,7 @@ public final class ServiceRequestFactory
 		DiskFileItemFactory fif = new DiskFileItemFactory();
 		ServletFileUpload   sfu = new ServletFileUpload(fif);
 
-    sfu.setSizeMax(maxUploadSize * 1024 * 1024);
+    sfu.setSizeMax(((long)maxUploadSize) * 1024L * 1024L);
 
 		try {
 			for (Object i : sfu.parseRequest(req)) {

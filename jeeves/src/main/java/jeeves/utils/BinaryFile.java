@@ -47,6 +47,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.Charset;
 
 //=============================================================================
 
@@ -211,7 +212,10 @@ public final class BinaryFile
 		if (remove)
 		{
 			String path = response.getAttributeValue("path");
-			new File(path).delete();
+			File file = new File(path);
+            if (!file.delete() && file.exists()) {
+                Log.warning(Log.JEEVES, "["+BinaryFile.class.getName()+"#removeIfTheCase]"+"Unable to remove binary file after sending to user.");
+            }
 		}
 	}
 
@@ -388,7 +392,9 @@ public final class BinaryFile
       int c=checkAck(inScp);
       if(c!='C') break;
       // read '0644 ' from scp
-      inScp.read(buf, 0, 5);
+      if (inScp.read(buf, 0, 5) == -1) {
+          throw new IllegalStateException("Expected 0664 but got nothing");
+      }
 
 			// establish file size from scp
       long filesize=0L;
@@ -404,9 +410,11 @@ public final class BinaryFile
 			// now get file name from scp
       String file=null;
       for(int i=0;;i++) {
-      	inScp.read(buf, i, 1);
+      	if (inScp.read(buf, i, 1) == -1) {
+      	    throw new IllegalStateException("Unable to read file name");
+      	}
       	if(buf[i]==(byte)0x0a) {
-      		file=new String(buf, 0, i);
+      		file=new String(buf, 0, i, Charset.forName("UTF-8"));
       		break;
       	}
       }
@@ -482,8 +490,8 @@ public final class BinaryFile
     throws IOException {
         
         if (sourceLocation.isDirectory()) {
-            if (!targetLocation.exists()) {
-                targetLocation.mkdir();
+            if (!targetLocation.mkdirs() && !targetLocation.exists()) {
+                throw new IOException("Unable to create target directory "+targetLocation);
             }
             
             String[] children = sourceLocation.list();
@@ -492,9 +500,20 @@ public final class BinaryFile
                         new File(targetLocation, children[i]));
             }
         } else {
-            InputStream in = new FileInputStream(sourceLocation);
-            OutputStream out = new FileOutputStream(targetLocation);
-            copy(in, out, true, true);
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = new FileInputStream(sourceLocation);
+                out = new FileOutputStream(targetLocation);
+                copy(in, out, false, false);
+            } finally {
+                if (in != null) {
+                    IOUtils.closeQuietly(in);
+                }
+                if (out != null) {
+                    IOUtils.closeQuietly(out);
+                }
+            }
         }
     }
 	

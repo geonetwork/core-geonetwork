@@ -26,6 +26,8 @@ package jeeves.server.context;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.annotation.CheckForNull;
+
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
@@ -59,6 +61,7 @@ public class ServiceContext extends BasicContext
      *
      * @return the service context set by service context or null if no in an inherited thread
      */
+    @CheckForNull
     public static ServiceContext get() {
         return threadLocalInstance.get();
     }
@@ -94,7 +97,7 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Map<String, Object> contexts)
 	{
 		super(jeevesApplicationContext, mm, pm, sf, contexts);
 

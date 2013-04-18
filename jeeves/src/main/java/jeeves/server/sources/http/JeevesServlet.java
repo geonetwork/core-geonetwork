@@ -49,8 +49,9 @@ import jeeves.utils.Util;
 @SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
+    private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-	private JeevesEngine jeeves = new JeevesEngine();
+	private transient JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
 
 	//---------------------------------------------------------------------------

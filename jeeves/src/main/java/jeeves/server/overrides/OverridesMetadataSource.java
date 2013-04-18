@@ -10,11 +10,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.expression.Expression;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource;
@@ -25,11 +22,9 @@ import org.springframework.security.web.util.RequestMatcher;
 public class OverridesMetadataSource implements FilterInvocationSecurityMetadataSource {
     private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap = new HashMap<RequestMatcher, Collection<ConfigAttribute>>();
     private FilterInvocationSecurityMetadataSource baseSource;
-    private SpelExpressionParser parser;
 
     public OverridesMetadataSource(FilterInvocationSecurityMetadataSource metadataSource) {
         this.baseSource = metadataSource;
-        this.parser = new SpelExpressionParser();
     }
 
     

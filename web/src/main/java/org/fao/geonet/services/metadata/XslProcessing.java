@@ -174,9 +174,9 @@ public class XslProcessing extends NotInReadOnlyModeService {
         MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
         if (info == null) {
-            notFound.add(new Integer(id));
+            notFound.add(Integer.valueOf(id));
         } else if (!accessMan.canEdit(context, id)) {
-            notEditable.add(new Integer(id));
+            notEditable.add(Integer.valueOf(id));
         } else {
 
             // -----------------------------------------------------------------------
@@ -187,7 +187,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
             File xslProcessing = new File(filePath);
             if (!xslProcessing.exists()) {
                 context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-                notProcessFound.add(new Integer(id));
+                notProcessFound.add(Integer.valueOf(id));
                 return null;
             }
             // --- Process metadata
@@ -226,7 +226,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
                 }
             }
 
-            metadata.add(new Integer(id));
+            metadata.add(Integer.valueOf(id));
 
             return processedMetadata;
         }

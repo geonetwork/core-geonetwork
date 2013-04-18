@@ -130,7 +130,7 @@ public class Download implements Service
 				query.append("AND    oa.metadataId = ? ");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString(), new Integer(id));
+				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
 
 				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
 				{

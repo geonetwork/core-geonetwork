@@ -180,9 +180,9 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			MdInfo info = dataMan.getMetadataInfo(dbms, id);
 	
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 				extractSubtemplates(context, dataMan, dbms, id, category, xpath, getTit, xpathTit, doChanges, metadata, subtemplates, response); 	
 			}
@@ -326,7 +326,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			boolean validate = false, ufo = false, indexImmediate = false;
 			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true); 
 
-			metadata.add(new Integer(id));
+			metadata.add(Integer.valueOf(id));
 		}
 		
 	}

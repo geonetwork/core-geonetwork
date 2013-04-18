@@ -156,7 +156,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             // Retrieve contact data from users table
             String contactId = gc.getSettingManager().getValue("system/csw/contactId");
             if ((contactId == null) || (contactId.equals(""))) contactId = "-1";
-            Element contact = dbms.select("SELECT * FROM Users WHERE id = ?", new Integer(contactId));
+            Element contact = dbms.select("SELECT * FROM Users WHERE id = ?", Integer.valueOf(contactId));
 
             substitute(context, capabilities, cswCapabilitiesInfo,  contact.getChild("record"), currentLanguage);
 

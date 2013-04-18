@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -162,15 +163,15 @@ public class ConfigurationOverrides {
         REPLACETEXT;
     }
 
-    static String LOGFILE_XPATH = "logging/logFile";
-    public static String OVERRIDES_KEY = "jeeves.configuration.overrides.file";
-    private static String ATTNAME_ATTR_NAME = "attName";
-    private static String VALUE_ATTR_NAME = "value";
-    private static String XPATH_ATTR_NAME = "xpath";
-    private static String FILE_NODE_NAME = "file";
-    private static String TEXT_FILE_NODE_NAME = "textFile";
-    private static String FILE_NAME_ATT_NAME = "name";
-    private static Pattern PROP_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
+    static final String LOGFILE_XPATH = "logging/logFile";
+    public static final String OVERRIDES_KEY = "jeeves.configuration.overrides.file";
+    private static final String ATTNAME_ATTR_NAME = "attName";
+    private static final String VALUE_ATTR_NAME = "value";
+    private static final String XPATH_ATTR_NAME = "xpath";
+    private static final String FILE_NODE_NAME = "file";
+    private static final String TEXT_FILE_NODE_NAME = "textFile";
+    private static final String FILE_NAME_ATT_NAME = "name";
+    private static final Pattern PROP_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
     private static final Filter ELEMENTS_FILTER = new Filter() {
         public boolean matches(Object obj) {
             return obj instanceof Element;
@@ -651,9 +652,10 @@ public class ConfigurationOverrides {
 
         public final String loadStringResource(String resource) throws JDOMException, IOException {
             InputStream in = loadInputStream(resource);
+            BufferedReader reader = null;
             if (in != null) {
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
                     StringBuilder data = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
@@ -661,7 +663,10 @@ public class ConfigurationOverrides {
                     }
                     return data.toString();
                 } finally {
-                    in.close();
+                    IOUtils.closeQuietly(in);
+                    if(reader != null) {
+                        IOUtils.closeQuietly(reader);
+                    }
                 }
             } else {
                 return null;
@@ -857,7 +862,7 @@ public class ConfigurationOverrides {
                         	if(file.exists()) {
                         		in = new FileInputStream(file);
                         	} else {
-                        		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource: " + url + ".  Perhaps a leading / was forgotten?");
+                        		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
                         	}
                         }
                     } else {

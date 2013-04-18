@@ -83,7 +83,7 @@ public class InfoUpdate extends NotInReadOnlyModeService {
 
 		dbms.execute (query, surname, name,
 									address, city, state, zip, country, email,
-									organ, kind, new Integer(userId));
+									organ, kind, Integer.valueOf(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

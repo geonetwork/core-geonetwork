@@ -179,7 +179,7 @@ public class LocalLib
 
 	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
 	{
-		return retrieve(dbms, table, id, null, null, new Integer(id));
+		return retrieve(dbms, table, id, null, null, Integer.valueOf(id));
 	}
 
 	//-----------------------------------------------------------------------------

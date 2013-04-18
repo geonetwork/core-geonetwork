@@ -78,7 +78,7 @@ public class Remove extends NotInReadOnlyModeService {
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 			if (myProfile.equals("UserAdmin")) {
-				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", new Integer(myUserId), iId);
+				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", Integer.valueOf(myUserId), iId);
 				if (admin.getChildren().size() == 0) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
 				}

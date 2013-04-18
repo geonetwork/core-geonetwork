@@ -125,9 +125,9 @@ public class List implements Service
 		if (profile.equals(ProfileManager.ADMIN)) {
 			groups = dbms.select("SELECT id FROM Groups");
 		} if (profile.equals(Geonet.Profile.USER_ADMIN)) {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", new Integer(id));
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", Integer.valueOf(id));
 		} else {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 		}
 
 		java.util.List<Element> list = groups.getChildren();
