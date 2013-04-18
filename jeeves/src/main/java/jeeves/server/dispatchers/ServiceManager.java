@@ -514,7 +514,7 @@ public class ServiceManager
 				req.write(SOAPUtil.embedExc(error, sender, id, message));
 			}
 
-			else if (input == InputMethod.XML || output == OutputMethod.XML || srvInfo == null)
+			else if (input == InputMethod.XML || output == OutputMethod.XML)
 			{
 				req.setStatusCode(code);
 				req.beginStream("application/xml; charset=UTF-8", cache);
