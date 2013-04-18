@@ -7,6 +7,8 @@ web/src/main/webapp/images/logos/*
 web/logs/
 web/jcs_caching/
 geonetwork*.db
+geonetwork-*
+changes-*
 web/coverage.ec
 */target/
 web/src/main/webapp/data/
