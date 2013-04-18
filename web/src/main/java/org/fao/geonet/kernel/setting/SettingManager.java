@@ -419,7 +419,7 @@ public class SettingManager
 		if (value == null || value.trim().length() == 0)
 			return null;
 
-		return new Integer(value);
+		return Integer.valueOf(value);
 	}
 
 	//---------------------------------------------------------------------------

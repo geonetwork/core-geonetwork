@@ -152,7 +152,7 @@ public class DownloadArchive implements Service
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
-			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",new Integer(userId));
+			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",Integer.valueOf(userId));
 			if (elUser.getChild("record") != null) {
 				userDetails.addContent(elUser.getChild("record").cloneContent());
 			}
@@ -390,7 +390,7 @@ public class DownloadArchive implements Service
 				query.append("AND    oa.metadataId = ?");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString(), new Integer(id));
+				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
 
 				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); ) {
 					Element group = (Element)i.next();

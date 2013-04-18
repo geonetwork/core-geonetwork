@@ -455,51 +455,56 @@ public class XmlRequest
 
 	private String getSentData(HttpMethodBase httpMethod)
 	{
-		String sentData = httpMethod.getName() +" "+ httpMethod.getPath();
+        StringBuilder sentData = new StringBuilder(httpMethod.getName()).append(" ").append(httpMethod.getPath());
 
-		if (httpMethod.getQueryString() != null)
-			sentData += "?"+ httpMethod.getQueryString();
+		if (httpMethod.getQueryString() != null) {
+			sentData.append("?"+ httpMethod.getQueryString());
+		}
 
-		sentData += "\r\n";
+		sentData.append("\r\n");
 
-		for (Header h : httpMethod.getRequestHeaders())
-			sentData += h;
+		for (Header h : httpMethod.getRequestHeaders()) {
+			sentData.append(h);
+		}
 
-		sentData += "\r\n";
+		sentData.append("\r\n");
 
-		if (httpMethod instanceof PostMethod)
-			sentData += postData;
+		if (httpMethod instanceof PostMethod) {
+			sentData.append(postData);
+		}
 
-		return sentData;
+		return sentData.toString();
 	}
 
 	//---------------------------------------------------------------------------
 
 	private String getReceivedData(HttpMethodBase httpMethod, byte[] response)
 	{
-		String receivedData = "";
+		StringBuilder receivedData = new StringBuilder();
 
 		try
 		{
 			//--- if there is a connection error (the server is unreachable) this
 			//--- call causes a NullPointerEx
 
-			receivedData = httpMethod.getStatusText() +"\r\r";
+			receivedData.append(httpMethod.getStatusText()).append("\r\r");
 
-			for (Header h : httpMethod.getResponseHeaders())
-				receivedData += h;
+			for (Header h : httpMethod.getResponseHeaders()) {
+				receivedData.append(h);
+			}
 
-			receivedData += "\r\n";
+			receivedData.append("\r\n");
 
-			if (response != null)
-				receivedData += new String(response, "UTF8");
+			if (response != null) {
+				receivedData.append(new String(response, "UTF8"));
+			}
 		}
 		catch (Exception e)
 		{
-			receivedData = "";
+			receivedData.setLength(0);
 		}
 
-		return receivedData;
+		return receivedData.toString();
 	}
 
 	//---------------------------------------------------------------------------

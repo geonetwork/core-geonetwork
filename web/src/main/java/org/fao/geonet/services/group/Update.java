@@ -74,7 +74,7 @@ public class Update extends NotInReadOnlyModeService {
 		{
 			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
 
-			dbms.execute(query, name, descr, email, new Integer(id));
+			dbms.execute(query, name, descr, email, Integer.valueOf(id));
 
 			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
 		}

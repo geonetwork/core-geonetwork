@@ -140,7 +140,7 @@ public class HarvesterHistoryDao {
 		int nrRecs = 0; 
 		for (Element id : ids) {
 			dbms.execute("DELETE from HarvestHistory "
-		    	+        "WHERE id = ?", new Integer(id.getText()));
+		    	+        "WHERE id = ?", Integer.valueOf(id.getText()));
 			nrRecs++;
 			dbms.commit();
 		}

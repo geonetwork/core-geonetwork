@@ -95,7 +95,7 @@ public class GetByOwner implements Service {
 
         Element result;
 				if (useOwnerId) {
-					result = dbms.select(query, new Integer(ownerId));
+					result = dbms.select(query, Integer.valueOf(ownerId));
 				} else {
 					result = dbms.select(query);
 				}

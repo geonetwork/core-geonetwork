@@ -145,7 +145,7 @@ public abstract class XmlSerializer {
      */
 	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element select = dbms.select(query, new Integer(id));
+		Element select = dbms.select(query, Integer.valueOf(id));
 		Element record = select.getChild(Jeeves.Elem.RECORD);
 
 		if (record == null)
@@ -290,7 +290,7 @@ public abstract class XmlSerializer {
 		if (groupOwner != null) {
 			fields.append(", groupOwner");
 			values.append(", ?");
-			args.add(new Integer(groupOwner));
+			args.add(Integer.valueOf(groupOwner));
 		}
 
 		if (title != null)
@@ -350,7 +350,7 @@ public abstract class XmlSerializer {
 
 		fixCR(xml);
 		String metadata = Xml.getString(xml);
-		int metadataId = new Integer(id);
+		int metadataId = Integer.valueOf(id);
 		
         if (updateDateStamp)  {
             if (changeDate == null)	{
@@ -387,7 +387,7 @@ public abstract class XmlSerializer {
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
 		String query = "DELETE FROM " + table + " WHERE id=?";
-		dbms.execute(query, new Integer(id));
+		dbms.execute(query, Integer.valueOf(id));
 	}
 
     /**

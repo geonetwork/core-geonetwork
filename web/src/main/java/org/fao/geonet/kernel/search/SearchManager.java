@@ -981,7 +981,7 @@ public class SearchManager {
 					continue;
 				}
 				if (hasxlinks.trim().equals("1")) {
-					docs.add(new Integer(id));
+					docs.add(Integer.valueOf(id));
 				}
 			}
 			return docs;

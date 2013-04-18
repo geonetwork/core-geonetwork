@@ -107,7 +107,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                 // Added support for proxy
                 if (proxyHost != null && proxyPort != null) {
-                    client.getHostConfiguration().setProxy(proxyHost, new Integer(proxyPort));
+                    client.getHostConfiguration().setProxy(proxyHost, Integer.valueOf(proxyPort));
                 }
 
                 httpGet = new GetMethod(url);
@@ -198,7 +198,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                 // Added support for proxy
                 if (proxyHost != null && proxyPort != null){
-                    client.getHostConfiguration().setProxy(proxyHost, new Integer(proxyPort));
+                    client.getHostConfiguration().setProxy(proxyHost, Integer.valueOf(proxyPort));
                 }
 
                 httpPost.setRequestBody(body);

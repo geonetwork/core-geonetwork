@@ -26,6 +26,8 @@ package jeeves.utils;
 import jeeves.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -70,6 +72,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.Method;
@@ -96,7 +99,7 @@ import java.util.UUID;
 public final class Xml 
 {
 
-	public static Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+	public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 
    //--------------------------------------------------------------------------
 
@@ -182,10 +185,10 @@ public final class Xml
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST"); 
 			connection.setRequestProperty("Content-Type", "application/xml");
-			connection.setRequestProperty("Content-Length", "" + Integer.toString(getString(xmlQuery).getBytes().length));
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(getString(xmlQuery).getBytes("UTF-8").length));
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setDoOutput(true);
-			PrintWriter out = new PrintWriter(connection.getOutputStream()); 
+			PrintStream out = new PrintStream(connection.getOutputStream(), true, "UTF-8"); 
 			out.print(getString(xmlQuery));
 			out.close();
 
@@ -242,7 +245,11 @@ public final class Xml
      */
 
 	public synchronized static byte[] convertFileToUTF8ByteArray(File file) throws IOException, CharacterCodingException {
-			DataInputStream inStream = new DataInputStream(new FileInputStream(file));
+	        FileInputStream in = null;
+			DataInputStream inStream = null;
+			try {
+                in = new FileInputStream(file);
+                inStream = new DataInputStream(in);
 			byte[] buf = new byte[(int)file.length()];
 			int nrRead = inStream.read(buf);
 		
@@ -259,6 +266,14 @@ public final class Xml
 				}
 			} 
 			return buf;
+			} finally {
+			    if(in != null) {
+			        IOUtils.closeQuietly(in);
+			    }
+			    if (inStream != null) {
+			        IOUtils.closeQuietly(inStream);
+			    }
+			}
 	}
 
 	//--------------------------------------------------------------------------
@@ -508,8 +523,8 @@ public final class Xml
 		} finally {
 			Transformer t = transFact.newTransformer(srcSheet);
 			if (params != null) {
-				for (String param : params.keySet()) {
-					t.setParameter(param,params.get(param));
+				for (Map.Entry<String,String> param : params.entrySet()) {
+					t.setParameter(param.getKey(),param.getValue());
 				}
 			}
 			t.transform(srcXml, result);

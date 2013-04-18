@@ -77,7 +77,7 @@ public class Groups implements Service
 								"FROM OperationAllowed, Metadata "+
 								"WHERE metadataId = id AND groupId=? AND owner=?";
 
-			List   list  = dbms.select(query, new Integer(groupId), id).getChildren();
+			List   list  = dbms.select(query, Integer.valueOf(groupId), id).getChildren();
 			String size  = ((Element)list.get(0)).getChildText("cnt");
 
 			if (Integer.parseInt(size) != 0)
@@ -109,7 +109,7 @@ public class Groups implements Service
 				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
 									" WHERE (groupId=? AND usergroups.profile != 'RegisteredUser') OR users.profile = 'Administrator'";
 
-				Element editors = dbms.select(query, new Integer(groupId));
+				Element editors = dbms.select(query, Integer.valueOf(groupId));
 
 				for (Object o : editors.getChildren())
 				{

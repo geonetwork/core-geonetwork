@@ -187,7 +187,7 @@ public class AccessManager {
 		query.append(groupList.toString());
 		query.append(") AND  metadataId = ?");
 		
-		Element operations = dbms.select(query.toString(), new Integer(mdId));
+		Element operations = dbms.select(query.toString(), Integer.valueOf(mdId));
 
 		// find out what they could do if they registered and offer that as as a separate element
 		if (!usrSess.isAuthenticated()) {
@@ -197,7 +197,7 @@ public class AccessManager {
 			query.append("WHERE  groupId = -1 ");
 			query.append("AND    metadataId = ?");
 			
-			Element therecords = dbms.select(query.toString(), new Integer(mdId));
+			Element therecords = dbms.select(query.toString(), Integer.valueOf(mdId));
 			if (therecords != null) {
 				Element guestOperations = new Element("guestoperations");
 				guestOperations.addContent(therecords.cloneContent());
@@ -287,7 +287,7 @@ public class AccessManager {
 		Set<String> hs = new HashSet<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
-		List   list = dbms.select(query, new Integer(userId)).getChildren();
+		List   list = dbms.select(query, Integer.valueOf(userId)).getChildren();
 
 		//--- return an empty list if the user does not exist
 
@@ -302,7 +302,7 @@ public class AccessManager {
 			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
 		}
         else {
-			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", new Integer(userId));
+			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", Integer.valueOf(userId));
 		}
 
 		for(Object o : elUserGrp.getChildren()) {
@@ -448,7 +448,7 @@ public class AccessManager {
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
         // group 'all' has the magic id 1.
         String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
-        Element result = dbms.select(query, new Integer(metadataId));
+        Element result = dbms.select(query, Integer.valueOf(metadataId));
         if(result == null) {
             return false;
         }

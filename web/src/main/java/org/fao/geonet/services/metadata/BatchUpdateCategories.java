@@ -90,9 +90,9 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 				//--- remove old operations
@@ -108,7 +108,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 					if (name.startsWith("_"))
 						dm.setCategory(context, dbms, id, name.substring(1));
 				}
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}

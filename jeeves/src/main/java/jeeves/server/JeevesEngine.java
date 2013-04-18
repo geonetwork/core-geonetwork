@@ -69,6 +69,7 @@ import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -195,7 +196,6 @@ public class JeevesEngine
 
             // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
             jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-            profileManager.setApplicationContext(jeevesAppContext);
             jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
             jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
 
@@ -247,6 +247,7 @@ public class JeevesEngine
     private void setupXSLTTransformerFactory(JeevesServlet servlet) throws IOException, TransformerConfigurationException {
     	
     	InputStream in = null;
+    	BufferedReader br = null;
     	// In debug mode, Jeeves may load a different file
     	// Load javax.xml.transform.TransformerFactory from application path instead
     	if(servlet != null) {
@@ -259,16 +260,15 @@ public class JeevesEngine
         try {
             
             if(in != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
                 String line;
                 while ((line = br.readLine()) != null)   {
-                    if(line == null || line.length() == 0) {
+                    if(line.length() == 0) {
                         warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
                     }
                     TransformerFactoryFactory.init(line);
                     break;
                 }
-                in.close();
             }
         }
         catch(IOException x) {
@@ -281,8 +281,9 @@ public class JeevesEngine
             x.printStackTrace();
         }
         finally {
-            if(in != null) {
-                in.close();
+            IOUtils.closeQuietly(in);
+            if(br != null) {
+                IOUtils.closeQuietly(br);
             }
         }
     }
@@ -408,13 +409,16 @@ public class JeevesEngine
             error("   Stack     : " +Util.getStackTrace(e));
 	    }
 
-		if (!new File(uploadDir).isAbsolute())
+		File uploadDirFile = new File(uploadDir);
+        if (!uploadDirFile.isAbsolute())
 			uploadDir = appPath + uploadDir;
 
 		if (!uploadDir.endsWith("/"))
 			uploadDir += "/";
 
-		new File(uploadDir).mkdirs();
+		if( !uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
+		    throw new RuntimeException("Unable to make upload directory: "+uploadDirFile);
+		}
 
 		debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
 

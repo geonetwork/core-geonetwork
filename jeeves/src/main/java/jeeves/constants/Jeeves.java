@@ -49,7 +49,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Prefix
+	public static final class Prefix
 	{
 		/**
 		 * Default constructor.
@@ -66,7 +66,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Elem
+	public static final class Elem
 	{
 		/**
        * Default constructor.
@@ -102,7 +102,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Text
+	public static final class Text
 	{
 		/**
        * Default constructor.
@@ -124,7 +124,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Attr
+	public static final class Attr
 	{
 		/**
        * Default constructor.
@@ -147,7 +147,7 @@ public final class Jeeves
 
 		//--- values of the 'id' attribute in the error element
 
-		public final class Id
+		public static final class Id
 		{
 			/**
           * Default constructor.
@@ -160,7 +160,7 @@ public final class Jeeves
 
 		//--- values of the type's attribute
 
-		public final class Type
+		public static final class Type
 		{
 			/**
           * Default constructor.
@@ -181,7 +181,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Path
+	public static final class Path
 	{
 		/**
        * Default constructor.
@@ -200,7 +200,7 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public final class Config
+	public static final class Config
 	{
 		/**
        * Default constructor.
@@ -230,9 +230,9 @@ public final class Jeeves
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Res
+	public static class Res
 	{
-		public final class Pool
+		public static final class Pool
 		{
 			/**
           * Default constructor.
@@ -271,7 +271,7 @@ public final class Jeeves
 	//--------------------------------------------------------------------------
 	//--- xml parameters for modules
 
-	public final class Param
+	public static final class Param
 	{
 		/**
        * Default constructor.

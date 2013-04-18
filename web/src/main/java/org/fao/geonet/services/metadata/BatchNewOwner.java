@@ -89,9 +89,9 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 
 			if (info == null) {
-				notFound.add(new Integer(id));	
+				notFound.add(Integer.valueOf(id));	
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 	 			//-- Get existing owner and privileges for that owner - note that 
@@ -120,7 +120,7 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 				// -- set the new owner into the metadata record
 				dm.updateMetadataOwner(dbms, Integer.parseInt(id), targetUsr, targetGrp);
 
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}
@@ -145,7 +145,7 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
 	{
 
-		Object args[] = { new Integer(id), new Integer(id), new Integer(userId), new Integer(groupId) };
+		Object args[] = { Integer.valueOf(id), Integer.valueOf(id), Integer.valueOf(userId), Integer.valueOf(groupId) };
 		String query = "SELECT * "+
 							"FROM OperationAllowed, Metadata "+
 							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";

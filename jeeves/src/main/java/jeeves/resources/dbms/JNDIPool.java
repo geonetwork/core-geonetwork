@@ -57,7 +57,7 @@ import org.geotools.data.DataStore;
 public class JNDIPool extends AbstractDbmsPool {
 
 	private JDBCDataStore dataStore;
-	private final String unknownParam = "unknown - JNDI data source supplied by container";
+	private static final String unknownParam = "unknown - JNDI data source supplied by container";
 
 	// --------------------------------------------------------------------------
 	// ---

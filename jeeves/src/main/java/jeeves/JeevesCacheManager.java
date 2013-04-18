@@ -34,7 +34,9 @@ public class JeevesCacheManager {
     private static <V> V find(String cacheName, String key, Callable<V> loader) throws Exception {
         Lock lock = getLock(key);
         try {
-            lock.tryLock(30, TimeUnit.SECONDS);
+            if(!lock.tryLock(30, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Timed out trying to get the log for the JeevesCache");
+            }
             JeevesJCS cache = JeevesJCS.getInstance(cacheName);
             
             @SuppressWarnings("unchecked")

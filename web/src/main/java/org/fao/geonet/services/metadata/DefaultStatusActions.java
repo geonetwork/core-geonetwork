@@ -122,7 +122,7 @@ public class DefaultStatusActions implements StatusActions {
 		if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
 			String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
 			unsetAllOperations(id);
-			dm.setStatus(context, dbms, id, new Integer(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
+			dm.setStatus(context, dbms, id, Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
 		}
 		
 	}
@@ -157,7 +157,7 @@ public class DefaultStatusActions implements StatusActions {
 			}
 
 			//--- set status, indexing is assumed to take place later
-			dm.setStatusExt(context, dbms, mid, new Integer(status), changeDate, changeMessage);
+			dm.setStatusExt(context, dbms, mid, Integer.valueOf(status), changeDate, changeMessage);
 		}
 
 

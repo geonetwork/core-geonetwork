@@ -122,7 +122,6 @@
             <xmlOutput>true</xmlOutput>
             <xmlOutput>true</xmlOutput>
             <excludeFilterFile>${rootProjectDir}/code_quality/findbugs-excludes.xml</excludeFilterFile>
-            <includeFilterFile>${rootProjectDir}/code_quality/findbugs-includes.xml</includeFilterFile>
             <debug>false</debug>
             <includeTests>false</includeTests>
           </configuration>

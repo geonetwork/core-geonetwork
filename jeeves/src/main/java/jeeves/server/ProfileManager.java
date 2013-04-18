@@ -34,7 +34,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
 
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.constants.Profiles;
 import jeeves.server.context.ServiceContext;
@@ -50,7 +49,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -65,7 +63,6 @@ public class ProfileManager
 	public static final String ADMIN = "Administrator";
 
 	private Hashtable<String, Element> htProfiles;
-	private JeevesApplicationContext applicationContext;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -268,9 +265,6 @@ public class ProfileManager
 		return false;
 	}
 
-	public void setApplicationContext(JeevesApplicationContext jeevesAppContext) {
-		this.applicationContext = jeevesAppContext;
-	}
 
 	/** 
 	 * Check if bean is defined in the context
@@ -309,7 +303,7 @@ public class ProfileManager
 		
 		FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
 		for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
-	    	if(securityInterceptor == null || context == null) return true;
+	    	if(securityInterceptor == null) return true;
 	    	
 
 	        Collection<ConfigAttribute> attrs = securityInterceptor.obtainSecurityMetadataSource().getAttributes(fi);

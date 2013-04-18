@@ -128,7 +128,7 @@ public class GetAdminOper implements Service
 
 			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
-			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
+			List listAllow = dbms.select(query, Integer.valueOf(id), grpId).getChildren();
 
 			//--- now extend the group list adding proper operations
 

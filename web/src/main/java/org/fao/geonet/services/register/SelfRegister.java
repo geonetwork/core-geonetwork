@@ -138,10 +138,10 @@ public class SelfRegister extends NotInReadOnlyModeService {
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		String passwordHash = PasswordUtil.encode(context, password);
-		dbms.execute(query, new Integer(id), username, passwordHash , surname, name, PROFILE, address,
+		dbms.execute(query, Integer.valueOf(id), username, passwordHash , surname, name, PROFILE, address,
 				city, state, zip, country, email, organ, kind);
 
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", new Integer(id), new Integer(group));
+		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", Integer.valueOf(id), Integer.valueOf(group));
 
 		// Send email to user confirming registration
 

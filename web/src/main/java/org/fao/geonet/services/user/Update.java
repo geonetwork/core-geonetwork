@@ -104,7 +104,7 @@ public class Update extends NotInReadOnlyModeService {
 			//
 			if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
 				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
-					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", new Integer(myUserId));
+					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", Integer.valueOf(myUserId));
 					java.util.List<Element> myGroups = grps.getChildren();
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
@@ -135,7 +135,7 @@ public class Update extends NotInReadOnlyModeService {
 							"address, city, state, zip, country, email, organisation, kind) "+
 							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, new Integer(id), username, PasswordUtil.encode(context, password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
+				dbms.execute(query, Integer.valueOf(id), username, PasswordUtil.encode(context, password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
 
 				setUserGroups(id, profile, params, dbms);
 			}
@@ -146,27 +146,27 @@ public class Update extends NotInReadOnlyModeService {
 				if (operation.equals(Params.Operation.FULLUPDATE)) {
 					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 
-					dbms.execute (query, username, PasswordUtil.encode(context,password), surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, PasswordUtil.encode(context,password), surname, name, profile, address, city, state, zip, country, email, organ, kind, Integer.valueOf(id));
 
 					//--- add groups
 
-					dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+					dbms.execute("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 
 					setUserGroups(id, profile, params, dbms);
 
 			// -- edit user info
 				} else if (operation.equals(Params.Operation.EDITINFO)) {
 					String query = "UPDATE Users SET username=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
+					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, Integer.valueOf(id));
 					//--- add groups
 				
-					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 					setUserGroups(id, profile, params, dbms);
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
 					ServletContext servletContext = context.getServlet().getServletContext();
-					PasswordUtil.updatePasswordWithNew(false, null, password, new Integer(id), servletContext, dbms);
+					PasswordUtil.updatePasswordWithNew(false, null, password, Integer.valueOf(id), servletContext, dbms);
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}
@@ -182,13 +182,13 @@ public class Update extends NotInReadOnlyModeService {
 			Dbms dbms) throws Exception {
 		String[] profiles = {Geonet.Profile.USER_ADMIN, Geonet.Profile.REVIEWER, Geonet.Profile.EDITOR, Geonet.Profile.REGISTERED_USER};
 		java.util.Set<Integer> editingGroups = new java.util.HashSet<Integer>();
-		int userId = new Integer(id);
+		int userId = Integer.valueOf(id);
 		for (String profile : profiles) {
 			java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
 			for(Element userGroup : userGroups) {
 				String group = userGroup.getText();
 				if (!group.equals("")) {
-					int groupId = new Integer(group);
+					int groupId = Integer.valueOf(group);
 					
 					// Combine all groups editor and reviewer groups
 					if (profile.equals(Geonet.Profile.REVIEWER) || profile.equals(Geonet.Profile.EDITOR)) {

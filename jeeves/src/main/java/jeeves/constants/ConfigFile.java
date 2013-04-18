@@ -30,7 +30,7 @@ package jeeves.constants;
 
 public class ConfigFile
 {
-	public final class Child
+	public static final class Child
 	{
 
         /**
@@ -55,9 +55,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class General
+	public static class General
 	{
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -78,9 +78,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Default
+	public static class Default
 	{
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -104,9 +104,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Resources
+	public static class Resources
 	{
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -120,9 +120,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Resource
+	public static class Resource
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -133,7 +133,7 @@ public class ConfigFile
 		   public static final String ENABLED = "enabled";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -150,9 +150,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Activator
+	public static class Activator
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -170,9 +170,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class AppHandler
+	public static class AppHandler
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -190,9 +190,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Schedules
+	public static class Schedules
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -203,7 +203,7 @@ public class ConfigFile
 			public static final String PACKAGE = "package";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -214,8 +214,8 @@ public class ConfigFile
 		   public static final String SCHEDULE = "schedule";
 		}
 	}
-    public class Monitors {
-        public final class Attr
+    public static class Monitors {
+        public static final class Attr
         {
             /**
              * Default constructor.
@@ -227,7 +227,7 @@ public class ConfigFile
             public static final String CLASS = "class";
         }
 
-        public final class Child
+        public static final class Child
         {
             /**
              * Default constructor.
@@ -248,9 +248,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Schedule
+	public static class Schedule
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -263,7 +263,7 @@ public class ConfigFile
 			public static final String WHEN  = "when";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -281,9 +281,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Services
+	public static class Services
 	{
-		public final class Attr
+		public static final class Attr
 		{
 		   /**
 		    * Default constructor.
@@ -294,7 +294,7 @@ public class ConfigFile
 		   public static final String PACKAGE = "package";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -308,9 +308,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Service
+	public static class Service
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -324,7 +324,7 @@ public class ConfigFile
 			public static final String SHEET = "sheet";
 			public static final String CACHE = "cache";
 
-			public final class Type
+			public static final class Type
 			{
 				/**
 				 * Default constructor.
@@ -337,7 +337,7 @@ public class ConfigFile
 			}
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -353,9 +353,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Class
+	public static class Class
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -366,7 +366,7 @@ public class ConfigFile
 		   public static final String NAME = "name";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -380,9 +380,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Param
+	public static class Param
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -397,9 +397,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Output
+	public static class Output
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -415,7 +415,7 @@ public class ConfigFile
 			public static final String CONTENT_TYPE = "contentType";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -430,9 +430,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Error
+	public static class Error
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -446,7 +446,7 @@ public class ConfigFile
 			public static final String STATUS_CODE  = "statusCode";
 		}
 
-		public final class Child
+		public static final class Child
 		{
 			/**
 			 * Default constructor.
@@ -465,9 +465,9 @@ public class ConfigFile
 	//---
 	//--------------------------------------------------------------------------
 
-	public class Xml
+	public static class Xml
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.
@@ -485,9 +485,9 @@ public class ConfigFile
 
 	//--------------------------------------------------------------------------
 
-	public class Call
+	public static class Call
 	{
-		public final class Attr
+		public static final class Attr
 		{
 			/**
 			 * Default constructor.

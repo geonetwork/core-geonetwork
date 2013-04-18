@@ -125,7 +125,7 @@ public class GetStatus implements Service
 		//--- get the list of content reviewers for this metadata record
 
 		Set<Integer> ids = new HashSet<Integer>();
-		ids.add(new Integer(id));
+		ids.add(Integer.valueOf(id));
 
 		Element cRevs = am.getContentReviewers(dbms, ids);
 		cRevs.setName("contentReviewers");

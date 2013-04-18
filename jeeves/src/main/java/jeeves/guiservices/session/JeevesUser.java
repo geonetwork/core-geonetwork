@@ -25,7 +25,7 @@ public class JeevesUser implements UserDetails {
 	private String password;
 	private String kind;
 	private String id;
-	private ProfileManager profileManager;
+	private transient ProfileManager profileManager;
 
 	public JeevesUser(ProfileManager profileManager){
 		this.profileManager = profileManager;

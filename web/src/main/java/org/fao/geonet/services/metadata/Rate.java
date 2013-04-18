@@ -111,7 +111,7 @@ public class Rate extends NotInReadOnlyModeService {
 		
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
-			rating = dm.rateMetadata(dbms, new Integer(id), ip, rating);
+			rating = dm.rateMetadata(dbms, Integer.valueOf(id), ip, rating);
 		else
 		{
 			//--- the metadata is harvested, is type=geonetwork?
@@ -134,7 +134,7 @@ public class Rate extends NotInReadOnlyModeService {
 	{
 		String query = "SELECT harvestUuid FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		//--- if we don't have any metadata, just return
 

@@ -65,7 +65,7 @@ public class BasicContext
         this.monitorManager = mm;
 		provMan    = pm;
 		serialFact = sf;
-		htContexts = contexts;
+		htContexts = new Hashtable<String, Object>(contexts);
 	}
 
 	//--------------------------------------------------------------------------

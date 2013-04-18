@@ -94,9 +94,9 @@ public class BatchDelete extends NotInReadOnlyModeService {
 				MdInfo info = dataMan.getMetadataInfo(dbms, id);
 	
 				if (info == null) {
-					notFound.add(new Integer(id));
+					notFound.add(Integer.valueOf(id));
 				} else if (!accessMan.isOwner(context, id)) {
-					notOwner.add(new Integer(id));
+					notOwner.add(Integer.valueOf(id));
 				} else {
 	
 					//--- backup metadata in 'removed' folder
@@ -112,7 +112,7 @@ public class BatchDelete extends NotInReadOnlyModeService {
 					dataMan.deleteMetadata(context, dbms, id);
                     if(context.isDebug())
                         context.debug("  Metadata with id " + id + " deleted.");
-					metadata.add(new Integer(id));
+					metadata.add(Integer.valueOf(id));
 				}
 			} else
             if(context.isDebug())

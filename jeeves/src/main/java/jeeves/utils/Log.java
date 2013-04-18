@@ -59,7 +59,7 @@ public final class Log
 	public static final String TRANSFORMER_FACTORY = JEEVES
 			+ ".transformerFactory";
 
-    public final class Dbms {
+    public static final class Dbms {
 
         /**
          * Default constructor.

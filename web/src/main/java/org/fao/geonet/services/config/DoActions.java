@@ -101,7 +101,7 @@ public class DoActions implements Service
 			String  proxyPort      = settingMan.getValue("system/proxy/port");
 			String  username       = settingMan.getValue("system/proxy/username");
 			String  password       = settingMan.getValue("system/proxy/password");
-			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
 		}
 
 		// FIXME: should also restart the Z server?
