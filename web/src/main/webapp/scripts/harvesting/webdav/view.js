@@ -61,7 +61,7 @@ function setEmpty()
 	$('wd.url')      .value = '';
 	
 	$('wd.recurse') .checked = false;
-	$('wd.validate').checked = false;
+	$('wd.validate').selectedIndex = 0;
 
 	var icons = $('wd.icon').options;
 	
@@ -113,7 +113,7 @@ function getData()
 	
 	data.URL      = $F('wd.url');
 	data.ICON     = $F('wd.icon');
-	data.VALIDATE = $('wd.validate').checked;
+	data.VALIDATE = $F('wd.validate');
 	data.RECURSE  = $('wd.recurse') .checked;
 	data.SUBTYPE  = $F('wd.subtype');
 	//--- retrieve privileges and categories information

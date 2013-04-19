@@ -58,7 +58,7 @@ this.setEmptyCommon = function()
 	$(prefix+'.oneRunOnly').checked = false;
 
 	new Cron().setUI(prefix);
-	$(prefix+'.validate').checked = false;
+	$(prefix+'.validate').selectedIndex = 0;
 	this.unselectImportXslt();
 
 	this.removeAllGroupRows();
