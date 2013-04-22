@@ -409,15 +409,17 @@ public class JeevesEngine
             error("   Stack     : " +Util.getStackTrace(e));
 	    }
 
-		File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.isAbsolute())
+        if (!new File(uploadDir).isAbsolute())
 			uploadDir = appPath + uploadDir;
 
-		if (!uploadDir.endsWith("/"))
-			uploadDir += "/";
+        if (!uploadDir.endsWith("/"))
+            uploadDir += "/";
 
+		File uploadDirFile = new File(uploadDir);
 		if( !uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
 		    throw new RuntimeException("Unable to make upload directory: "+uploadDirFile);
+		} else {
+		    Log.info(Log.JEEVES, "Upload directory is: "+uploadDir);
 		}
 
 		debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
