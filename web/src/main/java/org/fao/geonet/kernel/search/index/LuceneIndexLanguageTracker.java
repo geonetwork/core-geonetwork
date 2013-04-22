@@ -203,7 +203,9 @@ public class LuceneIndexLanguageTracker {
             throws CorruptIndexException, LockObtainFailedException, IOException {
         open(language);
         // Add taxonomy first
-        taxonomyIndexTracker.addDocument(doc, categories);
+        if (categories.size() > 0) {
+            taxonomyIndexTracker.addDocument(doc, categories);
+        }
         trackingWriters.get(language).addDocument(doc);
     }
 
