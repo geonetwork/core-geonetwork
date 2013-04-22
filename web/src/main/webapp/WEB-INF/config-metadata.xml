@@ -309,17 +309,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.recent.additions.embedded">
-			<output sheet="metadata-recentadditions.xsl">
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-          <param name="maxItems" value="10" />
-          <param name="timeBetweenUpdates" value="10" />
-        </call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="metadata.batch.delete">
 			<class name=".services.metadata.BatchDelete"/>
 

@@ -1351,18 +1351,6 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- RSS services -->
 
-		<service name="rss.latest">
-			<output sheet="rss-latest.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems" value="20" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="rss.search">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
