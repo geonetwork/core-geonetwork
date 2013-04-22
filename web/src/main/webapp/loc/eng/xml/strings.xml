@@ -162,7 +162,8 @@
         <rejectDefaultMsg>Choose another shared object...</rejectDefaultMsg>
     </reusable>
     <deletedSharedObject>
-        <msg>Shared metadata elements have been deleted that affect metadata document(s) that you own.  The complete list of affected metadata objects are listed bellow. Please update the documents listed in this email.</msg>
+        <msg>Mail sent automaticlly.
+        Shared metadata elements have been deleted that affect metadata document(s) that you own. The complete list of affected metadata objects are listed bellow. Please update the documents listed in this email.</msg>
         <subject>Shared object deleted</subject>
     </deletedSharedObject>
     <Shared>Shared</Shared>
