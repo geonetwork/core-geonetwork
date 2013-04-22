@@ -149,6 +149,15 @@
         <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
     </rule>
     
+    <!-- Rule for rss.latest to rss.search?sortBt=changeDate -->
+    <rule>
+        <note>
+            map the old rss.latest service
+        </note>
+        <from>^(.*)/rss.latest(\.*)</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
+    </rule>
+    
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
