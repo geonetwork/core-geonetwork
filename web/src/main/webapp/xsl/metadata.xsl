@@ -345,6 +345,7 @@
 				<xsl:with-param name="schema"   select="$schema"/>
 				<xsl:with-param name="title"    select="$title"/>
 				<xsl:with-param name="text"     select="$text"/>
+				<xsl:with-param name="id"       select="concat($id, '_block')"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
 				<xsl:with-param name="name" select="@name"/>
 				<xsl:with-param name="elemId" select="../geonet:element/@uuid"/>
