@@ -528,10 +528,16 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
             Query templateQ;
-            if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
-                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
-            }
-            else {
+            if (fieldValue != null) {
+                if (fieldValue.contains(OR_SEPARATOR)) {
+                    templateQ = new BooleanQuery();
+                    addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.IS_TEMPLATE, (BooleanQuery) templateQ);
+                } else if (fieldValue.equals("y") || fieldValue.equals("s")) {
+                    templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
+                } else {
+                    templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+                }
+            } else {
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
             }
             query.add(templateQ, templateOccur);
