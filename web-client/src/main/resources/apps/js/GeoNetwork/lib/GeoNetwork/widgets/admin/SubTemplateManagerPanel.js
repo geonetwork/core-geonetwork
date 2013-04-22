@@ -238,8 +238,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     tooltip: OpenLayers.i18n('addTplElTT'),
                     iconCls: 'addIcon',
                     handler: function(){
-                        var metadataType = 's';
-                        GeoNetwork.admin.AdminTools.showImportMetadataWindow(metadataType, OpenLayers.i18n('subTemplateImport'));
+                        GeoNetwork.admin.AdminTools.showImportMetadataWindow('s', OpenLayers.i18n('subTemplateImport'));
                     },
                     scope: this
                 },{
