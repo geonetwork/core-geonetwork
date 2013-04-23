@@ -72,7 +72,80 @@ cat.what = function() {
 	            valueDelimiter: ' or ',
 	            fieldLabel: OpenLayers.i18n('Catalogue')
 	        });
+	        
+            // Radio box
+            var catCookie = cookie.get('cat.searchform.cat');
+            if(catCookie == undefined) {
+                catCookie = 1;
+            }
+            
+            var radioChange = function(radio, checked) {
+                if(radio.boxLabel == 'Sextant') {
+                    categoryTree.setVisible(checked);
+                    categoryTree.setDisabled(!checked);
+                    if(checked) {
+                        cookie.set('cat.searchform.cat', 1);
+                    }
+                }
+                else if(radio.boxLabel == 'INSPIRE') {
+                    themeINSPIREField.setVisible(checked);
+                    themeINSPIREField.setDisabled(!checked);
+                    if(checked){
+                        cookie.set('cat.searchform.cat', 2);
+                    }
+                }
+            };
+            var radioSextant = new Ext.form.Radio({
+                boxLabel: 'Sextant', 
+                name: 'themes', 
+                inputValue: 1,
+                checked: catCookie==1?true:false,
+                listeners: {
+                    check: radioChange
+                }
+            });
+            
+            var radioINSPIRE = new Ext.form.Radio({
+                  boxLabel: 'INSPIRE', 
+                  name: 'themes',
+                  checked: catCookie==2?true:false,
+                  inputValue: 2,
+                  listeners: {
+                      check: radioChange
+                  }
+            });
+            
+	        var radios = new Ext.form.RadioGroup({
+	            columns: 1,
+	            items: [radioSextant,radioINSPIRE],
+	            reset: Ext.emptyFn
+	        });
 			
+	        // INSPIRE theme
+            var themeINSPIREStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+                url : services.opensearchSuggest,
+                rootId : 1,
+                baseParams : {
+                    field : 'inspiretheme'
+                }
+            });
+            var themeINSPIREField = new Ext.ux.form.SuperBoxSelect({
+                hideLabel : false,
+                minChars : 0,
+                queryParam : 'q',
+                hideTrigger : false,
+                id : 'E_inspiretheme',
+                name : 'E_inspiretheme',
+                store : themeINSPIREStore,
+                valueField : 'value',
+                displayField : 'value',
+                valueDelimiter : ' or ',
+                hidden: catCookie==2?false:true,
+                disabled: catCookie==2?false:true,
+                width: 230,
+                fieldLabel : OpenLayers.i18n('inspiretheme')
+            });
+
 	        // Use searchSuggestion to load categories (that way they can be filtered)
 	        var baseParams = {
 				field : '_cat',
@@ -88,19 +161,20 @@ cat.what = function() {
 				rootId : 1,
 				baseParams : baseParams
 			});
-	        
+	
 			var categoryTree = new GeoNetwork.CategoryTree({
 				store : categoryStore,
 				lang: cat.language,
 				storeLabel: GeoNetwork.data.CategoryStore(services.getCategories),
 				rootVisible: false,
 				label: OpenLayers.i18n('Themes'),
-				autoWidth: true
+				autoWidth: true,
+				hidden: catCookie==1?false:true,
+				disabled: catCookie==1?false:true,
 			});
 			
 			var sep1 = createSep();
 			var sep2 = createSep();
-			
 			
 			// reload categoryTree depending on selected catalogs
 			var updateCatTree = function(cb, value, record) {
@@ -128,7 +202,7 @@ cat.what = function() {
 				startwith:true,
 				url: services.opensearchSuggest
 			});
-			advancedFields.push(categoryTree, catalogueField);
+			advancedFields.push(radios, categoryTree, catalogueField, themeINSPIREField);
 			
 			panel = new Ext.Panel({
 				title: OpenLayers.i18n('What'),
@@ -150,7 +224,7 @@ cat.what = function() {
 						});
 					}
 				},
-				items: [searchField, sep1, catalogueField, sep2, categoryTree]
+				items: [searchField, sep1, catalogueField, sep2, radios, themeINSPIREField, categoryTree]
 			});
 		},
 		

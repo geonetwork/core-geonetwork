@@ -151,7 +151,7 @@ GeoNetwork.Lang.fr = {
     'inspireannex': 'Annexe',
     'inspirerelated': 'Données soumises à INSPIRE',
     'inspirerelatedtt': 'Données décrivant un rapport sur la conformité vis-à-vis des spécifications sur les données INSPIRE.',
-    'inspiretheme': 'Thème',
+    'inspiretheme': 'Thèmes',
     'inspireClassificationDataServices': 'INSPIRE classification data services',
     'serviceType': 'Service type',
     'serviceType_discovery': 'Discovery Service (discovery)',

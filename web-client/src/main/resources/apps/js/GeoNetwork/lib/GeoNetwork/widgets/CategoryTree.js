@@ -221,6 +221,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	Ext.each(this.getChecked(), function(node) {
     		node.getUI().toggleCheck(false);
     	});
+    	cookie.set('cat.searchform.categorytree','');
     }
 });
 

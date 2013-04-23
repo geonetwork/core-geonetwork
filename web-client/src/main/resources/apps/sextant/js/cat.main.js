@@ -560,7 +560,7 @@ cat.app = function() {
 
 			cpt.on('advancedmode',function(cpt) {
 				Ext.each(advandcedField,function(item) {
-					item.setVisible(true);
+					item.setVisible(!item.disabled);
 					if(!Ext.isIE) // temp
 					whatForm.body.removeClass('hidden');
 				});
