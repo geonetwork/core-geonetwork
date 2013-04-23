@@ -14,21 +14,25 @@ import org.jdom.JDOMException;
 
 public class AddGroupsToHarvester implements DatabaseMigrationTask {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void update(SettingManager settings, Dbms dbms) throws SQLException {
 		Element element = settings.get("harvesting", -1);
+		Map<String, Object> values = new HashMap<String, Object>();
+		update(element, values, "owner");
+		settings.setValues(dbms, values);
+	}
 
+	@SuppressWarnings("unchecked")
+	private void update(Element element, Map<String, Object> values,
+			String setting) {
 		try {
-			List<Element> sites = (List<Element>) jeeves.utils.Xml.selectNodes(element, "*//site[//group]");
-			Map<String, Object> values = new HashMap<String, Object>();
+			List<Element> sites = (List<Element>) jeeves.utils.Xml.selectNodes(element, "*//site[//"+setting+"]");
 
 			for (Element site : sites) {
 				String id = site.getAttributeValue("id");
-				values.put("id:"+id+"/group", "1");
+				values.put("id:"+id+"/"+setting, "1");
 			}
 
-			settings.setValues(dbms, values);
 		} catch (JDOMException e) {
 			throw new RuntimeException(e);
 		}
