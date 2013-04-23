@@ -120,6 +120,7 @@
 				<version id="110">
 					<file path="WEB-INF/classes/setup/sql/migrate/v110" filePrefix="migrate-" />
 			        <java class="v110.UpdateRDF"/>		    
+			        <java class="v110.AddGroupsToHarvester"/>		    
 				</version>
 			</migrate>		    
         </addXml>
