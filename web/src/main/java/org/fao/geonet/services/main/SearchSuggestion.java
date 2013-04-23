@@ -23,12 +23,9 @@
 
 package org.fao.geonet.services.main;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import jeeves.interfaces.Service;
@@ -42,6 +39,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -74,24 +72,6 @@ public class SearchSuggestion implements Service {
 
     private static final String ORIGIN_ATTR = "origin";
 
-    public class StartsWithComparator implements Comparator<String> {
-        private String prefix = "";
-
-        public StartsWithComparator(String prefix) {
-            this.prefix = prefix;
-        }
-
-        public int startsWith(String str) {
-            return StringUtils.startsWithIgnoreCase(str, prefix) ? -1 : 1;
-        }
-
-        public int compare(String str1, String str2) {
-            return ComparisonChain.start()
-                    .compare(startsWith(str1), startsWith(str2))
-                    .compare(str1, str2).result();
-        }
-    }
-
     /**
      * Max number of term's values to look in the index. For large catalogue
      * this value should be increased in order to get better results. If this
@@ -112,7 +92,45 @@ public class SearchSuggestion implements Service {
     private static String _defaultSearchField = "any";
 
     private ServiceConfig _config;
+    
+    private enum SORT_BY_OPTION {
+        FREQUENCY, ALPHA, STARTSWITHFIRST
+    };
+    
+    /**
+     * Sort a TermFrequency collection by placing element starting with prefix on top
+     * then alphabetical order.
+     */
+    public static class StartsWithComparator implements Comparator<TermFrequency> {
+        private String prefix = "";
 
+        public StartsWithComparator(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public int startsWith(String str) {
+            return StringUtils.startsWithIgnoreCase(str, prefix) ? -1 : 1;
+        }
+
+        public int compare(TermFrequency term1, TermFrequency term2) {
+            return ComparisonChain.start()
+                    .compare(startsWith(term1.getTerm()), startsWith(term2.getTerm()))
+                    .compare(term1.getTerm(), term2.getTerm()).result();
+        }
+    }
+    
+    /**
+     * Sort a TermFrequency collection by decreasing frequency and alphabetical order
+     */
+    public static class FrequencyComparator implements Comparator<TermFrequency> {
+        public int compare(TermFrequency term1, TermFrequency term2) {
+            return ComparisonChain.start()
+                    .compare(term2.getFrequency(), term1.getFrequency())
+                    .compare(term1.getTerm(), term2.getTerm())
+                    .result();
+        }
+    }
+    
     /**
      * Set default parameters
      */
@@ -133,7 +151,7 @@ public class SearchSuggestion implements Service {
         String fieldName = Util.getParam(params, "field", _defaultSearchField);
         // The value to search for
         String searchValue = Util.getParam(params, "q", "");
-        String searchValueWithoutWildcard = searchValue.replaceAll("\\*", "");
+        String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         // Search index term and/or index records
         String origin = Util.getParam(params, "origin", "");
@@ -143,58 +161,45 @@ public class SearchSuggestion implements Service {
         // The minimum frequency for a term value to be proposed in suggestion -
         // only apply while searching terms
         int threshold = Util.getParam(params, "threshold", _threshold);
-
-        boolean startWithFirst = Util.getParam(params, "startwithfirst", false);
-
+        
+        String sortBy = Util.getParam(params, "sortBy", SORT_BY_OPTION.FREQUENCY.toString());
+        
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
-            Log.debug(Geonet.SEARCH_ENGINE, "Autocomplete on field: '"
-                    + fieldName + "'" + "\tsearching: '" + searchValue + "'"
-                    + "\tthreshold: '" + threshold + "'"
-                    + "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'"
-                    + "\tstartwith: '" + startWithFirst + "'" + "\tfrom: '"
-                    + origin + "'");
+            Log.debug(Geonet.SEARCH_ENGINE, 
+                    "Autocomplete on field: '" + fieldName + "'" + 
+                    "\tsearching: '" + searchValue + "'" + 
+                    "\tthreshold: '" + threshold + "'" + 
+                    "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'" + 
+                    "\tsortBy: '" + sortBy + "'" + 
+                    "\tfrom: '" + origin + "'");
         }
-
+        
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getSearchmanager();
         // The response element
         Element suggestionsResponse = new Element("items");
-        List<String> listOfSuggestions = new ArrayList<String>();
-
+        
+        List<SearchManager.TermFrequency> listOfSuggestions = new ArrayList<SearchManager.TermFrequency>();
+        
         // If a field is stored, field values could be retrieved from the index
         // The main advantage is that only values from records visible to the
         // user are returned, because the search filter the results first.
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
             LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(
                     SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-
-            Collection<String> result = searcher.getSuggestionForFields(
+            
+            listOfSuggestions.addAll(searcher.getSuggestionForFields(
                     context, fieldName, searchValue, _config, maxNumberOfTerms,
-                    threshold);
-
-            listOfSuggestions.addAll(result);
+                    threshold));
         }
-
         // No values found from the index records field value ...
         if (origin.equals(INDEX_TERM_VALUES)
                 || (listOfSuggestions.size() == 0 && origin.equals(""))) {
             // If a field is not stored, field values could not be retrieved
-            // In that cas search the index
-            List<SearchManager.TermFrequency> termList = sm.getTermsFequency(
-                    fieldName, searchValue, maxNumberOfTerms, threshold);
-            Collections.sort(termList);
-            Collections.reverse(termList);
-
-            Iterator<SearchManager.TermFrequency> iterator = termList
-                    .iterator();
-            while (iterator.hasNext()) {
-                SearchManager.TermFrequency freq = (SearchManager.TermFrequency) iterator
-                        .next();
-                listOfSuggestions.add(freq.getTerm());
-                // Term frequency not returned :
-                // String.valueOf(freq.getFrequency());
-            }
+            // In that case search the index
+            listOfSuggestions.addAll(sm.getTermsFequency(
+                    fieldName, searchValue, maxNumberOfTerms, threshold));
         }
 
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
@@ -202,24 +207,25 @@ public class SearchSuggestion implements Service {
                     "  Found: " + listOfSuggestions.size()
                             + " suggestions from " + origin + ".");
         }
-
-        // TODO : test sorting with accent, numbers, capital letter
+        
         suggestionsResponse.setAttribute(new Attribute(ORIGIN_ATTR, origin));
-
         
         // Starts with element first
-        if (startWithFirst) {
+        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
             Collections.sort(listOfSuggestions, new StartsWithComparator(
                     searchValueWithoutWildcard));
+        } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
+            // Sort by alpha and frequency
+            Collections.sort(listOfSuggestions);
         } else {
-            Collections.sort(listOfSuggestions, Collator.getInstance());
+            Collections.sort(listOfSuggestions, new FrequencyComparator());
         }
 
-        for (String suggestion : listOfSuggestions) {
+        for (TermFrequency suggestion : listOfSuggestions) {
             Element md = new Element("item");
             // md.setAttribute("term", suggestion.replaceAll("\"",""));
-            md.setAttribute("term", suggestion);
-            md.setAttribute("freq", "");
+            md.setAttribute("term", suggestion.getTerm());
+            md.setAttribute("freq", suggestion.getFrequency() + "");
             suggestionsResponse.addContent(md);
         }
 
