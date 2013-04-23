@@ -119,17 +119,19 @@ public class SearchSuggestion implements Service {
 		// The minimum frequency for a term value to be proposed in suggestion -
 		// only apply while searching terms
 		int threshold = Util.getParam(params, "threshold", _threshold);
+		
+		// if true, return only the matching suggestions which start with q
+		boolean onlyStartWith = Util.getParam(params, "startwith", false);
 
 		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 			Log.debug(Geonet.SEARCH_ENGINE, "Autocomplete on field: '"
 					+ fieldName + "'" + "\tsearching: '" + searchValue + "'"
 					+ "\tthreshold: '" + threshold + "'"
 					+ "\tmaxNumberOfTerms: '" + maxNumberOfTerms + "'"
+					+ "\tstartwith: '" + onlyStartWith + "'"
 					+ "\tfrom: '" + origin + "'"
 					);
 		}
-
-
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getSearchmanager();
@@ -168,6 +170,14 @@ public class SearchSuggestion implements Service {
 				listOfSuggestions.add(freq.getTerm());
 				// Term frequency not returned :
 				// String.valueOf(freq.getFrequency());
+			}
+		}
+		
+		if(onlyStartWith && !searchValue.trim().isEmpty()) {
+			Iterator<String> it = listOfSuggestions.iterator();
+			while( it.hasNext() ) {
+			  String suggest = it.next();
+			  if(!suggest.startsWith(searchValue)) it.remove();
 			}
 		}
 		
