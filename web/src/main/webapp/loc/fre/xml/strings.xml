@@ -148,10 +148,9 @@
         <rejectDefaultMsg>Choisissez un autre objet réutilisable...</rejectDefaultMsg>
     </reusable>
     <deletedSharedObject>
-        <msg>Cher partenaire geocat.ch,
+        <msg>Mail envoyé automatiquement.
 Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
-Merci beaucoup de votre collaboration et meilleures salutations.
-Votre équipe geocat.ch</msg>
+</msg>
         <subject>Objet réutilisable rejeté</subject>
     </deletedSharedObject>
     <Shared>Objet réutilisable</Shared>

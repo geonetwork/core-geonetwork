@@ -153,7 +153,8 @@
         <rejectDefaultMsg>Selezionare un'altro oggetto riutilizzabile...</rejectDefaultMsg>
     </reusable>
     <deletedSharedObject>
-        <msg>Oggetti riutilizzabili utilizzati nei Suoi metadati sono eliminati. La lista completa dei metadati toccati si trova sottostante. Voglia per favore attualizzare questi metadati.</msg>
+        <msg>Messaggio inviato automaticamente.
+    Oggetti riutilizzabili utilizzati nei Suoi metadati sono eliminati. La lista completa dei metadati toccati si trova sottostante. Voglia per favore attualizzare questi metadati.</msg>
         <subject>Oggetto riutilizzabile eliminato</subject>
     </deletedSharedObject>
     <Shared>Oggetti riutilizzabili</Shared>

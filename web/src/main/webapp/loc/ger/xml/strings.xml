@@ -151,10 +151,9 @@
         <rejectDefaultMsg>Wählen Sie ein anderes wiederverwendbares Objekt...</rejectDefaultMsg>
     </reusable>
     <deletedSharedObject>
-        <msg>Lieber geocat.ch-Partner,
+        <msg>Automatisch versendetes E-mail.
 Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgend finden Sie die Liste der betroffenen Metadatensätze und die Begründung der Ablehnung. Wir bitten Sie, diese Metadaten anzupassen und erneut zu publizieren. Nehmen Sie bei Fragen bitte direkt mit uns Kontakt auf geocat@swisstopo.ch.
-Besten Dank für die Zusammenarbeit und Freundliche Grüsse
-Ihr geocat.ch-Team</msg>
+</msg>
         <subject>Wiederverwendbares Objekt entfernt</subject>
     </deletedSharedObject>
     <Shared>Wiederverwendbares Element</Shared>

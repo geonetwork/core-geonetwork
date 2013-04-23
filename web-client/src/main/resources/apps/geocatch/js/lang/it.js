@@ -31,12 +31,16 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'service': 'Services',
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
+	
+	'includearchived': 'Archivi inclusi',
+	'excludearchived': 'Archivi esclusi',
+	'onlyarchived': 'Solo archivi',
 	'owner': 'Proprietario',
 
 	'withinGeo': 'Completamente all interno o uguale' ,
 	'intersectGeo': 'Interseca',
 	'containsGeo': 'Contiene almeno',
-    'Login.error.message': 'Login failed. Check your username and password.',
+    'Login.error.message': 'Login fallito, controllare nome utente e password',
 
     'kantone': 'Cantone',
     'any2': 'Qualunque',
@@ -71,7 +75,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'startNewPolygonHelp' : 'Disegna un nuovo poligono (doppio clic per terminare)',
     'deletePolygonHelp' : 'Annulare o ricominciare un nuovo poligono',
 
-    'changeDate': 'Metadata revision',
+    'changeDate': 'Revisione metadati',
 
     'Search': 'Ricerca',
     'refineSearch': 'Affinare la ricerca',
@@ -89,13 +93,13 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'facetLess' : '- Mostra meno',
     'topicCat' : 'Categoria',
     'topicCats' : 'Categoria',
-    'body': 'Body',
+    'body': 'Corpo',
     'bodyError': 'Error',
-    'subject': 'Subject',
-    'composeMessage': 'Compose Message',
-    'send': 'Send',
-    'cancel': 'Cancel',
-    'nonEmptyField': "Field cannot be empty"
+    'subject': 'Oggetto',
+    'composeMessage': 'Componi messaggio',
+    'send': 'Invia',
+    'cancel': 'Cancella',
+    'nonEmptyField': "In campo non puo essere vuoto"
 
 };
 
