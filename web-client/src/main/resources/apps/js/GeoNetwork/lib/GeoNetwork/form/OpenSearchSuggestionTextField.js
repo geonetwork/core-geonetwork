@@ -90,10 +90,10 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
          * Don't set to true if Lucene field is not analyzed with an Analyzer using a lowerCaseFilter.
          */
         forceLowerCase: true,
-        /** api: config[startWithFirst] 
-         *  ``boolean`` request elements starting with search value on top of the results.
+        /** api: config[sortBy] 
+         *  ``String`` request elements sorting order. FREQUENCY (default), ALPHA, STARTSWITHFIRST
          */
-        startWithFirst: true
+        sortBy: "STARTSWITHFIRST"
     },
     /** api: config[url] 
      * ``String`` OpenSearch suggestion service URL.
@@ -156,7 +156,8 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
             rootId: 1,
             baseParams: {
                 field: this.field,
-                startwithfirst: this.startWithFirst
+//                withFrequency: true, // To display frequency info
+                sortBy: this.sortBy
             }
         });
     }

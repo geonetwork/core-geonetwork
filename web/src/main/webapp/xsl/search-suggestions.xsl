@@ -19,6 +19,7 @@
           <xsl:with-param name="pattern"     select="'&quot;'"/>
           <xsl:with-param name="replacement" select="'\&quot;'"/>
         </xsl:call-template>
+        <xsl:if test="/root/request/withFrequency"> (<xsl:value-of select="@freq"/>)</xsl:if>
       </xsl:variable>
       "<xsl:value-of select="$value"/>" <xsl:if test="position()!=last()"
         >,</xsl:if>
