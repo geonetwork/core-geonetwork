@@ -645,9 +645,12 @@ cat.app = function() {
 	return {
 		init : function() {
 			
+		    var cookiePath = '/';
+		    
 			var gnUrlElt = Ext.query('input[id*=configgeonetwork]');
 			if(gnUrlElt && gnUrlElt.length==1) {
 				GeoNetwork.URL=Ext.get(gnUrlElt[0]).getValue();
+				cookiePath += window.location.href.match(/(.*ifremer.fr.*?\/)(.*)\/catalogue.*/, '')[2]+'';
 			}
 			geonetworkUrl = GeoNetwork.URL || window.location.href.match(/((http).*\/.*)\/apps\/sextant.*/, '')[1];
 			
@@ -662,10 +665,10 @@ cat.app = function() {
 			// Init cookie
 			cookie = new Ext.state.CookieProvider({
 				expires : new Date(new Date().getTime()
-						+ (1000 * 60 * 60 * 24 * 365))
+						+ (1000 * 60 * 60 * 24 * 365)),
+				path: cookiePath
 			});
-			 Ext.state.Manager.setProvider(cookie);
-			 
+			Ext.state.Manager.setProvider(cookie);
 			
 			// Create connexion to the catalogue
 			catalogue = new GeoNetwork.Catalogue({
