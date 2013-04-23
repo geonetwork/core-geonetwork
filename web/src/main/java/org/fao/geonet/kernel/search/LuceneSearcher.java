@@ -353,6 +353,7 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		// To count the number of values added and stop if maxNumberOfTerms reach
 		int counter = 0;
+		String searchValueWithoutWildcard = searchValue.replaceAll("\\*", "");
 		
 		// A collection or a map if threshold is set
 		Collection <String> finalValues = new HashSet<String>();
@@ -368,11 +369,10 @@ public class LuceneSearcher extends MetaSearcher {
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
 		elData.addContent(new Element("fast").addContent("index")).
 		    addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).addContent(Boolean.toString(false)));
-		// FIXME : need more work on LQB
-//		if (!searchValue.equals("")) {
-//			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
-//		// TODO : filter template ?
-//		}
+		
+		if (!searchValue.equals("")) {
+			elData.addContent(new Element(searchField).setText(searchValue));
+		}
 		search(srvContext, elData, config);
 
 		elData.addContent(new Element("from").setText("1"));
@@ -397,7 +397,7 @@ public class LuceneSearcher extends MetaSearcher {
                     String[] values = doc.getValues(searchField);
 
                     for (int j = 0; j < values.length; ++j) {
-                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValue)) {
+                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValueWithoutWildcard)) {
                             if (threshold > 1) {
                                 // Use a map to save values frequency
                                 Integer valueFrequency = finalValuesMap.get(values[j]);

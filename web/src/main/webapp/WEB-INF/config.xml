@@ -465,7 +465,7 @@
 		<service name="main.search.suggest">
 			<class name=".services.main.SearchSuggestion">
 				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
-				<param name="threshold" value="2" />
+				<param name="threshold" value="1" />
 				<!--
 					Max number of term's values to look in the index. For large catalogue
 					this value should be increased in order to get better results. If this
