@@ -181,7 +181,6 @@ public class GeonetworkDataDirectory {
 		
 		if (useDefaultDataDir) {
 			systemDataDir = path + GEONETWORK_DEFAULT_DATA_DIR;
-			systemDataFolder = new File(systemDataDir);
 			Log.warning(Geonet.DATA_DIRECTORY,
 					"    - Data directory provided could not be used. Using default location: "
 							+ systemDataDir);

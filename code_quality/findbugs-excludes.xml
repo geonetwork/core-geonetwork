@@ -8,10 +8,7 @@
 		<Class name="~.*\..*Test" />
 	</Match>
   <Match>
-		<Class name="~org\.fao\.geonet\..*" />
-	</Match>
-  <Match>
-		<Class name="~org\.geonetwork\..*" />
+		<Class name="~org\.fao\.geonet\.[b-z].*" />
 	</Match>
 	<Match>
 		<Class name="jeeves.server.JeevesEngine" />

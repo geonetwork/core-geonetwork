@@ -65,7 +65,7 @@ public class RequestUtil {
 
         InputStream stream = request.getInputStream();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
         StringBuilder sb = new StringBuilder();
         String line = null;
 
