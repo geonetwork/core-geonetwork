@@ -55,6 +55,13 @@ GeoNetwork.Lang.it = {
     'selected': 'selezionato/i',
     'edit': 'Modifica',
     'delete': 'Elimina',
+    'duplicate': 'Duplica',
+    'createChild': 'Crea "figlio"',
+    'privileges': 'Privilegi',
+    'categories': 'Categorie',
+    'newOwner': 'Associa nuovo autore',
+    'updateCategories': 'Aggioma categorie',
+    'updatePrivileges': 'Aggioma privilegi',
     
     
 };
