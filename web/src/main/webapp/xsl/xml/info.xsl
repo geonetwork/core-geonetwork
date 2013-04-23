@@ -159,7 +159,7 @@
 
     <!-- ============================================================================================= -->
 
-    <xsl:template match="readonly">
+    <xsl:template match="readonly|index">
         <xsl:copy-of select="."/>
     </xsl:template>
 
