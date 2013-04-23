@@ -1073,6 +1073,9 @@ public class SearchManager {
 	                                            int threshold) throws Exception {
         List<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
+        String searchValueWithoutWildcard = searchValue.replaceAll("\\*", "");
+        boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
+        
         try {
             GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
             @SuppressWarnings("resource")
@@ -1084,9 +1087,12 @@ public class SearchManager {
                     BytesRef term = termEnum.next();
                     while (term != null && i++ < maxNumberOfTerms) {
                         String text = term.utf8ToString();
-                        if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                            TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                            termList.add(freq);
+                        if (termEnum.docFreq() >= threshold) {
+                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
+                                TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                                termList.add(freq);
+                            }
                         }
                         term = termEnum.next();
                     }

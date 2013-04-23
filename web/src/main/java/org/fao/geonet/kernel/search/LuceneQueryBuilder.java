@@ -816,7 +816,14 @@ public class LuceneQueryBuilder {
 		if (StringUtils.isNotBlank(searchParam)) {
 			if (!_tokenizedFieldSet.contains(luceneIndexField)) {
 				// TODO : use similarity when needed
-				TermQuery termQuery = new TermQuery(new Term(luceneIndexField, searchParam));
+			    Term t = new Term(luceneIndexField, searchParam);
+			    Query termQuery;
+			    if (searchParam.indexOf('*') >= 0 || searchParam.indexOf('?') >= 0) {
+			        termQuery = new WildcardQuery(t);
+			    } else {
+			        termQuery = new TermQuery(t);
+			    }
+				
 				BooleanClause clause = new BooleanClause(termQuery, occur);
 				query.add(clause);
 			}
