@@ -54,7 +54,8 @@ import org.jdom.Element;
 
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
-
+    private static final String INDEX = "index";
+    
     private String xslPath;
 	private String xmlPath;
 	private String otherSheets;
@@ -152,6 +153,8 @@ public class Info implements Service {
 
             else if(type.equals(READ_ONLY))
                 result.addContent(getReadOnly(gc));
+            else if(type.equals(INDEX)) 
+                result.addContent(getIndex(gc));
 			else
 				throw new BadParameterEx("Unknown type parameter value.", type);
 		}
@@ -163,6 +166,17 @@ public class Info implements Service {
         return response;
 	}
 
+   /**
+    * Returns whether GN is in indexing (true or false). 
+    * @param gc 
+    * @return 
+    */ 
+    private Element getIndex(GeonetContext gc) { 
+        Element isIndexing = new Element(INDEX); 
+        isIndexing.setText(Boolean.toString(gc.getDataManager().isIndexing())); 
+        return isIndexing; 
+    }
+    
     /**
      * Returns whether GN is in read-only mode (true or false).
      * @param gc
