@@ -39,19 +39,24 @@ GeoNetwork.Lang.it = {
     'exportCsv': 'Esporta (CSV)',
     'exportZip': 'Esporta (ZIP)',
     'printSel': 'Esporta (PDF)',
-    'getMEF': 'Export (ZIP)',
+    'getMEF': 'Esporta (ZIP)',
     'hitsPerPage': 'Numero per pagina',
     'sortBy': 'Ordina per',
     'otherActions': 'Altre azioni',
     'onSelection': 'On selection',
-    'none': 'none',
-    'all': 'all',
+    'none': 'nessuno',
+    'all': 'tutto',
     'allInPage': 'all in page',
-    'select': 'Select ',
-    'resultBy': ' result(s) / ',
+    'select': 'Seleziona',
+    'resultBy': ' resultati per / ',
     'type': 'Tipo',
     'from': 'da',
     'to': 'a',
+    'selected': 'selezionato/i',
+    'edit': 'Modifica',
+    'delete': 'Elimina',
+    
+    
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
