@@ -174,7 +174,11 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      */
     getSearchedCat: function() {
     	if(!this.loaded) {
-    		return cookie.get('cat.searchform.categorytree');
+    	    var treeCookie = cookie.get('cat.searchform.categorytree');
+    	    if(treeCookie) {
+    	        return treeCookie;
+    	    }
+    	    else return '';
     	}
     	
     	var selNodes = this.getChecked();
