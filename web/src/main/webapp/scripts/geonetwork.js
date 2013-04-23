@@ -24,20 +24,6 @@ var Browser = {
   }
 };
 
-if (Browser.Version() >= 9) {
-	if (typeof Range.prototype.createContextualFragment == "undefined") {
-    Range.prototype.createContextualFragment = function (html) {
-        var doc = window.document;
-        var container = doc.createElement("div");
-        container.innerHTML = html;
-        var frag = doc.createDocumentFragment(), n;
-        while ((n = container.firstChild)) {
-            frag.appendChild(n);
-        }
-        return frag;
-    };
-	}
-}
 
 /**
  * Replaces parameters in a string (defined like $1, $2, ...) with the values provided in the params array
