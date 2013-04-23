@@ -501,6 +501,8 @@ cat.app = function() {
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
 				cookie.set('cat.search.page', 0);
+				GeoExt.MapPanel.guess().map.zoomToMaxExtent();
+				GeoExt.MapPanel.guess().vectorLayer.destroyFeatures();
 				tBar.changeMode(false);
 			},
 			resetBt : new Ext.Button({

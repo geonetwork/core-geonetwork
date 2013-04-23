@@ -46,21 +46,6 @@ cat.who = function() {
 			what.getCatalogueField().on('additem', updateOrgList);
 			what.getCatalogueField().on('removeitem', updateOrgList);
 			
-//	        var groupField = new Ext.ux.form.SuperBoxSelect({
-//	            hideLabel: false,
-//	            width: 230,
-//	            minChars: 0,
-//	            queryParam: 'q',
-//	            hideTrigger: false,
-//	            id: 'E_credit',
-//	            name: 'E_credit',
-//	            store: groupFieldStore,
-//	            valueField: 'value',
-//	            displayField: 'value',
-//	            mode:mode,
-//	            valueDelimiter: ' or ',
-//	            fieldLabel: OpenLayers.i18n('orgs')
-//	        });
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,
