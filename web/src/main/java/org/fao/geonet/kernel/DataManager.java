@@ -328,7 +328,15 @@ public class DataManager {
             // TODO why swallow
         }
     }
-
+    
+    Set<IndexMetadataTask> indexing = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
+    
+    public boolean isIndexing() {
+        synchronized (indexing) {
+            return !indexing.isEmpty();
+        }
+    }
+    
     /**
      * TODO javadoc.
      */
@@ -341,6 +349,10 @@ public class DataManager {
         private JeevesUser user;
 
         IndexMetadataTask(ServiceContext context, List<String> ids) {
+            synchronized (indexing) {
+                indexing.add(this);
+            }
+            
             this.context = context;
             this.ids = ids;
             this.beginIndex = 0;
@@ -350,6 +362,10 @@ public class DataManager {
             }
         }
         IndexMetadataTask(ServiceContext context, List<String> ids, int beginIndex, int count) {
+            synchronized (indexing) {
+                indexing.add(this);
+            }
+            
             this.context = context;
             this.ids = ids;
             this.beginIndex = beginIndex;
@@ -405,6 +421,10 @@ public class DataManager {
             catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
                 e.printStackTrace();
+            } finally {
+                synchronized (indexing) {
+                    indexing.remove(this);
+                }
             }
         }
     }

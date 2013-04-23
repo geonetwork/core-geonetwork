@@ -40,6 +40,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
@@ -116,7 +117,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     public Element execute(Element request, ServiceContext context) throws CatalogException {
         String timeStamp = new ISODate().toString();
-
+        
+        // Return exception is indexing.
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataManager = gc.getDataManager();
+        if (dataManager.isIndexing()) {
+            throw new RuntimeException("Catalog is indexing records, retry later.");
+        }
+        
         //
         // some validation checks (note: this is not an XSD validation)
         //
@@ -175,12 +183,11 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             setName = getElementSetName(query , ElementSetName.SUMMARY);
             // elementsetname is FULL: use customized elementset if defined
             if(setName.equals(ElementSetName.FULL)) {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 List<Element> customElementSets;
                 Dbms dbms = null;
                 try {
 					dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-                    customElementSets = gc.getDataManager().getCustomElementSets(dbms);
+                    customElementSets = dataManager.getCustomElementSets(dbms);
                     // custom elementset defined
                     if(!CollectionUtils.isEmpty(customElementSets)) {
                         if(elemNames == null) {
