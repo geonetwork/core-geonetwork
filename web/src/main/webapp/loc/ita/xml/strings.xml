@@ -484,7 +484,7 @@
 	<logoSelectionWindow js="true">Scegli un logo</logoSelectionWindow>
 	<chooseLogo>Scegli un logo</chooseLogo>
 	<orgLogo>Logo dell'organizzazione</orgLogo>
-	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoDes>Gestione loghi (nodo e harvesting)</logoDes>
 	<logoRegistered js="true">Logo registrati</logoRegistered>
 	<logoAdd js="true">Aggiungi logo</logoAdd>
 	<selectedLogo js="true">Logo selezionati:</selectedLogo>

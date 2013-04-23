@@ -79,9 +79,11 @@ GeoNetwork.GeoCatCh.Lang.it = {
 
     'Search': 'Ricerca',
     'refineSearch': 'Affinare la ricerca',
+    'hideAdvancedOptions': 'Ricerca semplice',
     
     'removeLayers' : 'Rimuovere tutti i livelli e ripristinare la mappa',
     'linklabel-OGC:WMS': ' ',
+    'sendmail': 'Invia email',
     'createDateYear' : 'anni',
     'createDateYears' : 'aAnno',
     'denominator' : 'risoluzione spaziale',
