@@ -1035,20 +1035,24 @@ public class SearchManager {
 	 * @throws Exception
 	 */
     public Vector<String> getTerms(String fld) throws Exception {
-        Vector<String> terms = new Vector<String>();
+        Vector<String> foundTerms = new Vector<String>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         try {
+            @SuppressWarnings("resource")
             AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
-            TermsEnum enu = reader.terms(fld).iterator(null);
-            BytesRef term = enu.next();
-            while (term != null) {
-                if (!term.utf8ToString().equals(fld)) {
-                    break;
+            Terms terms = reader.terms(fld);
+            if (terms != null) {
+                TermsEnum enu = terms.iterator(null);
+                BytesRef term = enu.next();
+                while (term != null) {
+                    if (!term.utf8ToString().equals(fld)) {
+                        break;
+                    }
+                    foundTerms.add(term.utf8ToString());
+                    term = enu.next();
                 }
-                terms.add(term.utf8ToString());
-                term = enu.next();
             }
-            return terms;
+            return foundTerms;
         } finally {
             releaseIndexReader(indexAndTaxonomy);
         }
