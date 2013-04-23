@@ -75,7 +75,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'startNewPolygonHelp' : 'Disegna un nuovo poligono (doppio clic per terminare)',
     'deletePolygonHelp' : 'Annulare o ricominciare un nuovo poligono',
 
-    'changeDate': 'Metadata revision',
+    'changeDate': 'Revisione metadati',
 
     'Search': 'Ricerca',
     'refineSearch': 'Affinare la ricerca',
