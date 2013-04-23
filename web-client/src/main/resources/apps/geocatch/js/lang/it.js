@@ -22,7 +22,7 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
 GeoNetwork.GeoCatCh.Lang.it = {
 	'any': '- Qualunque -',
-	'dataset': 'Data',
+	'dataset': 'Set di dati',
 	'basicgeodata': 'Basic Geodata',
 	'basicgeodata-federal': ' + Geodati di base - federali',
 	'basicgeodata-cantonal': ' + Geodati di base - cantonali',
@@ -56,8 +56,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'contact': 'Contatto',
     'organisationName': 'Organizzazione',
 
-    'template': 'Template',
-    'identifier': 'Identifier',
+    'template': 'Modello',
+    'identifier': 'Identificatore',
     'formatTxt': 'Formato',
     'toEdit': 'Da adattare',
     'toPublish': 'Da pubblicare',
