@@ -47,6 +47,26 @@ DELETE FROM StatusValuesDes where langid='fra' or langid='deu';
 DELETE FROM categoriesdes where langid='fra' or langid='deu';
 DELETE FROM CswServerCapabilitiesInfo where langid='fra' or langid='deu';
 
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 5, 'fre', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 6, 'fre', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 7, 'fre', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 8, 'fre', 'accessConstraints', '');
+
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 9, 'ita', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 10, 'ita', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 11, 'ita', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 12, 'ita', 'accessConstraints', '');
+
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 13, 'ger', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 14, 'ger', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 15, 'ger', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 16, 'ger', 'accessConstraints', '');
+
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 17, 'roh', 'title', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 18, 'roh', 'abstract', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 19, 'roh', 'fees', '');
+INSERT INTO CswServerCapabilitiesInfo VALUES ( 20, 'roh', 'accessConstraints', '');
+
 DELETE FROM isolanguagesdes where langid='fra' or langid='deu' or iddes='500' or iddes='501';
 DELETE FROM isolanguages where code='fra' or code='deu';
 DELETE FROM groupsdes where langid='fra' or langid='deu';
