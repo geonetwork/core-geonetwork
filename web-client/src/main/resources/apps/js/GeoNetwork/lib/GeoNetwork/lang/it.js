@@ -48,7 +48,10 @@ GeoNetwork.Lang.it = {
     'all': 'all',
     'allInPage': 'all in page',
     'select': 'Select ',
-    'resultBy': ' result(s) / '
+    'resultBy': ' result(s) / ',
+    'type': 'Tipo',
+    'from': 'da',
+    'to': 'a',
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
