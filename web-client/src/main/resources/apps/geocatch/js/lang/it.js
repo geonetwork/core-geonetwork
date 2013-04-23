@@ -31,6 +31,10 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'service': 'Services',
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
+	
+	'includearchived': 'Archivi inclusi',
+	'excludearchived': 'Archivi esclusi',
+	'onlyarchived': 'Solo archivi',
 	'owner': 'Proprietario',
 
 	'withinGeo': 'Completamente all interno o uguale' ,
