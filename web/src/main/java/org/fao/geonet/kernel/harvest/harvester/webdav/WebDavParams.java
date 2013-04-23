@@ -61,7 +61,6 @@ public class WebDavParams extends AbstractParams
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
 
-		validate = Util.getParam(opt, "validate", false);
 		recurse  = Util.getParam(opt, "recurse",  false);
 		
 		subtype  = Util.getParam(opt, "subtype","");
@@ -83,7 +82,6 @@ public class WebDavParams extends AbstractParams
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
 
-		validate = Util.getParam(opt, "validate", validate);
 		recurse  = Util.getParam(opt, "recurse",  recurse);
 		
 		subtype  = Util.getParam(opt, "subtype",  subtype);

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,11 +25,22 @@ import org.junit.Test;
 import org.springframework.security.access.ConfigAttribute;
 
 public class ConfigurationOveridesTest {
-    final ClassLoader classLoader = getClass().getClassLoader();
-    String appPath = new File(new File(classLoader.getResource("test-config.xml").getFile()).getParentFile(),"correct-webapp").getAbsolutePath();
-    String falseAppPath = new File(new File(classLoader.getResource("test-config.xml").getFile()).getParentFile(),"false-webapp").getAbsolutePath();
-    final ConfigurationOverrides.ResourceLoader loader = new ConfigurationOverrides.ServletResourceLoader(null, appPath);
+	private static final ClassLoader classLoader;
+    private static final String appPath;
+    private static final String falseAppPath;
+    private static final ConfigurationOverrides.ResourceLoader loader;
     
+    static {
+        try {
+            classLoader = ConfigurationOveridesTest.class.getClassLoader();
+            String base = URLDecoder.decode(classLoader.getResource("test-config.xml").getFile(), "UTF-8");
+            appPath = new File(new File(base).getParentFile(), "correct-webapp").getAbsolutePath();
+            falseAppPath = new File(new File(base).getParentFile(), "false-webapp").getAbsolutePath();
+            loader = new ConfigurationOverrides.ServletResourceLoader(null, appPath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Test //@Ignore
     public void updateLoggingConfig() throws JDOMException, IOException {
         final Element overrides = Xml.loadFile(classLoader.getResource("correct-webapp/WEB-INF/overrides-config.xml"));

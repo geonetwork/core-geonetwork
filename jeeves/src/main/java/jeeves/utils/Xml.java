@@ -75,11 +75,13 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -447,7 +449,19 @@ public final class Xml
         if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
             Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
         }
-        Source s = catResolver.resolve(href, base);
+        String decodedBase;
+        try {
+            decodedBase = URLDecoder.decode(base, "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            decodedBase = base;
+        }
+        String decodedHref;
+        try {
+            decodedHref = URLDecoder.decode(href, "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            decodedHref = href;
+        }
+        Source s = catResolver.resolve(decodedHref, decodedBase);
         // If resolver has a blank XSL file to replace non existing resolved file ...
         String blankXSLFile = resolver.getBlankXSLFile();
         if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
