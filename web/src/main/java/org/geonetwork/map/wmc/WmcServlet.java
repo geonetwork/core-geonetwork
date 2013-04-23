@@ -131,8 +131,8 @@ public class WmcServlet extends HttpServlet {
                         TempFile tempFile = new TempFile(File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, getTempDir()));
                         final String id = generateId(tempFile);
                         try {
-                            FileWriter fw = new FileWriter(tempFile);
-                            fw.write(new String(data));
+                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8"));
+                            fw.write(new String(data, "UTF-8"));
                             fw.close();
                             out.write("{success: true, url: '" + getBaseUrl(request) + "/" + id + TEMP_FILE_SUFFIX + "'}");
 
@@ -212,7 +212,7 @@ public class WmcServlet extends HttpServlet {
             String wmcContent = RequestUtil.inputStreamAsString(httpServletRequest);
             wmcContent = XML_HEADER + "\n" + wmcContent;
 
-            FileWriter fw = new FileWriter(tempFile);
+            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8"));
             fw.write(wmcContent);
             fw.close();
 

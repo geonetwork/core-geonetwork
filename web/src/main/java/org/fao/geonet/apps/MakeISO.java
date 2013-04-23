@@ -53,7 +53,7 @@ public class MakeISO
 		FileInputStream  is = new FileInputStream(new File(args[0]));
 		FileOutputStream os = new FileOutputStream(new File(args[0]+".sql"));
 
-		BufferedReader ir = new BufferedReader(new InputStreamReader(is));
+		BufferedReader ir = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 //		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os));
 
 		String line;
