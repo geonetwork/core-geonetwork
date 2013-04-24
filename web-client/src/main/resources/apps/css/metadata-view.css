@@ -320,13 +320,18 @@ Display hyperlink as text next to element
 .mn-clear {
   background-image : url(../images/default/cross.png) !important;
 }
+
 .search-item {
+  padding-left: 2px;
+}
+.search-item h3 {
   font-weight : normal !important;
-  line-height : 1.5em;
+  line-height : 1.6em;
 }
 .search-item span {
-  text-decoration : underline;
+  font-weight: bolder;
 }
+
 /* TagCloud styles */
 ul li.tag-cloud {
   border-top : 1px solid transparent;
