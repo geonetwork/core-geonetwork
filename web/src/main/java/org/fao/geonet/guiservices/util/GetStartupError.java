@@ -52,8 +52,8 @@ public class GetStartupError implements Service
 		if (context.isStartupError()) {
 			Element errorElem = new Element("error");
 			Map<String,String> errors = context.getStartupErrors();
-			for (String errname : errors.keySet()) {
-				Element err = new Element(errname).setText(errors.get(errname));
+			for (Map.Entry<String,String> entry : errors.entrySet()) {
+				Element err = new Element(entry.getKey()).setText(entry.getValue());
 				errorElem.addContent(err);
 			}
 			root.addContent(errorElem);

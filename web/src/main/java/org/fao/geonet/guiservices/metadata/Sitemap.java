@@ -37,6 +37,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.jdom.Element;
 
+import scala.collection.mutable.StringBuilder;
+
 import java.util.Set;
 
 /**
@@ -48,8 +50,8 @@ import java.util.Set;
  */
 public class Sitemap implements Service
 {
-    private final String FORMAT_XML = "xml";
-    private final String FORMAT_HTML = "html";
+    private static final String FORMAT_XML = "xml";
+    private static final String FORMAT_HTML = "html";
 
     public void init(String appPath, ServiceConfig config) throws Exception { }
 
@@ -69,18 +71,19 @@ public class Sitemap implements Service
 
         Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
-        String query = "SELECT DISTINCT id, uuid, schemaId, changeDate FROM Metadata, OperationAllowed "+
-                            "WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (";
+        StringBuilder query = new StringBuilder("SELECT DISTINCT id, uuid, schemaId, changeDate FROM Metadata, OperationAllowed ");
+        query.append("WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (");
 
-        String aux = "";
+        StringBuilder aux = new StringBuilder();
 
-        for (String grpId : groups)
-            aux += " OR groupId="+grpId;
+        for (String grpId : groups) {
+            aux.append(" OR groupId=").append(grpId);
+        }
 
-        query += aux.substring(4);
-        query += ") ORDER BY changeDate DESC";
+        query.append(aux.substring(4));
+        query.append(") ORDER BY changeDate DESC");
 
-        Element result = dbms.select(query);
+        Element result = dbms.select(query.toString());
 
         Element formatEl = new Element("format");
         formatEl.setText(format.toLowerCase());

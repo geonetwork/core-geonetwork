@@ -164,19 +164,21 @@ public class Update implements Service {
                 serviceId).getChildren();
         
         // Build a Lucene query from the set of parameters
-        String luceneQuery = "";
+        StringBuilder luceneQuery = new StringBuilder();
         for (int k = 0; k < paramList.size(); k++) {
             Element eltParam = (Element) paramList.get(k);
             if (eltParam.getChildText("value") != null
                     && !eltParam.getChildText("value").equals("")) {
-                luceneQuery += " +" + eltParam.getChildText("name") + ":"
-                                + eltParam.getChildText("value");
+                luceneQuery.append(" +")
+                    .append(eltParam.getChildText("name"))
+                    .append(":")
+                    .append(eltParam.getChildText("value"));
             }
         }
         cls.addContent(new Element("param").setAttribute("name",
                 "filter").setAttribute(
                 "value",
-                luceneQuery));
+                luceneQuery.toString()));
 
         srv.setAttribute("name",
                 eltService.getChild("record").getChildText("name")).addContent(

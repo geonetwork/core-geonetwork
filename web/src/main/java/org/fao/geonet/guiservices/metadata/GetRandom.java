@@ -94,7 +94,6 @@ public class GetRandom implements Service
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			DataManager   dataMan   = gc.getDataManager();
 			SearchManager searchMan = gc.getSearchmanager();
 			MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
