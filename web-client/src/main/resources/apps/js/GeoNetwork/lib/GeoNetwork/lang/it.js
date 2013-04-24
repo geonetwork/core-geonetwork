@@ -70,7 +70,8 @@ GeoNetwork.Lang.it = {
     'administration': 'Amministrazione',
     'keywords': 'Parole chiave',
     'types': 'Tipo',
-    'Type': 'Tipo'
+    'Type': 'Tipo',
+    'valid': 'Valido'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
