@@ -62,8 +62,9 @@ GeoNetwork.Lang.it = {
     'newOwner': 'Associa nuovo autore',
     'updateCategories': 'Aggioma categorie',
     'updatePrivileges': 'Aggioma privilegi',
-    
-    
+    'popularity': 'Popolarita',
+    'relevance': 'Rilevanza',
+    'title': 'Titolo'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
