@@ -32,7 +32,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'owner': 'Besitzer',
 	'geodata': 'Geodata',
 	'yes': 'Ja',
-	'no': 'Nein'
+	'no': 'Nein',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',
