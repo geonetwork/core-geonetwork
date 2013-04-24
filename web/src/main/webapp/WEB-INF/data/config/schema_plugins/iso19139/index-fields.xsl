@@ -57,7 +57,7 @@
 			</xsl:variable>
 			<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true"/>
 			<!-- not tokenized title for sorting, needed for multilingual sorting -->
-            <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" token="false" />
+            <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
 
 			<xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
 			
