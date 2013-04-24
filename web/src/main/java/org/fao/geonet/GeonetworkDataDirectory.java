@@ -10,6 +10,7 @@ import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 
 /**
@@ -110,6 +111,8 @@ public class GeonetworkDataDirectory {
 //				Instead of looking for geonetwork.dir, get geonetwork_dir
 				value = System.getenv(key.replace('.', '_'));
 				break;
+			default:
+			    throw new IllegalArgumentException("Did not expect value: "+j);
 			}
 
 			if (value == null || value.equalsIgnoreCase("")) {
@@ -259,17 +262,26 @@ public class GeonetworkDataDirectory {
 		if (!schemaCatFile.exists()) {
 			Log.info(Geonet.DATA_DIRECTORY,
 					"     - Copying schema plugin catalogue ...");
+			FileInputStream in = null;
+			FileOutputStream out = null;
 			try {
-				FileInputStream in = new FileInputStream(path + "WEB-INF"
+                in = new FileInputStream(path + "WEB-INF"
 						+ File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
-				FileOutputStream out = new FileOutputStream(schemaCatFile);
+                out = new FileOutputStream(schemaCatFile);
 
-				BinaryFile.copy(in, out, true, true);
+				BinaryFile.copy(in, out, false, false);
 			} catch (IOException e) {
 				Log.info(
 						Geonet.DATA_DIRECTORY,
 						"      - Error copying schema plugin catalogue: "
 								+ e.getMessage());
+			} finally {
+			    if(in != null) {
+			        IOUtils.closeQuietly(in);
+			    }
+			    if(out != null) {
+			        IOUtils.closeQuietly(out);
+			    }
 			}
 		}
 
@@ -307,8 +319,8 @@ public class GeonetworkDataDirectory {
 
 		// Create directory if it does not exist
 		File file = new File(dir);
-		if (!file.exists()) {
-			file.mkdirs();
+		if (!file.exists() && !file.mkdirs()) {
+			throw new RuntimeException("Unable to create directory: "+file);
 		}
 
 		Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey + " is " + dir);

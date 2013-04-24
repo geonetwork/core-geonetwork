@@ -185,8 +185,8 @@ public class Geonetwork implements ApplicationHandler {
 		JeevesJCS.setConfigFilename(path + "WEB-INF/classes/cache.ccf");
 
 		// force caches to be config'd so shutdown hook works correctly
-		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
-		jcsDummy = JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
+		JeevesJCS.getInstance(Processor.XLINK_JCS);
+		JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
 
 		
 
@@ -228,7 +228,6 @@ public class Geonetwork implements ApplicationHandler {
 
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
-		String  host           = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 
 		// null means not initialized
 		ApplicationContext app_context = null;
@@ -934,7 +933,9 @@ public class Geonetwork implements ApplicationHandler {
 	private DataStore createShapefileDatastore(String indexDir) throws Exception {
 
 		File file = new File(indexDir + "/" + SPATIAL_INDEX_FILENAME + ".shp");
-		file.getParentFile().mkdirs();
+		if(!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
+		    throw new RuntimeException("Unable to create the spatial index (shapefile) directory: "+file.getParentFile());
+		}
 		if (!file.exists()) {
 			logger.info("Creating shapefile "+file.getAbsolutePath());
 		} else {
