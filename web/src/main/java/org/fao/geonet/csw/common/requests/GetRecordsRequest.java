@@ -63,8 +63,8 @@ public class GetRecordsRequest extends CatalogRequest
 	private String  maxRecords;
 	private String  constrLangVersion;
 	private String  constraint;
-	private String  hopCount;
-	private boolean distribSearch;
+	private String  hopCount = "2";
+	private boolean distribSearch = false;
 
 	private ResultType         resultType;
 	private ElementSetName     elemSetName;
@@ -149,6 +149,20 @@ public class GetRecordsRequest extends CatalogRequest
 	{
 		constraint = constr;
 	}
+	
+	//---------------------------------------------------------------------------
+
+	public void setHopCount(String hopCount)
+	{
+        this.hopCount = hopCount;
+    }
+	
+	//---------------------------------------------------------------------------
+
+	public void setDistribSearch(boolean distribSearch)
+	{
+        this.distribSearch = distribSearch;
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -183,10 +197,14 @@ public class GetRecordsRequest extends CatalogRequest
 		addParam("maxRecords",     maxRecords);
 		addParam("elementSetName", elemSetName);
 		addParam("constraint",     constraint);
-		addParam("hopCount",       hopCount);
 
-		if (distribSearch)
+		if (distribSearch) {
 			addParam("distributedSearch", "TRUE");
+
+            if (hopCount != null){
+                addParam("hopCount",       hopCount);
+            }
+		}
 
 		addParam("constraintLanguage",          constrLang);
 		addParam("constraint_language_version", constrLangVersion);
@@ -226,7 +244,9 @@ public class GetRecordsRequest extends CatalogRequest
 			ds.setText("TRUE");
 
 			if (hopCount != null)
+			{
 				ds.setAttribute("hopCount", hopCount);
+			}
 
 			params.addContent(ds);
 		}

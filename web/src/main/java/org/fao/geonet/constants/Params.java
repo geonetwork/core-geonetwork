@@ -26,7 +26,7 @@ package org.fao.geonet.constants;
 /**
  * Constants for service parameters (elements and attributes).
  */
-public class Params {
+public final class Params {
 	public static final String ACCESS       = "access";
 	public static final String BTN          = "btn";
 	public static final String CATEGORY     = "category";
@@ -142,7 +142,7 @@ public class Params {
     /**
      * TODO javadoc.
      */
-	public class Access {
+	public static final class Access {
 		public static final String PUBLIC  = "public";
 		public static final String PRIVATE = "private";
 	}
@@ -150,7 +150,7 @@ public class Params {
     /**
      * TODO javadoc.
      */
-	public class Operation {
+	public static final class Operation {
 		public static final String NEWUSER  = "newuser";
 		public static final String EDITINFO = "editinfo";
 		public static final String FULLUPDATE = "fullupdate";
@@ -163,7 +163,7 @@ public class Params {
     /**
      * TODO javadoc.
      */
-	public class Status { 
+	public static final class Status { 
         public static final String UNKNOWN   = "0";
         public static final String DRAFT     = "1";
         public static final String APPROVED  = "2";
@@ -175,7 +175,7 @@ public class Params {
     /**
      * TODO javadoc.
      */
-	public class Svn {
+	public static final class Svn {
 		public static final String DBURLPROP = "geonet:dburl";
 		public static final String OPERATOR  = "geonet:operator";
 		public static final String USERNAME  = "geonet:username";
