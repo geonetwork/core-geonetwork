@@ -148,7 +148,7 @@
         <validated>Convalidato</validated>
         <nonValidated>Non convalidato</nonValidated>
         <nonValidTitle>Gestione degli oggetti riutilizzabili non convalidati </nonValidTitle>
-        <nonValidDesc>Validare/Rifuitare oggetti riutilizzabili non ancore convalidati</nonValidDesc>
+        <nonValidDesc>Validare/Rifiutare oggetti riutilizzabili non ancore convalidati</nonValidDesc>
         <rejectTitle>Messago di rifiuto</rejectTitle>
         <rejectDefaultMsg>Selezionare un'altro oggetto riutilizzabile...</rejectDefaultMsg>
     </reusable>
