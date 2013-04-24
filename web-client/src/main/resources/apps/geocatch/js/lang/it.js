@@ -101,8 +101,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'composeMessage': 'Componi messaggio',
     'send': 'Invia',
     'cancel': 'Cancella',
-    'nonEmptyField': "In campo non puo essere vuoto"
-
+    'nonEmptyField': "In campo non puo essere vuoto",
+    'unpublishSlection': 'Nascondi selezione'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.GeoCatCh.Lang.it);
