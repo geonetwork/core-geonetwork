@@ -94,8 +94,6 @@ public class GetLatestUpdated implements Service
 			SearchManager searchMan = gc.getSearchmanager();
 			DataManager   dataMan   = gc.getDataManager();
 
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 			_request.getChild("to").setText(""+_maxItems);
 
 			_response = new Element(Jeeves.Elem.RESPONSE);

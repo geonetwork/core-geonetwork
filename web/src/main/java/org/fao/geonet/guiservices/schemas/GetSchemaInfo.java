@@ -62,8 +62,9 @@ public class GetSchemaInfo implements Service
 			try {
 				Map<String, XmlFile> schemaInfo = schemaMan.getSchemaInfo(schema);
 
-				for (String fname : schemaInfo.keySet()) {
-					XmlFile xf = schemaInfo.get(fname);
+				for (Map.Entry<String, XmlFile> entry : schemaInfo.entrySet()) {
+					XmlFile xf = entry.getValue();
+					String fname = entry.getKey();
 					Element response = xf.exec(new Element("junk"), context);
 					response.setName(FilenameUtils.removeExtension(fname));
 					Element schemaElem = new Element(schema);

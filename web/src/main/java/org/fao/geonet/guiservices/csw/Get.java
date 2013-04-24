@@ -50,10 +50,10 @@ public class Get implements Service {
 
         // Build response
         Element cswEnable = new Element("cswEnable");
-        cswEnable.setText(new Boolean(cswEnabled).toString());
+        cswEnable.setText(String.valueOf(cswEnabled));
 
         Element cswPublic = new Element("cswMetadataPublic");
-        cswPublic.setText(new Boolean(cswMetadataPublic).toString());
+        cswPublic.setText(String.valueOf(cswMetadataPublic));
 
         Element cswContactId = new Element("cswContactId");
         cswContactId.setText(cswContactIdValue);
