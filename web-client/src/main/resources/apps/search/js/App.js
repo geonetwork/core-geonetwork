@@ -200,7 +200,8 @@ GeoNetwork.app = function () {
             url: services.opensearchSuggest,
             rootId: 1,
             baseParams: {
-                field: 'orgName'
+                field: 'orgName',
+                sortBy: 'ALPHA'
             }
         });
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
@@ -226,7 +227,8 @@ GeoNetwork.app = function () {
             url: services.opensearchSuggest,
             rootId: 1,
             baseParams: {
-                field: 'keyword'
+                field: 'keyword',
+                sortBy: 'ALPHA'
             }
         });
 //        FIXME : could not underline current search criteria in tpl

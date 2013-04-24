@@ -98,6 +98,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.search.LuceneConfig.Facet;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
@@ -340,7 +341,7 @@ public class LuceneSearcher extends MetaSearcher {
 	 * @return
 	 * @throws Exception
 	 */
-	public Collection<String> getSuggestionForFields(ServiceContext srvContext, 
+	public Collection<SearchManager.TermFrequency> getSuggestionForFields(ServiceContext srvContext, 
 								final String searchField, final String searchValue, 
 								ServiceConfig config,
 								int maxNumberOfTerms, int threshold) throws Exception {
@@ -353,10 +354,9 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		// To count the number of values added and stop if maxNumberOfTerms reach
 		int counter = 0;
+		String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 		
-		// A collection or a map if threshold is set
-		Collection <String> finalValues = new HashSet<String>();
-		Map <String, Integer> finalValuesMap = new HashMap<String, Integer>();
+		Map <String, SearchManager.TermFrequency> finalValuesMap = new HashMap<String, SearchManager.TermFrequency>();
 		
 		GeonetContext gc = null;
 		if (srvContext != null) {
@@ -368,11 +368,10 @@ public class LuceneSearcher extends MetaSearcher {
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
 		elData.addContent(new Element("fast").addContent("index")).
 		    addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).addContent(Boolean.toString(false)));
-		// FIXME : need more work on LQB
-//		if (!searchValue.equals("")) {
-//			elData.addContent(new Element(searchField).setText("*" + searchValue + "*"));
-//		// TODO : filter template ?
-//		}
+		
+		if (!searchValue.equals("")) {
+			elData.addContent(new Element(searchField).setText(searchValue));
+		}
 		search(srvContext, elData, config);
 
 		elData.addContent(new Element("from").setText("1"));
@@ -397,16 +396,18 @@ public class LuceneSearcher extends MetaSearcher {
                     String[] values = doc.getValues(searchField);
 
                     for (int j = 0; j < values.length; ++j) {
-                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValue)) {
-                            if (threshold > 1) {
-                                // Use a map to save values frequency
-                                Integer valueFrequency = finalValuesMap.get(values[j]);
+                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValueWithoutWildcard)) {
+                            // Use a map to save values frequency
+                            String termName = values[j];
+                            TermFrequency valueFrequency = finalValuesMap.get(termName);
+                            if (valueFrequency != null) {
                                 // Log.debug(Geonet.SEARCH_ENGINE, "  " +
                                 // values[j] + ":" + valueFrequency);
-                                finalValuesMap.put(values[j], (valueFrequency != null ? ++valueFrequency : 1));
+                                valueFrequency.setFrequency(valueFrequency.getFrequency() + 1);
                             } else {
-                                finalValues.add(values[j]);
+                                finalValuesMap.put(termName, new TermFrequency(termName, 1));
                             }
+                            
                             counter++;
                         }
                     }
@@ -418,21 +419,26 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		// Filter values which does not reach the threshold
 		if (threshold > 1) {
-			Map<String, Integer> filteredMap = Maps.filterValues(finalValuesMap, Ranges.atLeast(threshold));
-			// Push map content to collection
-			finalValues.addAll(filteredMap.keySet());
-			
+			int size = finalValuesMap.size();
+			Iterator<?> it = finalValuesMap.entrySet().iterator();
+			while (it.hasNext()) {
+			   Entry<?, ?> item = (Entry<?, ?>) it.next();
+			   TermFrequency term = (TermFrequency) item.getValue();
+				if (term.getFrequency() < threshold) {
+					it.remove();
+				}
+			}
 			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 				Log.debug(Geonet.SEARCH_ENGINE, "  "
-						+ filteredMap.size() + "/" + finalValuesMap.size() + " above threshold: " + threshold);
+						+ finalValuesMap.size() + "/" + size + " above threshold: " + threshold);
 			}
 		}
 
 		if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
 			Log.debug(Geonet.SEARCH_ENGINE, "  "
-					+ finalValues.size() + " returned.");
+					+ finalValuesMap.size() + " returned.");
 		}
-		return finalValues;
+		return finalValuesMap.values();
 	}
 	public int getSize() {
 		return _numHits;
