@@ -28,7 +28,7 @@ import org.jdom.Namespace;
 /**
  * Constants for editing attribs.
  */
-public class Edit{
+public final class Edit{
 
     /**
      * Namespace used for editing.
@@ -41,7 +41,7 @@ public class Edit{
 	//---
 	//--------------------------------------------------------------------------
 
-	public class RootChild
+	public static final class RootChild
 	{
 		public static final String INFO      = "info";
 		public static final String ELEMENT   = "element";
@@ -57,9 +57,9 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class Info
+	public static final class Info
 	{
-		public class Elem
+		public static final class Elem
 		{
 			public static final String ID          = "id";
 			public static final String UUID        = "uuid";
@@ -104,9 +104,9 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class Element
+	public static final class Element
 	{
-		public class Attr
+		public static final class Attr
 		{
 			public static final String REF  	= "ref";
 			public static final String DEL  	= "del";
@@ -119,7 +119,7 @@ public class Edit{
 			public static final String MAX  = "max";
 		}
 
-		public class Child
+		public static final class Child
 		{
 			public static final String TEXT   = "text";
 			public static final String CHOOSE = "choose";
@@ -128,9 +128,9 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class Attribute
+	public static final class Attribute
 	{
-		public class Attr
+		public static final class Attr
 		{
 			public static final String NAME  = "name";
 			public static final String ADD   = "add";
@@ -138,7 +138,7 @@ public class Edit{
 			public static final String VALUE = "value";
 		}
 
-		public class Child
+		public static final class Child
 		{
 			public static final String TEXT    = "text";
 			public static final String DEFAULT = "default";
@@ -147,9 +147,9 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class ChildElem
+	public static final class ChildElem
 	{
-		public class Attr
+		public static final class Attr
 		{
 			public static final String NAME      = "name";
 			public static final String PREFIX    = "prefix";
@@ -161,7 +161,7 @@ public class Edit{
 			public static final String MAX       = "max";
 		}
 
-		public class Child
+		public static final class Child
 		{
 			public static final String CHOOSE = "choose";
 		}
@@ -169,9 +169,9 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class Choose
+	public static final class Choose
 	{
-		public class Attr
+		public static final class Attr
 		{
 			public static final String NAME = "name";
 		}
@@ -179,7 +179,7 @@ public class Edit{
 
 	//--------------------------------------------------------------------------
 
-	public class Value
+	public static final class Value
 	{
 		public static final String TRUE  = "true";
 		public static final String FALSE = "false";

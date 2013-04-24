@@ -113,6 +113,7 @@ public class SvnManager {
     } catch (SVNException e) {
 
       if (subFile.exists()) { // set the repoUrl and try and open it
+          subFile = subFile.getCanonicalFile();
         repoUrl = SVNURL.fromFile(subFile);
 
       } else {

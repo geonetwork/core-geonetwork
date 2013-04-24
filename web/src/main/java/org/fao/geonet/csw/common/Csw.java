@@ -29,7 +29,7 @@ import org.jdom.Namespace;
 /**
  * TODO javadoc.
  */
-public class Csw {
+public final class Csw {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Namespaces
@@ -86,9 +86,9 @@ public class Csw {
 	
 	public static final String CONFIG_FILE = "config-csw.xml";
 	
-	public class ConfigFile {
+	public static final class ConfigFile {
 
-		public class Child {
+		public static final class Child {
 			public static final String OPERATIONS = "operations";
 		}
 
@@ -98,19 +98,19 @@ public class Csw {
 		// ---
 		// --------------------------------------------------------------------------
 
-		public class Operations {
-			public class Child {
+		public static final class Operations {
+			public static final class Child {
 				public static final String OPERATION = "operation";
 			}
 		}
 
 		// --------------------------------------------------------------------------
 
-		public class Operation {
-			public class Attr {
+		public static final class Operation {
+			public static final class Attr {
 				public static final String NAME = "name";
 
-				public class Value {
+				public static final class Value {
 					public static final String GET_RECORDS = "GetRecords";
 					public static final String GET_CAPABILITIES = "GetCapabilities";
 					public static final String GET_DOMAIN = "GetDomain";
@@ -121,7 +121,7 @@ public class Csw {
 				}
 			}
 
-			public class Child {
+			public static final class Child {
 				public static final String PARAMETERS = "parameters";
 				public static final String TYPENAMES = "typenames";
 				public static final String OUTPUTFORMAT = "outputformat";
@@ -135,16 +135,16 @@ public class Csw {
 
 		// --------------------------------------------------------------------------
 
-		public class Parameters {
-			public class Child {
+		public static final class Parameters {
+			public static final class Child {
 				public static final String PARAMETER = "parameter";
 			}
 		}
 
 		// --------------------------------------------------------------------------
 
-		public class Parameter {
-			public class Attr {
+		public static final class Parameter {
+			public static final class Attr {
 				public static final String NAME  = "name";
 				public static final String FIELD = "field";
 				public static final String TYPE  = "type";
@@ -153,30 +153,30 @@ public class Csw {
 
 			}
 
-            public class Child {
+            public static final class Child {
                 public static final String XPATH = "xpath";
 			}
 		}
 
 		// --------------------------------------------------------------------------
 
-        public class XPath {
-            public class Attr {
+        public static final class XPath {
+            public static final class Attr {
 				public static final String SCHEMA  = "schema";
 				public static final String PATH = "path";
 			}
         }
 		// --------------------------------------------------------------------------
-		public class Typenames {
-			public class Child {
+		public static final class Typenames {
+			public static final class Child {
 				public static final String TYPENAME = "typename";
 			}
 		}
 		
 		// --------------------------------------------------------------------------
 
-		public class Typename {
-			public class Attr {
+		public static final class Typename {
+			public static final class Attr {
 				public static final String NAME = "name";
 				public static final String NAMESPACE = "namespace";
 				public static final String PREFIX = "prefix";
@@ -186,16 +186,16 @@ public class Csw {
 		
 		// --------------------------------------------------------------------------
 		
-		public class OutputFormat {
-			public class Child {
+		public static final class OutputFormat {
+			public static final class Child {
 				public static final String FORMAT = "format";
 			}
 		}
 		
 		// --------------------------------------------------------------------------
 		
-		public class ConstraintLanguage {
-			public class Child {
+		public static final class ConstraintLanguage {
+			public static final class Child {
 				public static final String VALUE = "value";
 			}
 		}
