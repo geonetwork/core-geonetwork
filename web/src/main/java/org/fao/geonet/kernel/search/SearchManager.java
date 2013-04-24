@@ -122,6 +122,7 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
+import com.google.common.collect.ComparisonChain;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -1035,20 +1036,24 @@ public class SearchManager {
 	 * @throws Exception
 	 */
     public Vector<String> getTerms(String fld) throws Exception {
-        Vector<String> terms = new Vector<String>();
+        Vector<String> foundTerms = new Vector<String>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         try {
+            @SuppressWarnings("resource")
             AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
-            TermsEnum enu = reader.terms(fld).iterator(null);
-            BytesRef term = enu.next();
-            while (term != null) {
-                if (!term.utf8ToString().equals(fld)) {
-                    break;
+            Terms terms = reader.terms(fld);
+            if (terms != null) {
+                TermsEnum enu = terms.iterator(null);
+                BytesRef term = enu.next();
+                while (term != null) {
+                    if (!term.utf8ToString().equals(fld)) {
+                        break;
+                    }
+                    foundTerms.add(term.utf8ToString());
+                    term = enu.next();
                 }
-                terms.add(term.utf8ToString());
-                term = enu.next();
             }
-            return terms;
+            return foundTerms;
         } finally {
             releaseIndexReader(indexAndTaxonomy);
         }
@@ -1069,10 +1074,13 @@ public class SearchManager {
 	 * @return	An unsorted and unordered list of terms with their frequency.
 	 * @throws Exception
 	 */
-	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
+	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
 	                                            int threshold) throws Exception {
-        List<TermFrequency> termList = new ArrayList<TermFrequency>();
+        Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
+        String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
+        boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
+        
         try {
             GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
             @SuppressWarnings("resource")
@@ -1084,9 +1092,12 @@ public class SearchManager {
                     BytesRef term = termEnum.next();
                     while (term != null && i++ < maxNumberOfTerms) {
                         String text = term.utf8ToString();
-                        if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                            TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                            termList.add(freq);
+                        if (termEnum.docFreq() >= threshold) {
+                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
+                                TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                                termList.add(freq);
+                            }
                         }
                         term = termEnum.next();
                     }
@@ -1102,10 +1113,10 @@ public class SearchManager {
      *
 	 */
 	public static class TermFrequency implements Comparable<Object> {
-		String term;
-		int frequency;
+		private String term;
+		private int frequency;
 
-		public TermFrequency(String term, int frequency) {
+        public TermFrequency(String term, int frequency) {
 			this.term = term;
 			this.frequency = frequency;
 		}
@@ -1117,18 +1128,20 @@ public class SearchManager {
 		public int getFrequency() {
 			return this.frequency;
 		}
-
+		
+        public void setFrequency(int frequency) {
+            this.frequency = frequency;
+        }
+        
 		public int compareTo(Object o) {
 			if (o instanceof TermFrequency) {
 				TermFrequency oFreq = (TermFrequency) o;
-				return new CompareToBuilder().append(frequency, oFreq.frequency).append(term, oFreq.term).toComparison();
-			}
-            else {
+				return term.compareTo(oFreq.term);
+			} else {
 				return 0;
 			}
 		}
 	}
-
 	// utilities
 
     /**

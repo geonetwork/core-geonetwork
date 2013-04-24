@@ -990,7 +990,7 @@ public class SchemaManager {
      * @return
      */
     private String buildSchemaFolderPath(String name) {
-        return "" + schemaPluginsDir.replace('\\', '/') + "/" + name.replace('\\', '/');
+        return schemaPluginsDir.replace('\\', '/') + "/" + name.replace('\\', '/');
     }
 	/**
      * Deletes the presentation xslt from the schemaplugin oasis catalog.

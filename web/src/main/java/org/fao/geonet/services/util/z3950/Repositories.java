@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 
 //=============================================================================
@@ -56,15 +56,15 @@ public class Repositories
 	  */
 	public static boolean build(URL cfgUrl, ServiceContext context) 
 	{
-		if (cfgUrl == null) {
-			context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
-			return false;
-		} else {
-			configPath = cfgUrl.getFile();
-		}
 
 		try
 		{
+		    if (cfgUrl == null) {
+		        context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
+		        return false;
+		    } else {
+		        configPath = URLDecoder.decode(cfgUrl.getFile(), "UTF-8");
+		    }
 			//--- build repositories file from template repositories file
 
 			String realRepo = StringUtils.substringBefore(configPath,".tem");

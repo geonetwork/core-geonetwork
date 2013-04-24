@@ -72,7 +72,7 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 					ByteArrayInputStream bytes = row.getBlob(0);
 					byte [] buff = new byte[bytes.available()];
 					bytes.read(buff);
-					String document = new String(buff);
+					String document = new String(buff, "UTF-8");
 					if(document.contains(ISO_METADATA_IDENTIFIER)) {
 						System.out.println("ISO metadata found");
 						results.add(document);

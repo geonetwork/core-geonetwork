@@ -865,14 +865,6 @@
           <stopPort>8090</stopPort>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
     </plugins>
   </build>
   
@@ -880,10 +872,38 @@
     Profiles configuration is defined in src/main/filters.
     -->
   <profiles>
+	<profile>
+		<id>run-static-analysis</id>
+		<activation>
+			<property><name>!skipTests</name></property>
+		</activation>
+		<build>
+		<plugins>
+		  <plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>findbugs-maven-plugin</artifactId>
+		  </plugin>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+		  </plugin>
+		</plugins>
+		</build>
+	</profile>
+    <profile>
+      <id>no-env-specified</id>
+      <activation>
+        <property>
+          <name>!env</name>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+      </properties>
+    </profile>
     <profile>
       <id>env-prod</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
         <property>
           <name>env</name>
           <value>prod</value>
