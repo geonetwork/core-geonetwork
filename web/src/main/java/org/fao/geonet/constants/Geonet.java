@@ -33,7 +33,7 @@ import org.jdom.Namespace;
 /**
  * TODO javadoc.
  */
-public class Geonet {
+public final class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
@@ -44,7 +44,7 @@ public class Geonet {
     /**
      * Container for file names.
      */
-	public class File {
+	public static final class File {
 		public static final String SCHEMA              = "schema.xsd";
 		public static final String SCHEMATRON          = "schematron.xsl";
 		public static final String SCHEMATRON_XML      = "schematron_xml.xsl";
@@ -86,14 +86,14 @@ public class Geonet {
 		public static final int METADATA_MAX_BLANKS 	 = 20;
 	}
 
-	public class SchemaPath {
+	public static final class SchemaPath {
 		public static final String OAI_PMH = "xml/validation/oai/OAI-PMH.xsd";
 	}
 
     /**
      * Container for elements.
      */
-	public class Elem {
+	public static final class Elem {
 		public static final String DOMAINS    = "domains";
 		public static final String GROUPS     = "groups";
 		public static final String GROUP      = "group";
@@ -127,12 +127,12 @@ public class Geonet {
     /**
      * Container for element attribs.
      */
-	public class Attr {}
+	public static final class Attr {}
 
     /**
      * Resource directory and search configuration file.
      */
-	public class Path {
+	public static final class Path {
 		public static final String SCHEMAS            = Jeeves.Path.XML + "schemas/";
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
@@ -153,7 +153,7 @@ public class Geonet {
     /**
      * Session constants.
      */
-	public class Session {
+	public static final class Session {
 		public static final String MAIN_SEARCH				= "main.search";
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String SEARCH_REQUEST = "search.request";
@@ -171,7 +171,7 @@ public class Geonet {
 
 	}
     
-    public class Settings {
+    public static final class Settings {
         public static final String SERVER_HOST = "system/server/host";
         public static final String SERVER_PORT = "system/server/port";
         public static final String SERVER_SECURE_PORT = "system/server/securePort";
@@ -181,7 +181,7 @@ public class Geonet {
     /**
      * Resource names.
      */
-	public class Res {
+	public static final class Res {
 		public static final String MAIN_DB = "main-db";
 	}
 
@@ -191,7 +191,7 @@ public class Geonet {
 	 * @see ../services.util.MainUtil.getDefaultSearch for
 	 * default values.
 	 */
-	public class SearchResult {
+	public static final class SearchResult {
         /** Parameter name: {@value #TITLE} - Free text field that searches
          * in the title */
 		public static final String TITLE         = "title";
@@ -401,7 +401,7 @@ public class Geonet {
         /**
          * TODO javadoc.
          */
-        public class ResultType  {
+        public static final class ResultType  {
             public static final String RESULTS                  = "results";
             public static final String HITS                     = "hits";
             public static final String VALIDATE                 = "validate";
@@ -415,7 +415,7 @@ public class Geonet {
         /**
          * TODO java.
          */
-		public class Relation {
+		public static final class Relation {
 			public static final String EQUAL     = "equal";
 			public static final String OVERLAPS  = "overlaps";
 			public static final String ENCLOSES  = "encloses";
@@ -430,7 +430,7 @@ public class Geonet {
         /**
          * TODO javadoc.
          */
-		public class Output {
+		public static final class Output {
 			public static final String FULL = "full";
 			public static final String TEXT = "text";
 		}
@@ -438,7 +438,7 @@ public class Geonet {
         /**
          * TODO javadoc.
          */
-		public class SortBy {
+		public static final class SortBy {
 			public static final String RELEVANCE = "relevance";
 			public static final String RATING    = "rating";
 			public static final String POPULARITY= "popularity";
@@ -454,7 +454,7 @@ public class Geonet {
     /**
      * Container for profile names.
      */
-	public class Profile {
+	public static final class Profile {
 		public static final String ADMINISTRATOR   = "Administrator";
 		public static final String USER_ADMIN      = "UserAdmin";
 		public static final String REVIEWER        = "Reviewer";
@@ -467,7 +467,7 @@ public class Geonet {
     /**
      * Container for config elements that are inside the configuration file.
      */
-	public class Config {
+	public static final class Config {
 		public static final String HTMLCACHE_DIR    = "htmlCacheDir";
 		public static final String LUCENE_DIR       = "luceneDir";
         /**
@@ -505,7 +505,7 @@ public class Geonet {
     /**
      * Container for element values.
      */
-	public class Text {
+	public static final class Text {
 		public static final String ON         = "on";
 		public static final String OFF        = "off";
 		public static final String DOWN       = "down";
@@ -515,7 +515,7 @@ public class Geonet {
     /**
      * Codelist directories.
      */
-	public class CodeList {
+	public static final class CodeList {
 		public static final String LOCAL              = "local";
 		public static final String EXTERNAL           = "external";
 		public static final String REGISTER           = "register";
@@ -571,7 +571,7 @@ public class Geonet {
     /**
      * Services.
      */
-	public class Service {
+	public static final class Service {
 		public static final String XML_LOGIN         = "xml.user.login";
 		public static final String XML_LOGOUT        = "xml.user.logout";
 		public static final String XML_INFO          = "xml.info";
@@ -582,7 +582,7 @@ public class Geonet {
 		public static final String MEF_EXPORT        = "mef.export";
 	}
 
-	public static class Namespaces {
+	public static final class Namespaces {
 		public static final Namespace GCO = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 		public static final Namespace GEONET = Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork");
 		public static final Namespace GMX = Namespace.getNamespace("gmx", "http://www.isotc211.org/2005/gmx");
