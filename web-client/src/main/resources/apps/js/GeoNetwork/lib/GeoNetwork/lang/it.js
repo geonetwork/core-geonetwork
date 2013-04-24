@@ -68,7 +68,9 @@ GeoNetwork.Lang.it = {
     'newMetadata': 'Nuovo metadato',
     'importMetadata': 'Importa metadati',
     'administration': 'Amministrazione',
-    'keywords': 'Parole chiave'
+    'keywords': 'Parole chiave',
+    'types': 'Tipo',
+    'Type': 'Tipo'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
