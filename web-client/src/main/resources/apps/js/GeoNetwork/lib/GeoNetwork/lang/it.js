@@ -64,7 +64,10 @@ GeoNetwork.Lang.it = {
     'updatePrivileges': 'Aggioma privilegi',
     'popularity': 'Popolarita',
     'relevance': 'Rilevanza',
-    'title': 'Titolo'
+    'title': 'Titolo',
+    'newMetadata': 'Nuovo metadato',
+    'importMetadata': 'Importa metadati',
+    'administration': 'Amministrazione'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);
