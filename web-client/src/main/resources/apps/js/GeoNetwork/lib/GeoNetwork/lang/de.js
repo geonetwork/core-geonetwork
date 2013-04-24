@@ -233,6 +233,7 @@ GeoNetwork.Lang.de = {
 'exportCsv':'Export (CSV)',
 'exportZip':'Export (ZIP)',
 'printSel':'Export (PDF)',
+'export': 'Export',
 'printTT':'Drucken. Öffnen Sie eine neue Seite zum Drucken.',
 'newOwner':'Neuer Eigentümer',
 'updateCategories':'Kategorien Aktualisieren',

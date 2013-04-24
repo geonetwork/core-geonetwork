@@ -31,6 +31,9 @@ GeoNetwork.GeoCatCh.Lang.en = {
 	'service': 'Services',
 	'service-OGC:WMS': ' + WMS Services',
 	'service-OGC:WFS': ' + WFS Services',
+	'geodata': 'Geodata',
+	'yes': 'Yes',
+	'no': 'No'
 
 	'includearchived': 'Include archived',
 	'excludearchived': 'Exclude archived',

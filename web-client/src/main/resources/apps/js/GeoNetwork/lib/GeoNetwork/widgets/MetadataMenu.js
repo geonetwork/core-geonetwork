@@ -422,7 +422,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.add(this.zoomToAction);
         
         this.exportActions = new Ext.menu.Item({
-            text: OpenLayers.i18n('Export'),
+            text: OpenLayers.i18n('export'),
             menu: {
                 items: [this.viewXMLAction, this.viewISO19139Action, this.viewGM03Action,
                         this.viewRDFAction, this.printAction, this.getMEFAction],

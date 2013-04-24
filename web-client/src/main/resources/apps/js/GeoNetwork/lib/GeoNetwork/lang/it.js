@@ -39,6 +39,7 @@ GeoNetwork.Lang.it = {
     'exportCsv': 'Esporta (CSV)',
     'exportZip': 'Esporta (ZIP)',
     'printSel': 'Esporta (PDF)',
+    'export': 'Esporta',
     'getMEF': 'Esporta (ZIP)',
     'hitsPerPage': 'Numero per pagina',
     'sortBy': 'Ordina per',

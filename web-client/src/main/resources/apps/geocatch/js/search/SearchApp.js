@@ -440,7 +440,7 @@ GeoNetwork.searchApp = function() {
             } ];
             
             var fieldArchivedGeoData = new Ext.form.ComboBox({
-                fieldLabel : 'Geodata',
+                fieldLabel : OpenLayers.i18n("geodata"),
                 name : 'E1.0_historicalArchive',
                 store : this.getArchivedStore(),
                 mode : 'local',
