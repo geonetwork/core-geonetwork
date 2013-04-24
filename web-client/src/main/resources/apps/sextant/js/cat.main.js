@@ -816,7 +816,11 @@ cat.app = function() {
 			Ext.each(events, function(e) {
 				catalogue.on(e, function() {
 					if (searching === true) {
-						searchForm.fireEvent('search');
+					    var searchPage = cookie.get('cat.search.page');
+					    if(searchPage && searchPage > 0) {
+                            catalogue.startRecord = searchPage;
+					    }
+						search();
 					}
 				});
 			});
