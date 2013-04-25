@@ -636,7 +636,7 @@ public class Geonetwork implements ApplicationHandler {
 				//&& subVersion.equals(dbSubVersion) Check only on version number
 		) {
 			logger.info("      Webapp version = Database version, no migration task to apply.");
-		} else {
+		} else if (to > from) {
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
 			
@@ -730,6 +730,8 @@ public class Geonetwork implements ApplicationHandler {
                 logger.warning("      Error occurs during migration. Check the log file for more details.");
             }
 			// TODO : Maybe some migration stuff has to be done in Java ?
+		} else {
+	          logger.info("      Running on a newer database version.");
 		}
 	}
 
