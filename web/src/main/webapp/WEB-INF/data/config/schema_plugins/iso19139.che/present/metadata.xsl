@@ -1880,6 +1880,10 @@ priority="40">
 		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='imageryBaseMapsEarthCover' and 
 		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')] or 
 		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')])] "/>
+	 <xsl:template mode="iso19139" priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='utilitiesCommunication' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication')])] "/>
 
 
 	<xsl:template mode="iso19139" match="gmd:MD_TopicCategoryCode" priority="10">
@@ -1918,7 +1922,7 @@ priority="40">
 					<option name=""/>
 					
 					<xsl:for-each select="exslt:node-set($list)//item">
-						<xsl:sort select="value" />
+						<xsl:sort select="label" />
 						<xsl:variable name="curValue" select="value"/>
 						<xsl:choose>
 							<xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">

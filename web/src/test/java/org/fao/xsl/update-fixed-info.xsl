@@ -339,6 +339,17 @@
         <copy-of select="."/>
 	</xsl:template>
 	
+	<xsl:template priority="10" match="
+		gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication_') and 
+			not( preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication_')])]">
+		<gmd:topicCategory>
+            <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
+        </gmd:topicCategory>
+		 <xsl:copy>
+			  <xsl:apply-templates select="@*|node()"/>
+		 </xsl:copy>
+	</xsl:template>
+	
 	<!-- ================================================================= -->
 	<!-- online resources: download -->
 	<!-- ================================================================= -->

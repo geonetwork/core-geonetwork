@@ -1520,70 +1520,75 @@ polvere</description>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>farming</code>
-			<label>Agricoltura</label>
-			<description>Allevamento di animali e/o coltivazione di piante
-				Esempi:agricoltura, irrigazioni, acquacoltura, piantagioni, parassiti e malattie che interessano i raccolti e il bestiame</description>
+			<code>imageryBaseMapsEarthCover</code>
+			<label>A Carte di base, immagini</label>
+			<description>Mappe di base
+				Esempi: copertura territoriale, carte topografiche, immagini</description>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_BaseMaps</code>
+			<label>A1 Carte di base, modelli del territorio</label>
+		</entry>
+		
+		<entry>
+			<code>imageryBaseMapsEarthCover_EarthCover</code>
+			<label>A2 Copertura e utilizzo del suolo</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_Imagery</code>
+			<label>A3 Immagini aeree e satellitari</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>biota</code>
-			<label>Bosco, flora, fauna</label>
-			<description>Flora e/o fauna nell’ambiente naturale
-				Esempi: fauna selvatica, vegetazione, scienze biologiche, ecologia, habitat
+			<code>location</code>
+			<label>B Localizzazione, sistemi di riferimento</label>
+			<description>Informazioni e servizi sulla
+				localizzazione
+				Esempi:      indirizzi,    reti
+				geodetiche, punti di controllo,
+				zone e servizi postali,
+				toponimi
 			</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>boundaries</code>
-			<label>Confini</label>
-			<description>Descrizione legale del territorio
-				Esempi: limiti politici e amministrativi</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>climatologyMeteorologyAtmosphere</code>
-			<label>Atmosfera, climatologia</label>
-			<description>Processi e  fenomeni dell’atmosfera
-				Esempi: annuvolamento, clima,  condizioni atmosferiche, cambiamenti climatici, precipitazioni</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>economy</code>
-			<label>Attività economiche</label>
-			<description>Attività economiche
-				Esempi: produzione, lavoro, commercio, reddito, industria, turismo, ecoturismo, silvicoltura,
-				pesca, esplorazione e sfruttamento delle risorse come minerali, petrolio e gas.</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
 			<code>elevation</code>
-			<label>Altimetria</label>
+			<label>C Altimetria</label>
 			<description>Quote sopra o sotto il livello del mare
 				Esempi: altitudine, DEM, batimetria, pendenze e prodotti derivati</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>environment</code>
-			<label>Protezione ambiente e natura</label>
-			<description>Risorse ambientali, protezione e conservazione dell’ambiente
-				Esempi: inquinamento ambientale, trattamento dei rifiuti, valutazione di impatto ambientale,
-				monitoraggio del rischio ambientale, riserve naturali, paesaggio
+			<code>boundaries</code>
+			<label>D Confini</label>
+			<description>Descrizione legale del territorio
+				Esempi: limiti politici e amministrativi</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>planningCadastre</code>
+			<label>E Pianificazione, catasto</label>
+			<description>Pianificazione del territorio
+				Esempi: carte dell’uso del
+				suolo, carte di zonizzazione,
+				indagini catastali, proprietà
+				terriere
 			</description>
 		</entry>
 		<entry>
-			<code>environment_EnvironmentalProtection</code>
-			<label>Protezione ambiente, rumore</label>
+			<code>planningCadastre_Planning</code>
+			<label>E1 Pianificazione e sviluppo territoriale</label>
 		</entry>
 		<entry>
-			<code>environment_NatureProtection</code>
-			<label>Protezione della natura e del paesaggio</label>
+			<code>planningCadastre_Cadastre</code>
+			<label>E2 Terreni catastali</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Geoscienze, rischi</label>
+			<label>F Geoscienze, rischi</label>
 			<description>Informazioni riguardanti le Scienze della Terra
 				Esempi: entità e processi geofisici, geologia, minerali,
 				struttura e origine delle rocce terrestri, rischi di terremoti,
@@ -1592,55 +1597,39 @@ polvere</description>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Geology</code>
-			<label>Geologia</label>
+			<label>F1 Geologia</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Soils</code>
-			<label>Suolo</label>
+			<label>F2 Suolo</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_NaturalHazards</code>
-			<label>Rischi naturali</label>
+			<label>F3 Rischi naturali</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>health</code>
-			<label>Salute</label>
-			<description>Salute, servizi sanitari,	ecologia umana e sicurezza
-				Esempi: malattie, fattori che interessano la salute, igiene, abuso di sostanze, 
-				salute fisica e mentale, servizi sanitari</description>
+			<code>biota</code>
+			<label>G Bosco, flora, fauna</label>
+			<description>Flora e/o fauna nell’ambiente naturale
+				Esempi: fauna selvatica, vegetazione, scienze biologiche, ecologia, habitat
+			</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>imageryBaseMapsEarthCover</code>
-			<label>Carte di base, immagini</label>
-			<description>Mappe di base
-				Esempi: copertura territoriale, carte topografiche, immagini</description>
-		</entry>
-		<entry>
-			<code>imageryBaseMapsEarthCover_BaseMaps</code>
-			<label>Carte di base, modelli del territorio</label>
-		</entry>
-		
-		<entry>
-			<code>imageryBaseMapsEarthCover_EarthCover</code>
-			<label>Copertura e utilizzo del suolo</label>
-		</entry>
-		<entry>
-			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>Immagini aeree e satellitari</label>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>intelligenceMilitary</code>
-			<label>Armata, sicurezza</label>
-			<description>Basi, strutture e attività militari
-				Esempi: addestramento, trasporto militare, raccolta di informazioni</description>
+			<code>oceans</code>
+			<label>H Oceani</label>
+			<description>Entità e caratteristiche dei
+				corpi d’acqua salata (escluse
+				le acque interne)
+				Esempi: maree, informazioni
+				sulle linee di costa
+			</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Idrografia</label>
+			<label>I Idrografia</label>
 			<description>Caratteristiche delle acque
 				interne, sistemi di drenaggio e
 				loro caratteristiche
@@ -1652,50 +1641,32 @@ polvere</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>location</code>
-			<label>Localizzazione, sistemi di riferimento</label>
-			<description>Informazioni e servizi sulla
-				localizzazione
-				Esempi:      indirizzi,    reti
-				geodetiche, punti di controllo,
-				zone e servizi postali,
-				toponimi
-			</description>
+			<code>climatologyMeteorologyAtmosphere</code>
+			<label>K Atmosfera, climatologia</label>
+			<description>Processi e  fenomeni dell’atmosfera
+				Esempi: annuvolamento, clima,  condizioni atmosferiche, cambiamenti climatici, precipitazioni</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>oceans</code>
-			<label>Oceani</label>
-			<description>Entità e caratteristiche dei
-				corpi d’acqua salata (escluse
-				le acque interne)
-				Esempi: maree, informazioni
-				sulle linee di costa
-			</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>planningCadastre</code>
-			<label>Pianificazione, catasto</label>
-			<description>Pianificazione del territorio
-				Esempi: carte dell’uso del
-				suolo, carte di zonizzazione,
-				indagini catastali, proprietà
-				terriere
+			<code>environment</code>
+			<label>L Protezione ambiente e natura</label>
+			<description>Risorse ambientali, protezione e conservazione dell’ambiente
+				Esempi: inquinamento ambientale, trattamento dei rifiuti, valutazione di impatto ambientale,
+				monitoraggio del rischio ambientale, riserve naturali, paesaggio
 			</description>
 		</entry>
 		<entry>
-			<code>planningCadastre_Planning</code>
-			<label>Pianificazione e sviluppo territoriale</label>
+			<code>environment_EnvironmentalProtection</code>
+			<label>L1 Protezione ambiente, rumore</label>
 		</entry>
 		<entry>
-			<code>planningCadastre_Cadastre</code>
-			<label>Terreni catastali</label>
+			<code>environment_NatureProtection</code>
+			<label>L2 Protezione della natura e del paesaggio</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>society</code>
-			<label>Popolazione, società, cultura</label>
+			<label>M Popolazione, società, cultura</label>
 			<description>Caratteristiche    sociali   e
 				culturali
 				Esempi:          antropologia,
@@ -1709,8 +1680,16 @@ polvere</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
+			<code>health</code>
+			<label>N Salute</label>
+			<description>Salute, servizi sanitari,	ecologia umana e sicurezza
+				Esempi: malattie, fattori che interessano la salute, igiene, abuso di sostanze, 
+				salute fisica e mentale, servizi sanitari</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
 			<code>structure</code>
-			<label>Edifici, infrastrutture, costruzioni</label>
+			<label>O Edifici, infrastrutture, costruzioni</label>
 			<description>Costruzioni, manufatti
 				Esempi:      palazzi,  musei,
 				chiese, fabbriche, monumenti,
@@ -1720,7 +1699,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
-			<label>Trasporto</label>
+			<label>P Trasporto</label>
 			<description>Mezzi e servizi per il
 				trasporto delle persone e/o
 				delle merci
@@ -1733,7 +1712,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Alimentazione, eliminazione, comunicazione</label>
+			<label>Q Approvvigionamento, smaltimento, comunicazione</label>
 			<description>Energia, acqua e sistemi dei
 				rifiuti, infrastrutture e servizi
 				di comunicazione
@@ -1742,6 +1721,43 @@ polvere</description>
 				geotermica,         solare       e
 				nucleare, potabilizzazione e
 			</description>
+		</entry>
+		<entry>
+			<code>utilitiesCommunication_energy</code>
+			<label>Q1 Energia</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>utilitiesCommunication_utilities</code>
+			<label>Q2 Sistemi dell'acqua e dei rifiuti</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>utilitiesCommunication_communication</code>
+			<label>Q3 Comunicazioni</label>
+			<description></description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>intelligenceMilitary</code>
+			<label>R Armata, sicurezza</label>
+			<description>Basi, strutture e attività militari
+				Esempi: addestramento, trasporto militare, raccolta di informazioni</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>farming</code>
+			<label>S Agricoltura</label>
+			<description>Allevamento di animali e/o coltivazione di piante
+				Esempi:agricoltura, irrigazioni, acquacoltura, piantagioni, parassiti e malattie che interessano i raccolti e il bestiame</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>economy</code>
+			<label>T Attività economiche</label>
+			<description>Attività economiche
+				Esempi: produzione, lavoro, commercio, reddito, industria, turismo, ecoturismo, silvicoltura,
+				pesca, esplorazione e sfruttamento delle risorse come minerali, petrolio e gas.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>

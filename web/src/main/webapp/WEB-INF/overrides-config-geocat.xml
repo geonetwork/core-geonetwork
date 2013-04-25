@@ -22,6 +22,9 @@
         <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
         <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
         <replaceAtt xpath="appHandler/param[@name = 'maxWritesInTransaction']" attName="value" value="1"/>
+        <addXML xpath="default/gui">
+			<call name="geocatEnv" class="org.fao.geonet.guiservices.util.GeocatExtraEnv" />
+        </addXML>
         <addXML xpath="appHandler">
             <param name="postgisConfig">
                 <database>${postgis.db}</database>

@@ -1561,70 +1561,65 @@
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopicCategoryCode">
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>farming</code>
-			<label>Agriculture</label>
-			<description>Rearing of animals and/or cultivation of plants. Examples: agriculture,
-				irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and
-				livestock</description>
+			<code>imageryBaseMapsEarthCover</code>
+			<label>A Base maps, Imagery</label>
+			<description>Base maps. Examples: land cover, topographic maps, imagery, unclassified
+				images, annotations</description>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_BaseMaps</code>
+			<label>A1 Base Maps, Landscape Models</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_EarthCover</code>
+			<label>A2 Land Cover, Land Use</label>
+		</entry>
+		<entry>
+			<code>imageryBaseMapsEarthCover_Imagery</code>
+			<label>A3 Aerial and Satellite Imagery</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>biota</code>
-			<label>Forest, Flora, Fauna</label>
-			<description>Flora and/or fauna in natural environment. Examples: wildlife, vegetation,
-				biological sciences, ecology, wilderness, sealife, wetlands, habitat</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>boundaries</code>
-			<label>Boundaries</label>
-			<description>Legal land descriptions. Examples: political and administrative
-			boundaries</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>climatologyMeteorologyAtmosphere</code>
-			<label>Atmosphere, climatology</label>
-			<description>Processes and phenomena of the atmosphere. Examples: cloud cover, weather,
-				climate, atmospheric conditions, climate change, precipitation</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>economy</code>
-			<label>Economical Activities</label>
-			<description>Economic activities, conditions and employment. Examples: production, labour,
-				revenue, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or
-				subsistence hunting, exploration and exploitation of resources such as minerals, oil and
-				gas</description>
+			<code>location</code>
+			<label>B Location, Reference Systems</label>
+			<description>Positional information and services. Examples: addresses, geodetic networks,
+				control points, postal zones and services, place names</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>elevation</code>
-			<label>Elevation</label>
+			<label>C Elevation</label>
 			<description>Height above or below sea level. Examples: altitude, bathymetry, digital
 				elevation models, slope, derived products</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>environment</code>
-			<label>Environmental and Nature Protection</label>
-			<description>Environmental resources, protection and conservation. Examples: environmental
-				pollution, waste storage and treatment, environmental impact assessment, monitoring
-				environmental risk, nature reserves, landscape</description>
+			<code>boundaries</code>
+			<label>D Boundaries</label>
+			<description>Legal land descriptions. Examples: political and administrative
+			boundaries</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>planningCadastre</code>
+			<label>E Spatial Planning, Cadastre</label>
+			<description>Information used for appropriate actions for future use of the land. Examples:
+				land use maps, zoning maps, cadastral surveys, land ownership</description>
 		</entry>
 		<entry>
-			<code>environment_EnvironmentalProtection</code>
-			<label>Environmental protection, Noise</label>
+			<code>planningCadastre_Planning</code>
+			<label>E1 Spatial Planning, Spatial Development</label>
 		</entry>
 		<entry>
-			<code>environment_NatureProtection</code>
-			<label>Nature and Landscape protection</label>
+			<code>planningCadastre_Cadastre</code>
+			<label>E2 Cadastre, Land Registry</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>Geosciences, Hazards</label>
+			<label>F Geosciences, Hazards</label>
 			<description>Information pertaining to earth sciences. Examples: geophysical features and
 				processes, geology, minerals, sciences dealing with the composition, structure and
 				origin of the earth s rocks, risks of earthquakes, volcanic activity, landslides,
@@ -1632,91 +1627,65 @@
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Geology</code>
-			<label>Geology</label>
+			<label>F1 Geology</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_Soils</code>
-			<label>Soils</label>
+			<label>F2 Soils</label>
 		</entry>
 		<entry>
 			<code>geoscientificInformation_NaturalHazards</code>
-			<label>Natural Hazards</label>
+			<label>F3 Natural Hazards</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>health</code>
-			<label>Health</label>
-			<description>Health, health services, human ecology, and safety. Examples: disease and
-				illness, factors affecting health, hygiene, substance abuse, mental and physical health,
-				health services</description>
+			<code>biota</code>
+			<label>G Forest, Flora, Fauna</label>
+			<description>Flora and/or fauna in natural environment. Examples: wildlife, vegetation,
+				biological sciences, ecology, wilderness, sealife, wetlands, habitat</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>imageryBaseMapsEarthCover</code>
-			<label>Base maps, Imagery</label>
-			<description>Base maps. Examples: land cover, topographic maps, imagery, unclassified
-				images, annotations</description>
-		</entry>
-		<entry>
-			<code>imageryBaseMapsEarthCover_BaseMaps</code>
-			<label>Base Maps, Landscape Models</label>
-		</entry>
-		<entry>
-			<code>imageryBaseMapsEarthCover_EarthCover</code>
-			<label>Land Cover, Land Use</label>
-		</entry>
-		<entry>
-			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>Aerial and Satellite Imagery</label>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>intelligenceMilitary</code>
-			<label>Military, Security</label>
-			<description>Military bases, structures, activities. Examples: barracks, training grounds,
-				military transportation, information collection</description>
+			<code>oceans</code>
+			<label>H Oceans</label>
+			<description>Features and characteristics of salt water bodies (excluding inland waters).
+				Examples: tides, tidal waves, coastal information, reefs</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>inlandWaters</code>
-			<label>Inland Waters</label>
+			<label>I Inland Waters</label>
 			<description>Inland water features, drainage systems and their characteristics. Examples:
 				rivers and glaciers, salt lakes, water utilization plans, dams, currents, floods, water
 				quality, hydrographic charts</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>location</code>
-			<label>Location, Reference Systems</label>
-			<description>Positional information and services. Examples: addresses, geodetic networks,
-				control points, postal zones and services, place names</description>
+			<code>environment</code>
+			<label>L Environmental and Nature Protection</label>
+			<description>Environmental resources, protection and conservation. Examples: environmental
+				pollution, waste storage and treatment, environmental impact assessment, monitoring
+				environmental risk, nature reserves, landscape</description>
+		</entry>
+		<entry>
+			<code>environment_EnvironmentalProtection</code>
+			<label>L1 Environmental protection, Noise</label>
+		</entry>
+		<entry>
+			<code>environment_NatureProtection</code>
+			<label>L2 Nature and Landscape protection</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
-			<code>oceans</code>
-			<label>Oceans</label>
-			<description>Features and characteristics of salt water bodies (excluding inland waters).
-				Examples: tides, tidal waves, coastal information, reefs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>planningCadastre</code>
-			<label>Spatial Planning, Cadastre</label>
-			<description>Information used for appropriate actions for future use of the land. Examples:
-				land use maps, zoning maps, cadastral surveys, land ownership</description>
-		</entry>
-		<entry>
-			<code>planningCadastre_Planning</code>
-			<label>Spatial Planning, Spatial Development</label>
-		</entry>
-		<entry>
-			<code>planningCadastre_Cadastre</code>
-			<label>Cadastre, Land Registry</label>
+			<code>climatologyMeteorologyAtmosphere</code>
+			<label>K Atmosphere, climatology</label>
+			<description>Processes and phenomena of the atmosphere. Examples: cloud cover, weather,
+				climate, atmospheric conditions, climate change, precipitation</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>society</code>
-			<label>Population, Society, Culture</label>
+			<label>M Population, Society, Culture</label>
 			<description>Characteristics of society and cultures. Examples: settlements, anthropology,
 				archaeology, education, traditional beliefs, manners and customs, demographic data,
 				recreational areas and activities, social impact assessments, crime and justice, census
@@ -1724,15 +1693,23 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
+			<code>health</code>
+			<label>N Health</label>
+			<description>Health, health services, human ecology, and safety. Examples: disease and
+				illness, factors affecting health, hygiene, substance abuse, mental and physical health,
+				health services</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
 			<code>structure</code>
-			<label>Buildings, Infrastructure</label>
+			<label>O Buildings, Infrastructure</label>
 			<description>Man-made construction. Examples: buildings, museums, churches, factories,
 				housing, monuments, shops, towers</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>transportation</code>
-			<label>Transportation</label>
+			<label>P Transportation</label>
 			<description>Means and aids for conveying persons and/or goods. Examples: roads,
 				airports/airstrips, shipping routes, tunnels, nautical charts, vehicle or vessel
 				location, aeronautical charts, railways</description>
@@ -1740,14 +1717,52 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Utilities, Communication</label>
+			<label>Q Utilities, Communication</label>
 			<description>Energy, water and waste systems and communications infrastructure and
 				services. Examples: hydroelectricity, geothermal, solar and nuclear sources of energy,
 				water purification and distribution, sewage collection and disposal, electricity and gas
 				distribution, data communication, telecommunication, radio, communication
 			networks</description>
 		</entry>
+		<entry>
+			<code>utilitiesCommunication_energy</code>
+			<label>Q1 Energy</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>utilitiesCommunication_utilities</code>
+			<label>Q2 Water and Waste Systems</label>
+			<description></description>
+		</entry>
+		<entry>
+			<code>utilitiesCommunication_communication</code>
+			<label>Q3 Communication</label>
+			<description></description>
+		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>intelligenceMilitary</code>
+			<label>R Military, Security</label>
+			<description>Military bases, structures, activities. Examples: barracks, training grounds,
+				military transportation, information collection</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>farming</code>
+			<label>S Agriculture</label>
+			<description>Rearing of animals and/or cultivation of plants. Examples: agriculture,
+				irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and
+				livestock</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>economy</code>
+			<label>T Economical Activities</label>
+			<description>Economic activities, conditions and employment. Examples: production, labour,
+				revenue, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or
+				subsistence hunting, exploration and exploitation of resources such as minerals, oil and
+				gas</description>
+		</entry>
 	</codelist>
 	<!-- ==================================================== -->
 	<codelist name="gmd:MD_TopologyLevelCode">

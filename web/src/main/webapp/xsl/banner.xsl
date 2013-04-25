@@ -41,19 +41,33 @@
 						<a onclick="javascript:alert('You are not on the production server.  You are using the \'{/root/gui/config/serverStage}\' server.  http://www.geocat.ch is the production/real server')" class="banner"><xsl:value-of select="/root/gui/config/serverStage"/></a> |
 					</xsl:if>
                 </td>
+                <script type="text/javascript">
+    				function changePageLanguage(lang) {
+    					var isGET = '<xsl:value-of select="/root/gui/geocatEnv/httpMethod"/>' === 'GET';
+    				    var service = '<xsl:value-of select="/root/gui/service"/>/'+lang+'/';
+  						var locService = '<xsl:value-of select="/root/gui/locService"/>/';
+    					var href;
+    					if(isGET) {
+    						href = window.location.href.replace(locService, service);
+    					} else {
+    						href = service+'geocat';
+    					}
+    					window.location.href = href;
+    				}
+				</script>
                 <td align="right" class="banner-menu">
                     <xsl:choose>
                         <xsl:when test="/root/gui/language='eng'">
                         </xsl:when>
                         <xsl:otherwise>
-                            <a class="banner" href="../eng/geocat"><xsl:value-of select="/root/gui/strings/eng"/></a> |
+                            <a class="banner" href="javascript:changePageLanguage('eng')"><xsl:value-of select="/root/gui/strings/eng"/></a> |
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:choose>
                         <xsl:when test="/root/gui/language='fra' or /root/gui/language='fre'">
                         </xsl:when>
                         <xsl:otherwise>
-                            <a class="banner" href="../fre/geocat"><xsl:value-of select="/root/gui/strings/fre"/></a>
+                            <a class="banner" href="javascript:changePageLanguage('fre')"><xsl:value-of select="/root/gui/strings/fre"/></a>
                             <xsl:choose><xsl:when test="not(/root/gui/language='deu' or /root/gui/language='ger')">
                                 |
                             </xsl:when></xsl:choose>
@@ -63,7 +77,7 @@
                         <xsl:when test="/root/gui/language='deu' or /root/gui/language='ger'">
                         </xsl:when>
                         <xsl:otherwise>
-                            <a class="banner" href="../ger/geocat"><xsl:value-of select="/root/gui/strings/ger"/></a>
+                            <a class="banner" href="javascript:changePageLanguage('ger')"><xsl:value-of select="/root/gui/strings/ger"/></a>
                             <xsl:choose><xsl:when test="not(/root/gui/language='ita')">
                                 |
                             </xsl:when></xsl:choose>
@@ -73,7 +87,7 @@
                         <xsl:when test="/root/gui/language='ita'">
                         </xsl:when>
                         <xsl:otherwise>
-                            <a class="banner" href="../ita/geocat"><xsl:value-of select="/root/gui/strings/ita"/></a>
+                            <a class="banner" href="javascript:changePageLanguage('ita')"><xsl:value-of select="/root/gui/strings/ita"/></a>
                         </xsl:otherwise>
                     </xsl:choose>
                 </td>

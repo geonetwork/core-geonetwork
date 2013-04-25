@@ -229,6 +229,10 @@
 		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='imageryBaseMapsEarthCover' and 
 		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')] or 
 		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover')])] "/>
+	 <xsl:template priority="20" match="
+		gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode)='utilitiesCommunication' and 
+		(preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication')] or 
+		following-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication')])] "/>
 
 	<xsl:template priority="10" match="
 		gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'imageryBaseMapsEarthCover_') and 
@@ -262,12 +266,23 @@
 			  <xsl:apply-templates select="@*|node()"/>
 		 </xsl:copy>
 	</xsl:template>
-	
+
 	<xsl:template priority="10" match="
 		gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'environment_') and 
 			not( preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'environment_')])]">
 		<gmd:topicCategory>
             <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+        </gmd:topicCategory>
+		 <xsl:copy>
+			  <xsl:apply-templates select="@*|node()"/>
+		 </xsl:copy>
+	</xsl:template>
+
+	<xsl:template priority="10" match="
+		gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication_') and 
+			not( preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'utilitiesCommunication_')])]">
+		<gmd:topicCategory>
+            <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
         </gmd:topicCategory>
 		 <xsl:copy>
 			  <xsl:apply-templates select="@*|node()"/>
