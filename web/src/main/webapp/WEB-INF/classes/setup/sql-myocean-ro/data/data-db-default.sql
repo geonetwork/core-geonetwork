@@ -1019,7 +1019,7 @@ INSERT INTO settings (id, parentid, name, value) VALUES (1245, 966, 'categories'
 INSERT INTO settings (id, parentid, name, value) VALUES (1246, 1245, 'category', '1');
 INSERT INTO settings (id, parentid, name, value) VALUES (1247, 1228, 'host', 'http://www.ifremer.fr/geonetwork/');
 INSERT INTO settings (id, parentid, name, value) VALUES (1248, 1228, 'createRemoteCategory', 'false');
-INSERT INTO settings (id, parentid, name, value) VALUES (1249, 1228, 'mefFormatFull', 'true');
+INSERT INTO settings (id, parentid, name, value) VALUES (1249, 1228, 'mefFormatFull', 'false');
 INSERT INTO settings (id, parentid, name, value) VALUES (1250, 1228, 'xslfilter', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1251, 966, 'search', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1252, 1251, 'freeText', '');
@@ -1056,7 +1056,7 @@ INSERT INTO settings (id, parentid, name, value) VALUES (1282, 1041, 'categories
 INSERT INTO settings (id, parentid, name, value) VALUES (1283, 1282, 'category', '2');
 INSERT INTO settings (id, parentid, name, value) VALUES (1284, 1265, 'host', 'http://www.ifremer.fr/geonetwork/');
 INSERT INTO settings (id, parentid, name, value) VALUES (1285, 1265, 'createRemoteCategory', 'false');
-INSERT INTO settings (id, parentid, name, value) VALUES (1286, 1265, 'mefFormatFull', 'true');
+INSERT INTO settings (id, parentid, name, value) VALUES (1286, 1265, 'mefFormatFull', 'false');
 INSERT INTO settings (id, parentid, name, value) VALUES (1287, 1265, 'xslfilter', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1288, 1041, 'search', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1289, 1288, 'freeText', '');
@@ -1093,7 +1093,7 @@ INSERT INTO settings (id, parentid, name, value) VALUES (1319, 1116, 'categories
 INSERT INTO settings (id, parentid, name, value) VALUES (1320, 1319, 'category', '4');
 INSERT INTO settings (id, parentid, name, value) VALUES (1321, 1302, 'host', 'http://www.ifremer.fr/geonetwork/');
 INSERT INTO settings (id, parentid, name, value) VALUES (1322, 1302, 'createRemoteCategory', 'false');
-INSERT INTO settings (id, parentid, name, value) VALUES (1323, 1302, 'mefFormatFull', 'true');
+INSERT INTO settings (id, parentid, name, value) VALUES (1323, 1302, 'mefFormatFull', 'false');
 INSERT INTO settings (id, parentid, name, value) VALUES (1324, 1302, 'xslfilter', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1325, 1116, 'search', '');
 INSERT INTO settings (id, parentid, name, value) VALUES (1326, 1325, 'freeText', '');
