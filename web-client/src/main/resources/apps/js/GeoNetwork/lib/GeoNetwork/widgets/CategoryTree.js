@@ -27,8 +27,11 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     /** form element name to match with Geonetwork search **/
     name: 'E_category',
     
-    /** Tells if the tree has been loaded from the categories service */
+    /** Tells if the tree has been loaded from the categories service **/
     loaded: false,
+    
+    /** Prefix of the value in the Store, the can start with / or not **/
+    prefixPattern: '/',
         
     defaultConfig: {
         border: false,
@@ -97,7 +100,11 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	var r, pseudotree = {};
     	this.root.removeAll();
     	for (var i=0; i<records.length; i++) {
-    		r = this.getLabel(records[i].get('value')).split('/');
+    	    var label = this.getLabel(records[i].get('value'));
+    	    if(this.prefixPattern != '/' && label.substring(0,1) != '/') {
+    	        label = '/' + label;
+    	    }
+    		r = label.split('/');
             this.createNodes(this.root, r, 1);
         }
     	this.restoreSearchedCat();
@@ -108,7 +115,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      */
     getLabel: function(value){
         var idx = this.storeLabel.find('name',value);
-        if(idx && this.storeLabel.getAt(idx).get('label') &&
+        if(idx>=0 && this.storeLabel.getAt(idx).get('label') &&
                 this.storeLabel.getAt(idx).get('label')[this.lang]) {
             return this.storeLabel.getAt(idx).get('label')[this.lang];
         }
@@ -119,17 +126,24 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      * Retrieve key value from a translation of a category
      */
     getKey: function(value){
+        var res;
         var idx = this.storeLabel.findBy(function(record, id) {
-            if(record.get('label')[this.lang] == value) {
+            if(record.get('label') && record.get('label')[this.lang] == value) {
                 return true;
             } else {
                 return false;
             }
         }, this);
         if(idx > 0 && this.storeLabel.getAt(idx)) {
-            return this.storeLabel.getAt(idx).get('name');
+            res = this.storeLabel.getAt(idx).get('name');
         }
-        else return value;
+        else {
+            res = value;
+        }
+        if(this.prefixPattern == '') {
+            res = res.substring(1,res.length);
+        }
+        return res;
     },
     
     /**
@@ -174,7 +188,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      */
     getSearchedCat: function() {
     	if(!this.loaded) {
-    	    var treeCookie = cookie.get('cat.searchform.categorytree');
+    	    var treeCookie = cookie.get('cat.searchform.'+this.name);
     	    if(treeCookie) {
     	        return treeCookie;
     	    }
@@ -194,7 +208,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     		}
     	}, this);
 
-    	cookie.set('cat.searchform.categorytree', res);
+    	cookie.set('cat.searchform.' + this.name, res);
     	return res;
     },
     
@@ -206,9 +220,12 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	// node is created with expanded:true, then collapse here to allow to check hidden nodes
     	this.getRootNode().collapse(true, false);
     	
-    	var c = cookie.get('cat.searchform.categorytree');
+    	var c = cookie.get('cat.searchform.' + this.name);
     	var checkedCat = c ? c.split(' or ') : [];
     	Ext.each(checkedCat, function(label) {
+    	    if(this.prefixPattern != '/') {
+    	        label = '/'+label;
+    	    }
     		var node = this.root.findChild('category', label, true);
     		if(node) {
     			node.getUI().toggleCheck(true);

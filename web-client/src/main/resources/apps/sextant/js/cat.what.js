@@ -116,7 +116,8 @@ cat.what = function() {
             });
             
 	        var radios = new Ext.form.RadioGroup({
-	            columns: 1,
+	            columns: 2,
+	            fieldLabel: OpenLayers.i18n('Themes'),
 	            items: [radioSextant,radioINSPIRE],
 	            reset: Ext.emptyFn
 	        });
@@ -126,24 +127,25 @@ cat.what = function() {
                 url : services.opensearchSuggest,
                 rootId : 1,
                 baseParams : {
-                    field : 'inspiretheme'
+                    field : 'inspiretheme',
+                    threshold: 1
                 }
             });
-            var themeINSPIREField = new Ext.ux.form.SuperBoxSelect({
-                hideLabel : false,
-                minChars : 0,
-                queryParam : 'q',
-                hideTrigger : false,
+            var themeINSPIREField = new GeoNetwork.CategoryTree({
+                store : themeINSPIREStore,
+                lang: cat.language,
+                storeLabel: themeINSPIREStore,
+                rootVisible: false,
+                autoWidth: true,
                 id : 'E_inspiretheme',
                 name : 'E_inspiretheme',
-                store : themeINSPIREStore,
-                valueField : 'value',
-                displayField : 'value',
-                valueDelimiter : ' or ',
+                root: new Ext.tree.TreeNode({
+                    expanded: true,
+                    text: 'inspire'
+                }),
+                prefixPattern: '',
                 hidden: catCookie==2?false:true,
-                disabled: catCookie==2?false:true,
-                width: 230,
-                fieldLabel : OpenLayers.i18n('inspiretheme')
+                disabled: catCookie==2?false:true
             });
 
 	        // Use searchSuggestion to load categories (that way they can be filtered)
@@ -167,10 +169,9 @@ cat.what = function() {
 				lang: cat.language,
 				storeLabel: GeoNetwork.data.CategoryStore(services.getCategories),
 				rootVisible: false,
-				label: OpenLayers.i18n('Themes'),
 				autoWidth: true,
 				hidden: catCookie==1?false:true,
-				disabled: catCookie==1?false:true,
+				disabled: catCookie==1?false:true
 			});
 			
 			var sep1 = createSep();
@@ -180,6 +181,9 @@ cat.what = function() {
 			var updateCatTree = function(cb, value, record) {
 				categoryStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : configwhat;
 				categoryTree.loadStore();
+				
+				themeINSPIREStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : configwhat;
+				themeINSPIREField.loadStore();
 			};
 			categoryStore.on('load', function() {
 			
@@ -202,7 +206,7 @@ cat.what = function() {
 				startwith:true,
 				url: services.opensearchSuggest
 			});
-			advancedFields.push(radios, categoryTree, catalogueField, themeINSPIREField);
+			advancedFields.push(radios,  catalogueField, themeINSPIREField, categoryTree);
 			
 			panel = new Ext.Panel({
 				title: OpenLayers.i18n('What'),
