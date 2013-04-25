@@ -188,7 +188,7 @@
 					<td class="padded">
                         <div id="inspire.subpanel">
                             <div align="left">
-                                <input id="inspire.enableSearchPanel" class="content" type="checkbox"/><label for="inpire.enableSearchPanel"><xsl:value-of select="/root/gui/config/metadataEnableInspireSearch"/></label>
+                                <input id="inspire.enableSearchPanel" class="content" type="checkbox"/><label for="inspire.enableSearchPanel"><xsl:value-of select="/root/gui/config/metadataEnableInspireSearch"/></label>
                             </div>
                         </div>
 					</td>
