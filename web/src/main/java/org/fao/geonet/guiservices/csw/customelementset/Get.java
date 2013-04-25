@@ -76,7 +76,7 @@ public class Get implements Service {
         }
 
         Element cswEnabledElement = new Element("cswEnabled");
-        cswEnabledElement.setText(new Boolean(cswEnabled).toString());
+        cswEnabledElement.setText(String.valueOf(cswEnabled));
 
         result.addContent(cswEnabledElement);
 

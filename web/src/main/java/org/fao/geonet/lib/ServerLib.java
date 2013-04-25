@@ -33,6 +33,8 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
 import jeeves.server.overrides.ConfigurationOverrides;
@@ -47,19 +49,24 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public ServerLib(ServletContext servletContext, String appPath) throws IOException
+	public ServerLib(@Nullable ServletContext servletContext, String appPath) throws IOException
 	{
 		this.appPath = appPath;
 
 		serverProps = new Properties();
 		
-		InputStream stream = servletContext.getResourceAsStream(SERVER_PROPS);
-		if (stream == null) {
-			stream = servletContext.getResourceAsStream(SERVER_PROPS.replace("/",File.separator));
-			if(stream == null) {
-				stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
-			}
+		InputStream stream = null;
+		if(servletContext != null) {
+		    stream = servletContext.getResourceAsStream(SERVER_PROPS);
+		    if (stream == null) {
+		        stream = servletContext.getResourceAsStream(SERVER_PROPS.replace("/",File.separator));
+		    }
 		}
+
+		if(stream == null) {
+		    stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
+		}
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 		
 		try {
