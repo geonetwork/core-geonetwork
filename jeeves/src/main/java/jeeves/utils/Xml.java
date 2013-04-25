@@ -527,7 +527,7 @@ public final class Xml
 		try {
 			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
 			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
-			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,false);
 			transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
 			// Add the following to get timing info on xslt transformations
 			//transFact.setAttribute(FeatureKeys.TIMING,true);
