@@ -643,6 +643,13 @@ cat.app = function() {
 		Ext.getBody().setHeight(Ext.getBody().getViewSize().height);
 		o.doLayout();
 	}
+	
+	// Get location of an url
+	var getLocation = function(href) {
+	    var l = document.createElement("a");
+	    l.href = href;
+	    return l;
+	};
 
 	return {
 		init : function() {
@@ -652,7 +659,9 @@ cat.app = function() {
 			var gnUrlElt = Ext.query('input[id*=configgeonetwork]');
 			if(gnUrlElt && gnUrlElt.length==1) {
 				GeoNetwork.URL=Ext.get(gnUrlElt[0]).getValue();
-				cookiePath += window.location.href.match(/(.*ifremer.fr.*?\/)(.*)\/catalogue.*/, '')[2]+'';
+				
+				var loc = getLocation(window.location.href);
+				cookiePath = loc.pathname;
 			}
 			geonetworkUrl = GeoNetwork.URL || window.location.href.match(/((http).*\/.*)\/apps\/sextant.*/, '')[1];
 			
