@@ -127,7 +127,7 @@ cat.what = function() {
                 url : services.opensearchSuggest,
                 rootId : 1,
                 baseParams : {
-                    field : 'inspiretheme',
+                    field : 'inspiretheme_en',
                     threshold: 1
                 }
             });
@@ -135,10 +135,11 @@ cat.what = function() {
                 store : themeINSPIREStore,
                 lang: cat.language,
                 storeLabel: themeINSPIREStore,
+                separator: '',
                 rootVisible: false,
                 autoWidth: true,
                 id : 'E_inspiretheme',
-                name : 'E_inspiretheme',
+                name : 'E_inspiretheme_en',
                 root: new Ext.tree.TreeNode({
                     expanded: true,
                     text: 'inspire'
@@ -146,6 +147,10 @@ cat.what = function() {
                 prefixPattern: '',
                 hidden: catCookie==2?false:true,
                 disabled: catCookie==2?false:true
+            });
+            new Ext.tree.TreeSorter(themeINSPIREField, {
+                folderSort: true,
+                dir: "asc"
             });
 
 	        // Use searchSuggestion to load categories (that way they can be filtered)

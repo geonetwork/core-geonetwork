@@ -197,6 +197,13 @@
                             <!-- Maybe we should add the english version to the index to not take the language into account 
                             or create one field in the metadata language and one in english ? -->
                             <Field name="inspiretheme" string="{string(.)}" store="true" index="true"/>
+                          	<xsl:variable name="englisgInspireTheme">
+                          		<xsl:call-template name="translateInspireThemeToEnglish">
+                          			<xsl:with-param name="keyword" select="string(.)"/>
+                          			<xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                          		</xsl:call-template>
+                          	</xsl:variable>
+                          	<Field name="inspiretheme_en" string="{$englisgInspireTheme}" store="true" index="true"/>
                           	<Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
                             <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
                           	<Field name="inspirecat" string="true" store="false" index="true"/>

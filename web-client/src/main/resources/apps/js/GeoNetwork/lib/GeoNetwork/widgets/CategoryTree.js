@@ -30,8 +30,6 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     /** Tells if the tree has been loaded from the categories service **/
     loaded: false,
     
-    /** Prefix of the value in the Store, the can start with / or not **/
-    prefixPattern: '/',
         
     defaultConfig: {
         border: false,
@@ -45,6 +43,12 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         containerScroll: true,
         rootVisible: false,
         autoHeight: true,
+        /**
+         *  Separator to use to split the category name 
+         *  and create children. If '', no child created and 
+         *  only one root node.
+         */
+        separator: '/',
         bodyCssClass: 'x-form-item search_label', 
         root: new Ext.tree.TreeNode({
             expanded: true,
@@ -101,10 +105,16 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	this.root.removeAll();
     	for (var i=0; i<records.length; i++) {
     	    var label = this.getLabel(records[i].get('value'));
-    	    if(this.prefixPattern != '/' && label.substring(0,1) != '/') {
-    	        label = '/' + label;
-    	    }
-    		r = label.split('/');
+            if (this.separator != '') {
+                // Prepend the separator
+                if(label.substring(0,1) != this.separator) {
+                    label = this.separator + label;
+                }
+                r = label.split(this.separator);
+            } else {
+                r = label;
+                records[i].data.label = label;
+            }
             this.createNodes(this.root, r, 1);
         }
     	this.restoreSearchedCat();
@@ -119,7 +129,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
                 this.storeLabel.getAt(idx).get('label')[this.lang]) {
             return this.storeLabel.getAt(idx).get('label')[this.lang];
         }
-        else return value;
+        else return OpenLayers.i18n(value); // Will return the value if not defined
     },
     
     /**
@@ -128,20 +138,17 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     getKey: function(value){
         var res;
         var idx = this.storeLabel.findBy(function(record, id) {
-            if(record.get('label') && record.get('label')[this.lang] == value) {
+            if((record.get('label') && (record.get('label')[this.lang] == value) || record.get('label') == value)) {
                 return true;
             } else {
                 return false;
             }
         }, this);
+        
         if(idx > 0 && this.storeLabel.getAt(idx)) {
-            res = this.storeLabel.getAt(idx).get('name');
-        }
-        else {
+            res = this.storeLabel.getAt(idx).get('name') || this.storeLabel.getAt(idx).get('value');
+        } else {
             res = value;
-        }
-        if(this.prefixPattern == '') {
-            res = res.substring(1,res.length);
         }
         return res;
     },
@@ -150,13 +157,17 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      * Create category node (recursive)
      */
     createNodes : function(node, r, index) {
-        var newCategory = r[index], md;
+        var type = typeof r, newCategory = (type == 'string' ? r : r[index]), md;
         if (newCategory) {
-        	var newNode = node.findChild('text',newCategory);
+            var newNode = node.findChild('text',newCategory);
             if (!newNode) {
-            	md = '';
-                for (var i=0; i<index; i++) {
-                    md += '/'+r[i+1];
+                md = '';
+                if (type == 'string') {
+                    md = newCategory;
+                } else {
+                    for (var i=0; i<index; i++) {
+                        md += (this.separator != '' ? this.separator : '') + r[i+1];
+                    }
                 }
                 newNode = new GeoNetwork.CategoryTreeNode({
                 	text: newCategory,
@@ -165,7 +176,9 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
                 });
                 node.appendChild(newNode);
             }
-            this.createNodes(newNode, r, index+1);
+            if (type != 'string') {
+                this.createNodes(newNode, r, index+1);
+            }
         }
     },
     
@@ -200,14 +213,13 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	
     	Ext.each(selNodes, function(node) {
     		if(!node.hasChildNodes()) {
-    			if(res == '') {
+    		    if(res == '') {
     				res = this.getKey(node.attributes.category);
     			} else {
     				res += ' or ' + this.getKey(node.attributes.category);
     			}
     		}
     	}, this);
-
     	cookie.set('cat.searchform.' + this.name, res);
     	return res;
     },
@@ -223,8 +235,8 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	var c = cookie.get('cat.searchform.' + this.name);
     	var checkedCat = c ? c.split(' or ') : [];
     	Ext.each(checkedCat, function(label) {
-    	    if(this.prefixPattern != '/') {
-    	        label = '/'+label;
+    	    if(this.separator != '') {
+    	        label = this.separator + label;
     	    }
     		var node = this.root.findChild('category', label, true);
     		if(node) {
