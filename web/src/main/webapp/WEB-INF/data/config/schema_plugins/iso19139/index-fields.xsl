@@ -444,9 +444,12 @@
 				<xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString)"/>
 				<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
 				<xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
-				
-				<!-- ignore empty downloads -->
-				<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
+
+                <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
+                <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
+
+                <!-- ignore empty downloads or WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
+                <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check)) and not($wmsLinkNoProtocol)">
 					<Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
 				</xsl:if>  
 
@@ -457,8 +460,8 @@
 				<xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
 			    	<Field name="download" string="true" store="false" index="true"/>
 			  	</xsl:if>
-			  
-				<xsl:if test="contains($protocol, 'OGC:WMS')">
+
+                <xsl:if test="contains($protocol, 'OGC:WMS') or $wmsLinkNoProtocol">
 			   	 	<Field name="dynamic" string="true" store="false" index="true"/>
 			  	</xsl:if>
 				<Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
@@ -475,7 +478,12 @@
 				<xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
 					<Field name="link" string="{concat($title, '|', $desc, '|', 
 						$linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc')}" store="true" index="false"/>
-				</xsl:if>   
+				</xsl:if>
+
+                <xsl:if test="$wmsLinkNoProtocol">
+                    <Field name="link" string="{concat($title, '|', $desc, '|',
+						$linkage, '|OGC:WMS|application/vnd.ogc.wms_xml')}" store="true" index="false"/>
+                </xsl:if>
 			</xsl:for-each>  
 		</xsl:for-each>
 
