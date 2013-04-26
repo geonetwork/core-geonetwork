@@ -117,7 +117,20 @@ public final class Params {
     public static final String XPATH_TITLE = "xpathTitle";
 		public static final String EXTRACT_TITLE = "extractTitle";
     public static final String DOCHANGES = "doChanges";
-    
+
+    public static final String IS_UPLOAD    = "isUpload";
+    public static final String TEMPLATEID    = "templateId";
+    public static final String USE_SESSION  = "use_session";
+    public static final String ORGANIZATION  = "organization";
+    public static final String PHONE  = "phone";
+    public static final String SEX  = "sex";
+    public static final String CAPTCHARESPONSE  = "captcharesponse";
+    public static final String REMARKS  = "remarks";
+    public static final String FUNCTION  = "function";
+    public static final String FEEDBACK_FUNCTION  = "feedback-function";
+    public static final String METADATA_ORGANIZATION  = "metadataorganisation";
+    public static final String METADATA_EMAIL  = "metadataemail";
+    public static final String DATE  = "date";
     public static final String FULL_PRIVILEGES = "fullPrivileges";
     
 	public static final String SERVICENAME     = "servicename";
