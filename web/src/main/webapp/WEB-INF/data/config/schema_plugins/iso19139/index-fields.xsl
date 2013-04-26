@@ -448,12 +448,12 @@
                 <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
                 <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
-                <!-- ignore empty downloads or WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
-                <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check)) and not($wmsLinkNoProtocol)">
-					<Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
-				</xsl:if>  
+                <!-- ignore empty downloads -->
+                <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
+                    <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
+                </xsl:if>
 
-				<xsl:if test="normalize-space($mimetype)!=''">
+                <xsl:if test="normalize-space($mimetype)!=''">
 					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>
 			  
@@ -464,8 +464,12 @@
                 <xsl:if test="contains($protocol, 'OGC:WMS') or $wmsLinkNoProtocol">
 			   	 	<Field name="dynamic" string="true" store="false" index="true"/>
 			  	</xsl:if>
-				<Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
-				
+
+                <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
+                <xsl:if test="not($wmsLinkNoProtocol)">
+                    <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
+                </xsl:if>
+
 				<!-- Add KML link if WMS -->
 				<xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
 					<!-- FIXME : relative path -->
