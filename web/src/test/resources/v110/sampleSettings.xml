@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<harvesting id="2">
+  <value />
+  <children>
+    <node id="1002">
+      <value>webdav</value>
+      <children>
+        <site id="1003">
+          <value />
+          <children>
+            <name id="1007">
+              <value>asfasfra</value>
+            </name>
+            <uuid id="1008">
+              <value>99691249-58c1-478d-990f-02c9e77f3363</value>
+            </uuid>
+            <useAccount id="1009">
+              <value>false</value>
+              <children>
+                <username id="1010">
+                  <value />
+                </username>
+                <password id="1011">
+                  <value />
+                </password>
+              </children>
+            </useAccount>
+            <url id="1021">
+              <value>http://sadfas.com</value>
+            </url>
+            <icon id="1022">
+              <value>default.gif</value>
+            </icon>
+          </children>
+        </site>
+        <options id="1004">
+          <value />
+          <children>
+            <every id="1012">
+              <value>0 0 0 ? * *</value>
+            </every>
+            <oneRunOnly id="1013">
+              <value>false</value>
+            </oneRunOnly>
+            <status id="1014">
+              <value>inactive</value>
+            </status>
+            <validate id="1023">
+              <value>false</value>
+            </validate>
+            <recurse id="1024">
+              <value>false</value>
+            </recurse>
+            <subtype id="1025">
+              <value>webdav</value>
+            </subtype>
+          </children>
+        </options>
+        <info id="1005">
+          <value />
+          <children>
+            <lastRun id="1017">
+              <value />
+            </lastRun>
+          </children>
+        </info>
+        <content id="1006">
+          <value />
+          <children>
+            <importxslt id="1015">
+              <value>none</value>
+            </importxslt>
+            <validate id="1016">
+              <value>NOVALIDATION</value>
+            </validate>
+          </children>
+        </content>
+        <privileges id="1019">
+          <value />
+        </privileges>
+        <categories id="1020">
+          <value />
+        </categories>
+      </children>
+    </node>
+  </children>
+</harvesting>

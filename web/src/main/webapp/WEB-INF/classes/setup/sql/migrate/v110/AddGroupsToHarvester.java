@@ -26,7 +26,7 @@ public class AddGroupsToHarvester implements DatabaseMigrationTask {
 	private void update(Element element, Map<String, Object> values,
 			String setting) {
 		try {
-			List<Element> sites = (List<Element>) jeeves.utils.Xml.selectNodes(element, "*//site[//"+setting+"]");
+			List<Element> sites = (List<Element>) jeeves.utils.Xml.selectNodes(element, "*//site[not(//"+setting+")]");
 
 			for (Element site : sites) {
 				String id = site.getAttributeValue("id");
