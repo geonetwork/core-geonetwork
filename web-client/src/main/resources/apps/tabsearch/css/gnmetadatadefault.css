@@ -444,6 +444,9 @@ div.button {
 .book {
   background-image : url(../../images/default/book.png) !important;
 }
+.feedback {
+    background-image : url(../../images/default/feedback.png) !important;
+}
 .subtemplateIcon {
   background-image : url(../../images/default/report_magnify.png) !important;
 }

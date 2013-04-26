@@ -1195,7 +1195,7 @@ Ext.onReady(function () {
             catalogue.kvpSearch("fast=index&uuid=" + uuid, null, null, null,
                     true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
-
+            var showFeedBackButton = record.get('email');
             var RowTitle = uuid;
 
             try {
@@ -1220,6 +1220,7 @@ Ext.onReady(function () {
                 catalogue : catalogue,
                 // maximized: true,
                 metadataUuid : uuid,
+                showFeedBackButton: showFeedBackButton,
                 record : record
             });
 

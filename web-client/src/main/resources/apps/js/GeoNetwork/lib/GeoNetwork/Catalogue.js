@@ -271,6 +271,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.services = {
             rootUrl: serviceUrl,
             csw: serviceUrl + 'csw',
+            feedback: serviceUrl + 'feedback.send',
             xmlSearch: serviceUrl + 'xml.search',
             mdSelect: serviceUrl + 'metadata.select',
             mdView: serviceUrl + 'view',

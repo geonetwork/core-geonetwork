@@ -125,7 +125,33 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }
         return contact;
     }
-    
+    function getOrganization(v, record) {
+        var orgName, el;
+        if (record.responsibleParty) {
+            for (i = 0; i < record.responsibleParty.length; i++) {
+                var tokens = record.responsibleParty[i].value.split(GeoNetwork.data.MetadataResultsFastStore.separator);
+                if(tokens[2]) {
+                    orgName = tokens[2];
+                    break;
+                }
+            }
+        }
+        return orgName;
+    }
+
+    function getEmail(v, record) {
+        var email, el;
+        if (record.responsibleParty) {
+            for (i = 0; i < record.responsibleParty.length; i++) {
+                var tokens = record.responsibleParty[i].value.split(GeoNetwork.data.MetadataResultsFastStore.separator);
+                if(tokens[4]) {
+                    email = tokens[4];
+                    break;
+                }
+            }
+        }
+        return email;
+    }
     function getLinks(v, record){
         if (record.link) {
             return record.link;
@@ -176,7 +202,15 @@ GeoNetwork.data.MetadataResultsStore = function(){
             return '';
         }
     }
-    
+
+    function getPublicationDate(v, record) {
+        if (record.geonet_info && record.geonet_info.publicationDate) {
+            return record.geonet_info.publicationDate[0].value;
+        } else {
+            return '';
+        }
+    }
+
     function getIsHarvested(v, record){
         if (record.geonet_info && record.geonet_info.isHarvested) {
             return record.geonet_info.isHarvested[0].value;
@@ -282,6 +316,12 @@ GeoNetwork.data.MetadataResultsStore = function(){
             name: 'contact',
             convert: getContact
         }, {
+            name: 'email',
+            convert: getEmail
+        }, {
+            name: 'organization',
+            convert: getOrganization
+        }, {
             name: 'thumbnail',
             convert: getThumbnails
         }, {
@@ -303,6 +343,9 @@ GeoNetwork.data.MetadataResultsStore = function(){
         }, {
             name: 'changedate',
             convert: getChangeDate
+        }, {
+            name : 'publicationdate',
+            convert : this.getPublicationDate
         }, {
             name: 'selected',
             convert: getSelected

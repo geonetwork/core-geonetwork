@@ -594,10 +594,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <!-- classic GUI -->
 		<service name="feedback">
 			<output sheet="feedback.xsl" />
 		</service>
 
+        <!-- Ext GUIs -->
+        <service name="feedback.send">
+            <class name=".services.feedback.Receptor" />
+            <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
+        </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="links">
