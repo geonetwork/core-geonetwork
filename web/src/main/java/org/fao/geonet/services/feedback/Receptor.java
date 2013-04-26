@@ -1,7 +1,8 @@
 package org.fao.geonet.services.feedback;
 
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -34,9 +35,9 @@ public class Receptor implements Service {
 
     //private static final String NOREPLY = "noreply@nationaalgeoregister.nl";
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	public Element exec(Element params, final ServiceContext context) throws Exception {
+    public Element exec(Element params, final ServiceContext context) throws Exception {
         try {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             SettingManager sm = gc.getSettingManager();
@@ -53,7 +54,7 @@ public class Receptor implements Service {
             String function = Util.getParam(params, Params.FUNCTION, "");
             String organization = Util.getParam(params, Params.ORGANIZATION, "");
             String feedbackFunction = Util.getParam(params, Params.FEEDBACK_FUNCTION, "");
-		    String email = Util.getParam(params, Params.EMAIL, "");
+            String email = Util.getParam(params, Params.EMAIL, "");
 
             //
             // automatic hidden params
@@ -67,7 +68,6 @@ public class Receptor implements Service {
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy 'at' hh:mm:ss z");
             String currentDateTime = sdf.format(cal.getTime());
-
             String body = "Date and time: " + currentDateTime + "\n";
             if(StringUtils.isEmpty(uuid)) {
                 body += "Subject:\tGeneral feedback GeoNetwork catalog\n";
@@ -75,11 +75,11 @@ public class Receptor implements Service {
             else {
                 body += "Subject:\tMetadata feedback GeoNetwork catalog\n";
                 body += "Metadata UUID: " + uuid + "\n";
-                body += "Metadata title: " + title + "\n";
+                body = "Metadata title: " + title + "\n";
                 body += "Metadata date: " + date + "\n";
                 body += "Metadata organization: " + metadataOrganization + "\n";
             }
-            body += "Name:\t" + name + "\n";
+            body = "Name:\t" + name + "\n";
             body += "Sex:\t" + sex + "\n";
             body += "Function:\t" + function + "\n";
             body += "Organization:\t" + organization + "\n";
@@ -93,12 +93,11 @@ public class Receptor implements Service {
 
             String subject;
             if(StringUtils.isEmpty(uuid)) {
-                 subject = "General feedback GeoNetwork catalog: " + feedbackFunction;
+                subject = "General feedback GeoNetwork catalog: " + feedbackFunction;
             }
             else {
                 subject = "Metadata feedback GeoNetwork catalog: " + feedbackFunction;
             }
-
 
             String host = sm.getValue("system/feedback/mailServer/host");
             String port = sm.getValue("system/feedback/mailServer/port");
@@ -107,6 +106,10 @@ public class Receptor implements Service {
             Log.debug(Geonet.FEEDBACK, "email settings.. host: " + host + " port: " + port + " email: " + to);
 
             JavaMailer mailer = new JavaMailer(host, port, false, null, null);
+
+            if(StringUtils.isEmpty(NOREPLY)) {
+                NOREPLY = "noreply@geonetwork-opensource.org";
+            }
             if(StringUtils.isNotEmpty(metadataEmail)) {
                 if(StringUtils.isNotEmpty(to)) {
                     mailer.send(subject, body, null, NOREPLY, to, metadataEmail);
@@ -124,7 +127,6 @@ public class Receptor implements Service {
                     response.setText("Feedback email not sent, because both the catalog system email and the metadata email were empty.");
                 }
             }
-
             Element response = new Element("response");
             Element success = new Element("feedbackreceptorsuccess");
             response.addContent(success);
@@ -147,5 +149,5 @@ public class Receptor implements Service {
             error.setAttribute("id", "feedbackreceptorerror");
             return new Element("response").addContent(error);
         }
-	}
+    }
 }
