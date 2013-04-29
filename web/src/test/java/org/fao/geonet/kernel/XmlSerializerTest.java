@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -102,6 +103,12 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
+		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
+		threadLocalInstance.set(null);
+
 		assertHiddenElements(true, null);
 	}
 
