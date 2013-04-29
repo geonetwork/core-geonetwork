@@ -1629,17 +1629,17 @@
 			<description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_energy</code>
+			<code>utilitiesCommunication_Energy</code>
 			<label>Q1 Energie</label>
 			<description>Energie</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_utilities</code>
+			<code>utilitiesCommunication_Utilities</code>
 			<label>Q2 Systèmes des eaux et des déchets</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_communication</code>
+			<code>utilitiesCommunication_Communication</code>
 			<label>Q3 Communication</label>
 			<description></description>
 		</entry>

@@ -1829,17 +1829,17 @@
 			<description>Energie-, Wasser- und Abfallsysteme, Kommunikationsinfrastruktur und -dienste, z.B. Wasserkraft, geothermische, solare und nukleare Energiequellen, Wasseraufbereitung- und verteilung, Abwassersammlung- und aufbereitung, Hochspannungs- und Gasleitungen, Datenkommunikation, Telekommunikation, Radio, Kommunikationsnetzwerke</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_energy</code>
+			<code>utilitiesCommunication_Energy</code>
 			<label>Q1 Energie</label>
 			<description>Energie</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_utilities</code>
+			<code>utilitiesCommunication_Utilities</code>
 			<label>Q2 Wasser- und Abfallsysteme</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_communication</code>
+			<code>utilitiesCommunication_Communication</code>
 			<label>Q3 Kommunikation</label>
 			<description></description>
 		</entry>

@@ -669,9 +669,9 @@
       <xsd:enumeration value="structure"/>
       <xsd:enumeration value="transportation"/>
       <xsd:enumeration value="utilitiesCommunication"/>
-      <xsd:enumeration value="utilitiesCommunication_energy"/>
-      <xsd:enumeration value="utilitiesCommunication_utilities"/>
-      <xsd:enumeration value="utilitiesCommunication_communication"/>
+      <xsd:enumeration value="utilitiesCommunication_Energy"/>
+      <xsd:enumeration value="utilitiesCommunication_Utilities"/>
+      <xsd:enumeration value="utilitiesCommunication_Communication"/>
     </xsd:restriction>
   </xsd:simpleType>
   <xsd:simpleType name="GM03_2_1Core.Core.Percentage">

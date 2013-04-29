@@ -1723,17 +1723,17 @@ polvere</description>
 			</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_energy</code>
+			<code>utilitiesCommunication_Energy</code>
 			<label>Q1 Energia</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_utilities</code>
+			<code>utilitiesCommunication_Utilities</code>
 			<label>Q2 Sistemi dell'acqua e dei rifiuti</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_communication</code>
+			<code>utilitiesCommunication_Communication</code>
 			<label>Q3 Comunicazioni</label>
 			<description></description>
 		</entry>

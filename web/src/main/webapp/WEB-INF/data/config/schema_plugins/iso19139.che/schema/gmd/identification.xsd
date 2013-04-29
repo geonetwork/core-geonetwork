@@ -284,9 +284,9 @@
 			<xs:enumeration value="structure"/>
 			<xs:enumeration value="transportation"/>
 			<xs:enumeration value="utilitiesCommunication"/>
-			<xs:enumeration value="utilitiesCommunication_energy"/>
-			<xs:enumeration value="utilitiesCommunication_utilities"/>
-			<xs:enumeration value="utilitiesCommunication_communication"/>
+			<xs:enumeration value="utilitiesCommunication_Energy"/>
+			<xs:enumeration value="utilitiesCommunication_Utilities"/>
+			<xs:enumeration value="utilitiesCommunication_Communication"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- ........................................................................ -->

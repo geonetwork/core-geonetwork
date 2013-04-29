@@ -1725,17 +1725,17 @@
 			networks</description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_energy</code>
+			<code>utilitiesCommunication_Energy</code>
 			<label>Q1 Energy</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_utilities</code>
+			<code>utilitiesCommunication_Utilities</code>
 			<label>Q2 Water and Waste Systems</label>
 			<description></description>
 		</entry>
 		<entry>
-			<code>utilitiesCommunication_communication</code>
+			<code>utilitiesCommunication_Communication</code>
 			<label>Q3 Communication</label>
 			<description></description>
 		</entry>
