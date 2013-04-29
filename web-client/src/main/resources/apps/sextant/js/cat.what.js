@@ -23,6 +23,7 @@ cat.what = function() {
 	};
 	
 	var groupFieldStore;
+	var userGroupStore;
 	return {
 		createCmp : function(catalogue) {
 			var services = catalogue.services;
@@ -61,11 +62,20 @@ cat.what = function() {
 			    // https://forge.ifremer.fr/mantis/view.php?id=15954
 			    // Filter group starting with - from the store for non authentified users
 			    // Filter group if configwhat is defined
+			    userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
+			    userGroupStore.load();
+
 			    groupFieldStore.on('load', function () {
 			        this.filterBy(function (record, id) {
 	                    if (groupToRemove.indexOf("-" + record.get('value')) !== -1) {
+	                        // Group to remove if identify
 	                        if (catalogue.isIdentified()) {
-                                return true;
+	                            // ... and if user is not a member of that group
+	                            // Administrator will see all groups defined in configWhat
+	                            // others, will see groups starting with "-" only if they are member of that group
+	                            // ... and one metadata is published (due to suggestions)
+	                            var userIsMemberOf = userGroupStore.query('name', record.get('value')).length !== 0;
+	                            return userIsMemberOf ? true : false;
                             }
                             return false;
 			            } else {
@@ -275,6 +285,9 @@ cat.what = function() {
 		
 		getCatalogueField : function() {
 			return catalogueField;
+		},
+		updateUserGroups : function() {
+		    userGroupStore.reload();
 		}
 	}
 }();

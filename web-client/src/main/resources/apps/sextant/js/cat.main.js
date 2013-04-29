@@ -109,9 +109,11 @@ cat.app = function() {
 		
 		catalogue.on('afterLogin', function() {
 			cookie.set('user', catalogue.identifiedUser);
+			cat.what.updateUserGroups(this);
 		});
 		catalogue.on('afterLogout', function() {
 			cookie.set('user', undefined);
+			cat.what.updateUserGroups(this);
 		});
 
 		// Refresh login form if needed
