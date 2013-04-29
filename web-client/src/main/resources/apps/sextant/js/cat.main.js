@@ -428,7 +428,7 @@ cat.app = function() {
 	function createSearchForm() {
 		
 		var services = catalogue.services;
-		cat.what.createCmp(services);
+		cat.what.createCmp(catalogue);
 		
 		var whereForm = cat.where.createCmp();
 		var whatForm = cat.what.getPanel();

@@ -21,41 +21,65 @@ cat.what = function() {
 				cls: 'search_form_separator'}
 		}
 	};
-
+	
+	var groupFieldStore;
 	return {
-		createCmp : function(services) {
-			
+		createCmp : function(catalogue) {
+			var services = catalogue.services;
 			//var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, false);
 			// Catalogue field is for Sextant the groupPublished
-			// TODO : here we have to restrict the list according to index content
-			// using autocompletion
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 			
 			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
 			var mode, groupFieldStore; 
 			var configwhatInput = Ext.query('input[id*=configwhat]');
-			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
-				configwhat = configwhatInput[0].value;
-				groupFieldStore =  new Ext.data.ArrayStore({
-					fields: ['value']
+			
+
+			groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore(
+				{
+					url : services.opensearchSuggest,
+					rootId : 1,
+					baseParams : {
+						field : '_groupPublished'
+					}
 				});
-				var data = configwhat.split(',');
-				for(i=0;i<data.length;i++) {
-					data[i] = [data[i]];
-				}
-				groupFieldStore.loadData(data);
-				mode='local';
-			}
-			else {
-				 groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore(
-					{
-						url : services.opensearchSuggest,
-						rootId : 1,
-						baseParams : {
-							field : '_groupPublished'
-						}
-					});
-				 mode='remote';
+			mode = 'remote';
+				
+			// optionnaly configwhat define some elements to remove using -GROUPNAME flag for non identified users
+			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
+			    configwhat = configwhatInput[0].value;
+			    var data = configwhat.split(',');
+			    var groupToRemove = [];
+                var groupToDisplay = [];
+			    for (var i = 0; i < data.length; i++) {
+			        if (data[i].substring(0, 1) === '-') {
+			            groupToRemove.push(data[i]);
+			        } else {
+			            groupToDisplay.push(data[i]);
+			        }
+			    }
+			    // https://forge.ifremer.fr/mantis/view.php?id=15954
+			    // Filter group starting with - from the store for non authentified users
+			    // Filter group if configwhat is defined
+			    groupFieldStore.on('load', function () {
+			        this.filterBy(function (record, id) {
+	                    if (groupToRemove.indexOf("-" + record.get('value')) !== -1) {
+	                        if (catalogue.isIdentified()) {
+                                return true;
+                            }
+                            return false;
+			            } else {
+			                if (groupToDisplay.length > 0) {
+			                    if (groupToDisplay.indexOf(record.get('value')) !== -1) {
+                                    return true;
+			                    } else {
+			                        return false;
+			                    }
+                            }
+			            }
+	                    return true;
+			        });
+			    });
 			}
 	        catalogueField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
