@@ -5,10 +5,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Xml;
 
@@ -28,9 +24,7 @@ public class AddGroupsToHarvesterTest {
 
 		task.update(settings , dbms);
 		
-		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("id:1003/owner", "1");
-		verify(settings).setValues(dbms, values);
+		verify(settings).add(dbms, "id:1003", "owner", "1");
 
 	}
 
