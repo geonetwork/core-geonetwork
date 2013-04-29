@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
 
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -19,6 +21,7 @@ public class AddGroupsToHarvester implements DatabaseMigrationTask {
 		Element element = settings.get("harvesting", -1);
 		Map<String, Object> values = new HashMap<String, Object>();
 		update(element, values, "owner");
+		Log.info(Geonet.HARVESTER, "Added owners to settings: \n"+values);
 		settings.setValues(dbms, values);
 	}
 
