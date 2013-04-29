@@ -393,24 +393,9 @@ class Harvester
 		    	}
 			}
 		} else {
-			System.out.println("no search criterion specified, harvesting all ... ");
+		    log.debug("no search criterion specified, harvesting all ... ");
 		}
 		
-		//--- make sure that any freetext value has wildcards
-		/*String freeText = s.freeText;
-		if (freeText.length() > 0) {
-			if (!freeText.contains("%")) freeText = "%"+freeText+"%";
-		}
-
-		// FIXME :
-		// old GeoNetwork node does not understand AnyText (csw:AnyText instead).
-		buildFilterQueryable(queriables, "csw:AnyText", freeText);
-		buildFilterQueryable(queriables, "dc:title", s.title);
-		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
-		buildFilterQueryable(queriables, "dc:subject", s.subject);
-		buildFilterQueryable(queriables, "dc:denominator", s.minscale, "PropertyIsGreaterThanOrEqualTo");
-		buildFilterQueryable(queriables, "dc:denominator", s.maxscale, "PropertyIsLessThanOrEqualTo");
-		*/
 		
 		//--- build filter expression
 
