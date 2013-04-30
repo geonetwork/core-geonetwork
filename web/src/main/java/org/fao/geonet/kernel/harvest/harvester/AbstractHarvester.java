@@ -131,7 +131,7 @@ public abstract class AbstractHarvester
 		//--- raises an exception if type is null
 
 		if (type == null)
-			throw new BadParameterEx("type", type);
+			throw new BadParameterEx("type", null);
 
 		Class<?> c = hsHarvesters.get(type);
 
@@ -169,7 +169,7 @@ public abstract class AbstractHarvester
 
 	//--------------------------------------------------------------------------
 
-	public void init(Element node) throws BadInputEx, SchedulerException
+	public synchronized void init(Element node) throws BadInputEx, SchedulerException
 	{
 		id       = node.getAttributeValue("id");
 		status   = Status.parse(node.getChild("options").getChildText("status"));
@@ -640,7 +640,7 @@ public abstract class AbstractHarvester
 	//--------------------------------------------------------------------------
 
 	private String id;
-	private Status status;
+	private volatile Status status;
 
 	private Throwable error;
     private boolean running = false;
@@ -649,7 +649,7 @@ public abstract class AbstractHarvester
 	protected SettingManager settingMan;
 	protected DataManager    dataMan;
 
-	private static Map<String, Class> hsHarvesters = new HashMap<String, Class>();
+	private static Map<String, Class<?>> hsHarvesters = new HashMap<String, Class<?>>();
 }
 
 //=============================================================================

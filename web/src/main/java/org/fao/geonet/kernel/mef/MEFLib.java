@@ -49,6 +49,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -257,7 +258,6 @@ public class MEFLib {
 	static void createDir(ZipOutputStream zos, String name) throws IOException {
 		ZipEntry entry = new ZipEntry(name);
 		zos.putNextEntry(entry);
-		zos.closeEntry();
 	}
 
 	/**
@@ -492,7 +492,8 @@ public class MEFLib {
 
 		Element privil = new Element("privileges");
 
-		for (String grpName : hmPriv.keySet()) {
+		for (Map.Entry<String, ArrayList<String>> entry : hmPriv.entrySet()) {
+		    String grpName = entry.getKey();
 			Element group = new Element("group");
 			group.setAttribute("name", grpName);
 			// Handle group owner
@@ -501,7 +502,7 @@ public class MEFLib {
 
 			privil.addContent(group);
 
-			for (String operName : hmPriv.get(grpName)) {
+			for (String operName : entry.getValue()) {
 				Element oper = new Element("operation");
 				oper.setAttribute("name", operName);
 

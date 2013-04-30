@@ -28,6 +28,8 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -35,11 +37,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 //=============================================================================
@@ -84,7 +83,9 @@ public class CswHarvester extends AbstractHarvester
 	{
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
-		icon.delete();
+        if (!icon.delete() && icon.exists()) {
+            Log.warning(Geonet.CSW_HARVEST, "Unable to delete icon: "+icon);
+        }
 		Lib.sources.delete(dbms, params.uuid);
 	}
 

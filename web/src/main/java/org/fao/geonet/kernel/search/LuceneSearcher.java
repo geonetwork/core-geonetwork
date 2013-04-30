@@ -358,11 +358,6 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		Map <String, SearchManager.TermFrequency> finalValuesMap = new HashMap<String, SearchManager.TermFrequency>();
 		
-		GeonetContext gc = null;
-		if (srvContext != null) {
-			gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-		}
-		
 		// Search for all current session could search for
 		// Do a like query to limit the size of the results
 		Element elData = new Element(Jeeves.Elem.REQUEST); // SearchDefaults.getDefaultSearch(srvContext, null);
@@ -790,21 +785,6 @@ public class LuceneSearcher extends MetaSearcher {
      * @throws Exception hmm
      */
 	private TopDocs performQuery(int startHit, int endHit, boolean buildSummary) throws Exception {
-
-		int numHits;
-		
-		boolean computeSummary = false;
-		if (buildSummary) {
-			computeSummary = _elSummary == null;
-			if (computeSummary) {
-				// get as many results as instructed or enough for search summary
-				numHits = Math.max(_maxHitsInSummary,endHit);
-			} else {
-				numHits = endHit;
-			}	
-		} else {
-			numHits = endHit;
-		}
 		IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
         _versionToken = indexAndTaxonomy.version;
         Pair<TopDocs,Element> results;
@@ -1110,39 +1090,40 @@ public class LuceneSearcher extends MetaSearcher {
             // wildcards - preserve them by analyzing the parts of the search string around them separately
             // (this is because Lucene's StandardTokenizer would remove wildcards, but that's not what we want)
             if(string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-                String starsPreserved = "";
+                StringBuilder starsPreserved = new StringBuilder();
                 String[] starSeparatedList = string.split("\\*");
                 for(String starSeparatedPart : starSeparatedList) {
-                    String qPreserved = "";
+                    StringBuilder qPreserved = new StringBuilder();
                     // ? present
                     if(starSeparatedPart.indexOf('?') >= 0) {
                         String[] qSeparatedList = starSeparatedPart.split("\\?");
                         for(String qSeparatedPart : qSeparatedList) {
                             String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, analyzer, tokenizedFieldSet);
-                            qPreserved += '?' + analyzedPart;
+                            qPreserved.append('?').append(analyzedPart);
                         }
                         // remove leading ?
-                        qPreserved = qPreserved.substring(1);
-                        starsPreserved += '*' + qPreserved;
+                        qPreserved.deleteCharAt(0);
+                        starsPreserved.append('*').append(qPreserved);
                     }
                     // no ? present
                     else {
-                        starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, analyzer, tokenizedFieldSet);
+                        String analyzeQueryText = LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, analyzer, tokenizedFieldSet);
+                        starsPreserved.append('*').append(analyzeQueryText);
                     }
                 }
                 // remove leading *
-                if (!org.apache.commons.lang.StringUtils.isEmpty(starsPreserved)) {
-                    starsPreserved = starsPreserved.substring(1);
+                if (starsPreserved.length() > 0) {
+                    starsPreserved = starsPreserved.deleteCharAt(0);
                 }
 
                 // restore ending wildcard
                 if (string.endsWith("*")) {
-                    starsPreserved += "*";
+                    starsPreserved.append("*");
                 } else if (string.endsWith("?")) {
-                    starsPreserved += "?";
+                    starsPreserved.append("?");
                 }
 
-                analyzedString = starsPreserved;
+                analyzedString = starsPreserved.toString();
             }
             // no wildcards
             else {
@@ -1377,9 +1358,10 @@ public class LuceneSearcher extends MetaSearcher {
 			Map<String, FacetConfig> summaryConfigValues) {
             List<FacetRequest> requests = new ArrayList<FacetRequest>(summaryConfigValues.size());
 		
-		for (String key : summaryConfigValues.keySet()) {
-			FacetConfig config = summaryConfigValues.get(key);
-			
+		for (Map.Entry<String, FacetConfig> entry : summaryConfigValues.entrySet()) {
+			FacetConfig config = entry.getValue();
+			String key = entry.getKey();
+
 			int max = config.getMax();
 			
 			FacetRequest facetRequest = new CountFacetRequest(
@@ -1402,7 +1384,6 @@ public class LuceneSearcher extends MetaSearcher {
 	 */
 	private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
         // Retrieve the info element
-        String root       = doc.get("_root");
         String schema     = doc.get("_schema");
         String source     = doc.get("_source");
         String uuid       = doc.get("_uuid");
@@ -1445,12 +1426,13 @@ public class LuceneSearcher extends MetaSearcher {
             addedTranslation = null;
         }
         if (dumpFields != null) {
-            for (String fieldName : dumpFields.keySet()) {
+            for (Map.Entry<String, String> entry : dumpFields.entrySet()) {
+                String fieldName = entry.getKey();
                 IndexableField[] values = doc.getFields(fieldName);
                 for (IndexableField f : values) {
                     if (f != null) {
                         if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
-                            md.addContent(new Element(dumpFields.get(fieldName)).setText(f.stringValue()));
+                            md.addContent(new Element(entry.getValue()).setText(f.stringValue()));
                         }
                     }
                 }

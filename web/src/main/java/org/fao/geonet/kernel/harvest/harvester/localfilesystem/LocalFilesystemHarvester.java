@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -127,7 +128,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	protected void doDestroy(Dbms dbms) throws SQLException {
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
-		icon.delete();
+        if (!icon.delete() && icon.exists()) {
+            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
+        }
+
 		Lib.sources.delete(dbms, dataMan.getSiteID());
 	}
 

@@ -136,7 +136,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         checkVersion(request);
 
         // GeoNetwork only supports "application/xml"
-        String outputFormat = checkOutputFormat(request);
+        checkOutputFormat(request);
 
         // one of ElementName XOR ElementSetName must be requested
         checkElementNamesXORElementSetName(request);
@@ -190,9 +190,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                     customElementSets = dataManager.getCustomElementSets(dbms);
                     // custom elementset defined
                     if(!CollectionUtils.isEmpty(customElementSets)) {
-                        if(elemNames == null) {
-                            elemNames = new HashSet<String>();
-                        }
+                        elemNames = new HashSet<String>();
                         for(Element customElementSet : customElementSets) {
                             elemNames.add(customElementSet.getChildText("xpath"));
                         }
@@ -512,7 +510,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * metadata record elements the query should present in the response to the GetRecords operation.
      *
      * OGC 07-045 8.2.2.1.1:
-     * Mandatory: Must support *one* of “csw:Record” or “gmd:MD_Metadata” in a query. Default value is “csw:Record”.
+     * Mandatory: Must support *one* of â€œcsw:Recordâ€� or â€œgmd:MD_Metadataâ€� in a query. Default value is â€œcsw:Recordâ€�.
      *
      * (note how OGC 07-045 mixes up a mandatory parameter that has a default value !!)
      *

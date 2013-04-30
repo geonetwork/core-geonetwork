@@ -28,6 +28,7 @@ import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlElementReader;
 import jeeves.utils.XmlRequest;
@@ -282,7 +283,10 @@ class Harvester
 	    			harvest(records, fragmentHarvester);
 	        }
 		} finally {
-			tempFile.delete();
+	        if (!tempFile.delete() && tempFile.exists()) {
+	            log.warning("Unable to delete tempFile: "+tempFile);
+	        }
+
 		}
 				
     }

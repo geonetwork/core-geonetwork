@@ -400,11 +400,11 @@ public class MetadataSchema
 	 * @return
 	 */
 	public String[] getSchematronRules() {
-		return schematronRules;
+        return this.schematronRules.clone() ;
 	}
 
 	private void setSchematronRules(String[] schematronRules) {
-		this.schematronRules = schematronRules;
+		this.schematronRules = schematronRules.clone();
 	}
 
 	// -- this info for profile detection methods

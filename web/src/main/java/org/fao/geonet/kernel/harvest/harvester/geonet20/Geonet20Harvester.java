@@ -29,6 +29,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
@@ -86,7 +87,10 @@ public class Geonet20Harvester extends AbstractHarvester
 	{
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
-		icon.delete();
+        if (!icon.delete() && icon.exists()) {
+            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
+        }
+
 		Lib.sources.delete(dbms, params.uuid);
 	}
 

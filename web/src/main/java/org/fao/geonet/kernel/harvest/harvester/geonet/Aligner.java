@@ -27,6 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
@@ -281,7 +282,9 @@ public class Aligner
 		}
 		finally
 		{
-			mefFile.delete();
+		     if (!mefFile.delete() && mefFile.exists()) {
+		         log.warning("Unable to delete mefFile: "+mefFile);
+		     }
 		}
 	}
 
@@ -567,7 +570,10 @@ public class Aligner
 			}
 			finally
 			{
-				mefFile.delete();
+	             if (!mefFile.delete() && mefFile.exists()) {
+	                 log.warning("Unable to delete mefFile: "+mefFile);
+	             }
+
 			}
 		}
 	}
@@ -701,8 +707,12 @@ public class Aligner
 		else for (File file : files)
 			if (!existsFile(file.getName(), infoFiles))
 			{
-                if(log.isDebugEnabled()) log.debug("  - Removing old " + dir + " file with name="+ file.getName());
-				file.delete();
+                if(log.isDebugEnabled()) {
+                    log.debug("  - Removing old " + dir + " file with name="+ file.getName());
+                }
+                if (!file.delete() && file.exists()) {
+                    log.warning("Unable to delete file: "+file);
+                }
 			}
 	}
 

@@ -201,6 +201,46 @@ public class ISODate implements Cloneable
 
 		return "0"+ value;
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + day;
+        result = prime * result + hour;
+        result = prime * result + (isShort ? 1231 : 1237);
+        result = prime * result + min;
+        result = prime * result + month;
+        result = prime * result + sec;
+        result = prime * result + year;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ISODate other = (ISODate) obj;
+        if (day != other.day)
+            return false;
+        if (hour != other.hour)
+            return false;
+        if (isShort != other.isShort)
+            return false;
+        if (min != other.min)
+            return false;
+        if (month != other.month)
+            return false;
+        if (sec != other.sec)
+            return false;
+        if (year != other.year)
+            return false;
+        return true;
+    }
 }
 
 //==============================================================================

@@ -461,7 +461,7 @@ public class SchemaLoader
 			if (choiceType) {
 			// The complex type has only one element then make it a choice type if
 			// there are concrete elements in the substitution group
-				Integer elementsAdded = assembleChoiceElements(mdt,al,doSubs);
+				int elementsAdded = assembleChoiceElements(mdt,al,doSubs);
 				if (!isAbstract && doSubs) {
 					/* 
 					 * Control of substitution lists is via the schema-substitutions.xml

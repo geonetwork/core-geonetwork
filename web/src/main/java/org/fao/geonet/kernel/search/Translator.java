@@ -41,7 +41,7 @@ import jeeves.server.context.ServiceContext;
 public abstract class Translator implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static Translator NULL_TRANSLATOR = new Translator() {
+    public static final Translator NULL_TRANSLATOR = new Translator() {
         private static final long serialVersionUID = 1L;
         public String translate(String key) {
             return null;

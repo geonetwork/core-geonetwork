@@ -56,6 +56,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -854,9 +855,13 @@ public class SchemaManager {
 		while (entry != null) {
 
 			if (entry.isDirectory()) {
-                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
                     Log.debug(Geonet.SCHEMA_MANAGER, "Creating directory "+entry.getName());
-				(new File(dir, entry.getName())).mkdir();
+                }
+                File dirFile = new File(dir, entry.getName());
+				if (!dirFile.mkdir() && !dirFile.exists()) {
+				    throw new IOException("Unable to create directory: "+dirFile);
+				}
 			} else {
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "Creating file "+entry.getName());

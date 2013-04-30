@@ -453,8 +453,7 @@ public class Aligner
                         Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField, 
                                 identifier, Collections.singleton("_uuid"), true);
                         log.debug("    - Number of resources with same identifier: " + values.size());
-                        for (String key : values.keySet()) {
-                            Map<String, String> recordFieldValues = values.get(key);
+                        for (Map<String, String> recordFieldValues : values.values()) {
                             String indexRecordUuid = recordFieldValues.get("_uuid");
                             if (!indexRecordUuid.equals(uuid)) {
                                 log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);

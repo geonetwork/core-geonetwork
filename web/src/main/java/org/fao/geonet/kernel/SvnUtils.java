@@ -62,8 +62,9 @@ public class SvnUtils {
 	public static void modifyFileProps(ISVNEditor editor, String filePath, Map<String,String> props) throws SVNException {
 
 		// add properties
-		for (String key : props.keySet()) {
-			editor.changeFileProperty(filePath, key, SVNPropertyValue.create(props.get(key)));
+		for (Map.Entry<String,String> entry : props.entrySet()) {
+			String propertyValue = entry.getValue();
+            editor.changeFileProperty(filePath, entry.getKey(), SVNPropertyValue.create(propertyValue));
 		}
 
 	}
@@ -83,7 +84,7 @@ public class SvnUtils {
 		editor.applyTextDelta(filePath, null);
         
 		SVNDeltaGenerator deltaGenerator = new SVNDeltaGenerator();
-		String checksum = deltaGenerator.sendDelta(filePath, new ByteArrayInputStream(oldData), 0, new ByteArrayInputStream(newData), editor, true);
+		deltaGenerator.sendDelta(filePath, new ByteArrayInputStream(oldData), 0, new ByteArrayInputStream(newData), editor, true);
 	}
 
     /**

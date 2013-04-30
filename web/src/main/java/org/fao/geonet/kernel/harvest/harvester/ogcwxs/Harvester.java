@@ -165,9 +165,6 @@ class Harvester
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
 		schemaMan = gc.getSchemamanager ();
-		SettingInfo si = new SettingInfo(context);
-
-
     }
 
 	//---------------------------------------------------------------------------

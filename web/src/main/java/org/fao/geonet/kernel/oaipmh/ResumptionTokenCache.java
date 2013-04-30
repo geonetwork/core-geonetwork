@@ -55,7 +55,7 @@ public class ResumptionTokenCache extends Thread {
 
 	public void run() {
 
-		while(running) {
+		while(running && !isInterrupted()) {
 			try {
 				Thread.sleep(CACHE_EXPUNGE_DELAY);
 				expunge();
@@ -137,5 +137,9 @@ public class ResumptionTokenCache extends Thread {
 		}
 		return ret;
 	}
+	
+	public void stopRunning() {
+        this.running = false;
+    }
 
 }

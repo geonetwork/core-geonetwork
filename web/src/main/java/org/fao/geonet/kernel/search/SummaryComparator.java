@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.search;
 import org.fao.geonet.kernel.LocaleUtil;
 import org.jdom.Element;
 
-import java.text.Collator;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
+public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>, Serializable
 {
-    
+    private static final long serialVersionUID = -4668989929284491497L;
 
     public enum Type
     {
@@ -78,7 +78,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
                     String[] parts = string.split("/");
                     scale = parts[parts.length - 1];
                 } else if (string.contains("\\")) {
-                    String[] parts = string.split("\\");
+                    String[] parts = string.split("\\\\");
                     scale = parts[parts.length - 1];
                 } else if (string.contains(":")) {
                     String[] parts = string.split(":");
@@ -209,21 +209,5 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         Comparable value2 = _type.value(key2, _locale, _configuration);
         return value1.compareTo(value2);
     }
-    
-    private static class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
-    {
-        public final String _wrapped;
-        private Collator _comparator;
-
-        public LocalizedStringComparable(String wrapped, Locale locale)
-        {
-            this._wrapped = wrapped;
-            _comparator = java.text.Collator.getInstance(locale);
-        }
-
-        public int compareTo(LocalizedStringComparable anotherString)
-        {
-            return _comparator.compare(_wrapped, anotherString._wrapped);
-        }
-    }
+ 
 }

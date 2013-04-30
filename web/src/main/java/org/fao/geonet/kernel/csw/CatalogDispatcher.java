@@ -54,7 +54,7 @@ import java.util.Map;
 
 public class CatalogDispatcher
 {
-	public static Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
+	public static final Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
 
 	//---------------------------------------------------------------------------
 	//---

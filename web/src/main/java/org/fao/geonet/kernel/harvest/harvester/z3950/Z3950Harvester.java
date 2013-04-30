@@ -32,6 +32,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
@@ -67,7 +68,10 @@ public class Z3950Harvester extends AbstractHarvester {
 	protected void doDestroy(Dbms dbms) throws SQLException {
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
-		icon.delete();
+        if (!icon.delete() && icon.exists()) {
+            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
+        }
+
 		Lib.sources.delete(dbms, params.uuid);
 
 		// FIXME: Should also delete the categories we have created for servers
@@ -158,8 +162,9 @@ public class Z3950Harvester extends AbstractHarvester {
 			// --- and then store in result
 
 			Map<String,Z3950Result> results = serverResults.getAllServerResults();
-			for ( String key : results.keySet()) {
-				Z3950Result serverRes = results.get(key);
+			for ( Map.Entry<String, Z3950Result> entry : results.entrySet()) {
+			    String key = entry.getKey();
+				Z3950Result serverRes = entry.getValue();
 				result.totalMetadata 			+= serverRes.totalMetadata;
 				result.addedMetadata 			+= serverRes.addedMetadata;
 				result.updatedMetadata 		+= serverRes.updatedMetadata;

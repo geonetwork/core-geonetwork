@@ -108,9 +108,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	}
 	
 
-	for (String tName : scMap.keySet()) {
-		Element schemaComponent = scMap.get(tName);
-	
+	for (Element schemaComponent: scMap.values()) {
 		if (schemaComponent != null)
 			response.addContent(schemaComponent);
 	}

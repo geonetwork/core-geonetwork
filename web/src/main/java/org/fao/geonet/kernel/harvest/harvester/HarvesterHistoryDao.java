@@ -55,7 +55,7 @@ public class HarvesterHistoryDao {
 			String query = "INSERT INTO HarvestHistory (id,harvestDate,harvesterUuid,"
 						+        "harvesterName,harvesterType,deleted,info,params,elapsedTime)";
       query +=       "VALUES (?,?,?,?,?,?,?,?,?)";
-      int res = dbms.execute(
+      dbms.execute(
           query,
           hhId,
           runDate,

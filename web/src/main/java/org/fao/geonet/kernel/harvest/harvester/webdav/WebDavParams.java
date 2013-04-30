@@ -118,7 +118,6 @@ public class WebDavParams extends AbstractParams
 	public String url;
 	public String icon;
 
-	public boolean validate;
 	public boolean recurse;
 	
 	public String subtype;

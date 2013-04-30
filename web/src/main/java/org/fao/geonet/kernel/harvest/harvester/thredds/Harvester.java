@@ -1232,16 +1232,18 @@ class Harvester
 	 
 	 private Element addOperatesOnUuid (Element md, Map<String,String> datasets) {
 		Element root 	= md.getChild("identificationInfo", gmd).getChild("SV_ServiceIdentification", srv);
-		Element co 		= root.getChild("containsOperations", srv);
+//		Element co 		= root.getChild("containsOperations", srv);
 
 		if (root != null) {
             if(log.isDebugEnabled()) log.debug("  - add operatesOn with uuid and other attributes");
 			
-			for (String dsUuid : datasets.keySet()) {
+			for (Map.Entry<String, String> entry : datasets.entrySet()) {
+			    String dsUuid = entry.getKey();
+			    
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", dsUuid);
 				op.setAttribute("href", context.getBaseUrl() + "/srv/en/metadata.show?uuid=" + dsUuid, xlink);
-				op.setAttribute("title", datasets.get(dsUuid), xlink);
+				op.setAttribute("title", entry.getValue(), xlink);
 				root.addContent(op);
 			}
 		}

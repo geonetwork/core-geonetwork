@@ -364,7 +364,6 @@ class Harvester {
 	 *
 	 */
 	private void addCategories(String id, String serverCategory) throws Exception {
-		UserSession session = context.getUserSession();
 		for (String catId : params.getCategories()) {
 			String name = localCateg.getName(catId);
 
@@ -393,7 +392,6 @@ class Harvester {
 	 *
 	 */
 	private void addPrivileges(String id) throws Exception {
-		UserSession session = context.getUserSession();
 		for (Privileges priv : params.getPrivileges()) {
 			String name = localGroups.getName(priv.getGroupId());
 

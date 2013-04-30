@@ -132,14 +132,14 @@ class Z3950Searcher extends MetaSearcher
             String server = ((Element) o).getText();
             servers.add(server);
         }
-		String sTimeout  = request.getChildText("timeout");
-		int timeout;
-		if (sTimeout == null) timeout = 10;
-		else
-		{
-			try { timeout = parseInt(sTimeout); }
-			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'timeout' parameter parameter: " + sTimeout); }
-		}
+//		String sTimeout  = request.getChildText("timeout");
+//		int timeout;
+//		if (sTimeout == null) timeout = 10;
+//		else
+//		{
+//			try { timeout = parseInt(sTimeout); }
+//			catch (NumberFormatException nfe) { throw new IllegalArgumentException("Bad 'timeout' parameter parameter: " + sTimeout); }
+//		}
 		String sHtml  = request.getChildText("serverhtml");
 		if (sHtml == null) _html = false;
 		else _html = sHtml.equals("on");

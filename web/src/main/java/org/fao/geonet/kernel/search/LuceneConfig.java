@@ -247,14 +247,29 @@ public class LuceneConfig {
 			return precisionStep;
 		}
 
-		public boolean equals(Object a) {
-			if (this == a)
-				return true;
-			if (!(a instanceof LuceneConfigNumericField))
-				return false;
-			LuceneConfigNumericField f = (LuceneConfigNumericField) a;
-			return f.getName().equals(this.name);
-		}
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
+        }
+
+
+        public boolean equals(Object a) {
+            if (this == a)
+                return true;
+            if (!(a instanceof LuceneConfigNumericField))
+                return false;
+            LuceneConfigNumericField f = (LuceneConfigNumericField) a;
+            return f.getName().equals(this.name);
+        }
+
+        private LuceneConfig getOuterType() {
+            return LuceneConfig.this;
+        }
+		
 	};
 
 	private Set<String> tokenizedFields = new HashSet<String>();
@@ -328,7 +343,7 @@ public class LuceneConfig {
 			Element elem = luceneConfig.getChild("index");
 			String version = elem.getChildText("luceneVersion");
 
-			if (version == null) {
+			if (version != null) {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
 					if (LUCENE_VERSION == null) {

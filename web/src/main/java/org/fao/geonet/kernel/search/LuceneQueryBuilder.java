@@ -191,18 +191,37 @@ public class LuceneQueryBuilder {
 
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
+/* JE:
+ * 
+ * This logic is completely broken so I have commented it out.  What is is supposed to do.  A new fieldValue was created but it doesn't
+ * change anything because strings are immutable there fore the set fieldValues is not modified.
+ * All that happens here is that the same field values keep getting added to values.  This could be done in a single 
+ * step. 
+*/ 
+/*  OLD CODE:
                         for(String fieldValue : fieldValues) {
                             field = "any";
+                            StringBuilder valueBuilder = new StringBuilder(fieldValue);
+                            @SuppressWarnings("resource")
                             Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
+
                             while(whitespaceScan.hasNext()) {
-                                fieldValue += " or " + whitespaceScan.next();
+                                valueBuilder.append(" or ").append(whitespaceScan.next());
                             }
-                            fieldValue = fieldValue.substring(" or ".length());
+                            fieldValue = valueBuilder.substring(" or ".length());
                             Set<String> values = searchCriteriaOR.get(field);
                             if(values == null) values = new HashSet<String>();
                             values.addAll(fieldValues);
                             searchCriteriaOR.put(field, values);
                         }
+*/
+/*  New Code: */
+
+                        Set<String> values = searchCriteriaOR.get(field);
+                        if(values == null) values = new HashSet<String>();
+                        values.addAll(fieldValues);
+                        searchCriteriaOR.put(field, values);
+/* Done adjustments */
                     }
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
@@ -631,40 +650,41 @@ public class LuceneQueryBuilder {
         // (this is because Lucene's StandardTokenizer would remove wildcards,
         // but that's not what we want)
         if (string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-            String starsPreserved = "";
+            StringBuilder starsPreserved = new StringBuilder();
             String[] starSeparatedList = string.split("\\*");
             for (String starSeparatedPart : starSeparatedList) {
-                String qPreserved = "";
+                StringBuilder qPreserved = new StringBuilder();
                 // ? present
                 if (starSeparatedPart.indexOf('?') >= 0) {
                     String[] qSeparatedList = starSeparatedPart.split("\\?");
                     for (String qSeparatedPart : qSeparatedList) {
                         String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
-                        qPreserved += '?' + analyzedPart;
+                        qPreserved.append('?').append(analyzedPart);
                     }
                     // remove leading ?
-                    qPreserved = qPreserved.substring(1);
-                    starsPreserved += '*' + qPreserved;
+                    qPreserved.deleteCharAt(0);
+                    starsPreserved.append('*').append(qPreserved);
                 }
                 // no ? present
                 else {
-                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                    String analyzedQueryText = LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                    starsPreserved.append('*').append(analyzedQueryText);
                 }
             }
             // remove leading *
-            if (!StringUtils.isEmpty(starsPreserved)) {
-                starsPreserved = starsPreserved.substring(1);
+            if (starsPreserved.length() > 0) {
+                starsPreserved.deleteCharAt(0);
             }
 
             // restore ending wildcard
             if (string.endsWith("*")) {
-                starsPreserved += "*";
+                starsPreserved.append("*");
             }
             else if (string.endsWith("?")) {
-                starsPreserved += "?";
+                starsPreserved.append("?");
             }
 
-            analyzedString = starsPreserved;
+            analyzedString = starsPreserved.toString();
         }
         // no wildcards
         else {
@@ -1080,27 +1100,27 @@ public class LuceneQueryBuilder {
         NumericRangeQuery rangeQuery;
         if ("double".equals(type)) {
             rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
-                    (min == null ? Double.MIN_VALUE : Double.valueOf(min)),
-                    (max == null ? Double.MAX_VALUE : Double.valueOf(max)),
+                    (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),
+                    (max == null ? Double.MAX_VALUE : Double.parseDouble(max)),
                     true, true);
 
         }
         else if ("float".equals(type)) {
             rangeQuery = NumericRangeQuery.newFloatRange(fieldName,
-                    (min == null ? Float.MIN_VALUE : Float.valueOf(min)),
-                    (max == null ? Float.MAX_VALUE : Float.valueOf(max)), true,
+                    (min == null ? Float.MIN_VALUE : Float.parseFloat(min)),
+                    (max == null ? Float.MAX_VALUE : Float.parseFloat(max)), true,
                     true);
         }
         else if ("long".equals(type)) {
             rangeQuery = NumericRangeQuery.newLongRange(fieldName,
-                    (min == null ? Long.MIN_VALUE : Long.valueOf(min)),
-                    (max == null ? Long.MAX_VALUE : Long.valueOf(max)), true,
+                    (min == null ? Long.MIN_VALUE : Long.parseLong(min)),
+                    (max == null ? Long.MAX_VALUE : Long.parseLong(max)), true,
                     true);
         }
         else {
             rangeQuery = NumericRangeQuery.newIntRange(fieldName,
-                    (min == null ? Integer.MIN_VALUE : Integer.valueOf(min)),
-                    (max == null ? Integer.MAX_VALUE : Integer.valueOf(max)),
+                    (min == null ? Integer.MIN_VALUE : Integer.parseInt(min)),
+                    (max == null ? Integer.MAX_VALUE : Integer.parseInt(max)),
                     true, true);
         }
         return rangeQuery;

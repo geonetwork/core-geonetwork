@@ -827,14 +827,6 @@ public class DataManager {
             }
         }
 
-        //-----------------------------------------------------------------------
-        //--- if the uuid does not exist we generate it
-
-        String uuid = dataMan.extractUUID(schema, xml);
-
-        if (uuid.length() == 0)
-            uuid = UUID.randomUUID().toString();
-
         //--- Now do the schematron validation on this file - if there are errors
         //--- then we say what they are!
         //--- Note we have to use uuid here instead of id because we don't have
@@ -1594,7 +1586,6 @@ public class DataManager {
      * @throws Exception
      */
     public Element getMetadata(Dbms dbms, String id) throws Exception {
-        boolean doXLinks = xmlSerializer.resolveXLinks();
         Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false);
         if (md == null) return null;
         md.detach();
@@ -1987,10 +1978,10 @@ public class DataManager {
      */
     private void saveValidationStatus (Dbms dbms, String id, Map<String, Integer[]> valTypeAndStatus, String date) throws Exception {
         clearValidationStatus(dbms, id);
-        Set<String> i = valTypeAndStatus.keySet();
-        for (String type : i) {
-            String query = "INSERT INTO Validation (metadataId, valType, status, tested, failed, valDate) VALUES (?,?,?,?,?,?)";
-            Integer[] results = valTypeAndStatus.get(type);
+        final String query = "INSERT INTO Validation (metadataId, valType, status, tested, failed, valDate) VALUES (?,?,?,?,?,?)";
+        for (Map.Entry<String, Integer[]> entry : valTypeAndStatus.entrySet()) {
+            String type = entry.getKey();
+            Integer[] results = entry.getValue();
             dbms.execute(query, Integer.valueOf(id), type, results[0], results[1], results[2], date);
         }
         dbms.commit();
@@ -2387,9 +2378,6 @@ public class DataManager {
                                         + " because the user in not a Reviewer of any group.");
                     }
                 } else {
-
-                    GeonetContext gc = (GeonetContext) context
-                            .getHandlerContext(Geonet.CONTEXT_NAME);
                     String userGroupsOnly = settingMan
                             .getValue("system/metadataprivs/usergrouponly");
                     if (userGroupsOnly.equals("true")) {
@@ -2921,8 +2909,7 @@ public class DataManager {
 
             String styleSheet = getSchemaDir(parentSchema)
                     + Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
-            Element childForUpdate = new Element("root");
-            childForUpdate = Xml.transform(rootEl, styleSheet, params);
+            Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
             xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
@@ -3071,13 +3058,16 @@ public class DataManager {
         Map<String, String> result = new HashMap<String, String>();
         if(CollectionUtils.isNotEmpty(iso639_1_set)) {
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            String query = "SELECT code, shortcode FROM IsoLanguages WHERE ";
+            StringBuilder queryBuilder = new StringBuilder("SELECT code, shortcode FROM IsoLanguages WHERE ");
+            Object[] iso639_1_array = new String[iso639_1_set.size()];
+            int i = 0;
             for(String iso639_1 : iso639_1_set) {
-                query += "shortcode = ? OR ";
+                iso639_1_array[i++] = iso639_1;
+                queryBuilder.append ("shortcode = ? OR ");
             }
-            query = query.substring(0, query.lastIndexOf("OR"));
+            String query = queryBuilder.substring(0, queryBuilder.lastIndexOf("OR"));
             @SuppressWarnings(value = "unchecked")
-            List<Element> records = dbms.select(query, iso639_1_set.toArray()).getChildren();
+            List<Element> records = dbms.select(query, iso639_1_array).getChildren();
             for(Element record : records) {
                 result.put(record.getChildText("shortcode"), record.getChildText("code"));
             }
