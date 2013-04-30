@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.pl = {
+    'dateType': 'Typ Data',
+    'creationDate': 'Data utworzenia',
+    'modificationDate': 'Data modyfikacji',
+    'publicationDate': 'Data publikacji',
 	'previousPage': 'Przejdź do poprzedniej strony',
 	'nextPage': 'Przejdź do następnej strony',
 	'upInPage': 'Przewiń w górę w wynikach',
@@ -489,7 +493,46 @@ GeoNetwork.Lang.pl = {
     'selected': 'Zaznaczone',
 
     'create': 'Utwórz',
-    
+
+    // Feedback
+    'feedbackcontactDetails' : 'Dane teleadresowe',
+    'feedbacknameInitials' : 'Imię i nazwisko, inicjał (-y)',
+    'feedbackmale' : 'Mężczyzna',
+    'feedbackfemale' : 'Kobieta',
+    'feedbackposition' : 'Stanowisko',
+    'feedbackorganization' : 'Organizacja',
+    'feedbackphone' : 'Telefon',
+    'feedbackemail' : 'Email',
+    'feedbackfeedback': 'Sprzężenie zwrotne',
+    'feedbackfunction': 'Funkcja',
+    'feedbackquestion': 'Pytanie',
+    'feedbackerror' : 'Błąd',
+    'feedbackremark' : 'Uwaga',
+    'feedbackcontact' : 'Kontakt',
+    'feedbackcategory' : 'Kategoria',
+    'feedbackmetadataContent' : 'Content Metadata',
+    'feedbackdataContent' : 'Zawartość danych',
+    'feedbackserviceContent' : 'Zawartość usługi',
+    'feedbacksupport' : 'Wsparcie',
+    'feedbackmapViewer' : 'Map Viewer',
+    'feedbacksearch' : 'Szukaj',
+    'feedbackorganizations' : 'Organizacje',
+    'feedbackcontentManagement' : 'Content Management',
+    'feedbackmetadataImport' : 'Importowanie metadanych',
+    'feedbackmetadataEdit'  :'Edycja metadanych',
+    'feedbackharvesting' : 'Zbioru',
+    'feedbackvalidator' : 'Validator',
+    'feedbackother' : 'Inaczej',
+    'feedbackremarks' : 'Uwagi',
+    'feedbackmetadataData' : 'Metadanych',
+    'feedbacktitle' : 'Tytuł',
+    'feedbackPanelTitle' : 'Za pomocą tego formularza możesz dać komentarz na metadanych, danych i / lub usług.',
+    'feedbacksubmit' : 'Wysłać',
+    'feedbackerrorTitle' : 'Zwracać uwagę',
+    'feedbackerrorMsg' : 'Wystąpił błąd podczas wysyłania. Prosimy spróbować ponownie później.',
+    'feedbackcancel' : 'Anulować',
+    'feedbackWindowTitle' : 'sprzężenie zwrotne',
+
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Zastąp bierzący zakres',
     'add-info-from-wmssetExtent': 'Ustal zakres',

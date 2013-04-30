@@ -387,7 +387,9 @@
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="categories" class=".services.category.List" />
-				<call name="status" class=".services.status.List" />
+				<call name="status" class=".services.main.Info">
+					<param name="type" value="status" />
+				</call>
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="repositories" class=".services.main.Info">
@@ -594,10 +596,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <!-- classic GUI -->
 		<service name="feedback">
 			<output sheet="feedback.xsl" />
 		</service>
 
+        <!-- Ext GUIs -->
+        <service name="feedback.send">
+            <class name=".services.feedback.Receptor" />
+            <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
+        </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="links">

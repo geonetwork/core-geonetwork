@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
@@ -43,7 +42,6 @@ import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -332,7 +330,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, source,
+        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, source,
                          isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);

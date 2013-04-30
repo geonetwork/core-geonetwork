@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.en = {
+    'dateType': 'Date type',
+    'creationDate': 'Creation date',
+    'modificationDate': 'Modification date',
+    'publicationDate': 'Publication date',
     'previousPage': 'Move to previous page',
     'nextPage': 'Move to next page',
     'upInPage': 'Scroll up in the results',
@@ -490,7 +494,46 @@ GeoNetwork.Lang.en = {
     'selected': 'Selected',
 
     'create': 'Create',
-    
+
+    // Feedback
+    'feedbackcontactDetails' : 'Contact data',
+    'feedbacknameInitials' : 'Name, Initial(s)',
+    'feedbackmale' : 'male',
+    'feedbackfemale' : 'female',
+    'feedbackposition' : 'Position',
+    'feedbackorganization' : 'Organization',
+    'feedbackphone' : 'Phone',
+    'feedbackemail' : 'Email',
+    'feedbackfeedback': 'Feedback',
+    'feedbackfunction': 'Function',
+    'feedbackquestion': 'Question',
+    'feedbackerror' : 'Error',
+    'feedbackremark' : 'Remark',
+    'feedbackcontact' : 'Contact',
+    'feedbackcategory' : 'Category',
+    'feedbackmetadataContent' : 'Metadata contents',
+    'feedbackdataContent' : 'Data contents',
+    'feedbackserviceContent' : 'Service contents',
+    'feedbacksupport' : 'Support',
+    'feedbackmapViewer' : 'Map viewer',
+    'feedbacksearch' : 'Search',
+    'feedbackorganizations' : 'Organizations',
+    'feedbackcontentManagement' : 'Content management',
+    'feedbackmetadataImport' : 'Metadata import',
+    'feedbackmetadataEdit'  :'Metadata editing',
+    'feedbackharvesting' : 'Harvesting',
+    'feedbackvalidator' : 'Validator',
+    'feedbackother' : 'Other',
+    'feedbackremarks' : 'Remarks',
+    'feedbackmetadataData' : 'Metadata data',
+    'feedbacktitle' : 'Title',
+    'feedbackPanelTitle' : 'With this form you can give feedback on metadata, data and/or services.',
+    'feedbacksubmit' : 'Send',
+    'feedbackerrorTitle' : 'Attention',
+    'feedbackerrorMsg' : 'An error has occurred when sending. Please try again later.',
+    'feedbackcancel' : 'Cancel',
+    'feedbackWindowTitle' : 'feedback',
+
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Replace existing extent',
     'add-info-from-wmssetExtent': 'Set extent',

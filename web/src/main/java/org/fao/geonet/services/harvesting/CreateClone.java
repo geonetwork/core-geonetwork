@@ -29,15 +29,14 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class CreateClone implements Service
-{
+/**
+ * TODO javadoc.
+ */
+public class CreateClone implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -51,30 +50,29 @@ public class CreateClone implements Service
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		//--- if 'id' is null all entries are returned
-
 		String id = params.getChildText("id");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String newId = gc.getHarvestManager().createClone(dbms, id);
+        String newId = gc.getHarvestManager().createClone(dbms, id, context.getUserSession().getUserId(), context);
 
 		if (newId != null) {
-			Element elem = new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element("id").setText(newId));
+			Element elem = new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(newId));
 			return elem;
 		}
 
 		//--- we get here only if the 'id' was not present or node was not found
-
 		throw new ObjectNotFoundEx(id);
 	}
 }
-
-//=============================================================================
-

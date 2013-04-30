@@ -408,11 +408,36 @@ CREATE TABLE Thesaurus
     activated    varchar(1),
     primary key(id)
   );
+  
+
+CREATE TABLE Services
+  (
+  
+    id         int,
+    name       varchar(64)   not null,
+    class       varchar(1048)   not null,
+    description       varchar(1048),
+        
+    primary key(id)
+  );
+  
+
+CREATE TABLE ServiceParameters
+  (
+    id         int,
+    service     int,
+    name       varchar(64)   not null,
+    value       varchar(1048)   not null,
+    
+    primary key(id)
+  );
+
 
 -- CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
+ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES service (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (idDes) REFERENCES Categories (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE Groups ADD FOREIGN KEY (referrer) REFERENCES Users (id);

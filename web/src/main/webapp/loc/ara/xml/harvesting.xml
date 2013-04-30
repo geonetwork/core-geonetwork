@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Select</select>
+    <selectownergroup>حصادة ينتمي إلى المجموعة</selectownergroup>
+    <select>Select</select>
 	<name>Name</name>
 	<directoryname>Directory</directoryname>
 	<type>Type</type>

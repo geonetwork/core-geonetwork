@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-CSW">
 		<div id="csw.editPanel">
+            <xsl:call-template name="ownerGroup-CSW"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-CSW"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-CSW"/>
@@ -25,6 +27,20 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-CSW">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="csw.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
+
+    <!-- ============================================================================================= -->
 
 	<xsl:template name="site-CSW">
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/site"/></h1>

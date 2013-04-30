@@ -54,7 +54,7 @@ public class History  implements Service
 		if (result != null) {
 			String id = params.getChildText("id");
 
-			Element harvesterInfo = gc.getHarvestManager().get(id, null);
+			Element harvesterInfo = gc.getHarvestManager().get(id, context, null);
 			Element response = new Element(Jeeves.Elem.RESPONSE);
 
 			response.addContent(result.detach());

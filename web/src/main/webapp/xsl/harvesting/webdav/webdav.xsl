@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-WD">
 		<div id="wd.editPanel">
+            <xsl:call-template name="ownerGroup-WD"/>
+            <div class="dots"/>
 			<xsl:call-template name="host-WD"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-WD"/>
@@ -23,6 +25,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-WD">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="wd.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="host-WD">

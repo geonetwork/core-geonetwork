@@ -22,7 +22,7 @@ csw.Model = function(xmlLoader)
 
 function retrieveGroups(callBack)
 {
-	new InfoService(loader, 'groups', callBack);
+	new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
 }
 
 //=====================================================================================
@@ -107,28 +107,12 @@ function getUpdateRequest(data)
 	return this.substituteCommon(data, request);
 }
 
-//=====================================================================================
-
-function getUpdateRequestOld(data)
-{
-	var request = str.substitute(updateTemp, data);
-	
-	var list = data.SEARCH_LIST;
-	var text = '';
-		
-	for (var i=0; i<list.length; i++){
-		text += str.substitute(searchTemp, list[i]);
-	}
-	
-	request = str.replace(request, '{SEARCH_LIST}', text);
-	
-	return this.substituteCommon(data, request);
-}
 
 //=====================================================================================
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <capabilitiesUrl>{CAPAB_URL}</capabilitiesUrl>'+
@@ -167,18 +151,4 @@ var updateTemp =
 '    </categories>'+
 '  </node>';
 
-//=====================================================================================
-
-var searchTemp = 
-'    <search>'+
-'      <freeText>{REVISION_DATE}</freeText>'+
-'      <title>{TITLE}</title>'+
-'      <abstract>{ABSTRACT}</abstract>'+
-'      <subject>{SUBJECT}</subject>'+
-'      <minscale>{MINSCALE}</minscale>'+
-'      <maxscale>{MAXSCALE}</maxscale>'+
-'    </search>';
-
-
-//=====================================================================================
 }

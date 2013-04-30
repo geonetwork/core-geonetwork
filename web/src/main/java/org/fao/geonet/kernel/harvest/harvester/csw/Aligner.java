@@ -43,7 +43,6 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 
 import java.util.Collections;
@@ -197,7 +196,7 @@ public class Aligner
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);

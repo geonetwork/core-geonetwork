@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'dateType': 'Type de date',
+    'creationDate': 'Date de création',
+    'modificationDate': 'Date de modification',
+    'publicationDate': 'Date de publication',
 	'previousPage': 'Page précédente',
 	'nextPage': 'Page suivante',
 	'upInPage': 'Se déplacer vers le haut des résultats',
@@ -489,7 +493,46 @@ GeoNetwork.Lang.fr = {
     
     'SelectionWindowTitle': 'Rechercher dans l\'annuaire',
     'found': 'Enregistrements trouvés',
-    
+
+    // Feedback
+    'feedbackcontactDetails' : 'Coordonnées',
+    'feedbacknameInitials' : 'Nom, Initiale (s)',
+    'feedbackmale' : 'Masculin',
+    'feedbackfemale' : 'Féminin',
+    'feedbackposition' : 'Position',
+    'feedbackorganization' : 'Organisation',
+    'feedbackphone' : 'Téléphone',
+    'feedbackemail' : 'E-mail',
+    'feedbackfeedback': 'Réaction',
+    'feedbackfunction': 'Fonction',
+    'feedbackquestion': 'Question',
+    'feedbackerror' : 'Erreur',
+    'feedbackremark' : 'Remarque',
+    'feedbackcontact' : 'Contacter',
+    'feedbackcategory' : 'Catégorie',
+    'feedbackmetadataContent' : 'Contenu des metadonnées',
+    'feedbackdataContent' : 'Contenu des données',
+    'feedbackserviceContent' : 'Contenu des services',
+    'feedbacksupport' : 'Soutenir',
+    'feedbackmapViewer' : 'Map Viewer',
+    'feedbacksearch' : 'Rechercher',
+    'feedbackorganizations' : 'Organisations',
+    'feedbackcontentManagement' : 'Gestion de contenu',
+    'feedbackmetadataImport' : 'Importation de métadonnées',
+    'feedbackmetadataEdit'  :'Modification des métadonnées',
+    'feedbackharvesting' : 'Moissonnage',
+    'feedbackvalidator' : 'Validator',
+    'feedbackother' : 'Autrement',
+    'feedbackremarks' : 'Remarques',
+    'feedbackmetadataData' : 'Les informations de métadonnées',
+    'feedbacktitle' : 'Titre',
+    'feedbackPanelTitle' : 'Avec ce formulaire, vous pouvez améliorer les informations sur les métadonnées, les données et / ou des services.',
+    'feedbacksubmit' : 'Envoyer',
+    'feedbackerrorTitle' : 'Attention',
+    'feedbackerrorMsg' : 'Une erreur s\'est produite lors de l\'envoi. S\'il vous plaît réessayer plus tard.',
+    'feedbackcancel' : 'Annuler',
+    'feedbackWindowTitle' : 'réaction',
+
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Remplacer les étendues géographiques existantes',
     'add-info-from-wmssetExtent': 'Définir l\'étendue',
