@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-wfsfeatures">
 		<div id="wfsfeatures.editPanel">
+            <xsl:call-template name="ownerGroup-wfsfeatures"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-wfsfeatures"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-wfsfeatures"/>
@@ -21,7 +23,18 @@
 			<xsl:call-template name="categories-wfsfeatures"/>
 		</div>
 	</xsl:template>
-
+    <!-- ============================================================================================= -->
+    <xsl:template name="ownerGroup-wfsfeatures">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="wfsfeatures.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-wfsfeatures">

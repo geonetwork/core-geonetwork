@@ -9,6 +9,8 @@
 
 	<xsl:template name="editPanel-OGCWXS">
 		<div id="ogcwxs.editPanel">
+            <xsl:call-template name="ownerGroup-OGCWXS"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-OGCWXS"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-OGCWXS"/>
@@ -22,7 +24,18 @@
 			<xsl:call-template name="categories-OGCWXS"/>
 		</div>
 	</xsl:template>
-
+    <!-- ============================================================================================= -->
+    <xsl:template name="ownerGroup-Arcsde">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="ogcwxs.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-OGCWXS">

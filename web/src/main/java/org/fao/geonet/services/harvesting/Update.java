@@ -59,9 +59,7 @@ public class Update implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		// Add current user has harvester owner
-		params.setAttribute("owner", context.getUserSession().getUserId());
-		
-		hm.update(dbms, params);
+        hm.update(dbms, params, context.getUserSession().getUserId());
 
 		String id = params.getAttributeValue("id");
 

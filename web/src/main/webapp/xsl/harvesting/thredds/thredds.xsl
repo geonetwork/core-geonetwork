@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-thredds">
 		<div id="thredds.editPanel">
+            <xsl:call-template name="ownerGroup-thredds"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-thredds"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-thredds"/>
@@ -21,7 +23,18 @@
 			<xsl:call-template name="categories-thredds"/>
 		</div>
 	</xsl:template>
-
+    <!-- ============================================================================================= -->
+    <xsl:template name="ownerGroup-thredds">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="thredds.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-thredds">

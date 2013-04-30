@@ -12,6 +12,8 @@
 			<img src="{/root/gui/url}/images/spinner.gif" alt="busy"/>
 		</div>
 		<div id="oai.editPanel">
+            <xsl:call-template name="ownerGroup-OAI"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-OAI"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-OAI"/>
@@ -28,7 +30,18 @@
 			<xsl:call-template name="categories-OAI"/>
 		</div>
 	</xsl:template>
-
+    <!-- ============================================================================================= -->
+    <xsl:template name="ownerGroup-OAI">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="oai.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-OAI">

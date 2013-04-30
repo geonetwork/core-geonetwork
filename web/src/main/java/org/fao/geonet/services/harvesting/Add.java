@@ -28,8 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -61,9 +59,7 @@ public class Add implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		// Add current user has harvester owner
-		params.setAttribute("owner", context.getUserSession().getUserId());
-		
-		String id = hm.add(dbms, params);
+        String id = hm.add(dbms, params, context.getUserSession().getUserId());
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element("id").setText(id));

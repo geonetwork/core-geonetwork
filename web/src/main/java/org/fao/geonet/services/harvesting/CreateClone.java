@@ -29,7 +29,6 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -62,7 +61,7 @@ public class CreateClone implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		String newId = gc.getHarvestManager().createClone(dbms, id);
+        String newId = gc.getHarvestManager().createClone(dbms, id, context.getUserSession().getUserId(), context);
 
 		if (newId != null) {
 			Element elem = new Element(Jeeves.Elem.RESPONSE)

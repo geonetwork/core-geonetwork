@@ -23,24 +23,26 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobBuilder.newJob;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
 import jeeves.utils.Util;
-
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.quartz.JobBuilder.newJob;
 
 //=============================================================================
 
@@ -63,81 +65,117 @@ public abstract class AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
-	{
-		Element site    = node.getChild("site");
-		Element opt     = node.getChild("options");
-		Element content = node.getChild("content");
-		
-		
-		Element account = (site == null) ? null : site.getChild("account");
+    /**
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+    public void create(Element node) throws BadInputEx {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
+            Log.debug(Geonet.HARVEST_MAN, "AbstractParams creating from:\n"+ Xml.getString(node));
+        }
+        Element site    = node.getChild("site");
+        Element opt     = node.getChild("options");
+        Element content = node.getChild("content");
 
-		name       = Util.getParam(site, "name", "");
-		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
-		
-		owner = node.getAttributeValue("owner");
-		if (owner == null) {
-			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
-		}
 
-		useAccount = Util.getParam(account, "use",      false);
-		username   = Util.getParam(account, "username", "");
-		password   = Util.getParam(account, "password", "");
+        Element account = (site == null) ? null : site.getChild("account");
 
-		every      = Util.getParam(opt, "every",      "0 0 0 * * ?" );
-		
-		oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
-		
-		getTrigger();
+        name       = Util.getParam(site, "name", "");
+        uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 
-		importXslt = Util.getParam(content, "importxslt", "none");
-		validate = Util.getParam(content, "validate", false);
+        Element ownerE = node.getChild("owner");
+        if(ownerE != null) {
+            Element ownerIdE = ownerE.getChild("id");
+            if(StringUtils.isNotEmpty(ownerIdE.getText())) {
+                ownerId = ownerIdE.getText();
+            }
+        }
+        if(StringUtils.isEmpty(ownerId)){
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+        }
 
-		addPrivileges(node.getChild("privileges"));
-		addCategories(node.getChild("categories"));
+        Element ownerIdGroupE = node.getChild("ownerGroup");
+        if(ownerIdGroupE != null) {
+            Element idE = ownerIdGroupE.getChild("id");
+            if(idE != null) {
+                ownerIdGroup = idE.getText();
+            }
+        }
 
-		this.node = node;
-	}
+        useAccount = Util.getParam(account, "use",      false);
+        username   = Util.getParam(account, "username", "");
+        password   = Util.getParam(account, "password", "");
 
-	//---------------------------------------------------------------------------
+        every      = Util.getParam(opt, "every",      "0 0 0 * * ?" );
 
-	public void update(Element node) throws BadInputEx
-	{
-		Element site    = node.getChild("site");
-		Element opt     = node.getChild("options");
-		Element content = node.getChild("content");
+        oneRunOnly = Util.getParam(opt, "oneRunOnly", false);
 
-		Element account = (site == null) ? null : site.getChild("account");
-		Element privil  = node.getChild("privileges");
-		Element categ   = node.getChild("categories");
+        getTrigger();
 
-		name       = Util.getParam(site, "name", name);
+        importXslt = Util.getParam(content, "importxslt", "none");
+        validate = Util.getParam(content, "validate", false);
 
-		owner = node.getAttributeValue("owner");
-		if (owner == null) {
-			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
-		}
-		
-		useAccount = Util.getParam(account, "use",      useAccount);
-		username   = Util.getParam(account, "username", username);
-		password   = Util.getParam(account, "password", password);
+        addPrivileges(node.getChild("privileges"));
+        addCategories(node.getChild("categories"));
 
-		every      = Util.getParam(opt, "every",      every);
-		oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
+        this.node = node;
+    }
 
-		getTrigger();
-		
-		importXslt = Util.getParam(content, "importxslt", importXslt);
-		validate = Util.getParam(content, "validate", validate);
+    /**
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+    public void update(Element node) throws BadInputEx {
+        Element site    = node.getChild("site");
+        Element opt     = node.getChild("options");
+        Element content = node.getChild("content");
 
-		if (privil != null)
-			addPrivileges(privil);
+        Element account = (site == null) ? null : site.getChild("account");
+        Element privil  = node.getChild("privileges");
+        Element categ   = node.getChild("categories");
 
-		if (categ != null)
-			addCategories(categ);
+        name       = Util.getParam(site, "name", name);
 
-		this.node = node;
-	}
+        Element ownerIdE = node.getChild("ownerId");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getText();
+        }
+        else {
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+        }
+
+        Element ownerIdGroupE = node.getChild("ownerGroup");
+        if(ownerIdGroupE != null) {
+            Element idE = ownerIdGroupE.getChild("id");
+            if(idE != null) {
+                ownerIdGroup = idE.getText();
+            }
+        }
+
+        useAccount = Util.getParam(account, "use",      useAccount);
+        username   = Util.getParam(account, "username", username);
+        password   = Util.getParam(account, "password", password);
+
+        every      = Util.getParam(opt, "every",      every);
+        oneRunOnly = Util.getParam(opt, "oneRunOnly", oneRunOnly);
+
+        getTrigger();
+
+        importXslt = Util.getParam(content, "importxslt", importXslt);
+        validate = Util.getParam(content, "validate", validate);
+
+        if(privil != null) {
+            addPrivileges(privil);
+        }
+
+        if(categ != null) {
+            addCategories(categ);
+        }
+
+        this.node = node;
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -154,8 +192,11 @@ public abstract class AbstractParams
 	{
 		copy.name       = name;
 		copy.uuid       = uuid;
-		copy.owner      = owner;
-		copy.useAccount = useAccount;
+
+        copy.ownerId  = ownerId;
+        copy.ownerIdGroup  = ownerIdGroup;
+
+        copy.useAccount = useAccount;
 		copy.username   = username;
 		copy.password   = password;
 
@@ -300,7 +341,6 @@ public abstract class AbstractParams
 
 	public String  name;
 	public String  uuid;
-	public String owner;
 	public boolean useAccount;
 	public String  username;
 	public String  password;
@@ -312,13 +352,20 @@ public abstract class AbstractParams
 	public String importXslt;
 
 	public Element node;
+    protected DataManager dm;
 
-	//---------------------------------------------------------------------------
+    /**
+     * id of the user who created or updated this harvester node.
+     */
+    public String ownerId;
 
-	protected DataManager dm;
+    /**
+     * id of the group selected by the user who created or updated this harvester node.
+     */
+    public String ownerIdGroup;
 
-	private ArrayList<Privileges> alPrivileges = new ArrayList<Privileges>();
-	private ArrayList<String>     alCategories = new ArrayList<String>();
+    private List<Privileges> alPrivileges = new ArrayList<Privileges>();
+	private List<String> alCategories = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 

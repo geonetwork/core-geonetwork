@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Seleccionar</select>
+    <selectownergroup>Cosechadora pertenece al grupo de</selectownergroup>
+    <select>Seleccionar</select>
 	<name>Nombre</name>
 	<directoryname>Directory</directoryname>
 	<type>Tipo</type>

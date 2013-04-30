@@ -20,7 +20,7 @@ arcsde.Model = function(xmlLoader)
 
 function retrieveGroups(callBack)
 {
-	new InfoService(loader, 'groups', callBack);
+	new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
 }
 
 //=====================================================================================

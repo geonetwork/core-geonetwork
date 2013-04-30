@@ -58,7 +58,7 @@ public class Get implements Service
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Element result = gc.getHarvestManager().get(id, sortField);
+        Element result = gc.getHarvestManager().get(id, context, sortField);
 
 		if (result != null)
 			return result;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Ausgewählt</select>
+    <selectownergroup>Harvester gehört zur Gruppe</selectownergroup>
+    <select>Ausgewählt</select>
 	<name>Name</name>
 	<directoryname>Verzeichnis</directoryname>
 	<type>Typ</type>

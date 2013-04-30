@@ -23,13 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobKey.jobKey;
-
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -42,9 +35,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
-
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -71,6 +63,13 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.quartz.JobKey.jobKey;
 
 //=============================================================================
 
@@ -401,27 +400,37 @@ public abstract class AbstractHarvester
 			doHarvest(logger, rm);
 		}
 	}
-	
-	/**
-	 * Create a session for the user who created the 
-	 * harvester. The owner identifier is added when 
-	 * the harvester config is created or updated
-	 * according to user session.
-	 */
-	private void login() {
-		JeevesUser user = new JeevesUser(this.context.getProfileManager());
-		
-		user.setId(getParams().owner);
-		// Harvester is only managed by Administrator
-		user.setProfile(Profile.ADMINISTRATOR);
-		
-		UserSession session = new UserSession();
-		session.loginAs(user);
-		this.context.setUserSession(session);
-		
-		this.context.setIpAddress(null);
-	}
-	
+
+    /**
+     * Create a session for the user who created the harvester. The owner identifier is added when the harvester config
+     * is created or updated according to user session.
+     */
+    private void login() throws Exception {
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        JeevesUser user = new JeevesUser(this.context.getProfileManager());
+
+        String ownerId = getParams().ownerId;
+
+        // for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
+        if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(dbms, Integer.parseInt(ownerId))) {
+            // just pick any Administrator (they can all see all harvesters and groups anyway)
+            ownerId = this.dataMan.pickAnyAdministrator(dbms);
+        }
+
+        user.setId(ownerId);
+
+        // lookup owner profile (it may have changed since harvester was created)
+        String profile = this.dataMan.getUserProfile(dbms, Integer.parseInt(ownerId));
+        user.setProfile(profile);
+        // todo reject if < useradmin ?
+
+        UserSession session = new UserSession();
+        session.loginAs(user);
+        this.context.setUserSession(session);
+
+        this.context.setIpAddress(null);
+    }
+
 	void harvest()
 	{
 	    running = true;
@@ -433,13 +442,13 @@ public abstract class AbstractHarvester
 		
 		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 
-		login();
-		
+
 		error = null;
 
 		String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
 		try
 		{
+            login();
 			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 			//--- update lastRun
@@ -555,6 +564,15 @@ public abstract class AbstractHarvester
 		settingMan.add(dbms, "id:"+useAccId, "username", params.username);
 		settingMan.add(dbms, "id:"+useAccId, "password", params.password);
 
+        /**
+         * User who created or updated this node.
+         */
+        settingMan.add(dbms, "id:"+siteId, "ownerId", params.ownerId);
+        /**
+         * Group selected by user who created or updated this node.
+         */
+        settingMan.add(dbms, "id:"+siteId, "ownerGroup", params.ownerIdGroup);
+
 		//--- setup options node ---------------------------------------
 
 		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
@@ -571,9 +589,7 @@ public abstract class AbstractHarvester
 		settingMan.add(dbms, "id:"+infoId, "lastRun", "");
 
 		//--- store privileges and categories ------------------------
-		
-		settingMan.add(dbms, "id:"+siteId, "owner",     params.owner);
-		
+
 		storePrivileges(dbms, params, path);
 		storeCategories(dbms, params, path);
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Выбор</select>
+    <selectownergroup>Комбайн относится к группе</selectownergroup>
+    <select>Выбор</select>
 	<name>Название</name>
 	<directoryname>Directory</directoryname>
 	<type>Тип</type>

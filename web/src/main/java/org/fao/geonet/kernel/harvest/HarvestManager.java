@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
@@ -35,6 +34,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -47,6 +47,9 @@ import org.quartz.SchedulerException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 //=============================================================================
 
@@ -130,63 +133,113 @@ public class HarvestManager
 	//---
 	//---------------------------------------------------------------------------
 
-	public Element get(String id, String sort) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param id harvester id
+     * @param context servicecontext
+     * @param sort sort field
+     * @return harvest node
+     * @throws Exception hmm
+     */
+    public Element get(String id, ServiceContext context, String sort) throws Exception {
 		Element result = (id == null)
 									? settingMan.get("harvesting", -1)
 									: settingMan.get("harvesting/id:"+id, -1);
 
-		if (result == null)
-			return null;
+        if (result == null) {
+            return null;
+        }
 
-		if (id != null)
-		{
-			result = transform(result);
-			addInfo(result);
-		}
-
-		else
-		{
-			Element nodes = result.getChild("children");
-
-			result = new Element("nodes");
-
-			if (nodes != null) {
-				for (Object o : nodes.getChildren()) {
-					Element node = transform((Element) o);
-					addInfo(node);
-					result.addContent(node);
-				}
-
-				// sort according to sort field
-				if (sort != null) result = transformSort(result,sort);
-
-			}
-
-		}
-
-		return result;
+        String profile = context.getUserSession().getProfile();
+        if (id != null) {
+            // you're an Administrator
+            if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+                result = transform(result);
+                addInfo(result);
+            }
+            // you're not an Administrator: only return harvest nodes from groups visible to you
+            else {
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                AccessManager am = gc.getAccessManager();
+                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                Set<String> groups = am.getVisibleGroups(dbms, context.getUserSession().getUserId() );
+                result = transform(result);
+                Element nodeGroup =  result.getChild("ownerGroup");
+                if ((nodeGroup != null) && (groups.contains(nodeGroup.getValue()))) {
+                    addInfo(result);
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        // id is null: return all (visible) nodes
+        else {
+            Element nodes = result.getChild("children");
+            result = new Element("nodes");
+            if (nodes != null) {
+                // you're Administrator: all nodes are visible
+                if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+                    for (Object o : nodes.getChildren()) {
+                        Element node = transform((Element) o);
+                        addInfo(node);
+                        result.addContent(node);
+                    }
+                }
+                // you're not an Adminstrator: only return nodes in groups visible to you
+                else {
+                    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                    AccessManager am = gc.getAccessManager();
+                    Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                    Set<String> groups = am.getVisibleGroups(dbms, context.getUserSession().getUserId() );
+                    for (Object o : nodes.getChildren()) {
+                        Element node = transform((Element) o);
+                        Element nodeGroup =  node.getChild("ownerGroup");
+                        if ((nodeGroup != null) && (groups.contains(nodeGroup.getValue()))) {
+                            addInfo(node);
+                            result.addContent(node);
+                        }
+                    }
+                }
+                // sort according to sort field
+                if (sort != null) result = transformSort(result,sort);
+            }
+        }
+        return result;
 	}
 
-	//---------------------------------------------------------------------------
-
-	public String add(Dbms dbms, Element node) throws JeevesException, SQLException
-	{
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms dbms
+     * @param node harvester config
+     * @param ownerId the id of the user doing this
+     * @return id of new harvester
+     * @throws JeevesException hmm
+     * @throws SQLException hmm
+     */
+    public String add(Dbms dbms, Element node, String ownerId) throws JeevesException, SQLException {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
+        }
+        String type = node.getAttributeValue("type");
+        AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
 
-		String type = node.getAttributeValue("type");
+        Element ownerIdE = new Element("ownerId");
+        ownerIdE.setText(ownerId);
+        node.addContent(ownerIdE);
 
-		AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
+        ah.add(dbms, node);
+        hmHarvesters.put(ah.getID(), ah);
+        hmHarvestLookup.put(ah.getParams().uuid, ah);
 
-		ah.add(dbms, node);
-		hmHarvesters.put(ah.getID(), ah);
-		hmHarvestLookup.put(ah.getParams().uuid, ah);
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
+        }
+        return ah.getID();
+    }
 
-		return ah.getID();
-	}
 
 	public String add2(Dbms dbms, Element node) throws JeevesException, SQLException
 	{
@@ -207,10 +260,10 @@ public class HarvestManager
 
 	//---------------------------------------------------------------------------
 
-	public synchronized String createClone(Dbms dbms, String id) throws Exception
+	public synchronized String createClone(Dbms dbms, String id, String ownerId, ServiceContext context) throws Exception
 	{
 		// get the specified harvester from the settings table
-		Element node = get(id, null);
+		Element node = get(id, context, null);
 		if (node == null) return null;
 
 		// remove info from the harvester we will clone
@@ -225,33 +278,51 @@ public class HarvestManager
 			}
 		}
 
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Cloning harvesting node : \n"+ Xml.getString(node));
+        }
+        Element ownerIdE = new Element("ownerId");
+        ownerIdE.setText(ownerId);
+        node.addContent(ownerIdE);
 
 		// now add a new harvester based on the settings in the old
-		return add(dbms, node);
+		return add(dbms, node, ownerId);
 	}
 
-	//---------------------------------------------------------------------------
-
-	public synchronized boolean update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException
-	{
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param node
+     * @param ownerId id of the user doing this
+     * @return
+     * @throws BadInputEx
+     * @throws SQLException
+     * @throws SchedulerException
+     */
+    public synchronized boolean update(Dbms dbms, Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
+        }
+        String id = node.getAttributeValue("id");
 
-		String id = node.getAttributeValue("id");
+        if (id == null) {
+            throw new MissingParameterEx("attribute:id", node);
+        }
+        AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (id == null)
-			throw new MissingParameterEx("attribute:id", node);
+        if (ah == null) {
+            return false;
+        }
 
-		AbstractHarvester ah = hmHarvesters.get(id);
+        Element ownerIdE = new Element("ownerId");
+        ownerIdE.setText(ownerId);
+        node.addContent(ownerIdE);
 
-		if (ah == null)
-			return false;
+        ah.update(dbms, node);
+        return true;
+    }
 
-		ah.update(dbms, node);
-		return true;
-	}
 
 	//---------------------------------------------------------------------------
 	/** This method must be synchronized because it cannot run if we are updating some entries */
@@ -408,6 +479,6 @@ public class HarvestManager
 	private ServiceContext context;
     private boolean readOnly;
 
-	private HashMap<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
-	private HashMap<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
+	private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
+	private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
 }
