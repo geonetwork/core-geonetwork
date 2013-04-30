@@ -153,7 +153,6 @@ public class LuceneSearcher extends MetaSearcher {
      *
      * @param sm
      * @param styleSheetName
-     * @param summaryConfig
      * @param luceneConfig
      */
 	public LuceneSearcher (SearchManager sm, String styleSheetName, LuceneConfig luceneConfig) {
@@ -614,6 +613,10 @@ public class LuceneSearcher extends MetaSearcher {
 
 			processTimeRange(request.getChild(SearchParameter.DATEFROM), "0000-01-01", request.getChild(SearchParameter.DATETO), "9999-01-01");
 
+            processTimeRange(request.getChild(SearchParameter.CREATIONDATEFROM), "0000-01-01", request.getChild(SearchParameter.CREATIONDATETO), "9999-01-01");
+            processTimeRange(request.getChild(SearchParameter.REVISIONDATEFROM), "0000-01-01", request.getChild(SearchParameter.REVISIONDATETO), "9999-01-01");
+            processTimeRange(request.getChild(SearchParameter.PUBLICATIONDATEFROM), "0000-01-01", request.getChild(SearchParameter.PUBLICATIONDATETO), "9999-01-01");
+
 			//--- some other stuff
 
             if(Log.isDebugEnabled(Geonet.LUCENE))
@@ -948,8 +951,7 @@ public class LuceneSearcher extends MetaSearcher {
      *
      * @param xmlQuery
      * @param analyzer
-     * @param tokenizedFieldSet
-     * @param numericFieldSet
+     * @param luceneConfig
      * @param langCode
      * @param requestedLanguageOnly
      * @return
@@ -976,8 +978,7 @@ public class LuceneSearcher extends MetaSearcher {
      *
      * @param xmlQuery
      * @param analyzer
-     * @param tokenizedFieldSet
-     * @param numericFieldSet
+     * @param luceneConfig
      * @return
      * @throws Exception
      */
@@ -1579,7 +1580,7 @@ public class LuceneSearcher extends MetaSearcher {
     /**
      * TODO javadoc.
      *
-     * @param webappNameg
+     * @param priorityLang
      * @param id
      * @param fieldname
      * @return

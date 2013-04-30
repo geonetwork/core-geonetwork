@@ -20,6 +20,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.nl = {
+    'dateType': 'Datum type',
+    'creationDate': 'Creatiedatum',
+    'modificationDate': 'Modificatiedatum',
+    'publicationDate': 'Publicatiedatum',
 	'previousPage': "Ga naar vorige pagina",
 	'nextPage': "Ga naar volgende pagina",
 	'upInPage': "Scroll naar boven in de resultaten",

@@ -19,6 +19,11 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.ca={
+    'dateType': 'Tipus de data',
+    'tempExtent': 'Extensió temporal',
+    'creationDate': 'Data de creació',
+    'modificationDate': 'Data de modificació',
+    'publicationDate': 'Data de publicació',
     'previousPage': 'Tornar a la pàgina anterior',
     'nextPage': 'Anar a la pàgina següent',
     'upInPage': 'Desplaçar cap amunt als resultats',

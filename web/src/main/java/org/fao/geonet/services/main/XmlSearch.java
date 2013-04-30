@@ -82,18 +82,21 @@ public class XmlSearch implements Service
 		MetaSearcher searcher;
 		context.info("Creating searchers");
 		
-		if (remote)	 
+        if(remote) {
 			searcher = searchMan.newSearcher(SearchManager.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-		else      
+        }
+        else {
 			searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+        }
 		
 		try {
 			
 			// Check is user asked for summary only without building summary
 			String summaryOnly = Util.getParam(params, Geonet.SearchResult.SUMMARY_ONLY, "0");
 			String sBuildSummary = params.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
-			if (sBuildSummary != null && sBuildSummary.equals("false") && !"0".equals(summaryOnly))
+            if(sBuildSummary != null && sBuildSummary.equals("false") && ! "0".equals(summaryOnly)) {
 				elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
+            }
 			
 			session.setProperty(Geonet.Session.SEARCH_REQUEST, elData.clone());
 			searcher.search(context, elData, _config);
