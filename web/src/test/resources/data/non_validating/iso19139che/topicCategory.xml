@@ -107,11 +107,34 @@
         <gmd:MD_TopicCategoryCode>climatologyMeteorologyAtmosphere</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
       <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+	  <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_BaseMaps</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+      <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>planningCadastre</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+	  <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>planningCadastre_Planning</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+      <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>geoscientificInformation</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+	  <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>geoscientificInformation_Geology</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+      <gmd:topicCategory>
 		<gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
 	  </gmd:topicCategory>
 	  <gmd:topicCategory>
-		<gmd:MD_TopicCategoryCode>environment_EnvironmentalProtection
-		</gmd:MD_TopicCategoryCode>
+		<gmd:MD_TopicCategoryCode>environment_EnvironmentalProtection</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+      <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
+	  </gmd:topicCategory>
+	  <gmd:topicCategory>
+		<gmd:MD_TopicCategoryCode>utilitiesCommunication_Energy</gmd:MD_TopicCategoryCode>
 	</gmd:topicCategory>
     </che:CHE_MD_DataIdentification>
   </gmd:identificationInfo>

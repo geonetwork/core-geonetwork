@@ -310,6 +310,7 @@
 		    	normalize-space(.) = 'imageryBaseMapsEarthCover' or
 		    	normalize-space(.) = 'planningCadastre' or
 		    	normalize-space(.) = 'geoscientificInformation' or
+		    	normalize-space(.) = 'utilitiesCommunication' or
 		    	normalize-space(.) = 'environment'"></xsl:when>
     		<xsl:otherwise>
 		        <GM03_2_1Core.Core.MD_TopicCategoryCode_>
