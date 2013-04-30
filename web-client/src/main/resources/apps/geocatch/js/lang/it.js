@@ -1,6 +1,4 @@
 /*
-/*
-/*
  * Copyright (C) 2009 GeoNetwork
  *
  * This file is part of GeoNetwork
@@ -35,7 +33,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'yes': 'Si',
 	'no': 'No',
 	'unChecked': 'Unchecked',
-	'recordType', 'Typo',
+	'recordType': 'Typo',
 	
 	'includearchived': 'Archivi inclusi',
 	'excludearchived': 'Archivi esclusi',

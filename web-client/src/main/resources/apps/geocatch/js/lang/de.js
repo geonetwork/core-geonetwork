@@ -34,7 +34,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'yes': 'Ja',
 	'no': 'Nein',
 	'unChecked': 'Unchecked',
-	'recordType', 'Type',
+	'recordType': 'Type',
 	
 	'includearchived': 'Include archived',
 	'excludearchived': 'Exclude archived',
