@@ -2370,7 +2370,7 @@ public class DataManager {
         // Session may not be defined when a harvester is running
         if (context.getUserSession() != null) {
             String userProfile = context.getUserSession().getProfile();
-            if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            if (! (userProfile.equals(Geonet.Profile.ADMINISTRATOR) || userProfile.equals(Geonet.Profile.USER_ADMIN)) ) {
                 int userId = Integer.parseInt(context.getUserSession()
                         .getUserId());
                 // Reserved groups
@@ -2496,6 +2496,53 @@ public class DataManager {
         String query = "SELECT metadataId FROM MetadataStatus WHERE userId=?";
         Element elRes = dbms.select(query, userId);
         return (elRes.getChildren().size() != 0);
+    }
+
+    public boolean existsUser(Dbms dbms, int id) throws Exception {
+        String query= "SELECT * FROM Users WHERE id=?";
+        List list = dbms.select(query, id).getChildren();
+        return list.size() > 0;
+    }
+
+    /**
+     * Returns id of one of the Administrator users.
+     * @return
+     */
+    public String pickAnyAdministrator(Dbms dbms) throws Exception{
+        String query = "SELECT id FROM users WHERE profile=?";
+        Element elRes = dbms.select(query, Geonet.Profile.ADMINISTRATOR);
+        String id = null;
+        if(elRes != null) {
+            Element elRec = elRes.getChild("record");
+            if(elRec != null) {
+                Element elId = elRec.getChild("id");
+                if(elId != null) {
+                    id = elId.getText();
+                }
+            }
+        }
+        if(StringUtils.isNotEmpty(id)) {
+            return id;
+        }
+        // should never happen
+        else {
+            throw new Exception("Unable to find any Administrator user");
+        }
+    }
+
+    public String getUserProfile(Dbms dbms, int userId) throws Exception {
+        String query = "SELECT profile FROM users WHERE id=?";
+        Element elRes = dbms.select(query, userId);
+        if(elRes != null) {
+            Element elRec = elRes.getChild("record");
+            if(elRec != null) {
+                Element elProfile = elRec.getChild("profile");
+                if(elProfile != null) {
+                    return elProfile.getText();
+                }
+            }
+        }
+        return null;
     }
 
     //--------------------------------------------------------------------------

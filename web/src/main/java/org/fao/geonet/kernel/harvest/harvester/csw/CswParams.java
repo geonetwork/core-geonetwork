@@ -32,33 +32,29 @@ import org.jdom.Element;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-//=============================================================================
-
-public class CswParams extends AbstractParams
-{
+/**
+ *
+ */
+public class CswParams extends AbstractParams {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public CswParams(DataManager dm)
-	{
+	public CswParams(DataManager dm) {
 		super(dm);
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
-
-	public void create(Element node) throws BadInputEx
-	{
+    /**
+     * called when a new entry must be added. Reads values from the provided entry, providing default values.
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+	public void create(Element node) throws BadInputEx {
 		super.create(node);
 
 		Element site     = node.getChild("site");
@@ -89,14 +85,13 @@ public class CswParams extends AbstractParams
 
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
-
-	public void update(Element node) throws BadInputEx
-	{
+    /**
+     * called when an entry has changed and variables must be updated.
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+	public void update(Element node) throws BadInputEx {
 		super.update(node);
 		
 		Element site     = node.getChild("site");
@@ -135,18 +130,29 @@ public class CswParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public Iterable<Search> getSearches() { return alSearches; }
+    /**
+     *
+     * @return
+     */
+	public Iterable<Search> getSearches() {
+        return alSearches;
+    }
 	
 	//public Iterable<Element> getSearchElements() { return eltSearches; }
 
-	//---------------------------------------------------------------------------
+    /**
+     *
+     * @return
+     */
+	public boolean isSearchEmpty() {
+        return alSearches.isEmpty();
+    }
 
-	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
-
-	//---------------------------------------------------------------------------
-
-	public CswParams copy()
-	{
+    /**
+     *
+     * @return
+     */
+	public CswParams copy() {
 		CswParams copy = new CswParams(dm);
 		copyTo(copy);
 
@@ -168,12 +174,16 @@ public class CswParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	private void addSearches(Element searches)
-	{
+    /**
+     *
+     * @param searches
+     */
+	private void addSearches(Element searches) {
 		alSearches.clear();
 
-		if (searches == null)
+		if (searches == null) {
 			return;
+        }
 
         for (Object o : searches.getChildren("search")) {
             Element search = (Element) o;
@@ -196,7 +206,3 @@ public class CswParams extends AbstractParams
 	public List<Element> eltSearches = new ArrayList<Element>();
 	
 }
-
-//=============================================================================
-
-

@@ -31,7 +31,6 @@ import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
@@ -444,7 +443,7 @@ class Harvester
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -1399,7 +1398,7 @@ class Harvester
 		atomicParams.url = params.url;
 		atomicParams.uuid = params.uuid;
 		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
-		atomicParams.owner = params.owner;
+		atomicParams.owner = params.ownerId;
 		return atomicParams;
 	}
 

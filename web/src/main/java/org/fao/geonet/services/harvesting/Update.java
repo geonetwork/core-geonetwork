@@ -33,10 +33,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Update implements Service
-{
+/**
+ * TODO javadoc.
+ *
+ */
+public class Update implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -51,24 +52,26 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		HarvestManager hm = gc.getHarvestManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		// Add current user has harvester owner
-		params.setAttribute("owner", context.getUserSession().getUserId());
-		
-		hm.update(dbms, params);
+        hm.update(dbms, params, context.getUserSession().getUserId());
 
 		String id = params.getAttributeValue("id");
 
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element("id").setText(id));
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(id));
 	}
+
 }
-
-//=============================================================================
-

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Harvester kuuluu ryhmään</selectownergroup>
 	<select>Valitse</select>
 	<name>Nimi</name>
 	<directoryname>Hakemisto</directoryname>

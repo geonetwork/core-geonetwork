@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Seleccionar</select>
+    <selectownergroup>Recol pertany al grup de</selectownergroup>
+    <select>Seleccionar</select>
 	<name>Nom</name>
 	<directoryname>Directori</directoryname>
 	<type>Tipus</type>

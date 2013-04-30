@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-Filesystem">
 		<div id="filesystem.editPanel">
+            <xsl:call-template name="ownerGroup-Filesystem"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Filesystem"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-Filesystem"/>
@@ -23,6 +25,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Filesystem">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="filesystem.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Filesystem">

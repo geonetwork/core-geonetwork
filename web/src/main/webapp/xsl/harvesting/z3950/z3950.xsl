@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-Z3950">
 		<div id="z3950.editPanel">
+            <xsl:call-template name="ownerGroup-Z3950"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Z3950"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-Z3950"/>
@@ -22,6 +24,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Z3950">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="z3950.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Z3950">

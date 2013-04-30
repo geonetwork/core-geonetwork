@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Velg</select>
+    <selectownergroup>Harvester tilhører gruppen</selectownergroup>
+    <select>Velg</select>
 	<name>Navn</name>
 	<directoryname>Katalog</directoryname>
 	<type>Type</type>

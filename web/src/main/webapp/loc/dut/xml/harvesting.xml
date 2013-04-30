@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Selecteer</select>
+    <selectownergroup>Harvester maakt deel uit van groep</selectownergroup>
+    <select>Selecteer</select>
 	<name>Naam</name>
 	<directoryname>Folder</directoryname>
 	<type>Type</type>

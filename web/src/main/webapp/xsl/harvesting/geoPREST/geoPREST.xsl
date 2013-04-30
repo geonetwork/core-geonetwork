@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-geoPREST">
 		<div id="geoPREST.editPanel">
+            <xsl:call-template name="ownerGroup-GEOPREST"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-GEOPREST"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-GEOPREST"/>
@@ -21,6 +23,20 @@
 			<xsl:call-template name="categories-GEOPREST"/>
 		</div>
 	</xsl:template>
+
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-GEOPREST">
+        <table border="0">
+            <tr>
+                <td class="padded">group</td>
+                <td class="padded"><select id="geoPREST.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 
 	<!-- ============================================================================================= -->
 

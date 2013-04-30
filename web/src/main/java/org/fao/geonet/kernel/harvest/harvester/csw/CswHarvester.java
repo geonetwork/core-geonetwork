@@ -35,17 +35,14 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
-//=============================================================================
-
-public class CswHarvester extends AbstractHarvester
-{
+/**
+ *
+ */
+public class CswHarvester extends AbstractHarvester {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Static init
@@ -68,8 +65,7 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
-	{
+	protected void doInit(Element node) throws BadInputEx {
 		params = new CswParams(dataMan);
 		params.create(node);
 	}
@@ -80,8 +76,12 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @throws SQLException
+     */
+	protected void doDestroy(Dbms dbms) throws SQLException {
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
 		icon.delete();
@@ -94,8 +94,16 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param node
+     * @return
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		params = new CswParams(dataMan);
 
 		//--- retrieve/initialize information
@@ -119,8 +127,15 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @param id
+     * @param node
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
 		CswParams copy = params.copy();
 
 		//--- update variables
@@ -133,8 +148,8 @@ public class CswHarvester extends AbstractHarvester
 		//--- update database
 		storeNode(dbms, copy, path);
 
-		//--- we update a copy first because if there is an exception CswParams
-		//--- could be half updated and so it could be in an inconsistent state
+		//--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
+		// in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
@@ -142,20 +157,23 @@ public class CswHarvester extends AbstractHarvester
 		params = copy;
 	}
 
-	//---------------------------------------------------------------------------
-
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @param p
+     * @param path
+     * @param siteId
+     * @param optionsId
+     * @throws SQLException
+     */
+	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		CswParams params = (CswParams) p;
 		
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
-                settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
 		
 		//--- store dynamic search nodes
-		
-		
 		String  searchID = settingMan.add(dbms, path, "search", "");	
 		
 		if (params.eltSearches!=null){
@@ -194,15 +212,13 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doAddInfo(Element node)
-	{
+	protected void doAddInfo(Element node) {
 		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
+		if (result == null) {
 			return;
+        }
 
 		//--- ok, add proper info
-
 		Element info = node.getChild("info");
 		Element res  = getResult();
 		info.addContent(res);
@@ -214,6 +230,10 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
+    /**
+     *
+     * @return
+     */
 	protected Element getResult() {
 		Element res  = new Element("result");
 		if (result != null) {
@@ -236,8 +256,13 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
-	{
+    /**
+     *
+     * @param log
+     * @param rm
+     * @throws Exception
+     */
+	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
@@ -254,10 +279,7 @@ public class CswHarvester extends AbstractHarvester
 	private CswResult result;
 }
 
-//=============================================================================
-
-class CswResult
-{
+class CswResult {
 	public int totalMetadata;
 	public int addedMetadata;
 	public int updatedMetadata;
@@ -268,6 +290,3 @@ class CswResult
 	public int unretrievable;
     public int doesNotValidate;	    
 }
-
-//=============================================================================
-

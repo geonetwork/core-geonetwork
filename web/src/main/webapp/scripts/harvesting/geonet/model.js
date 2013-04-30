@@ -50,7 +50,7 @@ function retrieveGroups(data, callBack, username, password)
 	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
     url += '/srv/'+Env.lang+'/xml.info';
 
-	new InfoService(loader, 'groups', callBack, url, username, password);
+	new InfoService(loader, 'groupsIncludingSystemGroups', callBack, url, username, password);
 }
 
 //=====================================================================================
@@ -121,6 +121,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+

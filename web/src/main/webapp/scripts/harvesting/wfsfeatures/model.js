@@ -51,7 +51,7 @@ function retrieveSchemas_OK(xmlRes)
 
 function retrieveGroups(callBack)
 {
-	new InfoService(loader, 'groups', callBack);
+	new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
 }
 
 //=====================================================================================
@@ -103,6 +103,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <url>{URL}</url>'+
