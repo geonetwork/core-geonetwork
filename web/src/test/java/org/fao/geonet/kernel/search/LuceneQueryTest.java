@@ -320,7 +320,8 @@ public class LuceneQueryTest extends TestCase {
         LuceneQueryInput lQI = new LuceneQueryInput(request);
 
 		// build lucene query
-		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+		LuceneQueryBuilder luceneQueryBuilder = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null);
+        Query query = luceneQueryBuilder.build(lQI);
 		// verify query
 		assertEquals("unexpected Lucene query", "+(title:xxx title:yyy (+any:xxx +any:yyy)) +_isTemplate:n", query.toString());
     }

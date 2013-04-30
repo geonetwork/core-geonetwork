@@ -191,37 +191,12 @@ public class LuceneQueryBuilder {
 
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
-/* JE:
- * 
- * This logic is completely broken so I have commented it out.  What is is supposed to do.  A new fieldValue was created but it doesn't
- * change anything because strings are immutable there fore the set fieldValues is not modified.
- * All that happens here is that the same field values keep getting added to values.  This could be done in a single 
- * step. 
-*/ 
-/*  OLD CODE:
-                        for(String fieldValue : fieldValues) {
-                            field = "any";
-                            StringBuilder valueBuilder = new StringBuilder(fieldValue);
-                            @SuppressWarnings("resource")
-                            Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
 
-                            while(whitespaceScan.hasNext()) {
-                                valueBuilder.append(" or ").append(whitespaceScan.next());
-                            }
-                            fieldValue = valueBuilder.substring(" or ".length());
-                            Set<String> values = searchCriteriaOR.get(field);
-                            if(values == null) values = new HashSet<String>();
-                            values.addAll(fieldValues);
-                            searchCriteriaOR.put(field, values);
-                        }
-*/
-/*  New Code: */
-
+                        field = "any";
                         Set<String> values = searchCriteriaOR.get(field);
                         if(values == null) values = new HashSet<String>();
                         values.addAll(fieldValues);
                         searchCriteriaOR.put(field, values);
-/* Done adjustments */
                     }
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
