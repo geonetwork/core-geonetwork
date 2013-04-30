@@ -26,6 +26,7 @@ package org.fao.geonet.kernel;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -273,7 +274,7 @@ public class AccessManager {
      */
 	public Set<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
         if(StringUtils.isEmpty(userId)){
-            System.out.println("WARNING: userId is empty. AccessManager getVisibleGroups()");
+            Log.warning(Geonet.ACCESS_MANAGER, "userId is empty. AccessManager getVisibleGroups()");
             return new HashSet<String>();
         }
         int id = Integer.parseInt(userId);
