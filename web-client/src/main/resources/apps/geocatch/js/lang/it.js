@@ -34,6 +34,8 @@ GeoNetwork.GeoCatCh.Lang.it = {
 	'geodata': 'Archivio',
 	'yes': 'Si',
 	'no': 'No',
+	'unChecked': 'Unchecked',
+	'recordType', 'Typo',
 	
 	'includearchived': 'Archivi inclusi',
 	'excludearchived': 'Archivi esclusi',
@@ -53,7 +55,7 @@ GeoNetwork.GeoCatCh.Lang.it = {
     'what': 'Cosa',
     'searchText': 'Ricerca testuale',
     'rtitle': 'Titolo',
-    'Abstract': 'Descrizione',
+    'abstract': 'Descrizione',
     'keyword': 'Parola chiave',
     'theme': 'Tema',
     'contact': 'Contatto',

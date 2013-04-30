@@ -33,6 +33,13 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'geodata': 'Archiv',
 	'yes': 'Ja',
 	'no': 'Nein',
+	'unChecked': 'Unchecked',
+	'recordType', 'Type',
+	
+	'includearchived': 'Include archived',
+	'excludearchived': 'Exclude archived',
+	'onlyarchived': 'Only archived',
+	'owner': 'Owner',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',

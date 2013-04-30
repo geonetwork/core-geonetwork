@@ -34,6 +34,8 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'geodata': 'Archive',
 	'yes': 'Oui',
 	'no': 'Non',
+	'unChecked': 'Unchecked',
+	'recordType', 'Type',
 
 	'includearchived': 'Archives inclues',
 	'excludearchived': 'Archives exclues',

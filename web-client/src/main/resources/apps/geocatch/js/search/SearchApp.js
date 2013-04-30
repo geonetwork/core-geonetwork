@@ -170,7 +170,7 @@ GeoNetwork.searchApp = function() {
             })
 
             var fieldType = new Ext.form.ComboBox({
-                fieldLabel : 'Type',
+                fieldLabel : OpenLayers.i18n('recordType'),
                 name : 'E1.0_type',
                 store : this.getTypeStore(),
                 mode : 'local',
