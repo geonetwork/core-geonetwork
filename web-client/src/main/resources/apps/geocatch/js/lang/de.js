@@ -30,7 +30,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'service-OGC:WMS': ' + WMS',
 	'service-OGC:WFS': ' + WFS',
 	'owner': 'Besitzer',
-	'geodata': 'Geodata',
+	'geodata': 'Archiv',
 	'yes': 'Ja',
 	'no': 'Nein',
 
