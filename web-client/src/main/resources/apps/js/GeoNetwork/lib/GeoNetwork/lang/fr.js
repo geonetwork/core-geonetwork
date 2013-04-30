@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'dateType': 'Type de date',
+    'creationDate': 'Date de création',
+    'modificationDate': 'Date de modification',
+    'publicationDate': 'Date de publication',
 	'previousPage': 'Page précédente',
 	'nextPage': 'Page suivante',
 	'upInPage': 'Se déplacer vers le haut des résultats',

@@ -20,7 +20,11 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.de = {
-	'previousPage':'Zur vorherigen Seite',
+    'dateType': 'Datum Typ',
+    'creationDate': 'Erstellungsdatum',
+    'modificationDate': 'Änderungsdatum',
+    'publicationDate': 'Veröffentlichung',
+    'previousPage':'Zur vorherigen Seite',
 'nextPage':'Zur nächsten Seite',
 'upInPage':'Blättern Sie nach oben in den Ergebnissen',
 'downInPage':'Blättern Sie nach unten in den Ergebnissen',
