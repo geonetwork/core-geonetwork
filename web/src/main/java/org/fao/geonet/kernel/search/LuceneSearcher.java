@@ -1111,39 +1111,8 @@ public class LuceneSearcher extends MetaSearcher {
             // wildcards - preserve them by analyzing the parts of the search string around them separately
             // (this is because Lucene's StandardTokenizer would remove wildcards, but that's not what we want)
             if(string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-                String starsPreserved = "";
-                String[] starSeparatedList = string.split("\\*");
-                for(String starSeparatedPart : starSeparatedList) {
-                    String qPreserved = "";
-                    // ? present
-                    if(starSeparatedPart.indexOf('?') >= 0) {
-                        String[] qSeparatedList = starSeparatedPart.split("\\?");
-                        for(String qSeparatedPart : qSeparatedList) {
-                            String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, analyzer, tokenizedFieldSet);
-                            qPreserved += '?' + analyzedPart;
-                        }
-                        // remove leading ?
-                        qPreserved = qPreserved.substring(1);
-                        starsPreserved += '*' + qPreserved;
-                    }
-                    // no ? present
-                    else {
-                        starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, analyzer, tokenizedFieldSet);
-                    }
-                }
-                // remove leading *
-                if (!org.apache.commons.lang.StringUtils.isEmpty(starsPreserved)) {
-                    starsPreserved = starsPreserved.substring(1);
-                }
-
-                // restore ending wildcard
-                if (string.endsWith("*")) {
-                    starsPreserved += "*";
-                } else if (string.endsWith("?")) {
-                    starsPreserved += "?";
-                }
-
-                analyzedString = starsPreserved;
+                WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
+                analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, analyzer, tokenizedFieldSet);
             }
             // no wildcards
             else {

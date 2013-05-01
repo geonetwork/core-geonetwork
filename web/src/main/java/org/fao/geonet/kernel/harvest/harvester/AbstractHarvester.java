@@ -39,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
@@ -73,7 +74,7 @@ import static org.quartz.JobKey.jobKey;
 
 //=============================================================================
 
-public abstract class AbstractHarvester 
+public abstract class AbstractHarvester extends BaseAligner
 {
     private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
@@ -289,16 +290,15 @@ public abstract class AbstractHarvester
 		if (status != Status.INACTIVE)
 			return OperResult.ALREADY_ACTIVE;
 
-		Logger logger = Log.createLogger(Geonet.HARVESTER);
 		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
 		OperResult result = OperResult.OK;
 
 		try
 		{
 			status = Status.ACTIVE;
-			logger.info("Started harvesting from node : "+ nodeName);
-			doHarvest(logger, rm);
-			logger.info("Ended harvesting from node : "+ nodeName);
+			log.info("Started harvesting from node : " + nodeName);
+			doHarvest(log, rm);
+			log.info("Ended harvesting from node : " + nodeName);
 
 			rm.close();
 		}
@@ -306,9 +306,9 @@ public abstract class AbstractHarvester
 		{
             context.getMonitorManager().getCounter(AbstractHarvesterErrorCounter.class).inc();
 			result = OperResult.ERROR;
-			logger.warning("Raised exception while harvesting from : "+ nodeName);
-			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
-			logger.warning(" (C) Message : "+ t.getMessage());
+			log.warning("Raised exception while harvesting from : " + nodeName);
+			log.warning(" (C) Class   : " + t.getClass().getSimpleName());
+			log.warning(" (C) Message : " + t.getMessage());
 			error = t;
 			t.printStackTrace();
 
@@ -318,8 +318,8 @@ public abstract class AbstractHarvester
 			}
 			catch (Exception ex)
 			{
-				logger.warning("CANNOT ABORT EXCEPTION");
-				logger.warning(" (C) Exc : "+ ex);
+				log.warning("CANNOT ABORT EXCEPTION");
+				log.warning(" (C) Exc : " + ex);
 			}
 		} finally {
 			status = Status.INACTIVE;
@@ -664,6 +664,8 @@ public abstract class AbstractHarvester
 	protected ServiceContext context;
 	protected SettingManager settingMan;
 	protected DataManager    dataMan;
+
+    protected Logger log = Log.createLogger(Geonet.HARVESTER);
 
 	private static Map<String, Class> hsHarvesters = new HashMap<String, Class>();
 }

@@ -268,26 +268,7 @@ public class LuceneQueryBuilder {
                     if (LuceneIndexField.ANY.equals(fieldName) || "all".equals(fieldName)) {
                         BooleanClause anyClause = null;
                         if (!onlyWildcard(fieldValue)) {
-                            // tokenize searchParam
-                            StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
-                            if (st.countTokens() == 1) {
-                                String token = st.nextToken();
-                                Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
-                                if (subQuery != null) {
-                                    anyClause = new BooleanClause(subQuery, tokenOccur);
-                                }
-                            } else {
-                                BooleanQuery orBooleanQuery = new BooleanQuery();
-                                while (st.hasMoreTokens()) {
-                                    String token = st.nextToken();
-                                    Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
-                                    if (subQuery != null) {
-                                        BooleanClause subClause = new BooleanClause(subQuery, occur);
-                                        orBooleanQuery.add(subClause);
-                                    }
-                                }
-                                anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
-                            }
+                            anyClause = tokenizeSearchParam(fieldValue, similarity, tokenOccur, occur);
                         }
                         if (anyClause != null && StringUtils.isNotEmpty(anyClause.toString())) {
                             booleanQuery.add(anyClause);
@@ -326,6 +307,41 @@ public class LuceneQueryBuilder {
             templateCriteriaAdded = true;
         }
         return query;
+    }
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param fieldValue
+     * @param similarity
+     * @param singleTokenOccur
+     * @param moreTokensOccur
+     * @return
+     */
+    private BooleanClause tokenizeSearchParam(String fieldValue, String similarity, Occur singleTokenOccur, Occur moreTokensOccur) {
+        // tokenize searchParam
+        BooleanClause anyClause = null;
+        StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
+        if (st.countTokens() == 1) {
+            String token = st.nextToken();
+            Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+            if (subQuery != null) {
+                anyClause = new BooleanClause(subQuery, singleTokenOccur);
+            }
+        }
+        else {
+            BooleanQuery orBooleanQuery = new BooleanQuery();
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                if (subQuery != null) {
+                    BooleanClause subClause = new BooleanClause(subQuery, moreTokensOccur);
+                    orBooleanQuery.add(subClause);
+                }
+            }
+            anyClause = new BooleanClause(orBooleanQuery, moreTokensOccur);
+        }
+        return anyClause;
     }
 
     /**
@@ -631,40 +647,8 @@ public class LuceneQueryBuilder {
         // (this is because Lucene's StandardTokenizer would remove wildcards,
         // but that's not what we want)
         if (string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-            String starsPreserved = "";
-            String[] starSeparatedList = string.split("\\*");
-            for (String starSeparatedPart : starSeparatedList) {
-                String qPreserved = "";
-                // ? present
-                if (starSeparatedPart.indexOf('?') >= 0) {
-                    String[] qSeparatedList = starSeparatedPart.split("\\?");
-                    for (String qSeparatedPart : qSeparatedList) {
-                        String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
-                        qPreserved += '?' + analyzedPart;
-                    }
-                    // remove leading ?
-                    qPreserved = qPreserved.substring(1);
-                    starsPreserved += '*' + qPreserved;
-                }
-                // no ? present
-                else {
-                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
-                }
-            }
-            // remove leading *
-            if (!StringUtils.isEmpty(starsPreserved)) {
-                starsPreserved = starsPreserved.substring(1);
-            }
-
-            // restore ending wildcard
-            if (string.endsWith("*")) {
-                starsPreserved += "*";
-            }
-            else if (string.endsWith("?")) {
-                starsPreserved += "?";
-            }
-
-            analyzedString = starsPreserved;
+            WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
+            analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, _analyzer, _tokenizedFieldSet);
         }
         // no wildcards
         else {
@@ -890,27 +874,7 @@ public class LuceneQueryBuilder {
 		BooleanClause anyClause = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
-			// tokenize searchParam
-			StringTokenizer st = new StringTokenizer(any, STRING_TOKENIZER_DELIMITER);
-			if (st.countTokens() == 1) {
-				String token = st.nextToken();
-				Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
-				if (subQuery != null) {
-					anyClause = new BooleanClause(subQuery, occur);
-				}
-			}
-            else {
-				BooleanQuery booleanQuery = new BooleanQuery();
-				while (st.hasMoreTokens()) {
-					String token = st.nextToken();
-					Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
-					if (subQuery != null) {
-						BooleanClause subClause = new BooleanClause(subQuery, occur);
-                        booleanQuery.add(subClause);
-                    }
-				}
-				anyClause = new BooleanClause(booleanQuery, occur);
-			}
+            anyClause = tokenizeSearchParam(any, similarity, occur, occur);
 		}
 		if (anyClause != null) {
 			query.add(anyClause);
@@ -1132,6 +1096,47 @@ public class LuceneQueryBuilder {
     }
 
     /**
+     * TODO Javadoc.
+     *
+     * @param query
+     * @param westBL
+     * @param minWestBL
+     * @param maxWestBL
+     * @param westBLIndexField
+     * @param eastBL
+     * @param minEastBL
+     * @param maxEastBL
+     * @param eastBLIndexField
+     * @param southBL
+     * @param minSouthBL
+     * @param maxSouthBL
+     * @param southBLIndexField
+     * @param northBL
+     * @param minNorthBL
+     * @param maxNorthBL
+     * @param northBLIndexField
+     * @param inclusive
+     */
+    private void addLatLongQuery(BooleanQuery query, String westBL, String minWestBL, String maxWestBL, String westBLIndexField,
+                                 String eastBL, String minEastBL, String maxEastBL, String eastBLIndexField,
+                                 String southBL, String minSouthBL, String maxSouthBL, String southBLIndexField,
+                                 String northBL, String minNorthBL, String maxNorthBL, String northBLIndexField,
+                                 boolean inclusive, boolean required) {
+        if (eastBL != null) {
+            addNumericRangeQuery(query, minEastBL, maxEastBL, inclusive, inclusive, eastBLIndexField, required);
+        }
+        if (westBL != null) {
+            addNumericRangeQuery(query, minWestBL, maxWestBL, inclusive, inclusive, westBLIndexField, required);
+        }
+        if (southBL != null) {
+            addNumericRangeQuery(query, minSouthBL, maxSouthBL, inclusive, inclusive, southBLIndexField, required);
+        }
+        if (northBL != null) {
+            addNumericRangeQuery(query, minNorthBL, maxNorthBL, inclusive, inclusive, northBLIndexField, required);
+        }
+    }
+
+    /**
      * Handle geographical search using Lucene.
      * 
      * East, North, South and West bounds are indexed as numeric in Lucene.
@@ -1160,129 +1165,54 @@ public class LuceneQueryBuilder {
         boolean inclusive = true;
 
         if (relation == null || relation.equals(Geonet.SearchResult.Relation.OVERLAPS)) {
-
             //
             // overlaps (default value) : uses the equivalence
             // -(a + b + c + d) = -a * -b * -c * -d
             //
-            // eastBL
-            if (westBL != null) {
-                addNumericRangeQuery(query, westBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
-                        LuceneIndexField.EAST, true);
-            }
-            // westBL
-            if (eastBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), eastBL, inclusive, inclusive,
-                        LuceneIndexField.WEST, true);
-            }
-            // northBL
-            if (southBL != null) {
-                addNumericRangeQuery(query, southBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
-                        LuceneIndexField.NORTH, true);
-            }
-            // southBL
-            if (northBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), northBL, inclusive, inclusive,
-                        LuceneIndexField.SOUTH, true);
-            }
+            addLatLongQuery(query, westBL, westBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
+                    eastBL, String.valueOf(minBoundingLongitudeValue), eastBL, LuceneIndexField.WEST,
+                    southBL, southBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH,
+                    northBL, String.valueOf(minBoundingLatitudeValue), northBL, LuceneIndexField.SOUTH, inclusive, true);
         }
         //
         // equal: coordinates of the target rectangle within 1 degree from
         // corresponding ones of metadata rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.EQUAL)) {
-            // eastBL
-            if (eastBL != null) {
-                addNumericRangeQuery(query, eastBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
-            }
-            // westBL
-            if (westBL != null) {
-                addNumericRangeQuery(query, westBL, westBL, inclusive, inclusive, LuceneIndexField.WEST, true);
-            }
-            // northBL
-            if (northBL != null) {
-                addNumericRangeQuery(query, northBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
-            }
-            // southBL
-            if (southBL != null) {
-                addNumericRangeQuery(query, southBL, southBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
-            }
+            addLatLongQuery(query, westBL, westBL, westBL, LuceneIndexField.WEST,
+                    eastBL, eastBL, eastBL, LuceneIndexField.EAST,
+                    southBL, southBL, southBL, LuceneIndexField.SOUTH,
+                    northBL, northBL, northBL, LuceneIndexField.NORTH,  inclusive, true);
         }
         //
         // encloses: metadata rectangle encloses target rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSES)) {
-            // eastBL
-            if (eastBL != null) {
-                addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
-                        LuceneIndexField.EAST, true);
-            }
-            // westBL
-            if (westBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive,
-                        LuceneIndexField.WEST, true);
-            }
-            // northBL
-            if (northBL != null) {
-                addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
-                        LuceneIndexField.NORTH, true);
-            }
-            // southBL
-            if (southBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive,
-                        LuceneIndexField.SOUTH, true);
-            }
+            addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.WEST,
+                    eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
+                    southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.SOUTH,
+                    northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH, inclusive, true);
         }
         //
         // fullyEnclosedWithin: metadata rectangle fully enclosed within target
         // rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSEDWITHIN)) {
-            // eastBL
-            if (eastBL != null) {
-                addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
-            }
-            // westBL
-            if (westBL != null) {
-                addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.WEST, true);
-            }
-            // northBL
-            if (northBL != null) {
-                addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
-            }
-            // southBL
-            if (southBL != null) {
-                addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
-            }
+            addLatLongQuery(query, westBL, westBL, eastBL, LuceneIndexField.WEST,
+                    eastBL, westBL, eastBL, LuceneIndexField.EAST,
+                    southBL, southBL, northBL, LuceneIndexField.SOUTH,
+                    northBL, southBL, northBL, LuceneIndexField.NORTH, inclusive, true);
         }
         //
         // fullyOutsideOf: one or more of the 4 forbidden halfplanes contains
         // the metadata
         // rectangle, that is, not true that all the 4 forbidden halfplanes do
-        // not contain
-        // the metadata rectangle
-        //
+        // not contain the metadata rectangle
         else if (relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
-            // eastBL
-            if (westBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive,
-                        LuceneIndexField.EAST, false);
-            }
-            // westBL
-            if (eastBL != null) {
-                addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
-                        LuceneIndexField.WEST, false);
-            }
-            // northBL
-            if (southBL != null) {
-                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive,
-                        LuceneIndexField.NORTH, false);
-            }
-            // southBL
-            if (northBL != null) {
-                addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
-                        LuceneIndexField.SOUTH, false);
-            }
+            addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.EAST,
+                    eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.WEST,
+                    southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.NORTH,
+                    northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.SOUTH, inclusive, false);
         }
     }
 

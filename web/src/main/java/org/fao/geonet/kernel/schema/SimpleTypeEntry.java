@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -40,7 +39,7 @@ import java.util.List;
   * is logged). Only the "restriction" child is recognized and extracted.
   */
 
-class SimpleTypeEntry
+class SimpleTypeEntry extends BaseHandler
 {
 	public String name;
 	public List alTypes = new ArrayList();
@@ -61,7 +60,7 @@ class SimpleTypeEntry
 
 	public SimpleTypeEntry(ElementInfo ei)
 	{
-		handleAttribs(ei);
+		name = handleAttribs(ei, name);
 		handleChildren(ei);
 	}
 
@@ -84,28 +83,6 @@ class SimpleTypeEntry
 	//---
 	//--- Private methods
 	//---
-	//---------------------------------------------------------------------------
-
-	private void handleAttribs(ElementInfo ei)
-	{
-		List attribs = ei.element.getAttributes();
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
-
-            if (attrName.equals("name")) {
-                name = at.getValue();
-                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
-                    name = ei.targetNSPrefix + ":" + at.getValue();
-                }
-            }
-            else {
-                Logger.log();
-            }
-        }
-	}
-
 	//---------------------------------------------------------------------------
 
 	private void handleChildren(ElementInfo ei)
