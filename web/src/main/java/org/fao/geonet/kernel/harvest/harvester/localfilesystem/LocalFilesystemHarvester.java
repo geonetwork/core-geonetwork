@@ -243,7 +243,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				}
 			}
 
-			String schema = dataMan.autodetectSchema(xml);
+			String schema = dataMan.autodetectSchema(xml, null);
 			if(schema == null) {
 				result.unknownSchema++;
 			}
@@ -437,7 +437,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		return "filesystem";
 	}
 
-	class LocalFilesystemResult {
+	static class LocalFilesystemResult {
 		public int total;
 		public int added;
 		public int updated;

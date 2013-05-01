@@ -32,6 +32,7 @@ import jeeves.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -55,6 +56,7 @@ import org.jdom.xpath.XPath;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.DateFormat;
@@ -280,7 +282,7 @@ class Harvester
 		
 		Element md = Xml.transform (capa, styleSheet, param);
 		
-		String schema = dataMan.autodetectSchema (md); // ie. iso19139; 
+		String schema = dataMan.autodetectSchema (md, null); // ie. iso19139; 
 
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
@@ -569,7 +571,7 @@ class Harvester
                             xml = (Element) xml.getChildren().get(0);
                         }
 
-						schema = dataMan.autodetectSchema (xml); // ie. iso19115 or 139 or DC
+						schema = dataMan.autodetectSchema (xml, null); // ie. iso19115 or 139 or DC
 						// Extract uuid from loaded xml document
 						// FIXME : uuid could be duplicate if metadata already exist in catalog
 						reg.uuid = dataMan.extractUUID(schema, xml);
@@ -817,11 +819,20 @@ class Harvester
 			if (result == 200) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
-                OutputStream fo = new FileOutputStream (dir + filename);
-			    BinaryFile.copy (req.getResponseBodyAsStream(),
+                OutputStream fo = null;
+                InputStream in = null;
+                
+                try {
+                    fo = new FileOutputStream (dir + filename);
+                    in = req.getResponseBodyAsStream();
+                    BinaryFile.copy (in,
 						    		fo, 
-						    		true,
-						    		true);
+						    		false,
+						    		false);
+                } finally {
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(fo);
+                }
 			} else {
 				log.info (" Http error connecting");
 				return null;
@@ -946,7 +957,7 @@ class Harvester
     private static final String IMAGE_FORMAT = "image/png";
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
 	
-	private class WxSLayerRegistry {
+	private static class WxSLayerRegistry {
 		public String uuid;
 		public String id;
 		public String name;

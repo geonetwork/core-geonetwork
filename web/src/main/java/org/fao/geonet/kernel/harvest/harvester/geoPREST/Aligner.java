@@ -132,7 +132,7 @@ public class Aligner
 
 		if (md == null) return;
 
-		String schema = dataMan.autodetectSchema(md);
+		String schema = dataMan.autodetectSchema(md, null);
 
 		if (schema == null) {
 			if (log.isDebugEnabled()) {
@@ -321,7 +321,6 @@ public class Aligner
 				e.printStackTrace();
 				log.error("Getting record from GeoPortal REST raised exception: "+e.getMessage());
 				log.error("Sent request "+request.getSentData());
-				if (response != null) log.error("Received:\n"+Xml.getString(response));
 				throw new Exception(e);
 			}
 

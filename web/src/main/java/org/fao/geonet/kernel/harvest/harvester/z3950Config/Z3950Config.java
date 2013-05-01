@@ -57,7 +57,6 @@ public class Z3950Config
 		this.params  = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		dataMan = gc.getDataManager();
 		schemaMan = gc.getSchemamanager();
 		result  = new Z3950ConfigResult();
 	}
@@ -143,7 +142,6 @@ public class Z3950Config
 	private ServiceContext context;
 	private XmlRequest     request;
 	private Z3950ConfigParams   params;
-	private DataManager    dataMan;
 	private SchemaManager  schemaMan;
 	private Z3950ConfigResult   result;
 }

@@ -38,7 +38,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class XmlSerializerTest {
 	
-	public class DummyXmlSerializer extends XmlSerializer {
+	public static class DummyXmlSerializer extends XmlSerializer {
 
 		public DummyXmlSerializer(SettingManager settingManager) {
 			super(settingManager);

@@ -32,6 +32,7 @@ import jeeves.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
@@ -88,7 +89,6 @@ public class SchemaManager {
 	private String 	 FS         = File.separator;
 	private	String	 basePath;
 	private String resourcePath;
-	private int numberOfSchemasAdded = 0;
 	private int numberOfCoreSchemasAdded = 0;
 	
 	private static final int MODE_NEEDLE = 0;
@@ -822,7 +822,7 @@ public class SchemaManager {
 
 		// -- create schema directory 
 		File dir = new File(schemaPluginsDir, name);
-		dir.mkdirs();
+		IO.mkdirs(dir, name+" schema plugin dir");
 
 		try {
 			unpackSchemaZipArchive(dir, in);
@@ -1738,11 +1738,11 @@ public class SchemaManager {
 		};
 
 		File webAppDir = new File(resourcePath + FS + Geonet.Path.SCHEMAS);
-		webAppDir.mkdirs();
+		IO.mkdirs(webAppDir, "Schema directory");
 
 		File webAppDirSchemaXSD = new File(webAppDir, name);
 		deleteDir(webAppDirSchemaXSD);
-		webAppDirSchemaXSD.mkdirs();
+		IO.mkdirs(webAppDirSchemaXSD, "webapp dir schema xsd");
 
 		// copy all XSDs from schema plugin dir to webapp schema dir
 		File fileSchemaPluginDir = new File(schemaPluginDir);

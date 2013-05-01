@@ -24,6 +24,7 @@
 package jeeves.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -83,6 +84,42 @@ public final class IO
 		    }
 		}
 	}
+	
+	/**
+	 * Make a directory (and parent directories) if it does not exist.
+	 * If the directory cannot be made and does not exist or is a file an exception is thrown 
+	 * 
+	 * @param dir the directory to make
+	 * @param desc A short description of the directory being made.
+	 */
+	public static void mkdirs(File dir, String desc) throws IOException {
+        if(!dir.mkdirs()) {
+            if (!dir.exists()) {
+                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". Check permissions of parent directory";
+                throw new IOException(msg);
+            }
+            if (dir.isFile()){
+                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". The file already exists and is a file";
+                throw new IOException(msg);
+                
+            }
+        }
+
+	}
+
+	/**
+	 * Set lastModified time if a failure log a warning.
+	 * 
+	 * @param file the file to set the time on
+	 * @param timeMillis the time in millis
+	 * @param loggerModule the module to log to
+	 */
+    public static void setLastModified(File file, long timeMillis, String loggerModule) {
+        if (!file.setLastModified(timeMillis)) {
+            Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
+        }
+        
+    }
 }
 
 //=============================================================================

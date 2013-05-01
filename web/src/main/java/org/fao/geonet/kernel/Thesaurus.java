@@ -83,12 +83,13 @@ public class Thesaurus {
     private String date;
     
     private String defaultNamespace;
-
-	private String version;
-
+    
     private String downloadUrl;
-
+    
     private String keywordUrl;
+
+/*    @SuppressWarnings("unused")
+	private String version;
 
 	@SuppressWarnings("unused")
 	private String name;
@@ -103,8 +104,8 @@ public class Thesaurus {
 	private String langue;
 
 	@SuppressWarnings("unused")
-	private String autority;
-
+	private String authority;
+*/
 	private IsoLanguagesMapper isoLanguageMapper;
 
 	/**
@@ -635,7 +636,6 @@ public class Thesaurus {
 				// may not be present yet
 				this.title = defaultTitle;
         this.date = new ISODate().toString();
-				this.version = "unknown"; // not really acceptable!
 
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
@@ -654,6 +654,7 @@ public class Thesaurus {
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
             } else {
                 this.title = defaultTitle;
+                this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
             
             try {

@@ -158,8 +158,8 @@ public abstract class XmlSerializer {
 		
 		if (!isIndexingTask) { 
 			boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-    		if(ServiceContext.get() != null) {
-    			ServiceContext context = ServiceContext.get();
+			ServiceContext context = ServiceContext.get();
+    		if(context != null) {
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
     			boolean canEdit = gc.getAccessManager().canEdit(context, id);
     			if(canEdit) {

@@ -189,7 +189,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			// transform ISO19115 to ISO19139
 			Element iso19139 = Xml.transform(iso19115, ISO19115_TO_ISO19139_TRANSFORMER_LOCATION);
 			
-			String schema = dataMan.autodetectSchema(iso19139);
+			String schema = dataMan.autodetectSchema(iso19139, null);
 			if(schema == null) {
 				result.unknownSchema++;
 			}
@@ -383,7 +383,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		return "arcsde";
 	}
 
-	class ArcSDEResult {
+	static class ArcSDEResult {
 		public int total;
 		public int added;
 		public int updated;

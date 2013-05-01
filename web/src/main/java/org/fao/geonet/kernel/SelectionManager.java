@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 /**
  * Manage objects selection for a user session.
  */
@@ -68,37 +70,26 @@ public class SelectionManager {
 		SelectionManager manager = getManager(session);
 		List<Element> elList = result.getChildren();
 
-		if (manager != null) {
+		Set<String> selection = manager.getSelection(SELECTION_METADATA);
 
-			Set<String> selection = manager.getSelection(SELECTION_METADATA);
-
-            for (Element element : elList) {
-                if (element.getName().equals(Geonet.Elem.SUMMARY)) {
-                    continue;
-                }
-                Element info = element.getChild(Edit.RootChild.INFO,
-                        Edit.NAMESPACE);
-                String uuid = info.getChildText(Edit.Info.Elem.UUID);
-                if (selection.contains(uuid)) {
-                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
-                            .setText("true"));
-                }
-                else {
-                    info.addContent(new Element(Edit.Info.Elem.SELECTED)
-                            .setText("false"));
-                }
+        for (Element element : elList) {
+            if (element.getName().equals(Geonet.Elem.SUMMARY)) {
+                continue;
             }
-			result.setAttribute(Edit.Info.Elem.SELECTED, Integer
-					.toString(selection.size()));
-		} else {
-            for (Element element : elList) {
-                Element info = element.getChild(Edit.RootChild.INFO,
-                        Edit.NAMESPACE);
+            Element info = element.getChild(Edit.RootChild.INFO,
+                    Edit.NAMESPACE);
+            String uuid = info.getChildText(Edit.Info.Elem.UUID);
+            if (selection.contains(uuid)) {
+                info.addContent(new Element(Edit.Info.Elem.SELECTED)
+                        .setText("true"));
+            }
+            else {
                 info.addContent(new Element(Edit.Info.Elem.SELECTED)
                         .setText("false"));
             }
-			result.setAttribute(Edit.Info.Elem.SELECTED, Integer.toString(0));
-		}
+        }
+		result.setAttribute(Edit.Info.Elem.SELECTED, Integer
+				.toString(selection.size()));
 	}
 
 	/**
@@ -132,10 +123,6 @@ public class SelectionManager {
 
 		// Get the selection manager or create it
 		SelectionManager manager = getManager(session);
-		if (manager == null) {
-			manager = new SelectionManager(session);
-			session.setProperty(Geonet.Session.SELECTED_RESULT, manager);
-		}
 
 		return manager.updateSelection(type, context, selected, paramid);
 	}
@@ -205,6 +192,7 @@ public class SelectionManager {
 	 *            Current user session
 	 * @return selection manager
 	 */
+	@Nonnull
 	public static SelectionManager getManager(UserSession session) {
 		SelectionManager manager = (SelectionManager) session.getProperty(Geonet.Session.SELECTED_RESULT);
 		if (manager == null) {

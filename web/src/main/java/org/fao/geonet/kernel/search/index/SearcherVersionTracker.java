@@ -36,7 +36,7 @@ public class SearcherVersionTracker {
     public long register(Map<AcquireResult, GeonetworkNRTManager> searchers) {
         long finalVersion = version.incrementAndGet();
         
-        Map<String, Long> versions = mapping.get(version);
+        Map<String, Long> versions = mapping.get(finalVersion);
         if(versions == null) {
             versions = new HashMap<String, Long>();
             mapping.put(finalVersion, versions);

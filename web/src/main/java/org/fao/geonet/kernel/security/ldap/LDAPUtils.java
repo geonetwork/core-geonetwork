@@ -126,7 +126,7 @@ public class LDAPUtils {
 					groupId = groupRecord.getChildText("id");
 				}
 				
-				if (groupId != null || createNonExistingLdapGroup) {
+				if (createNonExistingLdapGroup) {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 					}

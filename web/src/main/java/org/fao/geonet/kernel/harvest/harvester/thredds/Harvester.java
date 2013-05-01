@@ -426,7 +426,7 @@ class Harvester
 		//--- strip the catalog namespace as it is not required
 		md.removeNamespaceDeclaration(invCatalogNS);
 
-		String schema = dataMan.autodetectSchema(md); // should be iso19139
+		String schema = dataMan.autodetectSchema(md, null); // should be iso19139
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
 			result.unknownSchema ++;
@@ -1111,7 +1111,7 @@ class Harvester
 
 			Element md = Xml.transform (cata, serviceStyleSheet, param);
 
-			String schema = dataMan.autodetectSchema (md); 
+			String schema = dataMan.autodetectSchema (md, null); 
 			if (schema == null) {
 				log.warning("Skipping metadata with unknown schema.");
 				result.unknownSchema ++;
@@ -1432,7 +1432,7 @@ class Harvester
 	private FragmentHarvester atomicFragmentHarvester;
 	private FragmentHarvester collectionFragmentHarvester;
 
-	private class ThreddsService {
+	private static class ThreddsService {
 		public String uuid;
 		public Map<String,String> datasets = new HashMap();
 		public InvService service;

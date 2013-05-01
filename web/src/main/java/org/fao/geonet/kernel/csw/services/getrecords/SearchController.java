@@ -483,12 +483,10 @@ public class SearchController {
                             Element match = i.next();
                             Element parent = match.getParentElement();
                             while(parent != null) {
-                                if(parent != null) {
-                                    parent.removeContent();
-                                    parent.addContent((Element)match.clone());
-                                    match = (Element)parent.clone();
-                                    parent = parent.getParentElement();
-                                }
+                                parent.removeContent();
+                                parent.addContent((Element)match.clone());
+                                match = (Element)parent.clone();
+                                parent = parent.getParentElement();
                             }
                             elementsInContextMatching.add(match);
                         }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -45,7 +46,7 @@ class TaxonomyIndexTracker {
     }
     private void init() throws Exception {
 		try {
-			taxonomyDir.mkdirs();
+			IO.mkdirs(taxonomyDir, "Lucene Taxonomy directory");
 
 			FSDirectory fsDir = FSDirectory.open(taxonomyDir);
 

@@ -159,12 +159,13 @@ public final class Log
 		return new jeeves.interfaces.Logger()
 		{
 
-            public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}
-            public void debug  (String message) { Log.debug  (module, message); }
-			public void info   (String message) { Log.info   (module, message); }
-			public void warning(String message) { Log.warning(module, message); }
-			public void error  (String message) { Log.error  (module, message); }
-			public void fatal  (String message) { Log.fatal  (module, message); }
+		    @Override public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}
+            @Override public void debug  (String message) { Log.debug  (module, message); }
+            @Override public void info   (String message) { Log.info   (module, message); }
+			@Override public void warning(String message) { Log.warning(module, message); }
+			@Override public void error  (String message) { Log.error  (module, message); }
+			@Override public void fatal  (String message) { Log.fatal  (module, message); }
+			@Override public String getModule() {return module;}
 		};
 	}
 

@@ -38,7 +38,8 @@ import org.jdom.JDOMException;
  */
 public class DbDescTranslator extends Translator {
 
-	private final Dbms _dbms;
+    private static final long serialVersionUID = 1L;
+    private transient final Dbms _dbms;
 	private final String _langCode;
 
 	/**

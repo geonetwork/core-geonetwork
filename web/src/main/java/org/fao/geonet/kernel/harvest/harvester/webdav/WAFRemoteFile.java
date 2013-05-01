@@ -39,7 +39,7 @@ import java.util.Map;
 
 class WAFRemoteFile implements RemoteFile {
 	
-	public class WXS{
+	public static class WXS{
 		public static final String WMS = "SERVICE=WMS";
 		public static final String WCS = "SERVICE=WCS";
 		public static final String WFS = "SERVICE=WFS";

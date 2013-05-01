@@ -49,6 +49,7 @@ import javax.servlet.ServletContext;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -518,9 +519,7 @@ public class SearchManager {
         }
 
 		File htmlCacheDirTest   = new File(htmlCacheDir);
-		if (!htmlCacheDirTest.isDirectory() && !htmlCacheDirTest.mkdirs()) {
-            throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
-        }
+		IO.mkdirs(htmlCacheDirTest, "Html cache directory");
 		_htmlCacheDir = htmlCacheDir;
 
 
@@ -528,12 +527,13 @@ public class SearchManager {
 		if (!_luceneDir.isAbsolute()) {
             _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
         }
-        _luceneDir.getParentFile().mkdirs();
+        IO.mkdirs(_luceneDir.getParentFile(), "Lucene Index container directory");
+
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
 		_luceneTaxonomyDir = new File(luceneDir + TAXONOMY_DIR);
 		if (!_luceneTaxonomyDir.isAbsolute()) _luceneTaxonomyDir = new File(luceneDir+ TAXONOMY_DIR);
-		_luceneTaxonomyDir.getParentFile().mkdirs();
+		IO.mkdirs(_luceneTaxonomyDir.getParentFile(), "Unable to make luceneTaxony parent dir: {dir} because: {cause}");
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;

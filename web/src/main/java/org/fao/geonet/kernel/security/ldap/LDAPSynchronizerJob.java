@@ -252,7 +252,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 dbms.execute(query, Integer.valueOf(groupId), groupName);
                 Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId),
                         groupName);
-            } else if (groupRecord != null) {
+            } else {
                 groupId = groupRecord.getChildText("id");
                 // Update something ?
                 // Group description is only defined in catalog, not in LDAP for the time

@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nonnull;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -414,17 +416,17 @@ public class CatalogSearcher {
      * @throws Exception
      */
 	private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
-                                                          Element filterExpr, String filterVersion, Sort sort,
+                                                          @Nonnull Element filterExpr, String filterVersion, Sort sort,
                                                           ResultType resultType, int startPosition, int maxRecords,
                                                           int maxHitsInSummary, String cswServiceSpecificContraint,
                                                           GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
             throws Exception {
 
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
-        if (filterExpr != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
+        }
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
         }
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -445,14 +447,15 @@ public class CatalogSearcher {
         Query data;
         if (luceneExpr == null) {
             data = null;
+            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
             String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
                 analyzer, _luceneConfig,
                 _lang, requestedLanguageOnly);
+            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
         }
-        Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);

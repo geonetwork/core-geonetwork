@@ -690,7 +690,7 @@ public class FragmentHarvester {
 		public Iterable<String> categories;
 	}
 	
-	public class HarvestSummary {
+	public static class HarvestSummary {
 		public int fragmentsMatched;
 		public int recordsBuilt;
 		public int recordsUpdated;

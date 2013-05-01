@@ -87,6 +87,9 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
@@ -894,23 +897,23 @@ public class DataManager {
                     Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
                     if (xmlReport != null) {
                         report.addContent(xmlReport);
-                    }
-                    // add results to persitent validation information
-                    int firedRules = 0;
-                    Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                    while (i.hasNext()) {
-                        i.next();
-                        firedRules ++;
-                    }
-                    int invalidRules = 0;
-                    i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                    while (i.hasNext()) {
-                        i.next();
-                        invalidRules ++;
-                    }
-                    Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
-                    if (valTypeAndStatus != null) {
-                        valTypeAndStatus.put(ruleId, results);
+                        // add results to persitent validation information
+                        int firedRules = 0;
+                        Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (i.hasNext()) {
+                            i.next();
+                            firedRules ++;
+                        }
+                        int invalidRules = 0;
+                        i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (i.hasNext()) {
+                            i.next();
+                            invalidRules ++;
+                        }
+                        Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
+                        if (valTypeAndStatus != null) {
+                            valTypeAndStatus.put(ruleId, results);
+                        }
                     }
                 } catch (Exception e) {
                     Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
@@ -1327,7 +1330,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-    public String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @Nonnull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
         return autodetectSchema(md, schemaMan.getDefaultSchema());
     }
 
@@ -1341,7 +1344,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-    public String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
 
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()

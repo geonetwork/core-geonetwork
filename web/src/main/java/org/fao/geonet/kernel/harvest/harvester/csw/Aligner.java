@@ -65,7 +65,6 @@ public class Aligner
 		this.log        = log;
 		this.context    = sc;
 		this.dbms       = dbms;
-		this.server     = server;
 		this.params     = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -90,7 +89,7 @@ public class Aligner
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
 				request.setMethod(CatalogRequest.Method.GET);
-			} else if (oper.getUrl != null) {
+			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
 				request.setMethod(CatalogRequest.Method.POST);
 			} else {
@@ -177,7 +176,7 @@ public class Aligner
 		if (md == null)
 			return;
 
-		String schema = dataMan.autodetectSchema(md);
+		String schema = dataMan.autodetectSchema(md, null);
 
 		if (schema == null)
 		{
@@ -483,7 +482,6 @@ public class Aligner
 	private Dbms           dbms;
 	private CswParams      params;
 	private DataManager    dataMan;
-	private CswServer      server;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;

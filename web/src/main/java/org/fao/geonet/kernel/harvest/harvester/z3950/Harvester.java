@@ -261,7 +261,7 @@ class Harvester {
 				}
 
 				// detect schema, extract uuid and add
-				String schema = dataMan.autodetectSchema(md);
+				String schema = dataMan.autodetectSchema(md, null);
 				if (schema == null) {
 					log.warning("Skipping metadata with unknown schema.");
 					result.unknownSchema++;

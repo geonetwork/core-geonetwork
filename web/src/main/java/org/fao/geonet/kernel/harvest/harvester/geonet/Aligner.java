@@ -27,6 +27,7 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
@@ -250,7 +251,7 @@ public class Aligner
 					File outFile = new File(pubDir, file);
 					FileOutputStream os = new FileOutputStream(outFile);
 					BinaryFile.copy(is, os, false, true);
-					outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
 				}
 				
 				public void handleFeatureCat(Element md, int index)
@@ -267,7 +268,7 @@ public class Aligner
 	                    File outFile = new File(dir, file);
 	                    FileOutputStream os = new FileOutputStream(outFile);
 	                    BinaryFile.copy(is, os, false, true);
-	                    outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
 				    }
 				}
 			});
@@ -341,8 +342,8 @@ public class Aligner
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
 
-		new File(pubDir).mkdirs();
-		new File(priDir).mkdirs();
+		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata "+id);
+		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata "+id);
 
 		addCategories(id);
 		if (params.createRemoteCategory) {
@@ -747,15 +748,15 @@ public class Aligner
 
 		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 		{
-            if(log.isDebugEnabled()) log.debug("  - Adding remote " + dir + "  file with name:"+ file);
+            if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
 			FileOutputStream os = new FileOutputStream(locFile);
 			BinaryFile.copy(is, os, false, true);
-			locFile.setLastModified(remIsoDate.getSeconds() * 1000);
+			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
 		}
 		else
 		{
-            if(log.isDebugEnabled()) log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);
+            if(log.isDebugEnabled()){ log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);}
 		}
 	}
 

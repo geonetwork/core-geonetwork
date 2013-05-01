@@ -27,6 +27,7 @@ import jeeves.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -252,10 +253,10 @@ public class Importer {
 				
 				
 				Element metadata = md.get(index);
-				String schema = dm.autodetectSchema(metadata);
+				String schema = dm.autodetectSchema(metadata, null);
 
 				if (schema == null)
-					throw new Exception("Unknown schema format : " + schema);
+					throw new Exception("Unknown schema");
 
 				// Handle non MEF files insertion
 				if (info.getChildren().size() == 0) {
@@ -386,8 +387,8 @@ public class Importer {
 				String priDir = Lib.resource.getDir(context, "private", id
 						.get(index));
 
-				new File(pubDir).mkdirs();
-				new File(priDir).mkdirs();
+		        IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+id);
+		        IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+id);
 
 				if (categs != null)
 					addCategories(context, dm, dbms, id.get(index), categs);
@@ -515,8 +516,9 @@ public class Importer {
 					insertedWithLocalId = true;
 				}
 			} catch (NumberFormatException e) {
-                if(Log.isDebugEnabled(Geonet.MEF))
+                if(Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
+                }
 			}
 		} 
 		
@@ -545,7 +547,7 @@ public class Importer {
 		FileOutputStream os = new FileOutputStream(outFile);
 		BinaryFile.copy(is, os, false, true);
 
-		outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+		IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, Geonet.MEF);
 	}
 
 	/**

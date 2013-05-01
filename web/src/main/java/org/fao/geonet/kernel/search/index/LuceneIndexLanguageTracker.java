@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -63,7 +64,7 @@ public class LuceneIndexLanguageTracker {
     }
 
     private void init(File indexContainingDir, LuceneConfig luceneConfig) throws Exception {
-        indexContainingDir.mkdirs();
+        IO.mkdirs(indexContainingDir, "Lucene Container directory");
 
         try {
 	        Set<File> indices = listIndices(indexContainingDir);
@@ -78,7 +79,7 @@ public class LuceneIndexLanguageTracker {
     }
 
     private void open(File indexDir) throws IOException, CorruptIndexException, LockObtainFailedException {
-        indexDir.mkdirs();
+        IO.mkdirs(indexDir, "Language specific index directory");
         String language = indexDir.getName();
 
         Directory fsDir = null;
@@ -222,7 +223,7 @@ public class LuceneIndexLanguageTracker {
         taxonomyIndexTracker.reset();
         close(false);
         FileUtils.deleteDirectory(indexContainingDir);
-        indexContainingDir.mkdirs();
+        IO.mkdirs(indexContainingDir, "Lucene index container directory");
         dirs.clear();
         trackingWriters.clear();
         searchManagers.clear();

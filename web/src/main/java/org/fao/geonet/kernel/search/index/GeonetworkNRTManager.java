@@ -98,7 +98,7 @@ class GeonetworkNRTManager implements Closeable {
         }
         return new AcquireResult(version, lastVersionUpToDate, searcher, version != versionToken);
     }
-    final class AcquireResult {
+    static final class AcquireResult {
         final long version;
         final boolean lastVersionUpToDate;
         final IndexSearcher searcher;

@@ -77,10 +77,13 @@ class Harvester {
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
 		
 		RemoteRetriever rr = null;		
-		if(params.subtype.equals("webdav"))
-			rr = new WebDavRetriever();
-		else if(params.subtype.equals("waf"))
-			rr = new WAFRetriever();
+        if (params.subtype.equals("webdav")) {
+            rr = new WebDavRetriever();
+        } else if (params.subtype.equals("waf")) {
+            rr = new WAFRetriever();
+        } else {
+            throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
+        }
 		
 		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
 		rr.init(log, context, params);

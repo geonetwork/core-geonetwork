@@ -8,17 +8,46 @@
 		<Class name="~.*\..*Test" />
 	</Match>
   <Match>
-		<Class name="~org\.fao\.geonet\.[k-zK-Z].*" />
+		<Class name="~org\.fao\.geonet\.[l-zL-Z].*" />
 	</Match>
 	<Match>
 		<Class name="jeeves.server.JeevesEngine" />
-    <Method name="setDBServicesElement" />
+		<Method name="setDBServicesElement" />
 		<Bug pattern="REC_CATCH_EXCEPTION" />
 	</Match>
  	<Match>
 		<Class name="jeeves.server.dispatchers.ServiceManager" />
-    <Method name="dispatch" />
+		<Method name="dispatch" />
 		<Bug pattern="BC_UNCONFIRMED_CAST" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.rdf.Query$QueryResults" />
+		<Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+		<Method name="harvest" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+		<Method name="presentDocuments" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.Thesaurus" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+		<Method name="retrieveThesaurusTitle" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
+		<Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE" />
+		<Method name="extractGeometriesFrom" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.DataManager" />
+		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+		<Method name="autodetectSchema" params="org.jdom.Element"/>
 	</Match>
   <!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
 	<Match>

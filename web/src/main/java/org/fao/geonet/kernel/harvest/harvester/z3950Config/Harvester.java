@@ -55,12 +55,8 @@ class Harvester
 	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950ConfigParams params)
 	{
 		this.log    = log;
-		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		this.sm     = gc.getSettingManager();
-		this.dm     = gc.getDataManager();
+		this.context = context;
 	}
 
 	//--------------------------------------------------------------------------
@@ -153,11 +149,8 @@ class Harvester
 	//---------------------------------------------------------------------------
 
 	private Logger         log;
-	private Dbms           dbms;
 	private Z3950ConfigParams   params;
-  private ServiceContext context;
-	private SettingManager sm;
-	private DataManager dm;
+	private ServiceContext      context;
 }
 
 //=============================================================================

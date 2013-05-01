@@ -450,8 +450,6 @@ public class LuceneSearcher extends MetaSearcher {
 		return response;
 	}
 
-    private boolean closed = false;
-
     /**
      * TODO javadoc.
      */
@@ -1791,7 +1789,7 @@ public class LuceneSearcher extends MetaSearcher {
      * 
      * @author francois
      */
-    class SearchLoggerTask implements Runnable {
+    static class SearchLoggerTask implements Runnable {
         private ServiceContext srvContext;
         boolean logSpatialObject;
         String luceneTermsToExclude;

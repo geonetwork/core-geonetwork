@@ -669,14 +669,9 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 Log.debug(Geonet.CSW_HARVEST, "doHarvest finished waiting for harvester to finish");
             response = createHarvestResponse(harvester, context);
         }
-        if(response != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
-                Log.debug(Geonet.CSW_HARVEST, "doHarvest returns\n" + Xml.getString(response));
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
-                Log.debug(Geonet.CSW_HARVEST, "doHarvest returns null");
-        }
+        if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            Log.debug(Geonet.CSW_HARVEST, "doHarvest returns\n" + Xml.getString(response));
+
 		return response;
 	}
 

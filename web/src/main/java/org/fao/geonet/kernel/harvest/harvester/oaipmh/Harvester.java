@@ -300,7 +300,7 @@ class Harvester
 					return null;
 			}
 
-			String schema = dataMan.autodetectSchema(md);
+			String schema = dataMan.autodetectSchema(md, null);
 
 			if (schema == null)
 			{

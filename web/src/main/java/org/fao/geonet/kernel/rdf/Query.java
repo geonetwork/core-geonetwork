@@ -17,10 +17,16 @@ import org.openrdf.sesame.query.QueryResultsTable;
  * @author jeichar
  */
 public class Query<Q> {
-    public final class QueryResults extends AbstractList<Q> implements Serializable{
+    /**
+     * The results of a query.
+     * 
+     * Note: only serializable so that the results can be cached in the JCS cache.  It should not
+     * ever be truly serialized.
+     */
+    public final class QueryResults extends AbstractList<Q> implements Serializable {
         private static final long serialVersionUID = 3968403559675441162L;
         private final QueryResultsTable table;
-        private final Thesaurus thesaurus;
+        private transient final Thesaurus thesaurus;
 
         public QueryResults(QueryResultsTable table, Thesaurus thesaurus) {
             this.table = table;

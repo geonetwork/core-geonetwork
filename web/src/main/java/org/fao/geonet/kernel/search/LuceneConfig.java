@@ -103,7 +103,7 @@ public class LuceneConfig {
     /**
      * Facet configuration
      */
-    public class FacetConfig {
+    public static class FacetConfig {
         private String name;
         private String plural;
         private String indexKey;

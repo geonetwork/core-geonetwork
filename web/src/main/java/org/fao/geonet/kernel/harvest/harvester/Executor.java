@@ -101,7 +101,7 @@ class Executor extends Thread
 	{
 		try
 		{
-			sleep(minutes * 60 * 1000);
+			sleep((long)minutes * 60 * 1000);
 			return false;
 		}
 		catch (InterruptedException e)

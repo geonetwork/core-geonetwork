@@ -383,13 +383,13 @@ public class MetadataSchema
 	 * Schematron rules filename is like "schematron-rules-iso.xsl
 	 * 
 	 */
-	private class SchematronReportRulesFilter implements FilenameFilter {
+	private static class SchematronReportRulesFilter implements FilenameFilter {
 		public boolean accept(File directory, String filename) {
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
                     && filename.endsWith(XSL_FILE_EXTENSION);
         }
 	}
-	private class SchematronReportRulesSCHFilter implements FilenameFilter {
+	private static class SchematronReportRulesSCHFilter implements FilenameFilter {
         public boolean accept(File directory, String filename) {
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
                     && filename.endsWith(SCH_FILE_EXTENSION);

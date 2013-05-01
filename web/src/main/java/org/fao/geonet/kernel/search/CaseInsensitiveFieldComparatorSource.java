@@ -77,7 +77,6 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
         private String searchLang;
         private Collator collator;
         private DocTermsIndex shadowValues;
-        private AtomicReaderContext context;
 
         CaseInsensitiveFieldComparator(int numHits, String searchLang, String field) {
             values = new String[numHits];
@@ -154,7 +153,6 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
 
         @Override
         public FieldComparator<String> setNextReader(AtomicReaderContext context) throws IOException {
-           this.context = context;
            currentReaderValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), field);
           if(searchLang != null) {
               this.shadowValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), LuceneConfig.multilingualSortFieldName(field, searchLang));

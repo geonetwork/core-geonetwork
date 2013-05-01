@@ -73,10 +73,10 @@ public class SvnManager {
 	};
 
 	// SvnTask holds information used to commit changes to a metadata record
-	private class SvnTask {
-		private Set<String> ids; 					// metadata ids
-		private String sessionLogMessage; // session log message for svn commit
-		private Map<String,String> props; // properties to set on metadata record
+	private static class SvnTask {
+		Set<String> ids; 					// metadata ids
+		String sessionLogMessage; // session log message for svn commit
+//		Map<String,String> props; // properties to set on metadata record
 	}
     /**
      *  Constructor. Creates the subversion repository if it doesn't exist
@@ -439,7 +439,7 @@ public class SvnManager {
 			task = new SvnTask();
 			task.ids = new HashSet<String>();
 			task.sessionLogMessage = sessionLogMessage;
-			task.props = props;
+//			task.props = props;
 			tasks.put(dbms, task);
 		}
 
