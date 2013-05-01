@@ -23,16 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
@@ -40,7 +30,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
@@ -55,10 +44,15 @@ import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-import org.jdom.xpath.XPath;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 //=============================================================================
 
@@ -288,6 +282,33 @@ class Harvester
     //---------------------------------------------------------------------------
 
     /**
+     * TODO Javadoc.
+     *
+     * @param request
+     * @param oper
+     * @param server
+     * @param s
+     * @param url
+     * @param constraintLanguage
+     * @param constraint
+     * @param method
+     */
+    private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
+                              ConstraintLanguage constraintLanguage, String constraint, CatalogRequest.Method method) {
+
+        request.setUrl(url);
+        request.setServerVersion(server.getPreferredServerVersion());
+        request.setOutputSchema(oper.preferredOutputSchema);
+        request.setConstraintLanguage(constraintLanguage);
+        request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+        request.setConstraint(constraint);
+        request.setMethod(method);
+        for(String typeName: oper.typeNamesList) {
+            request.addTypeName(TypeName.getTypeName(typeName));
+        }
+        request.setOutputFormat(oper.preferredOutputFormat) ;
+    }
+    /**
      * Configs the harvester request
      *
      * @param request
@@ -302,80 +323,27 @@ class Harvester
         if (oper.getUrl == null && oper.postUrl == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
         }
-        
+
         // Use the preferred HTTP method and check one exist.
-		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
-			request.setUrl(oper.getUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.CQL);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getCqlConstraint(s));
-			request.setMethod(CatalogRequest.Method.GET);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
+        if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
+            setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+        }
+        else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
+            setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
+        }
+        else {
+            if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
+                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
             }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
-
-		} else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
-			request.setUrl(oper.postUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.FILTER);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getFilterConstraint(s));
-			request.setMethod(CatalogRequest.Method.POST);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
+            else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
+                setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
             }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
-
-		} else {
-		    if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
-                request.setUrl(oper.getUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-                request.setConstraintLanguage(ConstraintLanguage.CQL);
-                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-                request.setConstraint(getCqlConstraint(s));
-                request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-            } else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
-				request.setUrl(oper.postUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-				request.setConstraintLanguage(ConstraintLanguage.FILTER);
-				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-				request.setConstraint(getFilterConstraint(s));
-				request.setMethod(CatalogRequest.Method.POST);
-
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			} else {
-			    // TODO : add GET+FE and POST+CQL support
-			    log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
-			    
-			    request.setUrl(oper.getUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-                request.setConstraintLanguage(ConstraintLanguage.CQL);
-                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-                request.setConstraint(getCqlConstraint(s));
-                request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			}
-		}
+            else {
+                // TODO : add GET+FE and POST+CQL support
+                log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
+                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+            }
+        }
     }
 
 	//---------------------------------------------------------------------------

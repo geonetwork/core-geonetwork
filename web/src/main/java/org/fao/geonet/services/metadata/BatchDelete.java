@@ -24,12 +24,10 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
@@ -38,13 +36,10 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -52,7 +47,7 @@ import java.util.Set;
 /**
  * Removes a metadata from the system.
  */
-public class BatchDelete extends NotInReadOnlyModeService {
+public class BatchDelete extends BackupFileService {
 	public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
@@ -130,36 +125,4 @@ public class BatchDelete extends NotInReadOnlyModeService {
 			.addContent(new Element("notOwner").setText(notOwner.size()+""))
 			.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
-
-	private void backupFile(ServiceContext context, String id, String uuid, String file)
-	{
-		String outDir = Lib.resource.getRemovedDir(context, id);
-		String outFile= outDir + uuid +".mef";
-
-		new File(outDir).mkdirs();
-
-		try
-		{
-			FileInputStream  is = new FileInputStream(file);
-			FileOutputStream os = new FileOutputStream(outFile);
-
-			BinaryFile.copy(is, os, true, true);
-		}
-		catch(Exception e)
-		{
-			context.warning("Cannot backup mef file : "+e.getMessage());
-			e.printStackTrace();
-		}
-
-		new File(file).delete();
-	}
 }
-
-//=============================================================================
-

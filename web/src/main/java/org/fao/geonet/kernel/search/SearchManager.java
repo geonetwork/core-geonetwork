@@ -22,30 +22,9 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.servlet.ServletContext;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -53,11 +32,8 @@ import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -78,11 +54,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -123,10 +94,28 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import com.google.common.collect.ComparisonChain;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Indexes metadata using Lucene.
@@ -433,7 +422,7 @@ public class SearchManager {
 	/**
 	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
 	 * 
-	 * @param defaultAnalyzer The default analyzer to use
+	 * @param defaultAnalyzerClass The default analyzer to use
 	 * @param fieldAnalyzers	The list of extra analyzer per field
 	 * @param referenceMap	A map where to reference the per field analyzer
 	 * @param referenceKey	The reference key
@@ -1172,7 +1161,6 @@ public class SearchManager {
      *
      * @param schemaDir
      * @param xml
-     * @param translationForSorting 
      * @return
      * @throws Exception
      */
@@ -1527,12 +1515,10 @@ public class SearchManager {
 	/**
 	 * Creates Lucene numeric field.
 	 * 
-	 * @param doc	The document to add the field
 	 * @param name	The field name
 	 * @param string	The value to be indexed. It is parsed to its numeric type. If exception occurs
 	 * field is not added to the index. 
-	 * @param store
-	 * @param index
+	 * @param fieldType
 	 * @return
 	 * @throws Exception 
 	 */

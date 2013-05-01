@@ -53,14 +53,7 @@ public class LocalFilesystemParams extends AbstractParams {
 
 	public void create(Element node) throws BadInputEx {
 		super.create(node);
-		Element site = node.getChild("site");
-		directoryname = Util.getParam(site, "directory", "");
-		icon = Util.getParam(site, "icon",   "filesystem.gif");
-		String recurseString = Util.getParam(site, "recurse", "true");
-		recurse = (recurseString.equals("on") || recurseString.equals("true"));
-		String nodeleteString = Util.getParam(site, "nodelete", "true");
-		nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
-		System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+        createOrUpdate(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -71,15 +64,24 @@ public class LocalFilesystemParams extends AbstractParams {
 
 	public void update(Element node) throws BadInputEx {
 		super.update(node);
-		Element site = node.getChild("site");
-		directoryname = Util.getParam(site, "directory", "");
-		icon = Util.getParam(site, "icon",   "filesystem.gif");
-		String recurseString = Util.getParam(site, "recurse", "true");
-		recurse = (recurseString.equals("on") || recurseString.equals("true"));
-		String nodeleteString = Util.getParam(site, "nodelete", "true");
-		nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
-		System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+        createOrUpdate(node);
 	}
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param node
+     */
+    private void createOrUpdate(Element node) {
+        Element site = node.getChild("site");
+        directoryname = Util.getParam(site, "directory", "");
+        icon = Util.getParam(site, "icon",   "filesystem.gif");
+        String recurseString = Util.getParam(site, "recurse", "true");
+        recurse = (recurseString.equals("on") || recurseString.equals("true"));
+        String nodeleteString = Util.getParam(site, "nodelete", "true");
+        nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
+        System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+    }
 
 	public LocalFilesystemParams copy() {
 		LocalFilesystemParams copy = new LocalFilesystemParams(dm);

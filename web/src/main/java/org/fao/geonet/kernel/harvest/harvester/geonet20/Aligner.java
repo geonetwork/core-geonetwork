@@ -178,7 +178,8 @@ public class Aligner
 		result.addedMetadata++;
 
 		addCategories(id, info.getChildren("category"));
-		addPrivileges(id);
+
+        addPrivileges(id);
 
 		return id;
 	}

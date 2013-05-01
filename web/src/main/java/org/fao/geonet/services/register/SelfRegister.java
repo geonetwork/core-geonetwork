@@ -23,29 +23,13 @@
 
 package org.fao.geonet.services.register;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -53,6 +37,10 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Random;
 
 /**
  * Register user.
@@ -195,7 +183,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
 
-	    return sendMail(host, Integer.parseInt(port), subject, from, email, message);
+        return sendMail(host, Integer.parseInt(port), subject, from, email, message, PROTOCOL);
     }
 
 	/**
@@ -226,57 +214,10 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
-	    
-	    return sendMail(host, Integer.parseInt(port), subject, from, from, message);
+
+        return sendMail(host, Integer.parseInt(port), subject, from, from, message, PROTOCOL);
     }
 
-	// --------------------------------------------------------------------------
-		
-	/**
-	 * Send an email.
-	 * 
-	 * @param host
-	 * @param port
-	 * @param subject
-	 * @param from
-	 * @param to
-	 * @param content
-	 * @return
-	 */
-	boolean sendMail(String host, int port, String subject, String from, String to, String content) {
-		boolean isSendout = false;
-
-		Properties props = new Properties();
-		
-		props.put("mail.transport.protocol", PROTOCOL);
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.port", port);
-		props.put("mail.smtp.auth", "false");
-
-		Session mailSession = Session.getDefaultInstance(props);
-
-		try {
-			Message msg = new MimeMessage(mailSession);
-			msg.setFrom(new InternetAddress(from));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			msg.setSentDate(new Date());
-			msg.setSubject(subject);
-			// Add content message
-			msg.setText(content);
-			Transport.send(msg);
-			isSendout = true;
-		} catch (AddressException e) {
-			isSendout = false;
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			isSendout = false;
-			e.printStackTrace();
-		}
-		return isSendout;
-	}
-
-	// --------------------------------------------------------------------------
-		
 	/**
 	 * Check if the user exists. 
    *

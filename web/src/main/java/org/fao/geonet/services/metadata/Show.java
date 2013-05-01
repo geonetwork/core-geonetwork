@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -43,14 +43,12 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jeeves.utils.Xml;
-
 //=============================================================================
 
 /** Retrieves a particular metadata. Access is restricted
   */
 
-public class Show implements Service
+public class Show extends ShowViewBaseService
 {
     //--------------------------------------------------------------------------
 	//---
@@ -58,19 +56,8 @@ public class Show implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		String skip;
-		
-		skip = params.getValue("skipPopularity", "n");
-		skipPopularity = skip.equals("y");
-
-		skip = params.getValue("skipInfo", "n");
-		skipInfo = skip.equals("y");
-
-		skip = params.getValue("addRefs", "n");
-		addRefs = skip.equals("y");
-		
+	public void init(String appPath, ServiceConfig params) throws Exception{
+		super.init(appPath, params);
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
 
@@ -184,12 +171,6 @@ public class Show implements Service
 	//--- Variables
 	//---
 	//--------------------------------------------------------------------------
-
-	private boolean skipPopularity;
-	private boolean skipInfo;
-	private boolean addRefs;
     private boolean cache;
     
 }
-//=============================================================================
-

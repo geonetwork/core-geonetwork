@@ -36,9 +36,9 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -52,7 +52,7 @@ import java.util.Set;
 
 //=============================================================================
 
-public class Aligner
+public class Aligner extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -203,74 +203,12 @@ public class Aligner
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception
-	{
-		for(String catId : params.getCategories())
-		{
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed category with id:"+ catId);
-                }
-			} else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting category : "+ name);
-                }
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
-
-	private void addPrivileges(String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges())
-		{
-			String name = localGroups.getName(priv.getGroupId());
-			
-            if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-                }
-            } else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting privileges for group : "+ name);
-                }
-                
-				for (int opId: priv.getOperations())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-                        if(log.isDebugEnabled()) {
-                            log.debug("       --> "+ name);
-                        }
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-						if(log.isDebugEnabled()) {
-							log.debug("       --> "+ name +" (skipped)");
-						}
-					}
-				}
-			}
-		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -313,10 +251,10 @@ public class Aligner
 				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
 
 				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-				addPrivileges(id);
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-				addCategories(id);
+                addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 				dbms.commit();
 				dataMan.indexMetadata(dbms, id);
@@ -488,7 +426,3 @@ public class Aligner
 	private CswResult      result;
 	private GetRecordByIdRequest request;
 }
-
-//=============================================================================
-
-

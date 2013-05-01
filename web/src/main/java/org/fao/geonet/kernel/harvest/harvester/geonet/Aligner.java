@@ -28,12 +28,12 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.IO;
-import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
@@ -60,7 +60,7 @@ import java.util.Set;
 
 //=============================================================================
 
-public class Aligner
+public class Aligner extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -342,10 +342,10 @@ public class Aligner
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
 
-		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata "+id);
-		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata "+id);
+		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata " + id);
+		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata " + id);
 
-		addCategories(id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
     		if (categs != null) {
@@ -359,28 +359,6 @@ public class Aligner
 		result.addedMetadata++;
 
 		return id;
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception
-	{
-		for(String catId : params.getCategories())
-		{
-			String name = localCateg.getName(catId);
-
-			if (name == null)
-			{
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
-			else
-			{
-                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -631,7 +609,7 @@ public class Aligner
 			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), Integer.valueOf(id));
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-		addCategories(id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {

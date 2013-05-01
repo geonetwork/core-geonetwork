@@ -23,25 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.DecimalFormat;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -50,7 +33,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
@@ -61,9 +43,9 @@ import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.facet.search.FacetsCollector;
 import org.apache.lucene.facet.search.params.CountFacetRequest;
 import org.apache.lucene.facet.search.params.FacetRequest;
+import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
 import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
 import org.apache.lucene.facet.search.params.FacetSearchParams;
-import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
 import org.apache.lucene.facet.search.results.FacetResult;
 import org.apache.lucene.facet.search.results.FacetResultNode;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
@@ -111,13 +93,25 @@ import org.fao.geonet.services.region.RegionsDAO;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.DecimalFormat;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ranges;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * search metadata locally using lucene.
@@ -1089,40 +1083,8 @@ public class LuceneSearcher extends MetaSearcher {
             // wildcards - preserve them by analyzing the parts of the search string around them separately
             // (this is because Lucene's StandardTokenizer would remove wildcards, but that's not what we want)
             if(string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-                StringBuilder starsPreserved = new StringBuilder();
-                String[] starSeparatedList = string.split("\\*");
-                for(String starSeparatedPart : starSeparatedList) {
-                    StringBuilder qPreserved = new StringBuilder();
-                    // ? present
-                    if(starSeparatedPart.indexOf('?') >= 0) {
-                        String[] qSeparatedList = starSeparatedPart.split("\\?");
-                        for(String qSeparatedPart : qSeparatedList) {
-                            String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, analyzer, tokenizedFieldSet);
-                            qPreserved.append('?').append(analyzedPart);
-                        }
-                        // remove leading ?
-                        qPreserved.deleteCharAt(0);
-                        starsPreserved.append('*').append(qPreserved);
-                    }
-                    // no ? present
-                    else {
-                        String analyzeQueryText = LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, analyzer, tokenizedFieldSet);
-                        starsPreserved.append('*').append(analyzeQueryText);
-                    }
-                }
-                // remove leading *
-                if (starsPreserved.length() > 0) {
-                    starsPreserved = starsPreserved.deleteCharAt(0);
-                }
-
-                // restore ending wildcard
-                if (string.endsWith("*")) {
-                    starsPreserved.append("*");
-                } else if (string.endsWith("?")) {
-                    starsPreserved.append("?");
-                }
-
-                analyzedString = starsPreserved.toString();
+                WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
+                analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, analyzer, tokenizedFieldSet);
             }
             // no wildcards
             else {
