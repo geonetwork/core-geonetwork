@@ -1,14 +1,9 @@
 package org.fao.geonet.services.statistics;
 
-import java.util.List;
-
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -59,19 +54,8 @@ public class MostSearchedCategory extends NotInReadOnlyModeService{
         query += "order by cnt desc";
 
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
-		Element response = null;
-		if (maxHits < 1) {
-			response = dbms.select(query);
-		} else {
-			List resultSet = dbms.select(query).getChildren();
-			int max = maxHits < resultSet.size() ? maxHits : resultSet.size() ;
-			response = new Element(Jeeves.Elem.RESPONSE);
-			for (int i = 0; i < max; i++) {
-				Element el = (Element)resultSet.get(i);
-				response.addContent((Element)el.clone());
-			}
-		}
-		//System.out.println("response: " + Xml.getString(response));
-		return response;
+
+        MostSearchedResponse mostSearchedResponse = new MostSearchedResponse();
+        return mostSearchedResponse.createResponse(maxHits, dbms, query);
 	}
 }

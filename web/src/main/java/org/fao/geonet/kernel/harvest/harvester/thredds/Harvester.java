@@ -38,9 +38,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
@@ -166,7 +166,7 @@ import java.util.Map;
  * @author Simon Pigot
  *   
  */
-class Harvester
+class Harvester extends BaseAligner
 {
 	
 	
@@ -447,8 +447,8 @@ class Harvester
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
@@ -1287,35 +1287,6 @@ class Harvester
                 if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
 				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     **/
-	
-	private void addPrivileges (String id) throws Exception {
-		for (Privileges priv : params.getPrivileges ()) {
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			} else {
-				for (int opId: priv.getOperations ()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-					}
-				}
 			}
 		}
 	}

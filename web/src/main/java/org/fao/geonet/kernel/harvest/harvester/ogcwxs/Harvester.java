@@ -38,11 +38,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
@@ -138,7 +137,7 @@ import java.util.Map;
  * @author fxprunayre
  *   
  */
-class Harvester
+class Harvester extends BaseAligner
 {
 	
 	
@@ -338,8 +337,8 @@ class Harvester
 
 		int iId = Integer.parseInt(id);
 
-		addPrivileges(id);
-		addCategories(id);
+         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+         addCategories(id);
 		
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
 		dataMan.setTemplate(dbms, iId, "n", null);
@@ -650,8 +649,9 @@ class Harvester
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-			addPrivileges(reg.id);
-			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+
+            if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
 				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
@@ -874,41 +874,6 @@ class Harvester
 			}
 		}
 	}
-
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addPrivileges (String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges ())
-		{
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null)
-			{
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			}
-			else
-			{
-				for (int opId: priv.getOperations ())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
-					{
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else
-                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-				}
-			}
-		}
-	}
-
 
 	/** 
      * Add '?' or '&' if required to url so that parameters can just be 

@@ -32,6 +32,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -59,7 +60,7 @@ import java.util.UUID;
  * 
 **/
 
-public class FragmentHarvester {
+public class FragmentHarvester extends BaseAligner {
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -343,34 +344,9 @@ public class FragmentHarvester {
      * 
      */
 	private void updateSubtemplate(String id, String uuid, Element md, String title) throws Exception {
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-
-								//
-                // update metadata
-                //
-                boolean validate = false;
-                boolean ufo = false;
-                boolean index = false;
-                String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false);
-				int iId = Integer.parseInt(id);
-	
-
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
-        addPrivileges(id);
-
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-        addCategories(id);
-
-				dataMan.setTemplateExt(dbms, iId, "s", title);
-				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadata(dbms, id);
-
-        dbms.commit();
-
-				harvestSummary.updatedMetadata.add(uuid);
-				harvestSummary.fragmentsUpdated++;
+        update(id, md, title, true);
+        harvestSummary.updatedMetadata.add(uuid);
+        harvestSummary.fragmentsUpdated++;
 	}
 
 	//---------------------------------------------------------------------------
@@ -399,8 +375,8 @@ public class FragmentHarvester {
 
 		int iId = Integer.parseInt(id);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+        addCategories(id);
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
@@ -545,35 +521,53 @@ public class FragmentHarvester {
      */
 	private void updateMetadata(String recUuid, String id, Element template) throws Exception, SQLException {
 		// now update existing record with the filled in template
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("	- Attempting to update metadata record "+id+" with links");
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
-	
-								//
-                // update metadata
-                //
-                boolean validate = false;
-                boolean ufo = false;
-                boolean index = false;
-                String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
-
-				int iId = Integer.parseInt(id);
-
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
-        addPrivileges(id);
-
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-        addCategories(id);
-
-        dataMan.indexMetadata(dbms, id);	
-
-        dbms.commit();
-				harvestSummary.recordsUpdated++;
-				harvestSummary.updatedMetadata.add(recUuid);
+        }
+		template = dataMan.setUUID(params.outputSchema, recUuid, template);
+        update(id, template, null, false);
+        harvestSummary.recordsUpdated++;
+        harvestSummary.updatedMetadata.add(recUuid);
 	}
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param id
+     * @param template
+     * @param title
+     * @param doExt
+     * @throws Exception
+     */
+     private void update(String id, Element template, String title, boolean doExt)  throws Exception {
+         DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+         Date date = new Date();
+         //
+         // update metadata
+         //
+         boolean validate = false;
+         boolean ufo = false;
+         boolean index = false;
+         String language = context.getLanguage();
+         dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
+
+         int iId = Integer.parseInt(id);
+
+         dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+         addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+
+         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+         addCategories(id);
+
+         dataMan.indexMetadata(dbms, id);
+         if(doExt) {
+             dataMan.setTemplateExt(dbms, iId, "s", title);
+             dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+         }
+
+         dataMan.indexMetadata(dbms, id);
+         dbms.commit();
+    }
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -596,14 +590,15 @@ public class FragmentHarvester {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, Integer.parseInt(params.owner), group, params.uuid,
-                         isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+                isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()){
             log.debug("	- Set privileges, category, template and harvested");
-		addPrivileges(id);
-		dataMan.setCategory (context, dbms, id, params.isoCategory);
+        }
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+        dataMan.setCategory(context, dbms, id, params.isoCategory);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
@@ -631,35 +626,6 @@ public class FragmentHarvester {
                     log.debug ("    - Skipping removed category with id:"+ catId);
 			} else {
 				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addPrivileges (String id) throws Exception {
-		for (Privileges priv : params.privileges) {
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null) {
-                if(log.isDebugEnabled())
-                    log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			} else {
-				for (int opId: priv.getOperations ()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-					}
-				}
 			}
 		}
 	}

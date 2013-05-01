@@ -32,9 +32,9 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.OaiPmh;
@@ -56,7 +56,7 @@ import java.util.Set;
 
 //=============================================================================
 
-class Harvester
+class Harvester extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -263,8 +263,8 @@ class Harvester
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -396,41 +396,6 @@ class Harvester
 	}
 
 	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
-
-	private void addPrivileges(String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges())
-		{
-			String name = localGroups.getName(priv.getGroupId());
-
-			if (name == null) 
-			{
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-			}
-			else
-			{
-                if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
-
-				for (int opId: priv.getOperations())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
-					{
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name);
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else
-                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-				}
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods : updateMetadata
 	//---
@@ -467,7 +432,7 @@ class Harvester
 			//--- web interface so we have to re-set both
 
 			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-			addPrivileges(id);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 			addCategories(id);

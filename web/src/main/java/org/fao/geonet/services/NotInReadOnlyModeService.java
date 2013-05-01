@@ -1,9 +1,7 @@
 package org.fao.geonet.services;
 
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 import org.apache.commons.logging.LogFactory;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -13,7 +11,7 @@ import org.jdom.Element;
  * Base class for services that should not run their normal execution path if GeoNetwork is in read-only mode.
  * @author heikki doeleman
  */
-public abstract class NotInReadOnlyModeService implements Service{
+public abstract class NotInReadOnlyModeService extends MailSendingService {
     private org.apache.commons.logging.Log log = LogFactory.getLog(NotInReadOnlyModeService.class);
 
     @Override

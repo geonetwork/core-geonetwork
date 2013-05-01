@@ -35,7 +35,6 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ISODate;
@@ -255,7 +254,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-		addPrivileges(id, localGroups, dbms);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
 		addCategories(id, localCateg, dbms);
@@ -292,8 +291,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, source);
 
-		addPrivileges(id, localGroups, dbms);
-		addCategories(id, localCateg, dbms);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, localCateg, dbms);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -317,33 +316,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			}
 		}
 	}	
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
 
-	private void addPrivileges(String id, GroupMapper localGroups, Dbms dbms) throws Exception {
-		for (Privileges priv : params.getPrivileges()) {
-			String name = localGroups.getName(priv.getGroupId());
-			if (name == null) {
-			    Log.info(ARCSDE_LOG_MODULE_NAME, "    - Skipping removed group with id:"+ priv.getGroupId());
-			}
-			else {
-			    Log.info(ARCSDE_LOG_MODULE_NAME, "    - Setting privileges for group : "+ name);
-				for (int opId: priv.getOperations()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-					    Log.info(ARCSDE_LOG_MODULE_NAME, "       --> "+ name);
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else {
-					    Log.info(ARCSDE_LOG_MODULE_NAME, "       --> "+ name +" (skipped)");
-					}
-				}
-			}
-		}
-	}
-	
 	@Override
 	protected void doInit(Element entry) throws BadInputEx {
 		params = new ArcSDEParams(dataMan);

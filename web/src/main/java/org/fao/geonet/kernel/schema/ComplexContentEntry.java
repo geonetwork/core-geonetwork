@@ -35,7 +35,7 @@ import java.util.List;
 
 //==============================================================================
 
-class ComplexContentEntry
+class ComplexContentEntry extends BaseHandler
 {
 	public String base;
 	public ArrayList<String> alAttribGroups = new ArrayList<String>();
@@ -177,18 +177,7 @@ class ComplexContentEntry
             String elName = elRes.getName();
 
             if (elRes.getName().equals("sequence")) {
-                List sequence = elRes.getChildren();
-
-                for (Object aSequence : sequence) {
-                    Element elSeq = (Element) aSequence;
-
-                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
-                        alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-                    }
-                    else {
-                        Logger.log();
-                    }
-                }
+                handleSequence(elRes, alElements, ei);
             }
 
             else if (elRes.getName().equals("group")) {

@@ -43,9 +43,6 @@ import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -71,6 +68,8 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -86,9 +85,6 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -2268,14 +2264,18 @@ public class DataManager {
      * @throws Exception
      */
     public void setDataCommons(Dbms dbms, ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception {
+        Element env = prepareCommonsEnv(licenseurl, imageurl, jurisdiction, licensename, type);
+        manageCommons(dbms,context,id,env,Geonet.File.SET_DATACOMMONS);
+    }
+
+    private Element prepareCommonsEnv(String licenseurl, String imageurl, String jurisdiction, String licensename, String type) {
         Element env = new Element("env");
         env.addContent(new Element("imageurl").setText(imageurl));
         env.addContent(new Element("licenseurl").setText(licenseurl));
         env.addContent(new Element("jurisdiction").setText(jurisdiction));
         env.addContent(new Element("licensename").setText(licensename));
         env.addContent(new Element("type").setText(type));
-
-        manageCommons(dbms,context,id,env,Geonet.File.SET_DATACOMMONS);
+        return env;
     }
 
     /**
@@ -2291,13 +2291,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setCreativeCommons(Dbms dbms, ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception {
-        Element env = new Element("env");
-        env.addContent(new Element("imageurl").setText(imageurl));
-        env.addContent(new Element("licenseurl").setText(licenseurl));
-        env.addContent(new Element("jurisdiction").setText(jurisdiction));
-        env.addContent(new Element("licensename").setText(licensename));
-        env.addContent(new Element("type").setText(type));
-
+        Element env = prepareCommonsEnv(licenseurl, imageurl, jurisdiction, licensename, type);
         manageCommons(dbms,context,id,env,Geonet.File.SET_CREATIVECOMMONS);
     }
 
