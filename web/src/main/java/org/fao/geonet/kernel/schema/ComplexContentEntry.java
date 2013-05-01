@@ -128,7 +128,7 @@ class ComplexContentEntry extends BaseHandler
                 for (Object aSequence : sequence) {
                     Element elSeq = (Element) aSequence;
 
-                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
+                    if (isChoiceOrElementOrGroupOrSequence(elSeq)) {
                         alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
                     }
 

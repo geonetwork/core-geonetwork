@@ -23,22 +23,21 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -69,24 +68,9 @@ public class ThreddsHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new ThreddsParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -98,8 +82,9 @@ public class ThreddsHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new ThreddsParams(dataMan);
+        super.setParams(params);
 
-		//--- retrieve/initialize information
+        //--- retrieve/initialize information
 		params.create(node);
 
 		//--- force the creation of a new uuid
@@ -142,7 +127,9 @@ public class ThreddsHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 		
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -150,8 +137,9 @@ public class ThreddsHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		ThreddsParams params = (ThreddsParams) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
+        settingMan.add(dbms, "id:"+siteId, "url",  params.url);
 		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
 		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic);
@@ -177,14 +165,6 @@ public class ThreddsHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
 		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -282,6 +262,3 @@ class ThreddsResult
 	public int thumbnails;    // = number of thumbnail generated
 	public int thumbnailsFailed;// = number of thumbnail creation which failed
 }
-
-//=============================================================================
-

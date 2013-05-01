@@ -35,7 +35,7 @@ import java.util.List;
 
 //==============================================================================
 
-class ComplexTypeEntry
+class ComplexTypeEntry extends BaseHandler
 {
 	public String  name;
 	public boolean isOrType = false;
@@ -124,7 +124,7 @@ class ComplexTypeEntry
                 for (Object aSequence : sequence) {
                     Element elElem = (Element) aSequence;
 
-                    if (elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("choice") || elElem.getName().equals("sequence")) {
+                    if (isChoiceOrElementOrGroupOrSequence(elElem)) {
                         alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
                     }
                     else {

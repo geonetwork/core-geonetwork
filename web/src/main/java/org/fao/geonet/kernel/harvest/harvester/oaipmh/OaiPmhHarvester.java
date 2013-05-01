@@ -28,8 +28,6 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -70,24 +68,9 @@ public class OaiPmhHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new OaiPmhParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -99,6 +82,7 @@ public class OaiPmhHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new OaiPmhParams(dataMan);
+        super.setParams(params);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -143,7 +127,9 @@ public class OaiPmhHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -170,14 +156,6 @@ public class OaiPmhHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "stylesheet", s.stylesheet);
 		}
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -259,6 +237,3 @@ class OaiPmhResult
 	public int badFormat;
 	public int doesNotValidate;
 }
-
-//=============================================================================
-

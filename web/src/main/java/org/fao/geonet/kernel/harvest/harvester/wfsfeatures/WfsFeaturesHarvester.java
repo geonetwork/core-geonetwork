@@ -28,8 +28,6 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -70,22 +68,9 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new WfsFeaturesParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-		File icon = new File(context.getAppPath() +"images/logos", params.uuid +".gif");
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -97,6 +82,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new WfsFeaturesParams(dataMan);
+        super.setParams(params);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -141,6 +127,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 
 		params = copy;
+        super.setParams(params);
 	}
 
 	//---------------------------------------------------------------------------
@@ -161,14 +148,6 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+optionsId, "templateId",  params.templateId);
 		settingMan.add(dbms, "id:"+optionsId, "recordsCategory",  params.recordsCategory);
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -254,6 +233,3 @@ class WfsFeaturesResult
 	public int doesNotValidate;			// = completed records that didn't validate
 	public int recordsRemoved;		// = records removed
 }
-
-//=============================================================================
-

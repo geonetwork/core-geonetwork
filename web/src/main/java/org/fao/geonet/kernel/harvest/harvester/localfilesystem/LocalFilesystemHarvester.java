@@ -27,7 +27,6 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -65,7 +64,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	@Override
 	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		LocalFilesystemParams lp = (LocalFilesystemParams) params;
-		settingMan.add(dbms, "id:"+siteId, "icon", lp.icon);
+        super.setParams(lp);
+
+        settingMan.add(dbms, "id:"+siteId, "icon", lp.icon);
 		settingMan.add(dbms, "id:"+siteId, "recurse", lp.recurse);
 		settingMan.add(dbms, "id:"+siteId, "directory", lp.directoryname);
 		settingMan.add(dbms, "id:"+siteId, "nodelete", lp.nodelete);
@@ -74,8 +75,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	@Override
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		params = new LocalFilesystemParams(dataMan);
-		
-		//--- retrieve/initialize information
+        super.setParams(params);
+
+        //--- retrieve/initialize information
 		params.create(node);
 		
 		//--- force the creation of a new uuid
@@ -119,17 +121,6 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 			add(res, "doesNotValidate",result.doesNotValidate);
 		}
 		return res;
-	}
-
-	@Override
-	protected void doDestroy(Dbms dbms) throws SQLException {
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-
-		Lib.sources.delete(dbms, dataMan.getSiteID());
 	}
 
 	/**
@@ -356,7 +347,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	@Override
 	protected void doInit(Element entry) throws BadInputEx {
 		params = new LocalFilesystemParams(dataMan);
-		params.create(entry);
+        super.setParams(params);
+        params.create(entry);
 	}
 
 	@Override
@@ -380,12 +372,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 		
 		params = copy;
-	}
+        super.setParams(params);
 
-	@Override
-	public AbstractParams getParams() {
-		return params;
-	}
+    }
 
 	@Override
 	public String getType() {

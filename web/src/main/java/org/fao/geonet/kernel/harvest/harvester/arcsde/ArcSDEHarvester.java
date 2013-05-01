@@ -75,6 +75,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	@Override
 	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		ArcSDEParams as = (ArcSDEParams) params;
+        super.setParams(as);
 		settingMan.add(dbms, "id:"+siteId, "icon", as.icon);
 		settingMan.add(dbms, "id:"+siteId, "server", as.server);
 		settingMan.add(dbms, "id:"+siteId, "port", as.port);
@@ -98,6 +99,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		catch(NoClassDefFoundError n) {
 	*/		// using the real ESRI ArcSDE libraries : continue		
 			params = new ArcSDEParams(dataMan);
+        super.setParams(params);
 		
 			//--- retrieve/initialize information
 			params.create(node);
@@ -146,15 +148,6 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		}
 
 		return res;
-	}
-
-	@Override
-	protected void doDestroy(Dbms dbms) throws SQLException {
-		File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-		Lib.sources.delete(dbms, params.uuid);
 	}
 
 	@Override
@@ -302,6 +295,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	@Override
 	protected void doInit(Element entry) throws BadInputEx {
 		params = new ArcSDEParams(dataMan);
+        super.setParams(params);
 		params.create(entry);
 	}
 
@@ -326,11 +320,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 		
 		params = copy;
-	}
-
-	@Override
-	public AbstractParams getParams() {
-		return params;
+        super.setParams(params);
 	}
 
 	@Override

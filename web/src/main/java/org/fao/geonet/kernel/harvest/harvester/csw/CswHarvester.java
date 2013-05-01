@@ -28,8 +28,6 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -69,27 +67,8 @@ public class CswHarvester extends AbstractHarvester {
 
 	protected void doInit(Element node) throws BadInputEx {
 		params = new CswParams(dataMan);
+        super.setParams(params);
 		params.create(node);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     *
-     * @param dbms
-     * @throws SQLException
-     */
-	protected void doDestroy(Dbms dbms) throws SQLException {
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.CSW_HARVEST, "Unable to delete icon: "+icon);
-        }
-		Lib.sources.delete(dbms, params.uuid);
 	}
 
 	//---------------------------------------------------------------------------
@@ -109,8 +88,9 @@ public class CswHarvester extends AbstractHarvester {
      */
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		params = new CswParams(dataMan);
+        super.setParams(params);
 
-		//--- retrieve/initialize information
+        //--- retrieve/initialize information
 		params.create(node);
 
 		//--- force the creation of a new uuid
@@ -141,8 +121,9 @@ public class CswHarvester extends AbstractHarvester {
      */
 	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
 		CswParams copy = params.copy();
+        super.setParams(params);
 
-		//--- update variables
+        //--- update variables
 		copy.update(node);
 
 		String path = "harvesting/id:"+ id;
@@ -159,7 +140,9 @@ public class CswHarvester extends AbstractHarvester {
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
     /**
      *
@@ -201,14 +184,6 @@ public class CswHarvester extends AbstractHarvester {
 			settingMan.add(dbms, "id:"+searchID, "maxscale", s.maxscale);
 		}*/
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---

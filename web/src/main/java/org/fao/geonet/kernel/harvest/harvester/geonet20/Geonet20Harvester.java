@@ -29,7 +29,6 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
@@ -74,24 +73,8 @@ public class Geonet20Harvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new GeonetParams(dataMan);
-		params.create(node);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
-        }
-
-		Lib.sources.delete(dbms, params.uuid);
+        super.setParams(params);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -103,8 +86,9 @@ public class Geonet20Harvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new GeonetParams(dataMan);
+        super.setParams(params);
 
-		//--- retrieve/initialize information
+        //--- retrieve/initialize information
 		params.create(node);
 
 		//--- force the creation of a new uuid
@@ -131,7 +115,7 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		GeonetParams copy = params.copy();
 
-		//--- update variables
+        //--- update variables
 		copy.update(node);
 
 		String path = "harvesting/id:"+ id;
@@ -147,7 +131,9 @@ public class Geonet20Harvester extends AbstractHarvester
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -155,8 +141,9 @@ public class Geonet20Harvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		GeonetParams params = (GeonetParams) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
+        settingMan.add(dbms, "id:"+siteId, "host",    params.host);
 
 		//--- store search nodes
 
@@ -189,14 +176,6 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		info.addContent(new Element("smallThumbnail").setText(small));
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -334,6 +313,3 @@ class GeonetResult
 {
 	public ArrayList<AlignerResult> alResult = new ArrayList<AlignerResult>();
 }
-
-//=============================================================================
-

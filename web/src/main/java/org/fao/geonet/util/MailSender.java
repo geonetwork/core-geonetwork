@@ -28,9 +28,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+
+import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.List;
-import javax.mail.internet.InternetAddress;
 
 public class MailSender extends Thread
 {
@@ -42,48 +43,74 @@ public class MailSender extends Thread
 		_logger = context.getLogger();
 	}
 
-	public void send(String server, int port, String from, String fromDescr, String to, String toDescr, String subject, String message)
-	{
+    /**
+     *
+     * @param server
+     * @param port
+     * @param from
+     * @param fromDescr
+     * @param to
+     * @param subject
+     * @param message
+     * @throws EmailException
+     */
+    private void setUp(String server, int port, String from, String fromDescr, String to, String subject, String message) throws EmailException {
+        _mail.setHostName(server);
+        _mail.setSmtpPort(port);
+        _mail.setFrom(from, fromDescr);
+        _mail.addTo(to);
+        _mail.setSubject(subject);
+        _mail.setMsg(message);
+    }
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param server
+     * @param port
+     * @param from
+     * @param fromDescr
+     * @param to
+     * @param toDescr
+     * @param subject
+     * @param message
+     */
+	public void send(String server, int port, String from, String fromDescr, String to, String toDescr, String subject, String message) {
 		_mail = new SimpleEmail();
-
-		try
-		{
-			_mail.setHostName(server);
-			_mail.setSmtpPort(port);
-			_mail.setFrom(from, fromDescr);
-			_mail.addTo(to);
-			_mail.setSubject(subject);
-			_mail.setMsg(message);
-
-			start();
+		try {
+            setUp(server, port, from, fromDescr, to, subject, message);
+            start();
 		}
-		catch(EmailException e)
-		{
+		catch(EmailException e) {
 			logEx(e);
 		}
 	}
 
-	public void sendWithReplyTo(String server, int port, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message)
-	{
+    /**
+     * TODO Javadoc.
+     *
+     * @param server
+     * @param port
+     * @param from
+     * @param fromDescr
+     * @param to
+     * @param toDescr
+     * @param replyTo
+     * @param replyToDesc
+     * @param subject
+     * @param message
+     */
+	public void sendWithReplyTo(String server, int port, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message) {
 		_mail = new SimpleEmail();
-
-		try
-		{
-			_mail.setDebug(true);
-			_mail.setHostName(server);
-			_mail.setSmtpPort(port);
-			_mail.setFrom(from, fromDescr);
-			_mail.addTo(to);
-			_mail.setSubject(subject);
-			_mail.setMsg(message);
-			List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
+		try {
+            setUp(server, port, from, fromDescr, to, subject, message);
+            List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
 			addressColl.add(new InternetAddress(replyTo, replyToDesc));
 			_mail.setReplyTo(addressColl);
 
 			start();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			logEx(e);
 		}
 	}

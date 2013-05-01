@@ -56,7 +56,9 @@ import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
+import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -65,6 +67,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -590,7 +593,9 @@ public abstract class AbstractHarvester extends BaseAligner {
      *
      * @return
      */
-	public abstract AbstractParams getParams();
+    public AbstractParams getParams() {
+        return params;
+    }
 
     /**
      *
@@ -604,7 +609,17 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @param dbms
      * @throws SQLException
      */
-	protected abstract void doDestroy(Dbms dbms) throws SQLException;
+    protected void doDestroy(Dbms dbms) throws SQLException {
+        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
+
+        if (!icon.delete() && icon.exists()) {
+            Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
+        }
+
+        Lib.sources.delete(dbms, params.uuid);
+
+        // FIXME: Should also delete the categories we have created for servers
+    }
 
     /**
      *
@@ -786,7 +801,11 @@ public abstract class AbstractHarvester extends BaseAligner {
 		el.addContent(new Element(name).setText(Integer.toString(value)));
 	}
 
-	//--------------------------------------------------------------------------
+    public void setParams(AbstractParams params) {
+        this.params = params;
+    }
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
@@ -801,6 +820,8 @@ public abstract class AbstractHarvester extends BaseAligner {
 	protected ServiceContext context;
 	protected SettingManager settingMan;
 	protected DataManager    dataMan;
+
+    protected AbstractParams params;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 

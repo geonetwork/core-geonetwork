@@ -24,15 +24,24 @@ public abstract class BaseHandler {
         for (Object aSequence : sequence) {
             Element elElem = (Element) aSequence;
 
-            if (elElem.getName().equals("choice") || elElem.getName().equals("element") ||
-                    elElem.getName().equals("group") || elElem.getName().equals("sequence")) {
+            if (isChoiceOrElementOrGroupOrSequence(elElem)) {
                 alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
             }
-
             else {
                 Logger.log();
             }
         }
+    }
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param elElem
+     * @return
+     */
+    protected boolean isChoiceOrElementOrGroupOrSequence(Element elElem) {
+        return elElem.getName().equals("choice") || elElem.getName().equals("element") ||
+                elElem.getName().equals("group") || elElem.getName().equals("sequence");
     }
 
     /**
