@@ -31,6 +31,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -66,17 +67,11 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new Z3950ConfigParams(dataMan);
-		params.create(node);
+        super.setParams(params);
+
+        params.create(node);
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -87,7 +82,7 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new Z3950ConfigParams(dataMan);
-
+        super.setParams(params);
 		//--- retrieve/initialize information
 		params.create(node);
 
@@ -119,7 +114,9 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 		storeNode(dbms, copy, path);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -127,8 +124,9 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		Z3950ConfigParams params = (Z3950ConfigParams) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
+        settingMan.add(dbms, "id:"+siteId, "host",    params.host);
 		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
 
 		//--- store options
@@ -162,43 +160,6 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",         result.totalMetadata);
-			add(res, "added",         result.addedMetadata);
-			add(res, "incompatible",  result.incompatibleMetadata);
-			add(res, "unretrievable", result.unretrievable);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -218,19 +179,5 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private Z3950ConfigParams params;
-	private Z3950ConfigResult result;
+	private HarvestResult result;
 }
-
-//=============================================================================
-
-class Z3950ConfigResult
-{
-	public int totalMetadata;
-	public int addedMetadata;
-	public int unretrievable;
-	public int incompatibleMetadata;
-    
-}
-
-//=============================================================================
-

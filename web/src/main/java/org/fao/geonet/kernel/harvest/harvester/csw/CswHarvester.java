@@ -187,50 +187,6 @@ public class CswHarvester extends AbstractHarvester {
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node) {
-		//--- if the harvesting is not started yet, we don't have any info
-		if (result == null) {
-			return;
-        }
-
-		//--- ok, add proper info
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     *
-     * @return
-     */
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",        result.totalMetadata);
-			add(res, "added",        result.addedMetadata);
-			add(res, "updated",      result.updatedMetadata);
-			add(res, "unchanged",    result.unchangedMetadata);
-			add(res, "duplicatedResource",result.duplicatedResource);
-            add(res, "unknownSchema",result.unknownSchema);
-			add(res, "removed",      result.locallyRemoved);
-			add(res, "unretrievable",result.unretrievable);
-            add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------

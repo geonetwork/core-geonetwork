@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
@@ -188,7 +189,7 @@ class Harvester extends BaseAligner
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new ThreddsResult ();
+		result = new HarvestResult ();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
@@ -220,7 +221,7 @@ class Harvester extends BaseAligner
      * Start the harvesting of a thredds catalog 
      **/
 	
-	public ThreddsResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
 		
 		Element xml = null;
 		log.info("Retrieving remote metadata information for : " + params.name);
@@ -270,7 +271,7 @@ class Harvester extends BaseAligner
 		
 		dbms.commit();
 		
-	    result.total = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
+	    result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
 	}
 
@@ -1370,7 +1371,7 @@ class Harvester extends BaseAligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UriMapper      localUris;
-	private ThreddsResult  result;
+	private HarvestResult  result;
 	private String         hostUrl;
 	private HashSet<String> harvestUris = new HashSet<String>();
 	private String				 cdmCoordsToIsoKeywordsStyleSheet; 
@@ -1399,6 +1400,3 @@ class Harvester extends BaseAligner
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		
 }
-
-//=============================================================================
-

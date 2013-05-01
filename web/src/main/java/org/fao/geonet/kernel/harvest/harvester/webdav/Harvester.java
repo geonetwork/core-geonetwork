@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.jdom.Element;
@@ -59,7 +60,7 @@ class Harvester extends BaseAligner {
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new WebDavResult();
+		result = new HarvestResult();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
@@ -72,7 +73,7 @@ class Harvester extends BaseAligner {
 	//---
 	//---------------------------------------------------------------------------
 
-	public WebDavResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
 		
 		RemoteRetriever rr = null;		
@@ -124,7 +125,7 @@ class Harvester extends BaseAligner {
 		//--- insert/update new metadata
 
 		for(RemoteFile rf : files) {
-			result.total++;
+			result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
 			if (records == null)	{
 				addMetadata(rf);
@@ -193,7 +194,7 @@ class Harvester extends BaseAligner {
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
-		result.added++;
+		result.addedMetadata++;
 	}
 
 	//--------------------------------------------------------------------------
@@ -249,7 +250,7 @@ class Harvester extends BaseAligner {
 	private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
 		if (!rf.isMoreRecentThan(record.changeDate)) {
             if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
-			result.unchanged++;
+			result.unchangedMetadata++;
 		}
 		else {
             if(log.isDebugEnabled()) log.debug("  - Updating local metadata for path : "+ rf.getPath());
@@ -287,7 +288,7 @@ class Harvester extends BaseAligner {
 
             dbms.commit();
 			dataMan.indexMetadata(dbms, record.id);
-			result.updated++;
+			result.updatedMetadata++;
 		}
 	}
 
@@ -305,7 +306,7 @@ class Harvester extends BaseAligner {
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
 	private UriMapper localUris;
-	private WebDavResult result;
+	private HarvestResult result;
 	private SchemaManager  schemaMan;
 }
 

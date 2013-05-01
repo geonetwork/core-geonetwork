@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
@@ -79,7 +80,7 @@ public class Aligner extends BaseAligner
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
-		result  = new GeonetResult();
+		result  = new HarvestResult();
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
@@ -114,7 +115,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public GeonetResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -783,7 +784,7 @@ public class Aligner extends BaseAligner
 	private XmlRequest     request;
 	private GeonetParams   params;
 	private DataManager    dataMan;
-	private GeonetResult   result;
+	private HarvestResult   result;
 
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
@@ -794,7 +795,3 @@ public class Aligner extends BaseAligner
 	
 	private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 }
-
-//=============================================================================
-
-

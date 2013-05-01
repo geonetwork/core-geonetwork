@@ -643,15 +643,20 @@ public abstract class AbstractHarvester extends BaseAligner {
 
     /**
      *
-     * @return
-     */
-	protected abstract Element getResult();
-
-    /**
-     *
      * @param node
      */
-	protected abstract void doAddInfo(Element node);
+    protected void doAddInfo(Element node) {
+        //--- if the harvesting is not started yet, we don't have any info
+
+        if (result == null)
+            return;
+
+        //--- ok, add proper info
+
+        Element info = node.getChild("info");
+        Element res  = getResult();
+        info.addContent(res);
+    }
 
     /**
      *
@@ -736,11 +741,10 @@ public abstract class AbstractHarvester extends BaseAligner {
 
 		for (Privileges p : params.getPrivileges()) {
 			String groupId = settingMan.add(dbms, "id:"+ privId, "group", p.getGroupId());
-
 			for (int oper : p.getOperations()) {
 				settingMan.add(dbms, "id:"+ groupId, "operation", oper);
-		}
-	}
+		    }
+	    }
 	}
 
     /**
@@ -805,6 +809,41 @@ public abstract class AbstractHarvester extends BaseAligner {
         this.params = params;
     }
 
+    /**
+     *
+     * @return
+     */
+    protected Element getResult() {
+        Element res  = new Element("result");
+        if (result != null) {
+            add(res, "added", result.addedMetadata);
+            add(res, "atomicDatasetRecords", result.atomicDatasetRecords);
+            add(res, "badFormat", result.badFormat);
+            add(res, "collectionDatasetRecords", result.collectionDatasetRecords);
+            add(res, "datasetUuidExist", result.datasetUuidExist);
+            add(res, "doesNotValidate", result.doesNotValidate);
+            add(res, "duplicatedResource", result.duplicatedResource);
+            add(res, "fragmentsMatched", result.fragmentsMatched);
+            add(res, "fragmentsReturned", result.fragmentsReturned);
+            add(res, "fragmentsUnknownSchema", result.fragmentsUnknownSchema);
+            add(res, "incompatible",  result.incompatibleMetadata);
+            add(res, "recordsBuilt", result.recordsBuilt);
+            add(res, "recordsUpdated", result.recordsUpdated);
+            add(res, "removed", result.locallyRemoved);
+            add(res, "serviceRecords", result.serviceRecords);
+            add(res, "subtemplatesAdded", result.subtemplatesAdded);
+            add(res, "subtemplatesRemoved",	result.subtemplatesRemoved);
+            add(res, "subtemplatesUpdated", result.subtemplatesUpdated);
+            add(res, "total", result.totalMetadata);
+            add(res, "unchanged", result.unchangedMetadata);
+            add(res, "unknownSchema",result.unknownSchema);
+            add(res, "unretrievable", result.unretrievable);
+            add(res, "updated", result.updatedMetadata);
+            add(res, "thumbnails", result.thumbnails);
+            add(res, "thumbnailsFailed", result.thumbnailsFailed);
+        }
+        return res;
+    }
     //--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -822,8 +861,10 @@ public abstract class AbstractHarvester extends BaseAligner {
 	protected DataManager    dataMan;
 
     protected AbstractParams params;
+    protected HarvestResult result;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 
 	private static Map<String, Class<?>> hsHarvesters = new HashMap<String, Class<?>>();
+
 }

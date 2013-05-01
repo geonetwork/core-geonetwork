@@ -33,6 +33,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -65,10 +66,8 @@ class Harvester extends BaseAligner {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms,
-			Z3950Params params) {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950Params params) {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
 		this.searchMan = gc.getSearchmanager();
@@ -173,7 +172,7 @@ class Harvester extends BaseAligner {
 				String repoName = repoElem.getChildText("name");
 				codes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), repoName);
 				// create a result holder for this repository
-				Z3950Result result = serverResults.getServerResult(repoName);
+				HarvestResult result = serverResults.getServerResult(repoName);
 
 				// sanitize the name of the category
 				String categName = repoName.replaceAll("[^\\w]",""); 
@@ -238,7 +237,7 @@ class Harvester extends BaseAligner {
 				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
 				String repoName = codes.get(colCode);
                 if(log.isDebugEnabled()) log.debug("Processing record from server "+repoName);
-				Z3950Result result = serverResults.getServerResult(repoName);
+				HarvestResult result = serverResults.getServerResult(repoName);
 				result.totalMetadata++;
 
 				if (eName.equals("error")) {
@@ -369,6 +368,3 @@ class Harvester extends BaseAligner {
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
 }
-
-// =============================================================================
-

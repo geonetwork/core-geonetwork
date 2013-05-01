@@ -30,6 +30,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -123,43 +124,6 @@ public class WebDavHarvester extends AbstractHarvester {
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-	protected void doAddInfo(Element node) {
-		//--- if the harvesting is not started yet, we don't have any info
-		if (result == null) {
-			return;
-		}
-		//--- ok, add proper info
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          result.total);
-			add(res, "added",          result.added);
-			add(res, "updated",        result.updated);
-			add(res, "unchanged",      result.unchanged);
-			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.locallyRemoved);
-			add(res, "unretrievable",  result.unretrievable);
-			add(res, "badFormat",      result.badFormat);
-			add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -178,19 +142,5 @@ public class WebDavHarvester extends AbstractHarvester {
 	//---------------------------------------------------------------------------
 
 	private WebDavParams params;
-	private WebDavResult result;
-}
-
-//=============================================================================
-
-class WebDavResult {
-	public int total;
-	public int added;
-	public int updated;
-	public int unchanged;
-	public int locallyRemoved;
-	public int unknownSchema;
-	public int unretrievable;
-	public int badFormat;
-	public int doesNotValidate;
+	private HarvestResult result;
 }

@@ -34,6 +34,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -65,7 +66,7 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public Z3950ConfigResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 
 		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
@@ -87,7 +88,7 @@ class Harvester
 		//--- config local node
 
 		Z3950Config  configer = new Z3950Config(log, context, req, params);
-		Z3950ConfigResult result  = configer.config(records);
+		HarvestResult result  = configer.config(records);
 
 		return result;
 	}

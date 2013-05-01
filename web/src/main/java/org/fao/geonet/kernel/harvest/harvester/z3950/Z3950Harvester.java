@@ -29,6 +29,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -135,20 +136,22 @@ public class Z3950Harvester extends AbstractHarvester {
 		Element info = node.getChild("info");
 		Element res = getResult();
 		info.addContent(res);
+
+
 	}
 
 	protected Element getResult() {
 		Element res = new Element("result");
 		if (serverResults.getNumberOfResults() != 0) {
-			Z3950Result result = new Z3950Result();
+            HarvestResult result = new HarvestResult();
 
 			// --- total stats per server and record individual stats per server
 			// --- and then store in result
 
-			Map<String,Z3950Result> results = serverResults.getAllServerResults();
-			for ( Map.Entry<String, Z3950Result> entry : results.entrySet()) {
+			Map<String,HarvestResult> results = serverResults.getAllServerResults();
+			for ( Map.Entry<String, HarvestResult> entry : results.entrySet()) {
 			    String key = entry.getKey();
-				Z3950Result serverRes = entry.getValue();
+                HarvestResult serverRes = entry.getValue();
 				result.totalMetadata 			+= serverRes.totalMetadata;
 				result.addedMetadata 			+= serverRes.addedMetadata;
 				result.updatedMetadata 		+= serverRes.updatedMetadata;
@@ -206,30 +209,16 @@ public class Z3950Harvester extends AbstractHarvester {
 	private Z3950ServerResults serverResults = new Z3950ServerResults(); 
 }
 
-// =============================================================================
-
-class Z3950Result {
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int unknownSchema;
-	public int locallyRemoved;
-	public int unretrievable;
-	public int badFormat;
-	public int doesNotValidate;
-	public int couldNotInsert;
-}
 
 class Z3950ServerResults {
-	private Map <String,Z3950Result> serverResults = new HashMap<String,Z3950Result>();
+	private Map <String, HarvestResult> serverResults = new HashMap<String, HarvestResult>();
 
 	public int locallyRemoved;
 
-	public Z3950Result getServerResult(String serverName) {
-		Z3950Result result = serverResults.get(serverName);
+	public HarvestResult getServerResult(String serverName) {
+        HarvestResult result = serverResults.get(serverName);
 		if (result == null) {
-			result = new Z3950Result();
+			result = new HarvestResult();
 			serverResults.put(serverName,result);
 		}
 		return result;

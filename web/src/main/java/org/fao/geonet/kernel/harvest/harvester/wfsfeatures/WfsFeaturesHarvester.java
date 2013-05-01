@@ -31,6 +31,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -151,50 +152,6 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult()
-	{
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          					result.total);
-			add(res, "subtemplatesAdded",       result.subtemplatesAdded);
-			add(res, "subtemplatesUpdated",     result.subtemplatesUpdated);
-			add(res, "subtemplatesRemoved",  		result.subtemplatesRemoved);
-			add(res, "fragmentsUnknownSchema", 	result.fragmentsUnknownSchema);
-			add(res, "fragmentsReturned",				result.fragmentsReturned);
-			add(res, "fragmentsMatched",				result.fragmentsMatched);
-			add(res, "recordsBuilt",						result.recordsBuilt);
-			add(res, "recordsUpdated",					result.recordsUpdated);
-			add(res, "doesNotValidate",					result.doesNotValidate);
-		}	
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -214,22 +171,5 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private WfsFeaturesParams params;
-	private WfsFeaturesResult result;
-}
-
-//=============================================================================
-
-class WfsFeaturesResult
-{
-	public int total;										// = recordsBuilt + subtemplatesAdded 
-	public int subtemplatesAdded;				// = fragments added to database
-	public int subtemplatesRemoved;			// = fragments removed to database
-	public int subtemplatesUpdated;			// = fragments updated in database
-	public int fragmentsReturned;				// = fragments returned
-	public int fragmentsMatched;				// = fragments matched to template
-	public int fragmentsUnknownSchema;	// = fragments with unknown schema
-	public int recordsBuilt;				// = records built from template
-	public int recordsUpdated;		// = records built from template and updated
-	public int doesNotValidate;			// = completed records that didn't validate
-	public int recordsRemoved;		// = records removed
+	private HarvestResult result;
 }

@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ISODate;
@@ -59,7 +60,7 @@ import java.util.UUID;
 public class ArcSDEHarvester extends AbstractHarvester {
 
 	private ArcSDEParams params;
-	private ArcSDEResult result;
+    private HarvestResult result;
 	
 	static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
 	private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
@@ -118,30 +119,16 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doAddInfo(Element node) {
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res = getResult();
-		info.addContent(res);
-	}
-
-	@Override
 	protected Element getResult() {
 		Element res  = new Element("result");
 
 		if (result != null) {
-			add(res, "total",          result.total);
-			add(res, "added",          result.added);
-			add(res, "updated",        result.updated);
-			add(res, "unchanged",      result.unchanged);
+			add(res, "total",          result.totalMetadata);
+			add(res, "added",          result.addedMetadata);
+			add(res, "updated",        result.updatedMetadata);
+			add(res, "unchanged",      result.unchangedMetadata);
 			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.removed);
+			add(res, "removed",        result.locallyRemoved);
 			add(res, "unretrievable",  result.unretrievable);
 			add(res, "badFormat",      result.badFormat);
 			add(res, "doesNotValidate",result.doesNotValidate);
@@ -161,7 +148,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	
 	private void align(List<String> metadataList, ResourceManager rm) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : "+ params.name);
-		ArcSDEResult result = new ArcSDEResult();
+		HarvestResult result = new HarvestResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -173,7 +160,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//-----------------------------------------------------------------------
 		//--- insert/update metadata		
 		for(String metadata : metadataList) {
-			result.total++;
+			result.totalMetadata++;
 			// create JDOM element from String-XML
 			Element metadataElement = Xml.loadString(metadata, false);
 			// transform ESRI output to ISO19115
@@ -210,12 +197,12 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					if (id == null)	{
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
 						id = addMetadata(iso19139, uuid, dbms, schema, localGroups, localCateg);
-						result.added++;
+						result.addedMetadata++;
 					}
 					else {
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
 						updateMetadata(iso19139, id, dbms, localGroups, localCateg);
-						result.updated++;
+						result.updatedMetadata++;
 					}
 					idsForHarvestingResult.add(id);
 				}
@@ -230,7 +217,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			String ex$ = existingId.getChildText("id");
 			if(!idsForHarvestingResult.contains(ex$)) {
 				dataMan.deleteMetadataGroup(context, dbms, ex$);
-				result.removed++;
+				result.locallyRemoved++;
 			}
 		}			
 	}
@@ -328,15 +315,4 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		return "arcsde";
 	}
 
-	static class ArcSDEResult {
-		public int total;
-		public int added;
-		public int updated;
-		public int unchanged;
-		public int removed;
-		public int unknownSchema;
-		public int unretrievable;
-		public int badFormat;
-		public int doesNotValidate;		
-	}
 }

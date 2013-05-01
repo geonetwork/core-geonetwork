@@ -30,8 +30,8 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.jdom.Element;
@@ -58,7 +58,7 @@ public class Z3950Config
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		schemaMan = gc.getSchemamanager();
-		result  = new Z3950ConfigResult();
+		result  = new HarvestResult();
 	}
 
 	//--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ public class Z3950Config
 	//---
 	//--------------------------------------------------------------------------
 
-	public Z3950ConfigResult config(Set<RecordInfo> records) throws Exception
+	public HarvestResult config(Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of Z3950 Config Harvest for : "+ params.name);
 
@@ -143,9 +143,5 @@ public class Z3950Config
 	private XmlRequest     request;
 	private Z3950ConfigParams   params;
 	private SchemaManager  schemaMan;
-	private Z3950ConfigResult   result;
+	private HarvestResult   result;
 }
-
-//=============================================================================
-
-

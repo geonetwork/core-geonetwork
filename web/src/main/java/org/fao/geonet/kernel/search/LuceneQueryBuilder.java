@@ -333,7 +333,7 @@ public class LuceneQueryBuilder {
                     orBooleanQuery.add(subClause);
                 }
             }
-            anyClause = new BooleanClause(orBooleanQuery, moreTokensOccur);
+            anyClause = new BooleanClause(orBooleanQuery, singleTokenOccur);
         }
         return anyClause;
     }

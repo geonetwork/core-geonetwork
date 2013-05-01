@@ -152,51 +152,6 @@ public class OgcWxSHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          		result.total);
-			add(res, "added",          		result.added);
-			add(res, "layer",          		result.layer);
-			add(res, "layerUuidExist",		result.layerUuidExist);
-			add(res, "layerUsingMdUrl",		result.layerUsingMdUrl);
-			add(res, "unknownSchema",  		result.unknownSchema);
-			add(res, "removed",        		result.locallyRemoved);
-			add(res, "unretrievable",  		result.unretrievable);
-			add(res, "badFormat",      		result.badFormat);
-			add(res, "doesNotValidate",		result.doesNotValidate);
-			add(res, "thumbnails",     		result.thumbnails);
-			add(res, "thumbnailsFailed",	result.thumbnailsFailed);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -216,23 +171,4 @@ public class OgcWxSHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private OgcWxSParams params;
-	private OgcWxSResult result;
-}
-
-//=============================================================================
-
-class OgcWxSResult
-{
-	public int total;			// = md for data and service (ie. data + 1)
-	public int added;			// = total
-	public int layer;			// = md for data
-	public int layerUuidExist;	// = uuid already in catalogue
-	public int layerUsingMdUrl;	// = md for data using metadata URL document if ok
-	public int locallyRemoved;	// = md removed
-	public int unknownSchema;	// = md with unknown schema (should be 0 if no layer loaded using md url)
-	public int unretrievable;	// = http connection failed
-	public int badFormat;		// 
-	public int doesNotValidate;	// = 0 cos' not validated
-	public int thumbnails;		// = number of thumbnail generated
-	public int thumbnailsFailed;// = number of thumbnail creation which failed
 }

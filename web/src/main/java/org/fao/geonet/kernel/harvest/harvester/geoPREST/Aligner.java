@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.jdom.Element;
@@ -59,7 +60,7 @@ public class Aligner extends BaseAligner
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
-		result  = new GeoPRESTResult();
+		result  = new HarvestResult();
 
 		//--- setup REST operation rest/document?id={uuid}
 
@@ -73,7 +74,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public GeoPRESTResult align(Set<RecordInfo> records) throws Exception {
+	public HarvestResult align(Set<RecordInfo> records) throws Exception {
 		log.info("Start of alignment for : "+ params.name);
 
 		//-----------------------------------------------------------------------
@@ -318,7 +319,7 @@ public class Aligner extends BaseAligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private GeoPRESTResult      result;
+	private HarvestResult result;
 }
 
 //=============================================================================

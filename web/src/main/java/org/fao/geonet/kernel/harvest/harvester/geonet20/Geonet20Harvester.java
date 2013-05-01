@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -194,7 +195,7 @@ public class Geonet20Harvester extends AbstractHarvester
 
 		Element info = node.getChild("info");
 
-		for (AlignerResult ar : result.alResult)
+		for (HarvestResult ar : result.alResult)
 		{
 			Element site = new Element("search");
 			site.setAttribute("siteId", ar.siteId);
@@ -276,7 +277,7 @@ public class Geonet20Harvester extends AbstractHarvester
             if(log.isDebugEnabled()) log.debug("Obtained:\n"+Xml.getString(searchResult));
 
 			//--- site alignment
-			AlignerResult ar = aligner.align(searchResult, s.siteId);
+			HarvestResult ar = aligner.align(searchResult, s.siteId);
 
 			//--- collect some stats
 			result.alResult.add(ar);
@@ -311,5 +312,5 @@ public class Geonet20Harvester extends AbstractHarvester
 
 class GeonetResult
 {
-	public ArrayList<AlignerResult> alResult = new ArrayList<AlignerResult>();
+	public ArrayList<HarvestResult> alResult = new ArrayList<HarvestResult>();
 }

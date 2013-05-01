@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.OaiPmh;
@@ -71,7 +72,7 @@ class Harvester extends BaseAligner
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new OaiPmhResult();
+		result = new HarvestResult();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
@@ -83,7 +84,7 @@ class Harvester extends BaseAligner
 	//---
 	//---------------------------------------------------------------------------
 
-	public OaiPmhResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		ListIdentifiersRequest req = new ListIdentifiersRequest();
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
@@ -208,7 +209,7 @@ class Harvester extends BaseAligner
 
 		for(RecordInfo ri : records)
 		{
-			result.total++;
+			result.totalMetadata++;
 
 			String id = localUuids.getID(ri.id);
 
@@ -268,7 +269,7 @@ class Harvester extends BaseAligner
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
-		result.added++;
+		result.addedMetadata++;
 	}
 
 	//--------------------------------------------------------------------------
@@ -386,7 +387,7 @@ class Harvester extends BaseAligner
 		if (!ri.isMoreRecentThan(date))
 		{
             if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for remote id : "+ ri.id);
-			result.unchanged++;
+			result.unchangedMetadata++;
 		}
 		else
 		{
@@ -417,7 +418,7 @@ class Harvester extends BaseAligner
 
 			dbms.commit();
 			dataMan.indexMetadata(dbms, id);
-			result.updated++;
+			result.updatedMetadata++;
 		}
 	}
 
@@ -435,9 +436,5 @@ class Harvester extends BaseAligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private OaiPmhResult   result;
+	private HarvestResult   result;
 }
-
-//=============================================================================
-
-

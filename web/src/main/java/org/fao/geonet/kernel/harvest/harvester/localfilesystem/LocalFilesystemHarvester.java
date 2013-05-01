@@ -33,6 +33,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ISODate;
@@ -56,7 +57,7 @@ import java.util.UUID;
 public class LocalFilesystemHarvester extends AbstractHarvester {
 	
 	private LocalFilesystemParams params;
-	private LocalFilesystemResult result;
+	private HarvestResult result;
 	
 	public static void init(ServiceContext context) throws Exception {
 	}
@@ -90,37 +91,6 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
         	
 		return id;
-	}
-
-	@Override
-	protected void doAddInfo(Element node) {
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-		
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);		
-	}
-		
-	@Override
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          result.total);
-			add(res, "added",          result.added);
-			add(res, "updated",        result.updated);
-			add(res, "unchanged",      result.unchanged);
-			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.removed);
-			add(res, "unretrievable",  result.unretrievable);
-			add(res, "badFormat",      result.badFormat);
-			add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
 	}
 
 	/**
@@ -173,7 +143,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 */
 	private void align(List<String> results, ResourceManager rm) throws Exception {
 		System.out.println("Start of alignment for : "+ params.name);
-		this.result = new LocalFilesystemResult();
+		this.result = new HarvestResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		boolean transformIt = false;
@@ -194,7 +164,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		//--- insert/update new metadata
 
 		for(String xmlFile : results) {
-			result.total++;
+			result.totalMetadata++;
 			Element xml;
 			try {
 				System.out.println("reading file: " + xmlFile);	
@@ -247,12 +217,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					if (id == null)	{
 						System.out.println("adding new metadata");
 						id = addMetadata(xml, uuid, dbms, schema, localGroups, localCateg);
-						result.added++;
+						result.addedMetadata++;
 					}
 					else {
 						System.out.println("updating existing metadata, id is: " + id);
 						updateMetadata(xml, id, dbms, localGroups, localCateg);
-						result.updated++;
+						result.updatedMetadata++;
 					}
 					idsForHarvestingResult.add(id);
 				}
@@ -269,7 +239,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				String ex$ = existingId.getChildText("id");
 				if(!idsForHarvestingResult.contains(ex$)) {
 					dataMan.deleteMetadata(context, dbms, ex$);
-					result.removed++;
+					result.locallyRemoved++;
 				}
 			}			
 		}
@@ -379,17 +349,5 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	@Override
 	public String getType() {
 		return "filesystem";
-	}
-
-	static class LocalFilesystemResult {
-		public int total;
-		public int added;
-		public int updated;
-		public int unchanged;
-		public int removed;
-		public int unknownSchema;
-		public int unretrievable;
-		public int badFormat;
-		public int doesNotValidate;		
 	}
 }

@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -65,11 +66,11 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public AlignerResult align(Element result, String siteId) throws Exception
+	public HarvestResult align(Element result, String siteId) throws Exception
 	{
 		log.info("Start of alignment for site-id="+ siteId);
 
-		this.result = new AlignerResult();
+		this.result = new HarvestResult();
 		this.result.siteId = siteId;
 
 		List mdList = result.getChildren("metadata");
@@ -420,24 +421,5 @@ public class Aligner
 	private ServiceContext context;
 	private CategoryMapper localCateg;
     private UUIDMapper     localUuids;
-	private AlignerResult  result;
+	private HarvestResult result;
 }
-
-//=============================================================================
-
-class AlignerResult
-{
-	public String siteId;
-
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int locallyRemoved;
-	public int schemaSkipped;
-	public int uuidSkipped;
-    public int doesNotValidate;    
-}
-
-//=============================================================================
-

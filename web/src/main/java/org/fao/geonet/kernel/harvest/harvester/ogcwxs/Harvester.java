@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
@@ -160,7 +161,7 @@ class Harvester extends BaseAligner
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new OgcWxSResult ();
+		result = new HarvestResult ();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
@@ -175,7 +176,7 @@ class Harvester extends BaseAligner
 	/** 
      * Start the harvesting of a WMS, WFS or WCS node.
      */
-	public OgcWxSResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
         Element xml;
 
         log.info("Retrieving remote metadata information for : " + params.name);
@@ -232,7 +233,7 @@ class Harvester extends BaseAligner
         
         dbms.commit ();
             
-        result.total = result.added + result.layer;
+        result.totalMetadata = result.addedMetadata + result.layer;
     
 		return result;
 	}
@@ -346,7 +347,7 @@ class Harvester extends BaseAligner
 		dbms.commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
-		result.added ++;
+		result.addedMetadata++;
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
@@ -884,7 +885,7 @@ class Harvester extends BaseAligner
 	private SchemaManager  schemaMan;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
-    private OgcWxSResult   result;
+    private HarvestResult   result;
 
     /**
 	 * Store the GetCapabilities operation URL. This URL is scrambled
@@ -912,6 +913,3 @@ class Harvester extends BaseAligner
 	}
 
 }
-
-//=============================================================================
-
