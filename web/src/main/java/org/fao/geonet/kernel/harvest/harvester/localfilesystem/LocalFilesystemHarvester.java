@@ -301,7 +301,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-		addCategories(id, localCateg, dbms);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -337,30 +337,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		dataMan.setHarvestedExt(dbms, iId, source);
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, localCateg, dbms);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
 		return id;
-	}
-	
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id, CategoryMapper localCateg, Dbms dbms) throws Exception {
-		for(String catId : params.getCategories()) {
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-				System.out.println("    - Skipping removed category with id:"+ catId);
-			}
-			else {
-				System.out.println("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
+    }
 
 	@Override
 	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {

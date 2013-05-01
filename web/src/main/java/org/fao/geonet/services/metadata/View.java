@@ -23,12 +23,10 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -47,18 +45,10 @@ import org.jdom.Namespace;
  * Retrieves a particular metadata. Access is restricted
  */
 
-public class View implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		String skip;
-
-		skip = params.getValue("skipPopularity", "n");
-		skipPopularity = skip.equals("y");
-
-		skip = params.getValue("skipInfo", "n");
-		skipInfo = skip.equals("y");
-
-		skip = params.getValue("addRefs", "n");
-		addRefs = skip.equals("y");
+public class View extends ShowViewBaseService {
+	public void
+    init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
 	}
 
 	public Element exec(Element params, ServiceContext context)
@@ -154,7 +144,4 @@ public class View implements Service {
 		return elMd;
 	}
 
-	private boolean skipPopularity;
-	private boolean skipInfo;
-	private boolean addRefs;
 }

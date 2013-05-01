@@ -2015,17 +2015,14 @@ public class DataManager {
     //--------------------------------------------------------------------------
 
     /**
-     * Removes a metadata.
+     * TODO Javadoc.
      *
-     * @param context
      * @param dbms
+     * @param context
      * @param id
      * @throws Exception
      */
-    public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
-        String uuid = getMetadataUuid(dbms, id);
-        String isTemplate = getMetadataTemplate(dbms, id);
-
+    private void deleteMetadataFromDB(Dbms dbms, ServiceContext context, String id) throws Exception {
         //--- remove operations
         deleteMetadataOper(dbms, id, false);
 
@@ -2039,6 +2036,20 @@ public class DataManager {
 
         //--- remove metadata
         xmlSerializer.delete(dbms, "Metadata", id, context);
+    }
+
+    /**
+     * Removes a metadata.
+     *
+     * @param context
+     * @param dbms
+     * @param id
+     * @throws Exception
+     */
+    public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
+        String uuid = getMetadataUuid(dbms, id);
+        String isTemplate = getMetadataTemplate(dbms, id);
+        deleteMetadataFromDB(dbms, context, id);
 
         // Notifies the metadata change to metatada notifier service
         if (isTemplate.equals("n")) {
@@ -2057,19 +2068,7 @@ public class DataManager {
      * @throws Exception
      */
     public synchronized void deleteMetadataGroup(ServiceContext context, Dbms dbms, String id) throws Exception {
-        //--- remove operations
-        deleteMetadataOper(dbms, id, false);
-
-        //--- remove categories
-        deleteAllMetadataCateg(dbms, id);
-
-        dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", Integer.valueOf(id));
-        dbms.execute("DELETE FROM Validation WHERE metadataId=?", Integer.valueOf(id));
-        dbms.execute("DELETE FROM MetadataStatus WHERE metadataId=?", Integer.valueOf(id));
-
-        //--- remove metadata
-        xmlSerializer.delete(dbms, "Metadata", id, context);
-
+        deleteMetadataFromDB(dbms, context, id);
         //--- update search criteria
         searchMan.deleteGroup("_id", id + "");
     }

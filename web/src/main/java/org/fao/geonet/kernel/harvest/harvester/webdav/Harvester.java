@@ -189,7 +189,7 @@ class Harvester extends BaseAligner {
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, rf.getPath());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -241,24 +241,6 @@ class Harvester extends BaseAligner {
 	}
 
 	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception {
-		for(String catId : params.getCategories()) {
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
-			else {
-                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods : updateMetadata
 	//---
@@ -301,7 +283,7 @@ class Harvester extends BaseAligner {
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
             dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
-			addCategories(record.id);
+            addCategories(record.id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
             dbms.commit();
 			dataMan.indexMetadata(dbms, record.id);

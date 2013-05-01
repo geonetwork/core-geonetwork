@@ -257,7 +257,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-		addCategories(id, localCateg, dbms);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -292,31 +292,13 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		dataMan.setHarvestedExt(dbms, iId, source);
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, localCateg, dbms);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
 		return id;
 	}
 	
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id, CategoryMapper localCateg, Dbms dbms) throws Exception {
-		for(String catId : params.getCategories()) {
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-			    Log.info(ARCSDE_LOG_MODULE_NAME, "    - Skipping removed category with id:"+ catId);
-			}
-			else {
-			    Log.info(ARCSDE_LOG_MODULE_NAME, "    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}	
-
 	@Override
 	protected void doInit(Element entry) throws BadInputEx {
 		params = new ArcSDEParams(dataMan);

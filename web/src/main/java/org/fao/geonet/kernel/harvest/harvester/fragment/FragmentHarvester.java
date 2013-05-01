@@ -376,7 +376,7 @@ public class FragmentHarvester extends BaseAligner {
 		int iId = Integer.parseInt(id);
 
         addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
-        addCategories(id);
+        addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
@@ -557,7 +557,7 @@ public class FragmentHarvester extends BaseAligner {
          addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
 
          dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-         addCategories(id);
+         addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
 
          dataMan.indexMetadata(dbms, id);
          if(doExt) {
@@ -608,26 +608,6 @@ public class FragmentHarvester extends BaseAligner {
             log.debug("	- Commit "+id);
 		dbms.commit();
 		harvestSummary.recordsBuilt++;
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add categories according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addCategories (String id) throws Exception {
-		for(String catId : params.categories) {
-			String name = localCateg.getName (catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled())
-                    log.debug ("    - Skipping removed category with id:"+ catId);
-			} else {
-				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
 	}
 
 	private Logger log;

@@ -338,7 +338,7 @@ class Harvester extends BaseAligner
 		int iId = Integer.parseInt(id);
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-         addCategories(id);
+         addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
 		dataMan.setTemplate(dbms, iId, "n", null);
@@ -851,28 +851,6 @@ class Harvester extends BaseAligner
 		}
 		
 		return filename;
-	}
-
-
-    /**
-     * Add categories according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addCategories (String id) throws Exception
-	{
-		for(String catId : params.getCategories ())
-		{
-			String name = localCateg.getName (catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
-			}
-			else {
-				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
 	}
 
 	/** 
