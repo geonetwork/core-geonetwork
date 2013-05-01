@@ -1,11 +1,18 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.utils.Log;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -34,8 +41,13 @@ public class StopwordFileParser {
         try {
             File file = new File(filepath);
             if (file.exists() && !file.isDirectory()) {
-                Scanner scanner = new Scanner(new FileReader(file));
+                FileInputStream fin = null;
+                Reader reader = null;
+                Scanner scanner = null;
                 try {
+                    fin = new FileInputStream(file);
+                    reader = new BufferedReader(new InputStreamReader(fin, "UTF-8")); 
+                    scanner = new Scanner(reader);
                     while (scanner.hasNextLine()) {
                         Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
                         if (stopwordsFromLine != null) {
@@ -47,7 +59,9 @@ public class StopwordFileParser {
                     }
                 }
                 finally {
-                    scanner.close();
+                    IOUtils.closeQuietly(scanner);
+                    IOUtils.closeQuietly(reader);
+                    IOUtils.closeQuietly(fin);
                 }
             }
             // file does not exist or is a directory

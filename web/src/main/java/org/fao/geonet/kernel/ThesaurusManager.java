@@ -66,7 +66,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
 	 	if (_instance == null){ 
-	 	_instance = new ThesaurusManager(context, appPath, dm, rm, thesauriRepository); 
+	 	    _instance = new ThesaurusManager(context, appPath, dm, rm, thesauriRepository); 
 	 	} 
 	 	return _instance; 
 	}

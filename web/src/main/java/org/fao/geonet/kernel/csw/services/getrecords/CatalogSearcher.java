@@ -674,7 +674,7 @@ public class CatalogSearcher {
         encoder.setNamespaceAware(true);
 
         encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
-        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(), false);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString("UTF-8"), false);
         parentElement.setContent(index, geomElem);
     }
 

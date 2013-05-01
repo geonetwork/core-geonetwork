@@ -404,7 +404,9 @@ public class MetadataSchema
 	}
 
 	private void setSchematronRules(String[] schematronRules) {
-		this.schematronRules = schematronRules.clone();
+	    if(schematronRules != null) {
+	        this.schematronRules = schematronRules.clone();
+	    }
 	}
 
 	// -- this info for profile detection methods
