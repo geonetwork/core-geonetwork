@@ -22,24 +22,22 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.user.Update;
+import org.jdom.Element;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
-
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.user.Update;
-import org.jdom.Element;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LDAPUtils {
 	/**
@@ -113,16 +111,9 @@ public class LDAPUtils {
 				String groupId = null;
 				
 				if (groupRecord == null && createNonExistingLdapGroup) {
-					if (Log.isDebugEnabled(Geonet.LDAP)){
-						Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
-					}
-					
-					// If LDAP group does not exist in local database, create it
-					groupId = serialFactory.getSerial(dbms, "Groups") + "";
-					String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-					dbms.execute(query, Integer.valueOf(groupId), groupName);
-					Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
-				} else if (groupRecord != null) {
+                    createIfNotExist(groupName, groupId, dbms, serialFactory);
+				}
+                else if (groupRecord != null) {
 					groupId = groupRecord.getChildText("id");
 				}
 				
@@ -155,7 +146,27 @@ public class LDAPUtils {
 		
 		dbms.commit();
 	}
-	
+
+    /**
+     *
+     * @param groupName
+     * @param groupId
+     * @param dbms
+     * @param serialFactory
+     * @throws SQLException
+     */
+    protected static void createIfNotExist(String groupName, String groupId, Dbms dbms, SerialFactory serialFactory) throws SQLException {
+        if (Log.isDebugEnabled(Geonet.LDAP)){
+            Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
+        }
+
+        // If LDAP group does not exist in local database, create it
+        groupId = serialFactory.getSerial(dbms, "Groups") + "";
+        String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+        dbms.execute(query, Integer.valueOf(groupId), groupName);
+        Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
+    }
+
 	static Map<String, ArrayList<String>> convertAttributes(
 			NamingEnumeration<? extends Attribute> attributesEnumeration) {
 		Map<String, ArrayList<String>> userInfo = new HashMap<String, ArrayList<String>>();
