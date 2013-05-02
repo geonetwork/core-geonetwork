@@ -71,6 +71,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <server>{SERVER}</server>'+
