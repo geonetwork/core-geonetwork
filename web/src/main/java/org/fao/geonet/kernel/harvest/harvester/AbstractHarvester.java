@@ -410,11 +410,18 @@ public abstract class AbstractHarvester extends BaseAligner
         JeevesUser user = new JeevesUser(this.context.getProfileManager());
 
         String ownerId = getParams().ownerId;
+        if(log.isDebugEnabled()) {
+            log.debug("AbstractHarvester login: ownerId = " + ownerId);
+        }
 
         // for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
         if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(dbms, Integer.parseInt(ownerId))) {
             // just pick any Administrator (they can all see all harvesters and groups anyway)
             ownerId = this.dataMan.pickAnyAdministrator(dbms);
+            getParams().ownerId = ownerId;
+            if(log.isDebugEnabled()) {
+                log.debug("AbstractHarvester login: picked Adminstrator  " + ownerId + " to run this job");
+            }
         }
 
         user.setId(ownerId);
