@@ -357,7 +357,6 @@ class Harvester
 		fragmentParams.isoCategory = params.recordsCategory;
 		fragmentParams.privileges = params.getPrivileges();
 		fragmentParams.templateId = params.templateId;
-		fragmentParams.url = params.url;
 		fragmentParams.uuid = params.uuid;
 		fragmentParams.owner = params.ownerId;
 		return fragmentParams;

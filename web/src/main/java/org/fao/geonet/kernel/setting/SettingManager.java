@@ -76,7 +76,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class SettingManager
 {
 	private Setting root;
-	private Dbms dbms;
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -85,7 +84,6 @@ public class SettingManager
 
 	public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException
 	{
-		this.dbms = dbms;
 		init(dbms);
 
 		for(ResourceProvider rp : provMan.getProviders()) {
@@ -103,7 +101,7 @@ public class SettingManager
 	 * @throws SQLException
 	 */
 	private void init(Dbms dbms) throws SQLException {
-		List list = dbms.select("SELECT * FROM Settings").getChildren();
+		List<?> list = dbms.select("SELECT * FROM Settings").getChildren();
 
 		root = new Setting(0, null, null);
 		createSubTree(root, list);

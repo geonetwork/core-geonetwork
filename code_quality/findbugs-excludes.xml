@@ -8,7 +8,7 @@
 		<Class name="~.*\..*Test" />
 	</Match>
   <Match>
-		<Class name="~org\.fao\.geonet\.[k-zK-Z].*" />
+		<Class name="~org\.fao\.geonet\.[l-zL-Z].*" />
 	</Match>
 	
 	<!--              Jeeves  Exceptions                 -->
@@ -49,9 +49,11 @@
 		<Method name="autodetectSchema" params="org.jdom.Element"/>
 	</Match>
  	<Match>
-		<Class name="org.fao.geonet.kernel.DataManager" />
-		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
-		<Method name="getMetadataInfo"/>
+		<Or>
+			<Class name="org.fao.geonet.kernel.schema.ComplexTypeEntry" />
+			<Class name="org.fao.geonet.kernel.schema.AttributeEntry" />
+		</Or>
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
 	</Match>
  	<Match>
 		<Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
@@ -68,10 +70,16 @@
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
 		<Method name="processServices"/>
 	</Match>
-  <!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
+	
+	
+<!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
 	<Match>
-		<Class name="~org\.fao\.geonet\..*" />
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+		<Or>
+			<Class name="org.fao.geonet.kernel.search.LuceneSearcher" />
+			<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
+			<Class name="org.fao.geonet.kernel.search.SearchManager" />
+		</Or>
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>
-	-->
+
 </FindBugsFilter>

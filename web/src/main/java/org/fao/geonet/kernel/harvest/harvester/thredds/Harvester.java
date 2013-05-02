@@ -1090,7 +1090,6 @@ class Harvester extends BaseAligner
             if(log.isDebugEnabled()) log.debug("Processing Thredds service: "+serv.toString());
 
 			String sUuid = Sha1Encoder.encodeString (sUrl);
-			ts.uuid = sUuid;
 
 			//--- TODO: if service is WCS or WMS then pass the full service url to 
 			//--- OGCWxS service metadata creator
@@ -1329,7 +1328,6 @@ class Harvester extends BaseAligner
 		collectionParams.isoCategory = params.datasetCategory;
 		collectionParams.privileges = params.getPrivileges();
 		collectionParams.templateId = params.collectionMetadataTemplate;
-		collectionParams.url = params.url;
 		collectionParams.uuid = params.uuid;
 		collectionParams.outputSchema = params.outputSchemaOnCollectionsFragments;
 		return collectionParams;
@@ -1350,7 +1348,6 @@ class Harvester extends BaseAligner
 		atomicParams.isoCategory = params.datasetCategory;
 		atomicParams.privileges = params.getPrivileges();
 		atomicParams.templateId = params.atomicMetadataTemplate;
-		atomicParams.url = params.url;
 		atomicParams.uuid = params.uuid;
 		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
 		atomicParams.owner = params.ownerId;
@@ -1386,7 +1383,6 @@ class Harvester extends BaseAligner
 	private FragmentHarvester collectionFragmentHarvester;
 
 	private static class ThreddsService {
-		public String uuid;
 		public Map<String,String> datasets = new HashMap();
 		public InvService service;
 		public String version;

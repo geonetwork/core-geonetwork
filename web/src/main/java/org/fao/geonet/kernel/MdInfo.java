@@ -23,23 +23,85 @@
 
 package org.fao.geonet.kernel;
 
+import org.apache.lucene.document.Document;
+import org.jdom.Element;
+
 //=============================================================================
 
 public class MdInfo
 {
-	public String   id;
-	public String   uuid;
-	public String   schemaId;
-	public Template template;
-	public boolean  isHarvested;
-	public String   createDate;
-	public String   changeDate;
-	public String   source;
-	public String   title;
-	public String   root;
-	public String   owner;
-	public String   groupOwner;
-        public String displayOrder;
+	public MdInfo(String id, Element record) {
+
+        this.id          = id;
+        uuid        = record.getChildText("uuid");
+        schemaId    = record.getChildText("schemaid");
+        isHarvested = "y".equals(record.getChildText("isharvested"));
+        createDate  = record.getChildText("createdate");
+        changeDate  = record.getChildText("changedate");
+        source      = record.getChildText("source");
+        title       = record.getChildText("title");
+        root        = record.getChildText("root");
+        owner       = record.getChildText("owner");
+        groupOwner  = record.getChildText("groupowner");
+        displayOrder  = record.getChildText("displayOrder");
+
+        String temp = record.getChildText("istemplate");
+
+        if ("y".equals(temp))
+            template = MdInfo.Template.TEMPLATE;
+
+        else if ("s".equals(temp))
+            template = MdInfo.Template.SUBTEMPLATE;
+
+        else
+            template = MdInfo.Template.METADATA;
+
+    }
+
+    public MdInfo(Document doc) {
+        id           = doc.get("_id");
+        uuid         = doc.get("_uuid");
+        schemaId     = doc.get("_schema");
+        String isTemplate   = doc.get("_isTemplate");
+        if (isTemplate.equals("y")) {
+            template = MdInfo.Template.TEMPLATE;
+        }
+        else if (isTemplate.equals("s")) {
+            template = MdInfo.Template.SUBTEMPLATE;
+        }
+        else {
+            template = MdInfo.Template.METADATA;
+        }
+        String tmpIsHarvest  = doc.get("_isHarvested");
+        if (tmpIsHarvest != null) {
+            isHarvested  = doc.get("_isHarvested").equals("y");
+        }
+        else {
+            isHarvested  = false;
+        }
+        createDate   = doc.get("_createDate");
+        changeDate   = doc.get("_changeDate");
+        source       = doc.get("_source");
+        title        = doc.get("_title");
+        root         = doc.get("_root");
+        owner        = doc.get("_owner");
+        groupOwner   = doc.get("_groupOwner");
+        displayOrder   = doc.get("_displayOrder");
+    }
+
+    public final String   id;
+	public final String   uuid;
+	public final String   schemaId;
+	public final Template template;
+	public final boolean  isHarvested;
+	public final String   createDate;
+	public final String   changeDate;
+	public final String   source;
+	public final String   title;
+	public final String   root;
+	public final String   owner;
+	public final String   groupOwner;
+    public final String displayOrder;
 
 	//--------------------------------------------------------------------------
 

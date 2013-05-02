@@ -625,7 +625,6 @@ public class FragmentHarvester extends BaseAligner {
 	private HarvestSummary harvestSummary;
 	
 	static public class FragmentParams {
-		public String url;
 		public String uuid;
         public String owner;
 		public String templateId;

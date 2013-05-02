@@ -905,7 +905,6 @@ class Harvester extends BaseAligner
 		public String uuid;
 		public String id;
 		public String name;
-		public String url; 		// FIXME : if params.url is not the same as the GetMap Online link
 		public Double minx = -180.0;
 		public Double miny = -90.0;
 		public Double maxx = 180.0;

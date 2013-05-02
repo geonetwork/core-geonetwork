@@ -1180,31 +1180,7 @@ public class DataManager {
 
         Element record = (Element) list.get(0);
 
-        MdInfo info = new MdInfo();
-
-        info.id          = id;
-        info.uuid        = record.getChildText("uuid");
-        info.schemaId    = record.getChildText("schemaid");
-        info.isHarvested = "y".equals(record.getChildText("isharvested"));
-        info.createDate  = record.getChildText("createdate");
-        info.changeDate  = record.getChildText("changedate");
-        info.source      = record.getChildText("source");
-        info.title       = record.getChildText("title");
-        info.root        = record.getChildText("root");
-        info.owner       = record.getChildText("owner");
-        info.groupOwner  = record.getChildText("groupowner");
-        info.displayOrder  = record.getChildText("displayOrder");
-
-        String temp = record.getChildText("istemplate");
-
-        if ("y".equals(temp))
-            info.template = MdInfo.Template.TEMPLATE;
-
-        else if ("s".equals(temp))
-            info.template = MdInfo.Template.SUBTEMPLATE;
-
-        else
-            info.template = MdInfo.Template.METADATA;
+        MdInfo info = new MdInfo(id, record);
 
         return info;
     }

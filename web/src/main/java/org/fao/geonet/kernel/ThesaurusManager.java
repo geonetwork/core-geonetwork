@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.concurrent.ExecutorService;
@@ -80,8 +79,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 	private ResourceManager rm;
 
 	private DataManager dm;
-
-	private String THESAURUS_MANAGER_NOTIFIER_ID;
 
 	// Single instance 
  	private static ThesaurusManager _instance = null; 
@@ -110,7 +107,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		this.dm = dm;
 		this.rm = rm;
- 		THESAURUS_MANAGER_NOTIFIER_ID = UUID.randomUUID().toString();
 
 		batchBuildTable(context, thesauriDir);
 	}

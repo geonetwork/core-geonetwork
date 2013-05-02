@@ -125,7 +125,6 @@ public class LuceneSearcher extends MetaSearcher {
 	private Sort          _sort;
 	private Element       _elSummary;
 	
-	private int           _maxHitsInSummary;
 	private int           _numHits;
 	private String        _resultType;
     private String        _language;
@@ -1469,35 +1468,8 @@ public class LuceneSearcher extends MetaSearcher {
               indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
               Document doc = docVisitor.getDocument();
     
-              MdInfo mdInfo = new MdInfo();
-              mdInfo.id           = doc.get("_id");
-              mdInfo.uuid         = doc.get("_uuid");
-              mdInfo.schemaId     = doc.get("_schema");
-              String isTemplate   = doc.get("_isTemplate");
-              if (isTemplate.equals("y")) {
-                  mdInfo.template = MdInfo.Template.TEMPLATE;
-              }
-              else if (isTemplate.equals("s")) {
-                  mdInfo.template = MdInfo.Template.SUBTEMPLATE;
-              }
-              else {
-                  mdInfo.template = MdInfo.Template.METADATA;
-              }
-              String isHarvested  = doc.get("_isHarvested");
-              if (isHarvested != null) {
-                  mdInfo.isHarvested  = doc.get("_isHarvested").equals("y");
-              }
-              else {
-                  mdInfo.isHarvested  = false;
-              }
-              mdInfo.createDate   = doc.get("_createDate");
-              mdInfo.changeDate   = doc.get("_changeDate");
-              mdInfo.source       = doc.get("_source");
-              mdInfo.title        = doc.get("_title");
-              mdInfo.root         = doc.get("_root");
-              mdInfo.owner        = doc.get("_owner");
-              mdInfo.groupOwner   = doc.get("_groupOwner");
-    
+              MdInfo mdInfo = new MdInfo(doc);
+
               response.put(Integer.parseInt(mdInfo.id), mdInfo);
           }
       } finally {

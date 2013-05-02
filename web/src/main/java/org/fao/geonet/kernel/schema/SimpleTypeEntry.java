@@ -42,8 +42,8 @@ import java.util.List;
 class SimpleTypeEntry extends BaseHandler
 {
 	public String name;
-	public List alTypes = new ArrayList();
-	public List alEnum = new ArrayList();
+	public List<String> alTypes = new ArrayList<String>();
+	public List<String> alEnum = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -87,14 +87,14 @@ class SimpleTypeEntry extends BaseHandler
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();
 
             if (elName.equals("restriction")) {
-                List restrictions = elChild.getChildren();
+                List<?> restrictions = elChild.getChildren();
 
                 for (Object restriction : restrictions) {
                     Element elEnum = (Element) restriction;
@@ -119,16 +119,16 @@ class SimpleTypeEntry extends BaseHandler
             }
 
             else if (elName.equals("union")) {
-                List simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+                List<?> simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
                 // Load enumeration of union of simpleType (eg. gml:TimeUnitType, gml:NilReasonEnumeration)
                 if (simpleTypes.size()>0) {
 	                for (Object st : simpleTypes) {
 	                	Element stEl = (Element) st;
-	                	List restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+	                	List<?> restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
 	                
 	                	for (Object r : restrictions) {
 							Element rEl = (Element) r;
-							List enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+							List<?> enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
 							for (Object e : enumerationList) {
 								Element elEnum = (Element) e;
 								String v = elEnum.getAttributeValue("value");
