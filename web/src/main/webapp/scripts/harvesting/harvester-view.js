@@ -190,8 +190,8 @@ this.clearGroups = function()
 this.addGroup = function(id, label)
 {
 	gui.addToSelect(prefix+'.groups', id, label);
-    // do not add system groups (-1..2) to ownerGroup control
-    if(id != '-1' && id != '0' && id != '1' && id != '2') {
+    // do not add system groups [-1..1] to ownerGroup control
+    if(id != '-1' && id != '0' && id != '1') {
         gui.addToSelect(prefix+'.ownerGroup', id, label);
     }
 }

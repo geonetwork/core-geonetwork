@@ -292,7 +292,7 @@ public class Info implements Service {
      * @param context
      * @param dbms
      * @param profile
-     * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all', 'sample')
+     * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
      * @return
      * @throws SQLException
      */
@@ -330,7 +330,6 @@ public class Info implements Service {
                 ids.add("-1");
                 ids.add("0");
                 ids.add("1");
-                ids.add("2");
             }
 
             // retrieve all groups
