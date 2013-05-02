@@ -30,7 +30,7 @@
     <xsl:template name="ownerGroup-Arcsde">
         <table border="0">
             <tr>
-                <td class="padded">group</td>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
                 <td class="padded"><select id="arcsde.ownerGroup" class="content"/></td>
             </tr>
             <tr>

@@ -36,7 +36,7 @@
     <xsl:template name="ownerGroup-OAI">
         <table border="0">
             <tr>
-                <td class="padded">group</td>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
                 <td class="padded"><select id="oai.ownerGroup" class="content"/></td>
             </tr>
             <tr>

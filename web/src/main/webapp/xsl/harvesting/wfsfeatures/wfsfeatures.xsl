@@ -29,7 +29,7 @@
     <xsl:template name="ownerGroup-wfsfeatures">
         <table border="0">
             <tr>
-                <td class="padded">group</td>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
                 <td class="padded"><select id="wfsfeatures.ownerGroup" class="content"/></td>
             </tr>
             <tr>
