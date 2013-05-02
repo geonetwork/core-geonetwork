@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -47,10 +46,7 @@ import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.Parent;
 import org.jdom.Text;
-import org.jdom.filter.ContentFilter;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,13 +56,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Extracts subtemplates from a set of selected metadata records.
  */
 public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
-	private Map<String,List> namespaceList = new HashMap<String,List>();
+	private Map<String,List<Namespace>> namespaceList = new HashMap<String,List<Namespace>>();
 
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -80,7 +75,6 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
 		UserSession   session   = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -246,9 +240,9 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 					}
 					title = xmlTitle.getText();
 				} else { // use xpathTit
-					List titNodes = Xml.selectNodes(elem, xpathTit, metadataNamespaces);
+					List<?> titNodes = Xml.selectNodes(elem, xpathTit, metadataNamespaces);
 					StringBuilder sb = new StringBuilder();
-					for (Iterator iterTit = titNodes.iterator(); iterTit.hasNext();) {
+					for (Iterator<?> iterTit = titNodes.iterator(); iterTit.hasNext();) {
 						Object oTit = iterTit.next();
 						if (oTit instanceof Element) { // getText
 							Element eTit = (Element)oTit;

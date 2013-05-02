@@ -35,16 +35,11 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
-import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
-import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
-
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;

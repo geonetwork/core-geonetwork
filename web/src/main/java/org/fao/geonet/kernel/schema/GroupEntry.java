@@ -66,10 +66,10 @@ class GroupEntry extends BaseHandler
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for (Element elChild : children) {
             String elName = elChild.getName();
 
             if (elName.equals("sequence")) {

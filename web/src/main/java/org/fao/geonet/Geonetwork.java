@@ -86,6 +86,7 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -138,7 +139,6 @@ public class Geonetwork implements ApplicationHandler {
 	/**
      * Inits the engine, loading all needed data.
 	  */
-	@SuppressWarnings(value = "unchecked")
 	public Object start(Element config, ServiceContext context) throws Exception {
 		logger = context.getLogger();
 
@@ -158,7 +158,9 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("Initializing GeoNetwork " + version +  "." + subVersion +  " ...");
 
 		// Get main service config handler
-		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
+		@SuppressWarnings("unchecked")
+        List<Element> serviceConfigElems = config.getChildren();
+        ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 		
 		// Init configuration directory
 		new GeonetworkDataDirectory(webappName, path, handlerConfig, context.getServlet());
@@ -177,7 +179,8 @@ public class Geonetwork implements ApplicationHandler {
 
 		// Status actions class - load it
 		String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS); 
-		Class statusActionsClass = Class.forName(statusActionsClassName);
+		@SuppressWarnings("unchecked")
+        Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
 
         String languageProfilesDir = handlerConfig
                 .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
@@ -555,25 +558,6 @@ public class Geonetwork implements ApplicationHandler {
             }
         };
         scheduledExecutorService.scheduleWithFixedDelay(DBHeartBeat, initialDelay, fixedDelay, TimeUnit.SECONDS);
-    }
-
-    /**
-     *
-     * @param webappName
-     * @param handlerConfig
-     * @param dataDir
-     * @return
-     */
-    private String locateThesaurusDir(String webappName, ServiceConfig handlerConfig, String dataDir) {
-        String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
-        String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
-        String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir :
-                                (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
-                                );
-        thesauriDir = new File(thesauriDir).getAbsoluteFile().getPath();
-        handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
-        System.setProperty(webappName + ".codeList.dir", thesauriDir);
-        return thesauriDir;
     }
 
     /**

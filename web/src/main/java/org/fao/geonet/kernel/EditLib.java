@@ -173,9 +173,10 @@ public class EditLib {
 	public void removeEditingInfo(Element md) {
 		//--- purge geonet: attributes
 
-		List listAtts = md.getAttributes();
+		@SuppressWarnings("unchecked")
+        List<Attribute> listAtts = md.getAttributes();
 		for (int i=0; i<listAtts.size(); i++) {
-			Attribute attr = (Attribute) listAtts.get(i);
+			Attribute attr = listAtts.get(i);
 			if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
 				attr.detach();
 				i--;
@@ -183,9 +184,10 @@ public class EditLib {
 		}
 
 		//--- purge geonet: children
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 		for (int i=0; i<list.size(); i++) {
-			Element child = (Element) list.get(i);
+			Element child = list.get(i);
 			if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
 				removeEditingInfo(child);
 			else {
@@ -210,11 +212,10 @@ public class EditLib {
 
 		//--- search on children
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
-
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 child = findElement(child, ref);
 
@@ -252,9 +253,10 @@ public class EditLib {
             Log.debug(Geonet.EDITORADDELEMENT,"#### - child namespace = " + ns);
             Log.debug(Geonet.EDITORADDELEMENT,"#### - child prefix = " + prefix);
         }
-		List childS = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> childS = el.getChildren();
 		if (childS.size() > 0) {
-			Element elChildS = (Element)childS.get(0);
+			Element elChildS = childS.get(0);
 			Log.debug(Geonet.EDITORADDELEMENT,"#### 	- parents first child = " + elChildS.getName());
 		}
 
@@ -377,11 +379,10 @@ public class EditLib {
 	private List<Element> getChildren(Element el, String qname) {
 		Vector<Element> result = new Vector<Element>();
 
-		List children = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = el.getChildren();
 
-        for (Object aChildren : children) {
-            Element child = (Element) aChildren;
-
+        for (Element child : children) {
             if (child.getQualifiedName().equals(qname)) {
                 result.add(child);
             }
@@ -669,9 +670,10 @@ public class EditLib {
 		//--- create containers and fill them with elements using a depth first 
 		//--- search 
 		
-		List childs = md.getChildren();
-        for (Object child : childs) {
-            expandElements(schema, (Element) child);
+		@SuppressWarnings("unchecked")
+        List<Element> childs = md.getChildren();
+        for (Element child : childs) {
+            expandElements(schema, child);
         }
 	
 		String name = md.getQualifiedName();
@@ -712,9 +714,9 @@ public class EditLib {
 	private Vector<Object> getContainerChildren(Element md) {
 		Vector<Object> result = new Vector<Object>();
 
-		List chChilds = md.getChildren();
-        for (Object chChild1 : chChilds) {
-            Element chChild = (Element) chChild1;
+		@SuppressWarnings("unchecked")
+        List<Element> chChilds = md.getChildren();
+        for (Element chChild : chChilds) {
             String chName = chChild.getName();
             if (chName.contains(Edit.RootChild.CHOICE) ||
                     chName.contains(Edit.RootChild.GROUP) ||
@@ -738,8 +740,9 @@ public class EditLib {
 		//--- contract container children at each level in the XML tree
 		
 		Vector<Object> children = new Vector<Object>();
-		List childs = md.getContent();
-        for (Object obj : childs) {
+		@SuppressWarnings("unchecked")
+        List<Content> childs = md.getContent();
+        for (Content obj : childs) {
             if (obj instanceof Element) {
                 Element mdCh = (Element) obj;
                 String mdName = mdCh.getName();
@@ -787,10 +790,10 @@ public class EditLib {
 		int thisRef = ref;
 		int thisParent = ref;
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 ref = enumerateTree(child, ref + 1, thisParent);
             }
@@ -813,9 +816,10 @@ public class EditLib {
      */
 	public int findMaximumRef(Element md) {
 		int iRef = 0;
-		Iterator mdIt = md.getDescendants(new ElementFilter("element"));
+		@SuppressWarnings("unchecked")
+        Iterator<Element> mdIt = md.getDescendants(new ElementFilter("element"));
 		while (mdIt.hasNext()) {
-			Element elem = (Element)mdIt.next();
+			Element elem = mdIt.next();
 			String ref = elem.getAttributeValue("ref");
 			if (ref != null) {
 				int i = Integer.parseInt(ref);
@@ -835,11 +839,10 @@ public class EditLib {
 	public void expandTree(MetadataSchema schema, Element md) throws Exception {
 		expandElement(schema, md);
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
-
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 expandTree(schema, child);
             }
@@ -914,7 +917,7 @@ public class EditLib {
                 Log.debug(Geonet.EDITOREXPANDELEMENT,"- namespace = " + childNS);
             }
 
-			List list = md.getChildren(childName, Namespace.getNamespace(childNS));
+			List<?> list = md.getChildren(childName, Namespace.getNamespace(childNS));
 			if (list.size() == 0 && !(type.isOrType())) {
                 if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
                     Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present");
@@ -1069,10 +1072,11 @@ public class EditLib {
 		Vector<Element> v = new Vector<Element>();
 		v.add(child);
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            v.add((Element) aList);
+        for (Element elem : list) {
+            v.add(elem);
         }
 
 		//---
@@ -1095,13 +1099,14 @@ public class EditLib {
 	private void insertLast(Element md, String childName, String childNS, Element child) {
 		boolean added = false;
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-		Vector<Element> v = new Vector<Element>();
+		List<Element> v = new ArrayList<Element>();
 
 		for(int i=0; i<list.size(); i++)
 		{
-			Element el = (Element) list.get(i);
+			Element el = list.get(i);
 
 			v.add(el);
 
@@ -1114,7 +1119,7 @@ public class EditLib {
 				}
 				else
 				{
-					Element elNext = (Element) list.get(i+1);
+					Element elNext = list.get(i+1);
 
 					if (!equal(el, elNext))
 					{
@@ -1380,7 +1385,7 @@ public class EditLib {
      * @throws Exception
      */
 	private void addValues(MetadataSchema schema, Element elem, String name, String parent) throws Exception {
-		List values = schema.getElementValues(name,parent);
+		List<String> values = schema.getElementValues(name,parent);
 		if (values != null)
             for (Object value : values) {
                 Element text = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);

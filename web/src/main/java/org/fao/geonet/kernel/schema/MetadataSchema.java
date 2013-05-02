@@ -50,9 +50,9 @@ public class MetadataSchema
 	private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
     private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
-	private Map<String,List<List>> hmRestric  = new HashMap<String,List<List>>();
+	private Map<String,List<List<String>>> hmRestric  = new HashMap<String,List<List<String>>>();
 	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
-	private Map<String, List> hmSubs		 = new HashMap<String, List>();
+	private Map<String, List<String>> hmSubs		 = new HashMap<String, List<String>>();
 	private Map<String, String> hmSubsLink = new HashMap<String, String>();
 	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
 	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
@@ -211,7 +211,7 @@ public class MetadataSchema
 
     //---------------------------------------------------------------------------
 
-	public ArrayList getElementValues(String elem,String parent) throws Exception
+	public List<String> getElementValues(String elem,String parent) throws Exception
 	{
 
 		String type = getElementType(elem,parent);
@@ -220,14 +220,14 @@ public class MetadataSchema
 
 		// two cases here - if we have just one element with this name 
 		// then return its values
-		List<List> childValues = hmRestric.get(restricName);
+		List<List<String>> childValues = hmRestric.get(restricName);
 		if (childValues == null) return null;
-		if (childValues.size() == 1) return (ArrayList)childValues.get(0);
+		if (childValues.size() == 1) return childValues.get(0);
 
 		// OTHERWISE we don't know what to do so return the first one anyway! This
 		// should not happen....
 		Logger.log();
-		return (ArrayList)childValues.get(0);
+		return childValues.get(0);
 	}
 
 	//---------------------------------------------------------------------------
@@ -236,7 +236,7 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, String type, List alValues, List alSubs, String subLink)
+	void addElement(String name, String type, List<String> alValues, List<String> alSubs, String subLink)
 	{
 		// first just add the subs - because these are for global elements we 
 		// never have a clash because global elements are all in the same scope
@@ -264,13 +264,13 @@ public class MetadataSchema
 		if (type != null) restricName = name+"+"+type;
 
 		// it's already there
-		List<List> exValues = hmRestric.get(restricName);
+		List<List<String>> exValues = hmRestric.get(restricName);
 		if (exValues != null) {
 			Logger.log();
 
 		// it's not there so add a new list of lists
 		} else {
-			hmRestric .put(restricName, exValues = new ArrayList<List>());
+			hmRestric .put(restricName, exValues = new ArrayList<List<String>>());
 		}
 		exValues.add(alValues);
 	}

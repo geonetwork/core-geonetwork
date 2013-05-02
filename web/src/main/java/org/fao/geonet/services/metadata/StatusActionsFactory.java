@@ -25,22 +25,20 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 
 import java.lang.reflect.*;
 import java.util.Set;
 
 public class StatusActionsFactory {
 
-	Class statusRules;
+	Class<StatusActions> statusRules;
 
 	/**
 	  * Constructor.
 		*
 		* @param statusRules Class defined in WEB-INF/config.xml that defines status actions
 		*/
-	public StatusActionsFactory(Class statusRules) {
+	public StatusActionsFactory(Class<StatusActions> statusRules) {
 		this.statusRules = statusRules;
 	}	
 
@@ -51,7 +49,7 @@ public class StatusActionsFactory {
 		* @param dbms Database management system channel
 		*/
 	public StatusActions createStatusActions(ServiceContext context, Dbms dbms) throws Exception {
-		Constructor ct = statusRules.getConstructor();
+		Constructor<StatusActions> ct = statusRules.getConstructor();
 		StatusActions sa = (StatusActions)ct.newInstance();
 		
 		Method init = statusRules.getMethod("init", new Class[] {
@@ -63,31 +61,29 @@ public class StatusActionsFactory {
 		return sa;
 	}
 
-	/**
-	  * Calls statusChange method from the StatusActions class using Reflections.
-		*
-		* @param sa StatusActions class to call statusChange method from
-		* @param status The status to set on a group of metadata ids
-		* @param metadataIds The set of metadata records to set status on
-		* @param changeDate The date of the status change
-		* @param changeMessage The explanation for the status change
-		*/
-	public Set<Integer> statusChange(StatusActions sa, String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
+    /**
+     * Calls statusChange method from the StatusActions class using Reflections.
+     * 
+     * @param sa StatusActions class to call statusChange method from
+     * @param status The status to set on a group of metadata ids
+     * @param metadataIds The set of metadata records to set status on
+     * @param changeDate The date of the status change
+     * @param changeMessage The explanation for the status change
+     */
+    public Set<Integer> statusChange(StatusActions sa, String status, Set<Integer> metadataIds, String changeDate, String changeMessage)
+            throws Exception {
 
-		Method statusChange = statusRules.getMethod("statusChange", new Class[] {
-      String.class,       /* Status */
-      Set.class,          /* Metadata ids */
-      String.class,       /* changeDate */
-      String.class        /* changeMessage */
-      });
+        Method statusChange = statusRules.getMethod("statusChange", new Class[] { 
+                String.class, /* Status */
+                Set.class, /* Metadata ids */
+                String.class, /* changeDate */
+                String.class /* changeMessage */
+        });
 
-    return (Set<Integer>)statusChange.invoke(sa, new Object[] {
-      status,
-      metadataIds,
-      changeDate,
-      changeMessage
-      });	
-	}
+        @SuppressWarnings("unchecked")
+        Set<Integer> result = (Set<Integer>) statusChange.invoke(sa, new Object[] { status, metadataIds, changeDate, changeMessage });
+        return result;
+    }
 
 	/**
 	  * When record is edited do status change to Draft and reset permissions.

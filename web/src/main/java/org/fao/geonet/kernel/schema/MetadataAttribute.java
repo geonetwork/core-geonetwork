@@ -37,7 +37,7 @@ public class MetadataAttribute
 	public String  defValue;
 	public boolean required;
 
-	public ArrayList values = new ArrayList();
+	public  ArrayList<String> values = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---

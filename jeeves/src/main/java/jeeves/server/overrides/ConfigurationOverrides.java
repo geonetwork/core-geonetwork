@@ -173,11 +173,13 @@ public class ConfigurationOverrides {
     private static final String TEXT_FILE_NODE_NAME = "textFile";
     private static final String FILE_NAME_ATT_NAME = "name";
     private static final Pattern PROP_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
+    @SuppressWarnings("serial")
     private static final Filter ELEMENTS_FILTER = new Filter() {
         public boolean matches(Object obj) {
             return obj instanceof Element;
         }
     };
+    @SuppressWarnings("serial")
     private static final Filter TEXTS_FILTER = new Filter() {
         public boolean matches(Object obj) {
             return obj instanceof Text;
@@ -260,6 +262,7 @@ public class ConfigurationOverrides {
             return;
         }
         Properties properties = loadProperties(overrides);
+        @SuppressWarnings("unchecked")
         List<Element> files = overrides.getChildren(FILE_NODE_NAME);
         for (Element file : files) {
             String expectedfileName = file.getAttributeValue(FILE_NAME_ATT_NAME);
@@ -267,6 +270,7 @@ public class ConfigurationOverrides {
             if (Pattern.matches(expectedfileName, configFilePath.replace(File.separator, "/"))) {
             	Log.info(Log.JEEVES, "Overrides being applied to configuration file: " + expectedfileName);
 
+                @SuppressWarnings("unchecked")
                 List<Element> elements = file.getChildren();
                 for (Element element : elements) {
                     switch (Updates.valueOf(element.getName().toUpperCase())) {
@@ -362,6 +366,7 @@ public class ConfigurationOverrides {
             if (toUpdate instanceof Element) {
                 Element element = (Element) toUpdate;
                 debug("replacing Text of " + XPath.getXPath(element));
+                @SuppressWarnings("unchecked")
                 List<Text> textContent = toList(element.getDescendants(TEXTS_FILTER));
 
                 if (textContent.size() > 0) {
@@ -411,7 +416,7 @@ public class ConfigurationOverrides {
     private List<Content> xpathLookup(Element configRoot, String xpath) throws JDOMException {
         // Register all namespaces which may be required to solve xpath
         ArrayList<Namespace> namespaces = new ArrayList<Namespace>();
-        for (Iterator iterator = configRoot.getAdditionalNamespaces().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = configRoot.getAdditionalNamespaces().iterator(); iterator.hasNext();) {
             Namespace ns = (Namespace) iterator.next();
             namespaces.add(ns);
         }
@@ -431,8 +436,10 @@ public class ConfigurationOverrides {
 
     private Properties loadProperties(Element overrides) {
         Properties properties = new Properties();
+        @SuppressWarnings("unchecked")
         List<Element> pElem = overrides.getChildren("properties");
         for (Element element : pElem) {
+            @SuppressWarnings("unchecked")
             List<Element> props = element.getChildren();
             for (Element prop : props) {
                 String key = prop.getName();
@@ -450,6 +457,7 @@ public class ConfigurationOverrides {
     }
 
     private String getCaseInsensitiveAttValue(Element elem, String name, boolean exceptionOnFailure) {
+        @SuppressWarnings("unchecked")
         List<Attribute> atts = elem.getAttributes();
         for (Attribute att : atts) {
             if (att.getName().equalsIgnoreCase(name)) {
@@ -464,11 +472,13 @@ public class ConfigurationOverrides {
 
     private List<Content> updateProperties(Properties properties, Element elem) {
         Element clone = (Element) elem.clone();
+        @SuppressWarnings("unchecked")
         Iterator<Element> iter = clone.getDescendants(ELEMENTS_FILTER);
 
         List<Element> elems = toList(iter);
 
         for (Element next : elems) {
+            @SuppressWarnings("unchecked")
             List<Attribute> atts = next.getAttributes();
             for (Attribute att : atts) {
                 if (!att.getName().equalsIgnoreCase(XPATH_ATTR_NAME)) {
@@ -477,6 +487,7 @@ public class ConfigurationOverrides {
                 }
             }
         }
+        @SuppressWarnings("unchecked")
         Iterator<Text> iter2 = clone.getDescendants(TEXTS_FILTER);
 
         List<Text> textNodes = toList(iter2);
@@ -486,6 +497,7 @@ public class ConfigurationOverrides {
             text.setText(updatedText);
         }
 
+        @SuppressWarnings("unchecked")
         List<Content> newXml = new ArrayList<Content>(clone.getChildren());
         for (Content content : newXml) {
             content.detach();
@@ -494,8 +506,8 @@ public class ConfigurationOverrides {
         return newXml;
     }
 
-    private List toList(Iterator iter) {
-        ArrayList elems = new ArrayList();
+    private<E> List<E> toList(Iterator<E> iter) {
+        ArrayList<E> elems = new ArrayList<E>();
         while (iter.hasNext()) {
             elems.add(iter.next());
         }
@@ -709,6 +721,7 @@ public class ConfigurationOverrides {
         }
 
         private Element resolveImports(Element baseElement, String baseResource) throws JDOMException, IOException {
+            @SuppressWarnings("unchecked")
             List<Element> imports = new ArrayList<Element>(baseElement.getChildren("import"));
 
             for (Element anImport : imports) {
@@ -722,6 +735,7 @@ public class ConfigurationOverrides {
             return baseElement;
         }
 		private void mergeElements(Element baseElement, Element importedXml) throws JDOMException {
+            @SuppressWarnings("unchecked")
             List<Element> children = new ArrayList<Element>(importedXml.getChildren());
             for (Element toMerge : children) {
                 toMerge.detach();
@@ -742,6 +756,7 @@ public class ConfigurationOverrides {
         private void merge(Element baseElement, Element toMerge, String xpath, boolean overrideImports ) throws JDOMException {
             Element mergeTarget = Xml.selectElement(baseElement, xpath);
             if(mergeTarget != null) {
+                @SuppressWarnings("unchecked")
                 Collection<Content> contentToAdd = detach(toMerge.getContent());
                 if(overrideImports) {
                     contentToAdd = filterOutExistingElements(mergeTarget, contentToAdd);
@@ -769,7 +784,7 @@ public class ConfigurationOverrides {
             return contentToAdd;
         }
 
-        private Collection<Content> detach(List content) {
+        private Collection<Content> detach(List<Content> content) {
             ArrayList<Content> al = new ArrayList<Content>(content);
             for (Content o : al) {
                 o.detach();
@@ -936,14 +951,16 @@ public class ConfigurationOverrides {
 		Properties properties = new Properties();
 		if (overrides != null) {
 			properties = loadProperties(overrides);
-			List<Element> files = overrides.getChildren(TEXT_FILE_NODE_NAME);
+			@SuppressWarnings("unchecked")
+            List<Element> files = overrides.getChildren(TEXT_FILE_NODE_NAME);
 
 			for (Element file : files) {
 				String expectedfileName = file
 						.getAttributeValue(FILE_NAME_ATT_NAME);
 
 				if (Pattern.matches(expectedfileName, configFilePath)) {
-					List<Element> updates = file.getChildren("update");
+					@SuppressWarnings("unchecked")
+                    List<Element> updates = file.getChildren("update");
 					for (Element element : updates) {
 						matches.put(Pattern.compile(element
 								.getAttributeValue("linePattern")), element

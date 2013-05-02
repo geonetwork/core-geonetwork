@@ -57,9 +57,6 @@ import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;
@@ -80,7 +77,6 @@ import ucar.unidata.util.StringUtil;
 import javax.net.ssl.SSLHandshakeException;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -461,7 +457,6 @@ class Harvester extends BaseAligner
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
 
-        boolean indexGroup = false;
         dataMan.indexMetadata(dbms, id);
 		
 		dbms.commit();
@@ -568,34 +563,6 @@ class Harvester extends BaseAligner
 				Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + record.uuid);
 			}
 		}
-    }
-
-	//---------------------------------------------------------------------------
-	/** 
-	 * Get uuid and change date for thredds dataset
-	 *
-     * @param ds     the dataset to be processed 
-	 **/
-	
-	private RecordInfo getDatasetInfo(InvDataset ds) {
-	    Date lastModifiedDate  = null;
-		
-		List<DateType> dates = ds.getDates();
-		
-		for (DateType date: dates) {
-			if (date.getType().equalsIgnoreCase("modified")) {
-				lastModifiedDate = date.getDate();
-			}
-		}
-
-		String datasetChangeDate = null;
-		
-		if (lastModifiedDate != null) {
-			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-			datasetChangeDate = fmt.print(new DateTime(lastModifiedDate));
-		}
-		
-	    return new RecordInfo(getUuid(ds), datasetChangeDate);
     }
 
 	//---------------------------------------------------------------------------
@@ -1080,13 +1047,11 @@ class Harvester extends BaseAligner
 			    IOUtils.closeQuietly(isr);
 			    IOUtils.closeQuietly(dis);
 			}
-			dis.close();
 		} catch (Exception e) {
             if(log.isDebugEnabled()) log.debug("Caught exception "+e+" whilst attempting to query URL "+href);
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
  
 	//---------------------------------------------------------------------------
@@ -1269,27 +1234,6 @@ class Harvester extends BaseAligner
 	}
 	
 	//---------------------------------------------------------------------------
-	/** 
-     * Validates metadata according to the schema.
-     * 
-     *  
-     * @param schema 	Usually iso19139
-     * @param md		Metadata to be validated
-     * 
-     * @return			true or false
-     *                   
-     **/
-	 
-	private boolean validates(String schema, Element md) {
-		try {
-			dataMan.validate(schema, md);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-    //---------------------------------------------------------------------------
     /** 
      * Determine whether dataset metadata should be harvested  
      *
@@ -1393,14 +1337,14 @@ class Harvester extends BaseAligner
 	private String				 cdmCoordsToIsoMcpDataParametersStyleSheet;
 	private String				 fragmentStylesheetDirectory;
 	private String	 			 metadataGetService;
-	private Map<String,ThreddsService> services = new HashMap();
+	private Map<String,ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
 	private InvCatalogImpl catalog;
 	
 	private FragmentHarvester atomicFragmentHarvester;
 	private FragmentHarvester collectionFragmentHarvester;
 
 	private static class ThreddsService {
-		public Map<String,String> datasets = new HashMap();
+		public Map<String,String> datasets = new HashMap<String, String>();
 		public InvService service;
 		public String version;
 		public String ops;
@@ -1409,7 +1353,6 @@ class Harvester extends BaseAligner
 	static private final Namespace difNS = Namespace.getNamespace("http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/");
 	static private final Namespace invCatalogNS = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
 	static private final Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-	static private final Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 	static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		

@@ -19,10 +19,10 @@ public abstract class BaseHandler {
      * @param ei
      */
     protected void handleSequence(Element elChild, ArrayList<ElementEntry> alElements, ElementInfo ei){
-        List sequence = elChild.getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> sequence = elChild.getChildren();
 
-        for (Object aSequence : sequence) {
-            Element elElem = (Element) aSequence;
+        for (Element elElem : sequence) {
 
             if (isChoiceOrElementOrGroupOrSequence(elElem)) {
                 alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
@@ -52,9 +52,9 @@ public abstract class BaseHandler {
      * @return
      */
     protected String handleAttribs(ElementInfo ei, String name) {
-        List attribs = ei.element.getAttributes();
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
+        @SuppressWarnings("unchecked")
+        List<Attribute> attribs = ei.element.getAttributes();
+        for (Attribute at : attribs) {
 
             String attrName = at.getName();
             if (attrName.equals("name")) {
