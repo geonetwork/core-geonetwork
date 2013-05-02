@@ -192,7 +192,8 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		}
 	}
 
-	private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
+	@SuppressWarnings("unchecked")
+    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -201,9 +202,9 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		MdInfo mdInfo = dataMan.getMetadataInfo(dbms, id);
 
 		// Build a list of all Namespaces in the metadata document
-		List metadataNamespaces = namespaceList.get(mdInfo.schemaId);
+		List<Namespace> metadataNamespaces = namespaceList.get(mdInfo.schemaId);
 		if (metadataNamespaces == null) {
-			metadataNamespaces = new ArrayList();
+			metadataNamespaces = new ArrayList<Namespace>();
 			Namespace ns = md.getNamespace();
 			if (ns != null) {
 				metadataNamespaces.add(ns);
@@ -214,7 +215,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 		new Document(md);
 		// select all nodes that come back from the xpath selectNodes
-		List nodes = Xml.selectNodes(md, xpath, metadataNamespaces);
+		List<?> nodes = Xml.selectNodes(md, xpath, metadataNamespaces);
 		if (context.isDebug() || !doChanges) {
 			context.debug("xpath \n"+xpath+"\n returned "+nodes.size()+" results");
 			if (!doChanges) {
@@ -225,7 +226,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 
 		// for each node
-		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = nodes.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (o instanceof Element) {
 				Element elem = (Element)o;

@@ -134,7 +134,8 @@ public class FragmentHarvester extends BaseAligner {
 		localCateg 	= new CategoryMapper (dbms);
 		localGroups = new GroupMapper (dbms);
 
-		List<Element> recs = fragments.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> recs = fragments.getChildren();
 		
 		for (Element rec : recs) {
 			addRecord(rec);
@@ -157,14 +158,16 @@ public class FragmentHarvester extends BaseAligner {
 			Namespace ns = metadataTemplate.getNamespace();
 			if (ns != null) {
 				metadataTemplateNamespaces.add(ns);
-				metadataTemplateNamespaces.addAll(metadataTemplate.getAdditionalNamespaces());
+				@SuppressWarnings("unchecked")
+                List<Namespace> additionalNamespaces = metadataTemplate.getAdditionalNamespaces();
+                metadataTemplateNamespaces.addAll(additionalNamespaces);
 			}
 
 			// --- Build a list of all id attributes in metadata document so
 			// --- that we can remove any that are left over afterwards
 			new Document(metadataTemplate);
-			List elems = Xml.selectNodes(metadataTemplate, "//*[@id]", metadataTemplateNamespaces);
-			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+			List<?> elems = Xml.selectNodes(metadataTemplate, "//*[@id]", metadataTemplateNamespaces);
+			for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 				Object ob = iter.next();
 				if (ob instanceof Element) {
 					Element elem = (Element)ob;
@@ -187,7 +190,8 @@ public class FragmentHarvester extends BaseAligner {
      * 
      */
 	private void addRecord(Element rec) throws Exception {
-		List<Element> fragments = rec.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> fragments = rec.getChildren();
 		
 		Element recordMetadata = null;
 		Set<String> recordMetadataRefs = new HashSet<String>();
@@ -247,7 +251,8 @@ public class FragmentHarvester extends BaseAligner {
      */
 	private void addMetadata(Element fragment) {
  	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
- 	    	List<Element> children = fragment.getChildren();
+ 	    	@SuppressWarnings("unchecked")
+            List<Element> children = fragment.getChildren();
  			for (Element child: children) {
  				addFragmentMetadata(child);
  			}
@@ -297,7 +302,8 @@ public class FragmentHarvester extends BaseAligner {
      */
 	private void createSubtemplates(Element fragment) throws Exception {
  	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
- 	    	List<Element> children = fragment.getChildren();
+ 	    	@SuppressWarnings("unchecked")
+            List<Element> children = fragment.getChildren();
  				for (Element child: children) {
  					createOrUpdateSubtemplate(child);
  				}
@@ -407,10 +413,10 @@ public class FragmentHarvester extends BaseAligner {
 		// find all elements that have an attribute id with the matchId
         if(log.isDebugEnabled())
             log.debug("Attempting to search metadata for "+matchId);
-		List elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+		List<?> elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
-		for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 			Object ob = iter.next();
 			if (ob instanceof Element) {
 				Element elem = (Element)ob;
@@ -418,7 +424,8 @@ public class FragmentHarvester extends BaseAligner {
 	 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
  					Element parent = elem.getParentElement();
  					int insertionIndex = parent.indexOf(elem);
-	 	    	List<Element> children = fragment.getChildren();
+	 	    	@SuppressWarnings("unchecked")
+                List<Element> children = fragment.getChildren();
 	 	    	
 	 				for (Element child: children) {
 	 					//insert a copy of the referencing element 
@@ -456,10 +463,10 @@ public class FragmentHarvester extends BaseAligner {
 		for (String matchId : recordRefs) {
       if(log.isDebugEnabled())
             log.debug("Attempting to search metadata for "+matchId);
-			List elems = Xml.selectNodes(record,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+			List<?> elems = Xml.selectNodes(record,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 			// for each of these elements remove it as no fragment has matched it
-			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 				Object ob = iter.next();
 				if (ob instanceof Element) {
 					Element elem = (Element)ob;
@@ -616,7 +623,7 @@ public class FragmentHarvester extends BaseAligner {
 	private DataManager dataMan;
 	private FragmentParams params;
 	private String metadataGetService;
-	private List metadataTemplateNamespaces = new ArrayList();;
+	private List<Namespace> metadataTemplateNamespaces = new ArrayList<Namespace>();
 	private Set<String>  templateIdAtts = new HashSet<String>();;
 	private Element metadataTemplate;
 	private String harvestUri;

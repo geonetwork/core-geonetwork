@@ -101,7 +101,8 @@ public class SettingManager
 	 * @throws SQLException
 	 */
 	private void init(Dbms dbms) throws SQLException {
-		List<?> list = dbms.select("SELECT * FROM Settings").getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select("SELECT * FROM Settings").getChildren();
 
 		root = new Setting(0, null, null);
 		createSubTree(root, list);
@@ -432,9 +433,9 @@ public class SettingManager
      * @param s
      * @param elemList
      */
-	private void createSubTree(Setting s, List elemList)
+	private void createSubTree(Setting s, List<Element> elemList)
 	{
-		for(Iterator i=elemList.iterator(); i.hasNext(); )
+		for(Iterator<Element> i=elemList.iterator(); i.hasNext(); )
 		{
 			Element elem  = (Element) i.next();
 			String  sParId= elem.getChildText("parentid");
@@ -592,8 +593,9 @@ public class SettingManager
 	{
 		if (maxSerial == 0)
 		{
-			List   list = dbms.select("SELECT MAX(id) AS max FROM Settings").getChildren();
-			String max  = ((Element) list.get(0)).getChildText("max");
+			@SuppressWarnings("unchecked")
+            List<Element>   list = dbms.select("SELECT MAX(id) AS max FROM Settings").getChildren();
+			String max  = list.get(0).getChildText("max");
 
 			maxSerial = Integer.parseInt(max);
 		}

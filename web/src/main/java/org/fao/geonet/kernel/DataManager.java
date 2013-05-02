@@ -74,6 +74,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,7 +170,6 @@ public class DataManager {
             // get metadata
             Element record = (Element) result.getContent(i);
             String  id     = record.getChildText("id");
-            int iId = Integer.parseInt(id);
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")");
@@ -285,7 +285,6 @@ public class DataManager {
      */
     public void indexInThreadPoolIfPossible(Dbms dbms, String id) throws Exception {
         if(ServiceContext.get() == null ) {
-            boolean indexGroup = false;
             indexMetadata(dbms, id);
         } else {
             indexInThreadPool(ServiceContext.get(), id, dbms);
@@ -516,12 +515,12 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
 
             // get privileges
-            List operations = dbms
+            @SuppressWarnings("unchecked")
+            List<Element> operations = dbms
                     .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
                     .getChildren();
 
-            for (Object operation1 : operations) {
-                Element operation = (Element) operation1;
+            for (Element operation : operations) {
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
                 moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
@@ -531,17 +530,18 @@ public class DataManager {
                 }
             }
             // get categories
-            List categories = dbms
+            @SuppressWarnings("unchecked")
+            List<Element> categories = dbms
                     .select("SELECT id, name FROM MetadataCateg, Categories WHERE metadataId = ? AND categoryId = id ORDER BY id", id$)
                     .getChildren();
 
-            for (Object category1 : categories) {
-                Element category = (Element) category1;
+            for (Element category : categories) {
                 String categoryName = category.getChildText("name");
                 moreFields.add(SearchManager.makeField("_cat", categoryName, true, true));
             }
 
             // get status
+            @SuppressWarnings("unchecked")
             List<Element> statuses = dbms.select("SELECT statusId, userId, changeDate FROM MetadataStatus WHERE metadataId = ? ORDER BY changeDate DESC", id$)
                     .getChildren();
             if (statuses.size() > 0) {
@@ -556,6 +556,7 @@ public class DataManager {
             // -1 : not evaluated
             // 0 : invalid
             // 1 : valid
+            @SuppressWarnings("unchecked")
             List<Element> validationInfo = dbms
                     .select("SELECT valType, status FROM Validation WHERE metadataId = ?", id$)
                     .getChildren();
@@ -750,13 +751,14 @@ public class DataManager {
      * @throws Exception
      */
     public String getMetadataSchema(Dbms dbms, String id) throws Exception {
-        List list = dbms.select("SELECT schemaId FROM Metadata WHERE id = ?", Integer.valueOf(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select("SELECT schemaId FROM Metadata WHERE id = ?", Integer.valueOf(id)).getChildren();
 
         if (list.size() == 0)
             throw new IllegalArgumentException("Metadata not found for id : " +id);
         else {
             // get metadata
-            Element record = (Element) list.get(0);
+            Element record = list.get(0);
             return record.getChildText("schemaid");
         }
     }
@@ -815,7 +817,7 @@ public class DataManager {
 
         DataManager dataMan = gc.getDataManager();
 
-        dataMan.setNamespacePrefix(xml);
+        DataManager.setNamespacePrefix(xml);
         try {
             dataMan.validate(schema, xml);
         } catch (XSDValidationErrorEx e) {
@@ -895,15 +897,15 @@ public class DataManager {
                         report.addContent(xmlReport);
                         // add results to persitent validation information
                         int firedRules = 0;
-                        Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                        while (i.hasNext()) {
-                            i.next();
+                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (firedRulesElems.hasNext()) {
+                            firedRulesElems.next();
                             firedRules ++;
                         }
                         int invalidRules = 0;
-                        i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                        while (i.hasNext()) {
-                            i.next();
+                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (faileAssertElements.hasNext()) {
+                            faileAssertElements.next();
                             invalidRules ++;
                         }
                         Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
@@ -958,9 +960,9 @@ public class DataManager {
 
             //-- now get each xpath and evaluate it
             //-- xsderrors/xsderror/{message,xpath}
-            List list = xsdErrors.getChildren();
-            for (Object o : list) {
-                Element elError = (Element) o;
+            @SuppressWarnings("unchecked")
+            List<Element> list = xsdErrors.getChildren();
+            for (Element elError : list) {
                 String xpath = elError.getChildText("xpath", Edit.NAMESPACE);
                 String message = elError.getChildText("message", Edit.NAMESPACE);
                 message = "\\n" + message;
@@ -1110,12 +1112,13 @@ public class DataManager {
     public String getMetadataId(Dbms dbms, String uuid) throws Exception {
         String query = "SELECT id FROM Metadata WHERE uuid=?";
 
-        List list = dbms.select(query, uuid).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, uuid).getChildren();
 
         if (list.size() == 0)
             return null;
 
-        Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
         return record.getChildText("id");
     }
@@ -1130,12 +1133,13 @@ public class DataManager {
     public String getMetadataUuid(Dbms dbms, String id) throws Exception {
         String query = "SELECT uuid FROM Metadata WHERE id=?";
 
-        List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
         if (list.size() == 0)
             return null;
 
-        Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
         return record.getChildText("uuid");
     }
@@ -1150,12 +1154,13 @@ public class DataManager {
     public String getMetadataTemplate(Dbms dbms, String id) throws Exception {
         String query = "SELECT istemplate FROM Metadata WHERE id=?";
 
-        List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
         if (list.size() == 0)
             return null;
 
-        Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
         return record.getChildText("istemplate");
     }
@@ -1173,12 +1178,13 @@ public class DataManager {
                 "FROM   Metadata "+
                 "WHERE id=?";
 
-        List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
         if (list.size() == 0)
             return null;
 
-        Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
         MdInfo info = new MdInfo(id, record);
 
@@ -1241,7 +1247,6 @@ public class DataManager {
      */
     public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception {
         setHarvestedExt(dbms, id, harvestUuid);
-        boolean indexGroup = false;
         indexMetadata(dbms, Integer.toString(id));
     }
 
@@ -1373,31 +1378,35 @@ public class DataManager {
         //
         // update rating on the database
         //
-        String query = "UPDATE MetadataRating SET rating=? WHERE metadataId=? AND ipAddress=?";
-        int res = dbms.execute(query, rating, id, ipAddress);
+        String updateRatingQuery = "UPDATE MetadataRating SET rating=? WHERE metadataId=? AND ipAddress=?";
+        int res = dbms.execute(updateRatingQuery, rating, id, ipAddress);
 
         if (res == 0) {
-            query = "INSERT INTO MetadataRating(metadataId, ipAddress, rating) VALUES(?,?,?)";
-            dbms.execute(query, id, ipAddress, rating);
+            String insertRatingQuery = "INSERT INTO MetadataRating(metadataId, ipAddress, rating) VALUES(?,?,?)";
+            dbms.execute(insertRatingQuery, id, ipAddress, rating);
         }
 
         //
         // calculate new rating
         //
-        query = "SELECT sum(rating) as total FROM MetadataRating WHERE metadataId=?";
-        List list = dbms.select(query, id).getChildren();
-        String sum = ((Element) list.get(0)).getChildText("total");
-        query = "SELECT count(*) as numr FROM MetadataRating WHERE metadataId=?";
-        list  = dbms.select(query, id).getChildren();
-        String count = ((Element) list.get(0)).getChildText("numr");
+        String sumRatingQuery = "SELECT sum(rating) as total FROM MetadataRating WHERE metadataId=?";
+        @SuppressWarnings("unchecked")
+        List<Element> sumResultList = dbms.select(sumRatingQuery, id).getChildren();
+        String sum = sumResultList.get(0).getChildText("total");
+
+        String countQuery = "SELECT count(*) as numr FROM MetadataRating WHERE metadataId=?";
+        @SuppressWarnings("unchecked")
+        List<Element> countResultList  = dbms.select(countQuery, id).getChildren();
+        String count = countResultList.get(0).getChildText("numr");
         rating = (int)(Float.parseFloat(sum) / Float.parseFloat(count) + 0.5);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:"+ id +" --> rating is:"+rating);
+
         //
         // update metadata and reindex it
         //
-        query = "UPDATE Metadata SET rating=? WHERE id=?";
-        dbms.execute(query, rating, id);
+        String updateMetadataRatingQuery = "UPDATE Metadata SET rating=? WHERE id=?";
+        dbms.execute(updateMetadataRatingQuery, rating, id);
 
         indexInThreadPoolIfPossible(dbms,Integer.toString(id));
 
@@ -1431,12 +1440,13 @@ public class DataManager {
                                  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
         int iTemplateId = Integer.valueOf(templateId);
         String query = "SELECT schemaId, data FROM Metadata WHERE id=?";
-        List listTempl = dbms.select(query, iTemplateId).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> listTempl = dbms.select(query, iTemplateId).getChildren();
 
         if (listTempl.size() == 0) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
         }
-        Element el = (Element) listTempl.get(0);
+        Element el = listTempl.get(0);
 
         String schema = el.getChildText("schemaid");
         String data   = el.getChildText("data");
@@ -1456,10 +1466,10 @@ public class DataManager {
         copyDefaultPrivForGroup(context, dbms, id, groupOwner, fullRightsForGroup);
 
         //--- store metadata categories copying them from the template
-        List categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
 
-        for (Object aCategList : categList) {
-            Element elRec = (Element) aCategList;
+        for (Element elRec : categList) {
             String catId = elRec.getChildText("categoryid");
             setCategory(context, dbms, id, catId);
         }
@@ -1637,7 +1647,7 @@ public class DataManager {
      */
     public boolean existsMetadata(Dbms dbms, int id) throws Exception {
         //FIXME : should use lucene
-        List list = dbms.select("SELECT id FROM Metadata WHERE id=?", Integer.valueOf(id)).getChildren();
+        List<?> list = dbms.select("SELECT id FROM Metadata WHERE id=?", Integer.valueOf(id)).getChildren();
         return list.size() != 0;
     }
 
@@ -1651,7 +1661,7 @@ public class DataManager {
     public boolean existsMetadataUuid(Dbms dbms, String uuid) throws Exception {
         //FIXME : should use lucene
 
-        List list = dbms.select("SELECT uuid FROM Metadata WHERE uuid=?",uuid).getChildren();
+        List<?> list = dbms.select("SELECT uuid FROM Metadata WHERE uuid=?",uuid).getChildren();
         return list.size() != 0;
     }
 
@@ -1662,7 +1672,7 @@ public class DataManager {
      * @throws Exception
      */
     public Element getKeywords() throws Exception {
-        Vector keywords = searchMan.getTerms("keyword");
+        Collection<String> keywords = searchMan.getTerms("keyword");
         Element el = new Element("keywords");
 
         for (Object keyword : keywords) {
@@ -1744,7 +1754,6 @@ public class DataManager {
         finally {
             if(index) {
                 //--- update search criteria
-                boolean indexGroup = false;
                 indexMetadata(dbms, id);
             }
         }
@@ -1980,8 +1989,10 @@ public class DataManager {
      * @param id   the metadata record internal identifier
      * @return
      */
+    @SuppressWarnings("unchecked")
     private List<Element> getValidationStatus (Dbms dbms, String id) throws Exception {
-        return dbms.select("SELECT valType, status, tested, failed FROM Validation WHERE metadataId=?", Integer.valueOf(id)).getChildren();
+        String query = "SELECT valType, status, tested, failed FROM Validation WHERE metadataId=?";
+        return dbms.select(query, Integer.valueOf(id)).getChildren();
     }
 
     //--------------------------------------------------------------------------
@@ -2460,7 +2471,7 @@ public class DataManager {
 
     public boolean existsUser(Dbms dbms, int id) throws Exception {
         String query= "SELECT * FROM Users WHERE id=?";
-        List list = dbms.select(query, id).getChildren();
+        List<?> list = dbms.select(query, id).getChildren();
         return list.size() > 0;
     }
 
@@ -2539,6 +2550,7 @@ public class DataManager {
     public String getCurrentStatus(Dbms dbms, int id) throws Exception {
         Element status = getStatus(dbms, id);
         if (status == null) return Params.Status.UNKNOWN;
+        @SuppressWarnings("unchecked")
         List<Element> statusKids = status.getChildren();
         if (statusKids.size() == 0) return Params.Status.UNKNOWN;
         return statusKids.get(0).getChildText("statusid");
@@ -2557,7 +2569,6 @@ public class DataManager {
      */
     public void setStatus(ServiceContext context, Dbms dbms, int id, int status, String changeDate, String changeMessage) throws Exception {
         setStatusExt(context, dbms, id, status, changeDate, changeMessage);
-        boolean indexGroup = false;
         indexMetadata(dbms, Integer.toString(id));
     }
 
@@ -2729,6 +2740,7 @@ public class DataManager {
 
         String query = "select m.id, m.uuid, m.data, mn.notifierId, mn.action from metadata m left join metadatanotifications mn on m.id = mn.metadataId\n" +
                 "where (mn.notified is null or mn.notified = 'n') and (mn.action <> 'd') and (mn.notifierId is null or mn.notifierId = ?)";
+        @SuppressWarnings("unchecked")
         List<Element> results = dbms.select(query, Integer.valueOf(notifierId)).getChildren();
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata after select: " + (results != null));
@@ -2764,6 +2776,7 @@ public class DataManager {
 
         String query = "select metadataId as id, metadataUuid as uuid, notifierId, action from metadatanotifications " +
                 "where (notified = 'n') and (action = 'd') and (notifierId = ?)";
+        @SuppressWarnings("unchecked")
         List<Element> results = dbms.select(query, Integer.valueOf(notifierId)).getChildren();
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after select: " + (results != null));
@@ -2844,7 +2857,9 @@ public class DataManager {
      */
     public List<Element> retrieveNotifierServices(Dbms dbms) throws Exception {
         String query = "SELECT id, url, username, password FROM MetadataNotifiers WHERE enabled = 'y'";
-        return dbms.select(query).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> children = dbms.select(query).getChildren();
+        return children;
     }
 
 
@@ -3012,11 +3027,11 @@ public class DataManager {
         }
 
         // add categories
-        List categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
+        @SuppressWarnings("unchecked")
+        List<Element> categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
                 "WHERE metadataId = ? AND categoryId = id ORDER BY id", Integer.valueOf(id)).getChildren();
 
-        for (Object category1 : categories) {
-            Element category = (Element) category1;
+        for (Element category : categories) {
             addElement(info, Edit.Info.Elem.CATEGORY, category.getChildText("name"));
         }
 
@@ -3200,9 +3215,11 @@ public class DataManager {
 
         //--- get the namespaces and add prefixes to any that are
         //--- default (ie. prefix is '') if namespace match one of the schema
-        ArrayList nsList = new ArrayList();
+        ArrayList<Namespace> nsList = new ArrayList<Namespace>();
         nsList.add(ns);
-        nsList.addAll(md.getAdditionalNamespaces());
+        @SuppressWarnings("unchecked")
+        List<Namespace> additionalNamespaces = md.getAdditionalNamespaces();
+        nsList.addAll(additionalNamespaces);
         for (Object aNsList : nsList) {
             Namespace aNs = (Namespace) aNsList;
             if (aNs.getPrefix().equals("")) { // found default namespace
@@ -3289,6 +3306,7 @@ public class DataManager {
         cswCapabilitiesInfo.setLangId(language);
         Element capabilitiesInfoRecord = dbms.select("SELECT * FROM CswServerCapabilitiesInfo WHERE langId = ?", language);
 
+        @SuppressWarnings("unchecked")
         List<Element> records = capabilitiesInfoRecord.getChildren();
         for(Element record : records) {
             String field = record.getChild("field").getText();
@@ -3352,6 +3370,7 @@ public class DataManager {
      */
     public List<Element> getCustomElementSets(Dbms dbms) throws Exception {
         Element customElementSetList = dbms.select("SELECT * FROM CustomElementSet");
+        @SuppressWarnings("unchecked")
         List<Element> records = customElementSetList.getChildren();
         return records;
     }

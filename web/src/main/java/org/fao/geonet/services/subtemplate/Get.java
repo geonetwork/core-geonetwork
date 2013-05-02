@@ -98,8 +98,10 @@ public class Get implements Service {
                 String xpath = parameters.substring(0, endIndex);
                 String value = parameters.substring(endIndex + 1);
                 
-                List<Namespace> nss = new ArrayList();
-                nss.addAll(rec.getAdditionalNamespaces());
+                List<Namespace> nss = new ArrayList<Namespace>();
+                @SuppressWarnings("unchecked")
+                List<Namespace> additionalNamespaces = rec.getAdditionalNamespaces();
+                nss.addAll(additionalNamespaces);
                 nss.add(rec.getNamespace());
                 Object o = Xml.selectSingle(tpl, xpath, nss);
                 if (o instanceof Element) {

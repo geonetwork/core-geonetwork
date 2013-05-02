@@ -44,7 +44,7 @@ class ComplexTypeEntry extends BaseHandler
 	public ComplexContentEntry complexContent;
 	public SimpleContentEntry  simpleContent;
 
-	public List alElements = new ArrayList();
+	public List<ElementEntry> alElements = new ArrayList<ElementEntry>();
 	public List<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
 	public List<String> alAttribGroups = new ArrayList<String>();
 
@@ -52,10 +52,6 @@ class ComplexTypeEntry extends BaseHandler
 	//---
 	//--- Constructor
 	//---
-	//---------------------------------------------------------------------------
-
-	private ComplexTypeEntry() {}
-
 	//---------------------------------------------------------------------------
 
 	public ComplexTypeEntry(Element el, String file, String targetNS, String targetNSPrefix)
@@ -79,7 +75,7 @@ class ComplexTypeEntry extends BaseHandler
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
+		List<?> attribs = ei.element.getAttributes();
 
         for (Object attrib : attribs) {
             Attribute at = (Attribute) attrib;
@@ -110,7 +106,7 @@ class ComplexTypeEntry extends BaseHandler
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
@@ -120,7 +116,7 @@ class ComplexTypeEntry extends BaseHandler
             if (elName.equals("sequence") || elName.equals("choice")) {
                 isOrType = elName.equals("choice") && (first);
 
-                List sequence = elChild.getChildren();
+                List<?> sequence = elChild.getChildren();
 
                 for (Object aSequence : sequence) {
                     Element elElem = (Element) aSequence;

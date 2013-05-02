@@ -35,6 +35,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -76,7 +78,11 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -960,7 +966,7 @@ class Harvester extends BaseAligner
 	private void processService(InvService serv, String uuid, InvDataset ds) {
 		
 		//--- get service, if compound service then get all nested services
-		List<InvService> servs = new ArrayList();
+		List<InvService> servs = new ArrayList<InvService>();
 		if (serv.getServiceType() == ServiceType.COMPOUND) {
 			servs.addAll(serv.getServices());
 		} else {
@@ -1057,12 +1063,23 @@ class Harvester extends BaseAligner
             if(log.isDebugEnabled()) log.debug("Opened "+href+" and got class "+o.getClass().getName());
 			StringBuffer version = new StringBuffer();
 			String inputLine;
-			DataInputStream dis = new DataInputStream(conn.getInputStream());
-			while ((inputLine = dis.readLine()) != null) {
-					version.append(inputLine+"\n");	
+			BufferedReader dis = null;
+			InputStreamReader isr = null;
+			InputStream is = null;
+			try {
+			    is = conn.getInputStream();
+			    isr = new InputStreamReader(is, Jeeves.ENCODING);
+                dis = new BufferedReader(isr);
+    			while ((inputLine = dis.readLine()) != null) {
+    					version.append(inputLine+"\n");	
+    			}
+    			result = version.toString();
+                if(log.isDebugEnabled()) log.debug("Read from URL:\n"+result);
+			} finally {
+			    IOUtils.closeQuietly(is);
+			    IOUtils.closeQuietly(isr);
+			    IOUtils.closeQuietly(dis);
 			}
-			result = version.toString();
-            if(log.isDebugEnabled()) log.debug("Read from URL:\n"+result);
 			dis.close();
 		} catch (Exception e) {
             if(log.isDebugEnabled()) log.debug("Caught exception "+e+" whilst attempting to query URL "+href);
