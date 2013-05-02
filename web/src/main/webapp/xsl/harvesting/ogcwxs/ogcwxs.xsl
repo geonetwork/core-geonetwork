@@ -25,7 +25,7 @@
 		</div>
 	</xsl:template>
     <!-- ============================================================================================= -->
-    <xsl:template name="ownerGroup-Arcsde">
+	<xsl:template name="ownerGroup-OGCWXS">
         <table border="0">
             <tr>
                 <td class="padded">group</td>

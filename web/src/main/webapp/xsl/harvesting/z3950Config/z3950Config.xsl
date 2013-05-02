@@ -28,7 +28,7 @@
 		</div>
 	</xsl:template>
     <!-- ============================================================================================= -->
-    <xsl:template name="ownerGroup-z3950Config">
+	<xsl:template name="ownerGroup-Z3950Config">
         <table border="0">
             <tr>
                 <td class="padded">group</td>
