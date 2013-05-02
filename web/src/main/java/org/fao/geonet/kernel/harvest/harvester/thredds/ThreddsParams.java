@@ -172,7 +172,6 @@ public class ThreddsParams extends AbstractParams
 	public String icon;
 	public String lang;
 	public String topic;
-	public String crs = "epsg:4326";
 	public boolean createThumbnails;
 	public boolean createServiceMd;
 	public boolean createCollectionDatasetMd;

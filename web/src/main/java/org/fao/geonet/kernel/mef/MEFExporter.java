@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.mef;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
@@ -94,14 +95,14 @@ class MEFExporter {
 		if (!data.startsWith("<?xml"))
 			data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + data;
 
-		byte[] binData = data.getBytes("UTF-8");
+		byte[] binData = data.getBytes(Jeeves.ENCODING);
 
 		MEFLib.addFile(zos, FILE_METADATA, new ByteArrayInputStream(binData));
 
 		// --- save info file
 
 		binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
-				skipUUID).getBytes("UTF-8");
+				skipUUID).getBytes(Jeeves.ENCODING);
 
 		MEFLib.addFile(zos, FILE_INFO, new ByteArrayInputStream(binData));
 

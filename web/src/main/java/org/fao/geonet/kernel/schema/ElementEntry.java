@@ -175,18 +175,19 @@ class ElementEntry
             }
 
             else {
-                if (choiceElem) {
-                    Logger.log();
-                }
-                else if (groupElem) {
-                    Logger.log();
-                }
-                else if (sequenceElem) {
-                    Logger.log();
-                }
-                else {
-                    Logger.log();
-                }
+// TODO: 
+//                if (choiceElem) {
+//                    Logger.log();
+//                }
+//                else if (groupElem) {
+//                    Logger.log();
+//                }
+//                else if (sequenceElem) {
+//                    Logger.log();
+//                }
+//                else {
+//                    Logger.log();
+//                }
 
             }
         }

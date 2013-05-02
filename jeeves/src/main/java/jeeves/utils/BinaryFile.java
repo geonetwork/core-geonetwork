@@ -49,6 +49,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 
+import jeeves.constants.Jeeves;
+
 //=============================================================================
 
 /** class to encode/decode binary files to base64 strings
@@ -414,7 +416,7 @@ public final class BinaryFile
       	    throw new IllegalStateException("Unable to read file name");
       	}
       	if(buf[i]==(byte)0x0a) {
-      		file=new String(buf, 0, i, Charset.forName("UTF-8"));
+      		file=new String(buf, 0, i, Charset.forName(Jeeves.ENCODING));
       		break;
       	}
       }

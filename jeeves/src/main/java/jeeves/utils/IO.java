@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import jeeves.constants.Jeeves;
+
 import org.apache.commons.io.IOUtils;
 
 //=============================================================================
@@ -61,7 +63,7 @@ public final class IO
 		try
 		{
             in = new FileInputStream(name);
-            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Jeeves.ENCODING)));
 
 			String inputLine;
 

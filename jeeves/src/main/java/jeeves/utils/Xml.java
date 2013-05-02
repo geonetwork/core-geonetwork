@@ -23,6 +23,7 @@
 
 package jeeves.utils;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
@@ -187,10 +188,10 @@ public final class Xml
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST"); 
 			connection.setRequestProperty("Content-Type", "application/xml");
-			connection.setRequestProperty("Content-Length", "" + Integer.toString(getString(xmlQuery).getBytes("UTF-8").length));
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(getString(xmlQuery).getBytes(Jeeves.ENCODING).length));
 			connection.setRequestProperty("Content-Language", "en-US");
 			connection.setDoOutput(true);
-			PrintStream out = new PrintStream(connection.getOutputStream(), true, "UTF-8"); 
+			PrintStream out = new PrintStream(connection.getOutputStream(), true, Jeeves.ENCODING); 
 			out.print(getString(xmlQuery));
 			out.close();
 
@@ -262,7 +263,7 @@ public final class Xml
 			String encoding = detector.getDetectedCharset();
 			detector.reset();
 			if (encoding != null) {
-				if (!encoding.equals("UTF-8")) {
+				if (!encoding.equals(Jeeves.ENCODING)) {
 					Log.error(Log.JEEVES,"Detected character set "+encoding+", converting to UTF-8");
 					return convertByteArrayToUTF8ByteArray(buf, encoding);
 				}
@@ -295,7 +296,7 @@ public final class Xml
 		cset = Charset.forName(charsetName); // detected character set name
 		CharsetDecoder csetDecoder = cset.newDecoder();
 
-		Charset utf8 = Charset.forName("UTF-8");
+		Charset utf8 = Charset.forName(Jeeves.ENCODING);
 		CharsetEncoder utf8Encoder = utf8.newEncoder();
 
 		ByteBuffer inputBuffer = ByteBuffer.wrap(buf);
@@ -451,13 +452,13 @@ public final class Xml
         }
         String decodedBase;
         try {
-            decodedBase = URLDecoder.decode(base, "UTF-8");
+            decodedBase = URLDecoder.decode(base, Jeeves.ENCODING);
         } catch (UnsupportedEncodingException e1) {
             decodedBase = base;
         }
         String decodedHref;
         try {
-            decodedHref = URLDecoder.decode(href, "UTF-8");
+            decodedHref = URLDecoder.decode(href, Jeeves.ENCODING);
         } catch (UnsupportedEncodingException e1) {
             decodedHref = href;
         }

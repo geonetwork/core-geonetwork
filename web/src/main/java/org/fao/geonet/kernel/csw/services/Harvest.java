@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -905,7 +906,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 // transfer file
                 //
                 String filename = "CSW.Harvest.result";
-                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes("UTF-8"));
+                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Jeeves.ENCODING));
                 ftpClient.storeFile(filename, is);
                 is.close();
                 ftpClient.logout();

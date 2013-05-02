@@ -434,18 +434,16 @@ public class ThesaurusManager implements ThesaurusFinder {
 		String theKey = gst.getKey();
 		gst.retrieveThesaurusTitle();
 
-		synchronized(thesauriMap) {
-			if (thesauriMap.replace(theKey, gst) == null) {
-				createThesaurusRepository(gst);
-				thesauriMap.put(theKey, gst);
-                if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                    Log.debug(Geonet.THESAURUS_MAN, "Created thesaurus "+theKey+" from register "+uuid);
-			} else {
-				service.removeRepository(theKey);
-				createThesaurusRepository(gst);
-                if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                    Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus "+theKey+" from register "+uuid);
-			}
+		if (thesauriMap.replace(theKey, gst) == null) {
+			createThesaurusRepository(gst);
+			thesauriMap.put(theKey, gst);
+            if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                Log.debug(Geonet.THESAURUS_MAN, "Created thesaurus "+theKey+" from register "+uuid);
+		} else {
+			service.removeRepository(theKey);
+			createThesaurusRepository(gst);
+            if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus "+theKey+" from register "+uuid);
 		}
 
 		return theKey;

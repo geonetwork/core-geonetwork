@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jeeves.constants.Jeeves;
+
 
 public class WmcServlet extends HttpServlet {
     public static final Logger LOGGER = Logger.getLogger(WmcServlet.class);
@@ -132,8 +134,8 @@ public class WmcServlet extends HttpServlet {
                         TempFile tempFile = new TempFile(File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, getTempDir()));
                         final String id = generateId(tempFile);
                         try {
-                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8"));
-                            fw.write(new String(data, "UTF-8"));
+                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
+                            fw.write(new String(data, Jeeves.ENCODING));
                             fw.close();
                             out.write("{success: true, url: '" + getBaseUrl(request) + "/" + id + TEMP_FILE_SUFFIX + "'}");
 
@@ -213,7 +215,7 @@ public class WmcServlet extends HttpServlet {
             String wmcContent = RequestUtil.inputStreamAsString(httpServletRequest);
             wmcContent = XML_HEADER + "\n" + wmcContent;
 
-            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8"));
+            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
             fw.write(wmcContent);
             fw.close();
 

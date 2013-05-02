@@ -1,5 +1,6 @@
 package jeeves.server.local;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.utils.StringBufferOutputStream;
 import jeeves.utils.Xml;
@@ -200,7 +201,7 @@ public class LocalServiceRequest extends ServiceRequest
 			{
 				param = new Element(name);
 				try {
-					param.setText(URLDecoder.decode(value, "UTF-8"));
+					param.setText(URLDecoder.decode(value, Jeeves.ENCODING));
 				} catch (UnsupportedEncodingException e) {
 					param.setText(value);
 				}

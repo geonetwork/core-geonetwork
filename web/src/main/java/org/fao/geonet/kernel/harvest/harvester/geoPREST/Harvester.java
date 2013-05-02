@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -167,7 +168,7 @@ class Harvester
 			// uuid is in <guid> child
 			String guidLink = record.getChildText("guid");
 			if (guidLink != null) {
-				guidLink = URLDecoder.decode(guidLink, "UTF-8");
+				guidLink = URLDecoder.decode(guidLink, Jeeves.ENCODING);
 				identif = StringUtils.substringAfter(guidLink, "id=");
 			}
 			if (identif.length() == 0) {

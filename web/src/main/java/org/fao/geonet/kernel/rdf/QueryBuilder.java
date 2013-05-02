@@ -116,6 +116,9 @@ public class QueryBuilder<Q> {
         ResultInterpreter<String> newInterpreter = new IdentityResultInterpreter().onlyColumn("language").map(new com.google.common.base.Function<Value,String>(){
             @Override
             public String apply(Value input) {
+                if(input == null) {
+                    throw new AssertionError("Input of ResultInterpreter must not be null");
+                }
                 return mapper.iso639_1_to_iso639_2(input.toString(), "");
             }
         });

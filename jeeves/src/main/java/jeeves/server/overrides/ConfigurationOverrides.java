@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 import jeeves.utils.XPath;
 import jeeves.utils.Xml;
@@ -655,7 +656,7 @@ public class ConfigurationOverrides {
             BufferedReader reader = null;
             if (in != null) {
                 try {
-                    reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+                    reader = new BufferedReader(new InputStreamReader(in, Charset.forName(Jeeves.ENCODING)));
                     StringBuilder data = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {

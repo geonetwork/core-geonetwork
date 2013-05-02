@@ -60,7 +60,7 @@ class SimpleTypeEntry extends BaseHandler
 
 	public SimpleTypeEntry(ElementInfo ei)
 	{
-        name = handleAttribs(ei, name);
+        name = handleAttribs(ei, null);
         handleChildren(ei);
 	}
 

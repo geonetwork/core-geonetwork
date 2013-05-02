@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -60,7 +61,7 @@ public class ListBundleFiles extends AbstractFormatService {
             return;
 
         for (File f : files) {
-            String name = URLEncoder.encode(f.getName(), "UTF-8");
+            String name = URLEncoder.encode(f.getName(), Jeeves.ENCODING);
             Element element;
             String id = parentId + "/" + f.getName();
             if (f.isDirectory() && legalFile(f)) {

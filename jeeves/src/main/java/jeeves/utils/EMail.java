@@ -34,6 +34,8 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.Date;
 
+import jeeves.constants.Jeeves;
+
 //=============================================================================
 
 /** Simple class used to send an e-mail
@@ -125,7 +127,7 @@ public class EMail
 	{
 		Socket socket = new Socket(sMailServer, iPort);
 
-		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName("UTF-8")));
+		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Jeeves.ENCODING)));
 		out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
 
 		if (lookMailServer())

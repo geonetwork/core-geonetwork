@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.util.z3950;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
@@ -63,7 +64,7 @@ public class Repositories
 		        context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
 		        return false;
 		    } else {
-		        configPath = URLDecoder.decode(cfgUrl.getFile(), "UTF-8");
+		        configPath = URLDecoder.decode(cfgUrl.getFile(), Jeeves.ENCODING);
 		    }
 			//--- build repositories file from template repositories file
 

@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
+import jeeves.constants.Jeeves;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jose
@@ -65,7 +67,7 @@ public class RequestUtil {
 
         InputStream stream = request.getInputStream();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream, Jeeves.ENCODING));
         StringBuilder sb = new StringBuilder();
         String line = null;
 

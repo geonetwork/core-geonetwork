@@ -32,6 +32,8 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import jeeves.constants.Jeeves;
+
 /**
  * Adapter to retrieve ISO metadata from an ArcSDE server. The metadata in ArcSDE is scanned for
  * "MD_Metadata" and those that match are included in the result unprocessed, so including any
@@ -72,7 +74,7 @@ public class ArcSDEMetadataAdapter extends ArcSDEConnection {
 					ByteArrayInputStream bytes = row.getBlob(0);
 					byte [] buff = new byte[bytes.available()];
 					bytes.read(buff);
-					String document = new String(buff, "UTF-8");
+					String document = new String(buff, Jeeves.ENCODING);
 					if(document.contains(ISO_METADATA_IDENTIFIER)) {
 						System.out.println("ISO metadata found");
 						results.add(document);

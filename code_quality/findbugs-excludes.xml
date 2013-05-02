@@ -10,6 +10,8 @@
   <Match>
 		<Class name="~org\.fao\.geonet\.[k-zK-Z].*" />
 	</Match>
+	
+	<!--              Jeeves  Exceptions                 -->
 	<Match>
 		<Class name="jeeves.server.JeevesEngine" />
 		<Method name="setDBServicesElement" />
@@ -20,14 +22,11 @@
 		<Method name="dispatch" />
 		<Bug pattern="BC_UNCONFIRMED_CAST" />
 	</Match>
+
+	<!--              Geonetwork main exceptions                 -->
  	<Match>
 		<Class name="org.fao.geonet.kernel.rdf.Query$QueryResults" />
 		<Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
-	</Match>
- 	<Match>
-		<Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-		<Method name="harvest" />
 	</Match>
  	<Match>
 		<Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
@@ -48,6 +47,26 @@
 		<Class name="org.fao.geonet.kernel.DataManager" />
 		<Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
 		<Method name="autodetectSchema" params="org.jdom.Element"/>
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.DataManager" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
+		<Method name="getMetadataInfo"/>
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+		<Method name="harvest" />
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
+		<Method name="getFragmentHarvesterParams"/>
+	</Match>
+ 	<Match>
+		<Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester" />
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
+		<Method name="processServices"/>
 	</Match>
   <!-- Example showing how to disable the redundant null check in all classes in org.fao.geonet package 
 	<Match>

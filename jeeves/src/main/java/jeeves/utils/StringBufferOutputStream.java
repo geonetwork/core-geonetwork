@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import jeeves.constants.Jeeves;
+
 /**
  * Allows OutputStream to be mapped to StringBuffer.
  * <p/>
@@ -55,7 +57,7 @@ public class StringBufferOutputStream extends OutputStream
 			throw new IndexOutOfBoundsException("offset and length are negative or extend outside array bounds");
 		}
 
-		String str = new String(b, offset, length, Charset.forName("UTF-8"));
+		String str = new String(b, offset, length, Charset.forName(Jeeves.ENCODING));
 		strBuffer.append(str);
 	}
 

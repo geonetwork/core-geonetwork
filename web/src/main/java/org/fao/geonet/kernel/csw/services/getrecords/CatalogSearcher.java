@@ -39,6 +39,7 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Nonnull;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -674,7 +675,7 @@ public class CatalogSearcher {
         encoder.setNamespaceAware(true);
 
         encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
-        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString("UTF-8"), false);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Jeeves.ENCODING), false);
         parentElement.setContent(index, geomElem);
     }
 

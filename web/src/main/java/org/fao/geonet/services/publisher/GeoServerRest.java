@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -665,7 +666,7 @@ public class GeoServerRest {
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, "UTF-8"));
+						postData, contentType, Jeeves.ENCODING));
 			}
 		} else if (method.equals(METHOD_DELETE)) {
 			m = new DeleteMethod(url);
@@ -673,7 +674,7 @@ public class GeoServerRest {
 			m = new PostMethod(url);
 			if (postData != null) {
 				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, "UTF-8"));
+						postData, contentType, Jeeves.ENCODING));
 			}
 
 		} else {

@@ -20,38 +20,40 @@ public class WildCardStringAnalyzer {
     public String analyze(String string, String luceneIndexField, PerFieldAnalyzerWrapper _analyzer, Set<String> _tokenizedFieldSet) {
         // wildcards - preserve them by analyzing the parts of the search string around them separately
         // (this is because Lucene's StandardTokenizer would remove wildcards, but that's not what we want)
-        String starsPreserved = "";
+        StringBuilder starsPreserved = new StringBuilder();
         String[] starSeparatedList = string.split("\\*");
         for (String starSeparatedPart : starSeparatedList) {
-            String qPreserved = "";
+            StringBuilder qPreserved = new StringBuilder();
             // ? present
             if (starSeparatedPart.indexOf('?') >= 0) {
                 String[] qSeparatedList = starSeparatedPart.split("\\?");
                 for (String qSeparatedPart : qSeparatedList) {
                     String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
-                    qPreserved += '?' + analyzedPart;
+                    qPreserved.append('?').append(analyzedPart);
                 }
                 // remove leading ?
-                qPreserved = qPreserved.substring(1);
-                starsPreserved += '*' + qPreserved;
+                qPreserved.deleteCharAt(0);
+                starsPreserved.append('*').append(qPreserved);
             }
             // no ? present
             else {
-                starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                starsPreserved.append('*');
+                String analyzedQueryText = LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                starsPreserved.append(analyzedQueryText);
             }
         }
         // remove leading *
-        if (!StringUtils.isEmpty(starsPreserved)) {
-            starsPreserved = starsPreserved.substring(1);
+        if (starsPreserved.length() > 0) {
+            starsPreserved.deleteCharAt(0);
         }
 
         // restore ending wildcard
         if (string.endsWith("*")) {
-            starsPreserved += "*";
+            starsPreserved.append("*");
         }
         else if (string.endsWith("?")) {
-            starsPreserved += "?";
+            starsPreserved.append("?");
         }
-        return starsPreserved;
+        return starsPreserved.toString();
     }
 }

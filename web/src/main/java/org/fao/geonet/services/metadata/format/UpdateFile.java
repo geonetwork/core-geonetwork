@@ -45,7 +45,7 @@ public class UpdateFile extends AbstractFormatService {
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
 
-        String fileName = URLDecoder.decode(jeeves.utils.Util.getParam(params, Params.FNAME), "UTF-8");
+        String fileName = URLDecoder.decode(jeeves.utils.Util.getParam(params, Params.FNAME), Jeeves.ENCODING);
         String xslid = jeeves.utils.Util.getParam(params, Params.ID);
         String data =  jeeves.utils.Util.getParam(params, Params.DATA);
         

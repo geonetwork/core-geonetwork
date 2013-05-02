@@ -26,6 +26,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadServerCertificateEx;
 import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
@@ -705,7 +706,7 @@ class Harvester extends BaseAligner
 	
 	private String getSubsetUrl(InvDataset ds) {
 	    try {
-	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),"UTF-8");
+	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),Jeeves.ENCODING);
         } catch (UnsupportedEncodingException e) {
 			log.error("Thrown Exception "+e+" during dataset processing");
 	        e.printStackTrace();

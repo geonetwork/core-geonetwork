@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
@@ -291,7 +292,7 @@ public class SvnManager {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         repo.getFile(filePath, -1, new SVNProperties(), baos);
 
-        Element rec = Xml.loadString(baos.toString(), false);
+        Element rec = Xml.loadString(baos.toString(Jeeves.ENCODING), false);
         return (Element) rec.detach();
     }
 
@@ -555,13 +556,13 @@ public class SvnManager {
             Element categsPrevVersion = getFile(id, "categories.xml");
             String old = Xml.getString(categsPrevVersion);
             if (!old.equals(now)) {
-                SvnUtils.modifyFile(editor, id + "/categories.xml", old.getBytes(), now.getBytes());
+                SvnUtils.modifyFile(editor, id + "/categories.xml", old.getBytes(Jeeves.ENCODING), now.getBytes(Jeeves.ENCODING));
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Categories of metadata " + id + " updated");
             }
         } else {
             // Add the id/owner.xml item to the repository
-            SvnUtils.addFile(editor, id + "/categories.xml", now.getBytes("UTF-8"));
+            SvnUtils.addFile(editor, id + "/categories.xml", now.getBytes(Jeeves.ENCODING));
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Categories of metadata " + id + " added");
 
@@ -595,13 +596,13 @@ public class SvnManager {
             String old = Xml.getString(statusPrevVersion);
             if (!old.equals(now)) {
 
-                SvnUtils.modifyFile(editor, id + "/status.xml", old.getBytes(), now.getBytes());
+                SvnUtils.modifyFile(editor, id + "/status.xml", old.getBytes(Jeeves.ENCODING), now.getBytes(Jeeves.ENCODING));
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Status of metadata " + id + " was updated");
             }
         } else {
             // Add the id/owner.xml item to the repository
-            SvnUtils.addFile(editor, id + "/status.xml", now.getBytes());
+            SvnUtils.addFile(editor, id + "/status.xml", now.getBytes(Jeeves.ENCODING));
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Status of metadata " + id + " was added");
 
@@ -627,13 +628,13 @@ public class SvnManager {
             if (!old.equals(now)) {
 
                 // Update the id/metadata.xml item in the repository
-                SvnUtils.modifyFile(editor, id + "/metadata.xml", old.getBytes(), now.getBytes());
+                SvnUtils.modifyFile(editor, id + "/metadata.xml", old.getBytes(Jeeves.ENCODING), now.getBytes(Jeeves.ENCODING));
 
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Metadata " + id + " was updated");
             }
         } else {
-            SvnUtils.addFile(editor, id + "/metadata.xml", now.getBytes());
+            SvnUtils.addFile(editor, id + "/metadata.xml", now.getBytes(Jeeves.ENCODING));
         }
     }
 
@@ -660,13 +661,13 @@ public class SvnManager {
             String old = Xml.getString(ownerPrevVersion);
             if (!old.equals(now)) {
 
-                SvnUtils.modifyFile(editor, id + "/owner.xml", old.getBytes(), now.getBytes("UTF-8"));
+                SvnUtils.modifyFile(editor, id + "/owner.xml", old.getBytes(Jeeves.ENCODING), now.getBytes(Jeeves.ENCODING));
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata " + id + " was updated");
             }
         } else {
             // Add the id/owner.xml item to the repository
-            SvnUtils.addFile(editor, id + "/owner.xml", now.getBytes());
+            SvnUtils.addFile(editor, id + "/owner.xml", now.getBytes(Jeeves.ENCODING));
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Ownership of metadata " + id + " was added");
 
@@ -701,14 +702,14 @@ public class SvnManager {
             String old = Xml.getString(privsPrevVersion);
             if (!old.equals(now)) {
 
-                SvnUtils.modifyFile(editor, id + "/privileges.xml", old.getBytes(), now.getBytes());
+                SvnUtils.modifyFile(editor, id + "/privileges.xml", old.getBytes(Jeeves.ENCODING), now.getBytes(Jeeves.ENCODING));
 
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata " + id + " were updated");
             }
         } else {
             // Add the id/owner.xml item to the repository
-            SvnUtils.addFile(editor, id + "/privileges.xml", now.getBytes());
+            SvnUtils.addFile(editor, id + "/privileges.xml", now.getBytes(Jeeves.ENCODING));
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Privileges of metadata " + id + " were added");
         }

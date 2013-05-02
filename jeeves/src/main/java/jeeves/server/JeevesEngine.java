@@ -260,7 +260,7 @@ public class JeevesEngine
         try {
             
             if(in != null) {
-                br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                br = new BufferedReader(new InputStreamReader(in, Jeeves.ENCODING));
                 String line;
                 while ((line = br.readLine()) != null)   {
                     if(line.length() == 0) {

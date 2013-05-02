@@ -34,6 +34,8 @@ public final class Jeeves
     */
    private Jeeves() {}
    
+   public static final String ENCODING = System.getProperty("geonetwork.file.encoding", "UTF-8");
+   
    public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
 
 	public static final String CONFIG_FILE = "config.xml";

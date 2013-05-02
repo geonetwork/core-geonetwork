@@ -54,7 +54,7 @@ class GroupEntry extends BaseHandler
 	
 	public GroupEntry(ElementInfo ei)
 	{
-        name = handleAttribs(ei, name);
+        name = handleAttribs(ei, null);
         handleChildren(ei);
 	}
 

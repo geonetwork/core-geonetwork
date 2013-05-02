@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -64,7 +65,7 @@ public class Get implements Service
 			} else {
 				sb.append('&');
 			}
-			sb.append(child.getName()).append('=').append(URLEncoder.encode(child.getText(), "UTF-8"));
+			sb.append(child.getName()).append('=').append(URLEncoder.encode(child.getText(), Jeeves.ENCODING));
 		}
 		URL url = new URL(sb.toString());
 		HttpURLConnection conn = (HttpURLConnection)url.openConnection();

@@ -95,12 +95,13 @@ class ComplexTypeEntry extends BaseHandler
                 String abValue = at.getValue();
                 isAbstract = abValue.equals("true");
             }
-            else if (attrName.equals("mixed")) {
-                Logger.log();
-            }
-            else {
-                Logger.log();
-            }
+// TODO:
+//            else if (attrName.equals("mixed")) {
+//                Logger.log();
+//            }
+//            else {
+//                Logger.log();
+//            }
 
         }
 	}

@@ -76,13 +76,13 @@ class ComplexContentEntry extends BaseHandler
             Attribute at = (Attribute) attrib;
 
             String attrName = at.getName();
-
-            if (attrName.equals("mixed")) {
-                Logger.log();
-            }
-            else {
-                Logger.log();
-            }
+//  TODO:
+//            if (attrName.equals("mixed")) {
+//                Logger.log();
+//            }
+//            else {
+//                Logger.log();
+//            }
         }
 	}
 

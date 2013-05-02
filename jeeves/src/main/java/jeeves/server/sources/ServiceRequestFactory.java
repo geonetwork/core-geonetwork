@@ -78,7 +78,7 @@ public final class ServiceRequestFactory
 
 		if (encoding == null) {
 			try {
-				req.setCharacterEncoding("UTF-8");
+				req.setCharacterEncoding(Jeeves.ENCODING);
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}
