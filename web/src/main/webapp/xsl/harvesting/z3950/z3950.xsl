@@ -27,7 +27,7 @@
     <xsl:template name="ownerGroup-Z3950">
         <table border="0">
             <tr>
-                <td class="padded">group</td>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
                 <td class="padded"><select id="z3950.ownerGroup" class="content"/></td>
             </tr>
             <tr>
