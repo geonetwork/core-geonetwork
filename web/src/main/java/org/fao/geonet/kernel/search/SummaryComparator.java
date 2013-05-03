@@ -46,7 +46,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         STRING
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration)
             {
                 return new LocalizedStringComparable(string, locale);
             }
@@ -55,7 +55,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         NUMBER
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
             	try {
             		return Double.valueOf(string.trim());
@@ -67,7 +67,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         SCALE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
                 String scale = string;
                 /**
@@ -94,7 +94,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         DATE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<java.util.Date> value(String string, Locale locale, Element configuration)
             {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
@@ -124,7 +124,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
             }
         };
 
-        public abstract Comparable value(String string, Locale locale, Element configuration);
+        public abstract Comparable<? extends Object> value(String string, Locale locale, Element configuration);
 
         private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
         static {
@@ -203,9 +203,12 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
             return -1;
     }
 
+    @SuppressWarnings("unchecked")
     private int compareKeys(String key1, String key2)
     {
+        @SuppressWarnings("rawtypes")
         Comparable value1 = _type.value(key1, _locale, _configuration);
+        @SuppressWarnings("rawtypes")
         Comparable value2 = _type.value(key2, _locale, _configuration);
         return value1.compareTo(value2);
     }

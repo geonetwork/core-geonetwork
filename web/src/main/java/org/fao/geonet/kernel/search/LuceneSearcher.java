@@ -646,13 +646,16 @@ public class LuceneSearcher extends MetaSearcher {
 			// Boosting query
 			if (_boostQueryClass != null) {
 				try {
-                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                         Log.debug(Geonet.SEARCH_ENGINE, "Create boosting query:" + _boostQueryClass);
-					Class boostClass = Class.forName(_boostQueryClass);
-					Class[] clTypesArray = _luceneConfig.getBoostQueryParameterClass();				
+                    }
+                    
+					@SuppressWarnings("unchecked")
+                    Class<Query> boostClass = (Class<Query>) Class.forName(_boostQueryClass);
+					Class<?>[] clTypesArray = _luceneConfig.getBoostQueryParameterClass();				
 					Object[] inParamsArray = _luceneConfig.getBoostQueryParameter(); 
 
-					Class[] clTypesArrayAll = new Class[clTypesArray.length + 1];
+					Class<?>[] clTypesArrayAll = new Class[clTypesArray.length + 1];
 					clTypesArrayAll[0] = Class.forName("org.apache.lucene.search.Query");
 
                     System.arraycopy(clTypesArray, 0, clTypesArrayAll, 1, clTypesArray.length);
@@ -662,8 +665,8 @@ public class LuceneSearcher extends MetaSearcher {
 					try {
                         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                             Log.debug(Geonet.SEARCH_ENGINE, "Creating boost query with parameters:" + Arrays.toString(inParamsArrayAll));
-						Constructor c = boostClass.getConstructor(clTypesArrayAll);
-						_query = (Query) c.newInstance(inParamsArrayAll);
+						Constructor<Query> c = boostClass.getConstructor(clTypesArrayAll);
+						_query = c.newInstance(inParamsArrayAll);
 					} catch (Exception e) {
 						Log.warning(Geonet.SEARCH_ENGINE, " Failed to create boosting query: " + e.getMessage() 
 								+ ". Check Lucene configuration");
@@ -953,7 +956,6 @@ public class LuceneSearcher extends MetaSearcher {
      * @return
      * @throws Exception
      */
-	@SuppressWarnings({"deprecation"})
     private static Query makeQuery(Element xmlQuery, PerFieldAnalyzerWrapper analyzer, LuceneConfig luceneConfig) throws Exception {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "MakeQuery input XML:\n" + Xml.getString(xmlQuery));
@@ -1212,7 +1214,7 @@ public class LuceneSearcher extends MetaSearcher {
                     Map<String, Double> facetValues = new LinkedHashMap<String, Double>();
 
                     // facetValues = new TreeMap<String, Double>(comparator)
-                    for (Iterator subresults = frn.getSubResults().iterator(); subresults
+                    for (Iterator<? extends FacetResultNode> subresults = frn.getSubResults().iterator(); subresults
                             .hasNext();) {
                         FacetResultNode node = (FacetResultNode) subresults
                                 .next();
@@ -1231,7 +1233,7 @@ public class LuceneSearcher extends MetaSearcher {
                     // No need for a custom comparator Lucene facet request is
                     // made by count descending order
                     if (Facet.SortBy.COUNT != config.getSortBy()) {
-                        Comparator c = null;
+                        Comparator<Entry<String, Double>> c = null;
                         if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
                             // Create a numeric comparator
                             c = new Comparator<Entry<String, Double>>() {
@@ -1520,7 +1522,7 @@ public class LuceneSearcher extends MetaSearcher {
     public static Map<String,String> getMetadataFromIndex(String priorityLang, String idField, String id, Set<String> fieldnames) throws Exception {
         Map<String,Map<String,String>> results = LuceneSearcher.getAllMetadataFromIndexFor(priorityLang, idField, id, fieldnames, false);
         if (results.size() == 1) {
-            return (Map<String, String>) results.values().toArray()[0];
+            return results.values().iterator().next();
         } else {
             return new HashMap<String, String>();
         }

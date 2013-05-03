@@ -277,15 +277,15 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
 	private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> analyzerParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String boostQueryClass;
 	private Map<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> boostQueryParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String documentBoostClass;
 	private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> documentBoostParametersClass = new HashMap<String, Class<?>[]>();
 
 	private Element luceneConfig;
 
@@ -461,8 +461,9 @@ public class LuceneConfig {
 			elem = luceneConfig.getChild("defaultAnalyzer");
 			if (elem != null) {
 				defaultAnalyzerClass = elem.getAttribute("name").getValue();
-				loadClassParameters(ANALYZER_CLASS, "",
-						defaultAnalyzerClass, elem.getChildren("Param"));
+				List<?> paramChildren = elem.getChildren("Param");
+                loadClassParameters(ANALYZER_CLASS, "",
+						defaultAnalyzerClass, paramChildren);
 			}
 
 			// Fields specific analyzer
@@ -652,7 +653,7 @@ public class LuceneConfig {
      * @param clazz
      * @param children
      */
-	private void loadClassParameters(int type, String field, String clazz, List<Object> children) {
+	private void loadClassParameters(int type, String field, String clazz, List<?> children) {
 		if (children == null)
 			return; // No params
 
@@ -660,7 +661,7 @@ public class LuceneConfig {
             Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading class " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
-		Class[] paramsClass = new Class[children.size()];
+		Class<?>[] paramsClass = new Class<?>[children.size()];
 		int i = 0;
 		for (Object o : children) {
 			if (o instanceof Element) {
@@ -817,7 +818,7 @@ public class LuceneConfig {
 	 *            with class name for specific field analyzer)
 	 * @return The list of classes for analyzer parameters
 	 */
-	public Class[] getAnalyzerParameterClass(String analyzer) {
+	public Class<?>[] getAnalyzerParameterClass(String analyzer) {
 		return this.analyzerParametersClass.get(analyzer);
 	}
 
@@ -833,7 +834,7 @@ public class LuceneConfig {
 	 * 
 	 * @return The list of classes for boost query parameters.
 	 */
-	public Class[] getBoostQueryParameterClass() {
+	public Class<?>[] getBoostQueryParameterClass() {
 		return this.boostQueryParametersClass.get(boostQueryClass);
 	}
 
@@ -857,7 +858,7 @@ public class LuceneConfig {
      * 
      * @return The list of classes for document boost parameters.
      */
-    public Class[] getDocumentBoostParameterClass() {
+    public Class<?>[] getDocumentBoostParameterClass() {
         return this.documentBoostParametersClass.get(documentBoostClass);
     }
 

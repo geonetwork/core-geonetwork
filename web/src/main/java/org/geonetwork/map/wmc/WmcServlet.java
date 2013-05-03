@@ -23,6 +23,8 @@ import jeeves.constants.Jeeves;
 
 
 public class WmcServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
     public static final Logger LOGGER = Logger.getLogger(WmcServlet.class);
 
     private final String WMC_CONTENT_TYPE = "application/vnd.ogc.context+xml";
@@ -119,14 +121,12 @@ public class WmcServlet extends HttpServlet {
                 ServletFileUpload upload = new ServletFileUpload(factory);
 
                 // Parse the request
+                @SuppressWarnings("unchecked")
                 List<FileItem> items = upload.parseRequest(request);
 
 
                 // Process the uploaded items
-                Iterator iter = items.iterator();
-                while (iter.hasNext()) {
-                    FileItem item = (FileItem) iter.next();
-
+                for (FileItem item : items) {
                     if (!item.isFormField()) {
                         byte[] data = item.get();
 
@@ -308,6 +308,7 @@ public class WmcServlet extends HttpServlet {
     }
 
     protected static class TempFile extends File {
+        private static final long serialVersionUID = 1L;
         private final long creationTime;
 
         public TempFile(File tempFile) {

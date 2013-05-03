@@ -21,7 +21,7 @@ public class TestCase extends junit.framework.TestCase {
      * @param o
      * @param c
      */
-    public static void assertContains(String msg, Object o, Collection c) {
+    public static void assertContains(String msg, Object o, Collection<?> c) {
         for(Object in : c) {
             if(o.equals(in)) {
                 return;

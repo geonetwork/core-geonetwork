@@ -36,7 +36,6 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -181,12 +180,14 @@ public class List implements Service
 						dirE.setAttribute("type", rootName);
 						
 						// Search directory with same name
-						java.util.List children = list.getChildren("directory");
+						@SuppressWarnings("unchecked")
+                        java.util.List<Element> children = list.getChildren("directory");
 						Element element = null;
-						for (Iterator iter = children.iterator(); iter.hasNext();) {
-							element = (Element) iter.next();
-							if (element.getAttribute("label").getValue().equals(rdfDataDirectory[i].getName())) break;
-							element = null;
+						for (Element e : children) {
+							if (e.getAttribute("label").getValue().equals(rdfDataDirectory[i].getName())) {
+							    element = e;
+							    break;
+							}
 						}
 					
 						if (element != null) {

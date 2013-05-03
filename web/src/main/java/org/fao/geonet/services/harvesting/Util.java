@@ -33,7 +33,7 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 
@@ -64,13 +64,12 @@ public class Util
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Iterator i = params.getChildren().iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> paramList = params.getChildren();
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 
-		while (i.hasNext())
-		{
-			Element el  = (Element) i.next();
+		for (Element el : paramList) {
 			String  id  = el.getText();
 			String  res = job.execute(dbms, hm, id).toString();
 
