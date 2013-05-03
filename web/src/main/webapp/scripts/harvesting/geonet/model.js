@@ -13,7 +13,8 @@ gn.Model = function(xmlLoader)
 
 	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveSources   = retrieveSources;
-	this.retrieveGroups    = retrieveGroups;
+    this.retrieveGroups    = retrieveGroups;
+    this.retrieveLocalGroups = retrieveLocalGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.getUpdateRequest  = getUpdateRequest;
 	
@@ -36,6 +37,10 @@ function retrieveSources(data, callBack)
 }
 
 //=====================================================================================
+
+function retrieveLocalGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
 
 function retrieveGroups(data, callBack, username, password)
 {

@@ -12,7 +12,8 @@ Z3950Config.Model = function(xmlLoader)
 	var callBackStyleSheets = null;
 
 	this.retrieveImportXslts = retrieveImportXslts;
-	this.getUpdateRequest  = getUpdateRequest;
+    this.retrieveGroups    = retrieveGroups;
+    this.getUpdateRequest  = getUpdateRequest;
 	
 //=====================================================================================
 
@@ -41,6 +42,10 @@ function retrieveXslts_OK(xmlRes)
 		callBackStyleSheets(data);
 	}
 }
+
+    function retrieveGroups(callBack) {
+        new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+    }
 
 //=====================================================================================
 

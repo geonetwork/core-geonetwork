@@ -46,7 +46,15 @@ this.init = function()
 	this.view.init();
 	
 	model.retrieveImportXslts     (ker.wrap(this, init_importXslts_OK));
+    model.retrieveGroups(ker.wrap(this, init_groups_OK));
 }
+    function init_groups_OK(data) {
+        view.clearGroups();
+
+        for (var i=0; i<data.length; i++) {
+            view.addGroup(data[i].id, data[i].label[Env.lang]);
+        }
+    }
 
 //-------------------------------------------------------------------------------------
 

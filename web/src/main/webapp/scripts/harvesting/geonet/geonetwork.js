@@ -26,8 +26,8 @@ function Geonetwork(xmlLoader)
 	this.removeSearchRow = view.removeSearch;
 	this.getResultTip    = view.getResultTip;
 	this.retrieveSources = retrieveSources;
-	this.retrieveGroups  = retrieveGroups;
-	
+    this.retrieveGroups  = retrieveGroups;
+
 	this.model = model;
 	this.view  = view;
 	
@@ -49,7 +49,14 @@ this.init = function()
 	
 	model.retrieveCategories(ker.wrap(this, init_categ_OK));
 	model.retrieveImportXslts     (ker.wrap(this, init_importXslts_OK));
+    model.retrieveLocalGroups(ker.wrap(this, init_local_groups_OK));
 }
+
+    function init_local_groups_OK(data) {
+        for (var i=0; i<data.length; i++) {
+            view.addGroup(data[i].id, data[i].label[Env.lang]);
+        }
+    }
 
 //-------------------------------------------------------------------------------------
 
