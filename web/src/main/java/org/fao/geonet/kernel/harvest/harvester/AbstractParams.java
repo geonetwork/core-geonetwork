@@ -84,7 +84,7 @@ public abstract class AbstractParams {
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 		
-        Element ownerE = node.getChild("owner");
+        Element ownerE = node.getChild("ownerId");
         if(ownerE != null) {
             Element ownerIdE = ownerE.getChild("id");
             if(StringUtils.isNotEmpty(ownerIdE.getText())) {
