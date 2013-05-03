@@ -84,12 +84,9 @@ public abstract class AbstractParams
         name       = Util.getParam(site, "name", "");
         uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 
-        Element ownerE = node.getChild("ownerId");
-        if(ownerE != null) {
-            Element ownerIdE = ownerE.getChild("id");
-            if(StringUtils.isNotEmpty(ownerIdE.getText())) {
-                ownerId = ownerIdE.getText();
-            }
+        Element ownerIdE = node.getChild("ownerId");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getText();
         }
         if(StringUtils.isEmpty(ownerId)){
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
