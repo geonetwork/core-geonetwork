@@ -153,11 +153,11 @@ public class UserSession
 		}
 	}
 	public String getSurname() { 
-		Authentication auth = auth();
-		if (auth == null) {
+		JeevesUser userDetails = getPrincipal();
+		if (userDetails == null) {
 			return null;   
 		} else {
-			return auth.getName();
+			return userDetails.getSurname();
 		}
 	}
 	public String getProfile() {
