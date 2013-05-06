@@ -7,10 +7,14 @@
 gn20.Model = function(xmlLoader)
 {
 	var loader = xmlLoader;
-
+    this.retrieveGroups    = retrieveGroups;
 	this.getUpdateRequest = getUpdateRequest;
 	
 //=====================================================================================
+
+function retrieveGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
 
 function getUpdateRequest(data)
 {

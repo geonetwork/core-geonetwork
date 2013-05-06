@@ -12,9 +12,14 @@ Z3950Config.Model = function(xmlLoader)
 	var callBackStyleSheets = null;
 
 	this.retrieveImportXslts = retrieveImportXslts;
+    this.retrieveGroups    = retrieveGroups;
 	this.getUpdateRequest  = getUpdateRequest;
 	
 //=====================================================================================
+
+function retrieveGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
 
 function retrieveImportXslts(callBack)
 {

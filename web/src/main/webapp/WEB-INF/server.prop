@@ -1,16 +1,16 @@
 #GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime
-#Thu, 18 Apr 2013 16:30:02 +0200
+#Fri, 03 May 2013 12:24:36 +0200
 
 version=2.10.0
-subVersion=RC0
+subVersion=RC1
 release=2.10.0
 javaVersion=1.6.0
 jre_url=http\://java.sun.com/javase/downloads
 ant.build.javac.target=1.5
-buildDate=2013-04-18T16\:30\:02+0200
-date=1330181630
-day=18-4-2013
+buildDate=2013-05-03T12\:24\:36+0200
+date=1324031224
+day=03-5-2013
 OS=Compiled on Linux (unix)
 debugOn=on
-git_revision=c7e79b8812b3e6d00165e2be1fff87f46e41d699
+git_revision=00b6c55d6f263ced3e25e6938717429a9a59767b
 git_url=https\://github.com/geonetwork/core-geonetwork.git (push)
