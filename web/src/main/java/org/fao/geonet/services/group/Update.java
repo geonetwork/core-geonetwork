@@ -40,6 +40,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.resources.Resources;
@@ -81,20 +82,23 @@ public class Update implements Service
             // IE returns complete path of file, while FF only the name (strip path for IE)
             logoFile = stripPath(logoFile);
             
-            BufferedImage bufferedImage = ImageIO.read(new File(context.getUploadDir(), logoFile));
-            // scale to 40px width
-            int imgWidth = bufferedImage.getWidth();
-            int imgHeight = bufferedImage.getHeight();
-            int hardcodedWidth = 40;
-            int scaledHeight = hardcodedWidth * imgHeight / imgWidth;
-            Image thumb = bufferedImage.getScaledInstance(hardcodedWidth, scaledHeight, BufferedImage.SCALE_SMOOTH);
-            BufferedImage bimg = new BufferedImage(hardcodedWidth, scaledHeight, BufferedImage.TYPE_3BYTE_BGR);
-            Graphics2D g = bimg.createGraphics();
-            g.drawImage(thumb, 0, 0, null);
-            g.dispose();
+            File input = new File(context.getUploadDir(), logoFile);
+//			BufferedImage bufferedImage = ImageIO.read(input);
+//            // scale to 40px width
+//            int imgWidth = bufferedImage.getWidth();
+//            int imgHeight = bufferedImage.getHeight();
+//            int hardcodedWidth = 40;
+//            int scaledHeight = hardcodedWidth * imgHeight / imgWidth;
+//            Image thumb = bufferedImage.getScaledInstance(hardcodedWidth, scaledHeight, BufferedImage.SCALE_SMOOTH);
+//            BufferedImage bimg = new BufferedImage(hardcodedWidth, scaledHeight, BufferedImage.TYPE_3BYTE_BGR);
+//            Graphics2D g = bimg.createGraphics();
+//            g.drawImage(thumb, 0, 0, null);
+//            g.dispose();
             String logoDir = Resources.locateLogosDir(context);
             logoUUID = UUID.randomUUID().toString();
-            ImageIO.write(bimg, "png", new File(logoDir, logoUUID + ".png"));
+            File output = new File(logoDir, logoUUID + ".png");
+//			ImageIO.write(bimg, "png", output);
+            FileUtils.copyFile(input, output);
         }
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
