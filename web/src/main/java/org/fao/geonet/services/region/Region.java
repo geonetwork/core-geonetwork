@@ -2,6 +2,7 @@ package org.fao.geonet.services.region;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import jeeves.utils.Log;
 
@@ -128,12 +129,18 @@ public class Region {
         return regionEl;
     }
 
+    private static WeakHashMap<String, CoordinateReferenceSystem> crsMap = new WeakHashMap<String, CoordinateReferenceSystem>();
     public static CoordinateReferenceSystem decodeCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
         CoordinateReferenceSystem mapCRS;
         if (srs.equals("EPSG:4326")) {
             mapCRS = WGS84;
         } else {
-            mapCRS = CRS.decode(srs, false);
+        	mapCRS = crsMap.get(srs);
+
+        	if(mapCRS == null) {
+        		mapCRS = CRS.decode(srs, false);
+        		crsMap.put(srs, mapCRS);
+        	}
         }
         return mapCRS;
     }
