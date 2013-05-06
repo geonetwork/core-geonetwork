@@ -103,7 +103,7 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
             processedMetadata = XslProcessing.process(id, "onlinesrc-remove",
                     true, context.getAppPath(), params, context, metadata,
                     notFound, notOwner, notProcessFound, true,
-                    dataMan.getSiteURL());
+                    dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + notFound.size() + ", Not owner:" + notOwner.size()

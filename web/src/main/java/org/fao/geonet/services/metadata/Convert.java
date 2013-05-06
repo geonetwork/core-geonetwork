@@ -79,7 +79,7 @@ public class Convert implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 		String schemaDir = sm.getSchemaDir(mdInfo.schemaId);
-		Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, context.getBaseUrl(), dm.getSiteURL(), gc.getSiteName());
+		Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, context.getBaseUrl(), dm.getSiteURL(context), gc.getSiteName());
 
 		//--- transform the metadata with the created env and specified stylesheet
 		return Lib.transform(schemaDir, env, elMd, styleSheet);

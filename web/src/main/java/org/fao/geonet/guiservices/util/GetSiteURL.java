@@ -52,7 +52,7 @@ public class GetSiteURL implements Service
 		DataManager   dm = gc.getDataManager();
 
 		Element root = new Element("a");
-		root.addContent(new Element(Geonet.Elem.SITE_URL).setText(dm.getSiteURL()));
+		root.addContent(new Element(Geonet.Elem.SITE_URL).setText(dm.getSiteURL(context)));
 
 		return root;
 	}

@@ -246,10 +246,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 								continue;
 							}
 
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, dm.getSiteURL());
+            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, dm.getSiteURL(context));
 
 						} else {
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), dm.getSiteURL());
+            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), dm.getSiteURL(context));
 						}
 
             try {
@@ -280,7 +280,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 			Element md = dm.getMetadata(dbms, id);
 			Processor.detachXLink(md);
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(), "");
+			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(context), "");
 	
 			//--- transform the metadata with the created env and specified stylesheet
 			Element root = new Element("root");
@@ -414,7 +414,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 		aRdfDataFile = uuid+".rdf";
 		String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
 		File outputRdf = new File(thesaurusFile);
-		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL());
+		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL(context));
 
 		FileOutputStream outputRdfStream = null;
 		try {
