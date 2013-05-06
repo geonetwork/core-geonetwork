@@ -114,7 +114,7 @@ public class PrepareFileDownload implements Service
 		//--- and date modified, if not then set local to false 
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
 		elems = xp.selectNodes(elBrief);
-		response = processDownloadLinks(context, id, dm.getSiteURL(), elems, response);
+		response = processDownloadLinks(context, id, dm.getSiteURL(context), elems, response);
 
 		//--- now process web links so that they can be displayed as well
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:LINK')]");
