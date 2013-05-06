@@ -175,7 +175,10 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }
         return links;
     }
-
+    function hasLinks(v, record) {
+    	var links = getLinks(v,record).length;
+    	return links > 0;
+    }
     /**
      * Some convert function to face empty geonet_info parameters BUG in
      * GeoNetwork when retrieving iso19115 record through CSW
@@ -426,6 +429,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         }, {
             name : 'links',
             convert : getLinks
+        },  {
+            name : 'hasLinks',
+            convert : hasLinks
         }, {
             name : 'uri',
             mapping : 'uri',

@@ -142,6 +142,7 @@ GeoNetwork.Geocatch.Templates.TITLE =
         <tpl if="isdataset==true"><img src="{[catalogue.URL]}/images/dataset.gif" title="dataset" alt="dataset"/></tpl>\
         <tpl if="isservice==true"><img src="{[catalogue.URL]}/images/service.gif" title="service" alt="service"/></tpl>\
         <tpl if="historicalArchive==true"><img src="{[catalogue.URL]}/apps/geocatch/images/archived.png" title="archive" alt="archive"/></tpl>\
+		<tpl if="hasLinks==true"><img src="{[catalogue.URL]}/apps/images/default/link.png" title="link" alt="link"/></tpl>\
         <span class="md-action-menu"> - <a rel="mdMenu">&nbsp;</a></span>\
     </h1>';
 
