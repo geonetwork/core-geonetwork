@@ -90,7 +90,7 @@ public class Aligner extends BaseAligner {
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
 				request.setMethod(CatalogRequest.Method.GET);
-			} else if (oper.getUrl != null) {
+			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
 				request.setMethod(CatalogRequest.Method.POST);
 			} else {
