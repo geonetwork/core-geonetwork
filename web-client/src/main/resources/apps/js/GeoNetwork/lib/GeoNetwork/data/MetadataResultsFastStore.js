@@ -42,12 +42,18 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
     var separator = "|";
 
     function getTitle(v, record) {
+    	var title;
         if (record.title && record.title[0]) {
-            return record.title[0].value;
+            title = record.title[0].value;
         } else if (record.defaultTitle && record.defaultTitle[0]) {
-            return record.defaultTitle[0].value;
+        	title = record.defaultTitle[0].value;
         } else {
-            return '';
+        	title = translate('missing');
+        }
+        if(title.length > 50) {
+        	return title.substring(0,47)+"...";
+        } else {
+        	return title;
         }
     }
     function getGroupLogoUuid(v, record) {
