@@ -18,6 +18,7 @@
   color : #0076A1;
   font-size : small;
   margin-bottom : 5px;
+  vertical-align: middle;
 }
 
 .md-view div.relation {
@@ -76,7 +77,10 @@ table.related * li {
   text-align : center;
 }
 .md-view ul li * .md-logo img {
-  max-width : 30px;
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 5px;
+  max-width : 110px;
 }
 .md-view ul li {
   border-top : 1px solid transparent;

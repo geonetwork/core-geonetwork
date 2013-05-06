@@ -132,13 +132,21 @@ GeoNetwork.Geocatch.Templates.LINKS =
 
 
 
+
+GeoNetwork.Geocatch.Templates.LOGO = 
+	'<span class="md-logo" xmlns="http://www.w3.org/1999/html"> \
+	<tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img title="{[OpenLayers.i18n("Loading") + "..."]}"  class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
+	<tpl if="groupWebsite==\'\'"><img title="{[OpenLayers.i18n("Loading") + "..."]}" class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
+	</span>';
+
 GeoNetwork.Geocatch.Templates.TITLE = 
     '<h1>\
-        <input type="checkbox" \
-            <tpl if="selected==\'true\'">checked="true"</tpl>\
-            class="selector" \
-            onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>\
-        <a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
+     <input type="checkbox" \
+	    <tpl if="selected==\'true\'">checked="true"</tpl>\
+		    class="selector" \
+		    onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>'+
+	    GeoNetwork.Geocatch.Templates.LOGO+
+        '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
         <tpl if="isdataset==true"><img src="{[catalogue.URL]}/images/dataset.gif" title="dataset" alt="dataset"/></tpl>\
         <tpl if="isservice==true"><img src="{[catalogue.URL]}/images/service.gif" title="service" alt="service"/></tpl>\
         <tpl if="historicalArchive==true"><img src="{[catalogue.URL]}/apps/geocatch/images/archived.png" title="archive" alt="archive"/></tpl>\
@@ -146,22 +154,12 @@ GeoNetwork.Geocatch.Templates.TITLE =
         <span class="md-action-menu"> - <a rel="mdMenu">&nbsp;</a></span>\
     </h1>';
 
-
-GeoNetwork.Geocatch.Templates.LOGO = 
-    '<div class="md-logo" xmlns="http://www.w3.org/1999/html"> \
-        <tpl if="groupWebsite!=\'\'"><a href="{groupWebsite}" target="_blank"/><img title="{[OpenLayers.i18n("Loading") + "..."]}"  class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></a>  </tpl>\
-        <tpl if="groupWebsite==\'\'"><img title="{[OpenLayers.i18n("Loading") + "..."]}" class="loadCatalogName{catalogName}" src="{[catalogue.URL]}/images/logos/{groupLogoUuid}"/></tpl>\
-    </div>';
-
 GeoNetwork.Geocatch.Templates.FULL = new Ext.XTemplate(
         '<ul style="padding-left: 10px">',
           '<tpl for=".">',
                 '<li class="md md-full" style="{featurecolorCSS}">',
                     '<table>\
                         <tr>',
-                            '<td class="left">',
-                                GeoNetwork.Geocatch.Templates.LOGO,
-                            '</td>',
                             '<td id="{uuid}">',
                                 GeoNetwork.Geocatch.Templates.TITLE,
                                 GeoNetwork.Geocatch.Templates.ABSTRACT,
