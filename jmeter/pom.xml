@@ -4,7 +4,7 @@
   <parent>
     <groupId>ch.geocat</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOT</version>
   </parent>
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
