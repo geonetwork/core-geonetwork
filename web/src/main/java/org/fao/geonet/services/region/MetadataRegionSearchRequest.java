@@ -13,6 +13,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
@@ -169,7 +170,10 @@ public class MetadataRegionSearchRequest extends Request {
         boolean withEditorValidationErrors = false;
         boolean keepXlinkAttributes = true;
 
-        return gc.getDataManager().getMetadata(context, mdId, true, withEditorValidationErrors, keepXlinkAttributes);
+        DataManager dataManager = gc.getDataManager();
+		Element metadata = dataManager.getMetadata(context, mdId, false, withEditorValidationErrors, keepXlinkAttributes);
+        metadata = dataManager.enumerateTree(metadata);
+		return metadata;
     }
 
     @Override
