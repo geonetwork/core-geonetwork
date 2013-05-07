@@ -7,13 +7,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +32,6 @@ public class TableExport extends NotInReadOnlyModeService{
     /** constant for CSV file export */
 	public final static String CSV = "CSV";
 
-    private String currentExportFormat;
     /** the full path to the application directory */
     private  String appPath;
     /** the separator for CSV format
@@ -55,7 +52,7 @@ public class TableExport extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
 	public void init(String appPath, ServiceConfig params) throws Exception	{
         super.init(appPath, params);
-		this.currentExportFormat = params.getValue("exportType");
+//		this.currentExportFormat = params.getValue("exportType");
 		this.csvSep = params.getValue("csvSeparator");
 		this.dumpHeader = "true".equalsIgnoreCase(params.getValue("dumpHeader"));
         this.allowedTablesToExport = Arrays.asList(params.getValue("allowedTables").split(","));

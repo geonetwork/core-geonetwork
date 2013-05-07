@@ -317,17 +317,21 @@ public class CatalogSearcher {
 	// ---------------------------------------------------------------------------
 
 	private void checkForErrors(Element elem) throws InvalidParameterValueEx {
-		List children = elem.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = elem.getChildren();
 
 		if (elem.getName().equals("error")) {
 			String type = elem.getAttributeValue("type");
-			String oper = Xml.getString((Element) children.get(0));
+			String oper = "unknown";
+			if (!children.isEmpty()) {
+			    oper = Xml.getString((Element) children.get(0));
+			}
 
 			throw new InvalidParameterValueEx(type, oper);
 		}
 
-        for (Object aChildren : children) {
-            checkForErrors((Element) aChildren);
+        for (Element aChildren : children) {
+            checkForErrors(aChildren);
         }
 	}
 
@@ -356,9 +360,10 @@ public class CatalogSearcher {
 		}
 
 		else {
-			List children = elem.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = elem.getChildren();
 
-            for (Object aChildren : children) {
+            for (Element aChildren : children) {
                 convertPhrases((Element) aChildren);
             }
 		}
@@ -387,10 +392,11 @@ public class CatalogSearcher {
 						+ field); // FIXME log doesn't work
 		}
 
-		List children = elem.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = elem.getChildren();
 
-        for (Object aChildren : children) {
-            remapFields((Element) aChildren);
+        for (Element aChildren : children) {
+            remapFields(aChildren);
         }
 	}
 

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -107,12 +106,10 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 				dm.deleteMetadataOper(dbms, id, skip);
 
 				//--- set new ones
+				@SuppressWarnings("unchecked")
+                List<Element> list = params.getChildren();
 
-				List list = params.getChildren();
-
-				for(int i=0; i<list.size(); i++) {
-					Element el = (Element) list.get(i);
-
+				for (Element el : list) {
 					String name  = el.getName();
 
 					if (name.startsWith("_")) {

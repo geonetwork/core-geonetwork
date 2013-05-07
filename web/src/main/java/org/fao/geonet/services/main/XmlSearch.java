@@ -33,7 +33,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.services.util.SearchDefaults;

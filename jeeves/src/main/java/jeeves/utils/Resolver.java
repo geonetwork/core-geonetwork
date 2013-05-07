@@ -96,7 +96,8 @@ public final class Resolver implements ProxyInfoObserver
 
 		catResolver = new CatalogResolver(catMan);
 
-		Vector catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
+		@SuppressWarnings("unchecked")
+        Vector<String> catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
 		String[] cats = new String[catalogs.size()];
 		System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
 

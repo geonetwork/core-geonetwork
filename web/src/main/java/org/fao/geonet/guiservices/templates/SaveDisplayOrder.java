@@ -32,7 +32,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,6 +47,7 @@ public class SaveDisplayOrder implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getDataManager() ;
+        @SuppressWarnings("unchecked")
         List<Element> requestParameters = params.getChildren();
         for (Element param : requestParameters) {
             // the request params come in as e.g. <displayorder-30749>5</displayorder-30749> where

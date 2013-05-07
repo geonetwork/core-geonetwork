@@ -44,9 +44,6 @@ import java.io.IOException;
  */
 public class TouchesFilter extends SpatialFilter
 {
-
-    private static final long serialVersionUID = 1114543251684147194L;
-
     public TouchesFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         super(query, numHits, geom, sourceAccessor);

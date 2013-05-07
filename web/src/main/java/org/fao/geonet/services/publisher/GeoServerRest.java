@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.annotation.CheckReturnValue;
+
 import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 
@@ -37,6 +39,7 @@ import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
 
@@ -277,6 +280,8 @@ public class GeoServerRest {
 		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
 				null, "text/xml", false);
+		
+		checkResponseCode(statusCoverage);
 	}
 
 	/**
@@ -501,12 +506,14 @@ public class GeoServerRest {
 			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
 					+ ".xml", null, null, null, true);
 
+			checkResponseCode(status);
 			Element layerProperties = Xml.loadString(getResponse(), false);
 			String styleName = layerProperties.getChild("defaultStyle")
 					.getChild("name").getText();
 
 			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
 					+ ".sld", null, null, null, true);
+            checkResponseCode(status);
 
 			String currentStyle = getResponse();
 
@@ -514,10 +521,12 @@ public class GeoServerRest {
 					+ layer + ".sld</filename></style>";
 			status = sendREST(GeoServerRest.METHOD_POST, "/styles", body, null,
 					"text/xml", true);
+            checkResponseCode(status);
 
 			status = sendREST(GeoServerRest.METHOD_PUT, "/styles/" + layer
 					+ "_style", currentStyle, null,
 					"application/vnd.ogc.sld+xml", true);
+            checkResponseCode(status);
 
 			body = "<layer><defaultStyle><name>"
 					+ layer
@@ -527,6 +536,7 @@ public class GeoServerRest {
 			// http://jira.codehaus.org/browse/GEOS-3964
 			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
 					body, null, "text/xml", true);
+            checkResponseCode(status);
 
 		} catch (Exception e) {
             if(Log.isDebugEnabled("GeoServerRest"))
@@ -537,7 +547,13 @@ public class GeoServerRest {
 		return status;
 	}
 
-	public boolean createDatabaseDatastore(String ds, String host, String port,
+	private void checkResponseCode(int status2) {
+	    if(status2 > 399) {
+	        Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:"+status2);
+	    }
+    }
+
+    public boolean createDatabaseDatastore(String ds, String host, String port,
 			String db, String user, String pwd, String dbType, String ns)
 			throws IOException {
 		return createDatabaseDatastore(getDefaultWorkspace(), ds, host, port,
@@ -618,7 +634,7 @@ public class GeoServerRest {
 				"text/xml", true);
 
 		// Create layer for feature type (require for MapServer REST API)
-		int s = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
+		sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
 				"text/xml", false);
 
 		if (createStyle) {
@@ -644,7 +660,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public int sendREST(String method, String urlParams, String postData,
+	public @CheckReturnValue int sendREST(String method, String urlParams, String postData,
 			File file, String contentType, Boolean saveResponse)
 			throws IOException {
 

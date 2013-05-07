@@ -84,26 +84,26 @@ public class Aligner extends BaseAligner
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
-		List list = remoteInfo.getChild("groups").getChildren("group");
+		@SuppressWarnings("unchecked")
+        List<Element> list = remoteInfo.getChild("groups").getChildren("group");
 		setupLocEntity(list, hmRemoteGroups);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private void setupLocEntity(List list, HashMap<String, HashMap<String, String>> hmEntity)
+	private void setupLocEntity(List<Element> list, HashMap<String, HashMap<String, String>> hmEntity)
 	{
 
-        for (Object aList : list) {
-            Element entity = (Element) aList;
+        for (Element entity : list) {
             String name = entity.getChildText("name");
 
             HashMap<String, String> hm = new HashMap<String, String>();
             hmEntity.put(name, hm);
 
-            List labels = entity.getChild("label").getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> labels = entity.getChild("label").getChildren();
 
-            for (Object label : labels) {
-                Element el = (Element) label;
+            for (Element el : labels) {
                 hm.put(el.getName(), el.getText());
             }
         }
@@ -700,10 +700,10 @@ public class Aligner extends BaseAligner
 
 	private boolean existsFile(String fileName, Element files)
 	{
-		List list = files.getChildren("file");
+		@SuppressWarnings("unchecked")
+        List<Element> list = files.getChildren("file");
 
-        for (Object aList : list) {
-            Element elem = (Element) aList;
+        for (Element elem : list) {
             String name = elem.getAttributeValue("name");
 
             if (fileName.equals(name)) {

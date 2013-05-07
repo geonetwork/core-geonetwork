@@ -28,7 +28,6 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
@@ -48,11 +47,10 @@ public class SchemaSuggestions
 		Element sugg = Xml.loadFile(xmlSuggestFile);
 		// TODO: it could be good to check that suggested elements are 
 		// fine for the element type
-		List list = sugg.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = sugg.getChildren();
 
-        for (Object aList : list) {
-            Element el = (Element) aList;
-
+        for (Element el : list) {
             if (el.getName().equals("field")) {
                 htFields.put(el.getAttributeValue("name"), el);
             }
@@ -67,18 +65,17 @@ public class SchemaSuggestions
 
 	public boolean isSuggested(String parent, String child)
 	{
-		Element el = htFields.get(parent);
+		Element fieldEl = htFields.get(parent);
 
-		if (el == null)
+		if (fieldEl == null)
 			return false;
 
-		List list = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = fieldEl.getChildren();
 
-        for (Object aList : list) {
-            el = (Element) aList;
-
-            if (el.getName().equals("suggest")) {
-                String name = el.getAttributeValue("name");
+		for (Element elem : list) {
+            if (elem.getName().equals("suggest")) {
+                String name = elem.getAttributeValue("name");
 
                 if (child.equals(name)) {
                     return true;

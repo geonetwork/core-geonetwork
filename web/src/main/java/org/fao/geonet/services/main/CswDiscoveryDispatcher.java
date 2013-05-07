@@ -34,7 +34,6 @@ import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,8 +88,9 @@ public class CswDiscoveryDispatcher implements Service {
         else if(params.getName().equals("Envelope")) {
             Element soapBody = params.getChild("Body",
                     org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
-            List payloadList = soapBody.getChildren();
-            Element payload = (Element)payloadList.get(0);
+            @SuppressWarnings("unchecked")
+            List<Element> payloadList = soapBody.getChildren();
+            Element payload = payloadList.get(0);
             operation = payload.getName();
         }
         // POX

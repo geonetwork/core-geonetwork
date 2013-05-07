@@ -331,7 +331,7 @@ public class Importer {
 
 				if (validate) {
 					// Validate xsd and schematron
-					dm.validateMetadata(schema, metadata, context);
+					DataManager.validateMetadata(schema, metadata, context);
                 }
 
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
@@ -562,12 +562,13 @@ public class Importer {
 	 */
 	public static void addCategories(ServiceContext context, DataManager dm, Dbms dbms, String id,
 			Element categ) throws Exception {
-		List locCats = dbms.select("SELECT id,name FROM Categories")
-				.getChildren();
-		List list = categ.getChildren("category");
+		@SuppressWarnings("unchecked")
+        List<Element> locCats = dbms.select("SELECT id,name FROM Categories").getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = categ.getChildren("category");
 
-        for (Object aList : list) {
-            String catName = ((Element) aList).getAttributeValue("name");
+        for (Element categoryEl : list) {
+            String catName = categoryEl.getAttributeValue("name");
             String catId = mapLocalEntity(locCats, catName);
 
             if (catId == null) {
@@ -594,11 +595,12 @@ public class Importer {
 	 */
 	private static void addPrivileges(ServiceContext context, DataManager dm, Dbms dbms, String id,
 			Element privil) throws Exception {
-		List locGrps = dbms.select("SELECT id,name FROM Groups").getChildren();
-		List list = privil.getChildren("group");
+		@SuppressWarnings("unchecked")
+        List<Element> locGrps = dbms.select("SELECT id,name FROM Groups").getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = privil.getChildren("group");
 
-		for (Object g : list) {
-			Element group = (Element) g;
+		for (Element group : list) {
 			String grpName = group.getAttributeValue("name");
 			boolean groupOwner = group.getAttributeValue("groupOwner") != null;
 			String grpId = mapLocalEntity(locGrps, grpName);
@@ -634,10 +636,10 @@ public class Importer {
 	 */
 	private static void addOperations(ServiceContext context, DataManager dm, Dbms dbms, Element group,
 			String id, String grpId) throws Exception {
-		List opers = group.getChildren("operation");
+		@SuppressWarnings("unchecked")
+        List<Element> opers = group.getChildren("operation");
 
-        for (Object oper1 : opers) {
-            Element oper = (Element) oper1;
+        for (Element oper : opers) {
             String opName = oper.getAttributeValue("name");
 
             int opId = dm.getAccessManager().getPrivilegeId(opName);
@@ -654,10 +656,8 @@ public class Importer {
         }
 	}
 
-	private static String mapLocalEntity(List entities, String name) {
-		for (Object e : entities) {
-			Element entity = (Element) e;
-
+	private static String mapLocalEntity(List<Element> entities, String name) {
+		for (Element entity : entities) {
 			if (entity.getChildText("name").equals(name)
 					|| entity.getChildText("id").equals(name))
 				return entity.getChildText("id");

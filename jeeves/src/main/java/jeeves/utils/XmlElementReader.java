@@ -213,7 +213,8 @@ public class XmlElementReader implements Iterator<Element> {
 	        result = new Element(ln, elemPrefix, nsURI);
 	    }
 
-	    Iterator<Namespace> nss = event.asStartElement().getNamespaces();
+	    @SuppressWarnings("unchecked")
+        Iterator<Namespace> nss = event.asStartElement().getNamespaces();
 
 	    while (nss.hasNext()) {
 	    	Namespace ns = nss.next();
@@ -227,7 +228,8 @@ public class XmlElementReader implements Iterator<Element> {
 	        }
 	    }
 
-	    Iterator<Attribute> atts = event.asStartElement().getAttributes();
+	    @SuppressWarnings("unchecked")
+        Iterator<Attribute> atts = event.asStartElement().getAttributes();
 	    
 	    while (atts.hasNext()) {
 	    	Attribute att = atts.next();

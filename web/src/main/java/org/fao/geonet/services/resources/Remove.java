@@ -25,7 +25,6 @@ package org.fao.geonet.services.resources;
 
 import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -45,7 +44,6 @@ import java.io.File;
  * Deletes an uploaded file from the database when a record is in editing mode.
  */
 public class Remove extends NotInReadOnlyModeService {
-	private Element config;
 	private Update  update = new Update();
 
 	//-----------------------------------------------------------------------------

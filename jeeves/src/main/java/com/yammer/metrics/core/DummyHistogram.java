@@ -1,6 +1,5 @@
 package com.yammer.metrics.core;
 
-import com.yammer.metrics.stats.Sample;
 import com.yammer.metrics.stats.Snapshot;
 
 /**

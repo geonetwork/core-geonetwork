@@ -1353,11 +1353,12 @@ public class SchemaManager {
 	 * @return depends elements as a List
    * @throws Exception
 	 */
-	private List<Element> extractDepends(String xmlIdFile) throws Exception {
+	@SuppressWarnings("unchecked")
+    private List<Element> extractDepends(String xmlIdFile) throws Exception {
 		Element root = Xml.loadFile(xmlIdFile);
 
 		// get list of depends elements from schema-ident.xml
-		List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
+        List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
 		if (dependsList.size() == 0) {
 		 dependsList = root.getChildren("depends", GEONET_SCHEMA_PREFIX_NS);
 		}
@@ -1423,7 +1424,9 @@ public class SchemaManager {
 		Element root = Xml.loadFile(xmlIdFile);
 		Element autodetect = root.getChild("autodetect", GEONET_SCHEMA_NS);
 		if (autodetect == null) autodetect = root.getChild("autodetect", GEONET_SCHEMA_PREFIX_NS);
-		return autodetect.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = autodetect.getChildren();
+        return children;
 	}
 
 	/**
@@ -1434,18 +1437,19 @@ public class SchemaManager {
      * @throws Exception
 	 */
 	private List<Element> extractConvElements(String xmlConvFile) throws Exception {
-		List<Element> result = new ArrayList<Element>();
 		if (!(new File(xmlConvFile).exists())) {
             if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                 Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
+            return new ArrayList<Element>();
 		} else {
 			Element root = Xml.loadFile(xmlConvFile);
 			ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile, null, basePath, root);
 			
 			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
-			result = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> result = root.getChildren();
+			return result;
 		}
-		return result;
 	}
 
 	/**
@@ -1489,14 +1493,16 @@ public class SchemaManager {
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "		Checking autodetect element "+Xml.getString(elem)+" with name "+elem.getName());
 
-				List<Element> elemKids = elem.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> elemKids = elem.getChildren();
 				boolean match = false;
 
 				Attribute type = elem.getAttribute("type");
  					
 				// --- try and find the attribute and value in md 
 				if (mode==MODE_ATTRIBUTEWITHVALUE && elem.getName() == "attributes") {
-					List<Attribute> atts = elem.getAttributes();
+					@SuppressWarnings("unchecked")
+                    List<Attribute> atts = elem.getAttributes();
 					for (Attribute searchAtt : atts) {
                         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                             Log.debug(Geonet.SCHEMA_MANAGER, "				Finding attribute "+searchAtt.toString());
@@ -1511,7 +1517,8 @@ public class SchemaManager {
 
 				// --- try and find the namespace in md 
 				} else if (mode==MODE_NAMESPACE && elem.getName() == "namespaces") {
-					List<Namespace> nss = elem.getAdditionalNamespaces();
+					@SuppressWarnings("unchecked")
+                    List<Namespace> nss = elem.getAdditionalNamespaces();
 					for (Namespace ns : nss) {
                         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                             Log.debug(Geonet.SCHEMA_MANAGER, "				Finding namespace "+ns.toString());
@@ -1582,7 +1589,8 @@ public class SchemaManager {
  	 */
 	private boolean isMatchingAttributeInMetadata(Attribute needle, Element haystack) {
 		boolean returnVal = false;
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
@@ -1612,7 +1620,8 @@ public class SchemaManager {
 
 		if (checkNamespacesOnElement(needle,haystack)) return true;
 
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 		while(haystackIterator.hasNext()){
 			Element tempElement = haystackIterator.next();
 			if (checkNamespacesOnElement(needle,tempElement)) return true;
@@ -1630,7 +1639,8 @@ public class SchemaManager {
  	 */
 	private boolean checkNamespacesOnElement(Namespace ns, Element elem) {
 		if (elem.getNamespace().equals(ns)) return true;
-		List<Namespace> nss = elem.getAdditionalNamespaces();
+		@SuppressWarnings("unchecked")
+        List<Namespace> nss = elem.getAdditionalNamespaces();
 		for (Namespace ans : nss) {
 			if (ans.equals(ns)) return true;
 		}
@@ -1648,7 +1658,8 @@ public class SchemaManager {
  	 */
 	private boolean isMatchingElementInMetadata(Element needle, Element haystack, boolean checkValue) {
 		boolean returnVal = false;
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 		
 		String needleName = needle.getName();
 		Namespace needleNS = needle.getNamespace();

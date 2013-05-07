@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -123,6 +122,7 @@ public class Save extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         System.out.println("notifications save:\n"+ Xml.getString(params));
         Map<String, NotificationTarget> notificationTargets = new HashMap<String, NotificationTarget>();
+        @SuppressWarnings("unchecked")
         List<Element> parameters = params.getChildren();
         for(Element parameter : parameters) {
             String identifier = parameter.getName().substring(parameter.getName().lastIndexOf('-') + 1);

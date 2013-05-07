@@ -25,10 +25,11 @@ public class RequestUtil {
      * @return              Value of parameter, null for non valid parameter
      */
     public static String getParameter(HttpServletRequest request, String paramName) {
-        Enumeration paramNames = request.getParameterNames();
+        @SuppressWarnings("unchecked")
+        Enumeration<String> paramNames = request.getParameterNames();
 
         while (paramNames.hasMoreElements()) {
-            String name = (String) paramNames.nextElement();
+            String name = paramNames.nextElement();
 
             if (name.equalsIgnoreCase(paramName)) {
                 return request.getParameter(name);

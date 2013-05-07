@@ -27,7 +27,6 @@ import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -59,7 +58,6 @@ public class Delete extends BackupFileService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
-		UserSession   session   = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 

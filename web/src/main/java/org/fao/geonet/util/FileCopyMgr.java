@@ -15,17 +15,24 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+
+import org.apache.commons.io.IOUtils;
  
 public class FileCopyMgr {
 
-		private static void copy(File source, File target) throws IOException { 
-      FileChannel sourceChannel = new FileInputStream(source).getChannel();
-      FileChannel targetChannel = new FileOutputStream(target).getChannel();
-      sourceChannel.transferTo(0, sourceChannel.size(), targetChannel);
-      sourceChannel.close();
-      targetChannel.close();
-		}
- 
+    private static void copy(File source, File target) throws IOException {
+        FileChannel sourceChannel = null;
+        FileChannel targetChannel = null;
+        try {
+            sourceChannel = new FileInputStream(source).getChannel();
+            targetChannel = new FileOutputStream(target).getChannel();
+            sourceChannel.transferTo(0, sourceChannel.size(), targetChannel);
+        } finally {
+            IOUtils.closeQuietly(sourceChannel);
+            IOUtils.closeQuietly(targetChannel);
+        }
+    }
+
 		public static void copyFiles(String strPath, String dstPath) 
 														throws IOException {
 
@@ -68,7 +75,9 @@ public class FileCopyMgr {
 					copyFiles(src1 , dest1);
 				}
 			} else {
-				boolean ready = dest.createNewFile(); 
+				if (!dest.createNewFile() && !dest.isFile()) {
+				    throw new RuntimeException("Unable to create the file: "+dest);
+				}
 				copy(src,dest); 
 			}
 		}

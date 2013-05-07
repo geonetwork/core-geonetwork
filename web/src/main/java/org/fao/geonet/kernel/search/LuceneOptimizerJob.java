@@ -7,7 +7,6 @@ import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
-import org.fao.geonet.kernel.search.index.LuceneIndexWriterFactory;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

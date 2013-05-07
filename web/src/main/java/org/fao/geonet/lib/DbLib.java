@@ -66,10 +66,10 @@ public class DbLib {
 
 		Element result = dbms.select(query);
 
-		Iterator i = result.getChildren().iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> resultChildren = result.getChildren();
 
-		while (i.hasNext()) {
-			Element record = (Element) i.next();
+		for (Element record : resultChildren) {
 			record.setName(name);
 		}
 

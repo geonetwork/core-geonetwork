@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.operation;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

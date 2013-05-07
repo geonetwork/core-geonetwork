@@ -52,14 +52,13 @@ public class Get implements Service {
 
         Element elParameters = new Element(Geonet.Elem.FILTER);
 
-        java.util.List list = dbms.select(
-                "SELECT name, value FROM ServiceParameters WHERE service =?",
-                Integer.valueOf(id)).getChildren();
+        String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
+        @SuppressWarnings("unchecked")
+        java.util.List<Element> list = dbms.select(selectServiceParamsQuery, Integer.valueOf(id)).getChildren();
 
         for (int i = 0; i < list.size(); i++) {
 
             Element filter = (Element) list.get(i);
-            String filterId = filter.getChildText("id");
             elParameters.addContent(new Element(filter.getChildText("name"))
                     .setText(filter.getChildText("value")));
         }

@@ -11,7 +11,6 @@ import org.apache.lucene.search.FieldCache.DocTermsIndex;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.FieldCache.DocTerms;
 import org.apache.lucene.util.BytesRef;
 
 import java.io.IOException;

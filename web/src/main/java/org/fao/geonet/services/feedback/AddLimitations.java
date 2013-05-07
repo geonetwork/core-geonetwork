@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.feedback;
 
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -35,7 +34,6 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
@@ -56,7 +54,6 @@ public class AddLimitations implements Service
 {
 	public static final String OPER_DOWNLOAD = "1";
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -67,7 +64,6 @@ public class AddLimitations implements Service
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -104,9 +100,9 @@ public class AddLimitations implements Service
 		Element downloaded = new Element("downloaded");
 		File dir = new File(Lib.resource.getDir(context, access, id));
 
-		List files = params.getChildren(Params.FNAME);
-		for (Object o : files) {
-			Element elem = (Element)o;
+		@SuppressWarnings("unchecked")
+        List<Element> files = params.getChildren(Params.FNAME);
+		for (Element elem : files) {
 			response.addContent((Element)elem.clone());
 
 			String fname = elem.getText();

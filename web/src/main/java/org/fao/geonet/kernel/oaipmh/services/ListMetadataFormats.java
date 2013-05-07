@@ -124,7 +124,8 @@ public class ListMetadataFormats implements OaiPmhService
 			ConfigurationOverrides.DEFAULT.updateWithOverrides(DEFAULT_PREFIXES_FILE, context.getServlet().getServletContext(), context.getAppPath(), elem);
 		}
 
-		List<Element> defaultSchemas = elem.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> defaultSchemas = elem.getChildren();
 
 		List <MetadataFormat> defMdfs = new ArrayList<MetadataFormat>();
 		for (Element schema : defaultSchemas) {

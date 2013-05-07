@@ -80,10 +80,9 @@ public class IsoLanguagesMapper {
      */
     public void init(Dbms dbms) {
         String query = "SELECT code, shortcode FROM IsoLanguages";
-        @SuppressWarnings("unchecked")
-        List<Element> records;
         try {
-            records = dbms.select(query).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> records = dbms.select(query).getChildren();
             for (Element record : records) {
                 isoLanguagesMap639.forcePut(record.getChildText("shortcode")
                         .toLowerCase(), record.getChildText("code")

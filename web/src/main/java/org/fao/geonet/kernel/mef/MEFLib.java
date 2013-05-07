@@ -29,7 +29,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -226,16 +225,16 @@ public class MEFLib {
 	 */
 	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
-		List list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
 
-
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
 
-		Element record = (Element) list.get(0);
+		Element record = list.get(0);
 		String id = record.getChildText("id");
         record.removeChildren("data");
         boolean forEditing = false;
@@ -408,10 +407,10 @@ public class MEFLib {
 		String query = "SELECT name FROM MetadataCateg, Categories "
 				+ "WHERE categoryId = id AND metadataId = ?";
 
-		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
-		for (int i = 0; i < list.size(); i++) {
-			Element record = (Element) list.get(i);
+		for (Element record : list) {
 			String name = record.getChildText("name");
 
 			Element cat = new Element("category");
@@ -464,10 +463,10 @@ public class MEFLib {
 
 		// --- scan query result to collect info
 
-		List list = dbms.select(query, iId).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, iId).getChildren();
 
-		for (int i = 0; i < list.size(); i++) {
-			Element record = (Element) list.get(i);
+		for (Element record : list) {
 			String grpId = record.getChildText("grpid");
 			String grpName = record.getChildText("grpname");
 			String operName = record.getChildText("opername");

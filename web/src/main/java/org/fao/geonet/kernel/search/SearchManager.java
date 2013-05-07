@@ -729,21 +729,6 @@ public class SearchManager {
 		_spatial.writer().delete(txt);
 	}
 	
-	private void deleteIndexDocument(String id, boolean group) throws Exception {
-	    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
-	    }
-        if (group) {
-            deleteGroup("_id", id);
-        } else {
-            delete("_id", id);
-        }
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
-        }
-
-	}
-	
     /**
      * TODO javadoc.
      *
@@ -919,12 +904,11 @@ public class SearchManager {
 				sb.append(" ");
 			sb.append(text);
 		}
-		List children = metadata.getChildren();
-		if (children.size() > 0) {
-            for (Object aChildren : children) {
-                allText((Element) aChildren, sb);
-            }
-		}
+		@SuppressWarnings("unchecked")
+        List<Element> children = metadata.getChildren();
+        for (Element aChildren : children) {
+            allText(aChildren, sb);
+        }
 	}
 
     /**

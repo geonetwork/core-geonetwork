@@ -94,13 +94,13 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 
 		try {
 			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("className").equals("org.jzkit.search.provider.z3950.Z3950Origin")) continue;
 				copy.addContent((Content)child.clone());
@@ -137,14 +137,14 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 		boolean replaced = false;
 
 		try {
 			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("code").equals(code)) {
 					copy.addContent(repo);

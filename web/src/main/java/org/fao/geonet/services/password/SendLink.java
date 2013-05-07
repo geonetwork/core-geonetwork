@@ -60,7 +60,6 @@ public class SendLink extends MailSendingService {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -137,7 +136,6 @@ public class SendLink extends MailSendingService {
 	}
 
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
 	private static final String PROTOCOL = "smtp";
 	private static final String CHANGE_EMAIL_XSLT = "password-forgotten-email.xsl";

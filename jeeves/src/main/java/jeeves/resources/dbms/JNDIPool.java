@@ -25,12 +25,7 @@ package jeeves.resources.dbms;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.Connection;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import jeeves.constants.Jeeves;
 

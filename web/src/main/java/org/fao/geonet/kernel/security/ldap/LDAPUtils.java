@@ -182,8 +182,7 @@ public class LDAPUtils {
 				}
 				
 				// --- loop on all attribute's values
-				NamingEnumeration valueEnum;
-				valueEnum = attr.getAll();
+				NamingEnumeration<?> valueEnum = attr.getAll();
 				
 				while (valueEnum.hasMore()) {
 					Object value = valueEnum.next();

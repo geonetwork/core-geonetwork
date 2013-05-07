@@ -201,7 +201,7 @@ public class CswHarvester extends AbstractHarvester {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		h.harvest();
 	}
 
 	//---------------------------------------------------------------------------
@@ -211,7 +211,6 @@ public class CswHarvester extends AbstractHarvester {
 	//---------------------------------------------------------------------------
 
 	private CswParams params;
-	private CswResult result;
 }
 
 class CswResult {

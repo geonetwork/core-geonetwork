@@ -23,9 +23,6 @@
 
 package org.fao.geonet.services.schema;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

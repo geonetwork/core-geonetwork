@@ -283,7 +283,7 @@ public class SpatialIndexWriter implements FeatureListener
      * testing access.
      */
     static MultiPolygon extractGeometriesFrom(String schemaDir, 
-            Element metadata, Parser parser, Map errorMessage) throws Exception
+            Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception
     {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);

@@ -67,24 +67,6 @@ public class SRUParamTester {
 
 	}
 
-
-	private Object parseArgument(String type, String str) throws SRUArgumentParseException  {
-
-		String mytype = paramTypes.get(type);
-
-		if (mytype.equals("string")) {
-			return str;
-		}
-		if (mytype.equals("int")) {
-			try {
-				return Integer.parseInt(str);
-			} catch (NumberFormatException e) {
-				throw new SRUArgumentParseException(type, str, e);
-			}
-		}
-		return null;
-	}
-
 	public SRUParamTestDBO testParams(String op, Hashtable<String,String> params) {
 
 		Set<String> notSupported = testNotSupported(op, params);

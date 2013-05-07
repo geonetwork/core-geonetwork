@@ -176,9 +176,8 @@ public class GetInfo implements Service {
 		String dbURL = dbms.getURL();
 		databaseProperties.put("db.url", dbURL);
 
-		Dbms dbms = null;
 		try {
-			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+			context.getResourceManager().open(Geonet.Res.MAIN_DB);
 			databaseProperties.put("db.openattempt", "Database Opened Successfully");
 		} catch (Exception e) {
 			databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error is: " + e.getMessage());

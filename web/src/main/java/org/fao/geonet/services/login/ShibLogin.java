@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import jeeves.exceptions.UserLoginEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
@@ -129,12 +128,13 @@ public class ShibLogin extends NotInReadOnlyModeService
 
 		String query = "SELECT * FROM Users WHERE username = ? ";
 
-		List list = dbms.select(query, username).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, username).getChildren();
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new UserLoginEx(username);
 
-		Element userEl = (Element) list.get(0);
+		Element userEl = list.get(0);
 	
 		GeonetworkUser user = new GeonetworkUser(context.getProfileManager(), username, userEl);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
@@ -175,7 +175,8 @@ public class ShibLogin extends NotInReadOnlyModeService
         if (groupProvided) {
             String query = "SELECT id FROM Groups WHERE name=?";
 
-            List list  = dbms.select(query, group).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> list  = dbms.select(query, group).getChildren();
 
             if (list.isEmpty()) {
                 groupId = context.getSerialFactory().getSerial(dbms, "Groups");
@@ -209,9 +210,10 @@ public class ShibLogin extends NotInReadOnlyModeService
 
             if (groupProvided) {
                 String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
-                List list  = dbms.select(query2, groupId, userId).getChildren();
+                @SuppressWarnings("unchecked")
+                List<Element> list  = dbms.select(query2, groupId, userId).getChildren();
 
-                String count = ((Element) list.get(0)).getChildText("numr");
+                String count = list.get(0).getChildText("numr");
 
                  if (count.equals("0")) {
                      query = "INSERT INTO UserGroups(userId, groupId) "+

@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -95,7 +94,7 @@ public class UpdateStatus extends NotInReadOnlyModeService{
 		Set<Integer> metadataIds = new HashSet<Integer>();
 		metadataIds.add(iLocalId);
 
-		Set<Integer> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
+		saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
 		dataMan.indexMetadata(dbms, id);

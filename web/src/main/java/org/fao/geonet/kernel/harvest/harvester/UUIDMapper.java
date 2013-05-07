@@ -51,11 +51,10 @@ public class UUIDMapper
 	{
 		String query = "SELECT id, uuid, changeDate, isTemplate FROM Metadata WHERE harvestUuid=?";
 
-		List idsList = dbms.select(query, harvestUuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> idsList = dbms.select(query, harvestUuid).getChildren();
 
-        for (Object anIdsList : idsList) {
-            Element record = (Element) anIdsList;
-
+        for (Element record : idsList) {
             String id = record.getChildText("id");
             String uuid = record.getChildText("uuid");
             String date = record.getChildText("changedate");

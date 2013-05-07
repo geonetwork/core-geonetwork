@@ -66,6 +66,7 @@ public class UpdateChildren extends NotInReadOnlyModeService {
         String childrenIds = Util.getParam(params, "childrenIds");
 
         // Transform params element into Map<String, String> for xsl transformation
+        @SuppressWarnings("unchecked")
         List<Element> lstParams = params.getChildren();
         Map<String, String> parameters = new HashMap<String, String>();
         for (Element param : lstParams) {

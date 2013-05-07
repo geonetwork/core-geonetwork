@@ -24,7 +24,6 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -36,7 +35,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import java.util.List;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.

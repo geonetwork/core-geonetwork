@@ -24,7 +24,6 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -71,7 +70,9 @@ public class AddRegister extends NotInReadOnlyModeService {
 
 		// Save activated status in the database
 		String query = "SELECT * FROM Thesaurus WHERE id = ?";
-		java.util.List<Element> result = dbms.select(query, fname).getChildren();
+		
+		@SuppressWarnings("unchecked")
+        java.util.List<Element> result = dbms.select(query, fname).getChildren();
 
 		if (result.size() == 0) {
 			query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";

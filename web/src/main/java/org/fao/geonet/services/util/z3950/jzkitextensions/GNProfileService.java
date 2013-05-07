@@ -44,6 +44,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
                                                                                                                                        
@@ -60,12 +61,12 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
   private ApplicationContext ctx = null;
   private Configuration configuration = null;
 
-  /** If we can't map directly, abort */
-  private static final int SEMANTIC_ACTION_STRICT = 1;
-  /** If we can't map directly, strip the un-mappable component (Should feedback somehow) */
-  private static final int SEMANTIC_ACTION_STRIP = 2;
-  /** If we can't map directly, do a best effort match */
-  private static final int SEMANTIC_ACTION_FUZZY = 3;
+//  /** If we can't map directly, abort */
+//  private static final int SEMANTIC_ACTION_STRICT = 1;
+//  /** If we can't map directly, strip the un-mappable component (Should feedback somehow) */
+//  private static final int SEMANTIC_ACTION_STRIP = 2;
+//  /** If we can't map directly, do a best effort match */
+//  private static final int SEMANTIC_ACTION_FUZZY = 3;
   
   public static final int ERROR_QUERY = 1;
   public static final int ERROR_CONFIG = 2;
@@ -198,9 +199,11 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
 
     AttrPlusTermNode result = q;
 
-    for ( java.util.Iterator i = q.getAttrIterator(); i.hasNext(); ) {
+    @SuppressWarnings("unchecked")
+    Iterator<String> attrIterator = q.getAttrIterator();
+    for ( java.util.Iterator<String> i = attrIterator; i.hasNext(); ) {
       // 1. extract and rewrite use attribute
-      String attr_type = (String) i.next();
+      String attr_type = i.next();
       AttrValue av = (AttrValue) q.getAttr(attr_type);
         if(log.isDebugEnabled()) log.debug("Rewriting "+attr_type+"="+av);
       AttributeSetDBO as = valid_attributes.get(attr_type);
@@ -234,8 +237,9 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
           if(log.isDebugEnabled())
               log.debug("Rewrite, source index "+av+" is disallowed, scanning server alternatives allowed="+explain_use_indexes);
         boolean found = false;
-        for ( java.util.Iterator i = service_specific_rewrite_rules.entrySet().iterator(); ( ( i.hasNext() ) && ( !found ) ); ) {
-          Map.Entry e = (Map.Entry) i.next();
+        Set<Entry<String, AttrValue>> entrySet = service_specific_rewrite_rules.entrySet();
+        for ( Iterator<Entry<String, AttrValue>> i = entrySet.iterator(); i.hasNext() && !found; ) {
+          Map.Entry<String, AttrValue> e = i.next();
           if ( e.getKey().equals(av_str_val) ) {
             AttrValue new_av = (AttrValue) e.getValue();
               if(log.isDebugEnabled()) log.debug("Possible rewrite: "+new_av);
@@ -285,7 +289,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
         Set<AttrValue> possible_alternatives = lookupKnownAlternatives(av,default_namespace);
         if ( possible_alternatives != null ) {
             if(log.isDebugEnabled()) log.debug("Check out alternatives for "+failing_attr_type+":"+possible_alternatives);
-          for ( Iterator i = possible_alternatives.iterator(); ( ( i.hasNext() ) && ( result == null ) ); ) {
+          for ( Iterator<AttrValue> i = possible_alternatives.iterator(); ( ( i.hasNext() ) && ( result == null ) ); ) {
             AttrValue target_av = (AttrValue)i.next();
             AttrPlusTermNode new_variant = q.cloneForAttrs();
             new_variant.setAttr(failing_attr_type, target_av);

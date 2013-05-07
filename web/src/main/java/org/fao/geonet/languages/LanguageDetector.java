@@ -29,10 +29,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Automatic language detector using http://code.google.com/p/language-detection/.
  *
@@ -111,29 +107,6 @@ public class LanguageDetector {
         return iso639_2;
     }
 
-    /**
-     * Returns available language profiles. Non-iso 639-1 language codes are converted to iso 639-1.
-     *
-     * @param path application context path
-     * @return set of iso 639-1 language codes
-     */
-    private static Set<String> availableProfiles(String path) {
-        //
-        // look up available language profiles
-        //
-        File languageProfilesDir = new File(path);
-        String[] files = languageProfilesDir.list();
-        Set<String> languageProfiles = new HashSet<String>();
-        for(String file : files) {
-            // this is to deal with zh-cn and zh-tw in languageprofiles. All other files have a 639-1 2-char filename.
-            if(file.length() > 2) {
-                file = file.substring(0, 2);
-            }
-            languageProfiles.add(file);
-        }
-        Log.info(Geonet.LANGUAGEDETECTOR, "Language detection has # " + languageProfiles.size() + " profiles");
-        return languageProfiles;
-    }
 
     /**
      * Creates mapping to ISO 639-2 for all languages supported by this language detector.

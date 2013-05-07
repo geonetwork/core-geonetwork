@@ -104,13 +104,17 @@ public class MEFVisitor implements IVisitor {
 		// public/private elements don't exist
 		List<Element> pubFiles;
 		if (info.getChild("public") != null) {
-			pubFiles = info.getChild("public").getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> tmp = info.getChild("public").getChildren();
+			pubFiles = tmp;
 		} else {
 			pubFiles = new ArrayList<Element>();
 		}
 		List<Element> prvFiles;
 		if (info.getChild("private") != null) {
-			prvFiles = info.getChild("private").getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> tmp = info.getChild("private").getChildren();
+			prvFiles = tmp;
 		} else {
 			prvFiles = new ArrayList<Element>();
 		}

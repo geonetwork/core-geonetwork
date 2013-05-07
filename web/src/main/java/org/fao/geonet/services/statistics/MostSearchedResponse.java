@@ -25,7 +25,8 @@ public class MostSearchedResponse {
         if (maxHits < 1) {
             response = dbms.select(query);
         } else {
-            List resultSet = dbms.select(query).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> resultSet = dbms.select(query).getChildren();
             int max = maxHits < resultSet.size() ? maxHits : resultSet.size() ;
             response = new Element(Jeeves.Elem.RESPONSE);
             for (int i = 0; i < max; i++) {

@@ -23,10 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;

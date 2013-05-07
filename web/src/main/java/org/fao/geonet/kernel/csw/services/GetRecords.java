@@ -56,7 +56,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.util.CollectionUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -83,15 +82,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
 	private SearchController _searchController;
 
-    private LuceneConfig _luceneConfig;
-
     /**
      * @param summaryConfig
      * @param luceneConfig
      */
 	public GetRecords(LuceneConfig luceneConfig) {
     	_searchController = new SearchController(luceneConfig);
-    	this._luceneConfig = luceneConfig;
     }
 
     /**
@@ -562,6 +558,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 return cswPrefix + ":Record";
             }
             // not empty: scan comma-separated string
+            @SuppressWarnings("resource")
             Scanner commaSeparator = new Scanner(typeNamesValue);
             commaSeparator.useDelimiter(",");
             String result = cswPrefix + ":Record";
@@ -716,26 +713,26 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return
      * @throws InvalidParameterValueEx
      */
-    private int getHopCount(Element request) throws InvalidParameterValueEx {
-        Element ds = request.getChild("DistributedSearch", Csw.NAMESPACE_CSW);
-        if (ds == null) {
-            return -1;
-        }
-        String hopCount = ds.getAttributeValue("hopCount");
-        if (hopCount == null) {
-            return 2;
-        }
-        try {
-            int value = Integer.parseInt(hopCount);
-            if (value >= 0) {
-                return value;
-            }
-        }
-        catch (NumberFormatException ignored) {
-            throw new InvalidParameterValueEx("hopCount", hopCount);
-        }
-        throw new InvalidParameterValueEx("hopCount", hopCount);
-    }
+//    private int getHopCount(Element request) throws InvalidParameterValueEx {
+//        Element ds = request.getChild("DistributedSearch", Csw.NAMESPACE_CSW);
+//        if (ds == null) {
+//            return -1;
+//        }
+//        String hopCount = ds.getAttributeValue("hopCount");
+//        if (hopCount == null) {
+//            return 2;
+//        }
+//        try {
+//            int value = Integer.parseInt(hopCount);
+//            if (value >= 0) {
+//                return value;
+//            }
+//        }
+//        catch (NumberFormatException ignored) {
+//            throw new InvalidParameterValueEx("hopCount", hopCount);
+//        }
+//        throw new InvalidParameterValueEx("hopCount", hopCount);
+//    }
 
     /**
      * TODO javadoc.
@@ -755,10 +752,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 			return null;
         }
 
-		List list = sortBy.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = sortBy.getChildren();
 		List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
-        for (Object aList : list) {
-            Element el = (Element) aList;
+        for (Element el : list) {
             String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
             String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
@@ -791,6 +788,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             Log.debug(Geonet.CSW, "GetRecords getElementNames");
         Set<String> elementNames = null;
 	    if (query != null) {
+            @SuppressWarnings("unchecked")
             List<Element> elementList = query.getChildren("ElementName", query.getNamespace());
             for(Element element : elementList) {
                 if(elementNames == null) {
@@ -823,37 +821,37 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return list of typenames, or null if not found
      * @throws InvalidParameterValueEx if a typename is illegal
      */
-    private Set<String> getTypeNames(Element query) throws InvalidParameterValueEx {
-        Set<String> typeNames = null;
-        String typeNames$ = query.getAttributeValue("typeNames");
-        if(typeNames$ != null) {
-            Scanner commaSeparatedScanner = new Scanner(typeNames$).useDelimiter(",");
-            while(commaSeparatedScanner.hasNext()) {
-                String typeName = commaSeparatedScanner.next().trim();
-                // These two are explicitly not allowed as search targets in CSW 2.0.2, so we throw an exception if the
-                // client asks for them
-                if (typeName.equals("csw:BriefRecord") || typeName.equals("csw:SummaryRecord")) {
-                    throw new InvalidParameterValueEx("typeName", typeName);
-                }
-                if(typeNames == null) {
-                    typeNames = new HashSet<String>();
-                }
-                typeNames.add(typeName);
-            }
-        }
-        // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
-        if(typeNames != null) {
-            for(String typeName : typeNames) {
-                if(Log.isDebugEnabled(Geonet.CSW))
-                    Log.debug(Geonet.CSW, "TypeName: " + typeName);
-            }
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW))
-                Log.debug(Geonet.CSW, "No TypeNames found in request");
-        }
-        // TODO end if(isDebugEnabled)
-        return typeNames;
-    }
+//    private Set<String> getTypeNames(Element query) throws InvalidParameterValueEx {
+//        Set<String> typeNames = null;
+//        String typeNames$ = query.getAttributeValue("typeNames");
+//        if(typeNames$ != null) {
+//            Scanner commaSeparatedScanner = new Scanner(typeNames$).useDelimiter(",");
+//            while(commaSeparatedScanner.hasNext()) {
+//                String typeName = commaSeparatedScanner.next().trim();
+//                // These two are explicitly not allowed as search targets in CSW 2.0.2, so we throw an exception if the
+//                // client asks for them
+//                if (typeName.equals("csw:BriefRecord") || typeName.equals("csw:SummaryRecord")) {
+//                    throw new InvalidParameterValueEx("typeName", typeName);
+//                }
+//                if(typeNames == null) {
+//                    typeNames = new HashSet<String>();
+//                }
+//                typeNames.add(typeName);
+//            }
+//        }
+//        // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
+//        if(typeNames != null) {
+//            for(String typeName : typeNames) {
+//                if(Log.isDebugEnabled(Geonet.CSW))
+//                    Log.debug(Geonet.CSW, "TypeName: " + typeName);
+//            }
+//        }
+//        else {
+//            if(Log.isDebugEnabled(Geonet.CSW))
+//                Log.debug(Geonet.CSW, "No TypeNames found in request");
+//        }
+//        // TODO end if(isDebugEnabled)
+//        return typeNames;
+//    }
 
 }

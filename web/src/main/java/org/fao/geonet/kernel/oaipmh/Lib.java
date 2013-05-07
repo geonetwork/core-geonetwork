@@ -33,7 +33,6 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
@@ -62,12 +61,13 @@ public class Lib
 
 		String query = "SELECT schemaId FROM Metadata WHERE uuid=?";
 
-		List list = dbms.select(query, uuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, uuid).getChildren();
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new IdDoesNotExistException(uuid);
 
-		Element elem = (Element) list.get(0);
+		Element elem = list.get(0);
 
 		return elem.getChildText("schemaid");
 	}

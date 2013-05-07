@@ -31,7 +31,6 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -179,5 +178,4 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private Z3950ConfigParams params;
-	private HarvestResult result;
 }

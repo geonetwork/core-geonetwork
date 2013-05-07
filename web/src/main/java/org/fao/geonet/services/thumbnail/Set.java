@@ -192,7 +192,7 @@ public class Set extends NotInReadOnlyModeService {
         boolean scaling       = Util.getParam     (params, Params.SCALING, false);
         int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
         String  type          = Util.getParam     (params, Params.TYPE);
-        String  version       = Util.getParam     (params, Params.VERSION);
+//        String  version       = Util.getParam     (params, Params.VERSION);
 
         if (createSmall) {
 			String smallFile = getFileName(file, true);
@@ -224,7 +224,7 @@ public class Set extends NotInReadOnlyModeService {
             String  id            = Util.getParam     (params, Params.ID);
             String dataDir = createDataDir(id, context);
             String  type          = Util.getParam     (params, Params.TYPE);
-            String  version       = Util.getParam     (params, Params.VERSION);
+//            String  version       = Util.getParam     (params, Params.VERSION);
             String  file          = Util.getParam     (params, Params.FNAME);
             String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
             boolean scaling       = Util.getParam     (params, Params.SCALING, false);

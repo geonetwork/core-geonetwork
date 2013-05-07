@@ -23,13 +23,11 @@
 
 package jeeves.server.dispatchers.guiservices;
 
-import java.util.WeakHashMap;
 
 import jeeves.constants.ConfigFile;
 import jeeves.exceptions.BadInputEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
-import jeeves.utils.XmlFileCacher;
 
 import org.jdom.Element;
 

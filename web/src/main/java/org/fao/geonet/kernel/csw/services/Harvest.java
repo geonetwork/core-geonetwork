@@ -65,7 +65,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -806,8 +805,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * Class to deal with asynchronous HarvestResponse.
      *
      */
-    @SuppressWarnings({"NullableProblems"})
-    private class AsyncHarvestResponse implements RunnableFuture {
+    private class AsyncHarvestResponse implements RunnableFuture<Object> {
         /**
          * Constructor checks if the responseHandler uses a supported protocol.
          *

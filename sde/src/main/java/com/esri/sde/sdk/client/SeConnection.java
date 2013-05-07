@@ -18,10 +18,10 @@ public class SeConnection {
 	
 	public String getDatabaseName() throws SeException { return null; }
 	public String getUser() throws SeException { return null; }
-	@SuppressWarnings("unchecked")
-	public Vector getLayers() throws SeException { return null; }
-	@SuppressWarnings("unchecked")
-	public Vector getRasterColumns() throws SeException { return null; }
+	@SuppressWarnings("rawtypes")
+    public Vector getLayers() throws SeException { return null; }
+	@SuppressWarnings("rawtypes")
+    public Vector getRasterColumns() throws SeException { return null; }
 	public SeRelease getRelease() { return null; }
 	public boolean isClosed() { return false; }
 	

@@ -28,10 +28,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -58,9 +56,6 @@ public class GetEditableData implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan   = gc.getDataManager();
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
         String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);

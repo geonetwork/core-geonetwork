@@ -24,7 +24,6 @@
 package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;

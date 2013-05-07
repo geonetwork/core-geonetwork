@@ -97,7 +97,8 @@ public class RepositoryInfo {
 		
 		if (app_context != null) {
 			Configuration conf = (Configuration)app_context.getBean("JZKitConfig");
-			Iterator<SearchServiceDescriptionDBO> it = conf.enumerateRepositories();
+			@SuppressWarnings("unchecked")
+            Iterator<SearchServiceDescriptionDBO> it = conf.enumerateRepositories();
                
 			while (it.hasNext()) {
 	   		SearchServiceDescriptionDBO ssd = it.next();

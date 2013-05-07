@@ -6,11 +6,9 @@ import jeeves.utils.Log;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -96,10 +94,12 @@ public class StopwordFileParser {
      */
     private static Set<String> parseLine(String line) {
         Set<String> stopwords = null;
+        @SuppressWarnings("resource")
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter("\\|");
         if (scanner.hasNext()) {
             String stopwordsPart = scanner.next();
+            @SuppressWarnings("resource")
             Scanner whitespaceTokenizer = new Scanner(stopwordsPart);
             while (whitespaceTokenizer.hasNext()) {
                 String stopword = whitespaceTokenizer.next();

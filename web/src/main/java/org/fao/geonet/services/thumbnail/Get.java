@@ -99,12 +99,10 @@ public class Get implements Service
 
 	private boolean saveEditData(Element params)
 	{
-		List list = params.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = params.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-
+		for (Element el : list) {
 			if (el.getName().startsWith("_"))
 				return true;
 		}

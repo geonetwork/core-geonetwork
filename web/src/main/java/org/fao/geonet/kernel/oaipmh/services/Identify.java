@@ -77,13 +77,14 @@ public class Identify implements OaiPmhService
 
 		String query = "SELECT min(changeDate) as mcd FROM Metadata";
 
-		List list = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query).getChildren();
 
 		//--- if we don't have metadata, just return 'now'
-		if (list.size() == 0)
+		if (list.isEmpty())
 			return new ISODate();
 
-		Element rec = (Element) list.get(0);
+		Element rec = list.get(0);
 	
 		String date = rec.getChildText("mcd");
 		if (date == null || date.equals("")) return new ISODate();

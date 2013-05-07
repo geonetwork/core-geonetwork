@@ -86,7 +86,6 @@ public class OgcGenericFilters
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("serial")
     public static SpatialFilter create(Query query, int numHits,
             Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
@@ -131,7 +130,7 @@ public class OgcGenericFilters
 
 				// -- finally reproject all geometry in the Filter to match GeoNetwork
 				// -- default of WGS84 (long/lat ordering)
-		visitor = new ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
+		visitor = new org.geotools.filter.spatial.ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
 		final Filter reprojectedFilter = (Filter) remappedFilter.accept(visitor, null);
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);

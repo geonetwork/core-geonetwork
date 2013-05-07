@@ -32,7 +32,6 @@ import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -88,7 +87,8 @@ public class GetRecord implements OaiPmhService
 		DataManager     dm = gc.getDataManager();
 
 		String query = "SELECT uuid,id, schemaId, changeDate, data FROM Metadata WHERE "+select+"=?";
-		List list = dbms.select(query, selectVal).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, selectVal).getChildren();
 
 		if (list.size() == 0)
 			throw new IdDoesNotExistException(selectVal.toString());
@@ -137,9 +137,10 @@ public class GetRecord implements OaiPmhService
 
 		query = "SELECT name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
 
-		list = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list2 = dbms.select(query, Integer.valueOf(id)).getChildren();
 
-		for (Object o : list)
+		for (Object o : list2)
 		{
 			rec = (Element) o;
 

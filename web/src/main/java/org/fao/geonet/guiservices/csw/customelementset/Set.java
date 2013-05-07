@@ -79,6 +79,7 @@ public class Set implements Service {
             Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
 
         CustomElementSet customElementSet = new CustomElementSet();
+        @SuppressWarnings("unchecked")
         List<Element> xpaths = params.getChildren("xpath");
         for(Element xpath : xpaths) {
             customElementSet.add(xpath.getText());

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -59,7 +58,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -73,9 +71,7 @@ import java.util.zip.ZipOutputStream;
 public class DownloadArchive implements Service
 {
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
-	private final static String FILE_NAME_SUBSTR = "filename=";
 
 	//----------------------------------------------------------------------------
 	//---
@@ -84,7 +80,6 @@ public class DownloadArchive implements Service
 	//----------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -139,14 +134,13 @@ public class DownloadArchive implements Service
 		//--- set username for emails and logs
 		String username = session.getUsername();
 		if (username == null) username = "internet";
-		String profile = session.getProfile();
 		String userId  = session.getUserId();
 
 		//--- get feedback/reason for download info passed in & record in 'entered'
-		String name     = Util.getParam(params, Params.NAME);
-		String org      = Util.getParam(params, Params.ORG);
-		String email    = Util.getParam(params, Params.EMAIL);
-		String comments = Util.getParam(params, Params.COMMENTS);
+//		String name     = Util.getParam(params, Params.NAME);
+//		String org      = Util.getParam(params, Params.ORG);
+//		String email    = Util.getParam(params, Params.EMAIL);
+//		String comments = Util.getParam(params, Params.COMMENTS);
 		Element entered = new Element("entered").addContent(params.cloneContent());
 	
 		//--- get logged in user details & record in 'userdetails'
@@ -172,9 +166,9 @@ public class DownloadArchive implements Service
 		Element downloaded = new Element("downloaded");
 		File dir = new File(Lib.resource.getDir(context, access, id));
 
-		List files = params.getChildren(Params.FNAME);
-		for (Object o : files) {
-			Element elem = (Element)o;
+		@SuppressWarnings("unchecked")
+        List<Element> files = params.getChildren(Params.FNAME);
+		for (Element elem : files) {
 			String fname = elem.getText();
 
 			if (fname.contains("..")) {
@@ -391,9 +385,9 @@ public class DownloadArchive implements Service
 				query.append("AND    oa.groupId = g.id");
 
 				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
-
-				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); ) {
-					Element group = (Element)i.next();
+                @SuppressWarnings("unchecked")
+                List<Element> groupsEls = groups.getChildren();
+                for (Element group : groupsEls) {
 					String  name  = group.getChildText("name");
 					String  email = group.getChildText("email");
 

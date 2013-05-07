@@ -81,11 +81,10 @@ class UnusedSearcher extends MetaSearcher
 							"WHERE  isTemplate='n' AND isHarvested='n' AND source=?";
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		List list = dbms.select(query, siteId).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, siteId).getChildren();
 
-        for (Object aList : list) {
-            Element rec = (Element) aList;
-
+        for (Element rec : list) {
             String id = rec.getChildText("id");
 
             ISODate createDate = new ISODate(rec.getChildText("createdate"));
@@ -171,9 +170,10 @@ class UnusedSearcher extends MetaSearcher
 	{
 		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
 
-		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
-		Element record = (Element) list.get(0);
+		Element record = list.get(0);
 
 		int result = Integer.parseInt(record.getChildText("result"));
 

@@ -28,7 +28,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import jeeves.constants.Jeeves;
-import jeeves.utils.PasswordUtil;
 
 //==============================================================================
 

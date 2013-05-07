@@ -307,7 +307,8 @@ class Harvester extends BaseAligner
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
 			xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 										
-			List<Element> layers = xp.selectNodes(capa);
+			@SuppressWarnings("unchecked")
+            List<Element> layers = xp.selectNodes(capa);
 			if (layers.size()>0) {
 				log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
 			
@@ -667,9 +668,9 @@ class Harvester extends BaseAligner
     			Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
     			Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
     			
-    			Iterator<Element> bboxes = xml.getDescendants(
-    					new ElementFilter ("EX_GeographicBoundingBox", gmd)
-    					);
+    			ElementFilter bboxFinder = new ElementFilter("EX_GeographicBoundingBox", gmd);
+                @SuppressWarnings("unchecked")
+                Iterator<Element> bboxes = xml.getDescendants(bboxFinder);
     			
     			while (bboxes.hasNext()) {
     				Element box = bboxes.next();

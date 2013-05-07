@@ -69,9 +69,9 @@ public class ZipUtil {
 		if (!toDir.exists()) {
 			toDir.mkdirs();
 		}
-		Enumeration entries = zipFile.entries();
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+			ZipEntry zipEntry = entries.nextElement();
 			if (zipEntry.isDirectory()) {
 				File dir = new File(toDir, zipEntry.getName());
 				if (!dir.exists()) { // make sure also empty directories get

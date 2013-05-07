@@ -108,7 +108,8 @@ public class GNSearchSessionFactory extends SearchSessionFactoryImpl {
                // we take as indicator the fact that are is a "1"
                Pattern p = Pattern.compile(".*\\.1\\.([0-9]+)$" );
                
-               Iterator<CrosswalkDBO> it = directory.enumerateCrosswalks();
+               @SuppressWarnings("unchecked")
+            Iterator<CrosswalkDBO> it = directory.enumerateCrosswalks();
                
                List<GNExplainInfoDTO> list = new ArrayList<GNExplainInfoDTO>();
                while (it.hasNext()) {

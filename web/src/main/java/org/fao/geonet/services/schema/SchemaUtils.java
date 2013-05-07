@@ -40,7 +40,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
@@ -98,7 +97,7 @@ public class SchemaUtils {
 
 			// -- find link using XPath and create URL for further processing
 			XPath xp = XPath.newInstance ("link[contains(@protocol,'metadata-schema')]");
-			List elems = xp.selectNodes(elBrief);
+			List<?> elems = xp.selectNodes(elBrief);
 			try {
 				url = getMetadataSchemaUrl(elems);
 			}
@@ -170,9 +169,8 @@ public class SchemaUtils {
 
 	// --------------------------------------------------------------------------
 
-	private URL getMetadataSchemaUrl(List elems) throws MalformedURLException { 
-		for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
-			Object ob = iter.next();
+	private URL getMetadataSchemaUrl(List<?> elems) throws MalformedURLException { 
+	    for (Object ob : elems) {
 			if (ob instanceof Element) {
 				Element elem = (Element)ob;
 				String href = elem.getAttributeValue("href");

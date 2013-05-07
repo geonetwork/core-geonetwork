@@ -29,7 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * 
@@ -95,12 +95,10 @@ public class SearchDefaults {
 			// Add other elements send by the request
 			// It could be extra parameters handle by Lucene in lucene.xsl
 			// and not set by default
-			Iterator<Element> otherEl = request.getChildren().iterator();
-			while (otherEl.hasNext()) {
-				Element e = otherEl.next();
-				elData
-						.addContent(new Element(e.getName()).setText(e
-								.getText()));
+			@SuppressWarnings("unchecked")
+            List<Element> otherEl = request.getChildren();
+			for (Element e : otherEl) {
+                elData.addContent(new Element(e.getName()).setText(e.getText()));
 			}
 
 		} else if (elSession != null) {

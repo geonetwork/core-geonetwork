@@ -15,7 +15,6 @@ import scala.actors.threadpool.Arrays;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import com.vividsolutions.jts.io.gml2.GMLWriter;
 
 public enum GeomFormat {
 

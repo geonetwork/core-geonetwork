@@ -50,12 +50,11 @@ public class GNXMLQuery {
        QueryModel querymodel ;
 			 List<String> collections;
        
-       public GNXMLQuery(IRQuery q, ApplicationContext ctx) {
-               
-               this.ctx=ctx;
-               this.querymodel=q.getQueryModel();
-							 this.collections=q.getCollections();
-               
+    @SuppressWarnings("unchecked")
+    public GNXMLQuery(IRQuery q, ApplicationContext ctx) {
+        this.ctx = ctx;
+        this.querymodel = q.getQueryModel();
+        this.collections = q.getCollections();
        }
        
 

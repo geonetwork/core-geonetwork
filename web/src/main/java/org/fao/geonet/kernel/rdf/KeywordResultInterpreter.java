@@ -1,7 +1,6 @@
 package org.fao.geonet.kernel.rdf;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;

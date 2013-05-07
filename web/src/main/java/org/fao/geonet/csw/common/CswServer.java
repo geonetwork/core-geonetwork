@@ -120,10 +120,12 @@ public class CswServer {
 		CswOperation op = new CswOperation();
 		op.name   = name;
 		
-		List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
+		@SuppressWarnings("unchecked")
+        List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
 		evaluateUrl(dcp, op);
 
-		List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
+		@SuppressWarnings("unchecked")
+        List<Element> parameters = oper.getChildren("Parameter", Csw.NAMESPACE_OWS);
 		log("Found " + parameters.size() + " parameters for operation: " + name);
 		List<Element> outputSchemas = null;
         List<Element> typeNames = null;
@@ -134,7 +136,9 @@ public class CswServer {
             String parameterName = parameter.getAttributeValue("name");
             log("Processing parameter: " + parameterName);
             if (parameterName != null && parameterName.equalsIgnoreCase("outputSchema")) {
-                outputSchemas = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                @SuppressWarnings("unchecked")
+                List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                outputSchemas = tmp;
                 log("Found " + outputSchemas.size() + " outputSchemas for operation: " + name);
             }
 
@@ -146,18 +150,24 @@ public class CswServer {
             if (parameterName != null &&
                 (parameterName.equalsIgnoreCase("typeNames") || parameterName.equalsIgnoreCase("typeName"))
                 ) {
-                typeNames = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                @SuppressWarnings("unchecked")
+                List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                typeNames = tmp;
                 log("Found " + typeNames.size() + " typeNames for operation: " + name);
             }
 
             if (parameterName != null && parameterName.equalsIgnoreCase("outputFormat")) {
-                outputFormats = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                @SuppressWarnings("unchecked")
+                List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                outputFormats = tmp;
                 log("Found " + outputFormats.size() + " outputFormats for operation: " + name);
             }
             
             if (parameterName != null &&
                     parameterName.equalsIgnoreCase("CONSTRAINTLANGUAGE")) {
-                    constraintLanguages = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                    @SuppressWarnings("unchecked")
+                    List<Element> tmp = parameter.getChildren("Value", Csw.NAMESPACE_OWS);
+                    constraintLanguages = tmp;
                     log("Found " + constraintLanguages.size() + " constraintLanguage for operation: " + name);
             }
         }

@@ -51,7 +51,6 @@ import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.operation.transform.AffineTransform2D;
 import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;

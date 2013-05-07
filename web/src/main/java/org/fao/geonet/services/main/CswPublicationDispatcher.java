@@ -25,12 +25,10 @@ package org.fao.geonet.services.main;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Logger;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.services.Harvest;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -83,8 +81,9 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
         else if(params.getName().equals("Envelope")) {
             Element soapBody = params.getChild("Body",
                 org.jdom.Namespace.getNamespace("http://www.w3.org/2003/05/soap-envelope"));
-            List payloadList = soapBody.getChildren();
-            Element payload = (Element)payloadList.get(0);
+            @SuppressWarnings("unchecked")
+            List<Element> payloadList = soapBody.getChildren();
+            Element payload = payloadList.get(0);
             operation = payload.getName();
         }
         // POX

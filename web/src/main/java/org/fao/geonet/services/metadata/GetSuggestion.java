@@ -31,8 +31,6 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -94,12 +92,11 @@ public class GetSuggestion implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
-        AccessManager am = gc.getAccessManager();
         Dbms dbms = (Dbms) context.getResourceManager()
                 .open(Geonet.Res.MAIN_DB);
 
-        String runProcess = Util.getParam(params, Params.PROCESS, "");
         String action = Util.getParam(params, "action", "list");
+        @SuppressWarnings("unchecked")
         List<Element> children = params.getChildren();
         Map<String, String> xslParameter = new HashMap<String, String>();
         xslParameter.put("guiLang", context.getLanguage());
