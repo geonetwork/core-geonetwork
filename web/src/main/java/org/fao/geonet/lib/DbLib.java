@@ -325,7 +325,7 @@ public class DbLib {
 		return st.nextToken();
 	}
 
-	class ObjectInfo {
+	static final class ObjectInfo {
 		public String name;
 		public String type;
 	}

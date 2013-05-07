@@ -119,7 +119,16 @@ public final class IO
         if (!file.setLastModified(timeMillis)) {
             Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
         }
-        
+    }
+
+    public static void delete(File file, boolean throwException, String loggerModule) {
+        if (!file.delete()) {
+            if(throwException) {
+                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+            } else {
+                Log.warning(loggerModule, "Unable to delete "+file.getAbsolutePath());
+            }
+        }
     }
 }
 

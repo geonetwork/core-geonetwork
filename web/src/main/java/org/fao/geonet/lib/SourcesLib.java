@@ -25,7 +25,10 @@ package org.fao.geonet.lib;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.XmlRequest;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -104,7 +107,7 @@ public class SourcesLib
             context.warning("  (C) Logo  : "+ logo);
             context.warning("  (C) Excep : "+ e.getMessage());
 
-            logoFile.delete();
+            IO.delete(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }
@@ -130,7 +133,7 @@ public class SourcesLib
             context.warning("  (C) Logo  : "+ logo);
             context.warning("  (C) Excep : "+ e.getMessage());
 
-            logoFile.delete();
+            IO.delete(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }
