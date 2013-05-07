@@ -167,19 +167,19 @@
         <xsl:choose>
             <xsl:when test="$groupWebsite != '' and $groupLogoUuid != ''">
                 <a href="{$groupWebsite}" target="_blank">
-                    <img src="{/root/gui/url}/images/logos/{$groupLogoUuid}.png" width="40"/>
+                    <img src="{/root/gui/url}/images/logos/{$groupLogoUuid}.png" width="110"/>
                 </a>
             </xsl:when>
             <xsl:when test="$groupLogoUuid != ''">
-                <img src="{/root/gui/url}/images/logos/{$groupLogoUuid}.png" width="40"/>
+                <img src="{/root/gui/url}/images/logos/{$groupLogoUuid}.png" width="110"/>
             </xsl:when>
             <xsl:when test="/root/gui/sources/record[string(siteid)=$source]">
                 <a href="{/root/gui/sources/record[string(siteid)=$source]/url}" target="_blank">
-                    <img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
+                    <img src="{/root/gui/url}/images/logos/{$source}.gif" width="110"/>
                 </a>
             </xsl:when>
             <xsl:otherwise>
-                <img src="{/root/gui/url}/images/logos/{$source}.gif" width="40"/>
+                <img src="{/root/gui/url}/images/logos/{$source}.gif" width="110"/>
             </xsl:otherwise>
         </xsl:choose>
 
