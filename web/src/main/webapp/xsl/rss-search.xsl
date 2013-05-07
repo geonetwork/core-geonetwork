@@ -20,7 +20,7 @@
 		<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
 			<channel>
 			
-				<title><xsl:value-of select="gui/strings/header_meta/meta[@name='DC.title']/@content"/></title>
+				<title><xsl:value-of select="concat(gui/env/site/name, ' (', gui/env/site/organization, ')')"/></title>
 				<link><xsl:value-of select="$baseURL"/></link>
 				<description><xsl:value-of select="gui/strings/header_meta/meta[@name='DC.description']/@content"/></description>
 				<language><xsl:value-of select="gui/language"/></language>
@@ -28,7 +28,7 @@
 				<category>Geographic metadata catalog</category>
 				<generator>GeoNetwork opensource</generator>
 				<ttl>30</ttl> <!-- FIXME -->
-				<xsl:apply-templates mode="item" select="//rssItems/*">
+				<xsl:apply-templates mode="item" select="//rssItems/*[name() != 'summary']">
 					<xsl:with-param name="siteURL" select="$siteURL" />
 				</xsl:apply-templates>
 			</channel>
