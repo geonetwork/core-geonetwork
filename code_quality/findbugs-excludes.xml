@@ -7,9 +7,6 @@
 	<Match>
 		<Class name="~.*\..*Test" />
 	</Match>
-  <Match>
-		<Class name="~org\.fao\.geonet\.[t-zT-Z].*" />
-	</Match>
 	
 	<!--              Jeeves  Exceptions                 -->
 	<Match>

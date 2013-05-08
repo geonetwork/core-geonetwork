@@ -35,6 +35,8 @@ import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -45,7 +47,6 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Document;
@@ -1761,7 +1762,7 @@ public class SchemaManager {
 		String[] schemaFiles = fileSchemaPluginDir.list(filter);
 		if (schemaFiles.length > 0) {
 			for (String schemaFile : schemaFiles) {
-				FileCopyMgr.copyFiles(new File(schemaPluginDir, schemaFile), new File(webAppDirSchemaXSD, schemaFile));
+				FileUtils.copyDirectory(new File(schemaPluginDir, schemaFile), new File(webAppDirSchemaXSD, schemaFile), true);
 			}
 		} else {
 			Log.error(Geonet.SCHEMA_MANAGER, "Schema "+name+" does not have any XSD files!");
@@ -1769,7 +1770,7 @@ public class SchemaManager {
 
 		File fileSchemaDir = new File(schemaPluginDir,"schema");
 		if (fileSchemaDir.exists()) {
-			FileCopyMgr.copyFiles(fileSchemaDir, new File(webAppDirSchemaXSD, "schema"));
+			FileUtils.copyDirectory(fileSchemaDir, new File(webAppDirSchemaXSD, "schema"), true);
 		}
 
 	}

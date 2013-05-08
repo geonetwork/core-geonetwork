@@ -52,7 +52,7 @@ public class PDF implements Service {
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 
-        File tempFile = File.createTempFile(this.TMP_PDF_FILE, ".pdf", tempDir);
+        File tempFile = File.createTempFile(TMP_PDF_FILE, ".pdf", tempDir);
         OutputStream os = new FileOutputStream(tempFile);
         
         try {
