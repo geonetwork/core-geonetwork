@@ -29,26 +29,30 @@ import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 public class Add implements Service {
-	private String logoDirectory;
+	private volatile String logoDirectory;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-	    synchronized (this) {
-	        if(logoDirectory == null) {
-	            logoDirectory = Resources.locateHarvesterLogosDir(context);
-	        }
-        }
+	    if(logoDirectory == null) {
+    	    synchronized (this) {
+    	        if(logoDirectory == null) {
+    	            logoDirectory = Resources.locateHarvesterLogosDir(context);
+    	        }
+            }
+	    }
 		String file = Util.getParam(params, Params.FNAME);
 		
 		if (file.contains("..")) {
@@ -65,7 +69,7 @@ public class Add implements Service {
 		try {
 			FileUtils.moveFile(inFile, outFile);
 		} catch (Exception e) {
-			inFile.delete();
+			IO.delete(inFile, false, Geonet.RESOURCES);
 			throw new Exception(
 					"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 		}

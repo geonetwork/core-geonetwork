@@ -26,9 +26,11 @@ package org.fao.geonet.services.thumbnail;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -95,7 +97,7 @@ public class Set extends NotInReadOnlyModeService {
 
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 
-		new File(dataDir).mkdirs();
+		IO.mkdirs(new File(dataDir), "Metadata data directory");
 
 		//-----------------------------------------------------------------------
 		//--- create the small thumbnail, removing the old one
@@ -142,7 +144,7 @@ public class Set extends NotInReadOnlyModeService {
 			try {
 				FileUtils.moveFile(inFile, outFile);
 			} catch (Exception e) {
-				inFile.delete();
+				IO.delete(inFile, false, context);
 				throw new Exception(
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
@@ -302,7 +304,7 @@ public class Set extends NotInReadOnlyModeService {
                 try {
                     FileUtils.moveFile(inFile, outFile);
                 } catch (Exception e) {
-                    inFile.delete();
+                    IO.delete(inFile, false, context);
                     throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
                 }
 			
@@ -418,13 +420,19 @@ public class Set extends NotInReadOnlyModeService {
 
 	private Image getTiffImage(String inFile) throws IOException
 	{
-		Tiff t = new Tiff();
-		t.readInputStream(new FileInputStream(inFile));
-
-		if (t.getPageCount() == 0)
-			throw new IOException("No images inside TIFF file");
-
-		return t.getImage(0);
+	    FileInputStream fileInputStream = null;
+	    try {
+    		Tiff t = new Tiff();
+            fileInputStream = new FileInputStream(inFile);
+            t.readInputStream(fileInputStream);
+    
+    		if (t.getPageCount() == 0)
+    			throw new IOException("No images inside TIFF file");
+    
+    		return t.getImage(0);
+	    } finally {
+	        IOUtils.closeQuietly(fileInputStream);
+	    }
 	}
 
 	/**

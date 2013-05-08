@@ -216,10 +216,6 @@ public class MetadataRegionSearchRequest extends Request {
 
         public FileId(String id) {
             super(PREFIX, id);
-
-            if (id.startsWith(PREFIX)) {
-                id = id.substring(PREFIX.length());
-            }
         }
 
         @Override

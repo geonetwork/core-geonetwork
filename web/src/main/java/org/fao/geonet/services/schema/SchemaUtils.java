@@ -24,6 +24,7 @@ package org.fao.geonet.services.schema;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -59,8 +60,6 @@ public class SchemaUtils {
 	// --------------------------------------------------------------------------
 
 	private Element processSchema(ServiceContext context, String schema, String fname, URL url, String uuid, SchemaManager scm, boolean add) throws Exception {
-
-		Element response = new Element("response");
 
 		File zipArchive = null;
 		boolean deleteTempZip = false;
@@ -124,8 +123,8 @@ public class SchemaUtils {
 			zipArchive = new File(fname);
 		}
 
-		response = doSchema(scm, schema, zipArchive, add);
-		if (deleteTempZip) zipArchive.delete();
+		Element response = doSchema(scm, schema, zipArchive, add);
+		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 

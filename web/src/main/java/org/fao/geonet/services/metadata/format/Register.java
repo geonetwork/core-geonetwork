@@ -25,16 +25,19 @@ package org.fao.geonet.services.metadata.format;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.util.ZipUtil;
 import org.jdom.Element;
@@ -69,7 +72,7 @@ public class Register extends AbstractFormatService {
         if (file.exists()) {
             FileUtils.deleteDirectory(file);
         }
-        file.mkdirs();
+        IO.mkdirs(file, "Formatter directory");
 
         try {
             try {
@@ -91,7 +94,7 @@ public class Register extends AbstractFormatService {
 
             return response;
         } finally {
-            uploadedFile.delete();
+            IO.delete(uploadedFile, false, Geonet.FORMATTER);
         }
     }
 
@@ -99,9 +102,10 @@ public class Register extends AbstractFormatService {
     	ConfigFile.generateDefault(file);
 
         if (!new File(file, "loc").exists()) {
-            new File(file, "loc").mkdirs();
-            PrintStream out = new PrintStream(new FileOutputStream(new File(file, "loc"+File.separator+"README")));
+            IO.mkdirs(new File(file, "loc"), "Localization directory");
+            PrintStream out = null;
             try {
+                out = new PrintStream(new File(file, "loc"+File.separator+"README"), Jeeves.ENCODING);
                 out.println("If a formatter requires localization that cannot be found in strings or schema ");
                 out.println("localization the format bundle can have a loc subfolder containing translations.");
                 out.println("");
@@ -113,7 +117,7 @@ public class Register extends AbstractFormatService {
                 out.println("but it is recommended to always have the default language localization");
                 out.println("(unless language is fixed in the config.properties)");
             } finally {
-                out.close();
+                IOUtils.closeQuietly(out);
             }
         }
     }

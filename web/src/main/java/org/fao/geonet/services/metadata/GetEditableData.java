@@ -58,7 +58,6 @@ public class GetEditableData implements Service
 	{
 		String id = Utils.getIdentifierFromParameters(params, context);
 		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
-        String justCreated = Util.getParam(params, Geonet.Elem.JUSTCREATED, null);
 
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
@@ -72,12 +71,7 @@ public class GetEditableData implements Service
 		if (elMd == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
-        if(justCreated != null) {
-       //   elMd.addContent(new Element("JUSTCREATED").setText("true"));
-        }
-		//-----------------------------------------------------------------------
 		//--- return metadata
-
 		return elMd;
 	}
 }

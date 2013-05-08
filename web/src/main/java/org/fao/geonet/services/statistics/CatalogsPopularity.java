@@ -8,6 +8,7 @@ import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
@@ -125,9 +126,7 @@ public class CatalogsPopularity extends NotInReadOnlyModeService{
 		
 		File statFolder = new File(gc.getHandlerConfig().getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
-		if (!statFolder.exists()) {
-			statFolder.mkdirs();
-		}
+		IO.mkdirs(statFolder, "Statistics directory");
 		File f = new File(statFolder, chartFilename);
 		this.imageMap = org.fao.geonet.services.statistics.ChartFactory.writeChartImage(
 				chart, f, this.chartWidth, this.chartHeight, this.createTooltips, "graphPopuByCatalogImageMap");

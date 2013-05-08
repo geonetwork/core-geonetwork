@@ -31,6 +31,8 @@ import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -544,10 +546,14 @@ public class Importer {
 		String dir = Lib.resource.getDir(context, access, id);
 
 		File outFile = new File(dir, file);
-		FileOutputStream os = new FileOutputStream(outFile);
-		BinaryFile.copy(is, os, false, true);
-
-		IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, Geonet.MEF);
+		FileOutputStream os=null;
+		try {
+            os = new FileOutputStream(outFile);
+    		BinaryFile.copy(is, os);
+    		IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, Geonet.MEF);
+		} finally {
+		    IOUtils.closeQuietly(os);
+		}
 	}
 
 	/**

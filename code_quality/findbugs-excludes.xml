@@ -8,7 +8,7 @@
 		<Class name="~.*\..*Test" />
 	</Match>
   <Match>
-		<Class name="~org\.fao\.geonet\.[m-zM-Z].*" />
+		<Class name="~org\.fao\.geonet\.[t-zT-Z].*" />
 	</Match>
 	
 	<!--              Jeeves  Exceptions                 -->
@@ -69,6 +69,24 @@
 		<Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester" />
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
 		<Method name="processServices"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+		<Method name="processCQLTermNode"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.metadata.BatchVersion" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+		<Method name="exec"/>
+	</Match>
+	<Match>
+		<Class name="org.fao.geonet.services.metadata.Version" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+		<Method name="serviceSpecificExec"/>
+	</Match>
+	<Match>
+		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
 	</Match>
 	
 	

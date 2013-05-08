@@ -2,7 +2,9 @@ package org.fao.geonet.services.statistics;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -15,10 +17,13 @@ import jeeves.exceptions.BadParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -86,9 +91,8 @@ public class TableExport extends NotInReadOnlyModeService{
 
         // file to write
 		File tableDumpFile = new File(appPath + File.separator + "images" + File.separator + "statTmp");
-		if (!tableDumpFile.exists()) {
-			tableDumpFile.mkdirs();
-		}
+	    IO.mkdirs(tableDumpFile, "Statistics temp directory");
+	      
         String dumpFileName = tableToExport + "_" + context.getUserSession().getUserId() + ".csv";
         tableDumpFile = new File(tableDumpFile.getAbsolutePath(), dumpFileName);
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
@@ -101,9 +105,15 @@ public class TableExport extends NotInReadOnlyModeService{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         // use connection by hand, to allow us to control the resultset and avoid Java Heap Space Exception
         Connection con = dbms.getConnection();
-        Statement stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = stmt.executeQuery(query);
-        BufferedWriter out = new BufferedWriter(new FileWriter(tableDumpFile));
+        Statement stmt = null;
+        ResultSet rs = null;
+        FileOutputStream fileOutputStream = null;
+        BufferedWriter out = null;
+        try {
+        stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        rs = stmt.executeQuery(query);
+        fileOutputStream = new FileOutputStream(tableDumpFile);
+        out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Jeeves.ENCODING));
         ResultSetMetaData rsMetaData = rs.getMetaData();
 
         if (this.dumpHeader) {
@@ -129,6 +139,12 @@ public class TableExport extends NotInReadOnlyModeService{
             out.newLine();
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"data written");
+        } finally {
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(fileOutputStream);
+            IO.closeQuietly(rs);
+            IO.closeQuietly(stmt);
+        }
         rs.close();
         stmt.close();
         out.flush();

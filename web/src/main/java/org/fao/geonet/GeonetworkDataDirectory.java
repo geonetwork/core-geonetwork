@@ -269,19 +269,15 @@ public class GeonetworkDataDirectory {
 						+ File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
                 out = new FileOutputStream(schemaCatFile);
 
-				BinaryFile.copy(in, out, false, false);
+				BinaryFile.copy(in, out);
 			} catch (IOException e) {
 				Log.info(
 						Geonet.DATA_DIRECTORY,
 						"      - Error copying schema plugin catalogue: "
 								+ e.getMessage());
 			} finally {
-			    if(in != null) {
-			        IOUtils.closeQuietly(in);
-			    }
-			    if(out != null) {
-			        IOUtils.closeQuietly(out);
-			    }
+		        IOUtils.closeQuietly(in);
+		        IOUtils.closeQuietly(out);
 			}
 		}
 

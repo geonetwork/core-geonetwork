@@ -256,27 +256,27 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	 */
 	String getInitPassword() {
 		Random random = new Random();
-		String password = "";
-		String rand = "";
+		StringBuilder password = new StringBuilder();
 		char c = 'a';
 		for (int i = 0; i < 6; i++) {
 			int j = random.nextInt(10);
-			if (j < 5) {
+			String rand;
+            if (j < 5) {
 				if (j < 3) {
 					rand = String.valueOf(
-							(char) (c + (int) (Math.random() * 26)))
+							(char) (c + (int) (random.nextInt() * 26)))
 							.toUpperCase();
 				} else {
 					rand = String.valueOf(
-							(char) (c + (int) (Math.random() * 26)))
+							(char) (c + (int) (random.nextInt() * 26)))
 							.toLowerCase();
 				}
 			} else {
 				rand = String.valueOf(random.nextInt(10));
 			}
-			password += rand;
+			password.append(rand);
 		}
-		return password;
+		return password.toString();
 	}
 
 }

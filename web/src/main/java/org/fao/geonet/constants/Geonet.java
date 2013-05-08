@@ -570,6 +570,7 @@ public final class Geonet {
     public static final Version LUCENE_VERSION = Version.LUCENE_41;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
+    public static final String FORMATTER = GEONETWORK + ".formatter";
     /**
      * Services.
      */

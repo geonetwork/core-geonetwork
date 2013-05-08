@@ -12,7 +12,7 @@ public class TestCase extends junit.framework.TestCase {
     /**
      * Just to prevent junit.framework.AssertionFailedError: No tests found in org.fao.geonet.test.TestCase.
      */
-    public void testNothing() {}
+    public void testPreventAssertionFailedError() {}
 
     /**
      * Whether something is in a collection.

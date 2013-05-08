@@ -27,7 +27,8 @@ public class MetadataRegion extends Region {
         CoordinateReferenceSystem coordinateReferenceSystem = getBBox().getCoordinateReferenceSystem();
         Integer sourceCode = CRS.lookupEpsgCode(coordinateReferenceSystem, false);
         Integer desiredCode = CRS.lookupEpsgCode(projection, false);
-        if ((sourceCode == null || desiredCode == null || desiredCode != sourceCode) && !CRS.equalsIgnoreMetadata(coordinateReferenceSystem, projection)) {
+        boolean differentCrsCode = sourceCode == null || desiredCode == null || desiredCode.intValue() != sourceCode.intValue();
+        if (differentCrsCode && !CRS.equalsIgnoreMetadata(coordinateReferenceSystem, projection)) {
             MathTransform transform = CRS.findMathTransform(coordinateReferenceSystem, projection, true);
             return JTS.transform(geometry, transform);
         }

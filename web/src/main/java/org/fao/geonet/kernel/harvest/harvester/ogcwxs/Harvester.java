@@ -827,10 +827,7 @@ class Harvester extends BaseAligner
                 try {
                     fo = new FileOutputStream (dir + filename);
                     in = req.getResponseBodyAsStream();
-                    BinaryFile.copy (in,
-						    		fo, 
-						    		false,
-						    		false);
+                    BinaryFile.copy (in,fo);
                 } finally {
                     IOUtils.closeQuietly(in);
                     IOUtils.closeQuietly(fo);

@@ -139,8 +139,7 @@ public class Save extends NotInReadOnlyModeService {
 
         }
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        for(String key : notificationTargets.keySet()) {
-            NotificationTarget notificationTarget = notificationTargets.get(key);
+        for(NotificationTarget notificationTarget : notificationTargets.values()) {
             String enabled = notificationTarget.isEnabled() ? "y" : "n" ;
             // insert
             if(! notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())

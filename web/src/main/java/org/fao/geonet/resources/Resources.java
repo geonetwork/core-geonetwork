@@ -19,6 +19,7 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -305,7 +306,7 @@ public class Resources {
 				webappCopy = new File(appPath, filename);
 			}
 			if (webappCopy.exists()) {
-				file.getParentFile().mkdirs();
+				IO.mkdirs(file.getParentFile(), "The resources container directory for the file: "+filename);
 				transferTo(webappCopy, new FileOutputStream(file), true);
 			}
 
@@ -375,6 +376,8 @@ public class Resources {
 		String appDir = context.getAppPath();
 
 		File des = null;
+		FileInputStream is = null;
+		FileOutputStream os = null;
 		try {
 			File src = Resources.locateResource(
 					Resources.locateResourcesDir(context), servletContext,
@@ -385,16 +388,19 @@ public class Resources {
 			des = new File(Resources.locateLogosDir(context), destName
 					+ extension);
 
-			FileInputStream is = new FileInputStream(src);
-			FileOutputStream os = new FileOutputStream(des);
+            is = new FileInputStream(src);
+            os = new FileOutputStream(des);
 
-			BinaryFile.copy(is, os, true, true);
+			BinaryFile.copy(is, os);
 		} catch (IOException e) {
 			// --- we ignore exceptions here, just log them
 
 			context.warning("Cannot copy icon -> " + e.getMessage());
 			context.warning(" (C) Source : " + icon);
 			context.warning(" (C) Destin : " + des);
+		} finally {
+		    IOUtils.closeQuietly(is);
+		    IOUtils.closeQuietly(os);
 		}
 	}
 

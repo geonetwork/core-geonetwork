@@ -84,12 +84,13 @@ public class UpdateChildren extends NotInReadOnlyModeService {
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         int treatedChildren = children.length;
-        String untreatedReport = "";
+        StringBuilder untreatedReport = new StringBuilder();
         if (untreatedChildren.size() != 0) {
             treatedChildren = children.length - untreatedChildren.size();
-            untreatedReport = untreatedChildren.size() +" child/children not updated";
+            untreatedReport.setLength(0);
+            untreatedReport.append(untreatedChildren.size()).append(" child/children not updated");
             for (String id : untreatedChildren)
-                untreatedReport += ", "+id;
+                untreatedReport.append(", ").append(id);
         }
 
         String report = treatedChildren + " child/children updated for metadata " + parentUuid + ". " + untreatedReport;

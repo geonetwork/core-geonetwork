@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.util.regex.Pattern;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -60,8 +61,9 @@ public class ListOpenFileHandles implements Service {
 
     private void listFiles(Element report, Integer pid, int max, Pattern filter) throws Exception {
         Process process = Runtime.getRuntime().exec(new String[] { "lsof", "-p", pid.toString() });
+        BufferedReader in = null;
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(process.getInputStream(), Jeeves.ENCODING));
             
             String line;
             int total = 0;
@@ -83,6 +85,7 @@ public class ListOpenFileHandles implements Service {
             report.setAttribute("filteredTotal", ""+filteredTotal);
             report.setAttribute("displayed", ""+Math.min(total, displayed));
         } finally {
+            IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(process.getInputStream());
             IOUtils.closeQuietly(process.getOutputStream());
             IOUtils.closeQuietly(process.getErrorStream());

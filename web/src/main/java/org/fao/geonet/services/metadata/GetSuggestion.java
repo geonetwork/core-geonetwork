@@ -38,7 +38,6 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,12 +76,9 @@ import java.util.Map;
  */
 public class GetSuggestion implements Service {
 
-    ArrayList<String> process = new ArrayList<String>();
-    String appPath;
     private static final String XSL_SUGGEST = "suggest.xsl";
 
     public void init(String appPath, ServiceConfig params) throws Exception {
-        this.appPath = appPath;
     }
 
     public Element exec(Element params, ServiceContext context)

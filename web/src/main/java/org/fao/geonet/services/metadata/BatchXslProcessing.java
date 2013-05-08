@@ -126,7 +126,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService{
 	// ---
 	// --------------------------------------------------------------------------
 
-	class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
+	static final class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
 		Dbms dbms;
 		Iterator<String> iter;
 		String process;

@@ -2,6 +2,10 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
+
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 
@@ -25,18 +29,23 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
         String outDir = Lib.resource.getRemovedDir(context, id);
         String outFile= outDir + uuid +".mef";
 
-        new File(outDir).mkdirs();
 
+        FileInputStream is = null;
+        FileOutputStream os = null;
         try {
-            FileInputStream is = new FileInputStream(file);
-            FileOutputStream os = new FileOutputStream(outFile);
+            IO.mkdirs(new File(outDir), "The backup file directory");
+            is = new FileInputStream(file);
+            os = new FileOutputStream(outFile);
 
-            BinaryFile.copy(is, os, true, true);
+            BinaryFile.copy(is, os);
         }
         catch(Exception e) {
             context.warning("Cannot backup mef file : "+e.getMessage());
             e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(os);
         }
-        new File(file).delete();
+        IO.delete(new File(file), false, Geonet.MEF);
     }
 }
