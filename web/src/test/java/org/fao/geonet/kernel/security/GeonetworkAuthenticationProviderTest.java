@@ -80,7 +80,7 @@ public class GeonetworkAuthenticationProviderTest extends TestCase {
         userFoundSetup();
         try {
             geonetworkAuthenticationProvider.authenticate(authentication);
-            fail("Expected IllegalArgumentException");
+            TestCase.fail("Expected IllegalArgumentException");
         }
         catch(IllegalArgumentException x){}
     }
@@ -91,7 +91,7 @@ public class GeonetworkAuthenticationProviderTest extends TestCase {
         authentication = mock(UsernamePasswordAuthenticationToken.class);
         try {
             geonetworkAuthenticationProvider.authenticate(authentication);
-            fail("Expected BadCredentialsException");
+            TestCase.fail("Expected BadCredentialsException");
         }
         catch(BadCredentialsException x) {}
     }
@@ -99,7 +99,7 @@ public class GeonetworkAuthenticationProviderTest extends TestCase {
     @Test
     public void testAuthenticateWithTokenWithCredentials() throws Exception {
         GeonetworkAuthenticationProvider spy = authenticationSetup(true);
-        spy.authenticate(authentication);
+        TestCase.assertNotNull(spy.authenticate(authentication));
     }
 
     @Test(expected = BadCredentialsException.class)
@@ -107,7 +107,7 @@ public class GeonetworkAuthenticationProviderTest extends TestCase {
         GeonetworkAuthenticationProvider spy = authenticationSetup(false);
         try {
             spy.authenticate(authentication);
-            fail("Expected BadCredentialsException");
+            TestCase.fail("Expected BadCredentialsException");
         }
         catch(BadCredentialsException x) {}
     }
