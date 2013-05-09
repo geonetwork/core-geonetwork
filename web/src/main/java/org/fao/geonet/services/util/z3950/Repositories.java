@@ -25,6 +25,7 @@ package org.fao.geonet.services.util.z3950;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.FileUtils;
@@ -97,7 +98,7 @@ public class Repositories
 		boolean copied = false;
 
 		try {
-			FileUtils.copyDirectory(new File(tempRepo), new File(backRepo), true);
+		    BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
 			@SuppressWarnings("unchecked")
@@ -116,7 +117,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileUtils.copyDirectory(new File(backRepo), new File(tempRepo), true);
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();
@@ -141,7 +142,7 @@ public class Repositories
 		boolean replaced = false;
 
 		try {
-			FileUtils.copyDirectory(new File(tempRepo), new File(backRepo), true);
+			BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
 			@SuppressWarnings("unchecked")
@@ -165,7 +166,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileUtils.copyDirectory(new File(backRepo), new File(tempRepo), true);
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();

@@ -28,6 +28,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import org.globus.ftp.DataSink;
@@ -548,6 +549,16 @@ public final class BinaryFile
 		else
 			return("application/binary");
 	}
+
+    public static void copy(File srcFile, File destFile) throws IOException {
+        if(srcFile.isFile()) {
+            FileUtils.copyFile(srcFile, destFile);
+        } else {
+            FileUtils.copyDirectory(srcFile, destFile);
+            
+        }
+        
+    }
 
 }
 

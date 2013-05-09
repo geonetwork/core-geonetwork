@@ -12,6 +12,7 @@ package org.fao.geonet.util;
 import java.io.File;
 import java.io.IOException;
 
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -22,7 +23,7 @@ public class FileCopyMgr {
 
         File src = new File(strPath);
         File dest = new File(dstPath);
-        FileUtils.copyDirectory(src, dest, true);
+        BinaryFile.copy(src, dest);
     }
 
     /**
