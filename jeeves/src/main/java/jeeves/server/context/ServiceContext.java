@@ -23,7 +23,6 @@
 
 package jeeves.server.context;
 
-import java.util.Hashtable;
 import java.util.Map;
 
 import javax.annotation.CheckForNull;

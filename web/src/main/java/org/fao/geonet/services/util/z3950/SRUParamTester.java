@@ -4,6 +4,7 @@ import org.fao.geonet.services.main.SRUSearch;
 
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 public class SRUParamTester {
@@ -65,24 +66,6 @@ public class SRUParamTester {
 
 
 
-	}
-
-
-	private Object parseArgument(String type, String str) throws SRUArgumentParseException  {
-
-		String mytype = paramTypes.get(type);
-
-		if (mytype.equals("string")) {
-			return str;
-		}
-		if (mytype.equals("int")) {
-			try {
-				return Integer.parseInt(str);
-			} catch (NumberFormatException e) {
-				throw new SRUArgumentParseException(type, str, e);
-			}
-		}
-		return null;
 	}
 
 	public SRUParamTestDBO testParams(String op, Hashtable<String,String> params) {
@@ -147,8 +130,9 @@ public class SRUParamTester {
 
 		if (op.equals("searchretrieve")) {
 
-			for (String key : params.keySet()) {
-				String val = params.get(key);
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+			    String key = entry.getKey();
+				String val = entry.getValue();
 
 				if (paramTypes.containsKey(key) && paramTypes.get(key).equals("int") ) {
 					try {

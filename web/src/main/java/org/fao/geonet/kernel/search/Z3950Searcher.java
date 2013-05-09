@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import static java.lang.Integer.parseInt;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -358,11 +356,12 @@ class Z3950Searcher extends MetaSearcher
 		if (name.equals("query"))
 		{
 			String attrset = xmlQuery.getAttributeValue("attrset");
-			List children = xmlQuery.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = xmlQuery.getChildren();
 			if (children.size() == 0)
 				throw new BadParameterEx("Z39.50-query", Xml.getString(xmlQuery));
 
-			Element child = (Element)children.get(0);
+			Element child = children.get(0);
 			return "@attrset " + attrset + " " + newQuery(child);
 		}
 		else if (name.equals("and") || name.equals("or") || name.equals("not"))

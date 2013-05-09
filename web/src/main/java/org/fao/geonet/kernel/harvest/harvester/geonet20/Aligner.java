@@ -73,7 +73,8 @@ public class Aligner
 		this.result = new HarvestResult();
 		this.result.siteId = siteId;
 
-		List mdList = result.getChildren("metadata");
+		@SuppressWarnings("unchecked")
+        List<Element> mdList = result.getChildren("metadata");
 
 		//-----------------------------------------------------------------------
 		//--- retrieve local uuids for given site-id
@@ -97,8 +98,8 @@ public class Aligner
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-        for (Object aMdList : mdList) {
-            Element info = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
+        for (Element aMdList : mdList) {
+            Element info = aMdList.getChild("info", Edit.NAMESPACE);
 
             String remoteId = info.getChildText("id");
             String remoteUuid = info.getChildText("uuid");
@@ -178,7 +179,9 @@ public class Aligner
 
 		result.addedMetadata++;
 
-		addCategories(id, info.getChildren("category"));
+		@SuppressWarnings("unchecked")
+        List<Element> categories = info.getChildren("category");
+        addCategories(id, categories);
 
         addPrivileges(id);
 
@@ -189,10 +192,10 @@ public class Aligner
 	//--- Categories
 	//--------------------------------------------------------------------------
 
-	private void addCategories(String id, List categ) throws Exception
+	private void addCategories(String id, List<Element> categ) throws Exception
 	{
-        for (Object aCateg : categ) {
-            String catName = ((Element) aCateg).getText();
+        for (Element aCateg : categ) {
+            String catName = aCateg.getText();
             String catId = localCateg.getID(catName);
 
             if (catId != null) {
@@ -280,15 +283,15 @@ public class Aligner
 
 	private void updateCategories(String id, Element info) throws Exception
 	{
-		List catList = info.getChildren("category");
+		@SuppressWarnings("unchecked")
+        List<Element> catList = info.getChildren("category");
 
 		//--- remove old categories
 
-		List locCateg = dataMan.getCategories(dbms, id).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> locCateg = dataMan.getCategories(dbms, id).getChildren();
 
-        for (Object aLocCateg : locCateg) {
-            Element el = (Element) aLocCateg;
-
+        for (Element el : locCateg) {
             String catId = el.getChildText("id");
             String catName = el.getChildText("name");
 
@@ -300,8 +303,7 @@ public class Aligner
 
 		//--- add new categories
 
-        for (Object aCatList : catList) {
-            Element categ = (Element) aCatList;
+        for (Element categ : catList) {
             String catName = categ.getAttributeValue("name");
             String catId = localCateg.getID(catName);
 
@@ -318,7 +320,7 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private boolean existsCategory(List catList, String name)
+	private boolean existsCategory(List<Element> catList, String name)
 	{
         for (Object aCatList : catList) {
             Element categ = (Element) aCatList;
@@ -382,10 +384,10 @@ public class Aligner
 	//--------------------------------------------------------------------------
 	/** Return true if the sourceId is present in the remote site */
 
-	private boolean exists(List mdList, String uuid)
+	private boolean exists(List<Element> mdList, String uuid)
 	{
-        for (Object aMdList : mdList) {
-            Element elInfo = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
+        for (Element aMdList : mdList) {
+            Element elInfo = aMdList.getChild("info", Edit.NAMESPACE);
 
             if (uuid.equals(elInfo.getChildText("uuid"))) {
                 return true;

@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -70,12 +69,11 @@ class ComplexContentEntry extends BaseHandler
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
-
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
+//		@SuppressWarnings("unchecked")
+//        List<Attribute> attribs = ei.element.getAttributes();
+//
+//        for (Attribute at : attribs) {
+//            String attrName = at.getName();
 //  TODO:
 //            if (attrName.equals("mixed")) {
 //                Logger.log();
@@ -83,19 +81,17 @@ class ComplexContentEntry extends BaseHandler
 //            else {
 //                Logger.log();
 //            }
-        }
+//        }
 	}
 
 	//---------------------------------------------------------------------------
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
-            String elName = elChild.getName();
-
+        for (Element elChild : children) {
             if (elChild.getName().equals("extension")) {
                 handleExtension(elChild, ei);
             }
@@ -117,17 +113,15 @@ class ComplexContentEntry extends BaseHandler
 	{
 		base = el.getAttributeValue("base");
 
-		List extension = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> extension = el.getChildren();
 
-        for (Object anExtension : extension) {
-            Element elExt = (Element) anExtension;
-
+        for (Element elExt : extension) {
             if (elExt.getName().equals("sequence")) {
-                List sequence = elExt.getChildren();
+                @SuppressWarnings("unchecked")
+                List<Element> sequence = elExt.getChildren();
 
-                for (Object aSequence : sequence) {
-                    Element elSeq = (Element) aSequence;
-
+                for (Element elSeq : sequence) {
                     if (isChoiceOrElementOrGroupOrSequence(elSeq)) {
                         alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
                     }
@@ -170,10 +164,10 @@ class ComplexContentEntry extends BaseHandler
 
 		//--- handle children
 
-		List restriction = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> restriction = el.getChildren();
 
-        for (Object aRestriction : restriction) {
-            Element elRes = (Element) aRestriction;
+        for (Element elRes: restriction) {
             String elName = elRes.getName();
 
             if (elRes.getName().equals("sequence")) {

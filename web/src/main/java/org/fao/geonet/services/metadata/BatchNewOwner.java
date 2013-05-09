@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -150,13 +149,13 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 							"FROM OperationAllowed, Metadata "+
 							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";
 
-		List list = dbms.select(query, args).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, args).getChildren();
 
 		Vector<String> result = new Vector<String>();
 
-		for (Object o : list)
+		for (Element elem : list)
 		{
-			Element elem = (Element) o;
 			String  opId = elem.getChildText("operationid");
 
 			result.add(opId);

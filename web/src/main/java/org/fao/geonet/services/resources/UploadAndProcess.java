@@ -30,7 +30,6 @@ import java.util.Set;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -74,8 +73,6 @@ public class UploadAndProcess implements Service {
         // get info to log the upload
 
         UserSession session = context.getUserSession();
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
         String username = session.getUsername();
         if (username == null)
             username = "unknown (this shouldn't happen?)";

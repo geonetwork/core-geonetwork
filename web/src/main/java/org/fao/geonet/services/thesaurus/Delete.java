@@ -24,10 +24,10 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -69,7 +69,7 @@ public class Delete extends NotInReadOnlyModeService {
 		
 		// Remove file
 		if (item.exists()) {
-			item.delete();
+			IO.delete(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
             String query = "DELETE FROM Thesaurus WHERE id =?";

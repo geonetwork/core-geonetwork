@@ -48,7 +48,8 @@ public class OwnershipUtils
 
 		String query = "SELECT DISTINCT Users.id, username, name, surname, profile FROM Users, Metadata WHERE owner=Users.id";
 
-		List<Element> list  = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list  = dbms.select(query).getChildren();
 
 		return getUsers(context,us,dbms,list);
 	}
@@ -60,7 +61,8 @@ public class OwnershipUtils
 
 		String query = "SELECT DISTINCT id, username, name, surname, profile FROM Users WHERE profile not like 'RegisteredUser'";
 
-		List<Element>   list  = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element>   list  = dbms.select(query).getChildren();
 
 		return getUsers(context,us,dbms,list);
 	}
@@ -77,7 +79,7 @@ public class OwnershipUtils
 
 		Set<String> hsMyGroups = getUserGroups(dbms, id);
 
-		Set profileSet = context.getProfileManager().getProfilesSet(us.getProfile());
+		Set<String> profileSet = context.getProfileManager().getProfilesSet(us.getProfile());
 
 		//--- now filter them
 
@@ -110,7 +112,8 @@ public class OwnershipUtils
 		Set<String> hs = new HashSet<String>();
 
 		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
-		List<Element> list = dbms.select(query, id).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, id).getChildren();
 		for (Element el : list) {
 			hs.add(el.getChildText("id"));
 		}

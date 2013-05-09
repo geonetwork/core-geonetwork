@@ -29,13 +29,16 @@ import jeeves.exceptions.JeevesClientEx;
 
 public class SchematronValidationErrorEx extends JeevesClientEx
 {
+    private static final long serialVersionUID = 1L;
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public SchematronValidationErrorEx(String name) { this(name, null); }
+
+    public SchematronValidationErrorEx(String name) { this(name, null); }
 
 	public SchematronValidationErrorEx(String name, Object value)
 	{

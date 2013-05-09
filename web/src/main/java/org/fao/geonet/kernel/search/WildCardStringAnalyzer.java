@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.search;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 
 import java.util.Set;

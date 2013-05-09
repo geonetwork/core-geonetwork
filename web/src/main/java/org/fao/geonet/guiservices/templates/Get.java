@@ -27,7 +27,6 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -83,15 +82,15 @@ public class Get implements Service
 
 		Element result = search(params, context).setName(Jeeves.Elem.RESPONSE);
 
-		List list = result.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = result.getChildren();
 
 		Element response = new Element("dummy");
 
         // heikki: geonovum: first build the list of response records
         List<Element> responseRecords = new ArrayList<Element>();
 
-        for (Object aList : list) {
-            Element elem = (Element) aList;
+        for (Element elem : list) {
             Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
             if (!elem.getName().equals("metadata")) {
@@ -174,7 +173,8 @@ public class Get implements Service
 	private Element buildParams(Element par)
 	{
 		Element params = new Element(Jeeves.Elem.REQUEST);
-		List<Element> in =  par.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> in =  par.getChildren();
 		for (Element el : in)
 			params.addContent(new Element(el.getName()).setText(el.getText()));
 		

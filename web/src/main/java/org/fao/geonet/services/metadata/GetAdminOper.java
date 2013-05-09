@@ -100,12 +100,10 @@ public class GetAdminOper implements Service
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
-		List list = elGroup.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = elGroup.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-			
+		for (Element el : list) {
 			el.setName(Geonet.Elem.GROUP);
 			String sGrpId = el.getChildText("id");
 			int grpId = Integer.parseInt(sGrpId);
@@ -116,9 +114,9 @@ public class GetAdminOper implements Service
 			
 			String query = "SELECT profile FROM UserGroups WHERE userId=? AND groupId=?";
 			Element profiles = dbms.select(query, context.getUserSession().getUserIdAsInt(), grpId);
-			List profilesList = profiles.getChildren();
-			for (Object aProfile : profilesList) {
-				Element pEl = (Element) aProfile;
+			@SuppressWarnings("unchecked")
+            List<Element> profilesList = profiles.getChildren();
+			for (Element pEl : profilesList) {
 				String profile = pEl.getChildText("profile");
 				el.addContent(new Element("userProfile").setText(profile));
 			}
@@ -128,11 +126,13 @@ public class GetAdminOper implements Service
 
 			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
 
-			List listAllow = dbms.select(query, Integer.valueOf(id), grpId).getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> listAllow = dbms.select(query, Integer.valueOf(id), grpId).getChildren();
 
 			//--- now extend the group list adding proper operations
 
-			List listOper = elOper.getChildren();
+			@SuppressWarnings("rawtypes")
+            List listOper = elOper.getChildren();
 
 			for(int j=0; j<listOper.size(); j++)
 			{

@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -191,6 +190,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         Element harvest = null;
         Element transaction = null;
         if(operationsMetadata != null) {
+            @SuppressWarnings("unchecked")
             List<Element> operations = operationsMetadata.getChildren(Csw.OPERATION, Csw.NAMESPACE_OWS);
             for(Element operation : operations) {
                 if(operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME).equals(Csw.ConfigFile.Operation.Attr.Value.TRANSACTION)) {
@@ -265,7 +265,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		if (versions == null)
 			return;
 
-		Iterator<Element> i = versions.getChildren().iterator();
+		@SuppressWarnings("unchecked")
+        Iterator<Element> i = versions.getChildren().iterator();
 
 		StringBuffer sb = new StringBuffer();
 
@@ -422,8 +423,12 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
 
                     language.setText(lang);
-                    defaultLanguage.getChildren().add(language);
-                    inspireLanguages.getChildren().add(defaultLanguage);
+                    @SuppressWarnings("unchecked")
+                    List<Element> defaultLangChildren = defaultLanguage.getChildren();
+                    defaultLangChildren.add(language);
+                    @SuppressWarnings("unchecked")
+                    List<Element> inspireLanguagesChildren = inspireLanguages.getChildren();
+                    inspireLanguagesChildren.add(defaultLanguage);
 
                     break;
                 }
@@ -439,8 +444,12 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     language = new Element("Language", Csw.NAMESPACE_INSPIRE_COM);
 
                     language.setText(lang);
-                    supportedLanguage.getChildren().add(language);
-                    inspireLanguages.getChildren().add(supportedLanguage);
+                    @SuppressWarnings("unchecked")
+                    List<Element> supportedLanguageChildren = supportedLanguage.getChildren();
+                    supportedLanguageChildren.add(language);
+                    @SuppressWarnings("unchecked")
+                    List<Element> inspireLanguagesChildren = inspireLanguages.getChildren();
+                    inspireLanguagesChildren.add(supportedLanguage);
                 }
 
 
@@ -473,20 +482,22 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * @param cswServiceSpecificContraint
      */
 	private void setKeywords (Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
-		List<Element> keywords = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).getChildren("Keywords", Csw.NAMESPACE_OWS);
+		Element serviceIdentificationEl = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
+        @SuppressWarnings("unchecked")
+        List<Element> keywords = serviceIdentificationEl.getChildren("Keywords", Csw.NAMESPACE_OWS);
 
 		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
-			values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(), cswServiceSpecificContraint, _luceneConfig);
+            values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(),
+                    cswServiceSpecificContraint, _luceneConfig);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 			// If GetDomain operation failed, just add nothing to the capabilities document template.            
             return;
         }
 
-        for (int i = 0, keywordsSize = keywords.size(); i < keywordsSize; i++) {
-            Element k = keywords.get(i);
+		for (Element k : keywords) {
             Element keyword;
             int cpt = 0;
             for (Element v : values) {
@@ -511,7 +522,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      */
 	private void setOperationsParameters(Element capabilities) {
 
-		List<Element> operations = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).getChildren("Operation", Csw.NAMESPACE_OWS);
+		@SuppressWarnings("unchecked")
+        List<Element> operations = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).getChildren("Operation", Csw.NAMESPACE_OWS);
 
 		for (Element op : operations) {
 			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)

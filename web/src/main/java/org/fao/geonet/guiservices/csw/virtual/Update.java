@@ -159,14 +159,14 @@ public class Update implements Service {
         Element srv = new Element("service");
         Element cls = new Element("class");
 
-        java.util.List paramList = dbms.select(
-                "SELECT name, value FROM ServiceParameters WHERE service =?",
-                serviceId).getChildren();
-        
+        String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
+        @SuppressWarnings("unchecked")
+        java.util.List<Element> paramList = dbms.select(selectServiceParamsQuery, serviceId)
+                .getChildren();
+
         // Build a Lucene query from the set of parameters
         StringBuilder luceneQuery = new StringBuilder();
-        for (int k = 0; k < paramList.size(); k++) {
-            Element eltParam = (Element) paramList.get(k);
+        for (Element eltParam : paramList) {
             if (eltParam.getChildText("value") != null
                     && !eltParam.getChildText("value").equals("")) {
                 luceneQuery.append(" +")

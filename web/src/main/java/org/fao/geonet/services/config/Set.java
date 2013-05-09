@@ -90,7 +90,7 @@ public class Set implements Service
 			throw new OperationAbortedEx("Cannot set all values");
 
         // Update inspire property in SearchManager
-        gc.getSearchmanager().setInspireEnabled(new Boolean((String) values.get("system/inspire/enable"))); 
+        gc.getSearchmanager().setInspireEnabled(Boolean.valueOf((String)values.get("system/inspire/enable"))); 
 		String newUuid = (String)values.get("system/site/siteId");
 
         if (!currentUuid.equals(newUuid)) {

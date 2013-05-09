@@ -29,7 +29,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -54,6 +55,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nonnull;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
@@ -226,16 +229,16 @@ public class MEFLib {
 	 */
 	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
-		List list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
 
-
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
 
-		Element record = (Element) list.get(0);
+		Element record = list.get(0);
 		String id = record.getChildText("id");
         record.removeChildren("data");
         boolean forEditing = false;
@@ -265,15 +268,25 @@ public class MEFLib {
 	 * 
 	 * @param zos
 	 * @param name
-	 * @param is
+	 * @param in
 	 * @throws IOException
 	 */
-	static void addFile(ZipOutputStream zos, String name, InputStream is)
+	static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
 			throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-		BinaryFile.copy(is, zos, true, false);
-		zos.closeEntry();
+	       ZipEntry entry = null;
+	        try {
+	            entry = new ZipEntry(name);
+	            zos.putNextEntry(entry);
+	            BinaryFile.copy(in, zos);
+	        } finally {
+	            try {
+	                if(zos != null) {
+	                    zos.closeEntry();
+	                }
+	            } finally {
+	                IOUtils.closeQuietly(in);
+	            }
+	        }
 	}
 
 	/**
@@ -408,10 +421,10 @@ public class MEFLib {
 		String query = "SELECT name FROM MetadataCateg, Categories "
 				+ "WHERE categoryId = id AND metadataId = ?";
 
-		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
-		for (int i = 0; i < list.size(); i++) {
-			Element record = (Element) list.get(i);
+		for (Element record : list) {
 			String name = record.getChildText("name");
 
 			Element cat = new Element("category");
@@ -464,10 +477,10 @@ public class MEFLib {
 
 		// --- scan query result to collect info
 
-		List list = dbms.select(query, iId).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, iId).getChildren();
 
-		for (int i = 0; i < list.size(); i++) {
-			Element record = (Element) list.get(i);
+		for (Element record : list) {
 			String grpId = record.getChildText("grpid");
 			String grpName = record.getChildText("grpname");
 			String operName = record.getChildText("opername");

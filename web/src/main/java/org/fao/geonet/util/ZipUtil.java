@@ -11,6 +11,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import jeeves.utils.IO;
+
 /**
  * Zip or unzip files
  * 
@@ -39,24 +41,6 @@ public class ZipUtil {
 	}
 
 	/**
-	 * Recursive function Delete the specified repository and its content.
-	 * 
-	 * @param directory
-	 */
-	public static void deleteAllFiles(File directory) {
-
-		String[] listFile = directory.list();
-		for (int i = 0; i < listFile.length; i++) {
-			File file = new File(directory.getPath() + "/" + listFile[i]);
-			if (file.isDirectory()) {
-				deleteAllFiles(file);
-			} else if (file.exists())
-				file.delete();
-		}
-		directory.delete();
-	}
-
-	/**
 	 * Extracts a zip file to a specified directory.
 	 * 
 	 * @param zipFile
@@ -66,18 +50,14 @@ public class ZipUtil {
 	 * @throws java.io.IOException
 	 */
 	public static void extract(ZipFile zipFile, File toDir) throws IOException {
-		if (!toDir.exists()) {
-			toDir.mkdirs();
-		}
-		Enumeration entries = zipFile.entries();
+        IO.mkdirs(toDir, "Zip Unzip dir");
+        
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+			ZipEntry zipEntry = entries.nextElement();
 			if (zipEntry.isDirectory()) {
 				File dir = new File(toDir, zipEntry.getName());
-				if (!dir.exists()) { // make sure also empty directories get
-										// created!
-					dir.mkdirs();
-				}
+				IO.mkdirs(dir, "Extracted Zip Entry");
 			} else {
 				extract(zipFile, zipEntry, toDir);
 			}
@@ -98,10 +78,7 @@ public class ZipUtil {
 	public static void extract(ZipFile zipFile, ZipEntry zipEntry, File toDir)
 			throws IOException {
 		File file = new File(toDir, zipEntry.getName());
-		File parentDir = file.getParentFile();
-		if (!parentDir.exists()) {
-			parentDir.mkdirs();
-		}
+		IO.mkdirs(toDir, "Unzip dir");
 
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;

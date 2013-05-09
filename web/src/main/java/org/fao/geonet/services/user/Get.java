@@ -76,14 +76,14 @@ public class Get implements Service
 
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-			java.util.List list =dbms.select("SELECT groupId, profile FROM UserGroups WHERE userId=?",Integer.valueOf(id)).getChildren();
+			String selectGroupIdAndProfileQuery = "SELECT groupId, profile FROM UserGroups WHERE userId=?";
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> list = dbms.select(selectGroupIdAndProfileQuery,Integer.valueOf(id)).getChildren();
 
-			for(int i=0; i<list.size(); i++)
-			{
-				Element grp = (Element)list.get(i);
+            for (Element grp : list) {
 				String grpId = grp.getChildText("groupid");
 
-				elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getChildText("profile")));
+                elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getChildText("profile")));
 			}
 
 			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
@@ -91,7 +91,8 @@ public class Get implements Service
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info
 
-				java.util.List adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1",Integer.valueOf(myUserId),Integer.valueOf(id)).getChildren();
+				@SuppressWarnings("unchecked")
+                java.util.List<Element> adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1",Integer.valueOf(myUserId),Integer.valueOf(id)).getChildren();
 				if (adminlist.size() == 0) {
 					throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
 				}

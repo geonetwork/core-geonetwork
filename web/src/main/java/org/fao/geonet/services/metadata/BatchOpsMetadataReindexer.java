@@ -19,14 +19,12 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.resources.dbms.Dbms;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import java.util.concurrent.Callable;
@@ -41,7 +39,7 @@ import java.util.concurrent.Future;
  */
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 	
-	public class BatchOpsCallable implements Callable<Void> {
+	public static final class BatchOpsCallable implements Callable<Void> {
 		private final int ids[];
 		private final int beginIndex, count;
 		private final DataManager dm;
@@ -98,7 +96,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 
 		for (Future<Void> future : submitList) {
 			try {
-				Void o = future.get();
+				future.get();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {

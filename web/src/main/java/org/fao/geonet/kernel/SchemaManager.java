@@ -32,9 +32,12 @@ import jeeves.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -45,7 +48,6 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Document;
@@ -139,18 +141,18 @@ public class SchemaManager {
 		String[] saSchemas = new File(this.schemaPluginsDir).list();
 		if (saSchemas == null) {
 			Log.error(Geonet.SCHEMA_MANAGER, "Cannot scan plugin schemas directory : " +schemaPluginsDir);
-		} else {
-			for (int i=0; i<saSchemas.length; i++) {
-				if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
-			    File schemaDir = new File(this.schemaPluginsDir + FS + saSchemas[i]);
-          if (schemaDir.isDirectory()) {
-						processSchema(schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
-					}
-				}
-			}
-			// for each schema check that dependent schemas are already loaded 
-			checkDependencies(schemaPluginCatRoot);
-		}
+        } else {
+            for (int i = 0; i < saSchemas.length; i++) {
+                if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
+                    File schemaDir = new File(this.schemaPluginsDir + FS + saSchemas[i]);
+                    if (schemaDir.isDirectory()) {
+                        processSchema(schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
+                    }
+                }
+            }
+            // for each schema check that dependent schemas are already loaded
+            checkDependencies(schemaPluginCatRoot);
+        }
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
 
@@ -908,86 +910,91 @@ public class SchemaManager {
 	 * @param conversionsFile name of XML conversions file
      * @throws Exception
 	 */
-	private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile, String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
-		String path = new File(xmlSchemaFile).getParent();
+    private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile,
+            String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
+        String path = new File(xmlSchemaFile).getParent();
 
-		MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
-		mds.setName(name);
-		mds.setSchemaDir(path);
-		mds.loadSchematronRules(basePath);
+        MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
+        mds.setName(name);
+        mds.setSchemaDir(path);
+        mds.loadSchematronRules(basePath);
 
-		// -- add cached xml files (schema codelists and label files) 
-		// -- as Jeeves XmlFile objects (they need not exist)
-		
-		String base = fromAppPath + name + FS + "loc";
-		Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
+        // -- add cached xml files (schema codelists and label files)
+        // -- as Jeeves XmlFile objects (they need not exist)
 
-		for (String fname : fnames) {
-			String filePath = path + FS + "loc" + FS + defaultLang + FS + fname;
-            if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+        String base = fromAppPath + name + FS + "loc";
+        Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
+
+        for (String fname : fnames) {
+            String filePath = path + FS + "loc" + FS + defaultLang + FS + fname;
+            if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                 Log.debug(Geonet.SCHEMA_MANAGER, "Searching for " + filePath);
-			if (new File(filePath).exists()) {
-				Element config = new Element("xml");
-				config.setAttribute("name",name);
-				config.setAttribute("base",base);
-				config.setAttribute("file",fname);
-                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
-                    Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile "+Xml.getString(config));
-				XmlFile xf = new XmlFile(config, defaultLang, true);
-				xfMap.put(fname, xf);
-			} else {
-				Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);
-			}
-		}
+            if (new File(filePath).exists()) {
+                Element config = new Element("xml");
+                config.setAttribute("name", name);
+                config.setAttribute("base", base);
+                config.setAttribute("file", fname);
+                if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                    Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile " + Xml.getString(config));
+                XmlFile xf = new XmlFile(config, defaultLang, true);
+                xfMap.put(fname, xf);
+            } else {
+                Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);
+            }
+        }
 
-		// -- add any oasis catalog files to Jeeves.XML_CATALOG_FILES system 
-		// -- property for resolver to pick up
+        // -- add any oasis catalog files to Jeeves.XML_CATALOG_FILES system
+        // -- property for resolver to pick up
 
-		if (new File(oasisCatFile).exists()) {
-			String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
-			if (catalogProp == null) catalogProp = ""; // shouldn't happen
-			if (catalogProp.equals("")) {
-				catalogProp = oasisCatFile;
-			} else {
-				catalogProp = catalogProp + ";" + oasisCatFile;
-			}
-			System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
-		}
+        if (new File(oasisCatFile).exists()) {
+            String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
+            if (catalogProp == null)
+                catalogProp = ""; // shouldn't happen
+            if (catalogProp.equals("")) {
+                catalogProp = oasisCatFile;
+            } else {
+                catalogProp = catalogProp + ";" + oasisCatFile;
+            }
+            System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
+        }
 
-		Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
-		
-		mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
-		Log.debug(Geonet.SCHEMA_MANAGER,"  UUID is read/write mode: " + mds.isReadwriteUUID());
-		
-		putSchemaInfo(name,
-									idInfo.one(), // uuid of schema
-									idInfo.two(), // version of schema
-									mds, 
-									path + FS,
-									new SchemaSuggestions(xmlSuggestFile),
-									extractADElements(xmlIdFile),
-									xfMap,
-									true, // all schemas are plugin schemas now
-									extractSchemaLocation(xmlIdFile),
-									extractConvElements(conversionsFile),
-									extractDepends(xmlIdFile));
+        Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
 
-        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
-            Log.debug(Geonet.SCHEMA_MANAGER, "Property "+Jeeves.XML_CATALOG_FILES+" is "+System.getProperty(Jeeves.XML_CATALOG_FILES));
+        mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
+        Log.debug(Geonet.SCHEMA_MANAGER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
 
-		// -- Add entry for presentation xslt to schemaPlugins catalog
-		// -- if this schema is a plugin schema
-		int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
-		if (baseNrInt == 0) baseNrInt = numberOfCoreSchemasAdded; 
-		if (baseNrInt != -1) {
-			createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);		
-		}
+        putSchemaInfo(
+                name, 
+                idInfo.one(), // uuid of schema
+                idInfo.two(), // version of schema
+                mds, 
+                path + FS, 
+                new SchemaSuggestions(xmlSuggestFile),
+                extractADElements(xmlIdFile), 
+                xfMap, 
+                true, // all schemas are plugin schemas now
+                extractSchemaLocation(xmlIdFile), 
+                extractConvElements(conversionsFile), 
+                extractDepends(xmlIdFile));
 
-		// -- copy schema.xsd and schema directory from schema to 
-		// -- <web_app_dir>/xml/schemas/<schema_name>
-		copySchemaXSDsToWebApp(name, path);
+        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+            Log.debug(Geonet.SCHEMA_MANAGER, "Property " + Jeeves.XML_CATALOG_FILES + " is " + System.getProperty(Jeeves.XML_CATALOG_FILES));
+        }
 
-	}
+        // -- Add entry for presentation xslt to schemaPlugins catalog
+        // -- if this schema is a plugin schema
+        int baseNrInt = getHighestSchemaPluginCatalogId(name, schemaPluginCatRoot);
+        if (baseNrInt == 0)
+            baseNrInt = numberOfCoreSchemasAdded;
+        if (baseNrInt != -1) {
+            createUriEntryInSchemaPluginCatalog(name, baseNrInt, schemaPluginCatRoot);
+        }
+
+        // -- copy schema.xsd and schema directory from schema to
+        // -- <web_app_dir>/xml/schemas/<schema_name>
+        copySchemaXSDsToWebApp(name, path);
+
+    }
 
 	/**
      * Read the elements from the schema plugins catalog for use by other methods.
@@ -1213,16 +1220,16 @@ public class SchemaManager {
 		// -- FIXME: get schema directory and zip it up into the deleted metadata 
 		// -- directory?
 
-        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)){
             Log.debug(Geonet.SCHEMA_MANAGER, "Removing schema directory "+dir);
-		boolean deleteOp = deleteDir(new File(dir));
-        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
-            Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
+        }
+		deleteDir(new File(dir));
 
 		String pubSchemaDir = resourcePath + FS + Geonet.Path.SCHEMAS + name; 
-		Log.debug(Geonet.SCHEMA_MANAGER, "Removing published schemas directory "+pubSchemaDir);
-		deleteOp = deleteDir(new File(pubSchemaDir));
-		Log.debug(Geonet.SCHEMA_MANAGER, "Delete operation returned "+deleteOp);
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)){
+            Log.debug(Geonet.SCHEMA_MANAGER, "Removing published schemas directory "+pubSchemaDir);
+        }
+		deleteDir(new File(pubSchemaDir));
 	}
 
 	/**
@@ -1233,44 +1240,45 @@ public class SchemaManager {
      * @param schemaPluginCatRoot 
      * @return
 	 */
-	private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
+    private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
 
-    String schemaFile  = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA;
-    String suggestFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUGGESTIONS;
-    String substitutesFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_SUBSTITUTES;
-    String idFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_ID;
-    String oasisCatFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_OASIS;
-    String conversionsFile = schemasDir + saSchema +"/"+ Geonet.File.SCHEMA_CONVERSIONS;
+        String schemaFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA;
+        String suggestFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_SUGGESTIONS;
+        String substitutesFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_SUBSTITUTES;
+        String idFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_ID;
+        String oasisCatFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_OASIS;
+        String conversionsFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_CONVERSIONS;
 
-		if (!(new File(idFile).exists())) {
-			Log.error(Geonet.SCHEMA_MANAGER, "    Skipping : " +saSchema+" as it doesn't have "+Geonet.File.SCHEMA_ID);
-			return;
-		}
+        if (!(new File(idFile).exists())) {
+            Log.error(Geonet.SCHEMA_MANAGER, "    Skipping : " + saSchema + " as it doesn't have " + Geonet.File.SCHEMA_ID);
+            return;
+        }
 
-    Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " +saSchema);
-   
-	 	String stage = "";
-    try {
-			// validate the schema-ident file before reading it
-	 		stage = "reading schema-ident file "+idFile;
-			Element root = Xml.loadFile(idFile);
-	 		stage = "validating schema-ident file "+idFile;
-			Xml.validate(new Document(root));
+        Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " + saSchema);
 
-    	if (hmSchemas.containsKey(saSchema)) { // exists so ignore it
-				Log.error(Geonet.SCHEMA_MANAGER, "Schema "+saSchema+" already exists - cannot add!");
-			} else {
-	 			stage = "adding the schema information";
-    		addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile, conversionsFile);
-			}
-		} catch (Exception e) {
-			String errStr = "Failed whilst "+stage+". Exception message if any is "+e.getMessage();
-			Log.error(Geonet.SCHEMA_MANAGER, errStr);
-			e.printStackTrace();
-			throw new OperationAbortedEx(errStr, e);
+        String stage = "";
+        try {
+            // validate the schema-ident file before reading it
+            stage = "reading schema-ident file " + idFile;
+            Element root = Xml.loadFile(idFile);
+            stage = "validating schema-ident file " + idFile;
+            Xml.validate(new Document(root));
+
+            if (hmSchemas.containsKey(saSchema)) { // exists so ignore it
+                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + saSchema + " already exists - cannot add!");
+            } else {
+                stage = "adding the schema information";
+                addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile,
+                        conversionsFile);
+            }
+        } catch (Exception e) {
+            String errStr = "Failed whilst " + stage + ". Exception message if any is " + e.getMessage();
+            Log.error(Geonet.SCHEMA_MANAGER, errStr);
+            e.printStackTrace();
+            throw new OperationAbortedEx(errStr, e);
+        }
+
     }
-
-	}
 
 	/**
    * Check dependencies for all schemas - remove those that fail.
@@ -1353,11 +1361,12 @@ public class SchemaManager {
 	 * @return depends elements as a List
    * @throws Exception
 	 */
-	private List<Element> extractDepends(String xmlIdFile) throws Exception {
+	@SuppressWarnings("unchecked")
+    private List<Element> extractDepends(String xmlIdFile) throws Exception {
 		Element root = Xml.loadFile(xmlIdFile);
 
 		// get list of depends elements from schema-ident.xml
-		List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
+        List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
 		if (dependsList.size() == 0) {
 		 dependsList = root.getChildren("depends", GEONET_SCHEMA_PREFIX_NS);
 		}
@@ -1423,7 +1432,9 @@ public class SchemaManager {
 		Element root = Xml.loadFile(xmlIdFile);
 		Element autodetect = root.getChild("autodetect", GEONET_SCHEMA_NS);
 		if (autodetect == null) autodetect = root.getChild("autodetect", GEONET_SCHEMA_PREFIX_NS);
-		return autodetect.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = autodetect.getChildren();
+        return children;
 	}
 
 	/**
@@ -1434,18 +1445,19 @@ public class SchemaManager {
      * @throws Exception
 	 */
 	private List<Element> extractConvElements(String xmlConvFile) throws Exception {
-		List<Element> result = new ArrayList<Element>();
 		if (!(new File(xmlConvFile).exists())) {
             if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                 Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
+            return new ArrayList<Element>();
 		} else {
 			Element root = Xml.loadFile(xmlConvFile);
 			ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile, null, basePath, root);
 			
 			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
-			result = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> result = root.getChildren();
+			return result;
 		}
-		return result;
 	}
 
 	/**
@@ -1489,14 +1501,16 @@ public class SchemaManager {
                 if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "		Checking autodetect element "+Xml.getString(elem)+" with name "+elem.getName());
 
-				List<Element> elemKids = elem.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> elemKids = elem.getChildren();
 				boolean match = false;
 
 				Attribute type = elem.getAttribute("type");
  					
 				// --- try and find the attribute and value in md 
 				if (mode==MODE_ATTRIBUTEWITHVALUE && elem.getName() == "attributes") {
-					List<Attribute> atts = elem.getAttributes();
+					@SuppressWarnings("unchecked")
+                    List<Attribute> atts = elem.getAttributes();
 					for (Attribute searchAtt : atts) {
                         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                             Log.debug(Geonet.SCHEMA_MANAGER, "				Finding attribute "+searchAtt.toString());
@@ -1511,7 +1525,8 @@ public class SchemaManager {
 
 				// --- try and find the namespace in md 
 				} else if (mode==MODE_NAMESPACE && elem.getName() == "namespaces") {
-					List<Namespace> nss = elem.getAdditionalNamespaces();
+					@SuppressWarnings("unchecked")
+                    List<Namespace> nss = elem.getAdditionalNamespaces();
 					for (Namespace ns : nss) {
                         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                             Log.debug(Geonet.SCHEMA_MANAGER, "				Finding namespace "+ns.toString());
@@ -1582,7 +1597,8 @@ public class SchemaManager {
  	 */
 	private boolean isMatchingAttributeInMetadata(Attribute needle, Element haystack) {
 		boolean returnVal = false;
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
             Log.debug(Geonet.SCHEMA_MANAGER, "Matching " + needle.toString());
@@ -1612,7 +1628,8 @@ public class SchemaManager {
 
 		if (checkNamespacesOnElement(needle,haystack)) return true;
 
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 		while(haystackIterator.hasNext()){
 			Element tempElement = haystackIterator.next();
 			if (checkNamespacesOnElement(needle,tempElement)) return true;
@@ -1630,7 +1647,8 @@ public class SchemaManager {
  	 */
 	private boolean checkNamespacesOnElement(Namespace ns, Element elem) {
 		if (elem.getNamespace().equals(ns)) return true;
-		List<Namespace> nss = elem.getAdditionalNamespaces();
+		@SuppressWarnings("unchecked")
+        List<Namespace> nss = elem.getAdditionalNamespaces();
 		for (Namespace ans : nss) {
 			if (ans.equals(ns)) return true;
 		}
@@ -1648,7 +1666,8 @@ public class SchemaManager {
  	 */
 	private boolean isMatchingElementInMetadata(Element needle, Element haystack, boolean checkValue) {
 		boolean returnVal = false;
-		Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
+		@SuppressWarnings("unchecked")
+        Iterator<Element> haystackIterator = haystack.getDescendants(new ElementFilter());
 		
 		String needleName = needle.getName();
 		Namespace needleNS = needle.getNamespace();
@@ -1693,16 +1712,12 @@ public class SchemaManager {
 	 * @param dir the dir whose contents are to be deleted
      * @return
 	 */
-	private boolean deleteDir(File dir) {
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i=0; i<children.length; i++) { 
-				boolean success = deleteDir(new File(dir, children[i]));
-				if (!success) return false;
-			}
-		}
-
-		return dir.delete();
+	private void deleteDir(File dir) {
+	    try {
+	        FileUtils.deleteDirectory(dir);
+	    } catch (IOException e) {
+	        Log.warning(Geonet.SCHEMA_MANAGER, "Unable to delete directory: "+dir);
+	    }
 	}
 
 	/**
@@ -1750,7 +1765,7 @@ public class SchemaManager {
 		String[] schemaFiles = fileSchemaPluginDir.list(filter);
 		if (schemaFiles.length > 0) {
 			for (String schemaFile : schemaFiles) {
-				FileCopyMgr.copyFiles(new File(schemaPluginDir, schemaFile), new File(webAppDirSchemaXSD, schemaFile));
+			    BinaryFile.copy(new File(schemaPluginDir, schemaFile), new File(webAppDirSchemaXSD, schemaFile));
 			}
 		} else {
 			Log.error(Geonet.SCHEMA_MANAGER, "Schema "+name+" does not have any XSD files!");
@@ -1758,7 +1773,7 @@ public class SchemaManager {
 
 		File fileSchemaDir = new File(schemaPluginDir,"schema");
 		if (fileSchemaDir.exists()) {
-			FileCopyMgr.copyFiles(fileSchemaDir, new File(webAppDirSchemaXSD, "schema"));
+		    BinaryFile.copy(fileSchemaDir, new File(webAppDirSchemaXSD, "schema"));
 		}
 
 	}

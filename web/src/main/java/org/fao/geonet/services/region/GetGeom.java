@@ -32,7 +32,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.constants.Params;
-import org.geotools.referencing.CRS;
 import org.jdom.Element;
 
 import com.vividsolutions.jts.geom.Geometry;

@@ -137,7 +137,8 @@ public class Do implements Service {
 		// Read configuration and register node
         if(Log.isDebugEnabled(MODULE))
             Log.debug(MODULE, "Start node registration");
-		Collection<Element> nodes = geoserverConfig.getChildren("node");
+		@SuppressWarnings("unchecked")
+        Collection<Element> nodes = geoserverConfig.getChildren("node");
 		for (Element node : nodes) {
 			// TODO : check mandatory values and reject node when relevant
 			String id = node.getChildText("id");
@@ -272,29 +273,29 @@ public class Do implements Service {
 			String table, String dbType, String ns, String metadataUuid, String metadataTitle, String metadataAbstract) {
 		try {
 			if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)) {
-				String report = "";
+				StringBuilder report = new StringBuilder();
 				// TODO : check datastore already exist
 				if (!g.createDatabaseDatastore(db, host, port, db, user, password, dbType, ns))
-					report += "Datastore: " + g.getStatus();
+					report.append("Datastore: ").append(g.getStatus());
 				if (!g.createFeatureType(db, table, true, metadataUuid, metadataTitle, metadataAbstract))
-					report += "Feature type: " + g.getStatus();
+					report.append("Feature type: ").append(g.getStatus());
 //				Publication of Datastore and feature type may failed if already exist
-//				if (!report.equals("")) {
-//					setErrorCode(report);
+//				if (report.length() > 0) {
+//					setErrorCode(report.toString());
 //					return report(EXCEPTION, DB, getErrorCode());
 //				}
 			} else if (action.equals(ACTION.DELETE)) {
-				String report = "";
+			    StringBuilder report = new StringBuilder();
 				if (!g.deleteLayer(table))
-					report += "Layer: " + g.getStatus();
+					report.append("Layer: ").append(g.getStatus());
 //				Only remove the layer in such situation
 //				if (!g.deleteFeatureType(db, table))
-//					report += "Feature type: " + g.getStatus();
+//					report.append("Feature type: ").append(g.getStatus());
 //				if (!g.deleteDatastore(db))
-//					report += "Datastore: " + g.getStatus();
+//					report.append("Datastore: ").append(g.getStatus());
 
-				if (!report.equals("")) {
-					setErrorCode(report);
+				if (report.length() > 0) {
+					setErrorCode(report.toString());
 					return report(EXCEPTION, DB, getErrorCode());
 				}
 			}

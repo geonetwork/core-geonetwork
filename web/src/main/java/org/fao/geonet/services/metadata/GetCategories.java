@@ -87,13 +87,12 @@ public class GetCategories implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata categories
 
-		HashSet hsMetadataCat = new HashSet();
+		HashSet<String> hsMetadataCat = new HashSet<String>();
 
-		List mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",Integer.valueOf(id)).getChildren();
 
-		for(int i=0; i<mdCat.size(); i++)
-		{
-			Element el = (Element) mdCat.get(i);
+		for (Element el : mdCat) {
 			hsMetadataCat.add(el.getChildText("categoryid"));
 		}
 
@@ -102,11 +101,10 @@ public class GetCategories implements Service
 
 		Element elCateg = Lib.local.retrieve(dbms, "Categories");
 
-		List list = elCateg.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = elCateg.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
+		for (Element el : list) {
 
 			el.setName(Geonet.Elem.CATEGORY);
 

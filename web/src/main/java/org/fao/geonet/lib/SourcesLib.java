@@ -25,7 +25,10 @@ package org.fao.geonet.lib;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.XmlRequest;
+
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -55,16 +58,17 @@ public class SourcesLib
 	{
 		String query = "SELECT isLocal FROM Sources WHERE uuid=?";
 
-		List list = dbms.select(query, uuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, uuid).getChildren();
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 		{
 			query = "INSERT INTO Sources(uuid, name, isLocal) VALUES(?,?,?)";
 			dbms.execute(query, uuid, name, isLocal ? "y" : "n");
 		}
 		else
 		{
-			Element rec = (Element) list.get(0);
+			Element rec = list.get(0);
 
 			if (isLocal || "n".equals(rec.getChildText("islocal")))
 			{
@@ -103,7 +107,7 @@ public class SourcesLib
             context.warning("  (C) Logo  : "+ logo);
             context.warning("  (C) Excep : "+ e.getMessage());
 
-            logoFile.delete();
+            IO.delete(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }
@@ -129,7 +133,7 @@ public class SourcesLib
             context.warning("  (C) Logo  : "+ logo);
             context.warning("  (C) Excep : "+ e.getMessage());
 
-            logoFile.delete();
+            IO.delete(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }

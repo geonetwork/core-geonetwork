@@ -46,7 +46,6 @@ import jeeves.utils.Util;
 /** This is the main class. It handles http connections and inits the system
   */
 
-@SuppressWarnings("serial")
 public class JeevesServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;

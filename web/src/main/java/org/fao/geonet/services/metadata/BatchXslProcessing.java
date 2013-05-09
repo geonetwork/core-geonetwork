@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -33,7 +32,6 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
@@ -92,7 +90,6 @@ public class BatchXslProcessing extends NotInReadOnlyModeService{
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
 		UserSession session = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager()
@@ -129,7 +126,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService{
 	// ---
 	// --------------------------------------------------------------------------
 
-	class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
+	static final class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
 		Dbms dbms;
 		Iterator<String> iter;
 		String process;

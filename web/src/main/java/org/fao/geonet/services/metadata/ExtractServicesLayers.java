@@ -105,14 +105,15 @@ public class ExtractServicesLayers  implements Service {
 		    List<Element> elems ;
 
 		    try {
-		        elems = xpath.selectNodes(curMd);
+		        @SuppressWarnings("unchecked")
+                List<Element> tmp = xpath.selectNodes(curMd);
+		        elems = tmp;
 		    }  catch (Exception e)  {
 		        // Bad XML input ?
 		        continue;
 		    }
 
-		    for (Iterator itelem = elems.iterator(); itelem.hasNext();) {
-		        Element curnode    = (Element) itelem.next();
+		    for (Element curnode : elems) {
 		        XPath pLinkage     = XPath.newInstance("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
 		        XPath pProtocol    = XPath.newInstance("gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString");
 		        XPath pName        = XPath.newInstance("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");

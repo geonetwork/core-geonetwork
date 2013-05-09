@@ -58,8 +58,6 @@ public class Update implements Service {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager scm = gc.getSchemamanager();
 
-		Element response = new Element("response");
-
 		String schema = Util.getParam(params, Params.SCHEMA);
 		String urlStr, uuid, fname;
 		urlStr = uuid = fname = "";

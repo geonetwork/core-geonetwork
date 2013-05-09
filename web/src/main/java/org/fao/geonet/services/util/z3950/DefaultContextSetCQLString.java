@@ -37,10 +37,10 @@ import org.z3950.zing.cql.CQLTermNode;
  */
 public class DefaultContextSetCQLString extends GNCQLString {
 
-       private String default_attr_namespace;
+    private static final long serialVersionUID = 1L;
+    private String default_attr_namespace;
        private String default_rel_namespace;
        private String default_struct_namespace;
-       private boolean processed = false;
        private boolean force_def = false;
 
        /**

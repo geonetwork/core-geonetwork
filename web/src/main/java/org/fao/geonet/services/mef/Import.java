@@ -24,9 +24,9 @@
 package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -82,23 +82,23 @@ public class Import extends NotInReadOnlyModeService {
 		File file = new File(uploadDir, mefFile);
 
 		List<String> id = MEFLib.doImport(params, context, file, stylePath);
-        String ids = "";
+        StringBuilder ids = new StringBuilder();
 
         Iterator<String> iter = id.iterator();
         while (iter.hasNext()) {
             String item = (String) iter.next();
-            ids += item + ";";
+            ids.append(item).append(";");
 
         }
 
-        file.delete();
+        IO.delete(file, false, Geonet.MEF);
 
 		Element result = null;
 
         if (context.getService().equals("mef.import")) {
 
             result = new Element("id");
-            result.setText(ids);
+            result.setText(ids.toString());
 
         } else {
 

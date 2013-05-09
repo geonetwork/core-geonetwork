@@ -49,12 +49,10 @@ public class UriMapper
 	{
 		String query = "SELECT id, uuid, harvestUri, changeDate, schemaId, isTemplate FROM Metadata WHERE harvestUuid=?";
 
-		List idsList = dbms.select(query, harvestUuid).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> idsList = dbms.select(query, harvestUuid).getChildren();
 
-		for (int i=0; i<idsList.size(); i++)
-		{
-			Element record = (Element) idsList.get(i);
-
+		for (Element record : idsList) {
 			String uri  = record.getChildText("harvesturi");
 
 			List<RecordInfo> records = hmUriRecords.get(uri);

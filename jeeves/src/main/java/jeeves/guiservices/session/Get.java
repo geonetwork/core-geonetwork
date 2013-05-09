@@ -103,13 +103,11 @@ public class Get implements Service
 
 		if (groupName != null)
 		{
-			Hashtable group = (Hashtable)session.getProperty(groupName);
+			Map<?, Element> group = (Map<?, Element>)session.getProperty(groupName);
 			if (group != null)
 			{
 				Element gEl = new Element(groupName);
-				for (Enumeration i = group.elements(); i.hasMoreElements();)
-				{
-					Element child = (Element)i.nextElement();
+				for (Element child : group.values()) {
 					if (outFields == null || outFields.contains(child.getName()))
 						 gEl.addContent((Element)child.clone());
 				}

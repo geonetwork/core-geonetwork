@@ -53,7 +53,6 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -86,10 +85,9 @@ public class Info implements Service
 		String schema = jeeves.utils.Util.getParam(params, "schema", "");
 		String serviceType = jeeves.utils.Util.getParam(params, "serviceType", "");
 
-		for (Iterator i=params.getChildren().iterator(); i.hasNext();)
-		{
-			Element el = (Element) i.next();
-
+		@SuppressWarnings("unchecked")
+        List<Element> paramChildren = params.getChildren();
+		for (Element el : paramChildren) {
 			String name = el.getName();
 			String type = el.getText();
 
@@ -187,7 +185,8 @@ public class Info implements Service
 			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslFragmentDir);	
 			if (!xslPath.exists()) continue;
 
-			List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
 			for (Element elSheet : elSheets) {
 				elSheet = (Element)elSheet.clone();
 				elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));

@@ -23,7 +23,6 @@
 
 package jeeves.utils;
 
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
@@ -127,7 +126,7 @@ public final class Log
 		Logger.getLogger(module).warn(message);
 	}
 	
-	public static void warning(String module, Object message, IOException e) {
+	public static void warning(String module, Object message, Throwable e) {
 		Logger.getLogger(module).warn(message, e);
 	}
 

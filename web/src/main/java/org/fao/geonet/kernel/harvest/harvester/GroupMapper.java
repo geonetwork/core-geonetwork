@@ -46,11 +46,10 @@ public class GroupMapper
 	{
 		String query = "SELECT id, name FROM Groups";
 
-		List idsList = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> idsList = dbms.select(query).getChildren();
 
-        for (Object anIdsList : idsList) {
-            Element record = (Element) anIdsList;
-
+        for (Element record : idsList) {
             String id = record.getChildText("id");
             String name = record.getChildText("name");
 

@@ -7,12 +7,12 @@ import java.util.Collection;
  *
  * @author heikki doeleman
  */
-public class TestCase extends junit.framework.TestCase {
+public class GeonetworkTestCase extends junit.framework.TestCase {
 
     /**
      * Just to prevent junit.framework.AssertionFailedError: No tests found in org.fao.geonet.test.TestCase.
      */
-    public void testNothing() {}
+    public void testPreventAssertionFailedError() {}
 
     /**
      * Whether something is in a collection.
@@ -21,7 +21,7 @@ public class TestCase extends junit.framework.TestCase {
      * @param o
      * @param c
      */
-    public static void assertContains(String msg, Object o, Collection c) {
+    public static void assertContains(String msg, Object o, Collection<?> c) {
         for(Object in : c) {
             if(o.equals(in)) {
                 return;
@@ -34,13 +34,13 @@ public class TestCase extends junit.framework.TestCase {
      * No-arg constructor to enable serialization. This method is not intended to be used by mere mortals without
      * calling setName().
      */
-    public TestCase() {
+    public GeonetworkTestCase() {
         super();
     }
     /**
      * Constructs a test case with the given name.
      */
-    public TestCase(String name) {
+    public GeonetworkTestCase(String name) {
         super(name);
     }
     /**

@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import jeeves.server.context.ServiceContext;
 
-import org.geotools.referencing.CRS;
 import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 

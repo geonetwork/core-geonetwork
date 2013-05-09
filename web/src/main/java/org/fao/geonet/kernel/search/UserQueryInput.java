@@ -30,10 +30,8 @@ import org.jdom.Element;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -78,7 +76,7 @@ public class UserQueryInput {
             Geonet.SearchResult.BUILD_SUMMARY,
             Geonet.SearchResult.REQUESTED_LANGUAGE,
             "region_simple", "attrset", "mode", 
-            "region", "from", "to", "hitsperpage" 
+            "region", "from", "to", "hitsperpage", "georss"
             );
 
     private String similarity;
@@ -237,18 +235,6 @@ public class UserQueryInput {
     }
 
     /**
-     * All @See {@value #SECURITY_FIELDS} are removed from a user request.
-     * 
-     * @param jdom
-     */
-    @SuppressWarnings({"JavadocReference"})
-    private void protectRequest(Element jdom) {
-        for (String fieldName : SECURITY_FIELDS) {
-            jdom.removeChildren(fieldName);
-        }
-    }
-
-    /**
      * 
      * @return a string representation of the object.
      */
@@ -256,8 +242,7 @@ public class UserQueryInput {
     public String toString() {
         StringBuilder text = new StringBuilder();
         Map<String, Set<String>> searchCriteria = getSearchCriteria();
-        for (Iterator iter = searchCriteria.entrySet().iterator(); iter.hasNext();) {
-            Entry entry = (Entry) iter.next();
+        for (Map.Entry<String, Set<String>> entry : searchCriteria.entrySet()) {
             String fieldName = (String) entry.getKey();
             Set<String> fieldValue = (Set<String>) entry.getValue();
             text.append(fieldName).append(":").append(fieldValue).append(" ");

@@ -45,6 +45,7 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.io.IOUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -384,22 +385,15 @@ public class XmlRequest
 
 			is = httpMethod.getResponseBodyAsStream();
 			os = new FileOutputStream(outFile);
-
-			BinaryFile.copy(is, os, true, true);
-
-			is.close();
-			os.close();
+			
+			BinaryFile.copy(is, os);
 
 			return outFile;
 		}
 		finally
 		{
-			if (is != null)
-				is.close();
-
-			if (os != null)
-				os.close();
-
+		    IOUtils.closeQuietly(is);
+		    IOUtils.closeQuietly(os);
 			httpMethod.releaseConnection();
 
 			sentData = getSentData(httpMethod);

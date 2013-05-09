@@ -1,7 +1,5 @@
 package jeeves.server.local;
 
-import java.util.Collection;
-import java.util.Collections;
 
 import jeeves.guiservices.session.JeevesUser;
 import jeeves.server.JeevesEngine;
@@ -11,9 +9,6 @@ import jeeves.utils.Xml;
 
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**

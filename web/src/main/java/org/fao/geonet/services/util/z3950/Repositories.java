@@ -25,9 +25,11 @@ package org.fao.geonet.services.util.z3950;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Comment;
 import org.jdom.Content;
@@ -94,13 +96,13 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 
 		try {
-			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+		    BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("className").equals("org.jzkit.search.provider.z3950.Z3950Origin")) continue;
 				copy.addContent((Content)child.clone());
@@ -115,7 +117,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();
@@ -137,14 +139,14 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 		boolean replaced = false;
 
 		try {
-			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+			BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("code").equals(code)) {
 					copy.addContent(repo);
@@ -164,7 +166,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();

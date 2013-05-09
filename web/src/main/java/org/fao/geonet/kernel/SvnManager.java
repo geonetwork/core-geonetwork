@@ -45,6 +45,7 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.SVNCommitInfo;
+import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
@@ -181,7 +182,7 @@ public class SvnManager {
             // get database URL from root of repository and check against dbUrl
             // if it doesn't match then stop
             SVNProperties rootProps = new SVNProperties();
-            Collection nullColl = null;
+            Collection<SVNDirEntry> nullColl = null;
             repo.getDir("/", -1, rootProps, nullColl);
             String repoDbUrl = rootProps.getStringValue(Params.Svn.DBURLPROP).trim();
             if (repoDbUrl == null || (!dbUrl.trim().equals(repoDbUrl))) {
@@ -417,7 +418,6 @@ public class SvnManager {
                     it.remove();
                 }
                 editor.closeDir(); // close the root directory.
-                SVNCommitInfo commitInfo = editor.closeEdit();
                 if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                     Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids " + task.ids);
             } catch (Exception e) {
@@ -584,10 +584,11 @@ public class SvnManager {
         Element status = dataMan.getStatus(dbms, Integer.valueOf(id));
         if (status == null)
             return;
+        @SuppressWarnings("unchecked")
         List<Element> statusKids = status.getChildren();
         if (statusKids.size() == 0)
             return;
-        status = (Element) status.getChildren().get(0);
+        status = statusKids.get(0);
         String now = Xml.getString(status);
 
         if (exists(id + "/status.xml")) {

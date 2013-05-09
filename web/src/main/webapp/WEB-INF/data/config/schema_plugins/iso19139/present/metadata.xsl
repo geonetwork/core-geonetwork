@@ -737,7 +737,7 @@
 						<xsl:variable name="link">
 							<xsl:choose>
 								<xsl:when test="geonet:is-image(gmx:FileName/@src)">
-									<img class="logo-wrap" src="{gmx:FileName/@src}"/>
+									<img class="logo-wrap logo" src="{gmx:FileName/@src}"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>

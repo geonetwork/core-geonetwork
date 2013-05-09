@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.rdf;
 import static java.text.MessageFormat.format;
 import static org.fao.geonet.kernel.rdf.Selectors.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;

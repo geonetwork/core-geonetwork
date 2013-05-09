@@ -38,9 +38,6 @@ import java.io.IOException;
 
 public class IsFullyOutsideOfFilter  extends SpatialFilter
 {
-
-    private static final long serialVersionUID = 1114543251684147194L;
-
     public IsFullyOutsideOfFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         super(query, numHits, geom, sourceAccessor);

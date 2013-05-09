@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
@@ -18,11 +16,7 @@ import org.jfree.chart.imagemap.ImageMapUtilities;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.Month;
-import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.Year;
 import org.jfree.ui.RectangleInsets;
 
 
@@ -38,11 +32,11 @@ public class ChartFactory {
 	public final static byte TIMESERIES = 0;
 	public final static byte PIECHART = 1;
 	
-	private final String logDateFormat = "";
-	private boolean verboseMessage;
+//	private final String logDateFormat = "";
+//	private boolean verboseMessage;
 	
 	public ChartFactory(boolean verbose) {
-		this.verboseMessage = verbose;
+//		this.verboseMessage = verbose;
 	}
 	
 	/**
@@ -55,37 +49,35 @@ public class ChartFactory {
 	 *            the date, expressed as yyyy-MM-ddThh:mm:ss java pattern
 	 * @return a timePeriod with the right type
 	 */
-	private RegularTimePeriod getTimePeriod(
-			String dateType, 
-			String date,
-			DateFormat dateFormat) throws Exception {
-		if ("MONTH".equals(dateType)) {
-			return new Month(Integer.parseInt(date.substring(5, 7)), Integer
-					.parseInt(date.substring(0, 4)));
-		} else if ("YEAR".equals(dateType)) {
-			return new Year(Integer.parseInt(date.substring(0, 4)));
-		} else if ("DAY".equals(dateType)) {
-			return new Day(dateFormat.parse(date));
-		}
-		return null;
-	}
+//	private RegularTimePeriod getTimePeriod(
+//			String dateType, 
+//			String date,
+//			DateFormat dateFormat) throws Exception {
+//		if ("MONTH".equals(dateType)) {
+//			return new Month(Integer.parseInt(date.substring(5, 7)), Integer
+//					.parseInt(date.substring(0, 4)));
+//		} else if ("YEAR".equals(dateType)) {
+//			return new Year(Integer.parseInt(date.substring(0, 4)));
+//		} else if ("DAY".equals(dateType)) {
+//			return new Day(dateFormat.parse(date));
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * returns the name of the PNG image generated to represent the given record
 	 * object values into the given graphic type (see public class constant for list
 	 * of supported types
-	 * @param record the Element object containing values to represent into a graphic
 	 * @param graphType the graphic type
 	 * @param fileName the absolute filename to generates
+	 * @param record the Element object containing values to represent into a graphic
 	 * @return the absolute path to the generated file
 	 */
-	public boolean getChartFromRecord(List resultSet, String[] columns, byte graphType, String fileName) {
+	public boolean getChartFromRecord(String[] columns, byte graphType, String fileName) {
 		switch (graphType) {
 		case ChartFactory.TIMESERIES :
-			//return getTimeseriesFromRecord(resultSet, fileName);
 			break;
 		case ChartFactory.PIECHART :
-			//return getPiechartFromRecord(resultSet, fileName);
 			break;
 		default:
 			return false;

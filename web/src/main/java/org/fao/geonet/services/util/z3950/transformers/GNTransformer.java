@@ -39,7 +39,8 @@ public class GNTransformer extends FragmentTransformer {
 	private String stylesheet;
 	private DocumentBuilder htmldb = null;
 
-	public GNTransformer(String from, String to, Map properties, Map context, ApplicationContext ctx) {
+	@SuppressWarnings("rawtypes")
+    public GNTransformer(String from, String to, Map properties, Map context, ApplicationContext ctx) {
 		super(from,to,properties,context,ctx);
 		this.ctx = ctx;
 
@@ -72,7 +73,7 @@ public class GNTransformer extends FragmentTransformer {
 	}
 	
 
-	public Document transform(Document input, Map additional_properties) throws FragmentTransformationException {
+	public Document transform(Document input, @SuppressWarnings("rawtypes") Map additional_properties) throws FragmentTransformationException {
 
 		DOMBuilder builder = new DOMBuilder();
 		org.jdom.Document jdomDoc = builder.build(input);

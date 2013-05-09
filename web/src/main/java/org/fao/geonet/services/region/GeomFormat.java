@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.HashMap;
 
+import jeeves.constants.Jeeves;
+
 import org.fao.geonet.csw.common.util.Xml;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Encoder;
@@ -15,13 +17,12 @@ import scala.actors.threadpool.Arrays;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import com.vividsolutions.jts.io.gml2.GMLWriter;
 
 public enum GeomFormat {
 
     WKT {
-        private WKTWriter wktWriter = new WKTWriter();
-        private WKTReader wktReader = new WKTReader();
+        private transient WKTWriter wktWriter = new WKTWriter();
+        private transient WKTReader wktReader = new WKTReader();
 
         @Override
         public Element toElement(Geometry geom) {
@@ -43,7 +44,7 @@ public enum GeomFormat {
             encoder.setNamespaceAware(true);
 
             encoder.encode(geom, org.geotools.gml3.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString();
+            String gmlString = outputStream.toString(Jeeves.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }
@@ -85,7 +86,7 @@ public enum GeomFormat {
             encoder.setNamespaceAware(true);
 
             encoder.encode(geom, org.geotools.gml2.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString();
+            String gmlString = outputStream.toString(Jeeves.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }
@@ -105,7 +106,7 @@ public enum GeomFormat {
             encoder.setIndenting(false);
 
             encoder.encode(geom, org.geotools.gml3.v3_2.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString();
+            String gmlString = outputStream.toString(Jeeves.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }
@@ -120,9 +121,9 @@ public enum GeomFormat {
 
     public abstract Geometry parse(String geomString) throws Exception;
 
-    GMLConfiguration gml2Config = new GMLConfiguration();
-    org.geotools.gml3.GMLConfiguration gml3Config = new org.geotools.gml3.GMLConfiguration();
-    org.geotools.gml3.v3_2.GMLConfiguration gml32Config = new org.geotools.gml3.v3_2.GMLConfiguration();
+    transient GMLConfiguration gml2Config = new GMLConfiguration();
+    transient org.geotools.gml3.GMLConfiguration gml3Config = new org.geotools.gml3.GMLConfiguration();
+    transient org.geotools.gml3.v3_2.GMLConfiguration gml32Config = new org.geotools.gml3.v3_2.GMLConfiguration();
 
     public static GeomFormat find(String geomType) {
         for (GeomFormat f : values()) {

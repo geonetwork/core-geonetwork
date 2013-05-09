@@ -33,9 +33,7 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.fao.geonet.constants.Geonet;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.util.Collections;
 import java.util.Set;
 
 /**

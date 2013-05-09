@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.ownership;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -124,17 +123,20 @@ public class Transfer extends NotInReadOnlyModeService {
      * @throws SQLException
      */
 	private Set<String> retrievePrivileges(Dbms dbms, Integer userId, int groupId) throws SQLException {
-	    List list;
+	    final List<Element> list;
 	    if(userId==null) {
             String query = "SELECT * FROM OperationAllowed WHERE groupId=?";
-            list = dbms.select(query, groupId).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = dbms.select(query, groupId).getChildren();
+            list = tmp;
 	    } else {
             String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
-            list = dbms.select(query, userId, groupId).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = dbms.select(query, userId, groupId).getChildren();
+            list = tmp;
 	    }
 		Set<String> result = new HashSet<String>();
-		for (Object o : list) {
-			Element elem = (Element) o;
+		for (Element elem : list) {
 			String  opId = elem.getChildText("operationid");
 			String  mdId = elem.getChildText("metadataid");
 			result.add(opId +"|"+ mdId);

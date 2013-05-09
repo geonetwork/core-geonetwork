@@ -37,7 +37,6 @@ import org.jdom.Element;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,10 +79,10 @@ public class AccessManager {
      */
 	public AccessManager(Dbms dbms, SettingManager sm) throws SQLException {
 		settMan = sm;
-		List operList = dbms.select("SELECT * FROM Operations").getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> operList = dbms.select("SELECT * FROM Operations").getChildren();
 
-		for (Object o : operList) {
-			Element oper = (Element) o;
+		for (Element oper : operList) {
 			String id   = oper.getChildText("id");
 			String name = oper.getChildText("name");
 
@@ -144,7 +143,7 @@ public class AccessManager {
 			ops = operations;
 		}
 
-		List operIds = Xml.selectNodes(ops, "record/operationid");
+		List<?> operIds = Xml.selectNodes(ops, "record/operationid");
         for (Object operId : operIds) {
             Element elem = (Element) operId;
             out.add(elem.getText());
@@ -173,12 +172,10 @@ public class AccessManager {
 		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
 		StringBuffer groupList = new StringBuffer();
 
-		for (Iterator i = groups.iterator(); i.hasNext(); ) {
-			String groupId = (String) i.next();
+		for (String groupId : groups) {
+		    if(groupList.length() > 0)
+		        groupList.append(", ");
 			groupList.append(groupId);
-
-			if (i.hasNext())
-				groupList.append(", ");
 		}
 		// get allowed operations
 		StringBuffer query = new StringBuffer();
@@ -236,10 +233,10 @@ public class AccessManager {
 			if (Geonet.Profile.ADMINISTRATOR.equals(usrSess.getProfile())) {
 				Element elUserGrp = dbms.select("SELECT id FROM Groups");
 
-				List list = elUserGrp.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> list = elUserGrp.getChildren();
 
-                for (Object aList : list) {
-                    Element el = (Element) aList;
+                for (Element el : list) {
                     String groupId = el.getChildText("id");
                     hs.add(groupId);
                 }
@@ -252,10 +249,10 @@ public class AccessManager {
 				query.append("userId=?");
 				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
 
-				List list = elUserGrp.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> list = elUserGrp.getChildren();
 
-                for (Object aList : list) {
-                    Element el = (Element) aList;
+                for (Element el : list) {
                     String groupId = el.getChildText("groupid");
                     hs.add(groupId);
                 }
@@ -293,7 +290,8 @@ public class AccessManager {
 		Set<String> hs = new HashSet<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
-		List   list = dbms.select(query, Integer.valueOf(userId)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element>   list = dbms.select(query, Integer.valueOf(userId)).getChildren();
 
 		//--- return an empty list if the user does not exist
 
@@ -459,6 +457,7 @@ public class AccessManager {
             return false;
         }
         else {
+            @SuppressWarnings("unchecked")
             List<Element> records = result.getChildren("record");
             for(Element record : records) {
                 String operationId = record.getChildText("operationid");

@@ -68,7 +68,8 @@ public class SelectionManager {
 	 */
 	public static void updateMDResult(UserSession session, Element result) {
 		SelectionManager manager = getManager(session);
-		List<Element> elList = result.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> elList = result.getChildren();
 
 		Set<String> selection = manager.getSelection(SELECTION_METADATA);
 

@@ -58,7 +58,6 @@ public class Change extends NotInReadOnlyModeService {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -144,10 +143,8 @@ public class Change extends NotInReadOnlyModeService {
 	}
 
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
 	private static final String PROTOCOL = "smtp";
-	private static final String CONFIRM = "confirm";
 	private static final String CHANGE_KEY = "changeKey";
 	private static final String PWD_CHANGED_XSLT = "password-changed-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";

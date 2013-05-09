@@ -159,14 +159,15 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
                        // remove summary
                        result.removeChildren("summary");
-                       List list = result.getChildren();
+                       @SuppressWarnings("unchecked")
+                    List<Element> list = result.getChildren();
 
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Set name asked:" + spec);
 
                        // save other records to fragment
                        for (int i = 0; i < count; i++) {
-                               Element md = (Element) list.get(0);
+                               Element md = list.get(0);
                                md.detach();
 
                            if(Log.isDebugEnabled(Geonet.Z3950_SERVER))

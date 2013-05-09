@@ -30,6 +30,8 @@ import jeeves.utils.BinaryFile;
 import jeeves.utils.IO;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -84,26 +86,26 @@ public class Aligner extends BaseAligner
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
-		List list = remoteInfo.getChild("groups").getChildren("group");
+		@SuppressWarnings("unchecked")
+        List<Element> list = remoteInfo.getChild("groups").getChildren("group");
 		setupLocEntity(list, hmRemoteGroups);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private void setupLocEntity(List list, HashMap<String, HashMap<String, String>> hmEntity)
+	private void setupLocEntity(List<Element> list, HashMap<String, HashMap<String, String>> hmEntity)
 	{
 
-        for (Object aList : list) {
-            Element entity = (Element) aList;
+        for (Element entity : list) {
             String name = entity.getChildText("name");
 
             HashMap<String, String> hm = new HashMap<String, String>();
             hmEntity.put(name, hm);
 
-            List labels = entity.getChild("label").getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> labels = entity.getChild("label").getChildren();
 
-            for (Object label : labels) {
-                Element el = (Element) label;
+            for (Element el : labels) {
                 hm.put(el.getName(), el.getText());
             }
         }
@@ -250,9 +252,14 @@ public class Aligner extends BaseAligner
 					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
 					File outFile = new File(pubDir, file);
-					FileOutputStream os = new FileOutputStream(outFile);
-					BinaryFile.copy(is, os, false, true);
-					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+					FileOutputStream os = null;
+					try {
+                        os = new FileOutputStream(outFile);
+    					BinaryFile.copy(is, os);
+    					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+					} finally {
+					    IOUtils.closeQuietly(os);
+					}
 				}
 				
 				public void handleFeatureCat(Element md, int index)
@@ -267,9 +274,14 @@ public class Aligner extends BaseAligner
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
 	                    String dir = Lib.resource.getDir(context, "private", id[index]);
 	                    File outFile = new File(dir, file);
-	                    FileOutputStream os = new FileOutputStream(outFile);
-	                    BinaryFile.copy(is, os, false, true);
-	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+	                    FileOutputStream os = null;
+	                    try {
+                            os = new FileOutputStream(outFile);
+    	                    BinaryFile.copy(is, os);
+    	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+	                    } finally {
+	                        IOUtils.closeQuietly(os);
+	                    }
 				    }
 				}
 			});
@@ -700,10 +712,10 @@ public class Aligner extends BaseAligner
 
 	private boolean existsFile(String fileName, Element files)
 	{
-		List list = files.getChildren("file");
+		@SuppressWarnings("unchecked")
+        List<Element> list = files.getChildren("file");
 
-        for (Object aList : list) {
-            Element elem = (Element) aList;
+        for (Element elem : list) {
             String name = elem.getAttributeValue("name");
 
             if (fileName.equals(name)) {
@@ -729,9 +741,14 @@ public class Aligner extends BaseAligner
 		{
             if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
-			FileOutputStream os = new FileOutputStream(locFile);
-			BinaryFile.copy(is, os, false, true);
-			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+			FileOutputStream os = null;
+			try {
+                os = new FileOutputStream(locFile);
+    			BinaryFile.copy(is, os);
+    			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+			} finally {
+			    IOUtils.closeQuietly(os);
+			}
 		}
 		else
 		{

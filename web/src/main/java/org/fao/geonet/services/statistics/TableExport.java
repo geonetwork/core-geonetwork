@@ -2,25 +2,27 @@ package org.fao.geonet.services.statistics;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -34,7 +36,6 @@ public class TableExport extends NotInReadOnlyModeService{
     /** constant for CSV file export */
 	public final static String CSV = "CSV";
 
-    private String currentExportFormat;
     /** the full path to the application directory */
     private  String appPath;
     /** the separator for CSV format
@@ -55,7 +56,7 @@ public class TableExport extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
 	public void init(String appPath, ServiceConfig params) throws Exception	{
         super.init(appPath, params);
-		this.currentExportFormat = params.getValue("exportType");
+//		this.currentExportFormat = params.getValue("exportType");
 		this.csvSep = params.getValue("csvSeparator");
 		this.dumpHeader = "true".equalsIgnoreCase(params.getValue("dumpHeader"));
         this.allowedTablesToExport = Arrays.asList(params.getValue("allowedTables").split(","));
@@ -89,9 +90,8 @@ public class TableExport extends NotInReadOnlyModeService{
 
         // file to write
 		File tableDumpFile = new File(appPath + File.separator + "images" + File.separator + "statTmp");
-		if (!tableDumpFile.exists()) {
-			tableDumpFile.mkdirs();
-		}
+	    IO.mkdirs(tableDumpFile, "Statistics temp directory");
+	      
         String dumpFileName = tableToExport + "_" + context.getUserSession().getUserId() + ".csv";
         tableDumpFile = new File(tableDumpFile.getAbsolutePath(), dumpFileName);
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
@@ -104,9 +104,15 @@ public class TableExport extends NotInReadOnlyModeService{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         // use connection by hand, to allow us to control the resultset and avoid Java Heap Space Exception
         Connection con = dbms.getConnection();
-        Statement stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = stmt.executeQuery(query);
-        BufferedWriter out = new BufferedWriter(new FileWriter(tableDumpFile));
+        Statement stmt = null;
+        ResultSet rs = null;
+        FileOutputStream fileOutputStream = null;
+        BufferedWriter out = null;
+        try {
+        stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        rs = stmt.executeQuery(query);
+        fileOutputStream = new FileOutputStream(tableDumpFile);
+        out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Jeeves.ENCODING));
         ResultSetMetaData rsMetaData = rs.getMetaData();
 
         if (this.dumpHeader) {
@@ -132,6 +138,12 @@ public class TableExport extends NotInReadOnlyModeService{
             out.newLine();
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"data written");
+        } finally {
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(fileOutputStream);
+            IO.closeQuietly(rs);
+            IO.closeQuietly(stmt);
+        }
         rs.close();
         stmt.close();
         out.flush();

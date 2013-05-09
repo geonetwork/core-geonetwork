@@ -250,6 +250,7 @@ public class GetRelated implements Service {
     }
 
     private StringBuffer filterMetadata(Element md, ElementFilter el) {
+        @SuppressWarnings("unchecked")
         Iterator<Element> i = md.getDescendants(el);
         StringBuffer uuids = new StringBuffer("");
         boolean first = true;

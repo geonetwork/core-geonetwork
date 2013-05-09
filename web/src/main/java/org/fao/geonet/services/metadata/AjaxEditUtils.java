@@ -13,15 +13,15 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +80,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
     protected Element applyChangesEmbedded(Dbms dbms, String id, 
-                                        Hashtable changes, String currVersion) throws Exception {
+                                        Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();
@@ -99,9 +99,9 @@ public class AjaxEditUtils extends EditUtils {
         Map<String, String> xmlInputs = new HashMap<String, String>();
 
         // --- update elements
-        for (Enumeration e = changes.keys(); e.hasMoreElements();) {
-            String ref = ((String) e.nextElement()).trim();
-            String value = ((String) changes.get(ref)).trim();
+        for (Map.Entry<String, String> entry : changes.entrySet()) {
+            String ref = entry.getKey().trim();
+            String value = entry.getValue().trim();
             String attribute = null;
             
             // Avoid empty key
@@ -142,12 +142,13 @@ public class AjaxEditUtils extends EditUtils {
                 }
             } else {
                 // Process element value
-                List content = el.getContent();
+                @SuppressWarnings("unchecked")
+                List<Content> content = el.getContent();
                 
-                for (int i = 0; i < content.size(); i++) {
-                    if (content.get(i) instanceof Text) {
-                        el.removeContent((Text) content.get(i));
-                        i--;
+                for (Iterator<Content> iterator = content.iterator(); iterator.hasNext();) {
+                    Content content2 = iterator.next();
+                    if (content2 instanceof Text) {
+                        iterator.remove();
                     }
                 }
                 el.addContent(value);
@@ -158,8 +159,9 @@ public class AjaxEditUtils extends EditUtils {
         if (!xmlInputs.isEmpty()) {
             
             // Loop over each XML fragments to insert or replace
-            for (String ref : xmlInputs.keySet()) {
-                String value = xmlInputs.get(ref);
+            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
+                String ref = entry.getKey();
+                String value = entry.getValue();
                 String name = null;
                 int addIndex = ref.indexOf('_');
                 if (addIndex != -1) {
@@ -307,9 +309,9 @@ public class AjaxEditUtils extends EditUtils {
 		if (childName != null) {
 			if (childName.equals("geonet:attribute")) {
 				String defaultValue = "";
-				List attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
-				for (Object a : attributeDefs) {
-					Element attributeDef = (Element) a;
+				@SuppressWarnings("unchecked")
+                List<Element> attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
+				for (Element attributeDef : attributeDefs) {
 					if (attributeDef != null && attributeDef.getAttributeValue(Edit.Attribute.Attr.NAME).equals(name)) {
 						Element defaultChild = attributeDef.getChild(Edit.Attribute.Child.DEFAULT, Edit.NAMESPACE);
 						if (defaultChild != null) {
@@ -419,10 +421,10 @@ public class AjaxEditUtils extends EditUtils {
 
 				//--- get geonet child element with attribute name = unqualified name
 				Filter chFilter = new ElementFilter(Edit.RootChild.CHILD, Edit.NAMESPACE);
-				List children = parent.getContent(chFilter);
+				@SuppressWarnings("unchecked")
+                List<Element> children = parent.getContent(chFilter);
 
-				for (int i = 0; i < children.size(); i++) {
-					Element ch = (Element) children.get(i);
+				for (Element ch : children) {
 					String name = ch.getAttributeValue("name");
 					if (name != null && name.equals(uName)) {
 						result = (Element) ch.clone();
@@ -546,14 +548,17 @@ public class AjaxEditUtils extends EditUtils {
 		//--- swap the elements
 		int iSwapIndex = -1;
 
-		List list = ((Element) elSwap.getParent()).getChildren(elSwap.getName(), elSwap.getNamespace());
+		@SuppressWarnings("unchecked")
+        List<Element> list = elSwap.getParentElement().getChildren(elSwap.getName(), elSwap.getNamespace());
 
-		for(int i=0; i<list.size(); i++)
-			if (list.get(i) == elSwap)
-			{
-				iSwapIndex = i;
-				break;
-			}
+		int i = -1;
+		for (Element element : list) {
+		    i++;
+            if (element == elSwap) {
+                iSwapIndex = i;
+                break;
+            }
+        }
 
 		if (iSwapIndex == -1)
 			throw new IllegalStateException("Index not found for element --> " + elSwap);

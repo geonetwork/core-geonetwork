@@ -23,30 +23,20 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.util.List;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.ListRecordsRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
-import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListRecordsResponse;
 import org.fao.oaipmh.responses.Record;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
-import org.jdom.Element;
 
 //=============================================================================
 
@@ -101,7 +91,6 @@ public class ListRecords extends AbstractTokenLister
 	//---
 	//---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
 	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
 	{
 

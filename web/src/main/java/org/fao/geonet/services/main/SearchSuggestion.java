@@ -89,7 +89,7 @@ public class SearchSuggestion implements Service {
     /**
      * Default field to search in. any is full-text search field.
      */
-    private static String _defaultSearchField = "any";
+    private String _defaultSearchField = "any";
 
     private ServiceConfig _config;
     

@@ -122,10 +122,10 @@ class Harvester
 			throw new OperationAbortedEx("Missing 'channel' element in \n", Xml.getString(response));
 		}
 
-		List list = channel.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = channel.getChildren();
 
-		for (Object e :list) {
-			Element    record = (Element) e;
+		for (Element record :list) {
 			if (!record.getName().equals("item")) continue; // skip all the other crap
 			RecordInfo recInfo = getRecordInfo((Element)record.clone());
 			if (recInfo != null) records.add(recInfo);

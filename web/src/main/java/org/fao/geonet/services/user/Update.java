@@ -24,7 +24,6 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -37,7 +36,6 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javax.servlet.ServletContext;
 
@@ -81,7 +79,8 @@ public class Update extends NotInReadOnlyModeService {
 		String      myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 		
-		java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
+		@SuppressWarnings("unchecked")
+        java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
 		if (!operation.equals(Params.Operation.RESETPW)) {
 			if (!context.getProfileManager().exists(profile))
@@ -105,7 +104,8 @@ public class Update extends NotInReadOnlyModeService {
 			if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
 				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
 					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", Integer.valueOf(myUserId));
-					java.util.List<Element> myGroups = grps.getChildren();
+					@SuppressWarnings("unchecked")
+                    java.util.List<Element> myGroups = grps.getChildren();
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
 						boolean found = false;
@@ -184,7 +184,9 @@ public class Update extends NotInReadOnlyModeService {
 		java.util.Set<Integer> editingGroups = new java.util.HashSet<Integer>();
 		int userId = Integer.valueOf(id);
 		for (String profile : profiles) {
-			java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
+		    
+			@SuppressWarnings("unchecked")
+            java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
 			for(Element userGroup : userGroups) {
 				String group = userGroup.getText();
 				if (!group.equals("")) {

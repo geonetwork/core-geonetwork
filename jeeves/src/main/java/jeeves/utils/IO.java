@@ -26,12 +26,14 @@ package jeeves.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.io.IOUtils;
 
@@ -120,7 +122,46 @@ public final class IO
         if (!file.setLastModified(timeMillis)) {
             Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
         }
-        
+    }
+
+    public static void delete(File file, boolean throwException, String loggerModule) {
+        if (!file.delete() && file.exists()) {
+            if(throwException) {
+                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+            } else {
+                Log.warning(loggerModule, "Unable to delete "+file.getAbsolutePath());
+            }
+        }
+    }
+
+    public static void delete(File file, boolean throwException, ServiceContext context) {
+        if (!file.delete() && file.exists()) {
+            if(throwException) {
+                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+            } else {
+                context.warning("Unable to delete "+file.getAbsolutePath());
+            }
+        }
+    }
+
+    public static void closeQuietly(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (Throwable t) {
+                // ignore
+            }
+        }
+    }
+
+    public static void closeQuietly(Statement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (Throwable t) {
+                // ignore
+            }
+        }
     }
 }
 

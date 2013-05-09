@@ -135,11 +135,11 @@ public class Get implements Service {
 	 */
 	private static Set<String> retrieveIds(Dbms dbms, String query,
 			String field, int id) throws SQLException {
-		List<Element> records = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> records = dbms.select(query, Integer.valueOf(id)).getChildren();
 		Set<String> results = new HashSet<String>();
 
-		for (Object o : records) {
-			Element rec = (Element) o;
+		for (Element rec : records) {
 			String val = rec.getChildText(field);
 
 			results.add(val);

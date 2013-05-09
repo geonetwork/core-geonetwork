@@ -245,12 +245,12 @@ class Harvester
 				}
 			}
 
-			List list = results.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> list = results.getChildren();
 			int counter = 0;
 
-			for (Object e :list)
+			for (Element record :list)
 			{
-				Element    record = (Element) e;
 				RecordInfo recInfo= getRecordInfo((Element)record.clone());
 
 				if (recInfo != null)

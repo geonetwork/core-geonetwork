@@ -31,7 +31,6 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -171,5 +170,4 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private WfsFeaturesParams params;
-	private HarvestResult result;
 }

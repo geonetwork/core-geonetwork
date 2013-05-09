@@ -5,7 +5,10 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.fao.geonet.constants.Geonet;
 import org.geonetwork.http.proxy.util.RequestUtil;
 import org.geonetwork.http.proxy.util.ServletConfigUtil;
 
@@ -16,7 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+
+import jeeves.utils.Log;
 
 /**
  * Http proxy for ajax calls
@@ -24,6 +33,8 @@ import java.util.Enumeration;
  * @author Jose Garcia
  */
 public class HttpProxyServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
     // Url to proxy
     private static final String PARAM_URL = "url";
 
@@ -39,7 +50,7 @@ public class HttpProxyServlet extends HttpServlet {
     private String defaultProxyUrl;
 
     // List of allowed hosts for the proxy
-    private String[] allowedHosts;
+    private List<InetAddress> allowedHosts;
 
     // List of valid content types for request
     private String[] validContentTypes;
@@ -63,7 +74,21 @@ public class HttpProxyServlet extends HttpServlet {
 
         // List of allowed hosts accessed by proxy. If empty, all hosts are allowed
         if (allowedHostsValues != null) {
-            allowedHosts = allowedHostsValues.split(",");
+            String[] hostNames = allowedHostsValues.split(",");
+            List<InetAddress> addresses = new ArrayList<InetAddress>(hostNames.length * 2);
+            for (String host : hostNames) {
+                try {
+                    InetAddress[] allByName = InetAddress.getAllByName(host);
+                    for (InetAddress inetAddress : allByName) {
+                        addresses.add(inetAddress);
+                    }
+                } catch (UnknownHostException e) {
+                    Log.error(Geonet.GEONETWORK+".httpproxy", "Error resolving address of host:"+host, e);
+                }
+            }
+            if(!addresses.isEmpty()) {
+                this.allowedHosts = addresses;
+            }
         }
 
         // List of allowed content types for request
@@ -87,9 +112,10 @@ public class HttpProxyServlet extends HttpServlet {
             // Get rest of parameters to pass to proxied url
             HttpMethodParams urlParams = new HttpMethodParams();
 
-            Enumeration paramNames = request.getParameterNames();
+            @SuppressWarnings("unchecked")
+            Enumeration<String> paramNames = request.getParameterNames();
             while (paramNames.hasMoreElements()) {
-                String paramName = (String) paramNames.nextElement();
+                String paramName = paramNames.nextElement();
                 if (!paramName.equalsIgnoreCase(PARAM_URL)) {
                     urlParams.setParameter(paramName, request.getParameter(paramName));
                 }
@@ -171,9 +197,10 @@ public class HttpProxyServlet extends HttpServlet {
             // Get rest of parameters to pass to proxied url
             HttpMethodParams urlParams = new HttpMethodParams();
 
-            Enumeration paramNames = request.getParameterNames();
+            @SuppressWarnings("unchecked")
+            Enumeration<String> paramNames = request.getParameterNames();
             while (paramNames.hasMoreElements()) {
-                String paramName = (String) paramNames.nextElement();
+                String paramName = paramNames.nextElement();
                 if (!paramName.equalsIgnoreCase(PARAM_URL)) {
                     urlParams.setParameter(paramName, request.getParameter(paramName));
                 }
@@ -201,7 +228,8 @@ public class HttpProxyServlet extends HttpServlet {
                     client.getHostConfiguration().setProxy(proxyHost, Integer.valueOf(proxyPort));
                 }
 
-                httpPost.setRequestBody(body);
+                RequestEntity entity = new StringRequestEntity(body, request.getContentType(), request.getCharacterEncoding());
+                httpPost.setRequestEntity(entity);
 
                 client.executeMethod(httpPost);
 
@@ -276,17 +304,25 @@ public class HttpProxyServlet extends HttpServlet {
      *         False in other case
      */
     private boolean isAllowedHost(String host) {
-        return true;
+        if(host == null || host.trim().isEmpty()) return false;
+        if (allowedHosts == null || allowedHosts.isEmpty()) return true;
 
-        /*System.out.println("isAllowedHost (host): " + host);
-        if ((allowedHosts == null) || (allowedHosts.length == 0)) return true;
+        InetAddress[] targetAddr;
 
-        for (String h : allowedHosts) {
-            if ((!StringUtils.isEmpty(h)) && (h.equals(host))) {
-                return true;
+        try {
+            targetAddr = InetAddress.getAllByName(host);
+        } catch (UnknownHostException e) {
+            return false;
+        }
+
+        for (InetAddress address : allowedHosts) {
+            for (InetAddress targetOpt : targetAddr) {
+                if (targetOpt.equals(address)) {
+                    return true;
+                }
             }
         }
-        return false;*/
+        return false;
     }
 
     /**

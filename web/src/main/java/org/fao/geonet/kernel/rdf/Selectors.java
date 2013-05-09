@@ -2,7 +2,6 @@ package org.fao.geonet.kernel.rdf;
 
 import static java.text.MessageFormat.format;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Namespace;

@@ -53,7 +53,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -474,13 +473,16 @@ public class SearchController {
                                 xpath = "/" + typeName + "//" + elementName ;
                         }
                     }
+                    @SuppressWarnings("unchecked")
                     List<Element> elementsMatching = (List<Element>)Xml.selectDocumentNodes(result, xpath, namespaces);
+                    
                     if(strategy.equals("context")) {
-                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                             Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
+                        }
+                        
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
-                        for(Iterator<Element> i = elementsMatching.iterator(); i.hasNext();) {
-                            Element match = i.next();
+                        for (Element match : elementsInContextMatching) {
                             Element parent = match.getParentElement();
                             while(parent != null) {
                                 parent.removeContent();

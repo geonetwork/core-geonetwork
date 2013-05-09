@@ -70,8 +70,6 @@ import java.util.Set;
  */
 public class SRUSearch implements Service
 {
-	private ServiceConfig _config;
-
 	private static RecordFormatSpecification request_spec = new ArchetypeRecordFormatSpecification("F");
 
 	public static final int SRU_records_per_page = 10;
@@ -119,9 +117,6 @@ public class SRUSearch implements Service
         if(Log.isDebugEnabled(Geonet.SRU))
             Log.debug(Geonet.SRU,"SRUsearch::init");
 
-		_config = config;
-
-
 		contextSets = new Hashtable<String, String>();
 
 		contextSets.put("dc", "info:srw/cql-context-set/1/dc-v1.1");
@@ -144,7 +139,8 @@ public class SRUSearch implements Service
 	{
 
 
-		Hashtable<String, String> myparams = parseArgs(params.getChildren());
+		@SuppressWarnings("unchecked")
+        Hashtable<String, String> myparams = parseArgs(params.getChildren());
 
         if(Log.isDebugEnabled(Geonet.SRU))
             Log.debug(Geonet.SRU,"SRUsearch::exec op:"+myparams.get("operation")+" version "+myparams.get("version"));
@@ -352,7 +348,6 @@ public class SRUSearch implements Service
 			Element myresponse = new Element("sruresponse");
 			response.addContent(myresponse);
 
-			int last_record = 0;
 			int num_records = 0;
 			String res_id = "";
 			long idle = 0;
@@ -414,9 +409,7 @@ public class SRUSearch implements Service
 						//throw new Exception(errormsg);
 					}
 					myresponse.addContent( elem );
-
 				}
-				last_record = first_record+result.records.length-1;
 			}
 
 			response.addContent( new Element("numrec").setText(num_records+""));
@@ -427,7 +420,8 @@ public class SRUSearch implements Service
 		} 
 		
 		catch (InvalidQueryException e) {
-			if (diagnostics == null ) diagnostics = new Element("diagnostics");
+		    // diagnostics is known to be null
+		    diagnostics = new Element("diagnostics");
 
 			addToDiag(diagnostics, "info:srw/diagnostic/1/10", "Query syntax error", e.getMessage()  );
 			
@@ -436,7 +430,8 @@ public class SRUSearch implements Service
 		}
 		
 		catch (SearchException e) {
-			if (diagnostics == null ) diagnostics = new Element("diagnostics");
+            // diagnostics is known to be null
+		    diagnostics = new Element("diagnostics");
 
 			if (e.error_code == GNProfileService.ERROR_QUERY ) {
 				addToDiag(diagnostics, "info:srw/diagnostic/1/16", "Unsupported index",  e.getMessage()  );

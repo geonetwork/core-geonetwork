@@ -74,7 +74,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -555,7 +554,8 @@ public final class Xml
 	public static void clearTransformerFactoryStylesheetCache() {
 		TransformerFactory transFact = TransformerFactory.newInstance();
 		try {
-			Method cacheMethod = transFact.getClass().getDeclaredMethod("clearCache", null);
+			Class<?> class1 = transFact.getClass();
+            Method cacheMethod = class1.getDeclaredMethod("clearCache");
 			cacheMethod.invoke(transFact, new Object[0]);
 		} catch (Exception e) {
 			Log.error(Log.ENGINE, "Failed to find/invoke clearCache method - continuing ("+e.getMessage()+")");
@@ -1012,7 +1012,7 @@ public final class Xml
 	public synchronized static void validate(Document doc) throws Exception {
 		if (doc.getDocType() != null) { // assume DTD validation
 			SAXBuilder builder = getSAXBuilder(true);	
-			Document document = builder.build(new StringReader(getString(doc))); 
+			builder.build(new StringReader(getString(doc))); 
 		} 
 
 		Element xml = doc.getRootElement();

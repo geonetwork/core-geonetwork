@@ -26,8 +26,10 @@ package org.fao.geonet.services.metadata;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +39,6 @@ import java.util.concurrent.Future;
 
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.guiservices.session.JeevesUser;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -47,7 +48,6 @@ import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
@@ -184,7 +184,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 	//---
 	//--------------------------------------------------------------------------
 
-	public class ImportCallable implements Callable<List<Exception>> {
+	public static final class ImportCallable implements Callable<List<Exception>> {
 		private final File files[];
 		private final int beginIndex, count;
 		private final Element params;
@@ -249,7 +249,8 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 			super (dm);
 			this.params = params;
 			this.context = context;
-			this.files = files;
+			this.files = new File[files.length];
+			System.arraycopy(files, 0, this.files, 0, files.length);
 			this.stylePath = stylePath;
 		}
 
@@ -461,9 +462,9 @@ class ImportConfig
 
 	//--------------------------------------------------------------------------
 
-	private Hashtable htCategId       = new Hashtable();
-	private Hashtable htCategMapping  = new Hashtable();
-	private Hashtable htSchemaMapping = new Hashtable();
+	private Map<String, String> htCategId       = new HashMap<String, String>();
+	private Map<String, String> htCategMapping  = new HashMap<String, String>();
+	private Map<String, String> htSchemaMapping = new Hashtable<String, String>();
 
 	private String defaultCateg;
 	private String defaultSchema;
@@ -497,7 +498,7 @@ class ImportConfig
 
 	public String mapCategory(String catDir)
 	{
-		String mapping = (String) htCategMapping.get(catDir);
+		String mapping = htCategMapping.get(catDir);
 
 		if (mapping == null)
 			mapping = defaultCateg;
@@ -509,7 +510,7 @@ class ImportConfig
 
 	public String mapSchema(String catDir)
 	{
-		String mapping = (String) htSchemaMapping.get(catDir);
+		String mapping = htSchemaMapping.get(catDir);
 
 		if (mapping == null)
 			mapping = defaultSchema;
@@ -527,12 +528,10 @@ class ImportConfig
 	{
 		String query = "SELECT * FROM Categories";
 
-		List idsList = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> idsList = dbms.select(query).getChildren();
 
-		for (int i=0; i<idsList.size(); i++)
-		{
-			Element record = (Element) idsList.get(i);
-
+		for (Element record : idsList) {
 			String id   = record.getChildText("id");
 			String name = record.getChildText("name");
 
@@ -544,16 +543,14 @@ class ImportConfig
 
 	private void mapCategor(Element categMapping)
 	{
-		List list = categMapping.getChildren(MAPPING);
+		@SuppressWarnings("unchecked")
+        List<Element> list = categMapping.getChildren(MAPPING);
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-
+		for (Element el : list) {
 			String dir = el.getAttributeValue(ATTR_DIR);
 			String to  = el.getAttributeValue(ATTR_TO);
 
-			String categId = (String) htCategId.get(to);
+			String categId = htCategId.get(to);
 
 			if (categId == null)
 				throw new IllegalArgumentException("Category not found : "+ to);
@@ -562,7 +559,7 @@ class ImportConfig
 		}
 
 		String defaultTo = categMapping.getChild(DEFAULT).getAttributeValue(ATTR_TO);
-		String defaultId = (String) htCategId.get(defaultTo);
+		String defaultId = htCategId.get(defaultTo);
 
 		if (defaultId == null)
 			throw new IllegalArgumentException("Default category not found : "+ defaultTo);
@@ -574,12 +571,10 @@ class ImportConfig
 
 	private void mapSchemas(Element schemaMapping, DataManager dm)
 	{
-		List list = schemaMapping.getChildren(MAPPING);
+		@SuppressWarnings("unchecked")
+        List<Element> list = schemaMapping.getChildren(MAPPING);
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-
+		for (Element el : list) {
 			String dir = el.getAttributeValue(ATTR_DIR);
 			String to  = el.getAttributeValue(ATTR_TO);
 

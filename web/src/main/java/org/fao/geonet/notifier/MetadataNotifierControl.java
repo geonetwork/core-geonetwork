@@ -24,7 +24,6 @@ package org.fao.geonet.notifier;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import jeeves.server.context.ServiceContext;
@@ -55,9 +54,7 @@ public class MetadataNotifierControl {
         final MetadataNotifierTask updateTask = new MetadataNotifierTask(
                 rm, gc);
 
-        @SuppressWarnings("unused")
-        final ScheduledFuture<?> updateTaskHandle = scheduler.schedule(
-                updateTask, 20, TimeUnit.SECONDS);
+        scheduler.schedule(updateTask, 20, TimeUnit.SECONDS);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "MetadataNotifierControl runOnce finish");
     }

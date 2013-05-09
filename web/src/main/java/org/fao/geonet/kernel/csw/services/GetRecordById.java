@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -100,7 +99,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
-		Iterator ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
+		@SuppressWarnings("unchecked")
+        Iterator<Element> ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
 
 		if (!ids.hasNext())
 			throw new MissingParameterValueEx("id");
@@ -108,7 +108,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		try {
 			while(ids.hasNext())
 			{
-				String  uuid = ((Element) ids.next()).getText();
+				String  uuid = ids.next().getText();
 				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				String id = gc.getDataManager().getMetadataId(dbms, uuid);

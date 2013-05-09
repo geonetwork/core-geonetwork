@@ -52,19 +52,18 @@ import org.z3950.zing.cql.CQLTermNode;
  */
 public class GNCQLString implements QueryModel, java.io.Serializable {
 
-  private Log log = LogFactory.getLog(GNCQLString.class);
+    private static final long serialVersionUID = 1L;
 
-  private static String default_qualifier="cql.serverChoice";
+    private transient Log log = LogFactory.getLog(GNCQLString.class);
 
-  private String the_cql_string;
-  private InternalModelRootNode internal_model = null;
-  private CQLNode cql_root;
+    private static String default_qualifier = "cql.serverChoice";
 
+    private InternalModelRootNode internal_model = null;
+    private transient CQLNode cql_root;
 
   public GNCQLString(String the_cql_string) {
 
     try {
-      this.the_cql_string = the_cql_string;
       CQLParser parser = new CQLParser();
       cql_root = parser.parse(the_cql_string);
       if(log.isDebugEnabled()) log.debug("Parsed CQL");
@@ -145,7 +144,6 @@ aptn.setAttr(AttrPlusTermNode.ACCESS_POINT_ATTR,process(default_qualifier));
 
       // CQL Relation object:
       CQLRelation relation = cql_term_node.getRelation();
-      String test = relation.getBase();
      
       if ( relation != null ) {
         if ( relation.getBase() != null ) {
@@ -190,7 +188,7 @@ aptn.setAttr(AttrPlusTermNode.ACCESS_POINT_ATTR,process(default_qualifier));
     if ( cql_root != null )
       return cql_root.toCQL();
 
-    return null;
+    return "";
   }
 }
 

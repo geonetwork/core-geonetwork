@@ -30,6 +30,8 @@ import jeeves.exceptions.NotAllowedEx;
  * @author heikki doeleman
  */
 public class UnAuthorizedException extends NotAllowedEx {
+    private static final long serialVersionUID = 1L;
+
     public UnAuthorizedException(String message, Object object) {
         super(message, object);
 		id   = "unauthorized";

@@ -307,14 +307,15 @@ public class Aligner extends BaseAligner
             if(log.isDebugEnabled())
                 log.debug("Record got:\n"+Xml.getString(response));
 
-			List list = response.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> list = response.getChildren();
 
 			//--- maybe the metadata has been removed
 
 			if (list.size() == 0)
 				return null;
 
-			response = (Element) list.get(0);
+			response = list.get(0);
 			response = (Element) response.detach();
 
             // validate it here if requested
@@ -375,6 +376,7 @@ public class Aligner extends BaseAligner
                 XPath xp = XPath.newInstance (resourceIdentifierXPath);
                 xp.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
                 xp.addNamespace("gco", "http://www.isotc211.org/2005/gco");
+                @SuppressWarnings("unchecked")
                 List<Element> resourceIdentifiers = xp.selectNodes(response);
                 if (resourceIdentifiers.size() > 0) {
                     // Check if the metadata to import has a resource identifier

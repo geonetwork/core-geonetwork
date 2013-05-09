@@ -61,7 +61,6 @@ import org.opengis.filter.Id;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.identity.FeatureId;
-import org.opengis.filter.spatial.SpatialOperator;
 
 import java.io.IOException;
 import java.util.Collections;

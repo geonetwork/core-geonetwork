@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,7 +38,6 @@ import org.fao.geonet.util.ISODate;
 
 import org.jdom.Element;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -54,8 +52,6 @@ public class DefaultStatusActions implements StatusActions {
 	private String siteUrl;
 	private UserSession session;
 	private boolean emailNotes = true;
-
-	private String allGroup = "1";
 
 	/**
 		* Constructor.
@@ -179,20 +175,6 @@ public class DefaultStatusActions implements StatusActions {
 	// Private methods
 	//-------------------------------------------------------------------------
 
-	/**
-    * Set all operations on 'All' Group. Used when status changes from submitted to approved.
-    *
-    * @param mdId The metadata id to set privileges on
-    */
-  private void setAllOperations(int mdId) throws Exception {
-    String allGroup = "1";
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
-  }
-
   /**
     * Unset all operations on 'All' Group. Used when status changes from approved to something else. 
     *
@@ -260,7 +242,8 @@ public class DefaultStatusActions implements StatusActions {
 		*/
 	private void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
 
-		List<Element> userList = users.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> userList = users.getChildren();
 
 		Set<String> emails = new HashSet<String>();
 

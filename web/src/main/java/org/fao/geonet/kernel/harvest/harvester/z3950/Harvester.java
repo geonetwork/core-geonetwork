@@ -172,7 +172,7 @@ class Harvester extends BaseAligner {
 				String repoName = repoElem.getChildText("name");
 				codes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), repoName);
 				// create a result holder for this repository
-				HarvestResult result = serverResults.getServerResult(repoName);
+				serverResults.getServerResult(repoName);
 
 				// sanitize the name of the category
 				String categName = repoName.replaceAll("[^\\w]",""); 
@@ -344,7 +344,6 @@ class Harvester extends BaseAligner {
 					} 
 				}
 			
-				boolean indexGroup = false;
 				dataMan.indexMetadata(dbms, id$);
 
 				result.addedMetadata++;

@@ -39,7 +39,6 @@ import java.util.Collection;
 
 public class MimeTypeFinder
 {
-	private static MimeUtil mu;
 	private static boolean isWindows = System.getProperty("os.name").startsWith("Windows");
 	private static String blank = "";
 
@@ -49,20 +48,20 @@ public class MimeTypeFinder
 	private static void registerMimeDetectors(boolean notLocal) {
 
 		// unregister anything previously registered
-		mu.unregisterMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
-		mu.unregisterMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
-		mu.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-		mu.unregisterMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
+		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
+		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
+		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+		MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
 
 		// register anything required
 		if (isWindows) {
-			mu.registerMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
+			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.WindowsRegistryMimeDetector");
 		}
 		if (!notLocal) {
-			mu.registerMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
-			mu.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.OpendesktopMimeDetector");
+			MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
 		}
-		mu.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
+		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector");
 	}
 
 	/* 
@@ -75,13 +74,14 @@ public class MimeTypeFinder
 			registerMimeDetectors(false);
 			try {
 				File theFile = new File(dir, fName);
-				Collection<MimeType> types = mu.getMimeTypes(theFile);
+				@SuppressWarnings("unchecked")
+                Collection<MimeType> types = MimeUtil.getMimeTypes(theFile);
 				boolean specific = false;
 				for (MimeType mt : types) {
 					if (mt.getSpecificity()>1) specific = true;
 				}
 				if (specific) {
-					return mu.getMostSpecificMimeType(types).toString();
+					return MimeUtil.getMostSpecificMimeType(types).toString();
 				} else {
 					return types.iterator().next().toString();
 				}
@@ -101,7 +101,7 @@ public class MimeTypeFinder
 			registerMimeDetectors(true);
 			try {
 				URL theUrl = new URL(url);
-				MimeType mt = mu.getMostSpecificMimeType(mu.getMimeTypes(theUrl));
+				MimeType mt = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(theUrl));
 				return mt.toString();
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileFilter;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 

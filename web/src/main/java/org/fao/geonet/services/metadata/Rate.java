@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadServerResponseEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -134,14 +133,15 @@ public class Rate extends NotInReadOnlyModeService {
 	{
 		String query = "SELECT harvestUuid FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, Integer.valueOf(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		//--- if we don't have any metadata, just return
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new MetadataNotFoundEx("id:"+ id);
 
-		Element rec = (Element) list.get(0);
+		Element rec = list.get(0);
 
 		String harvUuid = rec.getChildText("harvestuuid");
 

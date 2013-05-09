@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -74,10 +73,10 @@ public class UpdateCategories extends NotInReadOnlyModeService {
 		dataMan.deleteAllMetadataCateg(dbms, id);
 
 		//--- set new ones
-		List list = params.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = params.getChildren();
 
-		for(int i=0; i<list.size(); i++) {
-			Element el = (Element) list.get(i);
+		for (Element el : list) {
 			String name = el.getName();
 
 			if (name.startsWith("_"))

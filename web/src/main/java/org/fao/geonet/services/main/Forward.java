@@ -67,7 +67,8 @@ public class Forward implements Service
 		String username = (acc == null) ? null : Util.getParam(acc, "username");
 		String password = (acc == null) ? null : Util.getParam(acc, "password");
 
-		List<Element> list = par.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = par.getChildren();
 
 		if (list.size() == 0)
 			throw new MissingParameterEx("<request>", par);
@@ -82,11 +83,11 @@ public class Forward implements Service
 		Lib.net.setupProxy(context, req);
 
 		if (list.size() == 1) {
-			params = (Element) list.get(0);
+			params = list.get(0);
 			req.setRequest(params); 
 		} else {
 			for (int i = 0; i < list.size();i++) {
-				Element elem = (Element) list.get(i);
+				Element elem = list.get(i);
 				req.addParam(elem.getName(), elem.getText());
 			}
 		}

@@ -63,8 +63,9 @@ public class MetadataType
 
 	public int getElementCount() { return alElements.size(); }
 
+    @SuppressWarnings("unchecked")
     public List<String> getElementList() {
-		return (ArrayList<String>) alElements.clone();
+		return (List<String>) alElements.clone();
 	}
 
 	//--------------------------------------------------------------------------

@@ -240,7 +240,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
+					@SuppressWarnings("resource")
+                    FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
 					if (fi.fieldInfo(property) == null)
 						continue;
 					
@@ -432,9 +433,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		List<Element> values = new ArrayList<Element>();
 		Element value;
 
-        for (Object aSortedValuesFrequency : sortedValuesFrequency) {
-            Entry<String, Integer> entry = (Entry<String, Integer>) aSortedValuesFrequency;
-
+        for (Entry<String, Integer> entry : sortedValuesFrequency) {
             value = new Element("Value", Csw.NAMESPACE_CSW);
             value.setAttribute("count", entry.getValue().toString());
             value.setText(entry.getKey());

@@ -28,7 +28,6 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 

@@ -185,6 +185,7 @@ public class LuceneQueryBuilder {
                     continue;
                 }
 
+                @SuppressWarnings("resource")
                 Scanner scanner = new Scanner(fieldName).useDelimiter(FIELD_OR_SEPARATOR);
                 while (scanner.hasNext()) {
                     String field = scanner.next();
@@ -1024,7 +1025,7 @@ public class LuceneQueryBuilder {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
 
-            NumericRangeQuery rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
@@ -1033,9 +1034,9 @@ public class LuceneQueryBuilder {
         }
     }
 
-    public static NumericRangeQuery buildNumericRangeQueryForType(String fieldName, String min, String max,
+    public static NumericRangeQuery<? extends Number> buildNumericRangeQueryForType(String fieldName, String min, String max,
                                                                   boolean minInclusive, boolean maxInclusive, String type) {
-        NumericRangeQuery rangeQuery;
+        NumericRangeQuery<? extends Number> rangeQuery;
         if ("double".equals(type)) {
             rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
                     (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),

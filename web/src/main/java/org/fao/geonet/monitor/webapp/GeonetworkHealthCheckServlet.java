@@ -31,7 +31,7 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
     public static final String REGISTRY_ATTRIBUTE_KEY = "REGISTRY_ATTRIBUTE_KEY";
     private static final String CONTENT_TYPE = "text/plain";
 
-    private HealthCheckRegistry registry;
+    private transient HealthCheckRegistry registry;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -62,13 +62,13 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
                 final HealthCheck.Result result = entry.getValue();
                 if (result.isHealthy()) {
                     if (result.getMessage() != null) {
-                        writer.format("* %s: OK\n  %s\n", entry.getKey(), result.getMessage());
+                        writer.format("* %s: OK%n  %s%n", entry.getKey(), result.getMessage());
                     } else {
-                        writer.format("* %s: OK\n", entry.getKey());
+                        writer.format("* %s: OK%n", entry.getKey());
                     }
                 } else {
                     if (result.getMessage() != null) {
-                        writer.format("! %s: ERROR\n!  %s\n", entry.getKey(), result.getMessage());
+                        writer.format("! %s: ERROR%n!  %s%n", entry.getKey(), result.getMessage());
                     }
 
                     final Throwable error = result.getError();

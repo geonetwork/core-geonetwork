@@ -422,8 +422,6 @@ public class ServiceManager
 				//---------------------------------------------------------------------
 				//--- check access
 
-				String profile = ProfileManager.GUEST;
-
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
 				    response = srvInfo.execServices(req.getParams(), context);

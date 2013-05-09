@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -86,7 +85,9 @@ public class Create extends NotInReadOnlyModeService {
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
 		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			java.util.List list = dbms.select("SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?", 
+			String selectGroupIdQuery = "SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?";
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
 						Integer.valueOf(user.getUserId()),
 						Integer.valueOf(groupOwner)).getChildren();
 			System.out.println("Group found: " + list.size());

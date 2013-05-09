@@ -1,18 +1,16 @@
 package org.fao.geonet.services.statistics;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
@@ -22,10 +20,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.jfree.chart.ChartRenderingInfo;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.imagemap.ImageMapUtilities;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.RegularTimePeriod;
@@ -55,7 +50,7 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 
 	/** the class of the time period to get from JFreeeChart, to allow timeSeries to be
 	 * correctly formatted */
-	private Class chartClass;
+	private Class<? extends RegularTimePeriod> chartClass;
 
 	/** the custom part of the date query; according to user choice for graphic */
 	private Hashtable<String, String> queryFragments;
@@ -71,11 +66,6 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 	 * dataset is big)
 	 */
 	private boolean createLegend;
-
-	/** jFreeChart parameter: number by which the ticks will be divided for units
-	 *  ie: 2 means that only one unit on two will be rendered
-	 * */
-	private int tickUnit;
 
 	/** chart width, service parameter, can be overloaded by request */
 	private int chartWidth;
@@ -103,7 +93,6 @@ public class RequestsByDate extends NotInReadOnlyModeService{
         super.init(appPath, params);
 		this.createLegend = Boolean.parseBoolean(params.getValue("createLegend"));
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
-		this.tickUnit = Integer.parseInt(params.getValue("tickUnit"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
 
@@ -162,10 +151,10 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 		
 		TimeSeries ts = new TimeSeries("By " + this.graphicType.toLowerCase(), this.chartClass);
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		List resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
 
-		for (int i=0; i < resultSet.size(); i++) {
-			Element record = (Element) resultSet.get(i);
+		@SuppressWarnings("unchecked")
+        List<Element> resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
+		for (Element record : resultSet) {
 			String curDate = record.getChildText("reqdate");
 			ts.add(getTimePeriod(
 					graphicType,
@@ -201,9 +190,7 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 
 		File statFolder = new File(gc.getHandlerConfig().getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
-		if (!statFolder.exists()) {
-			statFolder.mkdirs();
-		}
+        IO.mkdirs(statFolder, "Statistics temp directory");
 
 		File f = new File(statFolder, chartFilename);
 		//if (!f.exists()) {
@@ -300,33 +287,6 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 		return null;
 	}
 
-	private void writeImage(JFreeChart chart, File outFile) throws IOException {
-		// File f = new File(System.getProperty("java.io.tmpdir"), "toto.png");
-		FileOutputStream fout = null;
-		//System.out.println("will generate image to : " + outFile.getAbsolutePath());
-		try {
-			fout = new FileOutputStream(outFile);
-			ChartRenderingInfo chartRenderingInfo = new ChartRenderingInfo();
-			ChartUtilities.writeChartAsPNG(
-					fout,
-					chart,
-					this.chartWidth,
-					this.chartHeight,
-					chartRenderingInfo);
-			if (this.createTooltips) {
-				// gets some tooltips:
-				this.imageMap = ImageMapUtilities.getImageMap("graphByDateImageMap", chartRenderingInfo);
-			}
-			fout.flush();
-			fout.close();
-		} finally {
-			try {
-				fout.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
 	/**
 	 * To test graphic generation locally
 	 * @param args
@@ -340,7 +300,6 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 		//rdb.graphicType = RequestsByDate.BY_YEAR;
 		rdb.createTooltips = false;
 		rdb.createLegend = false;
-		rdb.tickUnit = 2;
 		rdb.chartWidth = 600;
 		rdb.chartHeight = 500;
         //rdb.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

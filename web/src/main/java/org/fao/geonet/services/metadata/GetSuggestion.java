@@ -31,8 +31,6 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -40,7 +38,6 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +76,9 @@ import java.util.Map;
  */
 public class GetSuggestion implements Service {
 
-    ArrayList<String> process = new ArrayList<String>();
-    String appPath;
     private static final String XSL_SUGGEST = "suggest.xsl";
 
     public void init(String appPath, ServiceConfig params) throws Exception {
-        this.appPath = appPath;
     }
 
     public Element exec(Element params, ServiceContext context)
@@ -94,12 +88,11 @@ public class GetSuggestion implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
-        AccessManager am = gc.getAccessManager();
         Dbms dbms = (Dbms) context.getResourceManager()
                 .open(Geonet.Res.MAIN_DB);
 
-        String runProcess = Util.getParam(params, Params.PROCESS, "");
         String action = Util.getParam(params, "action", "list");
+        @SuppressWarnings("unchecked")
         List<Element> children = params.getChildren();
         Map<String, String> xslParameter = new HashMap<String, String>();
         xslParameter.put("guiLang", context.getLanguage());

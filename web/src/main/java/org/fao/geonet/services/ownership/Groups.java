@@ -32,7 +32,6 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -56,7 +55,6 @@ public class Groups implements Service
 		int id = Util.getParamAsInt(params, "id");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
 		UserSession   us = context.getUserSession();
 		AccessManager am = gc.getAccessManager();
 
@@ -77,16 +75,18 @@ public class Groups implements Service
 								"FROM OperationAllowed, Metadata "+
 								"WHERE metadataId = id AND groupId=? AND owner=?";
 
-			List   list  = dbms.select(query, Integer.valueOf(groupId), id).getChildren();
-			String size  = ((Element)list.get(0)).getChildText("cnt");
+			@SuppressWarnings("unchecked")
+            List<Element> list  = dbms.select(query, Integer.valueOf(groupId), id).getChildren();
+			String size  = (list.get(0)).getChildText("cnt");
 
 			if (Integer.parseInt(size) != 0)
 			{
-				List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
 
-				if (records.size() != 0)
+				if (!records.isEmpty())
 				{
-					Element record  = (Element) records.get(0);
+					Element record  = records.get(0);
 					record.detach();
 					record.setName("group");
 
@@ -97,11 +97,12 @@ public class Groups implements Service
 
 		for (String groupId : myGroups)
 		{
-			List records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
 
-			if (records.size() != 0)
+			if (!records.isEmpty())
 			{
-				Element record  = (Element) records.get(0);
+				Element record  = records.get(0);
 				record.detach();
 				record.setName("targetGroup");
 				response.addContent(record);

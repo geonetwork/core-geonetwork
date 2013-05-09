@@ -78,7 +78,9 @@ public class CswParams extends AbstractParams {
 		
 		if (searches!=null){
 			if (searches.getChild("search")!=null){
-				eltSearches = searches.getChild("search").getChildren();
+			    @SuppressWarnings("unchecked")
+                List<Element> tmp = searches.getChild("search").getChildren();
+				eltSearches = tmp;
 			}
 		}
 		
@@ -119,7 +121,9 @@ public class CswParams extends AbstractParams {
 			addSearches(searches);
 			
 			if (searches.getChild("search")!=null){
-			    eltSearches = searches.getChild("search").getChildren();
+			    @SuppressWarnings("unchecked")
+                List<Element> tmp = searches.getChild("search").getChildren(); 
+			    eltSearches = tmp;
 			}
 		}
 
