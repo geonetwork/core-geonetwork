@@ -1,59 +1,58 @@
 package jeeves.server.overrides;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nullable;
 
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.RegexRequestMatcher;
 import org.springframework.security.web.util.RequestMatcher;
+import org.springframework.util.ReflectionUtils;
 
 public class OverridesMetadataSource implements FilterInvocationSecurityMetadataSource {
-    private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap = new HashMap<RequestMatcher, Collection<ConfigAttribute>>();
+    private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
     private FilterInvocationSecurityMetadataSource baseSource;
 
+    @SuppressWarnings("unchecked")
     public OverridesMetadataSource(FilterInvocationSecurityMetadataSource metadataSource) {
         this.baseSource = metadataSource;
-    }
-
-    
-    
-    @Override
-    public Collection<ConfigAttribute> getAllConfigAttributes() {
-        Set<ConfigAttribute> allAttributes = new HashSet<ConfigAttribute>(baseSource.getAllConfigAttributes());
-
-        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
-            allAttributes.addAll(entry.getValue());
+        assertKnownType(metadataSource);
+        Field field = ReflectionUtils.findField(baseSource.getClass(), "requestMap");
+        if (field == null) {
+            throw new IllegalArgumentException("The implementation of " + FilterInvocationSecurityMetadataSource.class.getName()
+                    + " has changed an now this class must be updated to work with new implementation");
         }
 
-        return allAttributes;
+        field.setAccessible(true);
+        requestMap = (Map<RequestMatcher, Collection<ConfigAttribute>>) ReflectionUtils.getField(field, metadataSource);
+    }
+
+    private void assertKnownType(FilterInvocationSecurityMetadataSource metadataSource) {
+        if (!(baseSource instanceof DefaultFilterInvocationSecurityMetadataSource)) {
+            throw new IllegalArgumentException("Modifying the interceptUrls can only be done when the metadataSource is an instanceof "
+                    + DefaultFilterInvocationSecurityMetadataSource.class.getName() + ". Instead the metadataSource was a "
+                    + metadataSource.getClass().getName());
+        }
+    }
+
+    @Override
+    public Collection<ConfigAttribute> getAllConfigAttributes() {
+        return baseSource.getAllConfigAttributes();
     }
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) {
-        Collection<ConfigAttribute> attributes = baseSource.getAttributes(object);
-
-        if(attributes == null) {
-            final HttpServletRequest request = ((FilterInvocation) object).getRequest();
-            for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
-                if (entry.getKey().matches(request)) {
-                    attributes = entry.getValue();
-                    break;
-                }
-            }
-        }
-        return attributes;
+        return baseSource.getAttributes(object);
     }
 
     @Override
@@ -61,22 +60,63 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
         return baseSource.supports(clazz) || FilterInvocation.class.isAssignableFrom(clazz);
     }
 
-
-
     public void addMapping(RegexRequestMatcher pattern, final String access) {
         LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> map = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
         Collection<ConfigAttribute> atts = new LinkedList<ConfigAttribute>();
-        map.put(pattern, atts );
-        
+        map.put(pattern, atts);
+
         atts.add(new SecurityConfig(access));
+
+        ExpressionBasedFilterInvocationSecurityMetadataSource ms = new ExpressionBasedFilterInvocationSecurityMetadataSource(map,
+                new DefaultWebSecurityExpressionHandler());
         
-        ExpressionBasedFilterInvocationSecurityMetadataSource ms = new ExpressionBasedFilterInvocationSecurityMetadataSource(map, new DefaultWebSecurityExpressionHandler());
-        Collection<ConfigAttribute> allAttributes = requestMap.get(pattern);
-        if(allAttributes == null) {
+        RequestMatcher requestMatcher = findMatchingRequestMatcher(pattern);
+        Collection<ConfigAttribute> allAttributes = requestMap.get(requestMatcher);
+        if (allAttributes == null) {
             allAttributes = new LinkedList<ConfigAttribute>();
-            requestMap.put(pattern, allAttributes);
+            requestMap.put(requestMatcher, allAttributes);
         }
-        
+
         allAttributes.addAll(ms.getAllConfigAttributes());
     }
+
+    public void setMapping(RegexRequestMatcher pattern, final String access) {
+        removeMapping(pattern);
+        addMapping(pattern, access);
+    }
+
+    public void removeMapping(RegexRequestMatcher pattern) {
+        RequestMatcher toRemove = findMatchingRequestMatcher(pattern);
+        if(toRemove == null) {
+            throw new IllegalArgumentException(pattern+" has not been found.");
+        } else {
+            requestMap.remove(toRemove);
+        }
+    }
+
+    private @Nullable RequestMatcher findMatchingRequestMatcher(RegexRequestMatcher pattern) {
+        for (RequestMatcher requestMatcher : requestMap.keySet()) {
+            if (requestMatcher instanceof RegexRequestMatcher) {
+                RegexRequestMatcher regexMatcher = (RegexRequestMatcher) requestMatcher;
+                Object otherPattern = getPattern(regexMatcher);
+                if (getPattern(pattern).toString().equals(otherPattern.toString())) {
+                    return regexMatcher;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Object getPattern(RegexRequestMatcher regexMatcher) {
+        Field field = ReflectionUtils.findField(RegexRequestMatcher.class, "pattern");
+        if (field == null) {
+            throw new IllegalArgumentException("The implementation of " + RegexRequestMatcher.class.getName()
+                    + " has changed an now this class must be updated to work with new implementation");
+        }
+        
+        field.setAccessible(true);
+        Object otherPattern = ReflectionUtils.getField(field, regexMatcher);
+        return otherPattern;
+    }
+
 }

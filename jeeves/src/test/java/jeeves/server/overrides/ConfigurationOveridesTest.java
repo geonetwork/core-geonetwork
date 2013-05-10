@@ -4,6 +4,7 @@ package jeeves.server.overrides;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -113,7 +114,6 @@ public class ConfigurationOveridesTest {
     		reader.close();
     	}
     }
-    
     @Test //@Ignore
     public void updateSpringConfiguration() throws JDOMException, IOException {
         JeevesApplicationContext applicationContext = new JeevesApplicationContext(new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml"));
@@ -146,15 +146,30 @@ public class ConfigurationOveridesTest {
         
         GeonetworkFilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", GeonetworkFilterSecurityInterceptor.class);
         Collection<ConfigAttribute> attributes = filterSecurityInterceptor.getSecurityMetadataSource().getAllConfigAttributes();
-        String expectedExp = "hasRole('Administrator')";
+        assertInterceptUrl(attributes, "hasRole('Administrator')");
+        assertInterceptUrl(attributes, "hasRole('RegisteredUser')");
+        assertNotInterceptUrl(attributes, "hasRole('REMOVE')");
+        assertNotInterceptUrl(attributes, "hasRole('SET')");
+    }
+    private void assertInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp) {
+        assertInterceptUrl(attributes, expectedExp, true);
+    }
+    private void assertNotInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp) {
+        assertInterceptUrl(attributes, expectedExp, false);
+    }
+    private void assertInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp, boolean assertTrue) {
         boolean found = false;
         for (ConfigAttribute configAttribute : attributes) {
             if(configAttribute.toString().equals(expectedExp)) {
                 found = true;
             }
         }
-        
-        assertTrue(attributes+" does not contain "+expectedExp, found);
+
+        if(assertTrue) {
+            assertTrue(attributes+" does not contain "+expectedExp, found);
+        } else {
+            assertFalse(attributes+" contains "+expectedExp, found);
+        }
     }
 
     @Test //@Ignore
