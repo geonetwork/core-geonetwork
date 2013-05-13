@@ -72,137 +72,56 @@
             <sch:report test="normalize-space($overview) != ''"
                 ><sch:value-of select="$loc/strings/report.R7"/> "<sch:value-of select="normalize-space($overview)"/>"</sch:report>
             
-            <!-- Check Mission type -->
-            <sch:let name="mission" value="gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='discipline']/gmd:MD_Keywords[1]/gmd:keyword[1]"/>
-            <sch:assert test="string-join($mission, '') != ''"
-                >$loc/strings/alert.R8</sch:assert>
-            <sch:report test="string-join($mission, '') != ''"
-                ><sch:value-of select="$loc/strings/report.R8"/> "<sch:value-of select="string-join($mission, ', ')"/>"</sch:report>
             
-            <!-- Check area of benefit -->
-            <sch:let name="benefit" value="count(gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='area-of-benefit']/gmd:MD_Keywords[1]/gmd:keyword)"/>
-            <sch:assert test="$benefit > 0">$loc/strings/alert.R9</sch:assert>
-            <sch:report test="$benefit > 0">
-                <sch:value-of select="$loc/strings/report.R9"/> "<sch:value-of select="string-join(gmd:descriptiveKeywords
-                    [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='area-of-benefit']/gmd:MD_Keywords[1]/gmd:keyword, ', ')"/>"
+         </sch:rule>
+    </sch:pattern>
+    <sch:pattern>
+        <sch:title>$loc/strings/processing</sch:title>
+        <sch:rule
+        context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
+        
+            
+            <!-- Check Number of vertical levels -->
+            <sch:let name="vert" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[2]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
+            <sch:assert test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">$loc/strings/alert.R25</sch:assert>
+            <sch:report test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">
+                <sch:value-of select="$loc/strings/report.R25"/> "<sch:value-of select="normalize-space($vert)"/>"
             </sch:report>
             
-            <!-- Check ocean variables -->
-            <sch:let name="ocean" value="count(gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords[1]/gmd:keyword)"/>
-            <sch:assert test="$ocean > 0">$loc/strings/alert.R10</sch:assert>
-            <sch:report test="$ocean > 0">
-                <sch:value-of select="$loc/strings/report.R10"/> "<sch:value-of select="string-join(gmd:descriptiveKeywords
-                    [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords[1]/gmd:keyword, ', ')"/>"
+            <!-- Check Temporal resolution -->
+            <sch:let name="resolu" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[1]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
+            <sch:assert test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">$loc/strings/alert.R26</sch:assert>
+            <sch:report test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">
+                <sch:value-of select="$loc/strings/report.R26"/> "<sch:value-of select="normalize-space($resolu)"/>"
             </sch:report>
-            
-            <!-- Check display priority -->
-            <sch:let name="credit" value="gmd:credit"/>
-            <sch:assert test="normalize-space($credit) != ''">$loc/strings/alert.R11</sch:assert>
-            <sch:report test="normalize-space($credit) != ''">
-            	<sch:value-of select="$loc/strings/report.R11"/> "<sch:value-of select="normalize-space($credit)"/>"
-            </sch:report>
-            
-            <!-- Check BBox -->
-            <sch:let name="west" value="gmd:extent[1]//gmd:westBoundLongitude"/>
-            <sch:let name="east" value="gmd:extent[1]//gmd:eastBoundLongitude"/>
-            <sch:let name="north" value="gmd:extent[1]//gmd:northBoundLatitude"/>
-            <sch:let name="south" value="gmd:extent[1]//gmd:southBoundLatitude"/>
-            <sch:assert test="normalize-space($west) != '' and normalize-space($east) != '' and
-            	normalize-space($north) != '' and normalize-space($south) != ''">$loc/strings/alert.R12
-            </sch:assert>
-            <sch:report test="normalize-space($west) != '' and normalize-space($east) != '' and
-            	normalize-space($north) != '' and normalize-space($south) != ''">
-            	<sch:value-of select="$loc/strings/report.R12"/> "
-            		<sch:value-of select="normalize-space($west)"/>
-	            	<sch:value-of select="normalize-space($east)"/>
-	            	<sch:value-of select="normalize-space($north)"/>
-	            	<sch:value-of select="normalize-space($south)"/>"
-            </sch:report>
-            
-            <!-- Check reference area -->
-            <sch:let name="area" value="gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords/gmd:keyword"/>
-            <sch:assert test="string-join($area, '') != ''">$loc/strings/alert.R13</sch:assert>
-            <sch:report test="string-join($area, '') != ''">
-            	<sch:value-of select="$loc/strings/report.R13"/> "<sch:value-of select="string-join($area, ', ')"/>"
-            </sch:report>
-            
-            <!-- Check min/max level -->
-            <sch:let name="minValue" value="gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
-            <sch:let name="maxValue" value="gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
-            <sch:assert test="normalize-space($minValue) != '' and normalize-space($maxValue) != ''">$loc/strings/alert.R14</sch:assert>
-            <sch:report test="normalize-space($minValue) != '' and normalize-space($maxValue) != ''">
-            	<sch:value-of select="$loc/strings/report.R14"/> "
-            	<sch:value-of select="normalize-space(concat(concat($minValue,' - '), $maxValue))"/>"
-            </sch:report>
-            
-            <!-- Check start date -->
-            <sch:let name="startDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:beginPosition"/>
-            <sch:assert test="normalize-space($startDate) != ''">$loc/strings/alert.R15</sch:assert>
-            <sch:report test="normalize-space($startDate) != ''">
-            	<sch:value-of select="$loc/strings/report.R15"/> "<sch:value-of select="normalize-space($startDate)"/>"
-            </sch:report>
-            
-            <!-- Check temporal scale -->
-            <sch:let name="scale" value="gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords[1]/gmd:keyword[1]"/>
-            <sch:assert test="string-join($scale, '') != ''">$loc/strings/alert.R16</sch:assert>
-            <sch:report test="string-join($scale, '') != ''">
-            	<sch:value-of select="$loc/strings/report.R16"/> "<sch:value-of select="string-join($scale, ', ')"/>"
-            </sch:report>
+        </sch:rule>
+        <sch:rule
+            context="//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
+            //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
             
             <!-- Check processing level -->
             <sch:let name="level" value="gmd:descriptiveKeywords
                 [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='processing-level']/gmd:MD_Keywords[1]/gmd:keyword[1]"/>
             <sch:assert test="string-join($level, '') != ''">$loc/strings/alert.R17</sch:assert>
             <sch:report test="string-join($level, '') != ''">
-            	<sch:value-of select="$loc/strings/report.R17"/> "<sch:value-of select="string-join($level, ', ')"/>"
+                <sch:value-of select="$loc/strings/report.R17"/> "<sch:value-of select="string-join($level, ', ')"/>"
             </sch:report>
             
             <!-- Check update frequency -->
             <sch:let name="freq" value="gmd:resourceMaintenance[1]/gmd:MD_MaintenanceInformation[1]/gmd:maintenanceAndUpdateFrequency[1]/gmd:MD_MaintenanceFrequencyCode[1]/@codeListValue"/>
             <sch:assert test="normalize-space($freq) != ''">$loc/strings/alert.R18</sch:assert>
             <sch:report test="normalize-space($freq) != ''">
-            	<sch:value-of select="$loc/strings/report.R18"/> "<sch:value-of select="normalize-space($freq)"/>"
+                <sch:value-of select="$loc/strings/report.R18"/> "<sch:value-of select="normalize-space($freq)"/>"
             </sch:report>
             
-            <!-- Check start period -->
+            <!-- Check sliding window of update period -->
             <sch:let name="period" value="gmd:resourceMaintenance[1]/gmd:MD_MaintenanceInformation[1]/gmd:updateScopeDescription[1]/gmd:MD_ScopeDescription[1]/gmd:other"/>
-            <sch:assert test="normalize-space($period) != ''">$loc/strings/alert.R19</sch:assert>
-            <sch:report test="normalize-space($period) != ''">
-            	<sch:value-of select="$loc/strings/report.R19"/> "<sch:value-of select="normalize-space($period)"/>"
+            <sch:assert test="normalize-space($period) != '' and normalize-space($period) != 'P0M0D0H/P0M0D0H'">$loc/strings/alert.R19</sch:assert>
+            <sch:report test="normalize-space($period) != '' and normalize-space($period) != 'P0M0D0H/P0M0D0H'">
+                <sch:value-of select="$loc/strings/report.R19"/> "<sch:value-of select="normalize-space($period)"/>"
             </sch:report>
-         </sch:rule>
-    </sch:pattern>
-    <sch:pattern>
-        <sch:title>$loc/strings/contentInfo</sch:title>
-            <sch:rule
-            context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
             
-                <!-- Check features type -->
-                <sch:let name="feature" value="count(gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes)"/>
-                <sch:assert test="$feature > 0">$loc/strings/alert.R23</sch:assert>
-                <sch:report test="$feature > 0">
-                	<sch:value-of select="$loc/strings/report.R23"/> "<sch:value-of select="gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName"/>"
-                </sch:report>
-                
-                <!-- Check Number of vertical levels -->
-                <sch:let name="vert" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[2]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
-                <sch:assert test="normalize-space($vert) != ''">$loc/strings/alert.R25</sch:assert>
-                <sch:report test="normalize-space($vert) != ''">
-                    <sch:value-of select="$loc/strings/report.R25"/> "<sch:value-of select="normalize-space($vert)"/>"
-                </sch:report>
-                
-                <!-- Check Temporal resolution -->
-                <sch:let name="resolu" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[1]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
-                <sch:assert test="normalize-space($resolu) != ''">$loc/strings/alert.R26</sch:assert>
-                <sch:report test="normalize-space($resolu) != ''">
-                    <sch:value-of select="$loc/strings/report.R26"/> "<sch:value-of select="normalize-space($resolu)"/>"
-                </sch:report>
-            </sch:rule>
+        </sch:rule>
     </sch:pattern>
     <sch:pattern>
         <sch:title>$loc/strings/crs</sch:title>
@@ -217,6 +136,113 @@
             
         </sch:rule>
     </sch:pattern>
+    <sch:pattern>
+        <sch:title>$loc/strings/keywords</sch:title>
+        <sch:rule
+            context="//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
+            //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <!-- Check Mission type -->
+            <sch:let name="mission" value="gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='discipline']/gmd:MD_Keywords/gmd:keyword[* != '']"/>
+            <sch:assert test="string-join($mission, '') != ''"
+                >$loc/strings/alert.R8</sch:assert>
+            <sch:report test="string-join($mission, '') != ''"
+                ><sch:value-of select="$loc/strings/report.R8"/> "<sch:value-of select="string-join($mission, ', ')"/>"</sch:report>
+            
+            <!-- Check area of benefit -->
+            <sch:let name="benefit" value="count(gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='area-of-benefit']/gmd:MD_Keywords/gmd:keyword[* != ''])"/>
+            <sch:assert test="$benefit > 0">$loc/strings/alert.R9</sch:assert>
+            <sch:report test="$benefit > 0">
+                <sch:value-of select="$loc/strings/report.R9"/> "<sch:value-of select="string-join(gmd:descriptiveKeywords
+                    [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='area-of-benefit']/gmd:MD_Keywords/gmd:keyword, ', ')"/>"
+            </sch:report>
+            
+            <!-- Check ocean variables -->
+            <sch:let name="ocean" value="count(gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords/gmd:keyword[* != ''])"/>
+            <sch:assert test="$ocean > 0">$loc/strings/alert.R10</sch:assert>
+            <sch:report test="$ocean > 0">
+                <sch:value-of select="$loc/strings/report.R10"/> "<sch:value-of select="string-join(gmd:descriptiveKeywords
+                    [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords/gmd:keyword, ', ')"/>"
+            </sch:report>
+            
+            <!-- Check features type -->
+            <sch:let name="feature" value="count(../../gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes)"/>
+            <sch:assert test="$feature > 0">$loc/strings/alert.R23</sch:assert>
+            <sch:report test="$feature > 0">
+                <sch:value-of select="$loc/strings/report.R23"/> "<sch:value-of select="../../gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName"/>"
+            </sch:report>
+            
+            
+            
+            <!-- Check display priority -->
+            <sch:let name="credit" value="gmd:credit"/>
+            <sch:assert test="normalize-space($credit) != ''">$loc/strings/alert.R11</sch:assert>
+            <sch:report test="normalize-space($credit) != ''">
+                <sch:value-of select="$loc/strings/report.R11"/> "<sch:value-of select="normalize-space($credit)"/>"
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+    
+    <sch:pattern>
+        <sch:title>$loc/strings/spatiotemp</sch:title>
+        <sch:rule
+            context="//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
+            //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
+            
+            <!-- Check BBox -->
+            <sch:let name="west" value="gmd:extent[1]//gmd:westBoundLongitude"/>
+            <sch:let name="east" value="gmd:extent[1]//gmd:eastBoundLongitude"/>
+            <sch:let name="north" value="gmd:extent[1]//gmd:northBoundLatitude"/>
+            <sch:let name="south" value="gmd:extent[1]//gmd:southBoundLatitude"/>
+            <sch:assert test="normalize-space($west) != '' and normalize-space($east) != '' and
+                normalize-space($north) != '' and normalize-space($south) != ''">$loc/strings/alert.R12
+            </sch:assert>
+            <sch:report test="normalize-space($west) != '' and normalize-space($east) != '' and
+                normalize-space($north) != '' and normalize-space($south) != ''">
+                <sch:value-of select="$loc/strings/report.R12"/> "
+                <sch:value-of select="normalize-space($west)"/>
+                <sch:value-of select="normalize-space($east)"/>
+                <sch:value-of select="normalize-space($north)"/>
+                <sch:value-of select="normalize-space($south)"/>"
+            </sch:report>
+            
+            <!-- Check reference area -->
+            <sch:let name="area" value="count(gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords/gmd:keyword[* != ''])"/>
+            <sch:assert test="$area > 0">$loc/strings/alert.R13</sch:assert>
+            <sch:report test="$area > 0">
+                <sch:value-of select="$loc/strings/report.R13"/> "<sch:value-of select="string-join(gmd:descriptiveKeywords
+                    [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords/gmd:keyword[* != ''], ', ')"/>"
+            </sch:report>
+            
+            <!-- Check min/max level -->
+            <sch:let name="minValue" value="gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
+            <sch:let name="maxValue" value="gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
+            <sch:assert test="normalize-space($minValue) != '' and normalize-space($maxValue) != ''">$loc/strings/alert.R14</sch:assert>
+            <sch:report test="normalize-space($minValue) != '' and normalize-space($maxValue) != ''">
+                <sch:value-of select="$loc/strings/report.R14"/> "
+                <sch:value-of select="normalize-space(concat(concat($minValue,' - '), $maxValue))"/>"
+            </sch:report>
+            
+            <!-- Check start date -->
+            <sch:let name="startDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:beginPosition"/>
+            <sch:assert test="normalize-space($startDate) != ''">$loc/strings/alert.R15</sch:assert>
+            <sch:report test="normalize-space($startDate) != ''">
+                <sch:value-of select="$loc/strings/report.R15"/> "<sch:value-of select="normalize-space($startDate)"/>"
+            </sch:report>
+            
+            <!-- Check temporal scale -->
+            <sch:let name="scale" value="gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords[1]/gmd:keyword[1]"/>
+            <sch:assert test="string-join($scale, '') != ''">$loc/strings/alert.R16</sch:assert>
+            <sch:report test="string-join($scale, '') != ''">
+                <sch:value-of select="$loc/strings/report.R16"/> "<sch:value-of select="string-join($scale, ', ')"/>"
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+    
     <sch:pattern>
         <sch:title>$loc/strings/contact</sch:title>
         <sch:rule

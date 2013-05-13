@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
     <identification>Product identification</identification>
+    <keywords>Descriptive keywords</keywords>
+    <spatiotemp>Spatio-temporal extent</spatiotemp>
+    <processing>Processing operations</processing>
+    
     <R1>Distribution fields are mandatory</R1>
     <alert.R1>
         <div>Check that the title is defined.</div>
@@ -75,9 +79,9 @@
     </alert.R18>
     <report.R18>Update frequency is:</report.R18>
     <alert.R19>
-        <div>Check that the start period is defined.</div>
+        <div>Check that the sliding window of updates is defined.</div>
     </alert.R19>
-    <report.R19>Start period is:</report.R19>
+    <report.R19>Sliding window of updates:</report.R19>
     <alert.R20>
         <div>Check that the production center is defined.</div>
     </alert.R20>
