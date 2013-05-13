@@ -2,9 +2,9 @@ package jeeves.server.overrides;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +15,6 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
-import jeeves.config.springutil.GeonetworkFilterSecurityInterceptor;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.utils.Xml;
@@ -25,6 +24,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 public class ConfigurationOveridesTest {
 	private static final ClassLoader classLoader;
@@ -144,7 +144,7 @@ public class ConfigurationOveridesTest {
         assertEquals("astring", testBean.getBasicProp2());
         assertTrue("testBeans doesn't contain 'newString' in its collection of strings", testBean.getCollectionProp().contains("newString"));
         
-        GeonetworkFilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", GeonetworkFilterSecurityInterceptor.class);
+        FilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", FilterSecurityInterceptor.class);
         Collection<ConfigAttribute> attributes = filterSecurityInterceptor.getSecurityMetadataSource().getAllConfigAttributes();
         assertInterceptUrl(attributes, "hasRole('Administrator')");
         assertInterceptUrl(attributes, "hasRole('RegisteredUser')");

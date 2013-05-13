@@ -69,7 +69,6 @@
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
 				<ref bean="exceptionTranslationFilter" />
-				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
@@ -230,8 +229,5 @@
 	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
 	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
-	</bean>
-	<bean id="overrideWebPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
-		<constructor-arg ref="overridefilterSecurityInterceptor"/>
 	</bean>
 </beans>

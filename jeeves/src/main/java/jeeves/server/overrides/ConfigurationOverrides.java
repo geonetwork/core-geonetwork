@@ -616,10 +616,10 @@ public class ConfigurationOverrides {
         String resource;
         resource = System.getProperty(context.getServletContextName()+"."+OVERRIDES_KEY);
         if (resource == null || resource.trim().isEmpty()) {
-            resource = lookupOverrideParamFromConfigFile(context.getResource("/WEB-INF/" + CONFIG_OVERRIDES_FILENAME));
+            resource = System.getProperty(OVERRIDES_KEY);
         }
         if (resource == null || resource.trim().isEmpty()) {
-            resource = System.getProperty(OVERRIDES_KEY);
+            resource = lookupOverrideParamFromConfigFile(context.getResource("/WEB-INF/" + CONFIG_OVERRIDES_FILENAME));
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = context.getInitParameter(OVERRIDES_KEY);

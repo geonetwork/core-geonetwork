@@ -5,12 +5,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="filterSecurityInterceptor">
-    	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_coreSecurityMapping_filterApplied"/>
+    <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
-            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex" id="coreFilterSecurityMetadataSource">
+            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+                <sec:intercept-url pattern="/srv/.*/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/\w*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
@@ -334,7 +334,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/keywords.getselected!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.list!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.view!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.types!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.get!?.*" access="permitAll"></sec:intercept-url>

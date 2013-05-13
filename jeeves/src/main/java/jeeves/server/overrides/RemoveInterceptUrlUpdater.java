@@ -9,8 +9,10 @@ public class RemoveInterceptUrlUpdater extends AbstractInterceptUrlUpdater {
     }
 
     @Override
-    protected void update(OverridesMetadataSource overrideSource) {
-        overrideSource.removeMapping(pattern);
+    protected void update(Iterable<OverridesMetadataSource> sources) {
+        for (OverridesMetadataSource overridesMetadataSource : sources) {
+            overridesMetadataSource.removeMapping(patternString);
+        }
     }
 
 }

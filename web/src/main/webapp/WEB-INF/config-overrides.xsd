@@ -2,13 +2,15 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="overrides">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="import"/>
-        <xs:element ref="properties"/>
-        <xs:element ref="spring"/>
-        <xs:element maxOccurs="unbounded" ref="file"/>
-        <xs:element maxOccurs="unbounded" ref="textFile"/>
-      </xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+	      <xs:sequence>
+	        <xs:element minOccurs="0" ref="import"/>
+	        <xs:element minOccurs="0" ref="properties"/>
+	        <xs:element minOccurs="0" ref="spring"/>
+	        <xs:element minOccurs="0" maxOccurs="unbounded" ref="file"/>
+	        <xs:element minOccurs="0" maxOccurs="unbounded" ref="textFile"/>
+	      </xs:sequence>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="import">
@@ -37,14 +39,14 @@
       <xs:documentation>override/modify/add the core spring application context</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:choice>
+      <xs:choice maxOccurs="unbounded">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="import"/>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="addProperty"/>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="setProperty"/>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="addInterceptUrl"/>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="setInterceptUrl"/>
-          <xs:element minOccurs="0" maxOccurs="unbounded" ref="removInterceptUrl"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="removeInterceptUrl"/>
         </xs:sequence>
       </xs:choice>
     </xs:complexType>
@@ -108,14 +110,9 @@
       <xs:documentation>Add a new intercept url mapping to the identified Security Interceptor bean</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="bean" use="required">
-        <xs:annotation>
-          <xs:documentation>The id of the bean to modify</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="pattern" use="required">
         <xs:annotation>
-          <xs:documentation>Same as the 'pattern' attribute of the spring security intercept-url element</xs:documentation>
+          <xs:documentation>The regex expression used to select a url</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="caseInsensitive">
@@ -130,56 +127,41 @@
       </xs:attribute>
       <xs:attribute name="access" use="required">
         <xs:annotation>
-          <xs:documentation>Same as the 'access' attribute of the spring security intercept-url element</xs:documentation>
+          <xs:documentation>Same as the 'access' attribute of the spring security intercept-url element.  For example hasRole('Administrator')</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="position">
+        <xs:annotation>
+          <xs:documentation>the position of the new mapping to add.  By default it will be added as the first rule.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
 	</xs:complexType>
   </xs:element>
   <xs:element name="removeInterceptUrl">
     <xs:annotation>
-      <xs:documentation>Add a new intercept url mapping to the identified Security Interceptor bean</xs:documentation>
+      <xs:documentation>Remove an existing intercept url mapping to the identified Security Interceptor bean</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="bean" use="required">
-        <xs:annotation>
-          <xs:documentation>The id of the bean to modify</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="pattern" use="required">
         <xs:annotation>
-          <xs:documentation>Same as the 'pattern' attribute of the spring security intercept-url element</xs:documentation>
+          <xs:documentation>The regex expression in the configuration files to remove.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
 	</xs:complexType>
   </xs:element>
   <xs:element name="setInterceptUrl">
     <xs:annotation>
-      <xs:documentation>Add a new intercept url mapping to the identified Security Interceptor bean</xs:documentation>
+      <xs:documentation>set an existing intercept url mapping to the identified Security Interceptor bean</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="bean" use="required">
-        <xs:annotation>
-          <xs:documentation>The id of the bean to modify</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="pattern" use="required">
         <xs:annotation>
-          <xs:documentation>Same as the 'pattern' attribute of the spring security intercept-url element</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="caseInsensitive">
-        <xs:annotation>
-          <xs:documentation>either true|false defaults is false</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="httpMethod">
-        <xs:annotation>
-          <xs:documentation>One of the http allowed methods, POST,PUT,DELETE,GET,etc... (case insensitive).  Restricts the httpMethod that is matched by interceptor. If not specified then all will be matched</xs:documentation>
+          <xs:documentation>The regex expression in the configuration files to update</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="access" use="required">
         <xs:annotation>
-          <xs:documentation>Same as the 'access' attribute of the spring security intercept-url element</xs:documentation>
+          <xs:documentation>Same as the 'access' attribute of the spring security intercept-url element.  For example hasRole('Administrator')</xs:documentation>
         </xs:annotation>
       </xs:attribute>
 	</xs:complexType>

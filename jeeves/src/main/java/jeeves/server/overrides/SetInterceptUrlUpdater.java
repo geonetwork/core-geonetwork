@@ -12,8 +12,20 @@ class SetInterceptUrlUpdater extends AbstractInterceptUrlUpdater {
     }
 
     @Override
-    protected void update(OverridesMetadataSource overrideSource) {
-        overrideSource.setMapping(pattern, access);
+    protected void update(Iterable<OverridesMetadataSource> sources) {
+        boolean found = false;
+        for (OverridesMetadataSource overridesMetadataSource : sources) {
+            try {
+                overridesMetadataSource.setMapping(patternString, access);
+                found = true;
+            } catch (IllegalArgumentException e) {
+                // this is exception is ignored.
+            }
+        }
+        
+        if (!found) {
+            throw new IllegalArgumentException("Unable to find an existing url mapping "+patternString);
+        }
     }
 
 }
