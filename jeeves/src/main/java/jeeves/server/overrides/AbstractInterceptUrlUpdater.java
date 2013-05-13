@@ -3,6 +3,7 @@ package jeeves.server.overrides;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jdom.Element;
@@ -24,7 +25,7 @@ abstract class AbstractInterceptUrlUpdater implements Updater {
 
         @Override
         @Nullable
-        public OverridesMetadataSource apply(@Nullable FilterSecurityInterceptor interceptor) {
+        public OverridesMetadataSource apply(@Nonnull FilterSecurityInterceptor interceptor) {
             if(interceptor == null) {
                 throw new NullPointerException();
             }
