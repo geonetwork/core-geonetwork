@@ -755,7 +755,6 @@ cat.app = function() {
 				listeners: {
 					afterrender: {
 						fn: function(o){
-							
 							function setHiddenField(name) {
 								if(urlParameters['s_'+name]) {
 									searchForm.getComponent('txtfield-'+name).setValue(urlParameters['s_'+name]);
@@ -772,12 +771,17 @@ cat.app = function() {
 							} else if(searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
 								if(!catalogue.casEnabled) {
-								    search();
+								    searchForm.reset();
+								    setTimeout(function () {
+								        search();
+                                    }, 1000);
 								}
 							}
 							if(catalogue.launchSearchAtStart) {
 								if (searching === true) {
-									searchForm.fireEvent('search');
+								    setTimeout(function () {
+					                    searchForm.fireEvent('search');
+					                }, 1000);
 								}
 							}
 							fitHeightToBody(o);
