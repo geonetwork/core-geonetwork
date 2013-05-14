@@ -391,9 +391,11 @@ GeoNetwork.util.SearchTools = {
                      * apply the list of filters defined by default to not allow 
                      * search accross all catalog content
                      */
-                    if (cur.mode === 'local' 
-                        && cur.getValue() === ""
-                        && (cur.name === 'E__groupPublished')) {
+                    if (cur.name === 'E__groupPublished' && 
+                            cur.configwhat && 
+                            !cur.configwhatRemoveOnly && 
+                            cur.getValue() === ""
+                        ) {
                         var values = [];
                         cur.getStore().each(function (record) {
                             values.push(record.get('value'));

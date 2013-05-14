@@ -45,13 +45,15 @@ cat.what = function() {
 					}
 				});
 			mode = 'remote';
-				
+			
+			var filtered = false;
+			var groupToRemove = [];
+            var groupToDisplay = [];
+            
 			// optionnaly configwhat define some elements to remove using -GROUPNAME flag for non identified users
 			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
 			    configwhat = configwhatInput[0].value;
 			    var data = configwhat.split(',');
-			    var groupToRemove = [];
-                var groupToDisplay = [];
 			    for (var i = 0; i < data.length; i++) {
 			        if (data[i].substring(0, 1) === '-') {
 			            groupToRemove.push(data[i]);
@@ -101,6 +103,8 @@ cat.what = function() {
 	            name: 'E__groupPublished',
 	            mode: mode,
 	            store: groupFieldStore,
+	            configwhat: groupToDisplay.length !== 0,
+	            configwhatRemoveOnly: groupToRemove.length !== 0 && groupToDisplay.length === 0,
 	            valueField: 'value',
 	            displayField: 'value',
 	            valueDelimiter: ' or ',
