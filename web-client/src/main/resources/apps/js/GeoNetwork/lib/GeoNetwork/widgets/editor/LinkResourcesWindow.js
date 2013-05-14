@@ -602,15 +602,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             valueField: 'value',
             displayField: 'label',
             triggerAction: 'all',
-            mode: 'local',
-            listeners: {
-                select: function (combo, record, index) {
-                    //this.associationType = record;
-                    // TODO : update record
-//                    console.log(record)
-                },
-                scope: this
-            }
+            mode: 'local'
         });
         
         
@@ -707,8 +699,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                                 }
                             });
                         } else {
-                            var form = this.uploadForm.getForm();
                             this.selectedLink = this.uploadForm.getForm().getValues();
+                            this.selectedLink.protocol = protocolCombo.getValue();
                             this.runProcess();
                         }
                     }
