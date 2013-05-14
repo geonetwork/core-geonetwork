@@ -146,7 +146,9 @@ public class ElementLib
 	{
 		for (Map.Entry<String, ? extends Object> entry : vars.entrySet()){
 		    String name = entry.getKey();
-			text = Util.replaceString(text, name, entry.getValue().toString());
+		    String value = "";
+            if(entry.getValue() != null) value = entry.getValue().toString();
+			text = Util.replaceString(text, name, value);
 		}
 
 		return text;
