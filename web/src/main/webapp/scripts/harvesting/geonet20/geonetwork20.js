@@ -13,7 +13,6 @@ var gn20 = new Object();
 
 function Geonetwork20(xmlLoader)
 {
-    console.log('gn20 constructor');
 	//--- call super constructor
 	Harvester.call(this);
 	
@@ -21,7 +20,6 @@ function Geonetwork20(xmlLoader)
 	var model = new gn20.Model(loader);
 	var view  = new gn20.View(loader);
 
-    console.log('gn20 stuff loaded');
 	//--- public methods
 	
 	this.addSearchRow    = addSearchRow;
