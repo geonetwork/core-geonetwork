@@ -19,7 +19,6 @@ function Geonetwork20(xmlLoader)
 	var loader= xmlLoader;
 	var model = new gn20.Model(loader);
 	var view  = new gn20.View(loader);
-	
 	//--- public methods
 	
 	this.addSearchRow    = addSearchRow;
