@@ -500,6 +500,7 @@ cat.app = function() {
 				this.getForm().reset();
 				var elt = this.findByType('gn_categorytree', true);
 				elt[0].reset();
+				this.find('id', 'E__groupPublished')[0].getStore().load();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
 				cookie.set('cat.search.page', 0);

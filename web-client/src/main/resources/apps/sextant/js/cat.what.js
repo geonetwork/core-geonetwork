@@ -110,6 +110,7 @@ cat.what = function() {
 	            valueDelimiter: ' or ',
 	            fieldLabel: OpenLayers.i18n('Catalogue')
 	        });
+	        groupFieldStore.load();
 	        
             // Radio box
             var catCookie = cookie.get('cat.searchform.cat');
