@@ -288,7 +288,7 @@ GeoNetwork.Lang.en = {
     'suggestion': 'Suggestion',
     'logoSelect': 'Select a logo',
     'relatedResources': 'Related resources',
-    'createLink': 'Create links ...',
+    'createLink': 'Create link',
     'featureCat': 'Feature catalogue',
     'serviceMd': 'Service metadata',
     'datasetMd': 'Dataset metadata',
