@@ -144,8 +144,8 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
                 return false;
             }
         }, this);
-        
-        if(idx > 0 && this.storeLabel.getAt(idx)) {
+
+        if(idx >= 0 && this.storeLabel.getAt(idx)) {
             res = this.storeLabel.getAt(idx).get('name') || this.storeLabel.getAt(idx).get('value');
         } else {
             res = value;
