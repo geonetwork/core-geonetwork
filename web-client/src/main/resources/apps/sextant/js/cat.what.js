@@ -302,6 +302,8 @@ cat.what = function() {
     		            cb && cb();
     		        }});
                 }});
+		    } else {
+		        cb && cb();
 		    }
 		}
 	}
