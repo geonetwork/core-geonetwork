@@ -1477,6 +1477,17 @@
 		<service name="isolanguages">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
+		
+		
+        <!-- HTML5UI -->
+        <service name="search">
+            <class name=".services.main.Home" />
+            <output sheet="search.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+            </output>
+        </service>
+
 	</services>
 
 	<!-- ====================================================================== -->
