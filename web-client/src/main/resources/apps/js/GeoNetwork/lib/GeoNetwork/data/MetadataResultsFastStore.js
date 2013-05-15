@@ -316,8 +316,8 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
     }
     function getDisplayOrder(v, record){
-        if (record.geonet_info && record.geonet_info.displayOrder) {
-            return record.geonet_info.displayOrder[0].value;
+        if (record.displayOrder) {
+            return record.displayOrder[0].value;
         } else {
             return 0;
         }
