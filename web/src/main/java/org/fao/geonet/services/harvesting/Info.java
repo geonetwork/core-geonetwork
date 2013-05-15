@@ -53,6 +53,9 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -140,10 +143,11 @@ public class Info implements Service
 	private Element getIcons(ServiceContext context)
 	{
 		Set<File> icons = Resources.listFiles(context, "harvesting", iconFilter);
-
+		List<File> list = new ArrayList<File>(icons);
+		Collections.sort(list);
 		Element result = new Element("icons");
 
-		for (File icon : icons)
+		for (File icon : list)
 			result.addContent(new Element("icon").setText(icon.getName()));
 
 		return result;
