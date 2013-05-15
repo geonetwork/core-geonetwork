@@ -108,23 +108,19 @@ cat.app = function() {
 		});
 		
 		catalogue.on('afterLogin', function() {
-			cookie.set('user', catalogue.identifiedUser);
-			cat.what.updateUserGroups(this);
+		    cookie.set('user', catalogue.identifiedUser);
 		});
 		catalogue.on('afterLogout', function() {
-			cookie.set('user', undefined);
-			cat.what.updateUserGroups(this);
+		    cookie.set('user', undefined);
 		});
-
+        
 		// Refresh login form if needed
 		var user = cookie.get('user');
 		if (user) {
 			catalogue.identifiedUser = user;
 			loginForm.login(catalogue, true);
 		}
-		if(catalogue.casEnabled) {
-			loginForm.triggerClick();
-		}
+		loginForm.triggerClick();
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
@@ -755,7 +751,7 @@ cat.app = function() {
 				listeners: {
 					afterrender: {
 						fn: function(o){
-							function setHiddenField(name) {
+						    function setHiddenField(name) {
 								if(urlParameters['s_'+name]) {
 									searchForm.getComponent('txtfield-'+name).setValue(urlParameters['s_'+name]);
 								}
@@ -770,20 +766,8 @@ cat.app = function() {
 								search();
 							} else if(searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
-								if(!catalogue.casEnabled) {
-								    searchForm.reset();
-								    setTimeout(function () {
-								        search();
-                                    }, 1000);
-								}
 							}
-							if(catalogue.launchSearchAtStart) {
-								if (searching === true) {
-								    setTimeout(function () {
-					                    searchForm.fireEvent('search');
-					                }, 1000);
-								}
-							}
+							
 							fitHeightToBody(o);
 							
 							var loadDiv = Ext.get('loading');
@@ -842,11 +826,7 @@ cat.app = function() {
 
             Ext.each(events, function(e) {
                 catalogue.on(e, function() {
-                    if (viewport.rendered) {
-                        searchAfterLoggin();
-                    } else {
-                        viewport.on('afterrender', searchAfterLoggin);
-                    }
+                    cat.what.updateUserGroups(searchAfterLoggin);
                 });
             });
 		},

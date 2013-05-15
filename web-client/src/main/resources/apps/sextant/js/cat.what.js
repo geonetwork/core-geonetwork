@@ -32,19 +32,16 @@ cat.what = function() {
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 			
 			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
-			var mode, groupFieldStore; 
-			var configwhatInput = Ext.query('input[id*=configwhat]');
+			var mode = 'remote', configwhatInput = Ext.query('input[id*=configwhat]');
 			
 
-			groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore(
-				{
+			groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
 					url : services.opensearchSuggest,
 					rootId : 1,
 					baseParams : {
 						field : '_groupPublished'
 					}
 				});
-			mode = 'remote';
 			
 			var filtered = false;
 			var groupToRemove = [];
@@ -65,8 +62,7 @@ cat.what = function() {
 			    // Filter group starting with - from the store for non authentified users
 			    // Filter group if configwhat is defined
 			    userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
-			    userGroupStore.load();
-
+			    
 			    groupFieldStore.on('load', function () {
 			        this.filterBy(function (record, id) {
 	                    if (groupToRemove.indexOf("-" + record.get('value')) !== -1) {
@@ -110,7 +106,15 @@ cat.what = function() {
 	            valueDelimiter: ' or ',
 	            fieldLabel: OpenLayers.i18n('Catalogue')
 	        });
-	        groupFieldStore.load();
+	        
+//	        User groups and group field will be updated on load when trying to log in
+//	        if (userGroupStore) {
+//    	        userGroupStore.load({callback: function () {
+//                    groupFieldStore.load();
+//                }});
+//	        } else {
+//	            groupFieldStore.load();
+//	        }
 	        
             // Radio box
             var catCookie = cookie.get('cat.searchform.cat');
@@ -199,8 +203,8 @@ cat.what = function() {
 			};
 	        
 	        //if configwhat then send _groupPublished to the suggestion service to filter cat
-	        if(configwhat) {
-	        	baseParams.groupPublished = configwhat;
+	        if(groupToDisplay.length > 0) {
+	        	baseParams.groupPublished = groupToDisplay.join(' or ');
 	        }
 	        var categoryStore = new GeoNetwork.data.OpenSearchSuggestionStore({
 				url : services.opensearchSuggest,
@@ -223,10 +227,10 @@ cat.what = function() {
 			
 			// reload categoryTree depending on selected catalogs
 			var updateCatTree = function(cb, value, record) {
-				categoryStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : configwhat;
+				categoryStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : groupToDisplay.join(' or ');
 				categoryTree.loadStore();
 				
-				themeINSPIREStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : configwhat;
+				themeINSPIREStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : groupToDisplay.join(' or ');
 				themeINSPIREField.loadStore();
 			};
 			categoryStore.on('load', function() {
@@ -291,9 +295,13 @@ cat.what = function() {
 		getCatalogueField : function() {
 			return catalogueField;
 		},
-		updateUserGroups : function() {
-		    if(userGroupStore) {
-		        userGroupStore.reload();
+		updateUserGroups : function(cb) {
+		    if (userGroupStore) {
+    		    userGroupStore.reload({callback: function () {
+    		        groupFieldStore.reload({callback: function () {
+    		            cb && cb();
+    		        }});
+                }});
 		    }
 		}
 	}
