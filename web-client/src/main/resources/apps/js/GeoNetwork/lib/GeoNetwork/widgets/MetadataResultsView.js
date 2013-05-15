@@ -580,7 +580,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 }
                                 linkButton = [];
                                 currentType = record.get('type');
-                                label = OpenLayers.i18n('linklabel-' + currentType);
+                                var labelKey = 'linklabel-' + currentType;
+                                label = OpenLayers.i18n(labelKey);
+                                if (label === labelKey) { // Default label if not found in translation
+                                    label = OpenLayers.i18n('linklabel-');
+                                }
                                 if (currentType === 'application/x-compressed') {
                                     hasDownloadAction = true;
                                 }
