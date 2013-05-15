@@ -292,7 +292,9 @@ cat.what = function() {
 			return catalogueField;
 		},
 		updateUserGroups : function() {
-		    userGroupStore.reload();
+		    if(userGroupStore) {
+		        userGroupStore.reload();
+		    }
 		}
 	}
 }();
