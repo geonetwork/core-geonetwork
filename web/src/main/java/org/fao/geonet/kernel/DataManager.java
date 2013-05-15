@@ -462,7 +462,7 @@ public class DataManager {
 
             // get metadata table fields
             String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
-                    "title, uuid, isHarvested, owner, groupOwner, popularity, rating FROM Metadata WHERE id = ?";
+                    "title, uuid, isHarvested, owner, groupOwner, popularity, rating, displayOrder FROM Metadata WHERE id = ?";
 
             Element rec = dbms.select(query, id$).getChild("record");
 
@@ -479,6 +479,7 @@ public class DataManager {
             String  groupOwner = rec.getChildText("groupowner");
             String  popularity = rec.getChildText("popularity");
             String  rating     = rec.getChildText("rating");
+            String  displayOrder = rec.getChildText("displayorder");
 
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
@@ -498,6 +499,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_dummy",       "0",        false, true));
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
+            moreFields.add(SearchManager.makeField("_displayOrder",displayOrder, true, false));
 
             if (owner != null) {
                 String userQuery = "SELECT username, surname, name, profile FROM Users WHERE id = ?";
