@@ -295,11 +295,13 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     },
     actionMenuInit: function(idx, node){
         this.acMenu = Ext.get(Ext.DomQuery.selectNode('span.md-action-menu', node));
-        this.acMenu.on('click', function(){
-            this.createMenu(idx, this);
-            this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
-        }, this);
-        this.acMenu.show();
+        if(this.acMenu) {
+            this.acMenu.on('click', function(){
+                this.createMenu(idx, this);
+                this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
+            }, this);
+            this.acMenu.show();
+        }
     },
     
     addCustomAction: function() {
