@@ -829,17 +829,26 @@ cat.app = function() {
 
 			var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterBadLogin',
 					'afterLogin' ];
-			Ext.each(events, function(e) {
-				catalogue.on(e, function() {
-					if (searching === true) {
-					    var searchPage = cookie.get('cat.search.page');
-					    if(searchPage && searchPage > 0) {
-                            catalogue.startRecord = searchPage;
-					    }
-						search();
-					}
-				});
-			});
+
+            var searchAfterLoggin = function() {
+                if (searching === true) {
+                    var searchPage = cookie.get('cat.search.page');
+                    if (searchPage && searchPage > 0) {
+                        catalogue.startRecord = searchPage;
+                    }
+                    search();
+                }
+            }
+
+            Ext.each(events, function(e) {
+                catalogue.on(e, function() {
+                    if (viewport.rendered) {
+                        searchAfterLoggin();
+                    } else {
+                        viewport.on('afterrender', searchAfterLoggin);
+                    }
+                });
+            });
 		},
 
 		getCatalogue : function() {
