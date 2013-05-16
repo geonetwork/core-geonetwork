@@ -205,7 +205,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
                 text: OpenLayers.i18n('collapseAll'),
                 checked: false,
                 checkHandler: function(){
-                    Ext.each(Ext.DomQuery.select('div.toggle'), function(i) {
+                    Ext.each(Ext.DomQuery.select('span.toggle'), function(i) {
                         if (i.onclick) {
                             i.onclick();
                         }
@@ -297,7 +297,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
      *  TODO : what to do in destroy ?
      */
     onDestroy: function(){
-        GeoNetwork.EditorToolbar.superclass.onDestroy.apply(this, arguments);
+        GeoNetwork.editor.EditorToolbar.superclass.onDestroy.apply(this, arguments);
     }
 });
 

@@ -634,9 +634,11 @@ public class GeoServerRest {
 				"text/xml", true);
 
 		// Create layer for feature type (require for MapServer REST API)
-		sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
+		status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
 				"text/xml", false);
 
+		checkResponseCode(status);
+		
 		if (createStyle) {
 			createStyle(ft);
 		}

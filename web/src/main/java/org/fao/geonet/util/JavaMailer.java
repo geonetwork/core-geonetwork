@@ -71,7 +71,7 @@ public class JavaMailer {
     	try {
             props = new Properties();
             // If true, attempt to authenticate the user using the AUTH command. Defaults to false.
-	        props.put("mail.smtps.auth", new Boolean(authentication).toString());
+	        props.put("mail.smtps.auth", String.valueOf(authentication));
             this.authentication = authentication;
             // The SMTP server
             props.put("mail.smtp.host", smtpHost);

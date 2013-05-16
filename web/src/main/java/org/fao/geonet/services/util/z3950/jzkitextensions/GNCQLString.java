@@ -54,13 +54,12 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-private Log log = LogFactory.getLog(GNCQLString.class);
+    private transient Log log = LogFactory.getLog(GNCQLString.class);
 
-  private static String default_qualifier="cql.serverChoice";
+    private static String default_qualifier = "cql.serverChoice";
 
-  private InternalModelRootNode internal_model = null;
-  private CQLNode cql_root;
-
+    private InternalModelRootNode internal_model = null;
+    private transient CQLNode cql_root;
 
   public GNCQLString(String the_cql_string) {
 
@@ -189,7 +188,7 @@ aptn.setAttr(AttrPlusTermNode.ACCESS_POINT_ATTR,process(default_qualifier));
     if ( cql_root != null )
       return cql_root.toCQL();
 
-    return null;
+    return "";
   }
 }
 

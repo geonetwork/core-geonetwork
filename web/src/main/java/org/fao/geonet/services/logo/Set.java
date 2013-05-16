@@ -40,6 +40,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -54,7 +55,7 @@ import org.jdom.Element;
  * 
  */
 public class Set implements Service {
-    private String harvestingLogoDirectory;
+    private volatile String harvestingLogoDirectory;
     private volatile String nodeLogoDirectory = null;
 
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -121,9 +122,16 @@ public class Set implements Service {
     }
 
     private void copyLogo(String file, String logo) throws IOException {
-        FileInputStream is = new FileInputStream(file);
-        FileOutputStream os = new FileOutputStream(logo);
-        BinaryFile.copy(is, os, true, true);
+        FileInputStream is = null;
+        FileOutputStream os = null;
+        try {
+            is = new FileInputStream(file);
+            os = new FileOutputStream(logo);
+            BinaryFile.copy(is, os);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(os);
+        }
     }
 
     private void createFavicon(Image img, String outFile) throws IOException {

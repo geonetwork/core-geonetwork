@@ -1,41 +1,25 @@
 package jeeves.server.overrides;
 
-import java.util.Properties;
-
-import jeeves.config.springutil.GeonetworkFilterSecurityInterceptor;
-
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.RegexRequestMatcher;
 
-class AddInterceptUrlUpdater extends BeanUpdater {
+class AddInterceptUrlUpdater extends AbstractInterceptUrlUpdater {
 
-    private RegexRequestMatcher pattern;
-    private String access;
+    private final String access;
+    private int position;
 
     public AddInterceptUrlUpdater(Element element) {
-        setBeanName(element);
-        this.pattern = new RegexRequestMatcher(element.getAttributeValue("pattern"), element.getAttributeValue("httpMethod"), Boolean.parseBoolean(element.getAttributeValue("caseInsensitive")));
+        super(element);
+        String postAttVal = element.getAttributeValue("position");
+        if (postAttVal == null) {
+            postAttVal = "0";
+        }
+        this.position = Integer.parseInt(postAttVal);
         this.access = element.getAttributeValue("access");
     }
 
     @Override
-    public Object update(ApplicationContext applicationContext, Properties properties, Object bean) {
-        GeonetworkFilterSecurityInterceptor interceptor = (GeonetworkFilterSecurityInterceptor) bean;
-        
-        FilterInvocationSecurityMetadataSource metadataSource = interceptor.getSecurityMetadataSource();
-        
-        OverridesMetadataSource overrideSource;
-        if (metadataSource instanceof OverridesMetadataSource) {
-            overrideSource = (OverridesMetadataSource) metadataSource;
-            
-        } else {
-            overrideSource = new OverridesMetadataSource(metadataSource);
-            interceptor.setSecurityMetadataSource(overrideSource);
-        }
-        
-        overrideSource.addMapping(pattern, access);
-        return null;
+    protected void update(Iterable<OverridesMetadataSource> sources) {
+        sources.iterator().next().addMapping(patternString, pattern, access, position);
     }
+
 }

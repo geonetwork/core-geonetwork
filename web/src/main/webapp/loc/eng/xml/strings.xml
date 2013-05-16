@@ -1379,4 +1379,9 @@
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
 </strings>

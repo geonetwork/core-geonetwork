@@ -438,6 +438,7 @@ div.button {
 }
 .tgDown {
   background-image : url(../images/default/bullet_arrow_down.png);
+  background-position: 50% 50%;
 }
 .edit {
   background-image : url(../images/default/page_white.png) !important;

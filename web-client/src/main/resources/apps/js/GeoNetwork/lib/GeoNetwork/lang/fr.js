@@ -334,7 +334,7 @@ GeoNetwork.Lang.fr = {
     'UploadError': 'Échec du transfert',
     'setAThumbnailByURL': 'Associer une image par URL',
     'setAURL': 'URL de l\'image',
-    'createLink': 'Associer ...',
+    'createLink': 'Associer',
     'featureCat': "Catalogue d'attributs",
     'serviceMd': 'Métadonnées de service',
     'datasetMd': 'Métadonnées de données',

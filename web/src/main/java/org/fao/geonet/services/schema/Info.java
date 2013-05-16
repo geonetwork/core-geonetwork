@@ -206,7 +206,7 @@ public class Info implements Service {
             currName = findNamespace(currName, scm, schema);
             
             if (currName == null) {
-                throw new OperationAbortedEx("No namespace found for : " + currName);
+                throw new OperationAbortedEx("No namespace found for currName  ");
             }
 
             if(!currName.equals(name)) {
@@ -219,7 +219,7 @@ public class Info implements Service {
         			currContext = findNamespace(currContext, scm, schema);
         		}
         		
-        		if (context.equals(currContext) || isoType.equals(currContext)) {
+        		if ((context != null && context.equals(currContext)) || isoType.equals(currContext)) {
         			return (Element) currElem.clone();
         		}
         	} else if (!requireContextMatch){

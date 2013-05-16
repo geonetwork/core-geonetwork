@@ -28,6 +28,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import org.globus.ftp.DataSink;
@@ -305,8 +306,13 @@ public final class BinaryFile
 		if (path == null) return;
 		if (!remoteFile) {
 			File f = new File(path);
-			InputStream input = new FileInputStream(f);
-			copy(input, output, true, false);
+			InputStream input = null;
+			try {
+                input = new FileInputStream(f);
+    			copy(input, output);
+			} finally {
+			    IOUtils.closeQuietly(input);
+			}
 		} else {
 			if (remoteProtocol.equals("scp")) {
 				try {
@@ -315,20 +321,22 @@ public final class BinaryFile
 					com.jcraft.jsch.Session session=jsch.getSession(remoteUser, remoteSite, 22);
 					UserInfo ui=new MyUserInfo();
 					session.setUserInfo(ui);
-					session.connect();
-				
-					String command="scp -f "+remotePath;
-					Channel channel=session.openChannel("exec");
-					((ChannelExec)channel).setCommand(command);
-	
-					// get I/O streams for remote scp
-					OutputStream outScp=channel.getOutputStream();
-					InputStream inScp=channel.getInputStream();
-					channel.connect();
-				
-					copy(inScp,outScp,output);
-				
-					session.disconnect();
+					try {
+    					session.connect();
+    				
+    					String command="scp -f "+remotePath;
+    					Channel channel=session.openChannel("exec");
+    					((ChannelExec)channel).setCommand(command);
+    	
+    					// get I/O streams for remote scp
+    					OutputStream outScp=channel.getOutputStream();
+    					InputStream inScp=channel.getInputStream();
+    					channel.connect();
+    				
+    					copy(inScp,outScp,output);
+					} finally {
+					    session.disconnect();
+					}
 				} catch (Exception e) {
 					Log.error(Log.RESOURCES,"Problem with scp from site: "+remoteUser+"@"+remoteSite+":"+remotePath);
 					e.printStackTrace();
@@ -451,33 +459,24 @@ public final class BinaryFile
 	/**
 	 * Copies an input stream (from a file) to an output stream 
 	 */
-	public static void copy(InputStream in, OutputStream out,
-			boolean closeInput, boolean closeOutput) throws IOException {
-
-		try {
-			if (in instanceof FileInputStream) {
-				FileInputStream fin = (FileInputStream) in;
-				WritableByteChannel outChannel;
-				if (out instanceof FileOutputStream) {
-					outChannel = ((FileOutputStream) out).getChannel();
-				} else {
-					outChannel = Channels.newChannel(out);
-				}
-				fin.getChannel().transferTo(0, Long.MAX_VALUE, outChannel);
+	public static void copy(InputStream in, OutputStream out) throws IOException {
+		if (in instanceof FileInputStream) {
+			FileInputStream fin = (FileInputStream) in;
+			WritableByteChannel outChannel;
+			if (out instanceof FileOutputStream) {
+				outChannel = ((FileOutputStream) out).getChannel();
 			} else {
-				BufferedInputStream input = new BufferedInputStream(in);
-
-				byte buffer[] = new byte[BUF_SIZE];
-				int nRead;
-
-				while ((nRead = input.read(buffer)) > 0)
-					out.write(buffer, 0, nRead);
+				outChannel = Channels.newChannel(out);
 			}
-		} finally {
-			if (closeInput)
-				IOUtils.closeQuietly(in);
-			if (closeOutput)
-				IOUtils.closeQuietly(out);
+			fin.getChannel().transferTo(0, Long.MAX_VALUE, outChannel);
+		} else {
+			BufferedInputStream input = new BufferedInputStream(in);
+
+			byte buffer[] = new byte[BUF_SIZE];
+			int nRead;
+
+			while ((nRead = input.read(buffer)) > 0)
+				out.write(buffer, 0, nRead);
 		}
 	}
 
@@ -507,14 +506,10 @@ public final class BinaryFile
             try {
                 in = new FileInputStream(sourceLocation);
                 out = new FileOutputStream(targetLocation);
-                copy(in, out, false, false);
+                copy(in, out);
             } finally {
-                if (in != null) {
-                    IOUtils.closeQuietly(in);
-                }
-                if (out != null) {
-                    IOUtils.closeQuietly(out);
-                }
+                IOUtils.closeQuietly(in);
+                IOUtils.closeQuietly(out);
             }
         }
     }
@@ -554,6 +549,16 @@ public final class BinaryFile
 		else
 			return("application/binary");
 	}
+
+    public static void copy(File srcFile, File destFile) throws IOException {
+        if(srcFile.isFile()) {
+            FileUtils.copyFile(srcFile, destFile);
+        } else {
+            FileUtils.copyDirectory(srcFile, destFile);
+            
+        }
+        
+    }
 
 }
 

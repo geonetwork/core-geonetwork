@@ -159,8 +159,9 @@ public class AjaxEditUtils extends EditUtils {
         if (!xmlInputs.isEmpty()) {
             
             // Loop over each XML fragments to insert or replace
-            for (String ref : xmlInputs.keySet()) {
-                String value = xmlInputs.get(ref);
+            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
+                String ref = entry.getKey();
+                String value = entry.getValue();
                 String name = null;
                 int addIndex = ref.indexOf('_');
                 if (addIndex != -1) {

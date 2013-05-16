@@ -30,6 +30,8 @@ import jeeves.utils.BinaryFile;
 import jeeves.utils.IO;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -250,9 +252,14 @@ public class Aligner extends BaseAligner
 					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
 					File outFile = new File(pubDir, file);
-					FileOutputStream os = new FileOutputStream(outFile);
-					BinaryFile.copy(is, os, false, true);
-					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+					FileOutputStream os = null;
+					try {
+                        os = new FileOutputStream(outFile);
+    					BinaryFile.copy(is, os);
+    					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+					} finally {
+					    IOUtils.closeQuietly(os);
+					}
 				}
 				
 				public void handleFeatureCat(Element md, int index)
@@ -267,9 +274,14 @@ public class Aligner extends BaseAligner
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
 	                    String dir = Lib.resource.getDir(context, "private", id[index]);
 	                    File outFile = new File(dir, file);
-	                    FileOutputStream os = new FileOutputStream(outFile);
-	                    BinaryFile.copy(is, os, false, true);
-	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+	                    FileOutputStream os = null;
+	                    try {
+                            os = new FileOutputStream(outFile);
+    	                    BinaryFile.copy(is, os);
+    	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+	                    } finally {
+	                        IOUtils.closeQuietly(os);
+	                    }
 				    }
 				}
 			});
@@ -729,9 +741,14 @@ public class Aligner extends BaseAligner
 		{
             if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
-			FileOutputStream os = new FileOutputStream(locFile);
-			BinaryFile.copy(is, os, false, true);
-			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+			FileOutputStream os = null;
+			try {
+                os = new FileOutputStream(locFile);
+    			BinaryFile.copy(is, os);
+    			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+			} finally {
+			    IOUtils.closeQuietly(os);
+			}
 		}
 		else
 		{

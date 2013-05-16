@@ -148,7 +148,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	
 	private void align(List<String> metadataList, ResourceManager rm) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : "+ params.name);
-		HarvestResult result = new HarvestResult();
+		result = new HarvestResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups

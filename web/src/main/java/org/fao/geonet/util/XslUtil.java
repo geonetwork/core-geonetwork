@@ -186,8 +186,9 @@ public final class XslUtil
             String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
             if(fieldValue == null) {
                 return getIndexFieldById(appName,uuid,field,lang);
+            } else {
+                return fieldValue;
             }
-            return fieldValue == null ? "" : fieldValue;
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
             return "";

@@ -102,7 +102,19 @@ public class ISODate implements Cloneable
 
 	public ISODate clone()
 	{
-		return new ISODate(year, month, day, hour, min, sec);
+	    ISODate clone;
+        try {
+            clone = (ISODate) super.clone();
+            clone.year = year;
+            clone.month = month;
+            clone.day = day;
+            clone.hour = hour;
+            clone.min = min;
+            clone.sec = sec;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            return new ISODate(year, month, day, hour, min, sec);
+        }
 	}
 
 	//---------------------------------------------------------------------------

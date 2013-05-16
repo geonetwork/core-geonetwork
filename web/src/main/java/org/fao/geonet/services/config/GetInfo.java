@@ -24,6 +24,7 @@ package org.fao.geonet.services.config;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.transform.TransformerFactory;
@@ -57,12 +58,10 @@ public class GetInfo implements Service {
 	private HashMap<String, String> databaseProperties = new HashMap<String, String>();
 	private SearchManager sm;
 	private Dbms dbms; 
-	String appPath;
 
 	final Properties properties = System.getProperties();
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 	}
 
 	public Element exec(Element params, ServiceContext context)
@@ -201,8 +200,8 @@ public class GetInfo implements Service {
 	 * @param h
 	 */
 	private void addToElement(Element el, HashMap<String, String> h) {
-		for (String key : h.keySet()) {
-			el.addContent(new Element(key).setText(h.get(key)));
+		for (Map.Entry<String, String>entry : h.entrySet()) {
+			el.addContent(new Element(entry.getKey()).setText(entry.getValue()));
 		}
 	}
 }

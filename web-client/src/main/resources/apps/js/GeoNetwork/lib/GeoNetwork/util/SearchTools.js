@@ -89,7 +89,7 @@ GeoNetwork.util.SearchTools = {
                     var isCatalogueMdStore = cat.metadataStore === metadataStore, 
                     	isCatalogueSStore = cat.summaryStore === summaryStore;
 
-                    if (values.length > 0) {
+                    if (values && values.length > 0) {
                         metadataStore.loadData(currentRecords);
                     }
                     

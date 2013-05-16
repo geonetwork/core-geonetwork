@@ -29,6 +29,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -53,6 +55,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nonnull;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
@@ -264,15 +268,25 @@ public class MEFLib {
 	 * 
 	 * @param zos
 	 * @param name
-	 * @param is
+	 * @param in
 	 * @throws IOException
 	 */
-	static void addFile(ZipOutputStream zos, String name, InputStream is)
+	static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
 			throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-		BinaryFile.copy(is, zos, true, false);
-		zos.closeEntry();
+	       ZipEntry entry = null;
+	        try {
+	            entry = new ZipEntry(name);
+	            zos.putNextEntry(entry);
+	            BinaryFile.copy(in, zos);
+	        } finally {
+	            try {
+	                if(zos != null) {
+	                    zos.closeEntry();
+	                }
+	            } finally {
+	                IOUtils.closeQuietly(in);
+	            }
+	        }
 	}
 
 	/**

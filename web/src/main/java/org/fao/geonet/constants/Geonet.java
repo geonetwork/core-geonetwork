@@ -169,6 +169,10 @@ public final class Geonet {
 		public static final String METADATA_ISO19110		= "metadata.iso19110";
 		public static final String FC_ISO19110		        = "fc.iso19110";
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
+        /**
+         * Contains the uuids of metadatas that have to be shown
+         */
+        public static final String METADATA_UUIDS    = "metadata.uuids";
 
 	}
     
@@ -571,6 +575,7 @@ public final class Geonet {
     public static final Version LUCENE_VERSION = Version.LUCENE_41;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
+    public static final String FORMATTER = GEONETWORK + ".formatter";
     /**
      * Services.
      */

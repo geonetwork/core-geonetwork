@@ -12,13 +12,14 @@
         http://www.springframework.org/schema/security/spring-security-3.1.xsd" >
 
 	<bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
-    <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="filterSecurityInterceptor">
-    	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_coreSecurityMapping_filterApplied"/>
+    <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
-            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex" id="coreFilterSecurityMetadataSource">
+            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/toremove/.*" access="hasRole('REMOVE')"></sec:intercept-url>
+                <sec:intercept-url pattern="/toset/.*" access="hasRole('SET')"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>
     </bean>

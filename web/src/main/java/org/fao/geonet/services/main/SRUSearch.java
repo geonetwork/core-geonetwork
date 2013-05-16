@@ -420,7 +420,8 @@ public class SRUSearch implements Service
 		} 
 		
 		catch (InvalidQueryException e) {
-			if (diagnostics == null ) diagnostics = new Element("diagnostics");
+		    // diagnostics is known to be null
+		    diagnostics = new Element("diagnostics");
 
 			addToDiag(diagnostics, "info:srw/diagnostic/1/10", "Query syntax error", e.getMessage()  );
 			
@@ -429,7 +430,8 @@ public class SRUSearch implements Service
 		}
 		
 		catch (SearchException e) {
-			if (diagnostics == null ) diagnostics = new Element("diagnostics");
+            // diagnostics is known to be null
+		    diagnostics = new Element("diagnostics");
 
 			if (e.error_code == GNProfileService.ERROR_QUERY ) {
 				addToDiag(diagnostics, "info:srw/diagnostic/1/16", "Unsupported index",  e.getMessage()  );

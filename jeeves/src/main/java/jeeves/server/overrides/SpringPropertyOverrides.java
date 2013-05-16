@@ -32,6 +32,10 @@ public class SpringPropertyOverrides {
             return PropertyUpdater.create(element);
         } else if ("addInterceptUrl".equalsIgnoreCase(element.getName())) {
             return new AddInterceptUrlUpdater(element);
+        } else if ("removeInterceptUrl".equalsIgnoreCase(element.getName())) {
+            return new RemoveInterceptUrlUpdater(element);
+        } else if ("SetInterceptUrl".equalsIgnoreCase(element.getName())) {
+            return new SetInterceptUrlUpdater(element);
         } else {
             throw new IllegalArgumentException(element.getName()+" is not known type of updater");
         }

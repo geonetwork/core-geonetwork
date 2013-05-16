@@ -41,7 +41,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDF implements Service {
 	
-	private final String TMP_PDF_FILE = "Document";
+	private static final String TMP_PDF_FILE = "Document";
 	
     public Element exec(Element metadata, ServiceContext context) throws Exception {
         
@@ -52,7 +52,7 @@ public class PDF implements Service {
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 
-        File tempFile = File.createTempFile(this.TMP_PDF_FILE, ".pdf", tempDir);
+        File tempFile = File.createTempFile(TMP_PDF_FILE, ".pdf", tempDir);
         OutputStream os = new FileOutputStream(tempFile);
         
         try {

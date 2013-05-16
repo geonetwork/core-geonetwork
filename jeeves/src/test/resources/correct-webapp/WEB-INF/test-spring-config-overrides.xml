@@ -11,5 +11,7 @@
 		<add bean="testBean" property="collectionProp" value="${db}" />
 		<add bean="testBean" property="collectionRef" ref="testBean3" />
 		<addInterceptUrl bean="filterSecurityInterceptor" pattern="/monitor/.*" access="hasRole('Administrator')"/>
+		<removeInterceptUrl bean="filterSecurityInterceptor" pattern="/toremove/.*"/>
+		<setInterceptUrl bean="filterSecurityInterceptor" pattern="/toset/.*" access="hasRole('RegisteredUser')"/>
 	</spring>
 </overrides>

@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 
 import org.apache.commons.io.FileUtils;
@@ -132,7 +133,7 @@ public class Upload implements Service {
             String filename, File targetDir, String overwrite) throws Exception {
         // move uploaded file to destination directory
         // note: uploadDir and rootDir must be in the same volume
-        targetDir.mkdirs();
+        IO.mkdirs(targetDir, "directory to move a file to");
 
         // get ready to move uploaded file to destination directory
         File oldFile = new File(sourceDir, filename);
@@ -157,11 +158,10 @@ public class Upload implements Service {
         try {
             FileUtils.moveFile(oldFile, newFile);
         } catch (Exception e) {
-            oldFile.delete();
             context.warning("Cannot move uploaded file");
             context.warning(" (C) Source : " + oldFile.getAbsolutePath());
             context.warning(" (C) Destin : " + newFile.getAbsolutePath());
-            oldFile.delete();
+            IO.delete(oldFile, false, context);
             throw new Exception(
                     "Unable to move uploaded file to destination directory");
         }

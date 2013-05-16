@@ -39,7 +39,7 @@ import java.util.concurrent.Future;
  */
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 	
-	public class BatchOpsCallable implements Callable<Void> {
+	public static final class BatchOpsCallable implements Callable<Void> {
 		private final int ids[];
 		private final int beginIndex, count;
 		private final DataManager dm;

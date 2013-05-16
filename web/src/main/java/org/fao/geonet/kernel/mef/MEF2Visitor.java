@@ -28,6 +28,7 @@ import jeeves.interfaces.Logger;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ZipUtil;
 import org.jdom.Element;
 
@@ -63,7 +64,7 @@ public class MEF2Visitor implements IVisitor {
 		File unzipDir = new File(mefFile.getParentFile(), "unzipping");
 
 		if (unzipDir.exists())
-			ZipUtil.deleteAllFiles(unzipDir);
+            FileCopyMgr.removeDirectoryOrFile(unzipDir);
 
 		ZipUtil.extract(new ZipFile(mefFile), unzipDir);
 
@@ -116,7 +117,7 @@ public class MEF2Visitor implements IVisitor {
             }
 		}
 
-		ZipUtil.deleteAllFiles(unzipDir);
+		FileCopyMgr.removeDirectoryOrFile(unzipDir);
 
 		return info;
 	}

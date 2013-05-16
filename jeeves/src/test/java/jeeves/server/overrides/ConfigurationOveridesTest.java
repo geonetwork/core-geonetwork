@@ -2,6 +2,7 @@ package jeeves.server.overrides;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -14,7 +15,6 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
-import jeeves.config.springutil.GeonetworkFilterSecurityInterceptor;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.utils.Xml;
@@ -24,6 +24,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 public class ConfigurationOveridesTest {
 	private static final ClassLoader classLoader;
@@ -113,7 +114,6 @@ public class ConfigurationOveridesTest {
     		reader.close();
     	}
     }
-    
     @Test //@Ignore
     public void updateSpringConfiguration() throws JDOMException, IOException {
         JeevesApplicationContext applicationContext = new JeevesApplicationContext(new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml"));
@@ -144,17 +144,32 @@ public class ConfigurationOveridesTest {
         assertEquals("astring", testBean.getBasicProp2());
         assertTrue("testBeans doesn't contain 'newString' in its collection of strings", testBean.getCollectionProp().contains("newString"));
         
-        GeonetworkFilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", GeonetworkFilterSecurityInterceptor.class);
+        FilterSecurityInterceptor filterSecurityInterceptor = applicationContext.getBean("filterSecurityInterceptor", FilterSecurityInterceptor.class);
         Collection<ConfigAttribute> attributes = filterSecurityInterceptor.getSecurityMetadataSource().getAllConfigAttributes();
-        String expectedExp = "hasRole('Administrator')";
+        assertInterceptUrl(attributes, "hasRole('Administrator')");
+        assertInterceptUrl(attributes, "hasRole('RegisteredUser')");
+        assertNotInterceptUrl(attributes, "hasRole('REMOVE')");
+        assertNotInterceptUrl(attributes, "hasRole('SET')");
+    }
+    private void assertInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp) {
+        assertInterceptUrl(attributes, expectedExp, true);
+    }
+    private void assertNotInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp) {
+        assertInterceptUrl(attributes, expectedExp, false);
+    }
+    private void assertInterceptUrl(Collection<ConfigAttribute> attributes, String expectedExp, boolean assertTrue) {
         boolean found = false;
         for (ConfigAttribute configAttribute : attributes) {
             if(configAttribute.toString().equals(expectedExp)) {
                 found = true;
             }
         }
-        
-        assertTrue(attributes+" does not contain "+expectedExp, found);
+
+        if(assertTrue) {
+            assertTrue(attributes+" does not contain "+expectedExp, found);
+        } else {
+            assertFalse(attributes+" contains "+expectedExp, found);
+        }
     }
 
     @Test //@Ignore

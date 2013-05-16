@@ -33,6 +33,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -62,6 +64,8 @@ import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -233,9 +237,13 @@ public class DownloadArchive implements Service
 		FileOutputStream las = new FileOutputStream(licenseAnnex);
 		Xml.transform(root, licenseAnnexXslt, las);
 		las.close();
-    InputStream in = new FileInputStream(licenseAnnex);
-		addFile(out, Geonet.File.LICENSE_ANNEX, in);
-    in.close();
+        InputStream in = null;
+        try {
+            in = new FileInputStream(licenseAnnex);
+    		addFile(out, Geonet.File.LICENSE_ANNEX, in);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
 
 		//--- if a license is specified include any license files mirrored locally 
 		//--- for inclusion
@@ -245,9 +253,13 @@ public class DownloadArchive implements Service
 		//--- stream FIXME: some refactoring required here to avoid metadata 
 		//--- being read yet again(!) from the database by the MEF exporter
 		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false, true, true);
-    in = new FileInputStream(outmef);
-		addFile(out, "metadata.zip", in);
-    in.close();
+		FileInputStream in2 = null;
+		try {
+            in2 = new FileInputStream(outmef);
+    		addFile(out, "metadata.zip", in2);
+		} finally {
+		    IOUtils.closeQuietly(in2);
+		}
 
 		//--- now close the zip file and send it out
 		if (out != null) out.close();
@@ -331,11 +343,21 @@ public class DownloadArchive implements Service
 
 	//----------------------------------------------------------------------------
 	
-	private void addFile(ZipOutputStream zos, String name, InputStream in) throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-		BinaryFile.copy(in, zos, true, false);
-		zos.closeEntry();
+	private void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in) throws IOException {
+		ZipEntry entry = null;
+		try {
+    		entry = new ZipEntry(name);
+    		zos.putNextEntry(entry);
+    		BinaryFile.copy(in, zos);
+		} finally {
+		    try {
+    		    if(zos != null) {
+    		        zos.closeEntry();
+    		    }
+		    } finally {
+		        IOUtils.closeQuietly(in);
+		    }
+		}
 	}
 
 	//----------------------------------------------------------------------------

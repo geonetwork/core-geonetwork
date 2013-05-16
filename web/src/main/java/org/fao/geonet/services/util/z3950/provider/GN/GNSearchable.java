@@ -85,7 +85,8 @@ public class GNSearchable implements Searchable {
             result.evaluate(timeout);
             result.setStatus(IRResultSetStatus.COMPLETE);
         } catch (Exception e) {
-            result.setStatus(IRResultSetStatus.FAILURE);
+            if(result!=null)
+                result.setStatus(IRResultSetStatus.FAILURE);
             e.printStackTrace();
         }
 

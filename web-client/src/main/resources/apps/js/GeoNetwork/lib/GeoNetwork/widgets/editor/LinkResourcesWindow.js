@@ -602,15 +602,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             valueField: 'value',
             displayField: 'label',
             triggerAction: 'all',
-            mode: 'local',
-            listeners: {
-                select: function (combo, record, index) {
-                    //this.associationType = record;
-                    // TODO : update record
-//                    console.log(record)
-                },
-                scope: this
-            }
+            mode: 'local'
         });
         
         
@@ -707,8 +699,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                                 }
                             });
                         } else {
-                            var form = this.uploadForm.getForm();
                             this.selectedLink = this.uploadForm.getForm().getValues();
+                            this.selectedLink.protocol = protocolCombo.getValue();
                             this.runProcess();
                         }
                     }
@@ -842,8 +834,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();
@@ -926,8 +919,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             items: cmp,
             border: false,
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();
@@ -1214,8 +1208,9 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         this.formPanel = new Ext.form.FormPanel({
             items: [cmp],
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();

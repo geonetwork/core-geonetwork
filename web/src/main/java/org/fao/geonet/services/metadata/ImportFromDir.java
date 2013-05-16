@@ -184,7 +184,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 	//---
 	//--------------------------------------------------------------------------
 
-	public class ImportCallable implements Callable<List<Exception>> {
+	public static final class ImportCallable implements Callable<List<Exception>> {
 		private final File files[];
 		private final int beginIndex, count;
 		private final Element params;
@@ -249,7 +249,8 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 			super (dm);
 			this.params = params;
 			this.context = context;
-			this.files = files;
+			this.files = new File[files.length];
+			System.arraycopy(files, 0, this.files, 0, files.length);
 			this.stylePath = stylePath;
 		}
 

@@ -1,7 +1,7 @@
 package org.fao.geonet.util.xml;
 
 import jeeves.utils.Xml;
-import org.fao.geonet.test.TestCase;
+import org.fao.geonet.test.GeonetworkTestCase;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author heikki doeleman
  *
  */
-public class NamespaceUtilsTest extends TestCase {
+public class NamespaceUtilsTest extends GeonetworkTestCase {
 
     public NamespaceUtilsTest(String name) throws Exception {
 		super(name);

@@ -1713,7 +1713,7 @@ public class SearchManager {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
                 if(geom.size() == 1) {
-                    return _types.get(relation).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
+                    return _types.get(relation.toLowerCase()).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
                 } else {
                     Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
                     Envelope bounds = null;
