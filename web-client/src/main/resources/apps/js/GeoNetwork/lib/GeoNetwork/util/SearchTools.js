@@ -218,7 +218,8 @@ GeoNetwork.util.SearchTools = {
                             } else {
                                 var idx = cb.getStore().find('id', new RegExp(value + '*'));
                                 if (idx !== -1) {
-                                    cb.setValue(cb.getStore().getAt(idx).id);
+                                    cb.setValue(cb.getStore().getAt(idx).get('id'));
+                                    cb.fireEvent('change', cb, cb.getValue());
                                 }
                             }
                         } else {
@@ -244,8 +245,8 @@ GeoNetwork.util.SearchTools = {
                         name: searchCriteria,
                         fieldLabel: OpenLayers.i18n(searchCriteria.substring(searchCriteria.indexOf('_') + 1)),
                         value: map[searchCriteria],
-                        // Switch to text for debugging
-                        inputType: 'text'
+                        inputType: 'text',
+                        extraCriteria: true
                     }));
                 }
             }

@@ -43,6 +43,13 @@ GeoNetwork.printDefaultForTabs = false;
 // Define if label needs to be displayed for login form next to username/password fields
 GeoNetwork.hideLoginLabels = true;
 
+// Define custom user menu for quick search links
+//GeoNetwork.Settings.userQuickLinks = {
+//        'Editor': [{
+//            label : OpenLayers.i18n('templates'),
+//            criteria : {"E_template" : "y"}
+//        }]
+//    };
 
 // Define which type of search to use
 // Old mode (xml.search with lucene, db access and XSL formatting)
