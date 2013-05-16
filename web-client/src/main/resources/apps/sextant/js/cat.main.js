@@ -561,7 +561,7 @@ cat.app = function() {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(!item.disabled);
 					if(!Ext.isIE) // temp
-					whatForm.body.removeClass('hidden');
+					    whatForm.body && whatForm.body.removeClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
 			});
@@ -569,7 +569,7 @@ cat.app = function() {
 				Ext.each(advandcedField,function(item) {
 					item.setVisible(false);
 					if(!Ext.isIE) //temp
-					whatForm.body.addClass('hidden');
+					    whatForm.body && whatForm.body.addClass('hidden');
 				});
 				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
 			});
