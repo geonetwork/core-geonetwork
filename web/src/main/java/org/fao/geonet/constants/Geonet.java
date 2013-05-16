@@ -122,6 +122,7 @@ public final class Geonet {
         public static final String ENABLED    = "enabled";
         public static final String VALUE       = "value";
         public static final String VIRTUAL_CSW     = "virtualcsw";
+        public static final String HASH = "hash";
 	}
 
     /**

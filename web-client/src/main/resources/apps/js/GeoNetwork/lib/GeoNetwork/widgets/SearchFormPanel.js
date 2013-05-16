@@ -101,10 +101,10 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
         this.searchCb();
         this.fireEvent('onsearch');
     },
-    reset: function () {
+    reset: function (args) {
         this.searchTriggered = false;
-        this.resetCb();
-        this.fireEvent('onreset');
+        this.resetCb(args);
+        this.fireEvent('onreset', args);
     },
     /** private: method[initComponent] 
      *  Initializes the search form panel.
