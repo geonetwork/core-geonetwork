@@ -39,6 +39,7 @@ GeoNetwork.editor.SuggestionsPanel = Ext.extend(Ext.Panel, {
         border: false,
         frame: false,
         iconCls: 'suggestionIcon',
+        cls: 'suggestionPanel',
         title: undefined,
         collapsible: true,
         collapsed: true
