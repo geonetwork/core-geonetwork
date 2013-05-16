@@ -165,15 +165,25 @@ cat.what = function() {
 	            reset: Ext.emptyFn
 	        });
 			
+
+            
 	        // INSPIRE theme
+            var params = {
+                    field : 'inspiretheme_en',
+                    threshold: 1
+                };
+            
+            //if configwhat then send _groupPublished to the suggestion service to filter INSPIRE theme
+            if (groupToDisplay.length > 0) {
+                params.groupPublished = groupToDisplay.join(' or ');
+            }
+            
             var themeINSPIREStore = new GeoNetwork.data.OpenSearchSuggestionStore({
                 url : services.opensearchSuggest,
                 rootId : 1,
-                baseParams : {
-                    field : 'inspiretheme_en',
-                    threshold: 1
-                }
+                baseParams : params
             });
+            
             var themeINSPIREField = new GeoNetwork.CategoryTree({
                 store : themeINSPIREStore,
                 lang: cat.language,
