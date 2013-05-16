@@ -384,7 +384,9 @@ div.button {
 .edit {
 	background-image: url(../../images/default/page_white.png) !important;
 }
-
+.addMenu {
+  background-image : url(../images/default/add.png) !important;
+}
 .editing {
 	background-image: url(../../images/default/page_white_edit.png)
 		!important;
