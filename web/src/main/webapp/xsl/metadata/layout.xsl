@@ -1811,12 +1811,13 @@
       <td colspan="2" class="complex">
         <fieldset>
           <legend id="stip.{$helpLink}|{$id}">
-            <span>
+            
+            <span class="toggle">
               <xsl:if test="/root/gui/config/metadata-view-toggleTab">
-                <div class="toggle button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
-                  >&#160;</div>
+                <xsl:attribute name="onclick">toggleFieldset(Ext.getDom('toggled-bt-<xsl:value-of select="$id"/>'), Ext.getDom('toggled<xsl:value-of select="$id"/>'));</xsl:attribute>
+                <div class="button tgDown" id="toggled-bt-{$id}">&#160;</div>
               </xsl:if>
-
+              
               <xsl:choose>
                 <xsl:when test="$title!=''">
                   <xsl:value-of select="$title"/>
@@ -1827,21 +1828,21 @@
                   </xsl:call-template>
                 </xsl:otherwise>
               </xsl:choose>
-
-              <xsl:if test="$edit and not($isXLinked)">
-                <xsl:call-template name="getButtons">
-                  <xsl:with-param name="addLink" select="$addLink"/>
-                  <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
-                  <xsl:with-param name="addXmlFragmentSubTemplate"
-                    select="$addXmlFragmentSubTemplate"/>
-                  <xsl:with-param name="removeLink" select="$removeLink"/>
-                  <xsl:with-param name="upLink" select="$upLink"/>
-                  <xsl:with-param name="downLink" select="$downLink"/>
-                  <xsl:with-param name="validationLink" select="$validationLink"/>
-                  <xsl:with-param name="id" select="$id"/>
-                </xsl:call-template>
-              </xsl:if>
+              
             </span>
+            <xsl:if test="$edit and not($isXLinked)">
+              <xsl:call-template name="getButtons">
+                <xsl:with-param name="addLink" select="$addLink"/>
+                <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
+                <xsl:with-param name="addXmlFragmentSubTemplate"
+                  select="$addXmlFragmentSubTemplate"/>
+                <xsl:with-param name="removeLink" select="$removeLink"/>
+                <xsl:with-param name="upLink" select="$upLink"/>
+                <xsl:with-param name="downLink" select="$downLink"/>
+                <xsl:with-param name="validationLink" select="$validationLink"/>
+                <xsl:with-param name="id" select="$id"/>
+              </xsl:call-template>
+            </xsl:if>
           </legend>
           <!-- Check if divs could be used instead ? -->
           <table class="gn" id="toggled{$id}">
