@@ -301,7 +301,8 @@ function hideAdvancedSearch(updateSearch) {
             cookie.set('user', {});
             cookie.get('user').searchTemplate = 'THUMBNAIL';
         }
-        if (catalogue && catalogue.resultsView) {
+        if (catalogue && catalogue.resultsView 
+                && catalogue.resultsView.autoSelectTemplate) {
             catalogue.resultsView.autoSelectTemplate();
         }
     }

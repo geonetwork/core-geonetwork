@@ -32,7 +32,7 @@ GeoNetwork.app = function() {
         var latestView = new GeoNetwork.MetadataResultsView({
             catalogue : catalogue,
             autoScroll : true,
-            tpl : GeoNetwork.Templates.THUMBNAIL
+            tpl : GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER
         });
         var latestStore = new GeoNetwork.Settings.mdStore();
         latestView.setStore(latestStore);
@@ -45,7 +45,7 @@ GeoNetwork.app = function() {
             items : latestView,
             renderTo : 'latest-metadata'
         });
-        latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
+        latestView.tpl = GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER;
         catalogue.kvpSearch(
                 "fast=index&from=1&to=4&sortBy=changeDate",
                 function(e) {
@@ -61,7 +61,15 @@ GeoNetwork.app = function() {
             catalogue : catalogue,
             query : 'fast=true&summaryOnly=true&from=1&to=4',
             renderTo : 'cloud-tag',
-            onSuccess : 'app.loadResults'
+            onSuccess : 'app.loadResults',
+            tpl: new Ext.XTemplate(
+                    '<tpl for=".">', 
+                        '<div class="tag-cloud">',
+                           '{value}<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
+                           'themekey' + 
+                                '={value}\', app.loadResults, null, null);" alt="{value}">({count})</a>', 
+                        '</div>', 
+                    '</tpl>')
         });
 
         return tagCloudView;
@@ -71,7 +79,7 @@ GeoNetwork.app = function() {
         var latestView = new GeoNetwork.MetadataResultsView({
             catalogue : catalogue,
             autoScroll : true,
-            tpl : GeoNetwork.Templates.THUMBNAIL
+            tpl : GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER
         });
         var latestStore = new GeoNetwork.Settings.mdStore();
         latestView.setStore(latestStore);
@@ -84,9 +92,9 @@ GeoNetwork.app = function() {
             items : latestView,
             renderTo : 'popular-metadata'
         });
-        latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
+        latestView.tpl = GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER;
         catalogue.kvpSearch(
-                "fast=index&from=1&to=5&sortBy=popularity",
+                "fast=index&from=1&to=4&sortBy=popularity",
                 function(e) {
                     Ext.each(Ext.DomQuery.select('.md-action-menu'), function(
                             el) {
