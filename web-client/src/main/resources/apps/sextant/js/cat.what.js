@@ -53,9 +53,9 @@ cat.what = function() {
 			    var data = configwhat.split(',');
 			    for (var i = 0; i < data.length; i++) {
 			        if (data[i].substring(0, 1) === '-') {
-			            groupToRemove.push(data[i]);
+			            groupToRemove.push(data[i].trim());
 			        } else {
-			            groupToDisplay.push(data[i]);
+			            groupToDisplay.push(data[i].trim());
 			        }
 			    }
 			    // https://forge.ifremer.fr/mantis/view.php?id=15954
