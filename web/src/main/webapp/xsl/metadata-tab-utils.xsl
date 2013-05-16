@@ -56,6 +56,9 @@
 			<xsl:when test="$metadata/image[@type='unknown']">
 				<img src="{$metadata/image[@type='unknown']}" alt="{/root/gui/strings/thumbnail}" style="max-height:180"/>
 			</xsl:when>
+			<xsl:when test="$metadata/image">
+				<img src="{$metadata/image[1]}" alt="{/root/gui/strings/thumbnail}" style="max-height:180"/>
+			</xsl:when>
 
 			<!-- papermaps thumbnail -->
 			<!-- FIXME
@@ -68,6 +71,7 @@
 
 			<!-- no thumbnail -->
 			<xsl:otherwise>
+			<xsl:value-of select="$metadata/image"></xsl:value-of>
 				<!-- <img src="{/root/gui/locUrl}/images/nopreview.gif" alt="{/root/gui/strings/thumbnail}"/> -->
 			</xsl:otherwise>
 		</xsl:choose>

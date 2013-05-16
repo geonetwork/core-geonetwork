@@ -3568,7 +3568,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<image type="overview">
-										<xsl:value-of select="concat(/root/gui/locService,'/graphover.show?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
+										<xsl:value-of select="concat(/root/gui/locService,'/resources.get?id=',$id,'&amp;fname=',$fileName,'&amp;access=public')"/>
 									</image>
 								</xsl:otherwise>
 							</xsl:choose>
