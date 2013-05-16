@@ -36,7 +36,6 @@
 				<link rel="alternate" type="application/rss+xml" title="{$siteName} - RSS" href="{$rssUrl}"/>
 				<link rel="search" href="{$serviceUrl}/portal.opensearch" type="application/opensearchdescription+xml" 
 					title="{$siteName}"/>
-				
 
                 <!--  CSS for OL -->
                 <link rel="stylesheet" type="text/css">
