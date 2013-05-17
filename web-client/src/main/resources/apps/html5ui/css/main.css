@@ -134,8 +134,6 @@ body {
 #header {
 	border-bottom: 10px solid;
 	background-image: url('../images/map_header.png');
-	background-repeat: no-repeat;
-	background-size: cover;
 	box-shadow: none;
 	border-top: 6px solid;
 }
@@ -1240,6 +1238,11 @@ div.facets * a {
 	background-position-y: 1px;
 }
 
+#metadata-panel .book {
+	background-image: url('../images/sprites/sprite_tooltip.gif');
+	background-position-y: -2px;
+}
+
 #permalink-button {
 	background-image: url('../images/sprites/sprite_link.gif');
 }
@@ -1254,11 +1257,6 @@ div.facets * a {
 
 .insert-missing-elements {
 	background-image: url('../images/add-missing-elements.png');
-}
-
-#metadata-panel td {
-	background: transparent;
-	height: auto;
 }
 
 #metadata-panel tr td em button.print {
@@ -1323,16 +1321,25 @@ a#administration_button:hover {
 	background-position-y: 16px;
 }
 
-#metadata-panel .book {
-	background-image: url('../images/sprites/sprite_tooltip.gif');
-	background-position-y: -2px;
-}
-
 #metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {
-	background-image: url('../images/sprites/sprite_tooltip.gif');
 	background-position-y: -18px;
 }
 
+#metadata-info .title {
+	font-size: 20px;
+}
+
+#metadata-panel td {
+	background: transparent;
+	height: auto;
+}
+
+#metadata-panel .metadata.view-simple > div > table.gn > tbody > tr > td {
+	background-image: url('../images/pattern_hr.png');
+	background-repeat: repeat-x;
+	background-position: center bottom;
+	border: none;
+}
 /**Metadata view */
 #metadata-panel form {
 	display: inline-block;
@@ -1551,7 +1558,7 @@ dl.xml * dd {
 	font-size: 11px;
 }
 
-/** IE specific **/
+/** IE specific **/ 
 .ext-ie #search-form .x-form-check-wrap input {
 	height: 22px;
 	width: 22px;
