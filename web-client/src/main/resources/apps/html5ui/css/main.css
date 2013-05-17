@@ -1230,28 +1230,37 @@ div.facets * a {
 
 /** Interactive link/buttons
 */
-#feedback-button {
-	background-image: url('../images/sprites/sprite_coment.gif');
-	background-position: 0px 1px;
-	background-position-x: 0px;
-	background-position-y: 1px;
+
+#metadata-panel table.x-toolbar-ct tr.x-toolbar-right-row td.x-toolbar-cell table.x-btn{
+	background-image: url('../images/sprites/sprite_icons_metadadato.png');
 }
 
 #metadata-panel .book {
-	background-image: url('../images/sprites/sprite_tooltip.gif');
-	background-position-y: -2px;
+	background:none;
+}
+
+#viewpanel-feedback {
+	background-position: -101px 0px;
+	background-position-x: -101px;
+	background-position-y: 0px;
+}
+
+#viewpanel-print {
+	background-position: -404px 0px;
+	background-position-x: -404px;
+	background-position-y: 0px;
 }
 
 #permalink-button {
-	background-image: url('../images/sprites/sprite_link.gif');
+	background-position: -202px 0px;
+	background-position-x: -202px;
+	background-position-y: 0px;
 }
 
 #share-button {
-	background-image: url('../images/sprites/sprite_share.gif');
-	background-position: 0 1;
-	background-position-x: 0px;
-	background-position-y: 1px;
-	background-repeat: repeat;
+	background-position: -303px 0px;
+	background-position-x: -303px;
+	background-position-y: 0px;
 }
 
 .insert-missing-elements {
@@ -1260,7 +1269,6 @@ div.facets * a {
 
 #metadata-panel tr td em button.print {
 	padding-left: 14px;
-	background-image: url('../images/sprites/sprite_printer.gif');
 	background-position: 0 0;
 	background-position-x: 0px;
 	background-position-y: 0px;
@@ -1296,32 +1304,34 @@ a#administration_button:hover {
 	background-position-y: 1px;
 }
 
-#feedback-button:hover {
-	background-position: 0 21;
-	background-position-x: 0px;
-	background-position-y: 21px;
+#viewpanel-feedback:hover, #viewpanel-feedback.x-btn-pressed {
+	background-position: -101px -39px;
+	background-position-y: -39px;
+}
+
+#viewpanel-print:hover, #viewpanel-print.x-btn-pressed {
+	background-position: -404px -39px;
+	background-position-y: -39px;
+}
+
+#viewpanel-tooltip:hover, #viewpanel-tooltip.x-btn-pressed {
+	background-position: 0px -39px;
+	background-position-y: -39px;
 }
 
 #permalink-button:hover,#permalink-button.x-btn-pressed {
-	background-position: 1 18;
-	background-position-x: 1px;
-	background-position-y: 18px;
+	background-position: -202px -39px;
+	background-position-y: -39px;
 }
 
 #share-button:hover,#share-button.x-btn-pressed {
-	background-position: 0 19;
-	background-position-x: 0px;
-	background-position-y: 19px;
+	background-position: -303px -39px;
+	background-position-y: -39px;
 }
 
 #metadata-panel .x-btn-over tr td em button.print {
-	background-position: 0 16;
-	background-position-x: 0px;
-	background-position-y: 16px;
-}
-
-#metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {
-	background-position-y: -18px;
+	background-position: -404px -39px;
+	background-position-y: -39px;
 }
 
 #metadata-info .title {

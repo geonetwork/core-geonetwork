@@ -296,6 +296,8 @@ GeoNetwork.app = function() {
 
         Ext.get("metadata-info").update("");
 
+        var button_width = 101;
+        var button_height = 38;
         var aResTab = new GeoNetwork.view.ViewPanel({
             serviceUrl : catalogue.services.mdView + '?uuid=' + uuid,
             lang : catalogue.lang,
@@ -312,7 +314,9 @@ GeoNetwork.app = function() {
             catalogue : catalogue,
             // maximized: true,
             metadataUuid : uuid,
-            record : record
+            record : record,
+            buttonWidth : button_width,
+            buttonHeight : button_height
         });
 
         // aResTab.on("afterrender", function() {
@@ -374,8 +378,8 @@ GeoNetwork.app = function() {
         // Adding social capabilities
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
             id : 'share-button',
-            width : 20,
-            height : 16,
+            width : button_width,
+            height : button_height,
             handler : function() {
                 toggle("share-capabilities");
             },
@@ -413,29 +417,29 @@ GeoNetwork.app = function() {
                                 + '</a>');
         Ext.get("fb-button").dom.title = "Like this";
         // feedback window
-        var feedbackWindow;
-        var newFeedbackWindow = function() {
-            feedbackWindow = new GeoNetwork.FeedbackForm(null, record);
-            feedbackWindow.show();
-        };
-
+//        var feedbackWindow;
+//        var newFeedbackWindow = function() {
+//            feedbackWindow = new GeoNetwork.FeedbackForm(null, record);
+//            feedbackWindow.show();
+//        };
+//        
         // feedback button to open window
-        Ext.getCmp("metadata-panel").getTopToolbar().addButton({
-            id : 'feedback-button',
-            width : 20,
-            height : 14,
-            tooltip : 'Feedback',
-            handler : newFeedbackWindow,
-            text : '',
-            tooltip : OpenLayers.i18n('Feedback'),
-            type : 'submit'
-        });
+//        Ext.getCmp("metadata-panel").getTopToolbar().addButton({
+//            id : 'feedback-button',
+//            width : button_width,
+//            height : button_height,
+//            tooltip : 'Feedback',
+//            handler : newFeedbackWindow,
+//            text : '',
+//            tooltip : OpenLayers.i18n('Feedback'),
+//            type : 'submit'
+//        });
 
         // Adding permalink
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
             id : 'permalink-button',
-            width : 20,
-            height : 19,
+            width : button_width,
+            height : button_height,
             handler : function() {
                 var url = Ext.state.Manager.getProvider().getPrettyLink();
                 Ext.get("permalink-div").update(url);

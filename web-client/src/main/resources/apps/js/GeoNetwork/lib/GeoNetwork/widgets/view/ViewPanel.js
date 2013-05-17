@@ -89,6 +89,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     metadataSchema: undefined,
     cache: {},
     tooltips: [],
+    buttonWidth : undefined,
+    buttonHeight : undefined,
     /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -340,7 +342,10 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     },
     createPrintMenu: function(){
         return new Ext.Button({
+            width: this.buttonWidth,
+            height: this.buttonHeight,
             iconCls: 'print',
+            id : 'viewpanel-print',
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
                 click: function(c, pressed){
@@ -359,7 +364,10 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             disabledButton = true;
         }
         return new Ext.Button({
+            width: this.buttonWidth,
+            height: this.buttonHeight,
             iconCls: 'feedback',
+            id : 'viewpanel-feedback',
             tooltip: OpenLayers.i18n('Feedback'),
             disabled: disabledButton,
             listeners: {
@@ -373,9 +381,12 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     },
     createTooltipMenu: function(){
         return new Ext.Button({
+            width: this.buttonWidth,
+            height: this.buttonHeight,
             enableToggle: true,
             pressed: this.displayTooltip,
             iconCls: 'book',
+            id : 'viewpanel-tooltip',
             tooltip: OpenLayers.i18n('enableTooltip'),
             listeners: {
                 toggle: function(c, pressed){
