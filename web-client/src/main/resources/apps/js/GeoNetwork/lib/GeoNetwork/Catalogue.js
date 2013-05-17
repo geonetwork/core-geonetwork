@@ -969,7 +969,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         break;
         default: 
-            window.open(this.services.mdEdit + '?id=' + id, this.windowName, this.windowOption);
+            var url;
+            if (create) {
+                child = child ? 'y' : 'n';
+                url = this.services.mdCreate + '?id=' + id + '&group=' + group +
+                    '&template=' + isTemplate + '&child=' + child;
+            } else {
+                url = this.services.mdEdit + '?id=' + id;
+            }
+            window.open(url, this.windowName, this.windowOption);
         }
     },
     /** api: method[metadataDuplicate]
