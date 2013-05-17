@@ -64,7 +64,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         }
     },
     
-    /** private: method[initComponent] 
+    /** private: method[initComponent]
      *  Initializes the help panel.
      */
     initComponent: function(){

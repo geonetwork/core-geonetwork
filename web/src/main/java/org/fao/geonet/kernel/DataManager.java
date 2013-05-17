@@ -1551,6 +1551,9 @@ public class DataManager {
 		String data   = el.getChildText("data");
 		String uuid   = UUID.randomUUID().toString();
 
+		if (!schema.equals("iso19139.che")) {
+				throw new IllegalArgumentException("Tried to a make a metadata with schema: '"+schema+"' only metadata of schema 'iso19139.che' are allowed in this catalog");
+		}
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
 		

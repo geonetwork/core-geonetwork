@@ -112,8 +112,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             text: OpenLayers.i18n('duplicate'),
             iconCls: 'md-mn-copy',
             handler: function(){
-                var id = this.record.get('id');
-                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('duplicate'), false);
+                var uuid = this.record.get('uuid');
+                this.catalogue.metadataDuplicate(uuid);
             },
             scope: this
         });

@@ -85,6 +85,7 @@ GeoNetwork.editor.EditorTools = {
      * @param {Object} title
      * @param {Object} isChild
      * @param {Object} filter
+     * @param {Boolean} duplicate
      */
     showNewMetadataWindow: function(scope, id, title, isChild, filter){
         // Destroy all previously created windows which may
