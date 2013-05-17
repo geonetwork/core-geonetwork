@@ -423,10 +423,9 @@ GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER = new Ext.XTemplate(
     '<ul>',
     '<tpl for=".">',
     '<li class="md md-thumbnail" style="{featurecolorCSS}">',
-    '<div class="md-wrap" id="{uuid}" title="{abstract}\n',
-    GeoNetwork.HTML5UI.Templates.CONTACT_INFO_TOOLTIP,
-    '">',
-    GeoNetwork.HTML5UI.Templates.THUMB,
+    '<a href="javascript:catalogue.metadataShow(\'{uuid}\');return false;" class="overthumb">&nbsp;</a>',
+    '<div class="md-wrap" id="{uuid}">',
+      GeoNetwork.HTML5UI.Templates.THUMB,
       GeoNetwork.HTML5UI.Templates.SHORT_TITLE,
       '<tpl if="values.abstract.length &gt;60">\
       {[values.abstract.substring(0, 60)]}...\
