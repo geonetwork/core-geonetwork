@@ -193,7 +193,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         /* Adapt sort order according to sort field */
                         var tokens = cb.getValue().split('#');
                         Ext.getCmp('E_sortBy').setValue(tokens[0]);
-                        Ext.getCmp('sortOrder').setValue(tokens[1]);
+                        if(Ext.getCmp('sortOrder')) {
+                            Ext.getCmp('sortOrder').setValue(tokens[1]);
+                        }
                     }
                     if (this.searchFormCmp) {
                         this.searchFormCmp.fireEvent('search');
