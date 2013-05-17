@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
 
@@ -9,11 +9,14 @@
 	<xsl:output omit-xml-declaration="no" method="html"
 		doctype-public="html" indent="yes" encoding="UTF-8" />
 
-
-	<xsl:variable name="baseUrl">
-		<xsl:value-of select="/root/gui/env/server/protocol" />://<xsl:value-of select="/root/gui/env/server/host" />:<xsl:value-of select="/root/gui/env/server/port" /><xsl:value-of select="/root/gui/url" />
-	</xsl:variable>
-
+	<xsl:variable name="hostUrl" select="concat(/root/gui/env/server/protocol, '://', /root/gui/env/server/host, ':', /root/gui/env/server/port)"/>
+	<xsl:variable name="baseUrl" select="concat($hostUrl, /root/gui/url)" />
+	<xsl:variable name="serviceUrl" select="concat($hostUrl, /root/gui/locService)" />
+	<xsl:variable name="rssUrl" select="concat($serviceUrl, '/rss.search?sortBy=changeDate')" />
+	
+	<xsl:variable name="siteName" select="/root/gui/env/site/name"/>
+	
+	
 	<!-- main page -->
 	<xsl:template match="/">
     <html class="no-js">
@@ -24,20 +27,16 @@
 			<head>
 				<meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
 				<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"></meta>
-				<title>GeoNetwork</title>
+				<title><xsl:value-of select="$siteName" /></title>
 				<meta name="description" content="" ></meta>
                 <meta name="viewport" content="width=device-width"></meta>
-                <meta name="og:title">
-                    <xsl:attribute name="content">GeoNetwork</xsl:attribute>
-                </meta>
-                
+				<meta name="og:title" content="{$siteName}"/>
 				
-                <link rel="alternate" type="application/rss+xml"  href="http://www.website.com/rss.xml"
-                         title="RSS feed">
-                    <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/srv/<xsl:value-of
-                        select="/root/gui/language" />/rss.search</xsl:attribute>
-                </link>
+				<link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
+				<link rel="alternate" type="application/rss+xml" title="{$siteName} - RSS" href="{$rssUrl}"/>
+				<link rel="search" href="{$serviceUrl}/portal.opensearch" type="application/opensearchdescription+xml" 
+					title="{$siteName}"/>
+				
 
                 <!--  CSS for OL -->
                 <link rel="stylesheet" type="text/css">

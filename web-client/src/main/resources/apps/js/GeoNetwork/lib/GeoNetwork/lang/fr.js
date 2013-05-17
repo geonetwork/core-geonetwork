@@ -19,6 +19,20 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'updateUserInfo': 'Afficher mon profil',
+    'updatePassword': 'Changer de mot de passe',
+    'myMetadata': 'Mes métadonnées',
+    '_owner': 'Identifiant utilisateur',
+    '_isHarvested': 'Fiches moissonnées',
+    'templates': 'Les modèles de saisie',
+    'myDraft': 'Mes brouillons',
+    'QuickSearch': 'Recherches rapides',
+    'LastSubmitted': 'Dernières soumissions',
+    'lastUpdates': 'Dernières mise à jour',
+    '_indexingError': 'Erreur d\'indexation',
+    'RecordWithIndexingError': 'Métadonnées avec des erreurs d\'indexation',
+    'fromLocalCatalog': 'Métadonnées du catalogue local',
+    'fromHarvestedCatalog': 'Métadonnées moissonnées',
     'dateType': 'Type de date',
     'creationDate': 'Date de création',
     'modificationDate': 'Date de modification',

@@ -137,6 +137,8 @@ GeoNetwork.app = function () {
             renderTo: 'login-form',
             catalogue: catalogue,
             layout: 'hbox',
+            searchForm: Ext.getCmp('searchForm'),
+            withUserMenu: true,
             hideLoginLabels: GeoNetwork.hideLoginLabels
         });
         
@@ -158,6 +160,7 @@ GeoNetwork.app = function () {
             loginForm.login(catalogue, true);
         }
     }
+    
     
     /**
      * Error message in case of bad login
