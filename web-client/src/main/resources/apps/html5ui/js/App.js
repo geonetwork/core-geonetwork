@@ -738,7 +738,7 @@ Ext
                                     status : 'information',
                                     target : document.body,
                                     id : 'cookie-warning',
-                                    pause : 30
+                                    pause : 40
                                 });
                 cookie.set('alreadyShowMessage', true);
             }
