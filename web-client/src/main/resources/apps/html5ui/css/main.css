@@ -916,8 +916,6 @@ nav {
 
 .addLayerIcon,.addLayer {
 	background-image: url(../../html5ui/img/icon_show_map.png) !important;
-	width: 24px !important;
-	height: 24px !important;
 }
 
 .bookmark-icon,.checkWMS,.checkWFS {
