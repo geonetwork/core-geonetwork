@@ -682,10 +682,6 @@ body {
 	border-top: none;
 }
 
-#search-container article {
-	margin: 10px 0px 10px 10px;
-	width: 77%;
-}
 /* search result --- list + right sidebar */
 #resultsPanel {
 	
@@ -836,7 +832,7 @@ div#resultsPanel .x-toolbar-right {
 }
 /* search result --- right sidebar */
 #search-container #secondary-aside {
-	margin-left: 20px;
+	margin-left: 3px;
 	padding-top: 0px
 }
 

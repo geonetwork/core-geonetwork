@@ -639,8 +639,7 @@ nav {
      WIDE: Main
      ============ */
 .main article {
-	float: left;
-	width: 78%;
+	width: 100%;
 	margin: 9px;
 }
 
@@ -1500,6 +1499,19 @@ ul li.tag-cloud a {
 
 #popular-metadata {
 	padding-left: 25px;
+}
+
+#latest-metadata .md-thumbnail, #popular-metadata .md-thumbnail {
+	width: 30%;
+}
+
+#latest-metadata .md-thumbnail .thumbnail, #popular-metadata .md-thumbnail .thumbnail {
+	width: 100%;
+}
+
+#latest-metadata .thumbnail img, #popular-metadata .thumbnail img {
+	display:block;
+	margin: auto;
 }
 
 #latest-metadata header h1,#popular-metadata header h1 {
