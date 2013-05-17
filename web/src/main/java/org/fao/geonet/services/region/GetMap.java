@@ -23,6 +23,9 @@
 
 package org.fao.geonet.services.region;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -37,6 +40,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
@@ -50,6 +55,7 @@ import jeeves.utils.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -95,15 +101,23 @@ public class GetMap implements Service {
     public static final String GEOM_TYPE_PARAM = "geomtype";
     public static final String HEIGHT_PARAM = "height";
     public static final String BACKGROUND_PARAM = "background";
-    private String format;
-    private Map<String, String> namedBackgrounds = new HashMap<String, String>();
+	private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
+	
+    private String _format;
+    private Map<String, String> _namedBackgrounds = new HashMap<String, String>();
+    private SortedSet<ExpandFactor> _expandFactors = new TreeSet<ExpandFactor>();
 
     public void init(String appPath, ServiceConfig params) throws Exception {
-        this.format = params.getMandatoryValue("format");
+        this._format = params.getMandatoryValue("format");
+        List<Element> expandFactors = params.getChildren("expandFactors");
+        for (Element factorEl : expandFactors) {
+			this._expandFactors.add(new ExpandFactor(factorEl)); 
+		}
+
         List<Element> namedBackgrounds = params.getChildren("namedBackgrounds");
         if (namedBackgrounds != null) {
             for (Element element : namedBackgrounds) {
-                this.namedBackgrounds.put(element.getName(), element.getTextTrim());
+                this._namedBackgrounds.put(element.getName(), element.getTextTrim());
             }
         }
     }
@@ -158,15 +172,15 @@ public class GetMap implements Service {
         }
         BufferedImage image;
         Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
-        double expandFactor = 0.2;
+        double expandFactor = calculateExpandFactor(bboxOfImage, srs);
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
         Dimension imageDimenions = calculateImageSize(bboxOfImage, widthString, heightString);
 
         Exception error = null;
         if (background != null) {
 
-            if (this.namedBackgrounds.containsKey(background)) {
-                background = this.namedBackgrounds.get(background);
+            if (this._namedBackgrounds.containsKey(background)) {
+                background = this._namedBackgrounds.get(background);
             }
 
             String minx = Double.toString(bboxOfImage.getMinX());
@@ -206,8 +220,6 @@ public class GetMap implements Service {
             }
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimenions);
-//            MathTransform mathTransform = new AffineTransform2D(worldToScreenTransform);
-//            Geometry screenGeom = JTS.transform(geom, mathTransform);
             Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geom));
             graphics.setColor(Color.yellow);
             graphics.draw(shape);
@@ -219,12 +231,29 @@ public class GetMap implements Service {
             graphics.dispose();
         }
 
-        File tmpFile = File.createTempFile("GetMap", "." + format);
-        ImageIO.write(image, format, tmpFile);
+        File tmpFile = File.createTempFile("GetMap", "." + _format);
+        ImageIO.write(image, _format, tmpFile);
         return BinaryFile.encode(200, tmpFile.getAbsolutePath(), true);
     }
 
-    private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {
+    private double calculateExpandFactor(Envelope bboxOfImage, String srs) throws Exception {
+    	CoordinateReferenceSystem crs = Region.decodeCRS(srs);
+    	ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
+    	env = env.transform(Region.WGS84, true);
+    	
+    	double diag = sqrt( pow(env.getWidth(), 2) + pow(env.getHeight(), 2));
+    	
+    	double scale = diag/WGS_DIAG;
+    	
+    	for (ExpandFactor factor : _expandFactors) {
+			if(scale < factor.proportion) {
+				return factor.factor;
+			}
+		}
+		return _expandFactors.last().factor;
+	}
+
+	private Dimension calculateImageSize(Envelope bboxOfImage, String widthString, String heightString) {
 
         if (widthString != null && heightString != null) {
             throw new BadParameterEx(
@@ -264,6 +293,22 @@ public class GetMap implements Service {
         return at;
     }
 
+    private static final class ExpandFactor implements Comparable<ExpandFactor>{
+    	final double proportion;
+    	final double factor;
+		private final Double _doubleProportion;
+    	public ExpandFactor(Element factorEl) {
+			String scale = factorEl.getAttributeValue("proportion");
+			String value = factorEl.getAttributeValue("value");
+			this.proportion = Double.parseDouble(scale);
+			this.factor = Double.parseDouble(value);
+			this._doubleProportion = this.proportion;
+		}
+		@Override
+		public int compareTo(ExpandFactor o) {
+			return _doubleProportion.compareTo(o._doubleProportion);
+		}
+    }
 }
 
 // =============================================================================
