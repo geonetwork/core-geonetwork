@@ -840,7 +840,7 @@ nav {
 }
 
 /* Other icons */
-#result-panel div#resultsPanel .md-mn-reset {
+.md-mn-reset {
 	background-image: url(../../images/default/cross.png);
 }
 
