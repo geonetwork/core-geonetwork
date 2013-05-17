@@ -205,13 +205,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     identifiedUser: undefined,
     
-    /** api: property[adminUser]
-     *  ``Boolean`` True if user is admin
-     *
-     *  FIXME : How to handle login/logout the best way ?
-     */
-    adminUser: false,
-    
     metadataEditFn: undefined,
     /** api: config[adminAppUrl]
      *  ``String`` URL to the administration interface
@@ -416,7 +409,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user is an admin
      */
     isAdmin: function(){
-        return this.adminUser;
+        return this.identifiedUser.role === "Administrator";
     },
     /** api: method[isReadOnly]
      *  Return true if GN is is read-only mode
