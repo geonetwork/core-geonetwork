@@ -272,6 +272,15 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                         }
                     }),
                     new Ext.Button({
+                        text: OpenLayers.i18n('harvestingAdmin'),
+                        listeners: {
+                            click: function () {
+                                this.catalogue.moveToURL(this.catalogue.services.harvestingAdmin)
+                            },
+                            scope: this
+                        }
+                    }),
+                    new Ext.Button({
                         text: OpenLayers.i18n('administration'),
                         //iconCls : 'md-mn md-mn-advanced',
                         listeners: {
