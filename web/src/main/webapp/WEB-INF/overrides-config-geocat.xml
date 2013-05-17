@@ -70,6 +70,7 @@
 	                <maxActive>${postgis.max.active}</maxActive>
 			        <maxIdle>${postgis.max.idle}</maxIdle>
         			<minIdle>${postgis.min.idle}</minIdle>
+        			<maxWait>2000</maxWait>
 	        		<validationQuery>SELECT 1</validationQuery> 
                 </config>
             </resource>
