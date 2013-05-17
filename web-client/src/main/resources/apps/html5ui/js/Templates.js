@@ -243,7 +243,7 @@ GeoNetwork.HTML5UI.Templates.WFS_VALID = "";
  */
 GeoNetwork.HTML5UI.Templates.BOOKMARK =
     '<button class="bookmark-icon" value="{title}" \
-    onclick="javascript:catalogue.metadataAddToBookmarks(\'{title}\', \'{uuid}\');">\
+    onclick="javascript:bookmarkMetadata(\'{[values.title.replace(\"\'\", \"\")]}\', \'{uuid}\');">\
         <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/html5ui/img/bookmark-add-icon.png"/>\
     </button>';
 
