@@ -368,6 +368,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             logoAdd: serviceUrl + 'logo.add',
             updatePassword: serviceUrl + 'user.pwedit?id=',
             updateUserInfo: serviceUrl + 'user.infoedit?id=',
+            harvestingAdmin: serviceUrl + 'harvesting',
             logoUrl: this.URL + '/images/logos/',
             imgUrl: this.URL + '/images/',
             harvesterLogoUrl: this.URL + '/images/harvesting/'
