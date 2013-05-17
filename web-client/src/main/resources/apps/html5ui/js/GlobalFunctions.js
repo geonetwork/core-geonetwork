@@ -111,6 +111,13 @@ function showBigMap() {
     // the first time. It will check if the print panel is already initiliazed
     // or not
     app.mapApp.initPrint();
+    
+
+    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+        Ext.get(a).removeClass("selected");
+    });
+
+    Ext.get("map-tab").addClass("selected");
 }
 
 function hideBigMap() {
@@ -136,6 +143,14 @@ function showSearch() {
 
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
     }
+
+
+    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+        Ext.get(a).removeClass("selected");
+    });
+
+    Ext.get("catalog-tab").addClass("selected");
+    
 }
 
 function hideSearch() {
@@ -157,6 +172,12 @@ function showMetadata() {
     show("metadata-info");
 
     app.breadcrumb.setDefaultPrevious(2);
+
+    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+        Ext.get(a).removeClass("selected");
+    });
+
+    Ext.get("catalog-tab").addClass("selected");
 }
 
 function hideMetadata() {

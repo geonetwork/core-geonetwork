@@ -238,6 +238,16 @@
 											</a>
 										</li>
 										<li>
+											<a id="catalog-tab" href="javascript:showSearch();">
+												<xsl:value-of select="/root/gui/strings/porCatInfoTab" />
+											</a>
+										</li>
+										<li>
+											<a id="map-tab" href="javascript:showBigMap();">
+												<xsl:value-of select="/root/gui/strings/map_label" />
+											</a>
+										</li>
+										<li>
 											<a id="about-tab" href="http://geonetwork-opensource.org/" target="about">
 												<xsl:value-of select="/root/gui/strings/about" />
 											</a>
@@ -248,8 +258,6 @@
 						</header>
 					</div>
 					
-                    <div id="pdok-loads" style="display:none;"></div>
-                    <div id="foot-loads" style="display:none;"></div>
 					<div id="main">
 			        <div id="copy-clipboard-ie"></div>
                        <div id="share-capabilities" style="display:none">
@@ -302,9 +310,9 @@
 	                        <div id="cloud-tag" style="display:none;"></div>
 	                        <section>
 	                            <div id="latest-metadata"><header>
-                                        <h1><xsl:value-of select="/root/gui/strings/latestDatasets" /></h1></header></div>
+                                        <h1><span><xsl:value-of select="/root/gui/strings/latestDatasets" /></span></h1></header></div>
 	                            <div id="popular-metadata"><header>
-                                        <h1><xsl:value-of select="/root/gui/strings/popularDatasets" /></h1></header></div>
+                                        <h1><span><xsl:value-of select="/root/gui/strings/popularDatasets" /></span></h1></header></div>
 	                        </section>
 	                    </div>
 	                    
@@ -354,7 +362,8 @@
 					<div id="footer">
 						<footer class="wrapper">
 							<ul>
-								<li>
+								<li style="float:left">
+									<xsl:value-of select="/root/gui/strings/poweredBy"/> 
 									<a href="http://geonetwork-opensource.org/">GeoNetwork OpenSource</a>
 								</li>
 								<li>
