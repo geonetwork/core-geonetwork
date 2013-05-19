@@ -26,11 +26,9 @@ package org.fao.geonet.kernel.csw.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -70,6 +68,9 @@ import org.fao.geonet.kernel.search.SummaryComparator.Type;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
+
+import bak.pcj.map.ObjectKeyIntMapIterator;
+import bak.pcj.map.ObjectKeyIntOpenHashMap;
 
 //=============================================================================
 
@@ -263,7 +264,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					// parse each document in the index
 					String[] fieldValues;
 					SortedSet<String> sortedValues = new TreeSet<String>();
-					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
+					ObjectKeyIntOpenHashMap duplicateValues = new ObjectKeyIntOpenHashMap();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
 					    DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
 						reader.document(hits.scoreDocs[j].doc, selector);
@@ -283,8 +284,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					}
 					
 					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
-					TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
-					sortedValuesFrequency.addAll(duplicateValues.entrySet());
+					TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency = new TreeSet<SummaryComparator.SummaryElement>(valuesComparator);
+                    ObjectKeyIntMapIterator entries = duplicateValues.entries();
+                    
+                    while(entries.hasNext()) {
+                        sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
+                        entries.next();
+                    }
 					
 					if (freq)
 						return createValuesByFrequency(sortedValuesFrequency);
@@ -389,7 +395,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	 * @param duplicateValues 
 	 */
 	private static void addtoSortedSet(SortedSet<String> sortedValues,
-			String[] fieldValues, HashMap<String, Integer> duplicateValues) {
+			String[] fieldValues, ObjectKeyIntOpenHashMap duplicateValues) {
 		for (String value : fieldValues) {
 			sortedValues.add(value);
 			if (duplicateValues.containsKey(value)) {
@@ -428,15 +434,15 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	 * @param sortedValuesFrequency
 	 * @return
 	 */
-	private static List<Element> createValuesByFrequency(TreeSet<Entry<String, Integer>> sortedValuesFrequency) {
+	private static List<Element> createValuesByFrequency(TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency) {
 		
 		List<Element> values = new ArrayList<Element>();
 		Element value;
 
-        for (Entry<String, Integer> entry : sortedValuesFrequency) {
+        for (SummaryComparator.SummaryElement element : sortedValuesFrequency) {
             value = new Element("Value", Csw.NAMESPACE_CSW);
-            value.setAttribute("count", entry.getValue().toString());
-            value.setText(entry.getKey());
+            value.setAttribute("count", Integer.toString(element.count));
+            value.setText(element.name);
 
             values.add(value);
         }
