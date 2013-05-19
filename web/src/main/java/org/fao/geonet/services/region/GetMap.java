@@ -308,6 +308,39 @@ public class GetMap implements Service {
 		public int compareTo(ExpandFactor o) {
 			return _doubleProportion.compareTo(o._doubleProportion);
 		}
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((_doubleProportion == null) ? 0 : _doubleProportion.hashCode());
+            long temp;
+            temp = Double.doubleToLongBits(factor);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(proportion);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            return result;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ExpandFactor other = (ExpandFactor) obj;
+            if (_doubleProportion == null) {
+                if (other._doubleProportion != null)
+                    return false;
+            } else if (!_doubleProportion.equals(other._doubleProportion))
+                return false;
+            if (Double.doubleToLongBits(factor) != Double.doubleToLongBits(other.factor))
+                return false;
+            if (Double.doubleToLongBits(proportion) != Double.doubleToLongBits(other.proportion))
+                return false;
+            return true;
+        }
+		
     }
 }
 

@@ -642,6 +642,19 @@
 
 		<service name="region.getmap.png">
 			<class name=".services.region.GetMap" >
+				<!-- In getMap the envelope of the geometry is calculated then
+					 it is expanded by a factor.  That factor is the size of the map.  This allows the 
+					 map to be slightly bigger than the geometry allowing some context to be shown.
+					 This parameter allows different factors to be chosen per scale level 
+					 
+					 Proportion is the proportion of the world that the geometry
+					 covers
+					 (bounds of WGS84)/(bounds of geometry in WGS84)-->)
+				 <param name="expandFactors">
+				 	<factor proportion=".0005" value="2"/>
+				 	<factor proportion=".01" value=".5"/>
+				 	<factor proportion=".015" value=".2"/>
+				 </param>
 				 <param name="format" value="png"/>
 				 <!-- named backgrounds allow the background parameter to be a simple key 
 				 	  and the complete URL will be looked up from this list of named backgrounds 
