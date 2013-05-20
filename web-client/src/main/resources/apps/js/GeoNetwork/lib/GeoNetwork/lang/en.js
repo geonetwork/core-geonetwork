@@ -656,7 +656,8 @@ GeoNetwork.Lang.en = {
     'linklabel-image/jpeg': 'Image link',
     'linklabel-website': 'Web link',
     'linklabel-application/octet-stream': 'Link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);
