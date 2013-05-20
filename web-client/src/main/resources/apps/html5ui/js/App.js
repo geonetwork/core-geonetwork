@@ -66,9 +66,9 @@ GeoNetwork.app = function() {
             tpl: new Ext.XTemplate(
                     '<tpl for=".">', 
                         '<div class="tag-cloud">',
-                           '{value}<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
+                           '<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
                            'themekey' + 
-                                '={value}\', app.loadResults, null, null);" alt="{value}">({count})</a>', 
+                                '={value}\', app.loadResults, null, null);" alt="{value}">{value} ({count})</a>', 
                         '</div>', 
                     '</tpl>')
         });
