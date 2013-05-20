@@ -53,8 +53,6 @@ function showBrowse() {
 
     show("main");
     show("search-form");
-    hide("pdok-loads");
-    hide("foot-loads");
 
     hideSearch();
     hideBigMap();
@@ -66,9 +64,6 @@ function showBrowse() {
 
     app.breadcrumb.setPrevious([]);
     app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[0]);
-
-    Ext.get("pdok-loads").update("");
-    Ext.get("foot-loads").update("");
 
     Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
         Ext.get(a).removeClass("selected");
