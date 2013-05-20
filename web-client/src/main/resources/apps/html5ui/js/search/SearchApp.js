@@ -85,7 +85,7 @@ GeoNetwork.searchApp = function() {
                 hideLabel : true,
                 id : 'fullTextField',
                 renderTo : 'fullTextField',
-                width : 285,
+                width : 170,
                 minChars : 2,
                 loadingText : '...',
                 hideTrigger : true,
