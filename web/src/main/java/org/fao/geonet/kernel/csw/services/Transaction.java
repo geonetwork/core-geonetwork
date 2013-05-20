@@ -263,6 +263,16 @@ public class Transaction extends AbstractOperation implements CatalogService
         }
 
 
+        // Privileges for the user group that inserts the metadata (same permissions as when inserting xml file from UI)
+        if (group != null) {
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_VIEW);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DOWNLOAD);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_EDITING);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DYNAMIC);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_FEATURED);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_NOTIFY);
+        }
+
 		dataMan.indexMetadata(dbms, id);
 		
 		fileIds.add( uuid );
