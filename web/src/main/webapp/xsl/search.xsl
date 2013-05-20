@@ -108,7 +108,7 @@
 
 				<script type="text/javascript">
 					<xsl:attribute name="src"><xsl:value-of
-						select="$baseUrl" />/apps/js/ext/ext-all.js</xsl:attribute>
+						select="$baseUrl" />/apps/js/ext/ext-all-debug.js</xsl:attribute>
 				</script>
 
 				<script type="text/javascript">
@@ -159,7 +159,7 @@
                         <span class="user-button">
 	                        <a id="user-button">                            
 	                            <xsl:choose>
-	                                <xsl:when test="$authenticated='false'">
+	                                <xsl:when test="starts-with($authenticated, 'false')">
 	                                    <xsl:attribute name="href">javascript:toggleLogin();</xsl:attribute>
 	                                    <xsl:value-of select="/root/gui/strings/login" />
 	                                </xsl:when>
@@ -174,7 +174,7 @@
                             </label>
                             <label id="name_label">
                                 <xsl:choose>
-                                    <xsl:when test="$authenticated='true'">
+                                    <xsl:when test="starts-with($authenticated, 'true')">
 		                                -
 		                                <xsl:value-of select="/root/request/user/name" />
                                     </xsl:when>
@@ -182,7 +182,7 @@
                             </label>
                             <label id="profile_label">
                                 <xsl:choose>
-                                    <xsl:when test="$authenticated='true'">
+                                    <xsl:when test="starts-with($authenticated, 'true')">
 		                                (           
 		                                <xsl:value-of select="/root/request/user/profile" />
 		                                )
@@ -193,7 +193,7 @@
                             <a href="javascript:catalogue.admin();" id="administration_button">
                                                       
                                 <xsl:choose>
-                                    <xsl:when test="$authenticated='false'">
+                                    <xsl:when test="starts-with($authenticated, 'false')">
                                         <xsl:attribute name="style">display:none</xsl:attribute>
                                     </xsl:when>
                                 </xsl:choose>
