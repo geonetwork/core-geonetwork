@@ -62,6 +62,7 @@ GeoNetwork.app = function() {
             query : 'fast=true&summaryOnly=true&from=1&to=4',
             renderTo : 'cloud-tag',
             onSuccess : 'app.loadResults',
+            itemSelector : 'div.tag-cloud',
             tpl: new Ext.XTemplate(
                     '<tpl for=".">', 
                         '<div class="tag-cloud">',
