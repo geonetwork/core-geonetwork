@@ -152,8 +152,14 @@ GeoNetwork.loginApp = function() {
                 headers : {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },
-                success : catalogue.onAfterLogout(),
-                failure : catalogue.onAfterBadLogout(),
+                success : function() {
+                    catalogue.fireEvent('afterLogout', 
+                                catalogue, catalogue.identifiedUser);
+                },
+                failure : function() {
+                    catalogue.fireEvent('afterBadLogout', 
+                            catalogue, catalogue.identifiedUser);
+            },
                 scope : this
             });
         },
