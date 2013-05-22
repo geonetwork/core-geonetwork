@@ -56,12 +56,12 @@ html,body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
-	font-family: OpenSans, Serif, sans-serif !important; 
+	font-family: OpenSans, Serif, sans-serif; 
 }
 
 /** Overriding fonts from gnmetadataview.css **/
 div#page-container #metadata-info * , div#page-container div#latest-metadata header h1, div#page-container div#popular-metadata header h1 {
-	font-family: OpenSans, Serif, sans-serif !important;
+	font-family: OpenSans, Serif, sans-serif;
 }
 
 /** General settings **/
@@ -150,7 +150,6 @@ textarea {
 }
 
 body {
-	font: 14px/22px Verdana, Helvetica, Arial;
 	min-width: 900px;
 }
 
