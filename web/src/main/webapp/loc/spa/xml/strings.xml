@@ -16,48 +16,50 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
 
-	<!-- new strings - 2.7 -->
-	<otherValue>Other:</otherValue>
+	<otherValue>Otro:</otherValue>
+	<warning>Advertencia</warning>
+	<isAdmin>¿Es administrador?</isAdmin>
+    <anyLanguage>Cualquiera</anyLanguage>
 	<nodata>Null</nodata>
-	<isAdmin>Is administrator ?</isAdmin>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
-	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
+	<batchExtractSubtemplatesTitle>Extraer subplantillas para los metadatos seleccionados</batchExtractSubtemplatesTitle>
+	<extractSubtemplates>Extraer subplantillas</extractSubtemplates>
 	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
 	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
 	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
-	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+	<categoryForSubtemplate>Categorías por subplantillas</categoryForSubtemplate>
+	<makeChanges>¡Sí, realmente quiero hacerlo!</makeChanges>
+	<dontMakeChanges>Por defecto, esta operación no hará ningún cambio en la base de datos. Se ejecuta en modo testeo. Marcando esta casilla se deshabilita el modo de testeo y los cambios se guardarán en la base de datos.</dontMakeChanges>
 
-		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+    <defaultStatusChangeMessage>Sin Información</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
-	<thesaurusType>Thesaurus Type</thesaurusType>
-	<warning>Warning</warning>
-	<anyLanguage>Cualquier lenguaje</anyLanguage>
-	<status>Status</status>
-	<changeLogMessage>Change Log Message</changeLogMessage>
-	<updateStatus>Update status</updateStatus>
+	<thesaurusType>Tipo de Tesauro</thesaurusType>
+	<changeLogMessage>Cambiar Mensaje de Log</changeLogMessage>
+	<status>Estado</status>
+	<updateStatus>Actualizar Estado</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
-	<startVersion>Start Versioning</startVersion>
+	<startVersion>Empezar Versionado</startVersion>
 	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-  <editAttributes>Add more details</editAttributes>
-  <subtemplate.admin>Manage directories</subtemplate.admin>
-  <subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
-  <surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
-	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
-	<emailMandatory>email address is Mandatory</emailMandatory>
-	<forgottenPassword>Forgot your password?</forgottenPassword>
+  <editAttributes>Añadir más detalles</editAttributes>
+  <subtemplate.admin>Organizar directorios</subtemplate.admin>
+  <subtemplate.admin.desc>Añade/modifica/borra directorios (pe. directorio de contactos)</subtemplate.admin.desc>  
+    <surnameMandatory>El apellido es Obligatorio</surnameMandatory>
+	<firstnameMandatory>El nombre es Obligatorio</firstnameMandatory>
+	<emailMandatory>El correo electrónico es Obligatorio</emailMandatory>
+	<forgottenPassword>¿Olvidaste tu contraseña?</forgottenPassword>
   <selectTemplate>Select schemas</selectTemplate>
-  <notificationsDes>Remote updates</notificationsDes>
-	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
-	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
+	<useStopwords>El índice Lucene utiliza stopwords para estos idiomas:</useStopwords>    
+  <rebuildIndexMessage>Si cambias estos valores, se recomienza rehacer el índice Lucene.</rebuildIndexMessage>
+	<!-- new strings - 2.7 -->
+    <notificationsDes>Actualizaciones remotas</notificationsDes>
+	<metadata-templates-samples-add>Añadir plantillas y ejemplos</metadata-templates-samples-add>
+	<metadata-schema-select>Selecciona un esquema para añadir plantillas o metadatos de ejemplo</metadata-schema-select>
 	<templatesSamples>Manage templates and sample data</templatesSamples>
-	<simpleSearch>Simple Search</simpleSearch>
-	<advancedSearch>Advanced Search</advancedSearch>
-	<remoteSearch>Remote Search</remoteSearch>
+	<simpleSearch>Búsqueda Simple</simpleSearch>
+	<advancedSearch>Búsqueda Avanzada</advancedSearch>
+	<remoteSearch>Búsqueda Remota</remoteSearch>
 	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
   <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
   <noServer js="true">Please select a server to search</noServer>
@@ -65,11 +67,11 @@
 	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
 	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
 	<anyWithoutWords>Any - without these words</anyWithoutWords>
-	<dataDownload>Data for Download</dataDownload>
-	<addSchema>Add a metadata schema/profile</addSchema>
-	<updateSchema>Update a metadata schema/profile</updateSchema>
-	<deleteSchema>Delete a metadata schema/profile</deleteSchema>
-	<selectSchema>Select a metadata schema/profile</selectSchema>
+	<dataDownload>Datos para Descargar</dataDownload>
+	<addSchema>Añadir un esquema/perfil de metadato</addSchema>
+	<updateSchema>Actualizar un esquema/perfil de metadato</updateSchema>
+	<deleteSchema>Borrar un esquema/perfil de metadato</deleteSchema>
+	<selectSchema>Seleccionar un esquema/perfil de metadato</selectSchema>
 	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
 	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
 	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
@@ -78,10 +80,7 @@
 	<enterSchema>Enter a name for the schema to be added</enterSchema>
 	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
 	<showRemoteHTML>Show HTML from remote server</showRemoteHTML>
-	<assignToGroup>Assign to Group(s)</assignToGroup>
-	<copyThumbnail>Copy thumbnails?</copyThumbnail>
-	<copyResources>Copy downloadable files?</copyResources>
-		<searchStatistics>Search Statistics</searchStatistics>
+		<searchStatistics>Buscar estadísticas</searchStatistics>
 		<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
 		<stat.byDay>by Day</stat.byDay>
        <stat.byMonth>by Month</stat.byMonth>
@@ -93,21 +92,21 @@
        <stat.day>Day</stat.day>
        <stat.hits>Hits</stat.hits>
        <stat.ip>IP</stat.ip>
-       <stat.noValue>no value</stat.noValue>
+       <stat.noValue>sin valor</stat.noValue>
        <stat.language>Language</stat.language>
        <stat.month>Month</stat.month>
        <stat.numberOfSearch>Number of search</stat.numberOfSearch>
        <stat.requestDate>Date of request</stat.requestDate>
-       <stat.spatialFilter>Spatial filter</stat.spatialFilter>
+       <stat.spatialFilter>Filtro espacial</stat.spatialFilter>
        <stat.totalsearches>Total user searches</stat.totalsearches>
-       <stat.year>Year</stat.year>
+       <stat.year>Año</stat.year>
        <stat.mdSheet>Metadata sheet</stat.mdSheet>
-       <stat.noTitle>no title</stat.noTitle>
+       <stat.noTitle>sin título</stat.noTitle>
        <stat.csvExport>CSV export</stat.csvExport>
        <stat.tabularStats>Tabular statistics</stat.tabularStats>
        <stat.tip1begin>Click on a link below to display live statistics, click the little arrow </stat.tip1begin>
-       <stat.tip1end>to hide it</stat.tip1end>
-       <stat.lastMonthStats>Last Month statistics</stat.lastMonthStats>
+       <stat.tip1end>para ocultarlo</stat.tip1end>
+       <stat.lastMonthStats>Estadísticas del último mes</stat.lastMonthStats>
        <stat.userIpText>User IP during search (number of search per unique IP)</stat.userIpText>
        <stat.mostSearchedKeywords>Most searched Keywords</stat.mostSearchedKeywords>
        <stat.mostSearchedCategories>Most searched Categories</stat.mostSearchedCategories>
@@ -153,9 +152,6 @@
        <stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
 	<!-- end new strings -->
 	
-    <useStopwords>El índice Lucene utiliza palabras vacías de estos idiomas:</useStopwords>    
-    <rebuildIndexMessage>Si cambia estos valores, se recomienda volver a generar el índice Lucene.</rebuildIndexMessage>
-	
 	<drawRectangle js="true">Draw rectangle</drawRectangle>
 	<drawPolygon js="true">Draw polygon</drawPolygon>
 	<drawCircle js="true">Draw circle</drawCircle>
@@ -183,25 +179,27 @@
 	<selectANode js="true">Select a node ...</selectANode>
 	<publishing js="true">Publishing ...</publishing>
 	
-	<logo>Logo configuration</logo>
-	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
-    <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
-	<logoRegistered js="true">Registered logos</logoRegistered>
-	<logoAdd js="true">Add new logo</logoAdd>
-  <selectedLogo js="true">Selected logo:</selectedLogo>
-  <logoDel js="true">Remove</logoDel>
-  <logoForNode js="true">Use for the catalogue</logoForNode>
+	<logo>Configuración del Logo</logo>
+	<logoSelectionWindow js="true">Elige un Logo</logoSelectionWindow>
+    <chooseLogo>Elige logo</chooseLogo>
+    <orgLogo>Logo de la Organización</orgLogo>
+    <logoDes>Configuración del logo del Catálogo (nodo y logo del harvesting)</logoDes>
+	<logoRegistered js="true">Logos registrados</logoRegistered>
+	<logoAdd js="true">Añadir nuevo logo</logoAdd>
+  <selectedLogo js="true">Logo seleccionado:</selectedLogo>
+    <logoDel js="true">Borrar</logoDel>
+    <logoForNode js="true">Usar para el catálogo</logoForNode>
   <logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
-	<logoSelect js="true">Select image for logo ...</logoSelect>
-	
-	<createChild>Create child</createChild>
-	<updateChildren>Update children</updateChildren>
-	<updateChildrenOk>Children updated</updateChildrenOk>
-	<updateChildrenFailed>Children update failed</updateChildrenFailed>
-	<batchUpdateChildrenTitle>Update children</batchUpdateChildrenTitle>
+	<logoSelect js="true">Selecciona una imágen para el logo...</logoSelect>
+	<url>URL</url>
+	<createChild>Crear hijo</createChild>
+	<updateChildren>Actualizar hijos</updateChildren>
+	<updateChildrenOk>Hijos actualizados</updateChildrenOk>
+	<updateChildrenFailed>Actualización de hijos fallida</updateChildrenFailed>
+	<batchUpdateChildrenTitle>Actualizar hijos</batchUpdateChildrenTitle>
 	<updateMode>Choose the strategy applied for children update from parent : </updateMode>
-	<addMode>Add sections</addMode>
-	<replaceMode>Replace sections</replaceMode>
+	<addMode>Añadir secciones</addMode>
+	<replaceMode>Reemplazar secciones</replaceMode>
 	<updateChildrenHelp>
 		<div>
 			<h2>More details</h2>
@@ -347,7 +345,7 @@
 	<add js="true">Añadir</add>
 	<addNewMetadata>Añadir Metadato</addNewMetadata>
 	<address>Dirección</address>
-	<admin>Administrador</admin>
+	<admin>Administración</admin>
 	<Administrator>Administrador</Administrator>
 	<agrovocKeyword>Palabras del Diccionario de Agrovoc</agrovocKeyword>
 	<all>todos</all>
@@ -392,8 +390,6 @@
 	<categoryNameMandatory>Se debe rellenar el nombre de la categoría.</categoryNameMandatory>
 	<changeDate>Fecha de modificación de los metadatos</changeDate>
 	<checkusername>Check</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Elegir-</choose>
 	<chooseFile>Seleccionar la ubicación del fichero a enviar</chooseFile>
 	<chooseLargeThumbnail>Elegir la ubicación del fichero thumbnail grande</chooseLargeThumbnail>
@@ -515,6 +511,8 @@
 	<georss>Abrir alimentación GeoRSS</georss>
 	<group>Grupo de usuarios</group>
 	<usergroups>User groups</usergroups>
+  <choice>Choice</choice>
+  <sequence>Sequence</sequence>
 	<groupManagement>Gestión de grupos de usuarios</groupManagement>
 	<groupManDes>Añadir/modificar/borrar y mostrar grupos</groupManDes>
 	<groups>Grupos</groups>
@@ -622,8 +620,8 @@
 	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimizar el índice de Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
-	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
-	<reload>Reload</reload>
+	<lucene.config.reload>Recargar la configuración de Lucene</lucene.config.reload>
+	<reload>Recargar</reload>
 	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Esta operación puede tardar algún tiempo sobre los catálogos con muchos metadatados y no se debe hacer en momentos de uso intensivo. ¿Desea continuar?</doYouReallyWantToDoThis>
 	<optimize>Optimizar</optimize>
@@ -694,12 +692,12 @@
 	<passwordOldRequired>El password anterior es obligatorio</passwordOldRequired>
 	<passwordSpace>Disculpe, no se permiten espacios en el password.</passwordSpace>
 	<persInfo>Información personal</persInfo>
-  <usersAndGroups>Users and groups</usersAndGroups>
-  <classification>Thesauri and classification systems</classification>
-  <catalogueConfiguration>Catalogue settings</catalogueConfiguration>
-  <indexConfiguration>Index settings</indexConfiguration>
-  <io>Import, export &amp; harvesting</io>
-  <placeKeyword>Palabras clave de lugar</placeKeyword>
+    <usersAndGroups>Usuarios y Grupos</usersAndGroups>
+    <classification>Tesauro y clasificación de sistemas</classification>
+    <catalogueConfiguration>Configuración del Catálogo</catalogueConfiguration>
+    <indexConfiguration>Configuración del Índice</indexConfiguration>
+    <io>Importar, exportar y cosechar</io>
+    <placeKeyword>Palabras clave de lugar</placeKeyword>
 	<porCatInfoTab>Catálogo</porCatInfoTab>
 	<poweredBy>Software usado: </poweredBy>
 	<previous>Anterior</previous>
@@ -811,8 +809,8 @@
 	<surName>Apellidos</surName>
 	<systemConfig>Configuración del sistema</systemConfig>
 	<systemConfigDes>Permite cambiar algunos parámetros del sistema</systemConfigDes>
-	<systemInfo>System information</systemInfo>
-	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
+	<systemInfo>Información del Sistema</systemInfo>
+	<systemInfoDes>Muestra información avanzada sobre el catálogo, índices, Java, sistema operativo</systemInfoDes>
 	<template>Plantilla de metadatos</template>
 	<Term>Término</Term>
 	<thanks>Gracias por su trabajo, el equipo GeoNetwork</thanks>
@@ -1029,15 +1027,15 @@
 	<xsdError>XSD Validation Error</xsdError>
 	<yourRegistration js="true">Your registration...</yourRegistration>
 	<zip>Código postal</zip>
-
-	<header_meta>
+        <header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadatos ISO19115 ISO19139 ISO GIS teledetección datos shapefiles datos  espaciales imágenes de satélite mapa mapas interactivos opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalogo clearinghouse coberturas mallas raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource proporciona a través de internet acceso a mapas interactivos, imágenes de satélite y bases de datos espaciales relacionadas. El propósito es mejorar el acceso a y la integración de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre los usuarios"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
 		<meta name="DC.title" lang="Spanish" content="Portal GeoNetwork para datos espaciales e información"/>
 		<meta name="DC.creator" content="Equipo GeoNetwork"/>
 		<meta name="DC.subject" lang="Spanish" content="GeoNetwork metadata ISO19115 ISO19139 ISO GIS sensores remotos datos shapefiles datos espaciales imágenes de satélite mapas mapas interactivos opengis 19115 19139 geographic z39.50 catálogo clearinghouse coberturas grid raster data opensource open source network"/>
- 	      <meta name="DC.description" lang="Spanish" content="GeoNetwork provee acceso a través de Internet a mapas interactivos, imágenes de satelite ya bases de datos espaciales relacionadas. Su propósito es mejorar el acceso y hacer uso integrado de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre diferentes usuarios"/>
+ 	    <meta name="DC.description" lang="Spanish" content="GeoNetwork provee acceso a través de Internet a mapas interactivos, imágenes de satelite ya bases de datos espaciales relacionadas. Su propósito es mejorar el acceso y hacer uso integrado de datos espaciales e información. GeoNetwork opensource permite compartir fácilmente datos espaciales entre diferentes usuarios"/>
+		<meta name="DC.publisher" content=""/>
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=ISO-8859-1"/>
@@ -1054,8 +1052,10 @@
 		</ul>
 	</mainpage1>
 	<mainpage2>
+		<p>
 		El proyecto GeoNetwork opensource promueve que se comparta la información temática y georeferenciada
 		disponible entre las organizaciones. Si desea más información, puede enviar un mensaje
+		</p>
 	</mainpage2>
 	<mainhelp1> Como buscar... </mainhelp1>
 	<mainhelp2> Ocultar la ayuda... </mainhelp2>
@@ -1092,7 +1092,6 @@
 		<iso19139>Guardar metadatos ISO19115/19139 como XML</iso19139>
 		<iso19139fra>Guardar metadatos Fra ISO19115/19139 como XML</iso19139fra>
 	</savexml>
-  <url>URL</url>
   <thesaurus>
     <load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Agregar elemento</addelement>
@@ -1129,7 +1128,7 @@
 		<thesaurus>Seleccione las palabras clave del tesauro</thesaurus>
 	</searchhelp>
 
-        <inspire>
+    <inspire>
         <serviceType>
             <value id="discovery">Discovery Service (discovery)</value>
             <value id="view">View Service (view)</value>
@@ -1144,6 +1143,7 @@
                 <value id="humanCatalogueViewer">Catalogue viewer</value>
                 <value id="humanGeographicViewer">Geographic viewer</value>
                 <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanServiceEditor">Service editor</value>
                 <value id="humanChainDefinitionEditor">Chain definition editor</value>
                 <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
                 <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
@@ -1240,6 +1240,11 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+        <conformity>
+            <value id="conformant">Conformant</value>
+            <value id="notConformant">Not Conformant</value>
+            <value id="notEvaluated">Not Evaluated</value>
+        </conformity>
         <what>
             <l1>Opciones de búsqueda de INSPIRE </l1>
             <l2>Metadatos INSPIRE metadata</l2>
@@ -1258,7 +1263,7 @@
             <l15>Tipo de servicio</l15>
         <l16>Classification of data services</l16>
         </what>
-                <annex1>
+        <annex1>
             <theme id="inspire_CoordinateRefSystems">Sistemas de coordenadas de referencia</theme>
             <theme id="inspire_GeographicalGridSystems">Sistema de cuadrículas geográficas</theme>
             <theme id="inspire_GeographicalNames">Nombres geográficos</theme>
@@ -1311,52 +1316,54 @@
     <mapViewer>Mapa</mapViewer>
 
     <uuid>Identificador único</uuid>    
-    <mymetadata>mis metadatos</mymetadata>        
-	<quickSearch>Quick search links</quickSearch>
-	<catalogueRecords>Catalogue metadata</catalogueRecords>
-	<harvestedRecords>Harvested metadata</harvestedRecords>
-	<catalogueTemplates>Catalogue templates</catalogueTemplates>
+    <mymetadata>Mis metadatos</mymetadata>        
+	<quickSearch>Enlaces rápidos de Búsqueda</quickSearch>
+	<catalogueRecords>Metadatos del Catálogo</catalogueRecords>
+	<harvestedRecords>Metadatos cosechados (harvest)</harvestedRecords>
+	<catalogueTemplates>Plantillas del Catálogo</catalogueTemplates>
 	<addremove>Agregar o quitar</addremove>
     <enabled>Habilitado</enabled>
     <notifications>Notificación a los objetivos a distancia</notifications>
     
-    <cswServer>CSW server</cswServer>
-    <cswServerDes>CSW Server configuration</cswServerDes>
-    <cswServerConfig>CSW Server configuration</cswServerConfig>
-    <cswServerEnable>Enable</cswServerEnable>
-    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Title</cswServerTitle>
-    <cswServerAbstract>Abstract</cswServerAbstract>
-    <cswServerFees>Fees</cswServerFees>
-    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
-    <cswServerContact>Contact</cswServerContact>
+    <cswServer>Servidor CSW</cswServer>
+    <cswServerDes>Configuración del Servidor CSW</cswServerDes>
+    <cswServerConfig>Configuración del Servidor CSW</cswServerConfig>
+    <cswServerEnable>Habilitado</cswServerEnable>
+    <cswServerMetadataPublic>Los metadatos insertados son públicos (Transacción)</cswServerMetadataPublic>
+    <cswServerTitle>Título</cswServerTitle>
+    <cswServerAbstract>Resúmen</cswServerAbstract>
+    <cswServerFees>Cuotas</cswServerFees>
+    <cswServerAccessConstraints>Reglas de Acceso</cswServerAccessConstraints>
+    <cswServerContact>Contacto</cswServerContact>
+	
+	
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
-	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
-	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
-	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
-	<virtualcswServiceName>Service name</virtualcswServiceName>
-	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
-	<virtualcswClassName>Class</virtualcswClassName>
-	<virtualcswNewService>Add a service</virtualcswNewService>
-	<virtualcswParamName>Filter type</virtualcswParamName>
-	<virtualcswParamValue>Filter value</virtualcswParamValue>
-	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
-	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
-	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
-	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
-	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+	<virtualcswServerDes>Configuración de servidores CSW virtuales</virtualcswServerDes>
+	<virtualcswServerConfig>Configuración de servidores CSW virtuales</virtualcswServerConfig>
+	<virtualcswInsert>Configuración del servidor CSW virtuales</virtualcswInsert>
+	<virtualcswServiceName>Nombre del servicio</virtualcswServiceName>
+	<virtualcswServiceDescription>Descripción del servicio</virtualcswServiceDescription>
+	<virtualcswClassName>Clase</virtualcswClassName>
+	<virtualcswNewService>Añadir un servicio</virtualcswNewService>
+	<virtualcswParamName>Tipo de Filtro</virtualcswParamName>
+	<virtualcswParamValue>Valor del Filtro</virtualcswParamValue>
+	<virtualcswServicenameMandatory>El nombre del servicio es obligatorio.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>El nombre del servicio es muy largo (48 carácteres máx.)</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>El nombre del servicio no puede contener caracteres especiales.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>El nombre de la clase es obligatorio.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>El nombre del servicio tiene que empezar con \"csw-\".</virtualcswServiceNameStartsWith>
 	
 	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
 	
-	<virtualcswAny>Free text</virtualcswAny>
-	<virtualcswTitle>Title</virtualcswTitle>
-	<virtualcswAbstract>Abstract</virtualcswAbstract>
-	<virtualcswKeywords>Keyword</virtualcswKeywords>
-	<virtualcswDenominator>Denominator</virtualcswDenominator>
-	<virtualcswCatalog>Catalog</virtualcswCatalog>
-	<virtualcswGroup>Group</virtualcswGroup>
-	<virtualcswCategory>Category</virtualcswCategory>
-	<virtualcswType>Resource type</virtualcswType>
+	<virtualcswAny>Texto libre</virtualcswAny>
+	<virtualcswTitle>Título</virtualcswTitle>
+	<virtualcswAbstract>Resúmen</virtualcswAbstract>
+	<virtualcswKeywords>Palabra clave</virtualcswKeywords>
+	<virtualcswDenominator>Denominador</virtualcswDenominator>
+	<virtualcswCatalog>Catálogo</virtualcswCatalog>
+	<virtualcswGroup>Grupo</virtualcswGroup>
+	<virtualcswCategory>Categoría</virtualcswCategory>
+	<virtualcswType>Tipo de Recurso</virtualcswType>
     <customize-elementset>Personalizar conjunto de elementos</customize-elementset>
     <csw-server-disabled>Servidor de la CSW se desactiva.</csw-server-disabled>
     <custom-elementset-intro>Definir los elementos que deben incluirse en el elemento personalizado ajustado aquí. Cada elemento debe ser identificado por su XPATH total de la raíz del documento. Estos elementos y sus descendientes serán incluidos en las respuestas a las solicitudes CSW GetRecord con ElementSetName = FULL.</custom-elementset-intro>
@@ -1367,6 +1374,15 @@
     <formatter.admin>Metadata Formatter Admin</formatter.admin>
     <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
-	<concealed>Concealed</concealed>
-	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	<concealed>Oculto</concealed>
+	<serviceNotAllowed>No tienes permisos para acceder al siguiente servicio {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>muestra opciones avanzadas</advancedOptions.show>
+	<advancedOptions.hide>oculta opciones avanzadas</advancedOptions.hide>
+	<latestDatasets>Recientes</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	
+	<welcome.text>Bienvenido a GeoNetwork</welcome.text>
+	<tag_label>TAGS</tag_label>
+	<map_label>Mapa</map_label>
 </strings>
