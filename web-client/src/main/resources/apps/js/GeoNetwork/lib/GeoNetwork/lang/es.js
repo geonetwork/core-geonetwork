@@ -262,7 +262,7 @@ GeoNetwork.Lang.es = {
     'username':'Nombre de usuario',
     'password':'Contraseña',
     'login':'Iniciar sesión',
-    'logout':'Acceder',
+    'logout':'Cerrar sesión',
     'administration':'Administración',
     'validationReport':'Informe de validación',
     'status':'Estado',
