@@ -32,16 +32,37 @@
 			userLang = userLang.split('-')[0].toLowerCase();
 			if (userLang.match("^en")) {
 				userLang = "eng";
-			}
-			if (userLang.match("^fr")) {
+			} else if (userLang.match("^fr")) {
 				userLang = "fre";
-			}
-			if (userLang.match("^de")) {
+			} else if (userLang.match("^de")) {
 				userLang = "ger";
-			}
-			if (userLang.match("^it")) {
+			} else if (userLang.match("^it")) {
 				userLang = "ita";
-			}
+            } else if (userLang.match("^ca")) {
+                userLang = "cat";
+            } else if (userLang.match("^es")) {
+                userLang = "spa";
+            } else if (userLang.match("^fi")) {
+                userLang = "fin";
+            } else if (userLang.match("^pl")) {
+                userLang = "pol";
+            } else if (userLang.match("^no")) {
+                userLang = "nor";
+			} else if (userLang.match("^nl")) {
+                userLang = "dut";
+            } else if (userLang.match("^pt")) {
+                userLang = "por";
+            } else if (userLang.match("^ar")) {
+                userLang = "ara";
+            } else if (userLang.match("^zh")) {
+                userLang = "chi";
+            } else if (userLang.match("^ru")) {
+                userLang = "rus";
+            } else if (userLang.match("^tr")) {
+                userLang = "tur";
+            } else {
+                userLang = "eng";
+            }
 	
 		  	window.location="srv/"+userLang+"/login.form"+window.location.search;
 		}
