@@ -161,6 +161,10 @@ public class GetAdminOper implements Service
 				el.addContent(elGrpOper);
 			}
 		}
+		
+		Element validationEl = dbms.select("SELECT valtype, status from validation where metadataid = ?", Integer.parseInt(id));
+		validationEl.detach();
+		validationEl.setName("validation");
 
 		//-----------------------------------------------------------------------
 		//--- put all together
@@ -172,7 +176,8 @@ public class GetAdminOper implements Service
 										.addContent(ownerId)
 										.addContent(hasOwner)
 										.addContent(schema)
-										.addContent(groupOwner);
+										.addContent(groupOwner)
+										.addContent(validationEl);
 
 		return elRes;
 	}

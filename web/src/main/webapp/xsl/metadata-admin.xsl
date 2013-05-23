@@ -21,11 +21,11 @@
 				<xsl:variable name="path" select="string(/root/response/luceneIndexPath)"/>
 				<xsl:variable name="id" select="string(/root/response/id)"/>
 				
-				<xsl:variable name="valid-xsd" select="util:getIndexFieldById($path, $id, '_valid_xsd', $lang)"/>
-				<xsl:variable name="validSch-iso" select="util:getIndexFieldById($path, $id, '_valid_schematron-rules-iso', $lang)"/>
-				<xsl:variable name="validSch-iso-che" select="util:getIndexFieldById($path, $id, '_valid_schematron-rules-iso-che', $lang)"/>
-				<xsl:variable name="validSch-inspire" select="util:getIndexFieldById($path, $id, '_valid_schematron-rules-inspire', $lang)"/>
-				<xsl:variable name="validSch-geonetwork" select="util:getIndexFieldById($path, $id, '_valid_schematron-rules-geonetwork', $lang)"/>
+				<xsl:variable name="valid-xsd" select="normalize-space(/root/response/validation/record[valtype = 'xsd']/status)"/>
+				<xsl:variable name="validSch-iso" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-iso']/status)"/>
+				<xsl:variable name="validSch-iso-che" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-iso-che']/status)"/>
+				<xsl:variable name="validSch-inspire" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-inspire']/status)"/>
+				<xsl:variable name="validSch-geonetwork" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-geonetwork']/status)"/>
 				<xsl:variable name="schema" select="/root/response/schema"/>
 				
 				<xsl:variable name="validXsd">
