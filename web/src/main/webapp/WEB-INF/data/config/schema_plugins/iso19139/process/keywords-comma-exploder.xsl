@@ -48,7 +48,7 @@
   <xsl:template match="geonet:*" priority="2"/>
 
   <!-- Apply to all keywords having "," in it. -->
-  <xsl:template match="gmd:MD_Keywords" priority="2">
+  <xsl:template match="gmd:MD_Keywords[contains(gmd:keyword, ',')]" priority="2">
       <xsl:copy>
           <xsl:apply-templates select="@*"/>
           <xsl:for-each select="gmd:keyword">
@@ -57,7 +57,7 @@
                   <xsl:with-param name="separator" select="','"/>
               </xsl:call-template>
           </xsl:for-each>
-          <xsl:copy-of select="gmd:type"/>
+          <xsl:copy-of select="gmd:type|gmd:thesaurusName"/>
       </xsl:copy>
   </xsl:template>
 
