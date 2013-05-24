@@ -1900,4 +1900,45 @@
         </entry>
     </codelist>
 	
+	<codelist name="gco:nilReason">
+		<entry>
+			<code>missing</code>
+			<label>Manquant</label>
+		</entry>
+		<entry>
+			<code>inapplicable</code>
+			<label>Non appliquable</label>
+		</entry>
+		<entry>
+			<code>template</code>
+			<label>Modèle</label>
+		</entry>
+		<entry>
+			<code>unknown</code>
+			<label>Inconnu</label>
+		</entry>
+		<entry>
+			<code>withheld</code>
+			<label>Avec autorisation</label>
+		</entry>
+	</codelist>
+	
+	<codelist name="indeterminatePosition">
+		<entry>
+			<code>after</code>
+			<label>Après</label>
+		</entry>
+		<entry>
+			<code>before</code>
+			<label>Avant</label>
+		</entry>
+		<entry>
+			<code>now</code>
+			<label>Maintenant</label>
+		</entry>
+		<entry>
+			<code>unknown</code>
+			<label>Inconnu</label>
+		</entry>
+	</codelist>
 </codelists>

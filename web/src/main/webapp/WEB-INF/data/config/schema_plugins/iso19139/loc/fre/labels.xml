@@ -4754,7 +4754,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     
   </element>
   <element name="gco:nilReason">
-    <label/>
+    <label>Raison de l'absence</label>
     <description/>
     <help/>
     <condition/>

@@ -2243,7 +2243,7 @@
 
               <!-- codelist in edit mode -->
               <xsl:variable name="label"
-                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $parent]/entry[code=$choiceValue]/label"/>
+                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code=$choiceValue]/label"/>
               <xsl:choose>
                 <xsl:when test="$label">
                   <xsl:value-of select="$label"/>
@@ -2274,7 +2274,7 @@
       <xsl:otherwise>
         <!-- codelist in view mode -->
         <xsl:variable name="label"
-          select="/root/gui/schemas/*[name(.)=$schema]//codelists/codelist[@name = $parent]/entry[code = $value]/label"/>
+          select="/root/gui/schemas/*[name(.)=$schema]//codelists/codelist[@name = $name]/entry[code = $value]/label"/>
         <xsl:choose>
           <xsl:when test="$label">
             <xsl:value-of select="$label"/>
