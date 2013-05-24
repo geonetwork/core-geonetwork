@@ -491,7 +491,7 @@ div.help ul li {
 }
 
 #metadata-info * {
-	font: 12px verdana, arial, sans-serif;
+	font: 12px;
 }
 
 #metadata-info .x-toolbar {
@@ -509,12 +509,6 @@ div.help ul li {
 
 #metadata-info .title {
 	color: #069;
-}
-
-/* pixel-push css */
-/* css by Michel - 5/12/2012 */
-body {
-	font-family: Verdana, Arial, sans-serif;
 }
 
 /* cookie message */
@@ -599,13 +593,12 @@ body {
 }
 
 #latest-metadata header h1,#popular-metadata header h1 {
-	font-family: Arial, Verdana, sans-serif !important;
-	font-size: 14px !important;
-	font-weight: bold !important;
-	line-height: 1.2em !important;
-	margin-bottom: 0.2em !important;
-	margin-top: 0 !important;
-	margin-bottom: 0.2em !important;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1.2em;
+	margin-bottom: 0.2em;
+	margin-top: 0;
+	margin-bottom: 0.2em;
 }
 
 /* first thumbnial container */
@@ -682,10 +675,6 @@ body {
 	border-top: none;
 }
 
-#search-container article {
-	margin: 10px 0px 10px 10px;
-	width: 77%;
-}
 /* search result --- list + right sidebar */
 #resultsPanel {
 	
@@ -836,7 +825,7 @@ div#resultsPanel .x-toolbar-right {
 }
 /* search result --- right sidebar */
 #search-container #secondary-aside {
-	margin-left: 20px;
+	margin-left: 3px;
 	padding-top: 0px
 }
 

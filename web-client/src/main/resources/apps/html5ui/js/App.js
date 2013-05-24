@@ -32,7 +32,7 @@ GeoNetwork.app = function() {
         var latestView = new GeoNetwork.MetadataResultsView({
             catalogue : catalogue,
             autoScroll : true,
-            tpl : GeoNetwork.Templates.THUMBNAIL
+            tpl : GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER
         });
         var latestStore = new GeoNetwork.Settings.mdStore();
         latestView.setStore(latestStore);
@@ -45,9 +45,9 @@ GeoNetwork.app = function() {
             items : latestView,
             renderTo : 'latest-metadata'
         });
-        latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
+        latestView.tpl = GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER;
         catalogue.kvpSearch(
-                "fast=index&from=1&to=4&sortBy=changeDate",
+                "fast=index&from=1&to=3&sortBy=changeDate",
                 function(e) {
                     Ext.each(Ext.DomQuery.select('.md-action-menu'), function(
                             el) {
@@ -61,7 +61,16 @@ GeoNetwork.app = function() {
             catalogue : catalogue,
             query : 'fast=true&summaryOnly=true&from=1&to=4',
             renderTo : 'cloud-tag',
-            onSuccess : 'app.loadResults'
+            onSuccess : 'app.loadResults',
+            itemSelector : 'div.tag-cloud',
+            tpl: new Ext.XTemplate(
+                    '<tpl for=".">', 
+                        '<div class="tag-cloud">',
+                           '<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
+                           'themekey' + 
+                                '={value}\', app.loadResults, null, null);app.searchApp.firstSearch=true;showSearch();" alt="{value}">{value} ({count})</a>', 
+                        '</div>', 
+                    '</tpl>')
         });
 
         return tagCloudView;
@@ -71,7 +80,7 @@ GeoNetwork.app = function() {
         var latestView = new GeoNetwork.MetadataResultsView({
             catalogue : catalogue,
             autoScroll : true,
-            tpl : GeoNetwork.Templates.THUMBNAIL
+            tpl : GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER
         });
         var latestStore = new GeoNetwork.Settings.mdStore();
         latestView.setStore(latestStore);
@@ -84,9 +93,9 @@ GeoNetwork.app = function() {
             items : latestView,
             renderTo : 'popular-metadata'
         });
-        latestView.tpl = GeoNetwork.Templates.THUMBNAIL;
+        latestView.tpl = GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER;
         catalogue.kvpSearch(
-                "fast=index&from=1&to=5&sortBy=popularity",
+                "fast=index&from=1&to=3&sortBy=popularity",
                 function(e) {
                     Ext.each(Ext.DomQuery.select('.md-action-menu'), function(
                             el) {
@@ -288,6 +297,8 @@ GeoNetwork.app = function() {
 
         Ext.get("metadata-info").update("");
 
+        var button_width = 101;
+        var button_height = 38;
         var aResTab = new GeoNetwork.view.ViewPanel({
             serviceUrl : catalogue.services.mdView + '?uuid=' + uuid,
             lang : catalogue.lang,
@@ -304,7 +315,9 @@ GeoNetwork.app = function() {
             catalogue : catalogue,
             // maximized: true,
             metadataUuid : uuid,
-            record : record
+            record : record,
+            buttonWidth : button_width,
+            buttonHeight : button_height
         });
 
         // aResTab.on("afterrender", function() {
@@ -366,8 +379,8 @@ GeoNetwork.app = function() {
         // Adding social capabilities
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
             id : 'share-button',
-            width : 20,
-            height : 16,
+            width : button_width,
+            height : button_height,
             handler : function() {
                 toggle("share-capabilities");
             },
@@ -405,29 +418,29 @@ GeoNetwork.app = function() {
                                 + '</a>');
         Ext.get("fb-button").dom.title = "Like this";
         // feedback window
-        var feedbackWindow;
-        var newFeedbackWindow = function() {
-            feedbackWindow = new GeoNetwork.FeedbackForm(null, record);
-            feedbackWindow.show();
-        };
-
+//        var feedbackWindow;
+//        var newFeedbackWindow = function() {
+//            feedbackWindow = new GeoNetwork.FeedbackForm(null, record);
+//            feedbackWindow.show();
+//        };
+//        
         // feedback button to open window
-        Ext.getCmp("metadata-panel").getTopToolbar().addButton({
-            id : 'feedback-button',
-            width : 20,
-            height : 14,
-            tooltip : 'Feedback',
-            handler : newFeedbackWindow,
-            text : '',
-            tooltip : OpenLayers.i18n('Feedback'),
-            type : 'submit'
-        });
+//        Ext.getCmp("metadata-panel").getTopToolbar().addButton({
+//            id : 'feedback-button',
+//            width : button_width,
+//            height : button_height,
+//            tooltip : 'Feedback',
+//            handler : newFeedbackWindow,
+//            text : '',
+//            tooltip : OpenLayers.i18n('Feedback'),
+//            type : 'submit'
+//        });
 
         // Adding permalink
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
             id : 'permalink-button',
-            width : 20,
-            height : 19,
+            width : button_width,
+            height : button_height,
             handler : function() {
                 var url = Ext.state.Manager.getProvider().getPrettyLink();
                 Ext.get("permalink-div").update(url);
@@ -726,7 +739,7 @@ Ext
                                     status : 'information',
                                     target : document.body,
                                     id : 'cookie-warning',
-                                    pause : 30
+                                    pause : 40
                                 });
                 cookie.set('alreadyShowMessage', true);
             }

@@ -243,7 +243,7 @@ GeoNetwork.HTML5UI.Templates.WFS_VALID = "";
  */
 GeoNetwork.HTML5UI.Templates.BOOKMARK =
     '<button class="bookmark-icon" value="{title}" \
-    onclick="javascript:catalogue.metadataAddToBookmarks(\'{title}\', \'{uuid}\');">\
+    onclick="javascript:bookmarkMetadata(\'{[values.title.replace(\"\'\", \"\")]}\', \'{uuid}\');">\
         <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/html5ui/img/bookmark-add-icon.png"/>\
     </button>';
 
@@ -268,6 +268,9 @@ GeoNetwork.HTML5UI.Templates.THUMB =
             <a href="javascript:catalogue.metadataShow(\'{uuid}\');return false;">\
                 <img src="{thumbnail}" alt="Thumbnail"/>\
             </a>\
+        </tpl>\
+        <tpl if="!thumbnail">\
+            <div class="emptyThumbnail"/>\
         </tpl>\
     </div>';
 
@@ -405,6 +408,31 @@ GeoNetwork.HTML5UI.Templates.THUMBNAIL = new Ext.XTemplate(
       '<div class="md-contact">',
       GeoNetwork.HTML5UI.Templates.CHANGE_DATE,
       '</div>',
+    '</div>',
+    '</li>',
+    '</tpl>',
+    '</ul>'
+);
+
+/** api: constructor
+ *  .. class:: GeoNetwork.HTML5UI.Templates.THUMBNAIL()
+ *
+ *   An instance of a pre-configured GeoNetwork.HTML5UI.Templates with thumbnail view
+ */
+GeoNetwork.HTML5UI.Templates.THUMBNAIL_SIMPLER = new Ext.XTemplate(
+    '<ul>',
+    '<tpl for=".">',
+    '<li class="md md-thumbnail" style="{featurecolorCSS}">',
+    '<a onclick="catalogue.metadataShow(\'{uuid}\');return false;" href="#" class="overthumb">&nbsp;</a>',
+    '<div class="md-wrap" id="{uuid}">',
+      GeoNetwork.HTML5UI.Templates.THUMB,
+      GeoNetwork.HTML5UI.Templates.SHORT_TITLE,
+      '<tpl if="values.abstract.length &gt;60">\
+      {[values.abstract.substring(0, 60)]}...\
+      </tpl>\
+      <tpl if="values.abstract.length &lt;= 60">\
+      {values.abstract}\
+      </tpl>',
     '</div>',
     '</li>',
     '</tpl>',

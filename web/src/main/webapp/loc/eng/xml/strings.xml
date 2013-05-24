@@ -1384,4 +1384,8 @@
 	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
 	<latestDatasets>Latest</latestDatasets>
 	<popularDatasets>Popular</popularDatasets>
+	
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>
