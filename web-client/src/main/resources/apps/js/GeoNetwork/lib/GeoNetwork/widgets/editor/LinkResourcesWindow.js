@@ -622,7 +622,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }
             }, {
                 name: 'overwrite',
-                fieldLabel: 'Overwrite',
+                fieldLabel: OpenLayers.i18n('Overwrite'),
                 checked: true,
                 xtype: 'checkbox'
             }],
