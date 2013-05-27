@@ -18,3 +18,5 @@ INSERT INTO Settings VALUES (955,952,'ignored','true');
 -- Version update
 UPDATE Settings SET value='2.10.0' WHERE name='version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='subVersion';
+
+UPDATE HarvestHistory SET elapsedTime = 0 WHERE elapsedTime IS NULL;
