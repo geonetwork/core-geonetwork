@@ -320,7 +320,7 @@
 							<div id="bread-crumb-div"></div>
 
 							<aside id="main-aside" class="main-aside" style="display:none;">
-								<header>Filter</header>
+								<header><xsl:value-of select="/root/gui/strings/filter" /></header>
 								<div id="facets-panel-div"></div>
 							</aside>
 							<article>
