@@ -23,11 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.CswOperation;
@@ -39,16 +45,12 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 //=============================================================================
 
@@ -69,7 +71,7 @@ public class Aligner extends BaseAligner
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
-		result  = new CswResult();
+		result  = new HarvestResult();
 
 		//--- setup get-record-by-id request
 
@@ -117,7 +119,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public CswResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -425,6 +427,6 @@ public class Aligner extends BaseAligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private CswResult      result;
+	private HarvestResult  result;
 	private GetRecordByIdRequest request;
 }

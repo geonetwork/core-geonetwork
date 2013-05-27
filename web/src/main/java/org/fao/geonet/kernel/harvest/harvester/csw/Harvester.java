@@ -43,6 +43,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -78,7 +79,7 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public CswResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		log.info("Retrieving capabilities file for : "+ params.name);
 
