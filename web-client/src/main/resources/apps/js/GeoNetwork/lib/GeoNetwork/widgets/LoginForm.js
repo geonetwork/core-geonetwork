@@ -85,7 +85,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
          */
         userInfoToolTipTpl: new Ext.XTemplate('<tpl for=".">', 
                 '<span class="gn-login">{name} {surname}</span><br/>',
-                '<span class="gn-role">{role}</span><br/>',
+                '<span class="gn-role">{[OpenLayers.i18n(values.role)]}</span><br/>',
                 '<img title="Avatar" class="gn-avatar" src="http://gravatar.com/avatar/{hash}?s=80"/>',
                 '</tpl>')
     },
