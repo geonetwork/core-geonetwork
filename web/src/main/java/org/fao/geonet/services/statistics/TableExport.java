@@ -72,10 +72,6 @@ public class TableExport extends NotInReadOnlyModeService{
      */
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
         String tableToExport = Util.getParam(params, "tableToExport");
 
         if (tableToExport == null ) {
@@ -132,10 +128,13 @@ public class TableExport extends NotInReadOnlyModeService{
             out.newLine();
         }
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"data written");
-        rs.close();
-        stmt.close();
-        out.flush();
-        out.close();
+        } finally {
+            out.flush();
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(fileOutputStream);
+            IO.closeQuietly(rs);
+            IO.closeQuietly(stmt);
+        }
         //dbms.disconnect();
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"streams closed");
 
