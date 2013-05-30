@@ -140,7 +140,7 @@
     
   </element>
   <element name="gmd:CI_ResponsibleParty" id="374.0">
-    <label>Responsable</label>
+    <label>Organisation responsable</label>
     <description>Type de données pour l'identification des personnes et organisations, ainsi que pour la description des modes de communication avec, associées avec le jeu de données</description>
     <help>Type de données destiné à l'identification de personnes et/ou d'organisations en relation avec le jeu de données (en tant que responsable, en charge du traitement, propriétaire, etc.), intégrant par ailleurs d'autres informations telles que le numéro de téléphone, l'adresse (postale, messagerie électronique) permettant d'entrer en contact avec ces personnes et/ou organisations. Les trois premiers attributs (individualName, organisationName, positionName) de ce type de données permettent de savoir s'il s'agit de la description d'une personne, d'un service ou de la domiciliation d'une personne précédemment définie. Une indication au moins est obligatoire. La liste de sélection CI_RoleCode spécifie alors la nature de la responsabilité endossée par le service désigné. Cf. CI_Citation pour d'autres informations.</help>
     <condition/>
