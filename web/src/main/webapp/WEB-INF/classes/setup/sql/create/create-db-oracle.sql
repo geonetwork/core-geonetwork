@@ -428,6 +428,25 @@ CREATE TABLE ServiceParameters
     primary key(id)
   );
 
+CREATE TABLE Services
+  (
+    id         int,
+    name       varchar2(64)   not null,
+    class       varchar2(1048)   not null,
+    description       varchar2(1048),
+    primary key(id)
+  );
+  
+
+CREATE TABLE ServiceParameters
+  (
+    id         int,
+    service     int,
+    name       varchar2(64)   not null,
+    value       varchar2(1048)   not null,
+    primary key(id)
+  );
+
 REM ======================================================================
 
 CREATE TABLE spatialIndex
@@ -448,6 +467,7 @@ CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
 ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES service (id);
+ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES services (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (idDes) REFERENCES Categories (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE Groups ADD FOREIGN KEY (referrer) REFERENCES Users (id);
