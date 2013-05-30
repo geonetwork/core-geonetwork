@@ -25,11 +25,7 @@ public class DeleteTmpGraphics extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
-		String message = "No files to delete";
+        String message = "No files to delete";
 		
 		FileFilter pngFilter = new FileFilter()		{
 			public	boolean accept(File file){
