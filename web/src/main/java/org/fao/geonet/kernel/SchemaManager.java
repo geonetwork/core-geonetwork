@@ -86,6 +86,7 @@ public class SchemaManager {
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
     private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
+	private boolean createOrUpdateSchemaCatalog;
 	private String	 defaultLang;
 	private String	 defaultSchema;
 	private String 	 FS         = File.separator;
@@ -124,7 +125,7 @@ public class SchemaManager {
 		* @param defaultLang the default language (taken from context)
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
-	private SchemaManager(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+	private SchemaManager(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 
 		hmSchemas .clear();
 
@@ -134,6 +135,7 @@ public class SchemaManager {
 		this.defaultLang = defaultLang;
 		this.defaultSchema = defaultSchema;
 		this.schemaPluginsCat = schemaPluginsCat;
+		this.createOrUpdateSchemaCatalog = createOrUpdateSchemaCatalog;
 		
 		Element schemaPluginCatRoot = getSchemaPluginCatalogTemplate();
 
@@ -169,9 +171,9 @@ public class SchemaManager {
      * @return
      * @throws Exception
      */
-	public synchronized static SchemaManager getInstance(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema) throws Exception {
+	public synchronized static SchemaManager getInstance(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 		if (schemaManager == null) {
-			schemaManager = new SchemaManager(basePath, resourcePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema);
+			schemaManager = new SchemaManager(basePath, resourcePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema, createOrUpdateSchemaCatalog);
 		}
 		return schemaManager;
 	}
@@ -1147,10 +1149,12 @@ public class SchemaManager {
      * @throws Exception
 	 */
 	private void writeSchemaPluginCatalog(Element root) throws Exception {
-		Xml.writeResponse(new Document((Element)root.detach()),
-                new BufferedOutputStream(new FileOutputStream(new File(schemaPluginsCat))));
-		Xml.resetResolver();	
-		Xml.clearTransformerFactoryStylesheetCache();
+	    if (createOrUpdateSchemaCatalog) {
+    		Xml.writeResponse(new Document((Element)root.detach()),
+                    new BufferedOutputStream(new FileOutputStream(new File(schemaPluginsCat))));
+    		Xml.resetResolver();	
+    		Xml.clearTransformerFactoryStylesheetCache();
+	    }
 	}
 
 	/**
