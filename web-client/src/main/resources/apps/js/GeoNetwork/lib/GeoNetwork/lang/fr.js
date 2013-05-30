@@ -19,6 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'Administrator': 'Administrateur',
+    'Reviewer': 'Relecteur',
+    'Editor': 'Éditeur',
+    'Guest': 'Invité',
     'harvestingAdmin': 'Gestion du moissonnage',
     'updateUserInfo': 'Afficher mon profil',
     'updatePassword': 'Changer de mot de passe',
@@ -611,7 +615,7 @@ GeoNetwork.Lang.fr = {
 	'SEARCH RESULTS': 'Résultats',
 	'Social Share': 'Partager',
 	'Preview': 'Aperçu',
-	'cookies.warning': 'Cette page utilise des cookies afin de stocker sur votre ordinateur des informations au sujet de votre utilisation.',
+	'cookies.warning': 'Les cookies assurent le bon fonctionnement de nos services. En utilisant ces derniers, vous acceptez l\'utilisation des cookies.',
 	'Online data': 'Données en ligne',
 	'Data for download': 'Données à télécharger',
 	'No direct download': 'Données hors-ligne',
