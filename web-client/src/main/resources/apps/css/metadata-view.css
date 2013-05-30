@@ -84,7 +84,7 @@ div.linkPanel div#add-menu-content{
   text-align : center;
 }
 .md-view ul li * .md-logo img {
-  max-width : 30px;
+  width : 30px;
 }
 .md-view ul li {
   border-top : 1px solid transparent;
