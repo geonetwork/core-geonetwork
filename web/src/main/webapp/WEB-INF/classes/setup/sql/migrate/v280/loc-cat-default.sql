@@ -1,5 +1,5 @@
 -- ISO 3 letter code migration
-INSERT INTO Languages VALUES ('cat','Catal‡', 'n', 'n');
+INSERT INTO Languages VALUES ('cat','Catal√†', 'n', 'n');
 
 UPDATE CategoriesDes             SET langid='cat' WHERE langid='ca';
 UPDATE IsoLanguagesDes           SET langid='cat' WHERE langid='ca';
