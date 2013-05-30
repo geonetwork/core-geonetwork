@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,10 +35,11 @@ public class ThesaurusBasedRegionsDAOTest {
     };
     private static ThesaurusManager thesaurusManager;
     private static Thesaurus regionsThesaurus;
-    private static String here = ThesaurusBasedRegionsDAOTest.class.getResource(".").getFile();
+    private static String here;
 
     @BeforeClass
-    public static void init() throws ConfigurationException {
+    public static void init() throws ConfigurationException, UnsupportedEncodingException {
+        here = URLDecoder.decode(ThesaurusBasedRegionsDAOTest.class.getResource(".").getFile(), "UTF-8");
         String sep = File.separator;
         regionsThesaurus = new Thesaurus(langMapper, "regions", "external", "place", new File(here, "external" + sep + "thesauri" + sep
                 + "place" + sep + "regions.rdf"), "");
