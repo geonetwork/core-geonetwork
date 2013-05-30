@@ -463,7 +463,6 @@ REM CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
-ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES service (id);
 ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES services (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (idDes) REFERENCES Categories (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
