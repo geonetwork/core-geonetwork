@@ -735,7 +735,7 @@
 	<register>Créer un compte</register>
 	<registerChoose>Je souhaite </registerChoose>
 	<RegisteredUser>Utilisateur enregistré</RegisteredUser>
-	<registerTitle>Formulaire d'enregistrement</registerTitle>
+	<registerTitle>Formulaire d\'enregistrement</registerTitle>
 	<registrationDetails>Information sur l'inscription :</registrationDetails>
 	<remote>Recherche distante</remote>
 	<remoteType>Distant</remoteType>
