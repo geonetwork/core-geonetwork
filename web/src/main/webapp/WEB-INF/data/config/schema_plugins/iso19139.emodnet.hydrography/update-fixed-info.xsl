@@ -17,7 +17,7 @@
 				':',
 				normalize-space(substring(substring-before(/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification
 					/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']
-					/gmd:organisationName/gco:CharacterString,'='),11)),
+					/gmd:organisationName/gco:CharacterString,'='),11)), ':',
 				/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
 					gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString)"/>
 		</xsl:if>
