@@ -7,11 +7,11 @@
 		<type id="groups">Grupper</type>
 		<type id="categories">Kategorier</type>
 		<type id="operations">Operasjoner</type>
-		<type id="regions">Områder</type>
+		<type id="regions">OmrÃ¥der</type>
 	</entityType>
 	
-	<srcLang>Kildespråk</srcLang>
-	<desLang>Målspråk</desLang>
+	<srcLang>KildesprÃ¥k</srcLang>
+	<desLang>MÃ¥lsprÃ¥k</desLang>
 	
 			<!-- Buttons -->
 	
@@ -22,8 +22,8 @@
 	
 	<validator>
 		<length>
-			<cannotBeEmpty>Den lokaliserte teksten kan ikke være tom</cannotBeEmpty>
-			<invalidMaxSize>Den lokaliserte teksten kan maks være på {VALUE} tengn</invalidMaxSize>
+			<cannotBeEmpty>Den lokaliserte teksten kan ikke vÃ¦re tom</cannotBeEmpty>
+			<invalidMaxSize>Den lokaliserte teksten kan maks vÃ¦re pÃ¥ {VALUE} tengn</invalidMaxSize>
 		</length>		
 	</validator>
 	
