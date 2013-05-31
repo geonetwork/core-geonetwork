@@ -108,7 +108,7 @@ public class TableExport extends NotInReadOnlyModeService {
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(query);
             fileOutputStream = new FileOutputStream(tableDumpFile);
-            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Jeeves.ENCODING));
+            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, "UTF-8"));
             ResultSetMetaData rsMetaData = rs.getMetaData();
 
             if (this.dumpHeader) {
