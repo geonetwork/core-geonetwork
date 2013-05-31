@@ -2,25 +2,25 @@ package org.fao.geonet.services.statistics;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
-import jeeves.utils.Xml;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
