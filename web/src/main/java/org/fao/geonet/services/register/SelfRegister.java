@@ -129,7 +129,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		dbms.execute(query, Integer.valueOf(id), username, passwordHash , surname, name, PROFILE, address,
 				city, state, zip, country, email, organ, kind);
 
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", Integer.valueOf(id), Integer.valueOf(group));
+		dbms.execute("INSERT INTO UserGroups(userId, profile, groupId) VALUES (?, ?, ?)", Integer.valueOf(id), PROFILE, Integer.valueOf(group));
 
 		// Send email to user confirming registration
 
