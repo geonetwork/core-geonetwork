@@ -126,7 +126,9 @@ cat.app = function() {
 	function showMD(uuid, record, url, maximized, width, height) {
 		
 		var bd = Ext.getBody();
-		var style = urlParameters.style || 'sextant';
+		//var style = urlParameters.style || 'sextant';
+		var url = Ext.get(Ext.query('input[id*=configmdviewerurl]')[0]).getValue();
+		var style = OpenLayers.Util.getParameters(url).style || 'sextant';
 		
 		var win = new cat.view.ViewWindow({
 			layout:'fit',
