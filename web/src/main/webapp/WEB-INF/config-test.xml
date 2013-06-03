@@ -25,6 +25,8 @@
 					localized="false" />
 				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />
+				<xml name="strings.pol" file="loc/pol/xml/strings.xml"
+					localized="false" />
 				<xml name="strings.tur" file="loc/tur/xml/strings.xml"
 					localized="false" />
 				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
@@ -53,6 +55,8 @@
 				<xml name="about.dut" file="loc/dut/xml/about.xml"
 					localized="false" />
 				<xml name="about.por" file="loc/por/xml/about.xml"
+					localized="false" />
+				<xml name="about.pol" file="loc/pol/xml/about.xml"
 					localized="false" />
 				<xml name="about.tur" file="loc/tur/xml/about.xml"
 					localized="false" />					
@@ -83,6 +87,8 @@
 					localized="false" />
 				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
+				<xml name="config.pol" file="loc/pol/xml/config.xml"
+					localized="false" />
 				<xml name="config.tur" file="loc/tur/xml/config.xml"
 					localized="false" />					
 				<xml name="config.cat" file="loc/cat/xml/config.xml"
@@ -112,6 +118,8 @@
 					file="loc/dut/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.por"
 					file="loc/por/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.pol"
+					file="loc/pol/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.tur"
 					file="loc/tur/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.cat"
@@ -149,6 +157,8 @@
 					localized="false" />
 				<xml name="strings.por" file="loc/por/xml/strings.xml"
 					localized="false" />
+				<xml name="strings.pol" file="loc/pol/xml/strings.xml"
+					localized="false" />
 				<xml name="strings.tur" file="loc/tur/xml/strings.xml"
 					localized="false" />					
 				<xml name="strings.cat" file="loc/cat/xml/strings.xml"
@@ -177,6 +187,8 @@
 				<xml name="about.dut" file="loc/dut/xml/about.xml"
 					localized="false" />
 				<xml name="about.por" file="loc/por/xml/about.xml"
+					localized="false" />
+				<xml name="about.pol" file="loc/pol/xml/about.xml"
 					localized="false" />
 				<xml name="about.tur" file="loc/tur/xml/about.xml"
 					localized="false" />					
@@ -207,6 +219,8 @@
 					localized="false" />
 				<xml name="config.por" file="loc/por/xml/config.xml"
 					localized="false" />
+				<xml name="config.pol" file="loc/pol/xml/config.xml"
+					localized="false" />
 				<xml name="config.tur" file="loc/tur/xml/config.xml"
 					localized="false" />					
 				<xml name="config.cat" file="loc/cat/xml/config.xml"
@@ -236,6 +250,8 @@
 					file="loc/dut/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.por"
 					file="loc/por/xml/harvesting.xml" localized="false" />
+				<xml name="harvesting.pol"
+					file="loc/pol/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.tur"
 					file="loc/tur/xml/harvesting.xml" localized="false" />
 				<xml name="harvesting.cat"
