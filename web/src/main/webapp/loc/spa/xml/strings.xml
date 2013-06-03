@@ -193,7 +193,7 @@
 	<logoForNode js="true">Usar para el catálogo</logoForNode>
 	<logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
 	<logoSelect js="true">Selecciona una imágen para el logo...</logoSelect>
-
+	<url>URL</url>
 	<createChild>Crear hijo</createChild>
 	<updateChildren>Actualizar hijos</updateChildren>
 	<updateChildrenOk>Hijos actualizados</updateChildrenOk>
@@ -1398,7 +1398,7 @@
 	<advancedOptions.hide>oculta opciones avanzadas</advancedOptions.hide>
 	<latestDatasets>Recientes</latestDatasets>
 	<popularDatasets>Popular</popularDatasets>
-
+	<filter>Filter</filter>
 	<welcome.text>Bienvenido a GeoNetwork</welcome.text>
 	<tag_label>TAGS</tag_label>
 	<map_label>Mapa</map_label>
