@@ -256,12 +256,10 @@
 	<linkedDataset>Pailveluun liittyvät aineistot:</linkedDataset>
 	<linkedFeatureCatalogue>Palveluun liittyvät esitystapaluettelot:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Lisää linkki metatietodokumentista sen ISO 19110-standardin mukaiseen esitystapaluetteloon.</linkedFeatureCatalogueHelp>
-
 	<createLinkedFeatureCatalogue>Linkki esitystapaluetteloon</createLinkedFeatureCatalogue>
 	<layerNameHelp js="true">
 		Kun palvelun metatietodokumentti linkitetään aineistojen metatietodokumentteihin, liitännäisresurssi voi sisältää OGC-palvelussa määritellyn tason nimen. Palvelun karttatasolista voi auttaa metatietojen muokkaajaa lisäämään oikean arvon.
 	</layerNameHelp>
-
 
 	<layerName js="true">Karttatason nimi</layerName>
 	<createIfNotExistButton js="true">Luo uusi metatietodokumentti.</createIfNotExistButton>
@@ -340,7 +338,7 @@
 	<abstract>Tiivistelmä</abstract>
 	<accept>Hyväksy</accept>
 	<actionOnSelect>valintatoiminnot</actionOnSelect>
-
+	<add js="true">add</add>
 	<addNewMetadata>Lisää uusia metatietoja</addNewMetadata>
 	<address>Osoite</address>
 	<admin>Ylläpito</admin>
@@ -417,7 +415,7 @@
 	<createTip>Luo uusi metatietodokumentti tämän metatietopohjan perusteella.</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
 	<crs code="EPSG:4258">ETRS 89</crs>
 	<crs code="EPSG:900913">Google Mercator</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>	
