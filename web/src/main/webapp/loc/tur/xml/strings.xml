@@ -195,7 +195,7 @@
 	<updateChildren>Çocuk (child) güncelle</updateChildren>
 	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>
 	<updateChildrenFailed>Çocuklar (children) güncellenmesinde hata oluştu</updateChildrenFailed>
-	<<batchUpdateChildrenTitle>Çocukları (children) güncelle</<batchUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Çocukları (children) güncelle</batchUpdateChildrenTitle>
 	<updateMode>Ebevyenden çocuk güncellemesine uygulanacak stratejiyi seçiniz : </updateMode>
 	<addMode>Bölümler Ekle</addMode>
 	<replaceMode>Bölümleri Değiştir</replaceMode>

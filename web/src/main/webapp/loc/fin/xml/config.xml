@@ -9,7 +9,7 @@
 	<host>Host-palvelin</host>
 	<port>Portti</port>
 	<securePort>Secure Portti</securePort>
-	<protocol>Preferred Protocol<protocol>
+	<protocol>Preferred Protocol</protocol>
 	
 	<intranet>Intranet</intranet>
 	<network>Verkko</network>
