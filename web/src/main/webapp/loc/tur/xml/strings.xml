@@ -398,7 +398,7 @@
 	<confirmCancel>Editörden çıkmak istediğinize emin misiniz ? (Kaydetmediğiniz bütün değişiklikler kaybolacaktır)</confirmCancel>
 	<confirmCancelCreate>Bu metaveriyi oluşturmayı iptal etmek istediğinizden emin misiniz ?</confirmCancelCreate>
 	<confirmDelete>Bu metaveriyi veritabanından silmek istediğinize  emin misiniz ?</confirmDelete>
-	<confirmMassiveDelete>Seçilen bütün $1  metaverisini veritabanından silmek istediğinize emin misiniz ?</confirmMassiveDelete>
+	<confirmBatchDelete>Seçilen bütün $1  metaverisini veritabanından silmek istediğinize emin misiniz ?</confirmBatchDelete>
 	<confirmNewPassword>Yeni şifreyi doğrula</confirmNewPassword>
 	<confirmPassword>Şifreyi doğrula</confirmPassword>
 	<constraintsTab>Kısıtlar</constraintsTab>
@@ -622,6 +622,7 @@
 	<metadata.admin.index.desc>Lucene indeksini yeniden oluştur (Rebuild)</metadata.admin.index.desc>
 	<metadata.admin.index.failed>İndeksleme işlemi başarısız oldu.</metadata.admin.index.failed>
 	<metadata.admin.index.success>İndeksleme işlemi başarılı oldu.</metadata.admin.index.success>
+	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Lucene indeksini optimize et</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>XLink Önbelleğini sil ve XLinks bağlantılı Kayıtların Indeksini yeniden oluştur</metadata.admin.index.rebuildxlinks.desc>
 
@@ -635,6 +636,7 @@
 	<metadata-samples-add>Örnek metaveri ekle</metadata-samples-add>
 	<metadata-samples-add-failed>Örnek metaveri ekleme başarısız oldu</metadata-samples-add-failed>
 	<metadata-samples-add-success>Örnek metaveri ekleme başarılı oldu</metadata-samples-add-success>
+	<metadata-template-add-success>Metadata template added.</metadata-template-add-success>
 	<metadata-template-order>Şablonları sırala</metadata-template-order>	
 	<metadata-template-order-desc>Şablonlarınızı sırala</metadata-template-order-desc>	
 	<metadata-template-add-default>Şablonlar ekle</metadata-template-add-default>	
@@ -714,7 +716,7 @@
 	<profile>Profil</profile>
 	<profileChoice value="Administrator">Yönetici</profileChoice>
 	<profileChoice value="Editor">Editör</profileChoice>
-	<profileChoice value="RegisteredUse">Kayıtlı Kullanıcı</profileChoice>
+	<profileChoice value="RegisteredUser">Kayıtlı Kullanıcı</profileChoice>
 	<profileChoice value="Reviewer">İçerik Değerlendirici</profileChoice>
 	<profileChoice value="UserAdmin">Kullanıcı Yöneticisi</profileChoice>
 	<profileChoice value="Monitor">System Monitor</profileChoice>
@@ -1309,7 +1311,6 @@
 	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
 	<custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
 	<custom-elementset-add>Eleman Ekle</custom-elementset-add>
-	<concealed>Concealed</concealed>
 
 	<wmslayers>WMS layers</wmslayers>
 	<formatter.admin>Metadata Formatter Admin</formatter.admin>
