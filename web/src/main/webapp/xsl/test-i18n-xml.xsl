@@ -20,6 +20,8 @@
 			<cat/>
 			<fin/>
 			<nor/>
+			<tur/>
+			<pol/>
 		</langs>
 	</xsl:variable>
 
