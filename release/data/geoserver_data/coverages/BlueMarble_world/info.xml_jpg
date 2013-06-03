@@ -1,0 +1,69 @@
+<coverage format = "BlueMarble_world" >
+  <name>world</name>
+  <label>Blue Marble world image</label>
+  <description>Blue Marble world image</description>
+  <wmspath>/</wmspath>
+  <metadataLink about = "http://localhost:8080/geoserver/wms" metadataType = "other" >
+    
+    null
+  
+  </metadataLink>
+  <keywords>Blue,Marble,world,topography,bathymetry,200407</keywords>
+  <!--
+    the default style this CoverageInfoDTO can be represented by.
+    at least must contain the "default" attribute
+  -->
+  <styles default = "raster" />
+  <envelope crs = "GEOGCS['WGS 84', 
+  DATUM['World Geodetic System 1984', 
+    SPHEROID['WGS 84', 6378137.0, 298.257223563, AUTHORITY['EPSG','7030']], 
+    AUTHORITY['EPSG','6326']], 
+  PRIMEM['Greenwich', 0.0, AUTHORITY['EPSG','8901']], 
+  UNIT['degree', 0.017453292519943295], 
+  AXIS['Geodetic longitude', EAST], 
+  AXIS['Geodetic latitude', NORTH], 
+  AUTHORITY['EPSG','4326']]" srsName = "EPSG:4326" >
+    <pos>-180.00000000005 -90.00000014395002</pos>
+    <pos>180.00000028795003 90.00000000005</pos>
+  </envelope>
+  <grid dimension = "2" >
+    <low>0 0 </low>
+    <high>8640 4320 </high>
+    <axisName>Geodetic longitude</axisName>
+    <axisName>Geodetic latitude</axisName>
+  </grid>
+  <CoverageDimension >
+    <name>Red band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <CoverageDimension >
+    <name>Green band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <CoverageDimension >
+    <name>Blue band</name>
+    <description>GridSampleDimension[0.0,255.0]</description>
+    <interval >
+      <min>0.0</min>
+      <max>255.0</max>
+    </interval>
+  </CoverageDimension>
+  <supportedCRSs >
+    <requestCRSs>EPSG:4326</requestCRSs>
+    <responseCRSs>EPSG:4326</responseCRSs>
+  </supportedCRSs>
+  <supportedFormats nativeFormat = "WorldImage" >
+    <formats>GEOTIFF,GTOPO30,ARCGRID,GIF,PNG,JPEG,TIFF,IMAGEMOSAIC</formats>
+  </supportedFormats>
+  <supportedInterpolations default = "nearest neighbor" >
+    <interpolationMethods>nearest neighbor,bilinear,bicubic</interpolationMethods>
+  </supportedInterpolations>
+</coverage>

@@ -1,0 +1,279 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>2.11.0-SNAPSHOT</version>
+  </parent>
+
+
+  <!-- =========================================================== -->
+  <!--     Module Description                                      -->
+  <!-- =========================================================== -->
+  <groupId>org.geonetwork-opensource</groupId>
+  <artifactId>geonetwork-docs</artifactId>
+  <name>GeoNetwork Documentation module</name>
+  <description> GeoNetwork documentation in HTML and PDF format. </description>
+
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+<!--      <distribution>repo</distribution> -->
+    </license>
+  </licenses>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+			<!-- English user documentation -->
+            <execution>
+              <id>user-docs-clean</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>make</executable>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                <workingDirectory>${basedir}/eng/users</workingDirectory>
+              </configuration>
+            </execution>
+
+            <execution>
+             <id>user-docs-build-html</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/users</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>user-docs-build-latex</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>latex</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/users</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>user-docs-build-all-pdf</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>all-pdf</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/users/build/latex</workingDirectory>
+             </configuration>
+           </execution>
+
+          <!-- Developer documentation -->
+           <execution>
+             <id>developer-docs-clean</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>clean</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/developer</workingDirectory>
+             </configuration>
+           </execution>
+
+           <execution>
+             <id>developer-docs-build-html</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/developer</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>developer-docs-build-latex</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>latex</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/developer</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>developer-docs-build-all-pdf</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>all-pdf</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/developer/build/latex</workingDirectory>
+             </configuration>
+           </execution>
+            
+			<!-- English documentation guide docs -->
+            <execution>
+              <id>docguide-docs-clean</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>make</executable>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                <workingDirectory>${basedir}/eng/docguide</workingDirectory>
+              </configuration>
+            </execution>
+
+            <execution>
+             <id>docguide-docs-build-html</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/docguide</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>docguide-docs-build-latex</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>latex</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/docguide</workingDirectory>
+             </configuration>
+           </execution>
+
+            <execution>
+             <id>docguide-docs-build-all-pdf</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>all-pdf</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/eng/docguide/build/latex</workingDirectory>
+             </configuration>
+           </execution>
+      
+
+            <execution>
+              <id>user-docs-clean-fra</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>make</executable>
+                  <arguments>
+                    <argument>clean</argument>
+                  </arguments>
+                <workingDirectory>${basedir}/fra/users</workingDirectory>
+              </configuration>
+            </execution>
+
+            <execution>
+             <id>user-docs-build-html-fra</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>exec</goal>
+             </goals>
+             <configuration>
+               <executable>make</executable>
+                 <arguments>
+                   <argument>html</argument>
+                 </arguments>
+               <workingDirectory>${basedir}/fra/users</workingDirectory>
+             </configuration>
+           </execution>
+            
+
+          <execution>
+            <id>ant-widgets-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ant</executable>
+              <commandlineArgs>clean</commandlineArgs>               
+              <workingDirectory>${basedir}/widgets</workingDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ant-widgets</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ant</executable>
+              
+              <workingDirectory>${basedir}/widgets</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>      
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
