@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <strings>
-	<username>Utilisateur</username>
-	<removedMetadata>Sauvegarde des métadonnées lors de la suppression</removedMetadata>
-	<dir>Répertoire</dir>
 	<site>Site</site>
 	<name>Nom</name>
 	<organ>Organisme</organ>
+	
 	<csw>Serveur CSW Profil ISO</csw>
 	<contactId>Contact</contactId>
 	<title>Titre</title>
 	<abstract>Résumé</abstract>
 	<fees>Frais</fees>
 	<accessConstraints>Contraintes d'accès</accessConstraints>
-    <cswMetadataPublic>Métadonnées insérées sont publiques</cswMetadataPublic>
+	<cswMetadataPublic>Métadonnées insérées sont publiques</cswMetadataPublic>
 	
-	<userSelfRegistration>Enregistrement libre des internautes</userSelfRegistration>
-	<shib>Authentification via Shibboleth </shib>
-	<path>Chemin</path>
-	<attributes>Attributs de configuration Shibboleth</attributes>
-	<surname>Nom</surname>
-	<firstname>Prénom</firstname>
 	
 	<threadedindexing>Indexation Multi-threaded</threadedindexing>
 	<maxthreads>Nombre de processus</maxthreads>
@@ -42,17 +34,39 @@
 	<host>Hôte</host>
 	<port>Port</port>
 	<securePort>Port sécurisé</securePort>
-    <protocol>Protocole préféré</protocol>
-
-	<searchStats>Statistique sur les recherches</searchStats>
-
-	<authentication>Authentification</authentication>
-	
-	<otherlogins>Autoriser les connexions d'autres utilisateurs depuis</otherlogins>
+	<protocol>Protocole préféré</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Réseau</network>
 	<netmask>Masque de sous-réseau</netmask>
+
+	<searchStats>Statistique sur les recherches</searchStats>
+
+	<z3950>Z39.50 Serveur</z3950>
+	<enable>Activé</enable>
+
+
+	<oai>Point d'accès OAI</oai>
+	<datesearch>Recherche par date</datesearch>
+	<datesearchopt>
+		<dsopt label="Étendue temporelle">1</dsopt>
+		<dsopt label="Date de modification">2</dsopt>
+	</datesearchopt>
+	
+	<tokentimeout>Délai d'expiration du jeton de reprise (ResumptionToken)</tokentimeout>
+	<cachesize>Taille du cache</cachesize>
+
+	<xlinkResolver>Résolution des XLink</xlinkResolver>
+
+	<inspire>INSPIRE</inspire>
+
+	<harvester>Moissonnage</harvester>
+	<enableEditing>Autoriser l'édition des métadonnées moissonnées</enableEditing>
+
+	<downloadservice>Service de téléchargement</downloadservice>
+	<leave>Utiliser les liens de la section distribution - sans changement</leave>
+	<simple>Utiliser le service de téléchargement GeoNetwork (resources.get)</simple>
+	<withdisclaimer>Utiliser le service analysant les contraintes d'accès GeoNetwork (file.disclaimer)</withdisclaimer>
 
 	<selectionmanager>Résultat de recherches</selectionmanager>
 	<maxrecords>Nombre maximum d'items sélectionnés</maxrecords>
@@ -104,60 +118,53 @@
 			<minute label="45">45</minute>
 		</minutes>
 
-	<z3950>Z39.50 Serveur</z3950>
-	<enable>Activé</enable>
 
-	<oai>Point d'accès OAI</oai>
-	<datesearch>Recherche par date</datesearch>
-	<datesearchopt>
-		<dsopt label="Étendue temporelle">1</dsopt>
-		<dsopt label="Date de modification">2</dsopt>
-	</datesearchopt>
-	
-	<tokentimeout>Délai d'expiration du jeton de reprise (ResumptionToken)</tokentimeout>
-	<cachesize>Taille du cache</cachesize>
+	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
 
-	<xlinkResolver>Résolution des XLink</xlinkResolver>
+	<localrating>Evaluation Local</localrating>
+	<autofixing>Correction automatique</autofixing>
 
-    <inspire>INSPIRE</inspire>
-	
-	<harvester>Moissonnage</harvester>
-	<enableEditing>Autoriser l'édition des métadonnées moissonnées</enableEditing>
-	
-	<downloadservice>Service de téléchargement</downloadservice>
-	<leave>Utiliser les liens de la section distribution - sans changement</leave>
-	<simple>Utiliser le service de téléchargement GeoNetwork (resources.get)</simple>
-	<withdisclaimer>Utiliser le service analysant les contraintes d'accès GeoNetwork (file.disclaimer)</withdisclaimer>
+	<proxy>Proxy</proxy>
+	<use>Activé</use>
+	<username>Utilisateur</username>
 
 	<feedback>Alerte par email</feedback>
 	<email>Email</email>
 	<smtpHost>Serveur SMTP</smtpHost>
 	<smtpPort>Port SMTP</smtpPort>
 
-	<clickablehyperlinks>Hyperliens cliquables</clickablehyperlinks>
+	<userSelfRegistration>Enregistrement libre des internautes</userSelfRegistration>
 
-	<localrating>Evaluation Local</localrating>
-    <autofixing>Correction automatique</autofixing>
-	
-	<proxy>Proxy</proxy>
-	<use>Activé</use>
+	<removedMetadata>Sauvegarde des métadonnées lors de la suppression</removedMetadata>
+	<dir>Répertoire</dir>
 
-    <metadataEnableInspireSearch>Activer le panneau de recherche</metadataEnableInspireSearch>
+	<authentication>Authentification</authentication>
 
-    <metadataViews>Affichage des métadonnées</metadataViews>
-    <metadataEnableSimpleView>Activer la vue simple</metadataEnableSimpleView>
-    <metadataEnableIsoView>Activer la vue ISO</metadataEnableIsoView>
-    <metadataEnableInspireView>Activer la vue INSPIRE</metadataEnableInspireView>
-    <metadataEnableXmlView>Activer la vue XML</metadataEnableXmlView>
-    <metadataDefaultView>Vue par défaut</metadataDefaultView>
-    <metadataSimpleView>Vue simple</metadataSimpleView>
-    <metadataIsoView>Vue ISO</metadataIsoView>
-    <metadataInspireView>Vue INSPIRE</metadataInspireView>
-    <metadataXmlView>Vue XML</metadataXmlView>
-    <metadataAdvancedView>Vue avancée</metadataAdvancedView>
-	
+	<otherlogins>Autoriser les connexions d'autres utilisateurs depuis</otherlogins>
+
+	<shib>Authentification via Shibboleth </shib>
+	<path>Chemin</path>
+	<attributes>Attributs de configuration Shibboleth</attributes>
+	<surname>Nom</surname>
+	<firstname>Prénom</firstname>
+
+	<metadataEnableInspireSearch>Activer le panneau de recherche</metadataEnableInspireSearch>
+
+	<metadataViews>Affichage des métadonnées</metadataViews>
+	<metadataEnableSimpleView>Activer la vue simple</metadataEnableSimpleView>
+	<metadataEnableIsoView>Activer la vue ISO</metadataEnableIsoView>
+	<metadataEnableInspireView>Activer la vue INSPIRE</metadataEnableInspireView>
+	<metadataEnableXmlView>Activer la vue XML</metadataEnableXmlView>
+	<metadataDefaultView>Vue par défaut</metadataDefaultView>
+	<metadataSimpleView>Vue simple</metadataSimpleView>
+	<metadataIsoView>Vue ISO</metadataIsoView>
+	<metadataInspireView>Vue INSPIRE</metadataInspireView>
+	<metadataXmlView>Vue XML</metadataXmlView>
+	<metadataAdvancedView>Vue avancée</metadataAdvancedView>
+
 	<metadataPrivs>Privilèges des métadonnées</metadataPrivs>
 	<md.usergrouponly>Définir les privilèges uniquement pour les groupes de l'utilisateur</md.usergrouponly>
+
 	<!-- Buttons -->
 
 	<save>Sauvegarder</save>
@@ -234,7 +241,7 @@
 			Après changement de l'identifiant, il est nécessaire de mettre à jour l'index et redéfinir le logo
 			à partir de l'interface d'administration.
 		</tip>
-		
+
 		<tip id="site.name">Used to identify the installation.</tip>
 
 		<!-- server -->
@@ -277,13 +284,13 @@
 
 		<tip id="z3950.port">
 			Change the Z39.50 listening port.
-			<br />
+			<br/>
 			<b>Please note:</b>
 			restart GeoNetwork to make this change active.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -291,32 +298,32 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Si défini, GeoNetwork permet de trouver des hyperliens cliquables dans les métadonnées.
 		</tip>
-		
+
 		<!-- local rating -->
 		<tip id="localrating.enable">
 			Si défini, GeoNetwork va calculer les cotes de l'utilisateur pour les métadonnées de ce nœud seulement (pas répartis entre les autres nœuds GeoNetwork).
 		</tip>
-		
+
 		<!-- automatic fixes -->
 		<tip id="autofixing.enable">
-            Lorsqu'elle est activée, GeoNetwork s'applique automatiquement les correctifs de certains lorsque vous enregistrez des métadonnées.
-        </tip>
+			Lorsqu'elle est activée, GeoNetwork s'applique automatiquement les correctifs de certains lorsque vous enregistrez des métadonnées.
+		</tip>
 
 		<!-- proxy -->
 
@@ -363,22 +370,22 @@
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Si ensemble, la langue de recherche est automatiquement détecté. Notez que cela ne fonctionne pas très bien des termes de recherche de courte durée.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Seulement retourner des résultats de recherche dans la langue demandée.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Retour des résultats de recherche dans la langue demandée sur le dessus.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Ignorer la langue demandée pour les résultats de recherche.
-        </tip>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Si ensemble, la langue de recherche est automatiquement détecté. Notez que cela ne fonctionne pas très bien des termes de recherche de courte durée.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Seulement retourner des résultats de recherche dans la langue demandée.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Retour des résultats de recherche dans la langue demandée sur le dessus.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Ignorer la langue demandée pour les résultats de recherche.
+		</tip>
 
-    </tips>
-	
+	</tips>
+
 	<data.dataDir>Répertoire des données :</data.dataDir>
 	<data.resources>Répertoire des ressources (eg. logos):</data.resources>
 	<data.configDir>Répertoire de la configuration locale :</data.configDir>
@@ -399,20 +406,20 @@
 	<index>Information sur l'index Lucene</index>
 	<main>Information sur le système</main>
 	<catalogue>Information sur le catalogue</catalogue>
-	<database>Information sur la base de données</database>
 	<system>Identification du catalogue</system>
+	<database>Information sur la base de données</database>
 	<siteId>Identifiant du catalogue :</siteId>
 	<version>Version :</version>
 	<subVersion>Sous-version :</subVersion>
 	<index.lucene.config>Configuration Lucene :</index.lucene.config>
 	<db.url>URL de connexion :</db.url>
-	<db.openattempt>Status :</db.openattempt>	
-  <db.numactive>Connexions utilisées :</db.numactive>	
-  <db.numidle>Connexions disponibles :</db.numidle>	
-  <db.maxactive>Nombre maximum de connexions :</db.maxactive>	
-  <db.statserror>Statistique :</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-    <hidewithheldelements>Cacher les éléments nécessitant autorisation (ie. withheld)</hidewithheldelements>
-    <keepMarkedElement>Conserver les éléments (sinon ils sont supprimés)</keepMarkedElement>
+	<db.openattempt>Status :</db.openattempt>
+	<db.numactive>Connexions utilisées :</db.numactive>
+	<db.numidle>Connexions disponibles :</db.numidle>
+	<db.maxactive>Nombre maximum de connexions :</db.maxactive>	
+	<db.statserror>Statistique :</db.statserror>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Cacher les éléments nécessitant autorisation (ie. withheld)</hidewithheldelements>
+	<keepMarkedElement>Conserver les éléments (sinon ils sont supprimés)</keepMarkedElement>
 </strings>
 
