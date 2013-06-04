@@ -1,0 +1,83 @@
+<assembly>
+ <id>bin</id>
+ <formats>
+  <format>zip</format>
+ </formats>
+ <includeBaseDirectory>false</includeBaseDirectory>
+ <fileSets>
+  <fileSet>
+   <!-- the main webapp -->
+   <directory>web/target/geonetwork</directory>
+   <outputDirectory>geonetwork/web/geonetwork</outputDirectory>
+   <includes>
+    <include>**/*</include>
+   </includes>
+  </fileSet>
+  <fileSet>
+   <!-- the geoserver webapp -->
+   <directory>geoserver/target</directory>
+   <outputDirectory>geonetwork/web</outputDirectory>
+   <includes>
+    <include>*.war</include>
+   </includes>
+  </fileSet>
+  <fileSet>
+   <!-- the data directory -->
+   <directory>release/data</directory>
+   <outputDirectory>geonetwork/data</outputDirectory>
+   <includes>
+    <include>**/*</include>
+   </includes>
+  </fileSet>
+  <fileSet>
+   <!-- windows batch files -->
+   <directory>release/bin</directory>
+   <outputDirectory>geonetwork/bin</outputDirectory>
+   <lineEnding>keep</lineEnding>
+   <includes>
+    <include>**/*</include>
+   </includes>
+   <excludes>
+    <exclude>*.sh</exclude>
+   </excludes>
+  </fileSet>
+  <fileSet>
+   <!-- unix shell scripts -->
+   <directory>release/bin</directory>
+   <lineEnding>unix</lineEnding>
+   <outputDirectory>geonetwork/bin</outputDirectory>
+   <fileMode>0755</fileMode>
+   <directoryMode>0755</directoryMode>
+   <includes>
+    <include>*.sh</include>
+   </includes>
+  </fileSet>
+<!-- TODO docs:
+  <fileSet>
+   <directory>release</directory>
+   <outputDirectory>geoserver-2.0-SNAPSHOT</outputDirectory>
+   <includes>
+    <include>LICENSE.txt</include>
+    <include>GPL.txt</include>
+    <include>RUNNING.txt</include>
+    <include>README.txt</include>
+   </includes>
+  </fileSet>-->
+  <fileSet>
+   <!-- Dependency configuration 
+   <directory>web/target/dependency/jetty</directory>
+   <outputDirectory>geonetwork/jetty</outputDirectory>
+   <includes>
+    <include>**/*</include>
+   </includes>
+  </fileSet>
+  <fileSet>-->
+   <!-- jetty configuration -->
+   <directory>release/jetty</directory>
+   <outputDirectory>geonetwork/jetty</outputDirectory>
+   <includes>
+    <include>**/*</include>
+   </includes>
+  </fileSet>
+ </fileSets>
+</assembly>

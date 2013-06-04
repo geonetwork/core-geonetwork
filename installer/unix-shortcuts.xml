@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+	<!-- =================================================================================== -->
+  
+	<skipIfNotSupported/>
+	<programGroup defaultName="GeoNetwork opensource" location="applications"/>
+
+	<!-- =================================================================================== -->
+	<!-- GN open homepage -->
+  
+	<shortcut 
+		name="Open GeoNetwork opensource" 
+		description="This opens the GeoNetwork homepage in a web browser"
+		target="$INSTALL_PATH/bin/win/start-stdln.html"
+		commandLine="" 
+		workingDirectory="$INSTALL_PATH" 
+		iconFile="$INSTALL_PATH/bin/ico/gn.ico" 
+		iconIndex="0" 
+		initialState="normal" 
+		programGroup="yes"
+		startup="no">
+		<createForPack name="Core"/>
+	</shortcut>
+	
+	<!-- =================================================================================== -->
+  	<!-- GN start -->
+   
+	<shortcut
+		name="Start server"
+		description="This starts the GeoNetwork server"
+		programGroup="yes"
+		desktop="no"
+		startup="no"
+		target="$INSTALL_PATH/bin/start-geonetwork.sh"
+		initialState="noShow"
+		workingDirectory="$INSTALL_PATH/bin"
+		type="Application"
+		iconFile="$INSTALL_PATH/bin/ico/gnstart.ico"
+		iconIndex="0" 
+		encoding="UTF-8">
+		<createForPack name="Core"/>
+   </shortcut>
+   
+	<!-- =================================================================================== -->
+	<!-- GN stop -->
+   
+	<shortcut
+		name="Stop server"
+		description="This stops the GeoNetwork server"
+		programGroup="yes"
+		desktop="no"
+		target="$INSTALL_PATH/bin/stop-geonetwork.sh"
+		initialState="noShow"
+		workingDirectory="$INSTALL_PATH/bin"
+		type="Application"
+		iconFile="$INSTALL_PATH/bin/ico/gnstop.ico"
+		iconIndex="0"
+		encoding="UTF-8">
+		<createForPack name="Core"/>
+   </shortcut>
+	
+	<!-- =================================================================================== -->
+	<!-- GAST -->
+   
+	<shortcut
+		name="Start GAST"
+		description="This starts GeoNetwork's Administrator Survival Tool"
+		programGroup="yes"
+		desktop="no"
+		commandLine="$INSTALL_PATH/bin/gast.sh"
+		initialState="noShow"
+		workingDirectory="$INSTALL_PATH/bin"
+		type="Application"
+		iconFile="$INSTALL_PATH/bin/ico/gast.ico"
+		iconIndex="0"
+		encoding="UTF-8">
+		<createForPack name="GAST"/>
+   </shortcut>
+	
+	<!-- =================================================================================== -->
+	<!-- Documentation -->
+	
+	<shortcut
+		name="Documentation" 
+		description="GeoNetwork opensource documentation"
+		target="$INSTALL_PATH/web/geonetwork/docs/eng/users"
+		commandLine="" 
+		workingDirectory="$INSTALL_PATH" 
+		iconFile="$INSTALL_PATH/bin/ico/docs.ico" 
+		iconIndex="0" 
+		initialState="normal" 
+		programGroup="yes"
+		startup="no">
+   </shortcut>
+
+  <!-- =================================================================================== -->
+  <!-- GN readme -->
+  
+  <shortcut 
+		name="Release notes " 
+		description="GeoNetwork desktop release notes "
+		target="$INSTALL_PATH/web/geonetwork/docs/readme.html"
+		commandLine="" 
+		workingDirectory="$INSTALL_PATH" 
+		iconFile="$INSTALL_PATH/bin/ico/text.ico" 
+		iconIndex="0" 
+		initialState="normal" 
+		programGroup="yes"
+		startup="no">
+		<createForPack name="Core"/>
+  </shortcut>
+	
+  <!-- =================================================================================== -->
+	<!-- License -->
+	
+  <shortcut 
+		name="GPL License" 
+		description="GeoNetwork opensource GNU-GPL license "
+		target="$INSTALL_PATH/web/geonetwork/docs/license.html"
+		commandLine="" 
+		workingDirectory="$INSTALL_PATH" 
+		iconFile="$INSTALL_PATH/bin/ico/text.ico" 
+		iconIndex="0" 
+		initialState="normal" 
+		programGroup="yes"
+		startup="no">
+  </shortcut>
+	
+  <!-- =================================================================================== -->
+  	<!-- Uninstall -->
+
+	<shortcut
+     name="Uninstaller"
+     programGroup="yes"
+     target="java"
+     commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"     
+     initialState="noShow"
+     iconFile="trashcan_full"
+     iconIndex="0" 
+     type="Application"
+     encoding="UTF-8">
+   </shortcut>
+   
+	<!-- =================================================================================== -->
+   
+</shortcuts>

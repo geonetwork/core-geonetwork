@@ -1,0 +1,2 @@
+﻿.. |project_name| replace:: GeoNetwork
+.. |project_url| replace:: geonetwork
