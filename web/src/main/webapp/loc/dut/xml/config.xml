@@ -4,7 +4,7 @@
 	<site>Site</site>
 	<name>Naam</name>
 	<organ>Organisatie</organ>
-	
+
 	<server>Server</server>
 	<host>Host</host>
 	<port>Poort</port>
@@ -14,45 +14,45 @@
 	<intranet>Intranet</intranet>
 	<network>Netwerk</network>
 	<netmask>Netmask</netmask>
-	
+
 	<searchStats>Zoek Statistieken</searchStats>
 
 	<z3950>Z39.50 Server</z3950>
 	<enable>Aanzetten</enable>
-		
+
 	<threadedindexing>Multi-threaded Indexering</threadedindexing>
 	<maxthreads>Aantal behandelde threads</maxthreads>
 	<recommendedThreads>Aanbevolen</recommendedThreads>
 	<reasonForOne>Databank niet getest of niet ondersteund</reasonForOne>
 	<reasonForMore>Van het aantal processors</reasonForMore>
 
-    <multilingual>meertalige instellingen</multilingual>
-    <autoDetectEnable>Schakel automatische detectie zoek taal</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Zoekresultaten in gewenste taal gesorteerd op de top</requestedlanguagesorted>
+	<multilingual>meertalige instellingen</multilingual>
+	<autoDetectEnable>Schakel automatische detectie zoek taal</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Zoekresultaten in gewenste taal gesorteerd op de top</requestedlanguagesorted>
 
 	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+	<datesearch>Datesearch</datesearch>
+	<datesearchopt>
+		<dsopt label="temporal extent">1</dsopt>
+		<dsopt label="modification date">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken Timeout </tokentimeout>
+	<cachesize>Cachesize</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
-    <inspire>INSPIRE</inspire>
-	
+	<inspire>INSPIRE</inspire>
+
 	<harvester>Harvesting</harvester>
 	<enableEditing>Allow editing on harvested records</enableEditing>
-	
+
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
@@ -114,29 +114,29 @@
 	<abstract>Samenvatting</abstract>
 	<fees>Kosten</fees>
 	<accessConstraints>Toegangsrestricties</accessConstraints>
-    <cswMetadataPublic>Toegevoegde metadata is publiek beschikbaar</cswMetadataPublic>
-    
+	<cswMetadataPublic>Toegevoegde metadata is publiek beschikbaar</cswMetadataPublic>
+
 	<clickablehyperlinks>Aanklikbare hyperlinks</clickablehyperlinks>
-	
+
 	<localrating>Lokale Waardering</localrating>
-    <autofixing>Automatische correcties</autofixing>
-	
+	<autofixing>Automatische correcties</autofixing>
+
 	<proxy>Proxy</proxy>
 	<use>Gebruik</use>
 	<username>Gebruikersnaam</username>
-	
+
 	<feedback>Antwoord</feedback>
 	<email>E-mail</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Poort</smtpPort>
-	
+
 	<userSelfRegistration>gebruikers zelf-registratie</userSelfRegistration>
-	
+
 	<removedMetadata>Verwijderde metadata</removedMetadata>
 	<dir>Map</dir>
-		
+
 	<authentication>Authentication</authentication>
-	
+
 	<otherlogins>Sta andere gebruikers toe om in te loggen via</otherlogins>
 
 	<shib>Shibboleth Authenticatie</shib>
@@ -145,108 +145,109 @@
 	<surname>Achternaam</surname>
 	<firstname>Voornaam</firstname>
 
-    <metadataEnableInspireSearch>Inschakelen zoekpaneel</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Inschakelen zoekpaneel</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Inschakelen eenvoudige view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Inschakelen ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Inschakelen INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Inschakelen XML view</metadataEnableXmlView>
-    <metadataDefaultView>Standaard view</metadataDefaultView>
-    <metadataSimpleView>Eenvoudige view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Geavanceerde view</metadataAdvancedView>
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Inschakelen eenvoudige view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Inschakelen ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Inschakelen INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Inschakelen XML view</metadataEnableXmlView>
+	<metadataDefaultView>Standaard view</metadataDefaultView>
+	<metadataSimpleView>Eenvoudige view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Geavanceerde view</metadataAdvancedView>
 
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
-	
+
 	<save>Bewaren</save>
 	<refresh>Vernieuwen</refresh>
-	
+
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>Het veld '{NAME}' kan niet leeg zijn</cannotBeEmpty>
 			<invalidMinSize>Het veld '{NAME}' moet minimaal {VALUE} tekens(s) lang zijn</invalidMinSize>
 			<invalidMaxSize>Het veld '{NAME}' kan maximaal {VALUE} teken(s) lang zijn</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>Het veld '{NAME}' moet een integer waarde bevatten</notInt>
 			<invalidMinValue>Het veld '{NAME}' moet &gt;= {VALUE}</invalidMinValue>
 			<invalidMaxValue>Het veld '{NAME}' moet &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>Het veld '{NAME}' moet alfanumeriek zijn en beginnen met een letter</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>Het veld '{NAME}' bevat geen geldige waarde voor Hostname</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>Het veld '{NAME}' bevat geen geldige URL waarde</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>Het veld '{NAME}' bevat geen geldig IP-adres</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Kan de systeemconfiguratie niet openen</cannotGet>
 	<cannotSave>Kan de systeemconfiguratie niet opslaan</cannotSave>
 	<saveOk>Systeemconfiguratie opgeslagen.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.name">
 			Gebruikt om deze installatie te identificeren.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			De <b>host</b> en <b>poort</b> waarden worden gebruikt om de URL samen te stellen
 			voor deze GeoNetwork server. Ze worden bijvoorbeeld gebruikt tijdens het editeren 
 			van metadata, om de bron voor de koppelingen aan te maken en om de specificaties
-                  van de server door te geven tijdens een CS/W aanvraag.
+			van de server door te geven tijdens een CS/W aanvraag.
 			<br/>
 			<b>Opmerking:</b> u dient de GAST tool te gebruiken om deze wijzigingen door te voeren
-                  in de metadata. 
+			in de metadata. 
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			De <b>netwerk</b> en <b>netmask</b> parameters worden gebruikt om de interne 
-                  connectie met de server mogelijk te maken. 
+			connectie met de server mogelijk te maken. 
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			Als deze optie is ingeschakeld zal GeoNetwork de Z39.50 servercomponent gebruiken.
 			Deze component maakt gebruik van het ISO23950 protocol.
 			<br/>
 			<b>Opmerking:</b> start GeoNetwork opnieuw om deze wijziging door te voeren. 
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Wijzig de Z39.50 poort (listening).
 			<br/>
 			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren. 
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -254,17 +255,17 @@
 			<br/>
 			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Opmerking:</b> Start GeoNetwork opnieuw om deze wijziging door te voeren.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
-		
+
 		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
 			De CSW ISO Profile server wordt geactiveerd indien geselecteerd. Andere catalogi kunnen (publieke) metadata harvesten.
@@ -280,7 +281,7 @@
 		<tip id="csw.accessConstraints">Toegangsbeperkingen</tip>
 
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Als deze optie is ingeschakeld zal GeoNetwork aanklikbare hyperlinks tonen in de metadata.
 		</tip>
@@ -289,41 +290,41 @@
 		<tip id="localrating.enable">
 			Als deze optie is ingeschakeld zal GeoNetwork de gebruikerswaardering van metadata alleen van deze node berekenen (niet gedistribueerd met andere GeoNetwork nodes).
 		</tip>
-		
+
 		<!-- automatic fixes -->
 		<tip id="autofixing.enable">
-            Wanneer ingeschakeld, GeoNetwork geldt automatisch bepaalde correcties bij het opslaan van metadata.
-        </tip>
+			Wanneer ingeschakeld, GeoNetwork geldt automatisch bepaalde correcties bij het opslaan van metadata.
+		</tip>
 
 		<!-- proxy -->
-		
+
 		<tip id="proxy.use">
 			Als deze optie is ingeschakeld zal GeoNetwork de proxy gebruiken als externe
 			nodes worden geraadpleegd. Bijvoorbeeld voor het harvesten van metadata.
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			Dit is het e-mailadres van de administrator waar respons terecht moet komen.
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			De SMTP <b>host</b> en <b>poort</b> waarden worden gebruikt om een e-mail te verzenden
 			naar gebruikers van GeoNetwork wanneer een bepaalde dataset wordt gedownload.
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Map waar metadata wordt opgeslagen (in MEF formaat) wanneer deze wordt verwijderd.
 		</tip>
-	<!-- userSelfRegistration -->
-		
+		<!-- userSelfRegistration -->
+
 		<tip id="userSelfRegistration.enable">
 			Indien geselecteerd, dan zijn gebruikers in staat om zichzelf te registreren. 
-            Deze gebruikers krijgen het GUEST group profiel. Er wordt een e-mail gestuurd 
-            naar de gebruiker met een gebruikersnaam en wachtwoord via het 'feedback' e-mail account.
+			Deze gebruikers krijgen het GUEST group profiel. Er wordt een e-mail gestuurd 
+			naar de gebruiker met een gebruikersnaam en wachtwoord via het 'feedback' e-mail account.
 			<br/>
 		</tip>
 
@@ -349,21 +350,22 @@
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Indien ingesteld, wordt de zoektaal automatisch gedetecteerd. Merk op dat dit niet zo goed bij korte zoektermen.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Alleen zoekresultaten weergegeven in de gewenste taal.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Terug zoekresultaten in de gewenste taal op de top.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Negeer gevraagde taal voor de zoekresultaten.
-        </tip>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Indien ingesteld, wordt de zoektaal automatisch gedetecteerd. Merk op dat dit niet zo goed bij korte zoektermen.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Alleen zoekresultaten weergegeven in de gewenste taal.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Terug zoekresultaten in de gewenste taal op de top.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Negeer gevraagde taal voor de zoekresultaten.
+		</tip>
 
 	</tips>
+
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
@@ -384,20 +386,20 @@
 	<index>Lucene index informatie</index>
 	<main>Systeem informatie</main>
 	<catalogue>Cataloog informatie</catalogue>
-	<database>Databank informatie</database>
 	<system>Cataloog configuratie</system>
+	<database>Databank informatie</database>
 	<siteId>Cataloog identifier:</siteId>
 	<version>Versie:</version>
 	<subVersion>Subversie:</subVersion>
 	<index.lucene.config>Lucene configuratie:</index.lucene.config>
 	<db.url>Databank URL:</db.url>	
-	<db.openattempt>Databank Status:</db.openattempt>	
-	<db.numactive>Databank connecties in gebruik:</db.numactive>	
-	<db.numidle>Databank connecties beschikbaar:</db.numidle>	
-	<db.maxactive>Maximum aantal databank connecties:</db.maxactive>	
+	<db.openattempt>Databank Status:</db.openattempt>
+	<db.numactive>Databank connecties in gebruik:</db.numactive>
+	<db.numidle>Databank connecties beschikbaar:</db.numidle>
+	<db.maxactive>Maximum aantal databank connecties:</db.maxactive>
 	<db.statserror>Databank statistieken:</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

@@ -8,9 +8,16 @@
 	<host>Хост</host>
 	<port>Порт</port>
 	<securePort>Secure Порт</securePort>
-  <protocol>Preferred Protocol</protocol>
+	<protocol>Preferred Protocol</protocol>
+
+	<intranet>Локальная сеть</intranet>
+	<network>Адрес</network>
+	<netmask>Маска</netmask>
 
 	<searchStats>Search Statistics</searchStats>
+
+	<z3950>Сервер Z39.50</z3950>
+	<enable>Включить</enable>
 
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>
@@ -18,19 +25,37 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
-    <multilingual>Многоязычный настройки</multilingual>
-    <autoDetectEnable>Включение автоматического обнаружения языка поискового запроса</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Результаты поиска в отсортированных просил язык на вершине</requestedlanguagesorted>
+	<multilingual>Многоязычный настройки</multilingual>
+	<autoDetectEnable>Включение автоматического обнаружения языка поискового запроса</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Результаты поиска в отсортированных просил язык на вершине</requestedlanguagesorted>
 
-	<intranet>Локальная сеть</intranet>
-	<network>Адрес</network>
-	<netmask>Маска</netmask>
+	<oai>OAI Provider</oai>
+	<datesearch>Datesearch</datesearch>
+	<datesearchopt>
+		<dsopt label="temporal extent">1</dsopt>
+		<dsopt label="modification date">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken Timeout </tokentimeout>
+	<cachesize>Cachesize</cachesize>
+
+	<xlinkResolver>XLink Resolver</xlinkResolver>
+
+	<inspire>INSPIRE</inspire>
+
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+
+	<downloadservice>Data-For-Download Service</downloadservice>
+	<leave>Use metadata linkage as is - no changes to linkage</leave>
+	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
+	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
 
 	<selectionmanager>Metadata Search Results</selectionmanager>
 	<maxrecords>Maximum selected records</maxrecords>
@@ -82,43 +107,18 @@
 			<minute label="45">45</minute>
 		</minutes>
 
-	<z3950>Сервер Z39.50</z3950>
-	<enable>Включить</enable>
-
-	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
-
-	<xlinkResolver>XLink Resolver</xlinkResolver>
-
-    <inspire>INSPIRE</inspire>
-	
-	<harvester>Harvesting</harvester>
-	<enableEditing>Allow editing on harvested records</enableEditing>
-	
-	<downloadservice>Data-For-Download Service</downloadservice>
-	<leave>Use metadata linkage as is - no changes to linkage</leave>
-	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
-	<withdisclaimer>Use GeoNetwork disclaimer and constraints service (file.disclaimer)</withdisclaimer>
-
 	<csw>CSW ISO Profile</csw>
 	<contactId>Contact</contactId>
 	<title>Title</title>
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
-    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
-	
+	<cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
+
 	<clickablehyperlinks>Работающую гиперссылку</clickablehyperlinks>
-	
+
 	<localrating>Местные Рейтинг</localrating>
-    <autofixing>Автоматического исправления</autofixing>
+	<autofixing>Автоматического исправления</autofixing>
 
 	<proxy>Прокси</proxy>
 	<use>Использовать</use>
@@ -135,7 +135,7 @@
 	<dir>Каталог</dir>
 
 	<authentication>Аутентификация</authentication>
-	
+
 	<otherlogins>Allow other users to login from</otherlogins>
 
 	<shib>Аутентификация Shibboleth</shib>
@@ -144,22 +144,23 @@
 	<surname>Фамилия</surname>
 	<firstname>Имя</firstname>
 
-    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
-	
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+	<metadataDefaultView>Default view</metadataDefaultView>
+	<metadataSimpleView>Simple view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Advanced view</metadataAdvancedView>
+
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
 
 	<save>Сохранить</save>
@@ -241,9 +242,9 @@
 			<b>Примечание:</b> Для вступления изменений в силу необходимо
 			перезапустить GeoNetwork.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -251,20 +252,20 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
 
 		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
-			If set, this will enable the CSW ISO Profile server functionnality. It will allow other catalogs to harvest it.
+			If set, this will enable the CSW ISO Profile server functionality. It will allow other catalogs to harvest it.
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
@@ -275,9 +276,9 @@
 		<tip id="csw.abstract">Abstract</tip>
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
-	
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Если установлено, GeoNetwork покажет работающую гиперссылку в метаданных.
 		</tip>
@@ -286,11 +287,11 @@
 		<tip id="localrating.enable">
 			Если установлено, GeoNetwork будет вычислять пользователей оценки для метаданных из этого узла (хоть и не распределяется между другими узлами GeoNetwork).
 		</tip>
-		
+
 		<!-- automatic fixes -->
 		<tip id="autofixing.enable">
-            Когда включен, GeoNetwork автоматически применяет определенные исправления при сохранении метаданных.
-        </tip>
+			Когда включен, GeoNetwork автоматически применяет определенные исправления при сохранении метаданных.
+		</tip>
 
 		<!-- proxy -->
 
@@ -315,8 +316,9 @@
 		<tip id="removedMd.dir">
 			Каталог для хранения метаданных (в формате MEF) после их удаления.
 		</tip>
-        <!-- userSelfRegistration -->
-		
+
+		<!-- userSelfRegistration -->
+
 		<tip id="userSelfRegistration.enable">
 			If set, users will be able to register themselves. Self-registered
 			users are assigned to the GUEST group. An email is sent to the
@@ -325,8 +327,6 @@
 			<br/>
 		</tip>
 
-
-		
 		<tip id="downloadservice.simple">
 				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
 		</tip>
@@ -349,21 +349,22 @@
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Если установлено, поиск языка автоматически. Обратите внимание, что это не очень хорошо работают на короткие сроки поиска.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Только возвращать результаты поиска в требуемом языке.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Вернуться в результаты поиска в запрашиваемом языке на вершине.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Игнорировать просил язык для результатов поиска.
-        </tip>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Если установлено, поиск языка автоматически. Обратите внимание, что это не очень хорошо работают на короткие сроки поиска.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Только возвращать результаты поиска в требуемом языке.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Вернуться в результаты поиска в запрашиваемом языке на вершине.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Игнорировать просил язык для результатов поиска.
+		</tip>
 
-    </tips>
+	</tips>
+
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
@@ -384,19 +385,20 @@
 	<index>Lucene index information</index>
 	<main>System information</main>
 	<catalogue>Catalogue information</catalogue>
-	<database>Database information</database>
 	<system>Catalogue configuration</system>
+	<database>Database information</database>
 	<siteId>Catalogue identifier:</siteId>
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
 	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
 	<db.statserror>Database statistics:</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
+
