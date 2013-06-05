@@ -109,7 +109,7 @@ public class PrepareFileDownload implements Service
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
 		@SuppressWarnings("unchecked")
         List<Element> downloadLinks = xp.selectNodes(elBrief);
-		response = processDownloadLinks(context, id, dm.getSiteURL(), downloadLinks, response);
+		response = processDownloadLinks(context, id, dm.getSiteURL(context), downloadLinks, response);
 
 		//--- now process web links so that they can be displayed as well
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:LINK')]");

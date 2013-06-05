@@ -104,7 +104,7 @@ public class DefaultStatusActions implements StatusActions {
 
 
 		dm = gc.getDataManager();
-		siteUrl = dm.getSiteURL();
+		siteUrl = dm.getSiteURL(context);
 	}
 
 	/** 

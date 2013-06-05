@@ -249,7 +249,7 @@ public class Upload implements Service {
 			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
 					newFile));
 
-			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL());
+			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL(context));
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.delete(rdfFile, false, Geonet.THESAURUS);

@@ -154,7 +154,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 					Thread.sleep(10000); // sleep 10 seconds
 				}
 				try {
-					initThesauriTable(thesauriDir);
+					initThesauriTable(thesauriDir, context);
 				} catch (Exception e) {
 					Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : "+e.getMessage()+"\n"+ Util.getStackTrace(e));
 				} 
@@ -169,7 +169,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void initThesauriTable(File thesauriDirectory) {
+	private void initThesauriTable(File thesauriDirectory, ServiceContext context) {
 
 		thesauriMap = new ConcurrentHashMap<String,Thesaurus>();
 		Log.info(Geonet.THESAURUS_MAN,"Scanning "+thesauriDirectory);
@@ -182,7 +182,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = externalThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL, context);
                     }
                 }
 			}
@@ -194,7 +194,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = localThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL, context);
                     }
                 }
 			}
@@ -206,7 +206,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = registerThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.REGISTER);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.REGISTER, context);
                     }
                 }
 			}
@@ -217,7 +217,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void loadRepositories(File thesauriDirectory, String root) {
+	private void loadRepositories(File thesauriDirectory, String root, ServiceContext context) {
 		
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -238,7 +238,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 							String uuid = StringUtils.substringBefore(aRdfDataFile,".rdf");
 							try {
 								FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
-								getRegisterMetadataAsRdf(uuid, outputRdfStream);					
+								getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
 								outputRdfStream.close();
 							} catch (Exception e) {
 								Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
@@ -246,10 +246,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 								continue;
 							}
 
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, dm.getSiteURL());
+            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, dm.getSiteURL(context));
 
 						} else {
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), dm.getSiteURL());
+            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), dm.getSiteURL(context));
 						}
 
             try {
@@ -268,7 +268,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param uuid Uuid of register (ISO19135) metadata record describing thesaurus
 	 * @param os OutputStream to write rdf to from XSLT conversion
 	 */
-	private void getRegisterMetadataAsRdf(String uuid, OutputStream os) throws Exception {
+	private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
 
 
 		Dbms dbms = null;
@@ -280,7 +280,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 			Element md = dm.getMetadata(dbms, id);
 			Processor.detachXLink(md);
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(), "");
+			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(context), "");
 	
 			//--- transform the metadata with the created env and specified stylesheet
 			Element root = new Element("root");
@@ -405,7 +405,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param type Type of thesaurus (theme, etc)
 	 * @return id of thesaurus created/updated
 	 */
-	public String createUpdateThesaurusFromRegister(String uuid, String type) throws Exception {
+	public String createUpdateThesaurusFromRegister(String uuid, String type, ServiceContext context) throws Exception {
 
 		String aRdfDataFile;
 		String root = Geonet.CodeList.REGISTER;
@@ -414,12 +414,12 @@ public class ThesaurusManager implements ThesaurusFinder {
 		aRdfDataFile = uuid+".rdf";
 		String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
 		File outputRdf = new File(thesaurusFile);
-		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL());
+		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL(context));
 
 		FileOutputStream outputRdfStream = null;
 		try {
             outputRdfStream = new FileOutputStream(outputRdf);
-			getRegisterMetadataAsRdf(uuid, outputRdfStream);
+			getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
 		} catch (Exception e) {
 			Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
 			e.printStackTrace();

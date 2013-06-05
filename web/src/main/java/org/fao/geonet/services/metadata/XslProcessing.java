@@ -119,7 +119,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         Element processedMetadata;
         try {
             processedMetadata = process(id, process, save, _appPath, params,
-                    context, metadata, notFound, notEditable, notProcessFound, false, dataMan.getSiteURL());
+                    context, metadata, notFound, notEditable, notProcessFound, false, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed",
                         "Not found:" + notFound.size() +

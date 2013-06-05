@@ -102,7 +102,7 @@ public class UploadAndProcess implements Service {
             processedMetadata = XslProcessing.process(id, "onlinesrc-add",
                     true, context.getAppPath(), params, context, metadata,
                     notFound, notOwner, notProcessFound, true,
-                    dataMan.getSiteURL());
+                    dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + notFound.size() + ", Not owner:" + notOwner.size()

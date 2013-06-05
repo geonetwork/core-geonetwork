@@ -1287,14 +1287,19 @@ public class DataManager {
 
     /**
      * TODO javadoc.
+     * @param context TODO
      *
      * @return
      */
-    public String getSiteURL() {
+    public String getSiteURL(ServiceContext context) {
+    	String lang = "eng";
+    	if(context != null) {
+    		lang = context.getLanguage();
+    	}
         String protocol = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
         String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/en";
+        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }
@@ -2710,7 +2715,7 @@ public class DataManager {
                 Element result = new Element("root");
                 result.addContent(md);
                 // add 'environment' to result
-                env.addContent(new Element("siteURL")   .setText(getSiteURL()));
+                env.addContent(new Element("siteURL")   .setText(getSiteURL(context)));
                 Element system = settingMan.get("system", -1);
                 env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
                 result.addContent(env);
@@ -2896,7 +2901,7 @@ public class DataManager {
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
-        env.addContent(new Element("siteURL").setText(getSiteURL()));
+        env.addContent(new Element("siteURL").setText(getSiteURL(srvContext)));
         env.addContent(new Element("parent").addContent(parent));
 
         // Set of untreated children (out of privileges, different schemas)
