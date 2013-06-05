@@ -42,11 +42,7 @@ public class LastMonthSummary extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
-		// computes date range
+        // computes date range
 		Calendar calendar = new GregorianCalendar();
 		calendar.add(Calendar.MONTH,-1);		
 		Calendar now = Calendar.getInstance();

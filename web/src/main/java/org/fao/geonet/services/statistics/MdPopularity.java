@@ -44,11 +44,7 @@ public class MdPopularity extends NotInReadOnlyModeService{
      */
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
             Log.debug(Geonet.SEARCH_LOGGER, "query to get MD popularity: " + query);
 		Element response = dbms.select(query);

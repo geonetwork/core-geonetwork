@@ -75,7 +75,7 @@ public class Add extends NotInReadOnlyModeService {
 		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
 		
 		File rdfFile = new File(filePath);		
-		Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, dm.getSiteURL(), false);
+		Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, dm.getSiteURL(context), false);
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database

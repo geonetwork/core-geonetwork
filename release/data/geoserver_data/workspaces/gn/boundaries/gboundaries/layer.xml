@@ -1,0 +1,16 @@
+<layer>
+  <name>gboundaries</name>
+  <id>LayerInfoImpl--71dd1428:126769556b6:-7ffc</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--1be91be:12676b54a88:-8000</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--71dd1428:126769556b6:-7ffd</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

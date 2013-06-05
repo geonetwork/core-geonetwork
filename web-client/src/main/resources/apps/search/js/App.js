@@ -593,6 +593,8 @@ GeoNetwork.app = function () {
         catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
     }
     function show(uuid, record, url, maximized, width, height) {
+        var showFeedBackButton = record.get('email');
+        
         var win = new GeoNetwork.view.ViewWindow({
             serviceUrl: url,
             lang: this.lang,
@@ -602,6 +604,7 @@ GeoNetwork.app = function () {
             catalogue: this,
             maximized: maximized || false,
             metadataUuid: uuid,
+            showFeedBackButton: showFeedBackButton,
             record: record,
             resultsView: this.resultsView
             });

@@ -449,7 +449,7 @@ class Harvester extends BaseAligner
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
 
-                String hRefLink =  dataMan.getSiteURL() + "/xml.metadata.get?uuid=" + layer.uuid;
+                String hRefLink =  dataMan.getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
 				

@@ -86,7 +86,7 @@ div.attr {
 }
 
 div#tabs ul li ul {
-	font: bold 11px Verdana;
+	font: bold 11px;
 	list-style-type: none;
 	margin-bottom: 0;
 	margin-left: 0;

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<title>Miniatyrbildehåndtering</title>
+	<title>MiniatyrbildehÃ¥ndtering</title>
 	<text type="small">Lite miniatyrbilde</text>
 	<text type="large">Stort miniatyrbilde</text>
-	<scale>Skalér bilde</scale>
+	<scale>SkalÃ©r bilde</scale>
 	<create>Lag lite</create>
-	<scaleWidth>Skalér bredde</scaleWidth>
-	<scaleHeight>Skalér høyde</scaleHeight>
+	<scaleWidth>SkalÃ©r bredde</scaleWidth>
+	<scaleHeight>SkalÃ©r hÃ¸yde</scaleHeight>
 	
 	<browse>Let</browse>
 	<add>Legg til</add>

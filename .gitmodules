@@ -1,18 +1,9 @@
-[submodule "installer"]
-	path = installer
-	url = https://github.com/geonetwork/core-installer.git
 [submodule "gast"]
 	path = gast
 	url = https://github.com/geonetwork/core-gast.git
 [submodule "maven_repo"]
 	path = maven_repo
 	url = https://github.com/geonetwork/core-maven-repo.git
-[submodule "release"]
-	path = release
-	url = https://github.com/geonetwork/core-release.git
-[submodule "docs"]
-	path = docs
-	url = https://github.com/geonetwork/core-doc-sources.git
 [submodule "web-itest/webspecs"]
 	path = web-itest/webspecs
 	url = https://github.com/camptocamp/webspecs.git

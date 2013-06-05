@@ -116,10 +116,6 @@ public class RequestsByDate extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
         if (! this.lang.equalsIgnoreCase(context.getLanguage()) ) {
             // user changed the language, must reload strings file to get translated values
             this.lang = context.getLanguage();

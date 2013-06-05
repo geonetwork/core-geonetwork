@@ -201,7 +201,7 @@ public class CswHarvester extends AbstractHarvester {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		h.harvest();
+		this.result = h.harvest();
 	}
 
 	//---------------------------------------------------------------------------
@@ -211,16 +211,4 @@ public class CswHarvester extends AbstractHarvester {
 	//---------------------------------------------------------------------------
 
 	private CswParams params;
-}
-
-class CswResult {
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int locallyRemoved;
-	public int duplicatedResource;
-	public int unknownSchema;
-	public int unretrievable;
-    public int doesNotValidate;	    
 }

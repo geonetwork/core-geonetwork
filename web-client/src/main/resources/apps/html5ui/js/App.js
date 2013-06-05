@@ -68,7 +68,7 @@ GeoNetwork.app = function() {
                         '<div class="tag-cloud">',
                            '<a href="#" onclick="javascript:catalogue.kvpSearch(\'fast=' + catalogue.metadataStore.fast + '&summaryOnly=0&from=1&to=20&hitsPerPage=20&' + 
                            'themekey' + 
-                                '={value}\', app.loadResults, null, null);" alt="{value}">{value} ({count})</a>', 
+                                '={value}\', app.loadResults, null, null);app.searchApp.firstSearch=true;showSearch();" alt="{value}">{value} ({count})</a>', 
                         '</div>', 
                     '</tpl>')
         });
@@ -311,7 +311,7 @@ GeoNetwork.app = function() {
             padding : '5px 25px',
             currTab : GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs : GeoNetwork.printDefaultForTabs || false,
-            printUrl : '../../apps/ngr2/print.html',
+            printUrl : '../../apps/html5ui/print.html',
             catalogue : catalogue,
             // maximized: true,
             metadataUuid : uuid,
