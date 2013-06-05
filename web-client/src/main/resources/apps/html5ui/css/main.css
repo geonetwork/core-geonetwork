@@ -2,7 +2,8 @@
 /** Fonts **/
 @font-face {
   font-family: OpenSans';
-  src: url('OpenSans-Regular.ttf') format('truetype');
+  src: url('fonts/Open_Sans/OpenSans-Regular.ttf') format('truetype');
+  src: url('fonts/Open_Sans/OpenSans-Regular.eot') format('truetype');
 }
 
 @font-face {
@@ -63,12 +64,12 @@ html,body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
-	font-family: OpenSans, Serif, sans-serif; 
+	font-family: OpenSans; 
 }
 
 /** Overriding fonts from gnmetadataview.css **/
 div#page-container #metadata-info * , div#page-container div#latest-metadata header h1, div#page-container div#popular-metadata header h1 {
-	font-family: OpenSans, Serif, sans-serif;
+	font-family: OpenSans;
 }
 
 /** General settings **/
