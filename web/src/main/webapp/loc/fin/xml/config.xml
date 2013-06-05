@@ -9,39 +9,50 @@
 	<host>Host-palvelin</host>
 	<port>Portti</port>
 	<securePort>Secure Portti</securePort>
-	<protocol>Preferred Protocol<protocol>
+	<protocol>Preferred Protocol</protocol>
 	
 	<intranet>Intranet</intranet>
 	<network>Verkko</network>
 	<netmask>Verkkomaski</netmask>
 	
+	<searchStats>Search Statistics</searchStats>
+
 	<z3950>Z39.50-palvelin</z3950>
 	<enable>Ota käyttöön</enable>
 
+	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<maxthreads>Number of processing threads</maxthreads>
+	<recommendedThreads>Recommended</recommendedThreads>
+	<reasonForOne>Database not tested or doesn't support</reasonForOne>
+	<reasonForMore>From number of processors</reasonForMore>
+
+	<multilingual>Monikielinen asetukset</multilingual>
+	<autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
+
 	<oai>OAI-palvelun tarjoaja</oai>
-		<datesearch>Päivämäärän haku</datesearch>
-		<datesearchopt>
-			<dsopt label="Ajallinen kattavuus">1</dsopt>
-			<dsopt label="Muokkauspäivä">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>Enimmäiskesto</tokentimeout>
-		<cachesize>Välimuistin koko</cachesize>
+	<datesearch>Päivämäärän haku</datesearch>
+	<datesearchopt>
+		<dsopt label="Ajallinen kattavuus">1</dsopt>
+		<dsopt label="Muokkauspäivä">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>Enimmäiskesto</tokentimeout>
+	<cachesize>Välimuistin koko</cachesize>
 
 	<xlinkResolver>XLink-elementtien muodostaminen</xlinkResolver>
 
-    <inspire>Inspire</inspire>
+	<inspire>Inspire</inspire>
 
-    <multilingual>Monikielinen asetukset</multilingual>
-    <autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
-		
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+
 	<downloadservice>Latauspalvelu</downloadservice>
 	<leave>Käytä metatiedoissa olevaa linkkiä</leave>
 	<simple>Käytä Geonetworkin latauspalvelua (resources.get)</simple>
@@ -96,35 +107,36 @@
 			<minute label="30">30</minute>
 			<minute label="45">45</minute>
 		</minutes>
-	
+
 	<csw>CSW ISO -profiili</csw>
 	<contactId>Yhteystaho</contactId>
 	<title>Otsikko</title>
 	<abstract>Tiivistelmä</abstract>
 	<fees>Hinnat</fees>
 	<accessConstraints>Saatavuusrajoitteet</accessConstraints>
-    <cswMetadataPublic>Lisättävä metatieto on julkinen.</cswMetadataPublic>
-    
+	<cswMetadataPublic>Lisättävä metatieto on julkinen.</cswMetadataPublic>
+
 	<clickablehyperlinks>Linkkejä voi klikata</clickablehyperlinks>
 
 	<localrating>Arvostelu on mahdollista.</localrating>
-		
+	<autofixing>Automatic Fixes</autofixing>
+
 	<proxy>Proxy</proxy>
 	<use>Käytä</use>
 	<username>Käyttäjätunnus</username>
-	
+
 	<feedback>Palaute</feedback>
 	<email>Sähköpostiosoite</email>
 	<smtpHost>Sähköpostipalvelin (SMTP)</smtpHost>
 	<smtpPort>Sähköpostipalvelimen portti (SMTP)</smtpPort>
 
 	<userSelfRegistration>Käyttäjä voi rekisteröityä itse</userSelfRegistration>
-	
+
 	<removedMetadata>Poistetut metatiedot</removedMetadata>
 	<dir>Hakemisto</dir>
-		
+
 	<authentication>Autentikointi</authentication>
-	
+
 	<otherlogins>Salli muiden käyttäjien kirjautua</otherlogins>
 
 	<shib>Shibboleth</shib>
@@ -132,94 +144,111 @@
 	<attributes>Shibboleth-attribuuttien tunnistus</attributes>
 	<surname>Sukunimi</surname>
 	<firstname>Etunimi</firstname>
-		
+
+	<metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+	<metadataDefaultView>Default view</metadataDefaultView>
+	<metadataSimpleView>Simple view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Advanced view</metadataAdvancedView>
+
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
-	
+
 	<save>Tallenna</save>
 	<refresh>Tyhjennä</refresh>
-	
+
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>Kentälle '{NAME}' on annettava arvo.</cannotBeEmpty>
 			<invalidMinSize>Kentän '{NAME}' arvon pitää olla vähintään {VALUE} merkkiä pitkä.</invalidMinSize>
 			<invalidMaxSize>Kentän '{NAME}' arvo saa olla enintään {VALUE} merkkiä pitkä.</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>Kentän '{NAME}' arvon täytyy olla kokonaisluku.</notInt>
 			<invalidMinValue>Kentän '{NAME}' arvon pitää olla vähintään {VALUE}.</invalidMinValue>
 			<invalidMaxValue>Kentän '{NAME}' arvo saa olla enintään {VALUE}.</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>Kentän '{NAME}' arvon pitää alkaa kirjaimella ja siinä saa olla ainoastaan kirjaimia tai numeroita.</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>Kentän '{NAME}' arvo ei ole validi host-palvelimen nimi.</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>Kentän '{NAME}' arvo ei ole validi www-osoite.</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>Kentän '{NAME}' arvo ei ole validi IP-osoite.</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Järjestelmäasetuksia ei voida näyttää.</cannotGet>
 	<cannotSave>Järjestelmäasetuksia ei voida tallentaa.</cannotSave>
 	<saveOk>Järjestelmäasetukset tallennettu.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.name">
 			Sivuston nimi identifioi kyseisen palvelun.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			Palvelimen <b>ip-osoite</b> ja <b>porttia</b> käytetään luotaessa www-osoitteita GeoNetowrk-palvelimelle, esimerkiksi luotaessa osoitteita metatietoihin ja vastatessa CSW-rajapintapyyntöön. Metatiedon sisällä tulisi käyttää GAST-työkaulua.
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			<b>Verkko-osoitetta</b> ja <b>maskia</b> käytetään GeoNetworkin sisäisissä linkityksissä.
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			Jos Z39.50-protokolla otetaan käyttöön, käynnistettäessä GeoNetwork käynnistetään myös ISO Z39.50-palvelinkomponentti. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Muuta Z39.50-porttia. <b>Muutoksen voimaantulo vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Jos alku- ja loppupäivää muutetaan, se vaikuttaa OAI:n toimintaan. Jos valitaan ajallinen kattavuus, metatiedoista haetaan ajallisen kattavuuden päiväys. Jos valitaan muokkauspäivä, metatiedoista haetaaan metatietojen viimeisin päivitysajankohta.   <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			Sekuntteina aika, jonka OAI-tulokset säilyvät välimuistissa ja niitä voidaan selailla.lease note. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			Välimuistiin tallennettujen tulosten määrä.
 		</tip>
-		
-		<!-- CSW -->
+
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
 			Jos CSW-protokolla otetaan käyttöön, palvelusta voidaan hakea metatietoja muihin palveluihin. <b>Käyttöönotto vaatii GeoNetwork-palvelun uudelleenkäynnistämistä.</b>
 		</tip>
@@ -230,9 +259,9 @@
 		<tip id="csw.abstract">Tiivistelmä</tip>
 		<tip id="csw.fees">Hinnat</tip>
 		<tip id="csw.accessConstraints">Saatavuusrajoitteet</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Jos otettu käyttöön, Paikkatietohakemiston metatietoihin tallennetut www-osoitteet näytetään linkkeinä.
 		</tip>
@@ -241,31 +270,31 @@
 		<tip id="localrating.enable">
 			Jos otettu käyttöön, Paikkatietohakemiston metatietoja voidaan arvostella.
 		</tip>
-		
+
 		<!-- proxy -->
-		
+
 		<tip id="proxy.use">
 			Jos proxy-palvelin otetaan käyttöön, palvelu käyttää proxy-parametreja ottaessa yhteyden muihin palvelimiin, esim. hakiessaan metatietoja muilta palvelimilta.
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			Ylläpitäjän sähköpostiosoite.
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			Palvelussa käytetyt sähköpostipalvelin ja sen käyttämä portti.
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Hakemisto, johon poistetut metatiedot tallennetaan.
 		</tip>
 
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			Jos itserekisteröityminen otetaan käyttöön, käyttäjät voivat rekisteröityä itse. Käyttäjälle lähetetään käyttäjätunnus ja salasana sähköpostitse.
 		</tip>
@@ -288,30 +317,55 @@
 			Jos otettu käyttöön, XLink-linkit metatieto-osioihin lasketaan. 
 		</tip>
 
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Jos asetettu, haku kieli tunnistetaan automaattisesti. Huomaa, että tämä ei toimi kovin hyvin lyhyiden hakutermejä.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Vain palauttaa hakutulokset pyydetyt kielellä.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Palauta hakutulokset pyydetyt kielen päälle.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Ohita pyydetään kieli hakutuloksia.
-        </tip>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Jos asetettu, haku kieli tunnistetaan automaattisesti. Huomaa, että tämä ei toimi kovin hyvin lyhyiden hakutermejä.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Vain palauttaa hakutulokset pyydetyt kielellä.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Palauta hakutulokset pyydetyt kielen päälle.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Ohita pyydetään kieli hakutuloksia.
+		</tip>
 
-    </tips>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	</tips>
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
 	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
 	<data.subversionPath>Subversion directory:</data.subversionPath>
 	<data.codeListDir>Thesaurus directory:</data.codeListDir>
-  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
-	
+	<xslt.factory>XSLT factory:</xslt.factory>
+	<java.vm.name>JVM name:</java.vm.name>
+	<java.vm.vendor>JVM vendor:</java.vm.vendor>
+	<java.version>JVM version:</java.version>
+	<os.arch>System architecture:</os.arch>
+	<os.name>System name:</os.name>
+	<mem.total>Total memory:</mem.total>
+	<mem.free>Total free memory:</mem.free>
+	<index.size.lucene>Lucene index size (ko):</index.size.lucene>
+	<index.size>Total index size (ko):</index.size>
+	<index.path>Index directory:</index.path>
+	<index>Lucene index information</index>
+	<main>System information</main>
+	<catalogue>Catalogue information</catalogue>
+	<system>Catalogue configuration</system>
+	<database>Database information</database>
+	<siteId>Catalogue identifier:</siteId>
+	<version>Version:</version>
+	<subVersion>Sub-version:</subVersion>
+	<index.lucene.config>Lucene configuration:</index.lucene.config>
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
+	<db.statserror>Database statistics:</db.statserror>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

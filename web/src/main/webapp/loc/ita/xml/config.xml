@@ -4,19 +4,19 @@
 	<site>Sito</site>
 	<name>Nome</name>
 	<organ>Organizzazione</organ>
-	
+
 	<server>Server</server>
 	<host>Host</host>
 	<port>Porta</port>
 	<securePort>Secure Port</securePort>
 	<protocol>Preferred Protocollo</protocol>
-	
+
 	<intranet>Intranet</intranet>
 	<network>Network</network>
 	<netmask>Netmask</netmask>
 
 	<searchStats>Statistiche di ricerca</searchStats>
-	
+
 	<z3950>Server Z39.50</z3950>
 	<enable>Abilita</enable>
 
@@ -28,12 +28,12 @@
 
 	<multilingual>Impostazioni per multilinguismo</multilingual>
 	<autoDetectEnable>Abilita riconoscimento automatico della lingue di richiesta</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
 	<requestedlanguagesorted>Mostra per primi i risultati nella lingua della richiesta</requestedlanguagesorted>
 
 	<oai>Registro OAI</oai>
@@ -42,16 +42,17 @@
 		<dsopt label="estensione temporale">1</dsopt>
 		<dsopt label="data di modifica">2</dsopt>
 	</datesearchopt>
-	
+
 	<tokentimeout>Scadenza del ResumptionToken</tokentimeout>
-	<cachesize>Dimensione della cache</cachesize>	
+	<cachesize>Dimensione della cache</cachesize>
+
 	<xlinkResolver>Risolutore XLink</xlinkResolver>
 
 	<inspire>INSPIRE</inspire>
 
 	<harvester>Harvesting</harvester>
 	<enableEditing>Permetti la modifica dei metadati caricati tramite harvesting</enableEditing>
-		
+
 	<downloadservice>Servizio Dati Download</downloadservice>
 	<leave>Usa il collegamento ai metadati così com'è - nessuna modifica</leave>
 	<simple>Usa il servizio di scaricamento di file di GeoNetwork (resources.get)</simple>
@@ -113,25 +114,27 @@
 	<abstract>Sunto</abstract>
 	<fees>Tariffe</fees>
 	<accessConstraints>Vincoli di accesso</accessConstraints>
-    <cswMetadataPublic>Il metadato inserito è pubblico</cswMetadataPublic>
-    
+	<cswMetadataPublic>Il metadato inserito è pubblico</cswMetadataPublic>
+
 	<clickablehyperlinks>Hyperlink cliccabili</clickablehyperlinks>
 
 	<localrating>Valutazione Locale</localrating>
-    <autofixing>Correzioni automatiche</autofixing>
-		
+	<autofixing>Correzioni automatiche</autofixing>
+
 	<proxy>Proxy</proxy>
 		<use>Usa</use>
 		<username>Nome Utente</username>
-	
+
 	<feedback>Feedback</feedback>
-		<email>EMail</email>
+	<email>EMail</email>
 		<smtpHost>Host SMTP</smtpHost>
 		<smtpPort>Porta SMTP</smtpPort>
 
 	<userSelfRegistration>utente 		auto-registrazione</userSelfRegistration>
+
 	<removedMetadata>Metadata rimosso</removedMetadata>
-		<dir>Directory</dir>
+	<dir>Directory</dir>
+
 	<authentication>Autenticazione</authentication>
 	
 	<otherlogins>Permetti agli utenti di effettuare il login da</otherlogins>
@@ -142,21 +145,20 @@
 	<surname>Cognome</surname>
 	<firstname>Nome</firstname>
 	
-    <metadataEnableInspireSearch>Abilita pannello di ricerca</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Abilita pannello di ricerca</metadataEnableInspireSearch>
 
-    <metadataViews>Viste metadati</metadataViews>
-    <metadataEnableSimpleView>Abilita vista base</metadataEnableSimpleView>
-    <metadataEnableIsoView>Abilita vista ISO</metadataEnableIsoView>
-    <metadataEnableInspireView>Abilita vista INSPIRE</metadataEnableInspireView>
-    <metadataEnableXmlView>Abilita vista XML</metadataEnableXmlView>
-    <metadataDefaultView>Vista di default</metadataDefaultView>
-    <metadataSimpleView>Vista base</metadataSimpleView>
-    <metadataIsoView>Vista ISO</metadataIsoView>
-    <metadataInspireView>Vista INSPIRE</metadataInspireView>
-    <metadataXmlView>Vista XML</metadataXmlView>
-    <metadataAdvancedView>Vista avanzata</metadataAdvancedView>
-	
-    
+	<metadataViews>Viste metadati</metadataViews>
+	<metadataEnableSimpleView>Abilita vista base</metadataEnableSimpleView>
+	<metadataEnableIsoView>Abilita vista ISO</metadataEnableIsoView>
+	<metadataEnableInspireView>Abilita vista INSPIRE</metadataEnableInspireView>
+	<metadataEnableXmlView>Abilita vista XML</metadataEnableXmlView>
+	<metadataDefaultView>Vista di default</metadataDefaultView>
+	<metadataSimpleView>Vista base</metadataSimpleView>
+	<metadataIsoView>Vista ISO</metadataIsoView>
+	<metadataInspireView>Vista INSPIRE</metadataInspireView>
+	<metadataXmlView>Vista XML</metadataXmlView>
+	<metadataAdvancedView>Vista avanzata</metadataAdvancedView>
+
 	<metadataPrivs>Privilegi dei metadati</metadataPrivs>
 	<md.usergrouponly>Imposta i privilegi soltanto al gruppo dell'utente</md.usergrouponly>
 
@@ -164,47 +166,47 @@
 	
 	<save>Salva</save>
 	<refresh>Ricarica</refresh>
-	
+
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>Il campo '{NAME}' non può essere vuoto</cannotBeEmpty>
 			<invalidMinSize>il campo '{NAME}' deve contenere almeno {VALUE} caratteri</invalidMinSize>
 			<invalidMaxSize>Il campo '{NAME}' deve contenere al massimo {VALUE} caratteri</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>Il campo '{NAME}' deve essere un intero</notInt>
 			<invalidMinValue>Il campo '{NAME}' deve essere &gt;= {VALUE}</invalidMinValue>
 			<invalidMaxValue>Il campo '{NAME}'deve essere &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>Il campo '{NAME}' deve essere alfanumerico (partendo con una lettera)</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>Il campo '{NAME}' non è un nome di host valido</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>Il campo '{NAME}' non è un URL valido</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>il campo '{NAME}' non è un indirizzo IP valido</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Non riesco a trovare la configurazione del sistema</cannotGet>
 	<cannotSave>Non riesco a salvare la configurazione del sistema</cannotSave>
 	<saveOk>Configurazione del sistema salvata.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.siteId">
 			Identificatore unico del catalogo.
@@ -212,41 +214,40 @@
 			dal pannello di amministrazione.
 		</tip>
 
-
 		<tip id="site.name">
 			Usato per identificare l'installazione.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			I valori <b>host</b> e <b>port</b> sono usati per creare l'URL al server di Geonetwork. Per esempio, sono usati durante la modifica dei metadati per creare i link alle risorse e per creare il documento di capabilities per il servizio CS/W.
 			<br/>
 			<b>Attenzione:</b> dovreste usare GAST per rispecchiare questo cambiamento nei metadati.
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			I parametri di <b>network</b> e <b>netmask</b> sono usati per identificare le connessioni interne a Geonetwork, ovvero per identificare il gruppo intranet.
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			Se abilitato, durante l'avvio di Geonetwork, verrà attivata la componente Z39.50 del server. Questo componente usa il protocollo ISO23950.
 			<br/>
 			<b>Attenzione:</b> ricarica Geonetwork per rendere attivi i cambiamenti.
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Cambia la porta di ingresso Z39.50.
 			<br/>
 			<b>Attenzione:</b> ricarica Geonetwork per rendere attivi i cambiamenti.
 		</tip>
-		
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influenza il comportamento di OAI quando i parametri da o fino sono forniti.
 			Se impostato su estensione temporale, è ricercata quella della data descritta dai metadati.
@@ -254,13 +255,13 @@
 			<br/>
 			<b>Nota:</b> ricarica GeoNetwork per rendere attive le modifiche.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			Numero dei secondi durante i quali un insieme di risultati OAI stanno nella cache e possono essere visionati usando il metodo OAI resumptionToken
 			<br/>
 			<b>Nota:</b> ricarica GeoNetwork per rendere attive le modifiche.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			Il numero di risultati OAI che possono essere salvati nella cache.
 		</tip>
@@ -278,9 +279,9 @@
 		<tip id="csw.abstract">Riassunto</tip>
 		<tip id="csw.fees">Tariffe</tip>
 		<tip id="csw.accessConstraints">Vincoli di accesso</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Se abilitato, GeoNetwork visualizzerà gli hyperlinks cliccabili nei metadati.
 		</tip>
@@ -296,35 +297,35 @@
 		</tip>
 
 		<!-- proxy -->
-		
+
 		<tip id="proxy.use">
 			Se abilitato, GeoNetwork userà il proxy indicato per accedere ai nodi remoti. Ad esempio è usato durante l'harvesting.
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			E' la email dell'amministratore usata per spedire messaggi di feedback.
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			I parametri SMTP <b>host</b> e <b>port</b> sono usati per spedire email agli utenti di Geonetwork quando è scaricata una risorsa.
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Directory usata per salvare i metadati in (nel formato MEF) quando sono cancellati.
 		</tip>
-		
+
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			Se impostata gli utenti saranno abilitati a registrarsi da sè. Questi utenti
 			sono assegnati al gruppo GUEST. Una email è inviata all'utente con il relativo nome utente e password mediante l'informazione di email di feedback.
 			<br/>
 		</tip>
-		
+
 		<tip id="downloadservice.simple">
 				Se il protocollo dei metadati è 'Dati per lo scaricamento', allora questo servizio consente all'utente di scaricare la risorsa da Geonetwork senza ulteriori input - è l'interfaccia di scaricamento più semplice
 		</tip>
@@ -340,8 +341,7 @@
 		<tip id="xlinkResolver.enable">
 			Se impostato, verranno risolti gli XLinks ai frammenti di metadati.
 		</tip>
-		
-		
+
 		<!-- searchStats -->
 
 		<tip id="searchStats.enable">
@@ -397,7 +397,7 @@
 	<db.maxactive>Massimo numero di connessioni al db:</db.maxactive>	
 	<db.statserror>Statistiche sul db:</db.statserror>
 	<sequentialExecution>Modalità di esecuzione sequenziale del pool di thread: </sequentialExecution>
-  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

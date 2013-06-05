@@ -4,7 +4,7 @@
 	<site>Site</site>
 	<name>Name</name>
 	<organ>Organization</organ>
-	
+
 	<server>Server</server>
 	<host>Host</host>
 	<port>Port</port>
@@ -14,18 +14,11 @@
 	<intranet>Intranet</intranet>
 	<network>Network</network>
 	<netmask>Netmask</netmask>
-	
+
 	<searchStats>Search Statistics</searchStats>
 
-    <multilingual>متعدد اللغات إعدادات</multilingual>
-    <autoDetectEnable>تمكين صناعة السيارات في الكشف عن طلب بحث لغة</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>نتائج البحث في اللغة المطلوبة على أعلى مرتبة</requestedlanguagesorted>
+	<z3950>Z39.50 Server</z3950>
+	<enable>Enable</enable>
 
 	<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>
@@ -33,26 +26,33 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
-	<z3950>Z39.50 Server</z3950>
-	<enable>Enable</enable>
+	<multilingual>متعدد اللغات إعدادات</multilingual>
+	<autoDetectEnable>تمكين صناعة السيارات في الكشف عن طلب بحث لغة</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>نتائج البحث في اللغة المطلوبة على أعلى مرتبة</requestedlanguagesorted>
 
 	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+	<datesearch>Datesearch</datesearch>
+	<datesearchopt>
+		<dsopt label="temporal extent">1</dsopt>
+		<dsopt label="modification date">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken Timeout </tokentimeout>
+	<cachesize>Cachesize</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
-    <inspire>INSPIRE</inspire>
-    
+	<inspire>INSPIRE</inspire>
+
 	<harvester>Harvesting</harvester>
 	<enableEditing>Allow editing on harvested records</enableEditing>
-	
+
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
@@ -114,30 +114,29 @@
 	<abstract>Abstract</abstract>
 	<fees>Fees</fees>
 	<accessConstraints>Access Constraints</accessConstraints>
-    <cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
-    
+	<cswMetadataPublic>Inserted metadata is public</cswMetadataPublic>
+
 	<clickablehyperlinks>التشعبية القابلة للنقر عليها</clickablehyperlinks>
 	
 	<localrating>تصنيف المحلية</localrating>
-	
-    <autofixing>التلقائي إصلاحات</autofixing>
-	
+	<autofixing>التلقائي إصلاحات</autofixing>
+
 	<proxy>Proxy</proxy>
 	<use>Use</use>
 	<username>Username</username>
-	
+
 	<feedback>Feedback</feedback>
 	<email>EMail</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Port</smtpPort>
 
 	<userSelfRegistration>User Self-Registration</userSelfRegistration>
-	
+
 	<removedMetadata>Removed metadata</removedMetadata>
 	<dir>Directory</dir>
-		
+
 	<authentication>Authentication</authentication>
-	
+
 	<otherlogins>Allow other users to login from</otherlogins>
 
 	<shib>Shibboleth Authentication</shib>
@@ -146,74 +145,75 @@
 	<surname>Surname</surname>
 	<firstname>Firstname</firstname>
 
-    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
-	
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+	<metadataDefaultView>Default view</metadataDefaultView>
+	<metadataSimpleView>Simple view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Advanced view</metadataAdvancedView>
+
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
-	
+
 	<save>Save</save>
 	<refresh>Refresh</refresh>
-	
+
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>The field '{NAME}' cannot be empty</cannotBeEmpty>
 			<invalidMinSize>The field '{NAME}' must be at least {VALUE} character(s) long</invalidMinSize>
 			<invalidMaxSize>The field '{NAME}' must be maximum {VALUE} character(s) long</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>The field '{NAME}' must be an integer</notInt>
 			<invalidMinValue>The field '{NAME}' must be &gt;= {VALUE}</invalidMinValue>
 			<invalidMaxValue>The field '{NAME}' must be &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>The field '{NAME}' must be alphanumeric (starting with a letter)</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>The field '{NAME}' is not a valid host name</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>The field '{NAME}' is not a valid URL</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>The field '{NAME}' is not a valid IP address</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Unable to get the system configuration</cannotGet>
 	<cannotSave>Unable to save the system configuration</cannotSave>
 	<saveOk>System configuration saved.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.name">
 			Used to identify the installation.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			The server's <b>host</b> and <b>port</b> are used to create URLs to
 			the GeoNetwork server. For example, they are used during metadata
@@ -223,32 +223,32 @@
 			<b>Please note:</b> you should use the GAST tool to reflect this
 			change inside the metadata.
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			The <b>network</b> and <b>netmask</b> parameters are used to identify
 			internal connections to GeoNetwork, that is, to identify the intranet
 			group.
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			If set, during startup GeoNetwork will start the Z39.50 server component.
 			This component uses the ISO23950 protocol.
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Change the Z39.50 listening port.
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -256,18 +256,18 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
-		
-		<!-- CSW -->
+
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
 			If set, this will enable the CSW ISO Profile server functionality. It will allow other catalogs to harvest it.
 			<br/>
@@ -280,48 +280,49 @@
 		<tip id="csw.abstract">Abstract</tip>
 		<tip id="csw.fees">Fees</tip>
 		<tip id="csw.accessConstraints">Access constraints</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			إذا كان تعيين ، سوف يعرض وصلات الشبكة الأرضية للنقر في الفوقية.
 		</tip>
-		
+
 		<!-- local rating -->
 		<tip id="localrating.enable">
 			إذا كان تعيين وسوف الشبكة الأرضية للمستخدم حساب التصنيفات الفوقية من هذه العقدة فقط (وليس توزيعها بين العقدتين الشبكة الأرضية الأخرى).
-		</tip>		
-		
-        <!-- automatic fixing -->
-        <tip id="autofixing.enable">
-            عند تمكين الشبكة الأرضية ينطبق تلقائيا إصلاحات معينة عند حفظ البيانات الوصفية.
-        </tip>
-                    <!-- proxy -->
-		
+		</tip>
+
+		<!-- automatic fixing -->
+		<tip id="autofixing.enable">
+			عند تمكين الشبكة الأرضية ينطبق تلقائيا إصلاحات معينة عند حفظ البيانات الوصفية.
+		</tip>
+
+		<!-- proxy -->
+
 		<tip id="proxy.use">
 			If set, GeoNetwork will use the provided proxy parameters when accessing
 			remote nodes. For example, this is used during the harvesting.
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			This is the administrator's email address used to send feedback.
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			The SMTP <b>host</b> and <b>port</b> parameters are used to send emails
 			to GeoNetwork's users when a resource is downloaded.
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Directory used to store metadata (in MEF format) when they are deleted.
 		</tip>
 
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			If set, users will be able to register themselves. Self-registered
 			users are assigned to the GUEST group. An email is sent to the
@@ -329,7 +330,7 @@
 			email information.
 			<br/>
 		</tip>
-		
+
 		<tip id="downloadservice.simple">
 				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
 		</tip>
@@ -339,20 +340,6 @@
 		<tip id="downloadservice.leave">
 				Selecting this option means that GeoNetwork will not handle file downloads.
 		</tip>
-
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            إذا مجموعة، ويتم الكشف عن تلقائيا لغة البحث. لاحظ أن هذا لا يعمل بشكل جيد جدا لشروط البحث القصير.
-        </tip>
-        <tip id="requestedlanguage.only">
-            عودة فقط نتائج البحث في اللغة المطلوبة.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            ترجع نتائج البحث في اللغة المطلوبة على القمة.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            تجاهل اللغة المطلوبة لنتائج البحث.
-        </tip>
 
 		<!-- xlinkResolver -->
 
@@ -365,7 +352,23 @@
 		<tip id="searchStats.enable">
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
+
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			إذا مجموعة، ويتم الكشف عن تلقائيا لغة البحث. لاحظ أن هذا لا يعمل بشكل جيد جدا لشروط البحث القصير.
+		</tip>
+		<tip id="requestedlanguage.only">
+			عودة فقط نتائج البحث في اللغة المطلوبة.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			ترجع نتائج البحث في اللغة المطلوبة على القمة.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			تجاهل اللغة المطلوبة لنتائج البحث.
+		</tip>
+
 	</tips>
+
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
@@ -386,20 +389,20 @@
 	<index>Lucene index information</index>
 	<main>System information</main>
 	<catalogue>Catalogue information</catalogue>
-	<database>Database information</database>
 	<system>Catalogue configuration</system>
+	<database>Database information</database>
 	<siteId>Catalogue identifier:</siteId>
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
 	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
 	<db.statserror>Database statistics:</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 
