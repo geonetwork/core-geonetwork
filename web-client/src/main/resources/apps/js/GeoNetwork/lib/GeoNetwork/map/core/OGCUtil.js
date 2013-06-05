@@ -145,7 +145,7 @@ GeoNetwork.OGCUtil.layerExistsInMap = function (layer, map) {
             if (lr.params) {
                 try {
                     var layers = lr.params.LAYERS.split(",");
-                    if ((layers.indexOf(layer.params.LAYERS) != -1) &&
+                    if (((layers.indexOf(layer.params.LAYERS) != -1) || (lr.params.LAYERS == layer.params.LAYERS)) &&
                       lr.params.SERVICE == layer.params.SERVICE &&
                         lr.url == layer.url) {
                         layerExists = lr;
