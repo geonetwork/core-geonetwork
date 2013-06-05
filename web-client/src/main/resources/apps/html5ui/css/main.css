@@ -1,67 +1,22 @@
 
 /** Fonts **/
 @font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-Regular.ttf') format('truetype');
+  font-family:'OpenSans';
+  src: url('fonts/Open_Sans/OpenSans-Regular.ttf') format('truetype'),
+       url('fonts/Open_Sans/OpenSans-Regular.eot') format('embedded-opentype');
 }
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-Bold.ttf') format('truetype');
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-Italic.ttf') format('truetype');
-  font-style: italic, oblique;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-BoldItalic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic, oblique;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-ExtraBold.ttf') format('truetype');
-  font-weight: bolder;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-ExtraBoldItalic.ttf') format('truetype');
-  font-weight: bolder;
-  font-style: italic, oblique;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-Light.ttf') format('truetype');
-  font-weight: lighter;
-}
-
-@font-face {
-  font-family: OpenSans';
-  src: url('OpenSans-LightItalic.ttf') format('truetype');
-  font-weight: lighter;
-  font-style: italic, oblique;
-}
-
 
 /* to keep footer down -- from http://matthewjamestaylor.com/blog/keeping-footers-at-the-bottom-of-the-page */
 html,body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
-	font-family: OpenSans, Serif, sans-serif; 
+	font-family: OpenSans; 
 }
 
 /** Overriding fonts from gnmetadataview.css **/
 div#page-container #metadata-info * , div#page-container div#latest-metadata header h1, div#page-container div#popular-metadata header h1 {
-	font-family: OpenSans, Serif, sans-serif;
+	font-family: OpenSans;
 }
 
 /** General settings **/
