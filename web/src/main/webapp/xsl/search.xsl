@@ -41,11 +41,11 @@
 				<!-- CSS for Ext -->
 				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/html5ui/js/ext/resources/css/ext-all.css</xsl:attribute>
+						select="$baseUrl" />/apps/js/ext/resources/css/ext-all.css</xsl:attribute>
 				</link>
 				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href"><xsl:value-of
-						select="$baseUrl" />/apps/html5ui/js/ext/resources/css/xtheme-gray.css</xsl:attribute>
+						select="$baseUrl" />/apps/js/ext/resources/css/xtheme-gray.css</xsl:attribute>
 				</link>
 
 				<link rel="stylesheet" type="text/css">
@@ -97,12 +97,12 @@
 
 				<script type="text/javascript">
 					<xsl:attribute name="src"><xsl:value-of
-						select="$baseUrl" />/apps/html5ui/js/ext/adapter/ext/ext-base.js</xsl:attribute>
+						select="$baseUrl" />/apps/js/ext/adapter/ext/ext-base.js</xsl:attribute>
 				</script>
 
 				<script type="text/javascript">
 					<xsl:attribute name="src"><xsl:value-of
-						select="$baseUrl" />/apps/html5ui/js/ext/ext-all.js</xsl:attribute>
+						select="$baseUrl" />/apps/js/ext/ext-all.js</xsl:attribute>
 				</script>
 
 				<script type="text/javascript">
