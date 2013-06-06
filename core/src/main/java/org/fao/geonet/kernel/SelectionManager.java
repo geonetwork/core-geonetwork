@@ -9,6 +9,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
@@ -147,7 +148,8 @@ public class SelectionManager {
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
 		if (selection == null) {
-			this.selections.put(type, Collections.synchronizedSet(new HashSet<String>()));
+		    selection = Collections.synchronizedSet(new HashSet<String>());
+			this.selections.put(type, selection);
 		}
 		if (selected != null) {
 			if (selected.equals(ADD_ALL_SELECTED))
@@ -250,10 +252,8 @@ public class SelectionManager {
 
 			List<String> uuidList;
 			try {
-				if (searcher instanceof LuceneSearcher)
-					uuidList = ((LuceneSearcher) searcher).getAllUuids(maxhits);
-				else if (searcher instanceof CatalogSearcher)
-					uuidList = ((CatalogSearcher) searcher).getAllUuids(maxhits, context);
+				if (searcher instanceof MetadataRecordSelector)
+					uuidList = ((MetadataRecordSelector) searcher).getAllUuids(maxhits, context);
 				else
 					return;
 

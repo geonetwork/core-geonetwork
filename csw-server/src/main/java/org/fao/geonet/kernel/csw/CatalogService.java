@@ -33,6 +33,7 @@ import java.util.Map;
 
 public interface CatalogService
 {
+    String BEAN_PREFIX = "CswService.";
 	/** Returns the name of the service for dispatching purposes */
 	public String  getName();
 

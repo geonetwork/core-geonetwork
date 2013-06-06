@@ -84,6 +84,7 @@ import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
@@ -100,7 +101,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 //=============================================================================
 
-public class CatalogSearcher {
+public class CatalogSearcher implements MetadataRecordSelector {
 	private static final class FindRegionFilterElements implements org.jdom.filter.Filter {
         private static final Namespace namespace = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
         private static final long serialVersionUID = 1L;

@@ -68,10 +68,6 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerDb;
 import org.fao.geonet.kernel.XmlSerializerSvn;
-import org.fao.geonet.kernel.csw.CatalogConfiguration;
-import org.fao.geonet.kernel.csw.CatalogDispatcher;
-import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -113,7 +109,6 @@ public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
-	private HarvestManager 		harvestMan;
 	private MetadataNotifierControl metadataNotifierControl;
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
@@ -140,6 +135,7 @@ public class Geonetwork implements ApplicationHandler {
 	  */
 	public Object start(Element config, ServiceContext context) throws Exception {
 		logger = context.getLogger();
+        ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
 		path    = context.getAppPath();
 		String baseURL = context.getBaseUrl();
@@ -287,8 +283,9 @@ public class Geonetwork implements ApplicationHandler {
 		luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
 		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
-        logger.info("  - Lucene configuration is:");
-        logger.info(lc.toString());
+		logger.info("  - Lucene configuration is:");
+		logger.info(lc.toString());
+		beanFactory.registerSingleton("luceneConfig", lc);
        
 		DataStore dataStore = context.getResourceManager().getDataStore(Geonet.Res.MAIN_DB);
 		if (dataStore == null) {
@@ -413,7 +410,6 @@ public class Geonetwork implements ApplicationHandler {
 
 		GeonetContext gnContext = new GeonetContext();
 
-		ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 		beanFactory.registerSingleton("accessManager", accessMan);
 		beanFactory.registerSingleton("dataManager", dataMan);
 		beanFactory.registerSingleton("searchManager", searchMan);

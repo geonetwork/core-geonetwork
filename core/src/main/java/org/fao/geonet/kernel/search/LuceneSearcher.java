@@ -118,7 +118,7 @@ import java.util.Set;
 /**
  * search metadata locally using lucene.
  */
-public class LuceneSearcher extends MetaSearcher {
+public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelector{
 	private static SearchManager _sm;
 	private String        _styleSheetName;
 
@@ -1431,7 +1431,7 @@ public class LuceneSearcher extends MetaSearcher {
 	 * 
 	 * @throws Exception hmm
 	 */
-    public List<String> getAllUuids(int maxHits) throws Exception {
+    public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
         List<String> response = new ArrayList<String>();
 		TopDocs tdocs = performQuery(0, maxHits, false);
 		IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
