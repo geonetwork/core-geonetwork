@@ -186,8 +186,14 @@ function hideMetadata() {
 
 function resizeResultsPanel() {
     var resultsPanel = Ext.get("resultsPanel");
-    resultsPanel.setWidth(Ext.getBody().getWidth()
-            - Ext.get("main-aside").getWidth() - 320);
+//    if(Ext.getBody().getWidth() > 1000) {
+//        resultsPanel.setWidth(Ext.getBody().getWidth()
+//                - Ext.get("main-aside").getWidth() - 320);
+//    } else {
+        resultsPanel.setWidth(Ext.getBody().getWidth()
+                - Ext.get("main-aside").getWidth());
+//    }
+    
     Ext.get("result-panel").setWidth(resultsPanel.getWidth());
     Ext.each(resultsPanel.dom.children, function(div) {
         div = Ext.get(div);
