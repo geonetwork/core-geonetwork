@@ -12,8 +12,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>geonetwork-main</artifactId>
+  <artifactId>web-app</artifactId>
   <packaging>war</packaging>
   <name>GeoNetwork Web module</name>
   <description> GeoNetwork web module description (TODO). </description>

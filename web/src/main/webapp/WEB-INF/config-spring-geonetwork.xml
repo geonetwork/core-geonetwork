@@ -4,6 +4,7 @@
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<import resource="classpath:JZkitApplicationContext.xml"/>
 	<import resource="config-security.xml"/>
 	
 	<util:set id="languages">

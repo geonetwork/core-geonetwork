@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>org.geonetwork-opensource</groupId>
-            <artifactId>monitor</artifactId>
+            <artifactId>health-monitor</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
