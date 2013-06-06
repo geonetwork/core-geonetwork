@@ -1625,3 +1625,34 @@ dl.xml * dd {
 	color: #3B6688;
 	text-align: center;
 }
+
+/* For small screens */
+
+
+@media (max-width: 1200px) {
+	#main {
+		margin-right: 8%;
+		margin-left: 8%;
+	}
+}
+
+@media (max-width: 1100px) {
+	#main {
+		margin-right: 6%;
+		margin-left: 6%;
+	}
+}
+
+@media (max-width: 1000px) {
+	#main {
+		margin-right: 3%;
+		margin-left: 3%;
+	}
+}
+
+@media (max-width: 800px) {
+	#main {
+		margin-right: 0%;
+		margin-left: 0%;
+	}
+}
