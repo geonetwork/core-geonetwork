@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<langpack>
+    <str id="panel.title" txt="English:Graphical User Interface" />
+    <str id="description.radio" txt="English:Which user interface do you want to use?"/>
+    <str id="radio.label.1" txt="English:The Default user interface"/>
+    <str id="radio.label.2" txt="English:The Tabbed Widgets based user interface"/>
+    <str id="staticText.text" txt="English:The default user interface can be changed again by a system adminstrator. See the documentation for details."/>
+</langpack>

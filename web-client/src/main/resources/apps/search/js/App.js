@@ -285,21 +285,10 @@ GeoNetwork.app = function () {
         var denominatorField = GeoNetwork.util.SearchFormTools.getScaleDenominatorField(true);
         var statusField = GeoNetwork.util.SearchFormTools.getStatusField(services.getStatus, true);
         
-        // Add hidden fields to be use by quick metadata links from the admin panel (eg. my metadata).
-        var ownerField = new Ext.form.TextField({
-            name: 'E__owner',
-            hidden: true
-        });
-        var isHarvestedField = new Ext.form.TextField({
-            name: 'E__isHarvested',
-            hidden: true
-        });
-
-
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField, statusField, ownerField, isHarvestedField);
+                                metadataTypeField, validField, statusField);
         
         // Create INSPIRE fields if enabled in administration
         var inspirePanel = catalogue.getInspireInfo().enableSearchPanel === "true";
@@ -395,9 +384,19 @@ GeoNetwork.app = function () {
                 anchor: '100%'
             },
             listeners: {
-                onreset: function () {
+                onreset: function (args) {
                     facetsPanel.reset();
-                    this.fireEvent('search');
+                    
+                    // Remove field added by URL or quick search
+                    this.cascade(function(cur){
+                        if (cur.extraCriteria) {
+                            this.remove(cur);
+                        }
+                    }, this);
+                    
+                    if (!args.nosearch) {
+                        this.fireEvent('search');
+                    }
                 }
             },
             items: formItems
@@ -594,6 +593,8 @@ GeoNetwork.app = function () {
         catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
     }
     function show(uuid, record, url, maximized, width, height) {
+        var showFeedBackButton = record.get('email');
+        
         var win = new GeoNetwork.view.ViewWindow({
             serviceUrl: url,
             lang: this.lang,
@@ -603,6 +604,7 @@ GeoNetwork.app = function () {
             catalogue: this,
             maximized: maximized || false,
             metadataUuid: uuid,
+            showFeedBackButton: showFeedBackButton,
             record: record,
             resultsView: this.resultsView
             });

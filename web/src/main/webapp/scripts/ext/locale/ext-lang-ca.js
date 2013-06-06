@@ -29,7 +29,7 @@ if(Ext.LoadMask){
 Date.shortMonthNames = [
    "Gen",
    "Febr",
-   "MarÁ",
+   "Mar√ß",
    "Abr",
    "Maig",
    "Juny",
@@ -44,7 +44,7 @@ Date.shortMonthNames = [
 Date.monthNames = [
   "Gener",
   "Febrer",
-  "MarÁ",
+  "Mar√ß",
   "Abril",
   "Maig",
   "Juny",
@@ -98,7 +98,7 @@ Date.parseCodes.S.s = "(?:st|nd|rd|th)";
 if(Ext.MessageBox){
   Ext.MessageBox.buttonText = {
     ok     : "OK",
-    cancel : "Cancel∑lar",
+    cancel : "Cancel¬∑lar",
     yes    : "Si",
     no     : "No"
   };
@@ -115,31 +115,31 @@ if(Ext.util.Format){
 if(Ext.DatePicker){
   Ext.apply(Ext.DatePicker.prototype, {
     todayText         : "Avui",
-    minText           : "Aquesta data Ès anterior a la data mÌnima",
-    maxText           : "Aquesta data Ès posterior a la data m‡xima",
+    minText           : "Aquesta data √©s anterior a la data m√≠nima",
+    maxText           : "Aquesta data √©s posterior a la data m√†xima",
     disabledDaysText  : "",
     disabledDatesText : "",
     monthNames        : Date.monthNames,
     dayNames          : Date.dayNames,
-    nextText          : 'Mes seg¸ent (Control+Fletxa dreta)',
+    nextText          : 'Mes seg√ºent (Control+Fletxa dreta)',
     prevText          : 'Mes anterior (Control+Fletxa esquerra)',
     monthYearText     : 'Esculliu un mes (Control+ tecles Up/Down per canviar any)',
     todayTip          : "{0} (Barra d'espai)",
     format            : "m/d/y",
     okText            : "&#160;OK&#160;",
-    cancelText        : "Cancel∑lar",
+    cancelText        : "Cancel¬∑lar",
     startDay          : 0
   });
 }
 
 if(Ext.PagingToolbar){
   Ext.apply(Ext.PagingToolbar.prototype, {
-    beforePageText : "P‡gina",
+    beforePageText : "P√†gina",
     afterPageText  : "de {0}",
-    firstText      : "Primera P‡gina",
-    prevText       : "P‡gina anterior",
-    nextText       : "P‡gina seg¸ent",
-    lastText       : "⁄ltima p‡gina",
+    firstText      : "Primera P√†gina",
+    prevText       : "P√†gina anterior",
+    nextText       : "P√†gina seg√ºent",
+    lastText       : "√öltima p√†gina",
     refreshText    : "Refrescar",
     displayMsg     : "Mostrant {0} - {1} de {2}",
     emptyMsg       : 'Cap dada a mostrar'
@@ -147,14 +147,14 @@ if(Ext.PagingToolbar){
 }
 
 if(Ext.form.Field){
-  Ext.form.Field.prototype.invalidText = "El valor del camp Ès inv‡lid";
+  Ext.form.Field.prototype.invalidText = "El valor del camp √©s inv√†lid";
 }
 
 if(Ext.form.TextField){
   Ext.apply(Ext.form.TextField.prototype, {
-    minLengthText : "La longitud mÌnima del camp Ès de {0} car‡cters",
-    maxLengthText : "La longitud m‡xima del camp Ès de {0} car‡cters",
-    blankText     : "Aquest camp Ès obligatori",
+    minLengthText : "La longitud m√≠nima del camp √©s de {0} car√†cters",
+    maxLengthText : "La longitud m√†xima del camp √©s de {0} car√†cters",
+    blankText     : "Aquest camp √©s obligatori",
     regexText     : "",
     emptyText     : null
   });
@@ -164,9 +164,9 @@ if(Ext.form.NumberField){
   Ext.apply(Ext.form.NumberField.prototype, {
     decimalSeparator : ".",
     decimalPrecision : 2,
-    minText : "El valor mÌnim del camp Ès {0}",
-    maxText : "El valor m‡xim del camp Ès {0}",
-    nanText : "{0} no Ès un n˙mero v‡lid"
+    minText : "El valor m√≠nim del camp √©s {0}",
+    maxText : "El valor m√†xim del camp √©s {0}",
+    nanText : "{0} no √©s un n√∫mero v√†lid"
   });
 }
 
@@ -176,7 +176,7 @@ if(Ext.form.DateField){
     disabledDatesText : "Deshabilitat",
     minText           : "La data en aquest camp no pot ser anterior a {0}",
     maxText           : "La data en aquest camp no pot ser posterior a  {0}",
-    invalidText       : "{0} no Ès una data v‡lida - ha de tenir el seg¸ent format:  {1}",
+    invalidText       : "{0} no √©s una data v√†lida - ha de tenir el seg√ºent format:  {1}",
     format            : "m/d/y",
     altFormats        : "m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d"
   });
@@ -191,16 +191,16 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
   Ext.apply(Ext.form.VTypes, {
-    emailText    : 'Aquest camp ha de contenir una adreÁa de correu en format "user@example.com"',
+    emailText    : 'Aquest camp ha de contenir una adre√ßa de correu en format "user@example.com"',
     urlText      : 'Aquest camp ha de contenir una URL en format "http:/'+'/www.example.com"',
-    alphaText    : 'Aquest camp nomÈs pot contenir lletres i el car‡cter _',
-    alphanumText : 'Aquest camp nomÈs pot contenir lletres, n˙meros i el car‡cter _'
+    alphaText    : 'Aquest camp nom√©s pot contenir lletres i el car√†cter _',
+    alphanumText : 'Aquest camp nom√©s pot contenir lletres, n√∫meros i el car√†cter _'
   });
 }
 
 if(Ext.form.HtmlEditor){
   Ext.apply(Ext.form.HtmlEditor.prototype, {
-    createLinkText : "Si us plau, entreu la URL per l'enllaÁ:",
+    createLinkText : "Si us plau, entreu la URL per l'enlla√ß:",
     buttonTips : {
       bold : {
         title: 'Negreta (Ctrl+B)',
@@ -254,22 +254,22 @@ if(Ext.form.HtmlEditor){
       },
       insertunorderedlist : {
         title: 'Llista',
-        text: 'ComenÁar una llista.',
+        text: 'Comen√ßar una llista.',
         cls: 'x-html-editor-tip'
       },
       insertorderedlist : {
         title: 'Llista numerada',
-        text: 'ComenÁar una llista numerada.',
+        text: 'Comen√ßar una llista numerada.',
         cls: 'x-html-editor-tip'
       },
       createlink : {
-        title: 'EnllaÁ',
-        text: 'Fer un enllaÁ amb el text seleccionat.',
+        title: 'Enlla√ß',
+        text: 'Fer un enlla√ß amb el text seleccionat.',
         cls: 'x-html-editor-tip'
       },
       sourceedit : {
-        title: 'EdiciÛ',
-        text: 'Canviar a mode ediciÛ.',
+        title: 'Edici√≥',
+        text: 'Canviar a mode edici√≥.',
         cls: 'x-html-editor-tip'
       }
     }
@@ -331,7 +331,7 @@ if(Ext.form.TimeField){
   Ext.apply(Ext.form.TimeField.prototype, {
     minText : "L'hora en aquest camp ha de ser igual o anterior a {0}",
     maxText : "L'hora en aquest camp ha de ser igual o posterior a {0}",
-    invalidText : "{0} no Ès una hora v‡lida",
+    invalidText : "{0} no √©s una hora v√†lida",
     format : "g:i A",
     altFormats : "g:ia|g:iA|g:i a|g:i A|h:i|g:i|H:i|ga|ha|gA|h a|g a|g A|gi|hi|gia|hia|g|H"
   });
@@ -339,12 +339,12 @@ if(Ext.form.TimeField){
 
 if(Ext.form.CheckboxGroup){
   Ext.apply(Ext.form.CheckboxGroup.prototype, {
-    blankText : "Heu de seleccionar com a mÌnim un Ìtem del grup"
+    blankText : "Heu de seleccionar com a m√≠nim un √≠tem del grup"
   });
 }
 
 if(Ext.form.RadioGroup){
   Ext.apply(Ext.form.RadioGroup.prototype, {
-    blankText : "Heu de seleccionar un Ìtem del grup"
+    blankText : "Heu de seleccionar un √≠tem del grup"
   });
 }

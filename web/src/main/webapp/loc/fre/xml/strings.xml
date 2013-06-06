@@ -21,6 +21,8 @@
 	<isAdmin>Est administrateur ?</isAdmin>
     <anyLanguage>n'importe quelle langue</anyLanguage>
 	<nodata>Inconnu</nodata>
+	<chooseLogo>Sélectionner un logo</chooseLogo>
+	<orgLogo>Logo de l'organisme</orgLogo>
 	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -703,7 +705,7 @@
 	<persInfo>Personal info</persInfo>
 	<placeKeyword>Mot-clé géographique</placeKeyword>
 	<porCatInfoTab>Catalogue</porCatInfoTab>
-	<poweredBy>Fonctionne avec </poweredBy>
+	<poweredBy>Site propulsé par </poweredBy>
 	<previous>&lt;&lt;</previous>
 	<privileges>Privilèges</privileges>
 	<profile>Profil</profile>
@@ -733,7 +735,7 @@
 	<register>Créer un compte</register>
 	<registerChoose>Je souhaite </registerChoose>
 	<RegisteredUser>Utilisateur enregistré</RegisteredUser>
-	<registerTitle>Formulaire d'enregistrement</registerTitle>
+	<registerTitle>Créer un compte</registerTitle>
 	<registrationDetails>Information sur l'inscription :</registrationDetails>
 	<remote>Recherche distante</remote>
 	<remoteType>Distant</remoteType>
@@ -1388,4 +1390,13 @@
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>plus de critères</advancedOptions.show>
+	<advancedOptions.hide>moins de critères</advancedOptions.hide>
+	<latestDatasets>Nouveautés</latestDatasets>
+	<popularDatasets>Populaire</popularDatasets>
+	<filter>Filtrer</filter>
+	<welcome.text></welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Carte</map_label>
 </strings>

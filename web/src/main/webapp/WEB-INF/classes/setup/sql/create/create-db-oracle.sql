@@ -408,12 +408,10 @@ CREATE TABLE Thesaurus
 
 CREATE TABLE Services
   (
-  
     id         int,
-    name       varchar(64)   not null,
-    class       varchar(1048)   not null,
-    description       varchar(1048),
-        
+    name       varchar2(64)   not null,
+    class       varchar2(1048)   not null,
+    description       varchar2(1048),
     primary key(id)
   );
   
@@ -422,9 +420,8 @@ CREATE TABLE ServiceParameters
   (
     id         int,
     service     int,
-    name       varchar(64)   not null,
-    value       varchar(1048)   not null,
-    
+    name       varchar2(64)   not null,
+    value       varchar2(1048)   not null,
     primary key(id)
   );
 
@@ -447,7 +444,7 @@ REM CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
 
-ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES service (id);
+ALTER TABLE ServiceParameters ADD FOREIGN KEY (service) REFERENCES services (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (idDes) REFERENCES Categories (id);
 ALTER TABLE CategoriesDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE Groups ADD FOREIGN KEY (referrer) REFERENCES Users (id);

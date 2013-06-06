@@ -123,6 +123,7 @@
             "GeoNetwork/widgets/Templates.js",
             "GeoNetwork/widgets/MetadataMenu.js",
             "GeoNetwork/widgets/SearchFormPanel.js",
+            "GeoNetwork/widgets/FeedbackForm.js",
             "GeoNetwork/widgets/MetadataResultsView.js",
             "GeoNetwork/widgets/MetadataResultsToolbar.js",
             "GeoNetwork/widgets/FacetsPanel.js",

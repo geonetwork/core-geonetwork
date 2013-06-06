@@ -38,11 +38,7 @@ public class MostSearchedCategory extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         String query = "select termtext, count(*) as cnt from ";
         query += "params ";

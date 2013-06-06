@@ -1,0 +1,4 @@
+installer
+=========
+
+Geonetwork installer project

@@ -688,7 +688,11 @@
 					<equivalentScale>
 						<MD_RepresentativeFraction>
 							<denominator>
-							  <gco:Integer><xsl:value-of select="if ($maxScale) then $maxScale else format-number(round($maxScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/></gco:Integer>
+								<gco:Integer><xsl:value-of select="if ($maxScale) 
+																		then $maxScale 
+																		else if ($maxScaleHint = 'Infinity') 
+																			then $maxScaleHint 
+																			else  format-number(round($maxScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/></gco:Integer>
 							</denominator>
 						</MD_RepresentativeFraction>
 					</equivalentScale>

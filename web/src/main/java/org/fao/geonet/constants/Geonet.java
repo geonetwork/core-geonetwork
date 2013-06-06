@@ -505,6 +505,7 @@ public final class Geonet {
         public static final String DB_HEARTBEAT_ENABLED = "DBHeartBeatEnabled";
         public static final String DB_HEARTBEAT_INITIALDELAYSECONDS = "DBHeartBeatInitialDelaySeconds";
         public static final String DB_HEARTBEAT_FIXEDDELAYSECONDS = "DBHeartBeatFixedDelaySeconds";
+        public static final String SCHEMA_PLUGINS_CATALOG_UPDATE = "createOrUpdateSchemaCatalog";
     }
 
     /**

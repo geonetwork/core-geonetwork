@@ -311,7 +311,7 @@ GeoNetwork.app = function() {
             padding : '5px 25px',
             currTab : GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs : GeoNetwork.printDefaultForTabs || false,
-            printUrl : '../../apps/ngr2/print.html',
+            printUrl : '../../apps/html5ui/print.html',
             catalogue : catalogue,
             // maximized: true,
             metadataUuid : uuid,

@@ -1,0 +1,183 @@
+2010-04-14 10:54:39,069 ERROR [geoserver.global] - 
+----------------------------------
+- GEOSERVER_DATA_DIR: D:\projects\gn24Xbranch\jetty\..\data\geoserver_data
+----------------------------------
+2010-04-14 10:54:39,166 INFO [storage.DefaultStorageFinder] - ***************************************************************************************************************************
+2010-04-14 10:54:39,167 INFO [storage.DefaultStorageFinder] - *** Found System environment variable GEOSERVER_DATA_DIR set to ../data/geoserver_data, using it as the default prefix. ***
+2010-04-14 10:54:39,167 INFO [storage.DefaultStorageFinder] - ***************************************************************************************************************************
+2010-04-14 10:54:39,169 INFO [config.XMLConfiguration] - Failed to find geowebcache.xml. This is not a problem unless you are trying to use a custom XML configuration file.
+2010-04-14 10:54:40,010 INFO [jdbc.JDBCMBWrapper] - MetaStore database is version 110
+2010-04-14 10:54:40,011 INFO [jdbc.JDBCMBWrapper] - Upgrading  H2 database from 110 to 120
+2010-04-14 10:54:40,011 INFO [jdbc.JDBCMBWrapper] - Running database upgrade from 110 to 111
+2010-04-14 10:54:40,060 INFO [jdbc.JDBCMBWrapper] - Database upgrade from 110 to 111 completed
+2010-04-14 10:54:40,060 INFO [jdbc.JDBCMBWrapper] - Running database upgrade from 111 to 120
+2010-04-14 10:54:40,065 INFO [jdbc.JDBCMBWrapper] - Database upgrade from 111 to 120 completed
+2010-04-14 10:54:40,297 INFO [geoserver.catalog] - Loaded namespace 'gn' (http://geonetwork-opensource.org)
+2010-04-14 10:54:40,322 INFO [geoserver.catalog] - Loaded namespace 'cite' (http://www.opengeospatial.net/cite)
+2010-04-14 10:54:40,346 INFO [geoserver.catalog] - Loaded namespace 'topp' (http://www.openplans.org/topp)
+2010-04-14 10:54:40,352 INFO [geoserver.catalog] - Default namespace: 'gn'
+2010-04-14 10:54:40,389 INFO [geoserver.catalog] - Loaded style 'capitals'
+2010-04-14 10:54:40,405 INFO [geoserver.catalog] - Loaded style 'simple_roads'
+2010-04-14 10:54:40,417 INFO [geoserver.catalog] - Loaded style 'grass'
+2010-04-14 10:54:40,429 INFO [geoserver.catalog] - Loaded style 'cite_lakes'
+2010-04-14 10:54:40,442 INFO [geoserver.catalog] - Loaded style 'green'
+2010-04-14 10:54:40,454 INFO [geoserver.catalog] - Loaded style 'giant_polygon'
+2010-04-14 10:54:40,465 INFO [geoserver.catalog] - Loaded style 'restricted'
+2010-04-14 10:54:40,478 INFO [geoserver.catalog] - Loaded style 'line'
+2010-04-14 10:54:40,505 INFO [geoserver.catalog] - Loaded style 'simple_streams'
+2010-04-14 10:54:40,519 INFO [geoserver.catalog] - Loaded style 'pophatch'
+2010-04-14 10:54:40,532 INFO [geoserver.catalog] - Loaded style 'poi'
+2010-04-14 10:54:40,544 INFO [geoserver.catalog] - Loaded style 'polygon'
+2010-04-14 10:54:40,557 INFO [geoserver.catalog] - Loaded style 'raster'
+2010-04-14 10:54:40,570 INFO [geoserver.catalog] - Loaded style 'point'
+2010-04-14 10:54:40,583 INFO [geoserver.catalog] - Loaded style 'tiger_roads'
+2010-04-14 10:54:40,598 INFO [geoserver.catalog] - Loaded style 'burg'
+2010-04-14 10:54:40,622 INFO [geoserver.catalog] - Loaded style 'dem'
+2010-04-14 10:54:40,637 INFO [geoserver.catalog] - Loaded style 'poly_landmarks'
+2010-04-14 10:54:40,650 INFO [geoserver.catalog] - Loaded style 'rain'
+2010-04-14 10:54:40,663 INFO [geoserver.catalog] - Loaded style 'population'
+2010-04-14 10:54:41,550 INFO [geoserver.catalog] - Processed data store 'country_boundaries', enabled
+2010-04-14 10:54:41,570 INFO [geoserver.catalog] - Processed coverage store 'BlueMarble_world', enabled
+2010-04-14 10:54:42,960 WARN [referencing.factory] - Axis elements found in a wkt definition, the force longitude first axis order hint might not be respected:
+PROJCS["WGS84 / Simple Mercator", GEOGCS["WGS 84", DATUM["WGS_1984", SPHEROID["WGS_1984", 6378137.0, 298.257223563]], PRIMEM["Greenwich", 0.0], UNIT["degree", 0.017453292519943295]], PROJECTION["Mercator_1SP_Google"], PARAMETER["latitude_of_origin", 0.0], PARAMETER["central_meridian", 0.0], PARAMETER["scale_factor", 1.0], PARAMETER["false_easting", 0.0], PARAMETER["false_northing", 0.0], UNIT["m", 1.0], AXIS["x", EAST], AXIS["y", NORTH], AUTHORITY["EPSG","54004"]]
+2010-04-14 10:54:43,169 INFO [geoserver.catalog] - Loaded feature type 'gn:gboundaries'
+2010-04-14 10:54:43,963 INFO [layer.TileLayerDispatcher] - ConfigurationLoader acquired lock, sleeping 5 seconds
+2010-04-14 10:54:43,970 INFO [geowebcache.GeoWebCacheDispatcher] - Invoked setServletPrefix(gwc)
+2010-04-14 10:54:43,978 INFO [wms.WMSService] - Will proxy requests to backend that are not getmap or getcapabilities.
+2010-04-14 10:54:43,996 INFO [wfs.WFSService] - Configured to forward to http://localhost:8080/geoserver/wfs , timeout is 600000ms regex filter 
+2010-04-14 10:54:44,109 INFO [rest.RESTDispatcher] - Created RESTDispatcher with 7 paths
+2010-04-14 10:54:44,234 INFO [geoserver.confg] - Loading service 'wcs'
+2010-04-14 10:54:44,270 INFO [geoserver.confg] - Loading service 'wfs'
+2010-04-14 10:54:44,311 INFO [geoserver.confg] - Loading service 'wms'
+2010-04-14 10:54:45,965 INFO [layer.TileLayerDispatcher] - ConfigurationLoader woke up, initializing
+2010-04-14 10:54:46,048 INFO [layer.TileLayerDispatcher] - Adding layers from GeoServer Catalog Listener
+2010-04-14 10:54:46,048 INFO [layer.TileLayerDispatcher] - Adding: gn:gboundaries
+2010-04-14 10:54:46,048 INFO [layer.TileLayerDispatcher] - Adding: gn:world
+2010-04-14 10:54:46,049 ERROR [config.XMLConfiguration] - Configuration file cannot be read or does not exist!
+2010-04-14 10:54:46,049 INFO [config.XMLConfiguration] - Found configuration file in D:\projects\gn24Xbranch\web\geoserver\..\resources
+2010-04-14 10:54:46,049 INFO [layer.TileLayerDispatcher] - Adding layers from D:\projects\gn24Xbranch\web\geoserver\..\resources
+2010-04-14 10:54:46,049 ERROR [layer.TileLayerDispatcher] - Configuration D:\projects\gn24Xbranch\web\geoserver\..\resources contained no layers.
+2010-04-14 10:54:46,049 INFO [config.XMLConfiguration] - Found configuration file in D:\projects\gn24Xbranch\web\geoserver\..\resources
+2010-04-14 10:54:46,058 ERROR [layer.TileLayerDispatcher] - Error reading service information from D:\projects\gn24Xbranch\web\geoserver\..\resources: Error parsing file D:\projects\gn24Xbranch\web\geoserver\..\resources\geowebcache.xml
+2010-04-14 10:54:46,059 INFO [layer.TileLayerDispatcher] - ConfigurationLoader completed
+2010-04-14 10:58:48,864 ERROR [geoserver.ows] - 
+org.geoserver.platform.ServiceException: org.geoserver.platform.ServiceException: Service WCS is disabled
+	at org.geoserver.ows.DisabledServiceCheck.serviceDispatched(DisabledServiceCheck.java:58)
+	at org.geoserver.ows.Dispatcher.fireServiceDispatchedCallback(Dispatcher.java:387)
+	at org.geoserver.ows.Dispatcher.service(Dispatcher.java:382)
+	at org.geoserver.ows.Dispatcher.handleRequestInternal(Dispatcher.java:213)
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:153)
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:48)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:875)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:809)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:571)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:511)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:727)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:820)
+	at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1124)
+	at org.vfny.geoserver.filters.SetCharacterEncodingFilter.doFilter(SetCharacterEncodingFilter.java:108)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:265)
+	at org.acegisecurity.intercept.web.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:107)
+	at org.acegisecurity.intercept.web.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:72)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.ui.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:124)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.providers.anonymous.AnonymousProcessingFilter.doFilter(AnonymousProcessingFilter.java:125)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.ui.basicauth.BasicProcessingFilter.doFilter(BasicProcessingFilter.java:174)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.context.HttpSessionContextIntegrationFilter.doFilter(HttpSessionContextIntegrationFilter.java:249)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.util.FilterChainProxy.doFilter(FilterChainProxy.java:149)
+	at org.acegisecurity.util.FilterToBeanProxy.doFilter(FilterToBeanProxy.java:98)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.LoggingFilter.doFilter(LoggingFilter.java:73)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.ReverseProxyFilter.doFilter(ReverseProxyFilter.java:183)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.GZIPFilter.doFilter(GZIPFilter.java:47)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:181)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417)
+	at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230)
+	at org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:324)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:534)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:879)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:741)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:213)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:403)
+	at org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:409)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:522)
+Caused by: org.geoserver.platform.ServiceException: Service WCS is disabled
+	at org.geoserver.ows.DisabledServiceCheck.serviceDispatched(DisabledServiceCheck.java:53)
+	... 52 more
+2010-04-14 10:59:06,277 ERROR [geoserver.ows] - 
+org.vfny.geoserver.wms.WmsException: Could not find layer topp:states
+	at org.geoserver.wms.kvp.GetMapKvpRequestReader.parseLayers(GetMapKvpRequestReader.java:1099)
+	at org.geoserver.wms.kvp.GetMapKvpRequestReader.read(GetMapKvpRequestReader.java:179)
+	at org.geoserver.wms.kvp.GetMapKvpRequestReader.read(GetMapKvpRequestReader.java:71)
+	at org.geoserver.ows.Dispatcher.parseRequestKVP(Dispatcher.java:1114)
+	at org.geoserver.ows.Dispatcher.dispatch(Dispatcher.java:457)
+	at org.geoserver.ows.Dispatcher.handleRequestInternal(Dispatcher.java:226)
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:153)
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:48)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:875)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:809)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:571)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:501)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:707)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:820)
+	at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:502)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1124)
+	at org.vfny.geoserver.filters.SetCharacterEncodingFilter.doFilter(SetCharacterEncodingFilter.java:108)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:265)
+	at org.acegisecurity.intercept.web.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:107)
+	at org.acegisecurity.intercept.web.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:72)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.ui.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:124)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.providers.anonymous.AnonymousProcessingFilter.doFilter(AnonymousProcessingFilter.java:125)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.ui.basicauth.BasicProcessingFilter.doFilter(BasicProcessingFilter.java:174)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.context.HttpSessionContextIntegrationFilter.doFilter(HttpSessionContextIntegrationFilter.java:249)
+	at org.acegisecurity.util.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:275)
+	at org.acegisecurity.util.FilterChainProxy.doFilter(FilterChainProxy.java:149)
+	at org.acegisecurity.util.FilterToBeanProxy.doFilter(FilterToBeanProxy.java:98)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.LoggingFilter.doFilter(LoggingFilter.java:73)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.ReverseProxyFilter.doFilter(ReverseProxyFilter.java:183)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.geoserver.filters.GZIPFilter.doFilter(GZIPFilter.java:47)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1115)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:361)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:181)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:417)
+	at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230)
+	at org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:324)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:534)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.java:864)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:533)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:207)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:403)
+	at org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:409)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:522)
+2010-04-14 11:00:56,433 INFO [geowebcache.GeoWebCacheDispatcher] - GeoWebCacheDispatcher.destroy() was invoked, shutting down.
+2010-04-14 11:00:56,439 INFO [storage.StorageBroker] - Destroying StorageBroker
+2010-04-14 11:00:56,440 WARN [jdbc.JDBCMBWrapper] - SHUTDOWN call to JDBC resulted in: La base de datos ya esta cerrada (para des-habilitar el cerrado automatico durante el shutdown de la VM, agregue ";DB_CLOSE_ON_EXIT=FALSE" a la URL de conexión)
+Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-104]
+2010-04-14 11:00:58,598 INFO [geoserver.catalog] - Disposing datastore 'DataStoreInfoImpl-71ad414c:127fb86fd45:-7fe6'
+2010-04-14 11:00:58,599 INFO [geoserver.catalog] - Disposing grid coverage reader 'BlueMarble_world'

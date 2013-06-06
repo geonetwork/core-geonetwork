@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+
+<installation version="1.0">
+	
+	<!-- =================================================================================== -->
+	
+	<info>
+		<appname>geonetwork</appname>
+		<appversion>@version@ @subVersion@</appversion>
+		<authors>
+			<author name="OSGeo"               email="geonetwork@osgeo.org"/>					
+			<author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
+			<author name="VAM WFP"             email="vamsie@wfp.org"/>
+			<author name="UNEP.net"            email="info@unep.net"/>			 
+			<author name="OCHA"                email="ochageodata@un.org"/>				 
+		</authors>
+		<url>http://geonetwork-opensource.org/</url>
+		<javaversion>@javaVersion@</javaversion>
+	</info>
+	
+	<!-- =================================================================================== -->
+		
+	<guiprefs width="800" height="600" resizable="yes">
+		<laf name="liquid">
+			<os family="unix"/>
+			<os family="windows"/>
+			<os family="mac"/>
+		</laf>
+		<modifier value="true" key="showDebugWindow" />
+	</guiprefs>
+	
+	<!-- =================================================================================== -->
+	
+	<locale>
+		<langpack iso3="eng"/>
+        <langpack iso3="fra"/>
+        <langpack iso3="spa"/>        
+	</locale>
+	
+	<!-- =================================================================================== -->
+		
+	<conditions>
+		<condition type="variable" id="guidefault">
+			<name>gui.radio</name>
+			<value>default</value>
+		</condition>
+		<condition type="variable" id="guihtml5widget">
+			<name>gui.radio</name>
+			<value>html5widget</value>
+		</condition>
+	</conditions>
+	
+	<dynamicvariables>
+		<variable name="defaultGUI" condition="guidefault">
+			<value><![CDATA[<client type="redirect" widget="false" url="main.home" />]]></value>
+		</variable>
+		<variable name="defaultGUI" condition="guihtml5widget">
+			<value><![CDATA[<client type="redirect" widget="true" url="search" createParameter="#create" stateId="s"/>]]></value>
+		</variable>
+	</dynamicvariables>
+	
+	<!-- =================================================================================== -->
+	
+	<resources>
+		<res id="HTMLLicencePanel.licence"     src="../docs/license.html"/>
+		<res id="HTMLLicencePanel.licence_fra" src="../docs/license_fra.html"/>
+        <res id="HTMLLicencePanel.licence_spa" src="../docs/license_spa.html"/>
+		<res id="HTMLInfoPanel.info"           src="../.props/readme.html"/>
+		<res id="HTMLInfoPanel.info_fra"       src="../.props/readme_fra.html"/>
+        <res id="HTMLInfoPanel.info_spa"       src="../.props/readme_spa.html"/>
+		<res id="userInputSpec.xml"            src="userInputSpec.xml"/>
+		<res id="userInputLang.xml"            src="userInputLang.xml"/>
+		<res id="userInputLang.xml_fra"        src="userInputLang.xml_fra.xml"/>
+	 	<res id="userInputLang.xml_spa"        src="userInputLang.xml_spa.xml"/>
+		<res id="Installer.image"          	   src="installer.png"/>
+		<res id="shortcutSpec.xml"         	   src="windows-shortcuts.xml"/>
+		<res id="Unix_shortcutSpec.xml"        src="unix-shortcuts.xml"/>
+		<res id="Win_shortcutSpec.xml"         src="windows-shortcuts.xml"/>
+        <res id="packsLang.xml"                src="packsLang.xml"/>
+        <res id="packsLang.xml_fra"            src="packsLang.xml_fra"/>
+        <res id="packsLang.xml_spa"            src="packsLang.xml_spa"/>
+	</resources>
+	
+	<!-- =================================================================================== -->
+	
+	<panels>
+		<panel classname="HelloPanel" id="helloPanel"/>
+		<panel classname="HTMLLicencePanel" id="htmlLicensePanel"/>
+		<panel classname="TargetPanel" id="targetPanel"/>
+		<panel classname="PacksPanel" id="packsPanel"/>
+		<panel classname="UserInputPanel" id="userInputPanel"/>
+		<panel classname="InstallPanel" id="installPanel"/>
+		<panel classname="ShortcutPanel" id="shortcutPanel"/>
+		<panel classname="HTMLInfoPanel" id="htmlInfoPanel"/>
+		<panel classname="FinishPanel" id="finishPanel"/>
+	</panels>
+	
+	<!-- =================================================================================== -->
+	
+	<native type="izpack" name="ShellLink.dll" />
+	
+	<!-- =================================================================================== -->
+	
+	<packs>
+		<pack id="core" name="Core" required="yes" preselected="yes">
+			<description/>
+			
+			<fileset dir="../release/bin"   targetdir="$INSTALL_PATH/bin"/>
+			
+			<fileset dir="../release/jetty" targetdir="$INSTALL_PATH/jetty">
+				<exclude name="logs/*.log"/>
+				<exclude name="logs/archive/*.log"/>
+			</fileset>
+
+			<!--singlefile target="$INSTALL_PATH/web/geonetwork.war" 
+			src="../web/target/geonetwork.war" override="true"/-->
+			
+			<fileset dir="../web/target/geonetwork"  targetdir="$INSTALL_PATH/web/geonetwork" />
+
+			<fileset dir="../release/data"   targetdir="$INSTALL_PATH/web/geonetwork/data" />
+			<fileset dir="../release/schemaPlugins"   targetdir="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins" />
+			
+            <fileset dir="../web-client/target/classes/apps" targetdir="$INSTALL_PATH/web/geonetwork/apps" />
+			
+			<!-- Update the config-gui.xml to reflect the selected GUI -->
+			<parsable targetfile="$INSTALL_PATH/web/geonetwork/WEB-INF/config-gui.xml" />
+				
+			<executable targetfile="$INSTALL_PATH/bin/start-geonetwork.sh" />
+			<executable targetfile="$INSTALL_PATH/bin/stop-geonetwork.sh" />
+			<executable targetfile="$INSTALL_PATH/bin/gast.sh" />
+		</pack>
+
+
+    <pack id="geoserver" name="GeoServer" required="no" preselected="yes">
+      <description/>
+      
+      <fileset dir="../geoserver/target/geoserver" targetdir="$INSTALL_PATH/web/geoserver"/>
+    	
+    	<!-- Unzipping when container start takes a long time on windows. 
+        <singlefile target="$INSTALL_PATH/web/geoserver.war" src="../geoserver/target/geoserver.war"
+        override="true"/>
+      -->
+    </pack>
+
+
+    <pack id="inspire" name="European Union INSPIRE Directive configuration pack" required="no" preselected="no">
+        <description/>
+
+        <!-- Enable schematron rules -->
+        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch.disabled"
+                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch"
+                    override="true"/>
+
+        <!-- Inspire thesaurus files -->
+        <singlefile src="../web/target/thesauri/gemet.rdf"
+                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/gemet.rdf"
+                    override="true"/>
+
+        <singlefile src="../web/target/thesauri/inspire-service-taxonomy.rdf"
+                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-service-taxonomy.rdf"
+                    override="true"/>
+
+        <singlefile src="../web/target/thesauri/inspire-theme.rdf"
+                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-theme.rdf"
+                    override="true"/>
+
+        <!-- SQL script with Inspire Settings enabled -->
+        <singlefile src="../web/target/inspire/data-db-default.sql"
+                    target="$INSTALL_PATH//web/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
+                    override="true"/>
+    </pack>
+
+    <pack id="gast" name="GAST" required="no" preselected="no">
+      <description/>
+      
+      <fileset dir="../gast" targetdir="$INSTALL_PATH/gast">
+        <exclude name="logs/gast.log*"/>
+        <exclude name="src/**"/>
+        <exclude name="target/**"/>
+        <exclude name="pom.xml"/>
+      </fileset>
+      
+      <singlefile target="$INSTALL_PATH/gast/gast.jar" src="../gast/target/gast.jar" override="true"/>
+    </pack>
+	</packs>
+
+	<!-- =================================================================================== -->
+
+</installation>

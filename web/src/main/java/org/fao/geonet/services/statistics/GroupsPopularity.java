@@ -69,11 +69,7 @@ public class GroupsPopularity extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        boolean readOnlyMode = super.exec(params, context) == null;
-        if(readOnlyMode) {
-            return null;
-        }
-		String message = "";
+        String message = "";
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
 		// gets the total popularity count (=100)
