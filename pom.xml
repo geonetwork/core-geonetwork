@@ -943,9 +943,14 @@
   <modules>
     <module>cachingxslt</module>
     <module>jeeves</module>
-    <module>oaipmh</module>
     <module>sde</module>
     <module>web-client</module>
+    <module>core</module>
+    <module>oaipmh</module>
+    <module>csw-server</module>
+    <module>harvesters</module>
+    <module>healthmonitor</module>
+    <module>services</module>
     <module>web</module>
   </modules>
 
