@@ -1542,6 +1542,11 @@ ul li.tag-cloud a {
 #latest-metadata header h1 span,#popular-metadata header h1 span{
 	padding:12px;
 	background: white;
+	min-height: 20px;
+}
+
+#latest-metadata, #popular-metadata {
+	min-height: 100px;
 }
 
 #latest-metadata input {
