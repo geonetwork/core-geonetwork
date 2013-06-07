@@ -301,42 +301,42 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupid}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupid}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>oaipmh</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
-      <groupId>${project.groupid}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
       <dependency>
-          <groupId>${project.groupid}</groupId>
+          <groupId>${project.groupId}</groupId>
           <artifactId>core</artifactId>
           <version>${project.version}</version>
       </dependency>
 
       <dependency>
-          <groupId>${project.groupid}</groupId>
+          <groupId>${project.groupId}</groupId>
           <artifactId>services</artifactId>
           <version>${project.version}</version>
       </dependency>
 
       <dependency>
-          <groupId>${project.groupid}</groupId>
+          <groupId>${project.groupId}</groupId>
           <artifactId>harvesters</artifactId>
           <version>${project.version}</version>
       </dependency>
 
       <dependency>
-          <groupId>${project.groupid}</groupId>
-          <artifactId>heath-monitor</artifactId>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>health-monitor</artifactId>
           <version>${project.version}</version>
       </dependency>
 
