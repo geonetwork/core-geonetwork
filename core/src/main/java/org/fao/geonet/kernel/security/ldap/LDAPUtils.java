@@ -28,7 +28,7 @@ import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.user.Update;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import javax.naming.NamingEnumeration;
@@ -121,12 +121,12 @@ public class LDAPUtils {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 					}
-					
-					Update.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(groupId), profile);
+
+					Utils.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(groupId), profile);
 					
 					try {
 						if (profile.equals(Profile.REVIEWER)) {
-							Update.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(
+                            Utils.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(
 									groupId), Profile.EDITOR);
 						}
 					} catch (Exception e) {

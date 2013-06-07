@@ -87,7 +87,7 @@ public class RepositoryInfo {
 	 * returns the list of repositories that are configured in JZkit
    * @param srvContext
    * @return
-   * @throws ConfigurationException
+   * @throws org.jzkit.configuration.api.ConfigurationException
    */
 	public static Collection<RepositoryInfo> getRepositories(ServiceContext srvContext) throws ConfigurationException {
 

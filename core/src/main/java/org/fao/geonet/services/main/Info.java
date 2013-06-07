@@ -42,7 +42,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.region.RegionsDAO;
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
 
@@ -293,7 +293,7 @@ public class Info implements Service {
      * @param profile
      * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
      * @return
-     * @throws SQLException
+     * @throws java.sql.SQLException
      */
     private Element getGroups(ServiceContext context, Dbms dbms, String profile, boolean includingSystemGroups) throws SQLException {
 		UserSession session = context.getUserSession();
@@ -345,7 +345,7 @@ public class Info implements Service {
      * @param dbms
      * @param sm
      * @return
-     * @throws SQLException
+     * @throws java.sql.SQLException
      */
 	private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
 	{

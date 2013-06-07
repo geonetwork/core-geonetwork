@@ -49,7 +49,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.services.region.RegionsDAO;
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;

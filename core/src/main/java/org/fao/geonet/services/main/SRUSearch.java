@@ -28,11 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.util.z3950.DefaultContextSetCQLString;
-import org.fao.geonet.services.util.z3950.GNExplainInfoDTO;
-import org.fao.geonet.services.util.z3950.SRUDiag;
-import org.fao.geonet.services.util.z3950.SRUParamTestDBO;
-import org.fao.geonet.services.util.z3950.SRUParamTester;
+import org.fao.geonet.services.util.z3950.*;
 import org.fao.geonet.services.util.z3950.jzkitextensions.GNProfileService;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -50,12 +46,7 @@ import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 
@@ -64,6 +55,7 @@ import java.util.Set;
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  *
  */
+
 /**
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  *
@@ -387,7 +379,7 @@ public class SRUSearch implements Service
 						elem.addContent(e);
 					}
 
-					else if (result.records[i].getOriginalObject() instanceof org.w3c.dom.Document )
+					else if (result.records[i].getOriginalObject() instanceof Document )
 					{
 						Document d = (Document)result.records[i].getOriginalObject();
 

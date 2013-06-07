@@ -36,12 +36,7 @@ import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
 import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.RecordModel.InformationFragmentImpl;
 import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
-import org.jzkit.search.util.ResultSet.AbstractIRResultSet;
-import org.jzkit.search.util.ResultSet.IFSNotificationTarget;
-import org.jzkit.search.util.ResultSet.IRResultSet;
-import org.jzkit.search.util.ResultSet.IRResultSetException;
-import org.jzkit.search.util.ResultSet.IRResultSetInfo;
-import org.jzkit.search.util.ResultSet.IRResultSetStatus;
+import org.jzkit.search.util.ResultSet.*;
 
 import java.util.List;
 import java.util.Observer;

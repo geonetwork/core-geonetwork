@@ -23,32 +23,17 @@ package org.fao.geonet.services.util.z3950.jzkitextensions;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jzkit.search.util.QueryModel.CQLString.CQLString;
-import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
-import org.jzkit.search.util.QueryModel.Internal.AttrValue;
-import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelNamespaceNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
-import org.jzkit.search.util.QueryModel.Internal.QueryNode;
+import org.jzkit.search.util.QueryModel.Internal.*;
 import org.jzkit.search.util.QueryModel.InvalidQueryException;
 import org.jzkit.search.util.QueryModel.QueryModel;
 import org.springframework.context.ApplicationContext;
-import org.z3950.zing.cql.CQLAndNode;
-import org.z3950.zing.cql.CQLBooleanNode;
-import org.z3950.zing.cql.CQLNode;
-import org.z3950.zing.cql.CQLNotNode;
-import org.z3950.zing.cql.CQLOrNode;
-import org.z3950.zing.cql.CQLParser;
-import org.z3950.zing.cql.CQLPrefixNode;
-import org.z3950.zing.cql.CQLProxNode;
-import org.z3950.zing.cql.CQLRelation;
-import org.z3950.zing.cql.CQLTermNode;
+import org.z3950.zing.cql.*;
 
 /**
  * code copied and pasted from JZKit sourcecode to fix a bug in the original class
  * @author 'Ian Ibbotson <ianibbo@googlemail.com>'
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
- * @see CQLString
+ * @see org.jzkit.search.util.QueryModel.CQLString.CQLString
  */
 public class GNCQLString implements QueryModel, java.io.Serializable {
 
@@ -68,7 +53,7 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
       cql_root = parser.parse(the_cql_string);
       if(log.isDebugEnabled()) log.debug("Parsed CQL");
     }
-    catch (  org.z3950.zing.cql.CQLParseException cqle ) {
+    catch (  CQLParseException cqle ) {
       log.warn("Problem parsing CQL",cqle);
       // cqle.printStackTrace();
     }

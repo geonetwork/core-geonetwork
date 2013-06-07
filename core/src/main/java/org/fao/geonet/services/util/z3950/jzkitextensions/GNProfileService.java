@@ -26,18 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.jzkit.ServiceDirectory.AttributeSetDBO;
 import org.jzkit.configuration.api.Configuration;
 import org.jzkit.configuration.api.ConfigurationException;
-import org.jzkit.search.util.Profile.CrosswalkDBO;
-import org.jzkit.search.util.Profile.ProfileDBO;
-import org.jzkit.search.util.Profile.ProfileService;
-import org.jzkit.search.util.Profile.ProfileServiceException;
-import org.jzkit.search.util.Profile.ProfileServiceImpl;
-import org.jzkit.search.util.Profile.QueryVerifyResult;
-import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
-import org.jzkit.search.util.QueryModel.Internal.AttrValue;
-import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelNamespaceNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
-import org.jzkit.search.util.QueryModel.Internal.QueryNode;
+import org.jzkit.search.util.Profile.*;
+import org.jzkit.search.util.QueryModel.Internal.*;
 import org.jzkit.search.util.QueryModel.QueryModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -47,12 +37,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-                                                                                                                                       
+
 /**
  * code copied and pasted from JZKit sourcecode to fix a bug in the original class
  * @author 'Ian Ibbotson <ianibbo@googlemail.com>'
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
- * @see ProfileServiceImpl
+ * @see org.jzkit.search.util.Profile.ProfileServiceImpl
  */
 public class GNProfileService implements ProfileService, ApplicationContextAware {
 
@@ -67,10 +57,10 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
 //  private static final int SEMANTIC_ACTION_STRIP = 2;
 //  /** If we can't map directly, do a best effort match */
 //  private static final int SEMANTIC_ACTION_FUZZY = 3;
-  
+
   public static final int ERROR_QUERY = 1;
   public static final int ERROR_CONFIG = 2;
-  
+
   public GNProfileService() {
   }
 
@@ -116,7 +106,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
     catch ( org.jzkit.search.util.QueryModel.InvalidQueryException iqe ) {
       throw new ProfileServiceException(iqe.toString(),ERROR_QUERY);
     }
-    catch ( org.jzkit.configuration.api.ConfigurationException ce ) {
+    catch ( ConfigurationException ce ) {
       throw new ProfileServiceException(ce.toString(),ERROR_CONFIG);
     }
 
@@ -153,7 +143,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
 
       QueryNode lhs = null;
       QueryNode rhs = null;
-     
+
       if ( ( cn.getLHS() != null ) && ( cn.getLHS().countChildrenWithTerms() > 0 ) )
         lhs = visit(cn.getLHS(), default_namespace, valid_attributes, service_specific_rewrite_rules, p);
 
@@ -201,7 +191,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
 
     @SuppressWarnings("unchecked")
     Iterator<String> attrIterator = q.getAttrIterator();
-    for ( java.util.Iterator<String> i = attrIterator; i.hasNext(); ) {
+    for ( Iterator<String> i = attrIterator; i.hasNext(); ) {
       // 1. extract and rewrite use attribute
       String attr_type = i.next();
       AttrValue av = (AttrValue) q.getAttr(attr_type);
@@ -239,7 +229,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
         boolean found = false;
         Set<Entry<String, AttrValue>> entrySet = service_specific_rewrite_rules.entrySet();
         for ( Iterator<Entry<String, AttrValue>> i = entrySet.iterator(); i.hasNext() && !found; ) {
-          Map.Entry<String, AttrValue> e = i.next();
+          Entry<String, AttrValue> e = i.next();
           if ( e.getKey().equals(av_str_val) ) {
             AttrValue new_av = (AttrValue) e.getValue();
               if(log.isDebugEnabled()) log.debug("Possible rewrite: "+new_av);
@@ -323,7 +313,7 @@ public class GNProfileService implements ProfileService, ApplicationContextAware
       CrosswalkDBO cw = configuration.lookupCrosswalk(namespace);
 
       if ( cw != null ) {
-        org.jzkit.search.util.Profile.AttrMappingDBO am = cw.lookupMapping(av.getValue().toString());
+        AttrMappingDBO am = cw.lookupMapping(av.getValue().toString());
         if (am != null) {
                result = am.getTargetAttrs();
         }

@@ -52,7 +52,7 @@ import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.relations.Get;
+import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 class MEF2Exporter {
@@ -247,7 +247,7 @@ class MEF2Exporter {
 		if (id == null)
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
-		Set<String> relatedIds = Get.getRelationIds(Integer.valueOf(id), "normal", context);
+		Set<String> relatedIds = Utils.getRelationIds(Integer.valueOf(id), "normal", context);
 		if (relatedIds.size() == 0)
 			return "";
 

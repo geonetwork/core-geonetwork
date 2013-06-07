@@ -90,8 +90,8 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.services.region.Region;
-import org.fao.geonet.services.region.RegionsDAO;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 

@@ -26,7 +26,7 @@ public abstract class MailSendingService implements Service {
      * @param content
      * @param protocol
      * @return
-     * @throws MessagingException
+     * @throws javax.mail.MessagingException
      */
     protected boolean sendMail(String host, int port, String subject, String from, String to, String content, String protocol) throws MessagingException {
         boolean isSendout;

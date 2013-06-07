@@ -21,20 +21,17 @@
 
 package org.fao.geonet.guiservices.schemas;
 
-import java.util.Map;
-
 import jeeves.interfaces.Service;
-import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FilenameUtils;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-
 import org.jdom.Element;
+
+import java.util.Map;
 
 //=============================================================================
 
