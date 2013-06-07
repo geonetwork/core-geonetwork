@@ -494,19 +494,6 @@ div.help ul li {
 	font-size: 12px;
 }
 
-#metadata-info .x-toolbar {
-	background: none !important;
-	background-color: white !important;
-}
-
-#metadata-info .x-layout-collapsed {
-	background-color: #F6D4B1 !important;
-}
-
-#metadata-info .x-layout-split,#metadata-info .x-layout-collapsed-over {
-	background-color: #E26F02 !important;
-}
-
 #metadata-info .title {
 	color: #069;
 }
