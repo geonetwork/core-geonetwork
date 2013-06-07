@@ -29,8 +29,8 @@ div#page-container #metadata-info * , div#page-container div#latest-metadata hea
 #main {
 	padding: 3px;
 	padding-bottom: 150px; /* height of the footer */
-	margin-left: 15%;
-	margin-right: 15%;
+	margin-left: 7%;
+	margin-right: 7%;
 }
 
 #footer {
@@ -1633,25 +1633,31 @@ dl.xml * dd {
 
 @media (max-width: 1200px) {
 	#main {
-		margin-right: 8%;
-		margin-left: 8%;
+		margin-right: 4%;
+		margin-left: 4%;
 	}
 }
 
 @media (max-width: 1100px) {
-	#main {
-		margin-right: 6%;
-		margin-left: 6%;
-	}
-}
-
-@media (max-width: 1000px) {
 	#main {
 		margin-right: 3%;
 		margin-left: 3%;
 	}
 }
 
+@media (max-width: 1000px) {
+	#main {
+		margin-right: 2%;
+		margin-left: 2%;
+	}
+}
+
+@media (max-width: 900px) {
+	#main {
+		margin-right: 1%;
+		margin-left: 1%;
+	}
+}
 @media (max-width: 800px) {
 	#main {
 		margin-right: 0%;
