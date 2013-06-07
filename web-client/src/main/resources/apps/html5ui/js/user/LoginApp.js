@@ -153,6 +153,7 @@ GeoNetwork.loginApp = function() {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },
                 success : function() {
+                    catalogue.identifiedUser = undefined;
                     catalogue.fireEvent('afterLogout', 
                                 catalogue, catalogue.identifiedUser);
                 },
