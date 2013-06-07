@@ -447,6 +447,16 @@ div#resultsPanel * div.x-panel-tbar>div {
 	overflow: initial;
 }
 
+#layerManager-accordion input, #layerManager-accordion textarea {
+	min-width: 90px;
+}
+
+#printToPdfPanel form {
+	overflow-y: scroll;
+	display: inline-block;
+	max-width: 100%;
+}
+
 div#resultsPanel .x-panel-bbar div {
 	border: none !important;
 	background: none;

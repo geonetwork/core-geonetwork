@@ -536,6 +536,7 @@ GeoNetwork.mapApp = function() {
         printPanel = new Ext.form.FormPanel(
                 {
                     title : OpenLayers.i18n("mf.print.print"),
+                    id: "printToPdfPanel",
                     labelAlign : "top",
                     items : [
                             {
