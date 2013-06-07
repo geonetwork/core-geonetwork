@@ -1345,7 +1345,7 @@ a#administration_button:hover {
 	background-position-y: -39px;
 }
 
-#metadata-info .title {
+#metadata-info span.title {
 	font-size: 20px;
 }
 
@@ -1458,10 +1458,6 @@ body * ul.x-menu-list {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-}
-
-legend[id*="MD_Metadata"][id*="root"] span span div.alert {
-	display: none;
 }
 
 .alert * h2 {

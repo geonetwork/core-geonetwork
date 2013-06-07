@@ -491,20 +491,7 @@ div.help ul li {
 }
 
 #metadata-info * {
-	font: 12px;
-}
-
-#metadata-info .x-toolbar {
-	background: none !important;
-	background-color: white !important;
-}
-
-#metadata-info .x-layout-collapsed {
-	background-color: #F6D4B1 !important;
-}
-
-#metadata-info .x-layout-split,#metadata-info .x-layout-collapsed-over {
-	background-color: #E26F02 !important;
+	font-size: 12px;
 }
 
 #metadata-info .title {
@@ -1073,7 +1060,7 @@ div.showBigMapItemInactive:hover {
 }
 
 #metadata-info #editorPanel .buttons a.del span {
-	background-image: url("../../images/default/minus-white.png");
+	background-image: url("../../images/default/cross.png");
 }
 
 #metadata-info #editorPanel .buttons a.add span {
