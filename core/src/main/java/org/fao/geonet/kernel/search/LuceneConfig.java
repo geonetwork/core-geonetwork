@@ -306,6 +306,7 @@ public class LuceneConfig {
 	
 	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
 	private Set<String> multilingualSortFields = new HashSet<String>();
+    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
 
 	
     /**

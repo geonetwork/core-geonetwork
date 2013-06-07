@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.config;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -30,10 +31,10 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import javax.servlet.ServletContext;
 
@@ -48,6 +49,8 @@ public class Reload implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig handlerConfig = gc.getBean(ServiceConfig.class);
+		
+		
 		String luceneConfigXmlFile = handlerConfig
 				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 		String path = context.getAppPath();
@@ -59,14 +62,18 @@ public class Reload implements Service {
 
 		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
 
+		JeevesApplicationContext applicationContext = context.getApplicationContext();
+        ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+// RFTODO test reload and make sure we don't have 2 lc beans
+//        LuceneConfig beanInstance = applicationContext.getBean(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, LuceneConfig.class);
+//		beanFactory.destroyBean(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, beanInstance);
+		
+		beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
 		// Update related services to Lucene config
 		// SearchManager
 		SearchManager sm = gc.getBean(SearchManager.class);
-		sm.reloadLuceneConfiguration(lc);
+		sm.reloadLuceneConfiguration();
 
-		// CatalogueDispatcher
-		CatalogDispatcher cd = gc.getBean(CatalogDispatcher.class);
-		cd.reloadLuceneConfiguration(lc);
 
 		Logger logger = context.getLogger();
 		logger.info("  - Lucene configuration is:");

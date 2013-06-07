@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
@@ -51,7 +52,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -92,6 +92,8 @@ import java.util.concurrent.Executors;
  */
 public class DataManager {
 
+
+    private JeevesApplicationContext _applicationContext;
 
     //--------------------------------------------------------------------------
     //---
@@ -134,6 +136,7 @@ public class DataManager {
         session.loginAs(new JeevesUser(servContext.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
         servContext.setUserSession(session);
         init(parameterObject.context, parameterObject.dbms, false);
+        this._applicationContext = servContext.getApplicationContext();
     }
 
     /**
@@ -610,14 +613,6 @@ public class DataManager {
     //--- Schema management API
     //---
     //--------------------------------------------------------------------------
-
-    /**
-     *
-     * @param hm
-     */
-    public void setHarvestManager(HarvestManager hm) {
-        harvestMan = hm;
-    }
 
     /**
      *
@@ -3009,9 +3004,12 @@ public class DataManager {
         addElement(info, Edit.Info.Elem.RATING,      rating);
         addElement(info, Edit.Info.Elem.DISPLAY_ORDER,  displayOrder);
 
-        if (isHarvested.equals("y"))
-            info.addContent(harvestMan.getHarvestInfo(harvestUuid, id, uuid));
-
+        if (isHarvested.equals("y")) {
+            HarvestInfoProvider infoProvider = _applicationContext.getBean(HarvestInfoProvider.class);
+            if (infoProvider != null) {
+                info.addContent(infoProvider.getHarvestInfo(harvestUuid, id, uuid));
+            }
+        }
         if (version != null)
             addElement(info, Edit.Info.Elem.VERSION, version);
 
@@ -3303,7 +3301,6 @@ public class DataManager {
     private SearchManager  searchMan;
     private SettingManager settingMan;
     private SchemaManager  schemaMan;
-    private HarvestManager harvestMan;
     private String dataDir;
     private String thesaurusDir;
     private ServiceContext servContext;

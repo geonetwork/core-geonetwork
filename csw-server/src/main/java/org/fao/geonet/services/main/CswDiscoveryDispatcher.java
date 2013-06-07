@@ -29,8 +29,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 

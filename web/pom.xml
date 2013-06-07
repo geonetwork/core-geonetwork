@@ -301,30 +301,42 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupid}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupid}</groupId>
       <artifactId>oaipmh</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupid}</groupId>
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-      <dependency> <!-- dummy API for ARC SDE stuff -->
-          <groupId>org.geonetwork-opensource</groupId>
+      <dependency>
+          <groupId>${project.groupid}</groupId>
           <artifactId>core</artifactId>
           <version>${project.version}</version>
       </dependency>
 
-      <dependency> <!-- dummy API for ARC SDE stuff -->
-          <groupId>org.geonetwork-opensource</groupId>
+      <dependency>
+          <groupId>${project.groupid}</groupId>
           <artifactId>services</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupid}</groupId>
+          <artifactId>harvesters</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupid}</groupId>
+          <artifactId>heath-monitor</artifactId>
           <version>${project.version}</version>
       </dependency>
 

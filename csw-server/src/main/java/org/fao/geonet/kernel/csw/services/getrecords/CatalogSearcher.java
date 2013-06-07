@@ -96,6 +96,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.context.ApplicationContext;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -117,8 +118,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
     }
 
-	private final LuceneConfig	_luceneConfig;
-	private final Set<String> _tokenizedFieldSet;
+//	private final Set<String> _tokenizedFieldSet;
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
 	private Query         _query;
@@ -127,13 +127,14 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	private String        _lang;
 	private long          _searchToken;
     private final GMLConfiguration   _configuration;
+    private ApplicationContext _applicationContext;
 	
 	public CatalogSearcher(GMLConfiguration  configuration, 
-			LuceneConfig luceneConfig, Set<String> selector, Set<String> uuidselector) {
-		_luceneConfig = luceneConfig;
-		_tokenizedFieldSet = luceneConfig.getTokenizedField();
+			Set<String> selector, Set<String> uuidselector, ApplicationContext applicationContext) {
+//		_tokenizedFieldSet = luceneConfig.getTokenizedField();
 		_selector = selector;
 		_configuration = configuration;
+		this._applicationContext = applicationContext;
 		_uuidselector = uuidselector;
 		_searchToken = -1L;  // means we will get a new IndexSearcher when we
 		                     // ask for it first time
@@ -218,6 +219,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	}
 
 	// ---------------------------------------------------------------------------
+	private LuceneConfig getLuceneConfig() {
+	    return _applicationContext.getBean(LuceneConfig.class);
+	}
 	/**
 	 * <p>
 	 * Gets results in current searcher
@@ -233,18 +237,18 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getBean(SearchManager.class);
-
+		LuceneConfig luceneConfig = getLuceneConfig();
         IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
 
         try {
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
-            if (indexAndTaxonomy.version != _searchToken && !(!_luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)))) {
+            if (indexAndTaxonomy.version != _searchToken && !(!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)))) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang,
-                    _luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, wrapSpatialFilter(), _sort, null, false,
-                    _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(), _luceneConfig.isDocsScoredInOrder());
+                    luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, wrapSpatialFilter(), _sort, null, false,
+                    luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(), luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
 
@@ -345,7 +349,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
 			String field = elem.getAttributeValue("fld");
 			String text = elem.getAttributeValue("txt");
 
-			if (_tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
+			
+			Set<String> tokenizedFieldSet = getLuceneConfig().getTokenizedField();
+            if (tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
 				elem.setName("PhraseQuery");
 
 				StringTokenizer st = new StringTokenizer(text, " ");
@@ -453,6 +459,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		
         Query data;
+        LuceneConfig luceneConfig = getLuceneConfig();
         if (luceneExpr == null) {
             data = null;
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
@@ -460,7 +467,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
             String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
-                analyzer, _luceneConfig,
+                analyzer, luceneConfig,
                 _lang, requestedLanguageOnly);
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
         }
@@ -468,7 +475,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
         if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, _luceneConfig);
+            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
             Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
         }
 
@@ -519,9 +526,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		_sort = sort;
 	
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang, _luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
-                _sort, taxonomyReader, buildSummary, _luceneConfig.isTrackDocScores(), _luceneConfig.isTrackMaxScore(),
-                _luceneConfig.isDocsScoredInOrder()
+                maxRecords, _lang, luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
+                _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
+                luceneConfig.isDocsScoredInOrder()
 		);
 		TopDocs hits = searchResults.one();
 		Element summary = searchResults.two();

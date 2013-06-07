@@ -42,12 +42,12 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.context.ApplicationContext;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,21 +62,16 @@ import java.util.Set;
  */
 public class SearchController {
     
-	private LuceneConfig _luceneConfig;
 	private final Set<String> _selector;
 	private final Set<String> _uuidselector;
     private GMLConfiguration _gmlConfig;
+    private ApplicationContext _applicationContext;
 
-	public SearchController(LuceneConfig luceneConfig) {
-		_luceneConfig = luceneConfig;
-		
+	public SearchController(ApplicationContext applicationContext) {
 		_selector = Collections.singleton("_id");
 		_uuidselector = Collections.singleton("_uuid");
-		_gmlConfig = new GMLConfiguration();		
-    }
-	
-    public void setLuceneConfig(LuceneConfig newConfig) {
-    	_luceneConfig = newConfig;
+		_gmlConfig = new GMLConfiguration();
+		this._applicationContext = applicationContext;
     }
     
 	//---------------------------------------------------------------------------
@@ -114,7 +109,7 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _selector, _uuidselector, _applicationContext);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         

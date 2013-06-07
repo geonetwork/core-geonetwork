@@ -68,6 +68,9 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerDb;
 import org.fao.geonet.kernel.XmlSerializerSvn;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
+import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
+import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -113,6 +116,7 @@ public class Geonetwork implements ApplicationHandler {
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
 	private Element dbConfiguration;
+    private JeevesApplicationContext _applicationContext;
     private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
@@ -135,6 +139,7 @@ public class Geonetwork implements ApplicationHandler {
 	  */
 	public Object start(Element config, ServiceContext context) throws Exception {
 		logger = context.getLogger();
+		this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
 		path    = context.getAppPath();
@@ -285,7 +290,7 @@ public class Geonetwork implements ApplicationHandler {
 		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
 		logger.info("  - Lucene configuration is:");
 		logger.info(lc.toString());
-		beanFactory.registerSingleton("luceneConfig", lc);
+		beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
        
 		DataStore dataStore = context.getResourceManager().getDataStore(Geonet.Res.MAIN_DB);
 		if (dataStore == null) {
@@ -310,10 +315,10 @@ public class Geonetwork implements ApplicationHandler {
 				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 		
 		SettingInfo settingInfo = new SettingInfo(settingMan);
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
-				logAsynch, logSpatialObject, luceneTermsToExclude, 
-				dataStore, maxWritesInTransaction, 
-				settingInfo, schemaMan, servletContext);
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, logAsynch,
+				logSpatialObject, luceneTermsToExclude, dataStore, 
+				maxWritesInTransaction, settingInfo, 
+				schemaMan, servletContext, _applicationContext);
 		
 		 
 		 // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -384,7 +389,6 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Catalogue services for the web...");
 
 		CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
-		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile), lc);
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
@@ -404,23 +408,35 @@ public class Geonetwork implements ApplicationHandler {
         //------------------------------------------------------------------------
         //--- initialize metadata notifier subsystem
         logger.info("  - Metadata notifier ...");
-        
-		//------------------------------------------------------------------------
-		//--- return application context
+
+        //------------------------------------------------------------------------
+        //--- initialize harvesting subsystem
+
+        logger.info("  - Harvest manager...");
 
 		GeonetContext gnContext = new GeonetContext();
+
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+
+        // Creates a default site logo, only if the logo image doesn't exists
+        // This can happen if the application has been updated with a new version preserving the database and
+        // images/logos folder is not copied from old application 
+        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
+
+        //------------------------------------------------------------------------
+        //--- return application context
 
 		beanFactory.registerSingleton("accessManager", accessMan);
 		beanFactory.registerSingleton("dataManager", dataMan);
 		beanFactory.registerSingleton("searchManager", searchMan);
 		beanFactory.registerSingleton("schemaManager", schemaMan);
 		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
-		beanFactory.registerSingleton("catalogDispatcher", catalogDis);
 		beanFactory.registerSingleton("settingManager", settingMan);
 		beanFactory.registerSingleton("thesaurusManager", settingMan);
 		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
 		beanFactory.registerSingleton("svnManager", svnManager);
+		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("xmlSerializer", xmlSerializer);
 		// change harvestManager to bean
 		beanFactory.registerSingleton("harvestManager", harvestMan);
@@ -431,19 +447,6 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
-
-        //------------------------------------------------------------------------
-        //--- initialize harvesting subsystem
-
-        logger.info("  - Harvest manager...");
-
-        harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
-        dataMan.setHarvestManager(harvestMan);
-
-        // Creates a default site logo, only if the logo image doesn't exists
-        // This can happen if the application has been updated with a new version preserving the database and
-        // images/logos folder is not copied from old application 
-        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
@@ -903,7 +906,7 @@ public class Geonetwork implements ApplicationHandler {
 
 			
 		logger.info("  - Harvest Manager...");
-		harvestMan.shutdown();
+		_applicationContext.getBean(HarvestManager.class).shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();
