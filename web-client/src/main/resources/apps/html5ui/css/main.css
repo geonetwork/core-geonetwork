@@ -1460,10 +1460,6 @@ body * ul.x-menu-list {
 	border-radius: 4px;
 }
 
-legend[id*="MD_Metadata"][id*="root"] span span div.alert {
-	display: none;
-}
-
 .alert * h2 {
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }

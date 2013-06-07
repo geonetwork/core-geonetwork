@@ -1060,7 +1060,7 @@ div.showBigMapItemInactive:hover {
 }
 
 #metadata-info #editorPanel .buttons a.del span {
-	background-image: url("../../images/default/minus-white.png");
+	background-image: url("../../images/default/cross.png");
 }
 
 #metadata-info #editorPanel .buttons a.add span {
