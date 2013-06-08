@@ -151,38 +151,29 @@ public class SelectionManager {
 		    selection = Collections.synchronizedSet(new HashSet<String>());
 			this.selections.put(type, selection);
 		}
-		if (selected != null) {
-			if (selected.equals(ADD_ALL_SELECTED))
-				this.selectAll(type, context);
-			else if (selected.equals(REMOVE_ALL_SELECTED))
-				this.close(type);
-			else if (selected.equals(ADD_SELECTED) && (paramid != null))
-				selection.add(paramid);
-			else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-				selection.remove(paramid);
-			else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
-				this.close(type);
-				selection.add(paramid);
-			}
+
+		if (selected.equals(ADD_ALL_SELECTED))
+			this.selectAll(type, context);
+		else if (selected.equals(REMOVE_ALL_SELECTED))
+			this.close(type);
+		else if (selected.equals(ADD_SELECTED) && (paramid != null))
+			selection.add(paramid);
+		else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
+			selection.remove(paramid);
+		else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
+			this.close(type);
+			selection.add(paramid);
 		}
 
 		// Remove empty/null element from the selection
-        Iterator<String> iter = null;
-        if (selection != null) {
-            iter = selection.iterator();
-        }
-        if (iter != null) {
-            while (iter.hasNext()) {
-                Object element = iter.next();
-                if (element == null)
-                    iter.remove();
-            }
+        Iterator<String> iter = selection.iterator();
+        while (iter.hasNext()) {
+            Object element = iter.next();
+            if (element == null)
+                iter.remove();
         }
 
-        if (selection != null) {
-            return selection.size();
-        }
-        return 0;
+        return selection.size();
     }
 
     /**

@@ -23,7 +23,8 @@
 
 package org.fao.oaipmh.responses;
 
-import java.util.Random;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import org.fao.oaipmh.util.SearchResult;
 import org.fao.oaipmh.util.ISODate;
@@ -156,8 +157,7 @@ public class GeonetworkResumptionToken extends ResumptionToken
 	}
 	
 	public void setupToken(int newpos) {
-
-		if (newpos < res.ids.size()) // update token so that it refers to the next chunk
+		if (newpos < res.getIds().size()) // update token so that it refers to the next chunk
 			setPos(newpos);
 		else 
 		{
@@ -233,11 +233,11 @@ public class GeonetworkResumptionToken extends ResumptionToken
 
 		pos = Integer.parseInt( temp[5] );
 	}
+	  private SecureRandom random = new SecureRandom();
 
-	private static String generateRandomString() {
-		Random r = new Random();
-		return Long.toString(Math.abs(r.nextLong()), 36);
-	}
+    public String generateRandomString() {
+        return new BigInteger(130, random).toString(36);
+    }
 
 }
 

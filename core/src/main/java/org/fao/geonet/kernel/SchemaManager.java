@@ -41,7 +41,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -332,17 +331,17 @@ public class SchemaManager {
 				if (new File(schemaFile).exists()) { // build one 
 					String schemaUrl = getSchemaUrl(context, name);
 					if (nsUri == null || nsUri.equals("")) {
-						out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Csw.NAMESPACE_XSI);
+						out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Geonet.Namespaces.XSI);
 					} else {
 						schemaLoc = nsUri +" "+ schemaUrl;
-						out = new Attribute("schemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+						out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
           }
 				} // else return null - no schema xsd exists - could be dtd
       } else {
 				if (nsUri == null || nsUri.equals("")) {
-					out = new Attribute("noNamespaceSchemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+					out = new Attribute("noNamespaceSchemaLocation", schemaLoc, Geonet.Namespaces.XSI);
 				} else {
-        	out = new Attribute("schemaLocation", schemaLoc, Csw.NAMESPACE_XSI);
+        	out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
 				}
       }
 			return out;

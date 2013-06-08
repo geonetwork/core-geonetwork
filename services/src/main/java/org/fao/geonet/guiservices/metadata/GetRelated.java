@@ -240,7 +240,7 @@ public class GetRelated implements Service {
 
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
-        if (type.equals("") || type.contains("online") || type.contains("thumbnail")) {
+        if (md != null && (type.equals("") || type.contains("online") || type.contains("thumbnail"))) {
             relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
         }
         

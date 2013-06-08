@@ -1,44 +1,71 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
-  <modelVersion>4.0.0</modelVersion>
-  
-  <parent>
-    <groupId>org.geonetwork-opensource</groupId>
-    <artifactId>geonetwork</artifactId>
-    <version>2.11.0-SNAPSHOT</version>
-  </parent>
-  
-  
-  <!-- =========================================================== -->
-  <!--     Module Description                                      -->
-  <!-- =========================================================== -->
-  <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>oaipmh</artifactId>
-  <packaging>jar</packaging>
-  <name>Oaipmh modules</name>
-  <description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.geonetwork-opensource</groupId>
+		<artifactId>geonetwork</artifactId>
+		<version>2.11.0-SNAPSHOT</version>
+	</parent>
+
+
+	<!-- =========================================================== -->
+	<!-- Module Description -->
+	<!-- =========================================================== -->
+	<groupId>org.geonetwork-opensource</groupId>
+	<artifactId>oaipmh</artifactId>
+	<packaging>jar</packaging>
+	<name>Oaipmh modules</name>
+	<description>
     Oaipmh project.
   </description>
-  
-  <licenses>
-    <license>
-      <name>General Public License (GPL)</name>
-      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  
 
-  <dependencies>
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>jeeves</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-      
+	<licenses>
+		<license>
+			<name>General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.geonetwork-opensource</groupId>
+			<artifactId>jeeves</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<profiles>
+		<profile>
+			<id>run-static-analysis</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<properties>
+		<rootProjectDir>${basedir}/..</rootProjectDir>
+	</properties>
 </project>

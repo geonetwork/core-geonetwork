@@ -30,9 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.component.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 

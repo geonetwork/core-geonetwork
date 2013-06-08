@@ -66,9 +66,9 @@ public class ListRecords extends AbstractTokenLister
 
 		//--- loop to retrieve metadata
 
-		while (num<Lib.MAX_RECORDS && pos < result.ids.size())
+		while (num<Lib.MAX_RECORDS && pos < result.getIds().size())
 		{
-			int id = result.ids.get(pos);
+			int id = result.getIds().get(pos);
 
 			Record r = buildRecord(context, id, result.prefix);
 

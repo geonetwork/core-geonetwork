@@ -66,9 +66,9 @@ public class ListIdentifiers extends AbstractTokenLister
 
 		int num = 0;
 
-		while (num<Lib.MAX_RECORDS && pos < result.ids.size())
+		while (num<Lib.MAX_RECORDS && pos < result.getIds().size())
 		{
-			int id = result.ids.get(pos);
+			int id = result.getIds().get(pos);
 
 			Header h = buildHeader(context, id, result.prefix);
 

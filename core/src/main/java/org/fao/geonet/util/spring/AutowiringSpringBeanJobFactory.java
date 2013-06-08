@@ -25,8 +25,10 @@ public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory
 	@Override
 	protected Object createJobInstance(final TriggerFiredBundle bundle)
 			throws Exception {
-		bundle.getJobDetail().getJobDataMap()
-				.put("applicationContext", applicationContext);
+	    if (beanFactory == null) {
+	        throw new IllegalStateException("beanFactory must be initialized before callin createJobInstance");
+	    }
+		bundle.getJobDetail().getJobDataMap().put("applicationContext", applicationContext);
 		final Object job = super.createJobInstance(bundle);
 		beanFactory.autowireBean(job);
 		return job;

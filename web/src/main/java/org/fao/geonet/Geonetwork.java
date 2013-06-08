@@ -86,7 +86,7 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.services.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;

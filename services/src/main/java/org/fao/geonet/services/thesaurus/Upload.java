@@ -159,7 +159,7 @@ public class Upload implements Service {
 		}
 
 		long fsize = 0;
-		if (rdfFile.exists()) {
+		if (rdfFile != null && rdfFile.exists()) {
 			fsize = rdfFile.length();
 		} else {
 			throw new OperationAbortedEx("Thesaurus file doesn't exist");

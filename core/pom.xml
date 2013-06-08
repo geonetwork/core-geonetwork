@@ -340,24 +340,6 @@
             <version>4.0.patch</version>
         </dependency>
 
-        <!-- Monitoring libraries -->
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-log4j</artifactId>
-        </dependency>
-
         <!-- language detection -->
         <dependency>
             <groupId>com.cybozu.labs</groupId>
@@ -403,8 +385,6 @@
             <artifactId>flying-saucer-pdf-itext5</artifactId>
             <version>9.0.1</version>
         </dependency>
-
-
     </dependencies>
 
 </project>

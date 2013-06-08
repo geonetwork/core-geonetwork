@@ -29,13 +29,13 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
   private static Map<String, TemplatesCacheEntry> templatesCache = new HashMap<String, TemplatesCacheEntry>();
 
   /** Factory logger. */
-  protected static Logger logger =
+  protected static final Logger logger =
     Logger.getLogger(CachingTransformerFactory.class);
 
   /** Active readers count. */
-  protected static int activeReaders = 0;
+  static int activeReaders = 0;
   /** Active writers count. */
-  protected static int activeWriters = 0;
+  static int activeWriters = 0;
 
 	/**
 	 * Clear the stylesheet cache. This is not part of the 
@@ -215,7 +215,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
   /**
    * Private class to hold templates cache entry.
    */
-  private class TemplatesCacheEntry
+  private static final class TemplatesCacheEntry
   {
     /** When was the cached entry last modified. */
     private long lastModified;

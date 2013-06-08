@@ -44,7 +44,7 @@ public class ServiceMetadataReindexer extends MetadataIndexerProcessor {
     public void process() throws Exception {
 			for (Element md : reindex) {
 				String  mdId = md.getChildText("metadataid");
-				dm.indexMetadata(dbms, mdId);
+				getDataManager().indexMetadata(dbms, mdId);
 			}
     }
 }

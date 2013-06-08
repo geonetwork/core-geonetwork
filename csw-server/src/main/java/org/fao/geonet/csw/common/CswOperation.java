@@ -32,40 +32,44 @@ import java.util.List;
  * Representation of a CSW operation as it was described in a GetCapabilities response.
  *
  */
+/**
+ * @author Jesse
+ *
+ */
 public class CswOperation {
 	
-	public String name;
-	public URL    getUrl;
-	public URL    postUrl;
+	private String name;
+	private URL    getUrl;
+	private URL    postUrl;
 	
 	/**
 	 * The OutputSchemas as advertised in the CSW server's GetCapabilities response.
 	 */
-	public List<String> outputSchemaList = new ArrayList<String>();
+	private List<String> outputSchemaList = new ArrayList<String>();
 
     /**
 	 * The OutputFormats as advertised in the CSW server's GetCapabilities response.
 	 */
-    public List<String> outputFormatList = new ArrayList<String>();
+    private List<String> outputFormatList = new ArrayList<String>();
 
     /**
      * The constraintLanguage as advertised in the CSW server's GetCapabilities response.
      */
-    public List<String> constraintLanguage = new ArrayList<String>();
+    private List<String> constraintLanguage = new ArrayList<String>();
     
 	/**
 	 * The preferred OutputSchema from the above.
 	 */
-	public String preferredOutputSchema;
+	private String preferredOutputSchema;
 
     /**
 	 * The preferred OutputFormat from the above.
 	 */
-    public String preferredOutputFormat;
+    private String preferredOutputFormat;
 
-    public String preferredServerVersion;
+    private String preferredServerVersion;
 
-    public List<String> typeNamesList = new ArrayList<String>();
+    private List<String> typeNamesList = new ArrayList<String>();
 
 	protected void choosePreferredOutputSchema() {
 		OutputSchemaPreference preference = new OutputSchemaPreference();
@@ -90,5 +94,65 @@ public class CswOperation {
 
         if (preferredOutputFormat == null) preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
 	}
+
+    public String getPreferredOutputSchema() {
+        return preferredOutputSchema;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public URL getGetUrl() {
+        return getUrl;
+    }
+
+    public URL getPostUrl() {
+        return postUrl;
+    }
+
+    public List<String> getOutputSchemaList() {
+        return outputSchemaList;
+    }
+
+    public List<String> getOutputFormatList() {
+        return outputFormatList;
+    }
+
+    public List<String> getConstraintLanguage() {
+        return constraintLanguage;
+    }
+
+    public String getPreferredOutputFormat() {
+        return preferredOutputFormat;
+    }
+
+    public String getPreferredServerVersion() {
+        return preferredServerVersion;
+    }
+
+    public List<String> getTypeNamesList() {
+        return typeNamesList;
+    }
+
+    public void setName(String name2) {
+        this.name = name2;
+    }
+
+    public void setPreferredServerVersion(String preferredServerVersion2) {
+        this.preferredServerVersion = preferredServerVersion2;        
+    }
+
+    public void setPreferredOutputFormat(String preferredOutputFormat2) {
+        this.preferredOutputFormat = preferredOutputFormat2;
+    }
+
+    public void setPostUrl(URL url) {
+        this.postUrl = url;
+    }
+
+    public void setGetUrl(URL url) {
+        this.getUrl = url;
+    }
 
 }

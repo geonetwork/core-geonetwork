@@ -1,5 +1,6 @@
 package org.fao.geonet.services.statistics;
 
+import org.apache.commons.io.IOUtils;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -122,10 +123,7 @@ public class ChartFactory {
 			fout.flush();
 			fout.close();
 		} finally {
-			try {
-				fout.close();
-			} catch (Exception e) {
-			}
+		    IOUtils.closeQuietly(fout);
 		}
 		return res;
 	}

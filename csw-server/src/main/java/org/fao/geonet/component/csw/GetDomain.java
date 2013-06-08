@@ -178,14 +178,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	public static List<Element> handlePropertyName(String[] propertyNames,
 			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
 
-		List<Element> domainValuesList = null;
+		List<Element> domainValuesList = new ArrayList<Element>();
 
         if(Log.isDebugEnabled(Geonet.CSW))
             Log.debug(Geonet.CSW,"Handling property names '"+Arrays.toString(propertyNames)+"' with max records of "+maxRecords);
 		
 		for (int i=0; i < propertyNames.length; i++) {
 			
-			if (i==0) domainValuesList = new ArrayList<Element>();
 			
 			// Initialize list of values element.
 			Element listOfValues = null;

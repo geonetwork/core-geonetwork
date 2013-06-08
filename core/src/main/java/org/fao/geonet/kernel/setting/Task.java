@@ -125,6 +125,9 @@ class Task
 			case REMOVED:
 					setting.removeFromParent();
 					break;
+					
+			default:
+			    throw new IllegalArgumentException("Doesn't handle:" + type);
 		}
 	}
 

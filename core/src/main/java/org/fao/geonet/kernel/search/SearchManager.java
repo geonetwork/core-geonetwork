@@ -57,8 +57,6 @@ import org.apache.lucene.search.Filter;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
@@ -93,6 +91,7 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContext;
@@ -136,6 +135,7 @@ public class SearchManager {
 
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
+    private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
 
 	private final File _stylesheetsDir;
     private static File _stopwordsDir;
@@ -1690,7 +1690,7 @@ public class SearchManager {
             }
             catch (Exception e) {
             	// TODO Handle NPE creating spatial filter (due to constraint language version).
-    			throw new NoApplicableCodeEx("Error when parsing spatial filter (version: " + filterVersion + "):" +
+    			throw new IllegalArgumentException("Error when parsing spatial filter (version: " + filterVersion + "):" +
                         Xml.getString(filterExpr) + ". Error is: " + e.toString());
             }
             finally {
@@ -1779,7 +1779,15 @@ public class SearchManager {
          */
         private Parser getFilterParser(String filterVersion) {
 			Configuration config;
-			config = filterVersion.equals(Csw.FILTER_VERSION_1_0) ? FILTER_1_0_0  : FILTER_1_1_0;
+			if (filterVersion.equals(FilterCapabilities.VERSION_100)) {
+			    config = FILTER_1_0_0;
+			} else if (filterVersion.equals(FilterCapabilities.VERSION_200)) {
+			    config = FILTER_2_0_0;
+			} else if (filterVersion.equals(FilterCapabilities.VERSION_110)) {
+			    config = FILTER_1_1_0;
+			} else {
+			    throw new IllegalArgumentException("UnsupportFilterVersion: "+filterVersion);
+			}
 			return new Parser(config);
 		}
 

@@ -81,30 +81,30 @@ public class Aligner extends BaseAligner
 		CswOperation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
 
 		// Use the preferred HTTP method and check one exist.
-		if (oper.getUrl != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
-			request.setUrl(oper.getUrl);
+		if (oper.getGetUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
+			request.setUrl(oper.getGetUrl());
 			request.setMethod(CatalogRequest.Method.GET);
-		} else if (oper.postUrl != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
-			request.setUrl(oper.postUrl);
+		} else if (oper.getPostUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
+			request.setUrl(oper.getPostUrl());
 			request.setMethod(CatalogRequest.Method.POST);
 		} else {
-			if (oper.getUrl != null) {
-				request.setUrl(oper.getUrl);
+			if (oper.getGetUrl() != null) {
+				request.setUrl(oper.getGetUrl());
 				request.setMethod(CatalogRequest.Method.GET);
-			} else if (oper.postUrl != null) {
-				request.setUrl(oper.postUrl);
+			} else if (oper.getPostUrl() != null) {
+				request.setUrl(oper.getPostUrl());
 				request.setMethod(CatalogRequest.Method.POST);
 			} else {
 				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
 			}
 		}
 
-		if(oper.preferredOutputSchema != null) {
-			request.setOutputSchema(oper.preferredOutputSchema);
+		if(oper.getPreferredOutputSchema() != null) {
+			request.setOutputSchema(oper.getPreferredOutputSchema());
 		}
 
-        if(oper.preferredServerVersion != null) {
-			request.setServerVersion(oper.preferredServerVersion);
+        if(oper.getPreferredServerVersion() != null) {
+			request.setServerVersion(oper.getPreferredServerVersion());
 		}
 
 		if (params.useAccount) {

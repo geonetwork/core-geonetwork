@@ -6,6 +6,7 @@ import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Xml;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 
@@ -30,7 +31,7 @@ public class CswGetCapabilitiesHealthCheck implements HealthCheckFactory {
 					request.setInputMethod(InputMethod.GET);
 					Element result = context.execute(request);
 
-                    if (result.getChild("ServiceIdentification", Csw.NAMESPACE_OWS) == null)
+                    if (result.getChild("ServiceIdentification", Geonet.Namespaces.OWS) == null)
                         return Result.unhealthy("Capabilities did not have a 'ServiceIdentification' element as expected.  Xml: " + Xml.getString(result));
                     return Result.healthy();
                 } catch (Throwable e) {

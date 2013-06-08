@@ -30,7 +30,6 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;

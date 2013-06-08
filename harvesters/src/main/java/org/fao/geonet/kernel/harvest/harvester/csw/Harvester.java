@@ -177,7 +177,7 @@ class Harvester
 			return false;
 		}
 
-		if (oper.getUrl == null && oper.postUrl == null)
+		if (oper.getGetUrl() == null && oper.getPostUrl() == null)
 		{
 			log.warning("Operation has no GET and POST bindings : "+ name);
 			return false;
@@ -299,15 +299,15 @@ class Harvester
 
         request.setUrl(url);
         request.setServerVersion(server.getPreferredServerVersion());
-        request.setOutputSchema(oper.preferredOutputSchema);
+        request.setOutputSchema(oper.getPreferredOutputSchema());
         request.setConstraintLanguage(constraintLanguage);
         request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
         request.setConstraint(constraint);
         request.setMethod(method);
-        for(String typeName: oper.typeNamesList) {
+        for(String typeName: oper.getTypeNamesList()) {
             request.addTypeName(TypeName.getTypeName(typeName));
         }
-        request.setOutputFormat(oper.preferredOutputFormat) ;
+        request.setOutputFormat(oper.getPreferredOutputFormat()) ;
     }
     /**
      * Configs the harvester request
@@ -321,28 +321,28 @@ class Harvester
      */
     private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
             throws Exception {
-        if (oper.getUrl == null && oper.postUrl == null) {
+        if (oper.getGetUrl() == null && oper.getPostUrl() == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
         }
 
         // Use the preferred HTTP method and check one exist.
-        if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
-            setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+        if (oper.getGetUrl() != null && preferredMethod.equals("GET") && oper.getConstraintLanguage().contains("cql_text")) {
+            setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
         }
-        else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
-            setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
+        else if (oper.getPostUrl() != null && preferredMethod.equals("POST") && oper.getConstraintLanguage().contains("filter")) {
+            setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
         }
         else {
-            if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
-                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+            if (oper.getGetUrl() != null && oper.getConstraintLanguage().contains("cql_text")) {
+                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
             }
-            else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
-                setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
+            else if (oper.getPostUrl() != null && oper.getConstraintLanguage().contains("filter")) {
+                setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
             }
             else {
                 // TODO : add GET+FE and POST+CQL support
                 log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
-                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
             }
         }
     }

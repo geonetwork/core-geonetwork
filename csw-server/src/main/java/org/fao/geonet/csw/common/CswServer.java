@@ -98,7 +98,7 @@ public class CswServer {
 					CswOperation oper = extractOperation(elem);
 
 					if (oper != null)
-                        operations.put(oper.name, oper);
+                        operations.put(oper.getName(), oper);
 				}
 			}
     }
@@ -118,7 +118,7 @@ public class CswServer {
 		}
 
 		CswOperation op = new CswOperation();
-		op.name   = name;
+		op.setName(name);
 		
 		@SuppressWarnings("unchecked")
         List<Element> dcp = oper.getChildren("DCP", Csw.NAMESPACE_OWS);
@@ -176,7 +176,7 @@ public class CswServer {
             for (Element outputSchema : outputSchemas) {
                 String outputSchemaValue = outputSchema.getValue();
                 log("Adding outputSchema: " + outputSchemaValue + " to operation: " + name);
-                op.outputSchemaList.add(outputSchemaValue);
+                op.getOutputSchemaList().add(outputSchemaValue);
             }
             op.choosePreferredOutputSchema();
         }
@@ -192,7 +192,7 @@ public class CswServer {
                     log(" Some implementation use CQL instead of CQL_TEXT for the CQL constraint language value.");
                     constraintLanguageValue = "cql_text";
                 }
-                op.constraintLanguage.add(constraintLanguageValue);
+                op.getConstraintLanguage().add(constraintLanguageValue);
             }
         }
         else {
@@ -205,7 +205,7 @@ public class CswServer {
                 log("Adding typeName: " + typeNameValue + " to operation: " + name);
                 TypeName tn = TypeName.getTypeName(typeNameValue);
                 if (tn != null) {
-                    op.typeNamesList.add(typeNameValue);
+                    op.getTypeNamesList().add(typeNameValue);
                 } else {
                     log("  Unsupported typeName found: " + typeNameValue + ".");
                 }
@@ -219,16 +219,16 @@ public class CswServer {
             for (Element outputFormat : outputFormats) {
                 String outputFormatValue = outputFormat.getValue();
                 log("Adding outputFormat: " + outputFormatValue + " to operation: " + name);
-                op.outputFormatList.add(outputFormatValue);
+                op.getOutputFormatList().add(outputFormatValue);
             }
 			op.choosePreferredOutputFormat();
 		}
 		else {
-            op.preferredOutputFormat = Csw.OUTPUT_FORMAT_APPLICATION_XML;
+            op.setPreferredOutputFormat(Csw.OUTPUT_FORMAT_APPLICATION_XML);
 			log("No outputFormat for operation: " + name);
 		}
 
-        op.preferredServerVersion = preferredServerVersion;
+        op.setPreferredServerVersion(preferredServerVersion);
 
         return op;
     }
@@ -305,9 +305,9 @@ public class CswServer {
 			} else {
 				String tmpGetUrl = getUrl.getAttributeValue("href", ns);
 
-				if (tmpGetUrl != null && op.getUrl == null) {
+				if (tmpGetUrl != null && op.getGetUrl() == null) {
 					try	{
-						op.getUrl = new URL(tmpGetUrl);
+						op.setGetUrl(new URL(tmpGetUrl));
 						log ("Found URL (GET method): " + tmpGetUrl);
 					} catch (MalformedURLException e) {
 						log ("Malformed 'xlink:href' attribute in operation's http method");
@@ -328,7 +328,7 @@ public class CswServer {
                     if (tmpPostUrl == null) {
                         log("Missing 'xlink:href' attribute in operation's http method");
                     } else {
-                        if (op.postUrl == null) {
+                        if (op.getPostUrl() == null) {
                             // PostEncoding could return a SOAP service address. Not supported
                             Element methodConstraint = postUrl.getChild("Constraint", Csw.NAMESPACE_OWS);
 
@@ -341,7 +341,7 @@ public class CswServer {
                             }
 
                             try	{
-                                op.postUrl = new URL(tmpPostUrl);
+                                op.setPostUrl(new URL(tmpPostUrl));
                                 log ("Found URL (POST method):" + tmpPostUrl);
                                 break;
                             } catch (MalformedURLException e) {

@@ -75,8 +75,10 @@ public class OaiPmhFactory
 
 		Map<String, String> params2 = new HashMap<String, String>();
 
-		for (String key : params.keySet())
-			params2.put(key, params.get(key));
+
+        for (Map.Entry<String, String> param: params.entrySet()) {
+            params2.put(param.getKey(), param.getValue());
+        }
 
 		params = params2;
 

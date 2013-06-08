@@ -83,7 +83,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 			int start = index;
 			int count = Math.min(perThread,ids.length-start);
 			// create threads to process this chunk of ids
-			Callable<Void> worker = new BatchOpsCallable(ids, start, count, dm, dbms);
+			Callable<Void> worker = new BatchOpsCallable(ids, start, count, getDataManager(), dbms);
 			Future<Void> submit = executor.submit(worker);
 			submitList.add(submit);
 			index += count;

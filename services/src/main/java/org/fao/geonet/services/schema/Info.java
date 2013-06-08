@@ -218,7 +218,7 @@ public class Info implements Service {
         			currContext = findNamespace(currContext, scm, schema);
         		}
         		
-        		if ((context != null && context.equals(currContext)) || isoType.equals(currContext)) {
+        		if ((context != null && context.equals(currContext)) || (isoType != null && isoType.equals(currContext))) {
         			return (Element) currElem.clone();
         		}
         	} else if (!requireContextMatch){

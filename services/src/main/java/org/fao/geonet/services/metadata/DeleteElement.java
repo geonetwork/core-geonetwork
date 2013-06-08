@@ -68,9 +68,14 @@ public class DeleteElement extends NotInReadOnlyModeService {
 
 		// -- The metadata-edit-embedded.xsl searches for a taged element to
 		// -- transform so tag the element for display
-		Element cloned = (Element) child.clone();
-		EditLib.tagForDisplay(cloned);
-
+		Element cloned;
+		if(child != null) {
+            cloned = (Element) child.clone();
+            EditLib.tagForDisplay(cloned);
+		} else {
+		    cloned = new Element("result");
+		}
+		
 		return cloned;
 	}
 }
