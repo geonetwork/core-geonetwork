@@ -14,7 +14,7 @@ Here is a typical example of a fragment. This is a responsible party and it coul
      <gco:CharacterString>John D'ath</gco:CharacterString>
    </gmd:individualName>
    <gmd:organisationName>
-     <gco:CharacterString>Mulligan & Sons, Funeral Directors</gco:CharacterString>
+     <gco:CharacterString>Mulligan &amp; Sons, Funeral Directors</gco:CharacterString>
    </gmd:organisationName>
    <gmd:positionName>
      <gco:CharacterString>Undertaker</gco:CharacterString>
