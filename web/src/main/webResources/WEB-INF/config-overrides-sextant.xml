@@ -215,6 +215,11 @@
           <param name="filter" value="+_groupPublished:PHOTOS_ANCIENNES"/>
         </class>
       </service>
+      <service name="csw-PREVIMER">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:PREVIMER"/>
+        </class>
+      </service>
       <service name="csw-REBENT">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:REBENT"/>
