@@ -120,7 +120,7 @@ cat.app = function() {
 		    cookie.set('user', undefined);
 		});
 		
-		catalogue.login();
+		loginForm.triggerClick();
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
@@ -861,8 +861,6 @@ cat.app = function() {
                 });
             });
             
-            // Trigger search
-            cat.what.updateUserGroups(searchAfterLoggin);
 		},
 
 		getCatalogue : function() {
