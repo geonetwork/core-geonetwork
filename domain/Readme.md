@@ -7,3 +7,4 @@ it in your IDE are available at: http://docs.jboss.org/hibernate/jpamodelgen/1.0
 
 Maven already has it enabled so if you don't want to work on this package only need to run the maven build and the 
 required files will be generated.  
+

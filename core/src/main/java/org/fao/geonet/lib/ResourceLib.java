@@ -29,9 +29,9 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.domain.Operation;
-import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.security.access.AccessDeniedException;
 

@@ -35,8 +35,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.domain.Setting;
-import org.fao.geonet.kernel.repository.SettingRepository;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.repository.SettingRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
