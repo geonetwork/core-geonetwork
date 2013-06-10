@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
@@ -58,6 +59,7 @@ import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
+import jeeves.server.resources.ResourceProvider;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
@@ -184,6 +186,8 @@ public class JeevesEngine
 
 			dbLoaded = false;
 			
+	        initResources(jeevesAppContext);
+
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
             info("Initializing profiles...");
@@ -322,14 +326,6 @@ public class JeevesEngine
 				throw new IllegalArgumentException("Illegal 'default' element in secondary include");
 		}
 
-		//--- init resources
-
-		List<Element> resList = configRoot.getChildren(ConfigFile.Child.RESOURCES);
-		
-		for(int i=0; i<resList.size(); i++)
-			initResources(resList.get(i), file);
-
-		
 		//--- init app-handlers
 
 		appHandList.addAll(configRoot.getChildren(ConfigFile.Child.APP_HANDLER));
@@ -477,84 +473,52 @@ public class JeevesEngine
 
 	/** Setup resources from the resource element (config.xml)
 	  */
+    private void initResources(JeevesApplicationContext jeevesAppContext) {
+        boolean resourceFound = false;
+        info("Initializing resources...");
 
-	@SuppressWarnings("unchecked")
-	private void initResources(Element resources, String file)
-	{
-		boolean resourceFound = false;
-		info("Initializing resources...");
+        Map<String, ResourceProvider> resourceProviders = jeevesAppContext.getBeansOfType(ResourceProvider.class);
+        for (Entry<String, ResourceProvider> entry : resourceProviders.entrySet()) {
+            ResourceProvider provider = entry.getValue();
+            String name = entry.getKey();
+            try {
+                providerMan.register(provider, name);
 
-		List<Element> resList = resources.getChildren(ConfigFile.Resources.Child.RESOURCE);
+                // Try and open a resource from the provider
+                providerMan.getProvider(name).open();
 
-		for(int i=0; i<resList.size(); i++)
-		{
-			Element res = resList.get(i);
+                if (name.equals("main-db")) {
+                    dbms = (Dbms) providerMan.getProvider(name).open();
+                }
 
-			String  name      = res.getChildText(ConfigFile.Resource.Child.NAME);
-			String  provider  = res.getChildText(ConfigFile.Resource.Child.PROVIDER);
-			Element config    = res.getChild    (ConfigFile.Resource.Child.CONFIG);
-			Element activator = res.getChild    (ConfigFile.Resource.Child.ACTIVATOR);
+                resourceFound = true;
+            } catch (Exception e) {
+                Map<String, String> errors = new HashMap<String, String>();
+                String eS = "Raised exception while initializing resource " + name + ". Skipped.";
+                error(eS);
+                errors.put("Error", eS);
+                error("   Resource  : " + name);
+                errors.put("Resource", name);
+                error("   Provider  : " + provider.getClass().getName());
+                errors.put("Provider", provider.getClass().getName());
+                error("   Exception : " + e);
+                errors.put("Exception", e.toString());
+                error("   Message   : " + e.getMessage());
+                errors.put("Message", e.getMessage());
+                error("   Stack     : " + Util.getStackTrace(e));
+                errors.put("Stack", Util.getStackTrace(e));
+                error(errors.toString());
+                serviceMan.setStartupErrors(errors);
+            }
+        }
 
-			String enabled = res.getAttributeValue(ConfigFile.Resource.Attr.ENABLED);
-
-			if ((enabled == null) || enabled.equals("true"))
-			{
-				info("   Adding resource : " + name);
-
-				resourceFound = true;
-				try
-				{
-					if (activator != null)
-					{
-						String clas = activator.getAttributeValue(ConfigFile.Activator.Attr.CLASS);
-
-						info("      Loading activator  : "+ clas);
-						Activator activ = (Activator) Class.forName(clas).newInstance();
-
-						info("      Starting activator : "+ clas);
-						activ.startup(appPath, activator);
-
-						vActivators.add(activ);
-					}
-
-					providerMan.register(provider, name, config);
-
-					// Try and open a resource from the provider
-					providerMan.getProvider(name).open();
-					
-					if (name.equals("main-db")){
-						dbms = (Dbms) providerMan.getProvider(name).open();
-					}
-				}
-				catch(Exception e)
-				{
-					Map<String,String> errors = new HashMap<String,String>();
-					String eS = "Raised exception while initializing resource "+name+" in "+file+". Skipped.";
-					error(eS); 
-					errors.put("Error", eS); 
-					error("   Resource  : " +name);
-					errors.put("Resource", name); 
-					error("   Provider  : " +provider);
-					errors.put("Provider", provider);
-					error("   Exception : " +e);
-					errors.put("Exception",e.toString());
-					error("   Message   : " +e.getMessage());
-					errors.put("Message", e.getMessage());
-					error("   Stack     : " +Util.getStackTrace(e));
-					errors.put("Stack", Util.getStackTrace(e));
-					error(errors.toString());
-					serviceMan.setStartupErrors(errors);
-				}
-			}
-		}
-
-		if (!resourceFound) {
-			Map<String,String> errors = new HashMap<String,String>();
-			errors.put("Error", "No database resources found to initialize - check "+file); 
-			error(errors.toString());
-			serviceMan.setStartupErrors(errors);
-		}
-	}
+        if (!resourceFound) {
+            Map<String, String> errors = new HashMap<String, String>();
+            errors.put("Error", "No database resources found to initialize - check spring configuration files");
+            error(errors.toString());
+            serviceMan.setStartupErrors(errors);
+        }
+    }
 
 	//---------------------------------------------------------------------------
 	//---

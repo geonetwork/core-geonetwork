@@ -204,16 +204,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- Not permitted under oracle licensing rules <dependency> <groupId>ojdbc</groupId> 
-			<artifactId>ojdbc</artifactId> </dependency> -->
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>eu.medsea.mimeutil</groupId>
 			<artifactId>mime-util</artifactId>
@@ -387,11 +377,68 @@
 			<artifactId>flying-saucer-pdf-itext5</artifactId>
 			<version>9.0.1</version>
 		</dependency>
-
-
+		<!-- Persistence dependencies -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+			<version>1.2.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
 	</dependencies>
 
-
+<!-- 	<build> -->
+<!-- 		<plugins> -->
+			<!-- These plugins are responsible for generating the hibernate metamodel -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.bsc.maven</groupId> -->
+<!-- 				<artifactId>maven-processor-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>process</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>process</goal> -->
+<!-- 						</goals> -->
+<!-- 						<phase>generate-sources</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<outputDirectory>target/metamodel</outputDirectory> -->
+<!-- 							<processors> -->
+<!-- 								<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor> -->
+<!-- 							</processors> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>build-helper-maven-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>add-source</id> -->
+<!-- 						<phase>generate-sources</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>add-source</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<sources> -->
+<!-- 								<source>target/metamodel</source> -->
+<!-- 							</sources> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+<!-- 		</plugins> -->
+<!-- 	</build> -->
 	<profiles>
 		<profile>
 			<id>run-static-analysis</id>

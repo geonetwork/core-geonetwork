@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -266,18 +267,15 @@ private SearchController _searchController;
         boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
 
         if (metadataPublic) {
-            dataMan.setOperation(context, dbms, id, "1", AccessManager.OPER_VIEW);
+            dataMan.setOperation(context, dbms, id, "1", ReservedOperation.view);
         }
 
 
         // Privileges for the user group that inserts the metadata (same permissions as when inserting xml file from UI)
         if (group != null) {
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_VIEW);
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DOWNLOAD);
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_EDITING);
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DYNAMIC);
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_FEATURED);
-            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_NOTIFY);
+            for (ReservedOperation op : ReservedOperation.values()) {
+                dataMan.unsetOperation(context, dbms, id, group, op);
+            }
         }
 
 		dataMan.indexMetadata(dbms, id);

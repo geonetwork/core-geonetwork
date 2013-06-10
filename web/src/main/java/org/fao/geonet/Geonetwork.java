@@ -214,7 +214,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Setting manager...");
 
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
+		SettingManager settingMan = context.getApplicationContext().getBean(SettingManager.class);
 
 		// --- Migrate database if an old one is found
 		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
@@ -330,7 +330,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Access manager...");
 
-		AccessManager accessMan = new AccessManager(dbms, settingMan);
+        AccessManager accessMan = context.getApplicationContext().getBean(AccessManager.class);
 
 		//------------------------------------------------------------------------
 		//--- get edit params and initialize DataManager
@@ -647,7 +647,7 @@ public class Geonetwork implements ApplicationHandler {
 	                        try {
                             	String className = file.getAttributeValue("class");
                                 logger.info("         - Java migration class:" + className);
-	                        	settingMan.refresh(dbms);
+	                        	settingMan.refresh();
 	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
 	                            task.update(settingMan, dbms);
 	                        } catch (Exception e) {
@@ -675,7 +675,7 @@ public class Geonetwork implements ApplicationHandler {
     		
 			// Refresh setting manager in case the migration task added some new settings.
             try {
-                settingMan.refresh(dbms);
+                settingMan.refresh();
             } catch (Exception e) {
                 logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
                 e.printStackTrace();

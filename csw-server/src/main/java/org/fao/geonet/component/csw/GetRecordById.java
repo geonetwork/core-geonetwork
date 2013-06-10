@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -154,7 +155,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 				// Check if the current user has access 
 			    // to the requested MD 
-			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.view); 
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
 

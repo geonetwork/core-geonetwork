@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -52,7 +53,6 @@ import java.util.List;
 
 public class AddLimitations implements Service
 {
-	public static final String OPER_DOWNLOAD = "1";
 	private static String FS = File.separator;
 	private String stylePath;
 
@@ -85,7 +85,7 @@ public class AddLimitations implements Service
 
 		String access   = Util.getParam(params, Params.ACCESS);
 
-		Lib.resource.checkPrivilege(context, id, OPER_DOWNLOAD);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 
 		//--- get metadata info
 		MdInfo info = dm.getMetadataInfo(dbms, id);

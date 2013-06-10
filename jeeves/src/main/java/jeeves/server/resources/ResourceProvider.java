@@ -23,12 +23,12 @@
 
 package jeeves.server.resources;
 
-import org.jdom.Element;
-
-import org.geotools.data.DataStore;
-
 import java.sql.SQLException;
 import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.geotools.data.DataStore;
 
 //=============================================================================
 
@@ -42,9 +42,6 @@ public interface ResourceProvider
 
 	public String getName();
 
-	/** Initializes the provider */
-	public void init(String name, Element config) throws Exception;
-
 	/** gets props from the provider */
 	public Map<String,String> getProps();
 
@@ -54,6 +51,9 @@ public interface ResourceProvider
 	/** gets datastore from the provider */
 	public DataStore getDataStore();
 
+    /** Gets the datastore */
+    public DataSource getDataSource();
+    
 	/** Stops the provider */
 	public void end();
 

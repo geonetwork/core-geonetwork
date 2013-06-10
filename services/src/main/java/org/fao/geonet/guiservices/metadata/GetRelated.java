@@ -38,6 +38,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
@@ -316,7 +317,7 @@ public class GetRelated implements Service {
 				String id = dm.getMetadataId(dbms, uuid);
 				boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 				content = dm.getMetadata(context, id,
 																	forEditing, withValidationErrors,
                                 	keepXlinkAttributes);

@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
@@ -77,7 +78,7 @@ public class SchemaUtils {
 
 			// -- check download permissions (should be ok since admin but...)
 			try {
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+				Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 			}
             catch (Exception e) {
      		    throw new OperationAbortedEx("Download access not available on metadata record with uuid "+uuid);

@@ -46,8 +46,8 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -175,7 +175,7 @@ class MEF2Exporter {
 
 		if (format == Format.FULL) {
 			try {
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 				MEFLib.savePrivate(zos, priDir, uuid);
 			} catch (Exception e) {
 				// Current user could not download private data

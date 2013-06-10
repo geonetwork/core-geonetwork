@@ -52,6 +52,11 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.kernel.domain.Operation;
+import org.fao.geonet.kernel.domain.OperationAllowed;
+import org.fao.geonet.kernel.domain.ReservedGroup;
+import org.fao.geonet.kernel.domain.ReservedOperation;
+import org.fao.geonet.kernel.repository.OperationAllowedRepository;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -2308,6 +2313,20 @@ public class DataManager {
     //--- Privileges API
     //---
     //--------------------------------------------------------------------------
+    
+    /**
+     *  Adds a permission to a group. Metadata is not reindexed.
+     *
+     * @param context
+     * @param dbms
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @throws Exception
+     */
+    public void setOperation(ServiceContext context, Dbms dbms, String mdId, String grpId, ReservedOperation op) throws Exception {
+        setOperation(context,dbms,Integer.valueOf(mdId),Integer.valueOf(grpId), op.getId());
+    }
 
     /**
      *  Adds a permission to a group. Metadata is not reindexed.
@@ -2390,6 +2409,19 @@ public class DataManager {
             }
         }
     }
+    
+    /**
+     *
+     * @param context
+     * @param dbms
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @throws Exception
+     */
+    public void unsetOperation(ServiceContext context, Dbms dbms, String mdId, String grpId, ReservedOperation opId) throws Exception {
+        unsetOperation(context,dbms,Integer.valueOf(mdId),Integer.valueOf(grpId),opId.getId());
+    }
 
     /**
      *
@@ -2438,16 +2470,16 @@ public class DataManager {
         }
         //--- store access operations for group
 
-        setOperation(context, dbms, id, groupId, AccessManager.OPER_VIEW);
-        setOperation(context, dbms, id, groupId, AccessManager.OPER_NOTIFY);
+        setOperation(context, dbms, id, groupId, ReservedOperation.view);
+        setOperation(context, dbms, id, groupId, ReservedOperation.notify);
         //
         // Restrictive: new and inserted records should not be editable,
         // their resources can't be downloaded and any interactive maps can't be
         // displayed by users in the same group
         if(fullRightsForGroup) {
-            setOperation(context, dbms, id, groupId, AccessManager.OPER_EDITING);
-            setOperation(context, dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
-            setOperation(context, dbms, id, groupId, AccessManager.OPER_DYNAMIC);
+            setOperation(context, dbms, id, groupId, ReservedOperation.editing);
+            setOperation(context, dbms, id, groupId, ReservedOperation.download);
+            setOperation(context, dbms, id, groupId, ReservedOperation.dynamic);
         }
         // Ultimately this should be configurable elsewhere
     }
@@ -3131,18 +3163,23 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.OWNER, "true");
         }
 
-        Element operations = accessMan.getAllOperations(context, id, context.getIpAddress());
-        Set<String> hsOper = accessMan.getOperations(context, id, context.getIpAddress(), operations);
+        Set<Operation> operations = accessMan.getAllOperations(context, id, context.getIpAddress());
+        Set<String> hsOper = accessMan.getOperationNames(context, id, context.getIpAddress(), operations);
 
-        addElement(info, Edit.Info.Elem.VIEW,     			String.valueOf(hsOper.contains(AccessManager.OPER_VIEW)));
-        addElement(info, Edit.Info.Elem.NOTIFY,   			String.valueOf(hsOper.contains(AccessManager.OPER_NOTIFY)));
-        addElement(info, Edit.Info.Elem.DOWNLOAD, 			String.valueOf(hsOper.contains(AccessManager.OPER_DOWNLOAD)));
-        addElement(info, Edit.Info.Elem.DYNAMIC,  			String.valueOf(hsOper.contains(AccessManager.OPER_DYNAMIC)));
-        addElement(info, Edit.Info.Elem.FEATURED, 			String.valueOf(hsOper.contains(AccessManager.OPER_FEATURED)));
+        addElement(info, Edit.Info.Elem.VIEW,               String.valueOf(hsOper.contains(ReservedOperation.view.name())));
+        addElement(info, Edit.Info.Elem.NOTIFY,             String.valueOf(hsOper.contains(ReservedOperation.notify.name())));
+        addElement(info, Edit.Info.Elem.DOWNLOAD,           String.valueOf(hsOper.contains(ReservedOperation.download.name())));
+        addElement(info, Edit.Info.Elem.DYNAMIC,            String.valueOf(hsOper.contains(ReservedOperation.dynamic.name())));
+        addElement(info, Edit.Info.Elem.FEATURED,           String.valueOf(hsOper.contains(ReservedOperation.featured.name())));
 
-        if (!hsOper.contains(AccessManager.OPER_DOWNLOAD)) {
-            boolean gDownload = Xml.selectNodes(operations, "guestoperations/record[operationid="+AccessManager.OPER_DOWNLOAD+" and groupid='-1']").size() == 1;
-            addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, gDownload+"");
+        if (!hsOper.contains(ReservedOperation.download.name())) {
+            JeevesApplicationContext appContext = context.getApplicationContext();
+            int groupId = ReservedGroup.guest.getId();
+            int metadataId = Integer.parseInt(id);
+            int operationId = ReservedOperation.download.getId();
+            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findByGroupIdAndMetadataIdAndOperationId(groupId, metadataId, operationId);
+            boolean canDownload = opAllowed != null;
+            addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, String.valueOf(canDownload));
         }
 
     }

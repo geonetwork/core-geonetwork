@@ -23,76 +23,56 @@
 
 package org.fao.geonet.kernel;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.domain.Group;
+import org.fao.geonet.kernel.domain.Metadata;
+import org.fao.geonet.kernel.domain.Operation;
+import org.fao.geonet.kernel.domain.ReservedGroup;
+import org.fao.geonet.kernel.domain.ReservedOperation;
+import org.fao.geonet.kernel.domain.Setting;
+import org.fao.geonet.kernel.repository.GroupRepository;
+import org.fao.geonet.kernel.repository.MetadataRepository;
+import org.fao.geonet.kernel.repository.OperationAllowedRepository;
+import org.fao.geonet.kernel.repository.OperationRepository;
+import org.fao.geonet.kernel.repository.SettingRepository;
 import org.jdom.Element;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
  */
+@Component
 public class AccessManager {
-	public static final String OPER_VIEW     				= "0";
-	public static final String OPER_DOWNLOAD 				= "1";
-	public static final String OPER_EDITING  				= "2";
-	public static final String OPER_NOTIFY   				= "3";
-	public static final String OPER_DYNAMIC  				= "5";
-	public static final String OPER_FEATURED 				= "6";
 
-	public static final Map<String,String> ops = new HashMap<String,String>();
+    @Autowired
+    private SettingRepository _settingRepository;
 
-	static {
-		ops.put("0","VIEW");
-		ops.put("1","DOWNLOAD");
-		ops.put("2","EDITING");
-		ops.put("3","NOTIFY");
-		ops.put("5","DYNAMIC");
-		ops.put("6","FEATURED");
-	};
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
-
-    /**
-     * Loads all permissions from database and caches them.
-     *
-     * @param dbms
-     * @param sm
-     * @throws SQLException
-     */
-	public AccessManager(Dbms dbms, SettingManager sm) throws SQLException {
-		settMan = sm;
-		@SuppressWarnings("unchecked")
-        List<Element> operList = dbms.select("SELECT * FROM Operations").getChildren();
-
-		for (Element oper : operList) {
-			String id   = oper.getChildText("id");
-			String name = oper.getChildText("name");
-
-			//--- build Hashset of all operations
-			hsAllOps.add(id);
-			hmIdToName.put(Integer.parseInt(id), name);
-			hmNameToId.put(name, Integer.parseInt(id));
-		}
-	}
-
+    @Autowired
+    private OperationRepository _opRepository;
+    
+    @Autowired
+    private MetadataRepository _metadataRepository;
+    
+    @Autowired
+    private OperationAllowedRepository _opAllowedRepository;
+    
+    @Autowired
+    private GroupRepository _groupRepository;
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -111,7 +91,7 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
+	public Set<Operation> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
 		return getOperations(context, mdId, ip, null);
 	}
 
@@ -125,36 +105,38 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
-		UserSession us = context.getUserSession();
+	public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
+		Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
-			return hsAllOps;
-		}
+			results = new HashSet<Operation>(_opRepository.findAll());
+		} else {
+    		if (operations == null) {
+    		    results = new HashSet<Operation>(getAllOperations(context, mdId, ip));
+    		}
+            else {
+                results = new HashSet<Operation>(operations);
+    		}
 
-		// otherwise build result
-		Set<String> out = new HashSet<String>();
-
-		Element ops;
-		if (operations == null) {
-			ops = getAllOperations(context, mdId, ip);
-		}
-        else {
-			ops = operations;
-		}
-
-		List<?> operIds = Xml.selectNodes(ops, "record/operationid");
-        for (Object operId : operIds) {
-            Element elem = (Element) operId;
-            out.add(elem.getText());
-        }
-		if (us.isAuthenticated() && us.getProfile().equals(Geonet.Profile.EDITOR) && out.contains(OPER_EDITING)) {
-			out.add(OPER_VIEW);
+    		UserSession us = context.getUserSession();
+            if (us.isAuthenticated() && us.getProfile().equals(Geonet.Profile.EDITOR)) {
+                results.add(_opRepository.findReservedOperation(ReservedOperation.view));
+            }
 		}
 		
-		return out;
+		return results;
 	}
 
+    public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
+        Set<String> names = new HashSet<String>();
+        
+        for (Operation op : getOperations(context, mdId, ip, operations)) {
+            names.add(op.getName());
+        }
+        
+        return names;
+    }
+	
     /**
      * Returns all operations permitted by the user on a particular metadata.
      *
@@ -164,46 +146,12 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Element getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		UserSession usrSess = context.getUserSession();
-
-        // build group list
-		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
-		StringBuffer groupList = new StringBuffer();
-
-		for (String groupId : groups) {
-		    if(groupList.length() > 0)
-		        groupList.append(", ");
-			groupList.append(groupId);
+	public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
+		Metadata md = _metadataRepository.findByIdString(mdId);
+		if(md == null) {
+		    return Collections.emptySet();
 		}
-		// get allowed operations
-		StringBuffer query = new StringBuffer();
-
-		query.append("SELECT operationId, groupId ");
-		query.append("FROM   OperationAllowed ");
-		query.append("WHERE  groupId IN (");
-		query.append(groupList.toString());
-		query.append(") AND  metadataId = ?");
-		
-		Element operations = dbms.select(query.toString(), Integer.valueOf(mdId));
-
-		// find out what they could do if they registered and offer that as as a separate element
-		if (!usrSess.isAuthenticated()) {
-			query = new StringBuffer();
-			query.append("SELECT operationId, groupId ");
-			query.append("FROM   OperationAllowed ");
-			query.append("WHERE  groupId = -1 ");
-			query.append("AND    metadataId = ?");
-			
-			Element therecords = dbms.select(query.toString(), Integer.valueOf(mdId));
-			if (therecords != null) {
-				Element guestOperations = new Element("guestoperations");
-				guestOperations.addContent(therecords.cloneContent());
-				operations.addContent(guestOperations);
-			}
-		}
-		return operations;
+		return md.getOperations();
 	}
 
     /**
@@ -450,23 +398,26 @@ public class AccessManager {
      * @throws Exception
      */
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
-        // group 'all' has the magic id 1.
-        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
-        Element result = dbms.select(query, Integer.valueOf(metadataId));
-        if(result == null) {
+        Metadata metadata = _metadataRepository.findByIdString(metadataId);
+        if(metadata == null) {
             return false;
         }
         else {
-            @SuppressWarnings("unchecked")
-            List<Element> records = result.getChildren("record");
-            for(Element record : records) {
-                String operationId = record.getChildText("operationid");
-                if(operationId != null && operationId.equals(OPER_VIEW))  {
-                    return true;
-                }
-            }
-            return false;
+            Group allGroup = _groupRepository.findReservedGroup(ReservedGroup.all);
+            int opId = ReservedOperation.view.getId();
+            return hasPermission(metadata, allGroup, opId);
         }
+    }
+
+    /**
+     * Check if the group has the permission.
+     *
+     * @param metadata the metadata object
+     * @param group the group to check
+     * @param opId the id of the operation to check for
+     */
+    public boolean hasPermission(Metadata metadata, Group group, int opId) {
+        return _opAllowedRepository.findByGroupIdAndMetadataIdAndOperationId(group.getId(), metadata.getId(), opId) != null;
     }
 
     /**
@@ -491,7 +442,7 @@ public class AccessManager {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         
         Element isEditorRes = dbms.select(isEditorQuery, 
-                                Integer.parseInt(OPER_EDITING), 
+                                ReservedOperation.editing.getId(), 
                                 Integer.parseInt(us.getUserId()), 
                                 Geonet.Profile.EDITOR, 
                                 Integer.parseInt(id));
@@ -505,11 +456,11 @@ public class AccessManager {
     /**
      * TODO javadoc.
      *
-     * @param descr
+     * @param name 
      * @return
      */
-	public int getPrivilegeId(String descr) {
-		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
+	public int getPrivilegeId(String name) {
+		return _opRepository.findByName(name).getId();
 	}
 
     /**
@@ -519,7 +470,7 @@ public class AccessManager {
      * @return
      */
 	public String getPrivilegeName(int id) {
-		return hmIdToName.get(id);
+		return _opRepository.findOne(id).getName();
 	}
 
 	//--------------------------------------------------------------------------
@@ -552,18 +503,20 @@ public class AccessManager {
 
         // IPv4
 
-		String network = settMan.getValue("system/intranet/network");
-		String netmask = settMan.getValue("system/intranet/netmask");
+		Setting network = _settingRepository.findOneByPath("system/intranet/network");
+		Setting netmask = _settingRepository.findOneByPath("system/intranet/netmask");
 
-		try {
-		long lIntranetNet  = getAddress(network);
-		long lIntranetMask = getAddress(netmask);
-		long lAddress      = getAddress(ip);
-		return (lAddress & lIntranetMask) == lIntranetNet ;
-		} catch (Exception nfe) {
+        try {
+            if (network != null && netmask != null) {
+                long lIntranetNet = getAddress(network.getValue());
+                long lIntranetMask = getAddress(netmask.getValue());
+                long lAddress = getAddress(ip);
+                return (lAddress & lIntranetMask) == lIntranetNet;
+            }
+        } catch (Exception nfe) {
 			nfe.printStackTrace();
-			return false;
 		}
+        return false;
 	}
 
     /**
@@ -584,15 +537,4 @@ public class AccessManager {
 			return a1<<24 | a2<<16 | a3<<8 | a4;
 		}
 	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private SettingManager  settMan;
-	private Set<String> hsAllOps = new HashSet<String>();
-	private Map<Integer, String> hmIdToName = new HashMap<Integer, String>();
-	private Map<String, Integer> hmNameToId = new HashMap<String, Integer>();
 }

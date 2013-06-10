@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -87,7 +88,7 @@ public class PrepareFileDownload implements Service
 		}
 		
 		//--- check download access
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 
 		//--- get metadata
         boolean withValidationErrors = false, keepXlinkAttributes = false;

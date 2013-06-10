@@ -9,10 +9,10 @@ import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Encoder;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
-import scala.actors.threadpool.Arrays;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public enum GeomFormat {

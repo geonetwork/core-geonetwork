@@ -23,15 +23,14 @@
 
 package jeeves.resources.dbms;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
 import jeeves.server.resources.Stats;
@@ -39,27 +38,30 @@ import jeeves.utils.Log;
 
 import org.geotools.data.DataStore;
 
-import org.jdom.Element;
-
-/**
- * @author sppigot
- */
-
-//=============================================================================
-
 /**
  * A pool of database connections. This class should be extended to initialize
  * database connection pool implementations (eg. JNDI via geotools or
  * apache commons database connection pool)
+ * 
+ * @author sppigot
  */
-
 public abstract class AbstractDbmsPool implements ResourceProvider {
 	public String name;
-	public String url;
 	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
 	private DataSource dataSource;
 	private DataStore  dataStore;
-	
+
+    public void init() {
+        debug(toString());
+    }
+    
+    /**
+     * Set the name of the provider.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    	
 	// --------------------------------------------------------------------------
 	// ---
 	// --- Abstract Methods that must be overridden by extending classes
@@ -67,20 +69,11 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	// --------------------------------------------------------------------------
 
 	/**
-	 * Initializes the pool from jeeves config and sets the datastore.
-	 *
-	 * @param name The name of the database pool
-	 * @param config The database config params from the jeeves config.xml file
-	 */
-	public abstract void init(String name, Element config) throws Exception;
-
-	// --------------------------------------------------------------------------
-
-	/**
 	 * Closes the datasource and/or disposes the datastore
 	 */
-	public abstract void end();
-
+    public void end() {
+        dataStore.dispose();
+    }
 	// --------------------------------------------------------------------------
 
 	/**
@@ -131,13 +124,15 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 		return name;
 	}
 
+	public abstract String getUrl();
+
 	// --------------------------------------------------------------------------
 	/**
 	 * Gets an element from the pool
 	 */
 
 	public synchronized Object open() throws Exception {
-		Dbms dbms = new Dbms(dataSource, url);
+		Dbms dbms = new Dbms(dataSource, getUrl());
 		String nullStr = null;
 		dbms.connect(nullStr, nullStr);
 		return dbms;
@@ -182,6 +177,11 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 			}
 		}
 	}
+    
+    @Override
+    public synchronized DataSource getDataSource() {
+        return dataSource;
+    }
 
 	// --------------------------------------------------------------------------
 	/**
@@ -206,21 +206,6 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 
 	public void removeListener(ResourceListener l) {
 		hsListeners.remove(l);
-	}
-
-	// --------------------------------------------------------------------------
-
-	protected int getPreparedStatementCacheSize(Element config) throws NumberFormatException {
-		int iMaxOpen = -1;
-		String maxOpenPreparedStatements = config.getChildText(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS);
-		if (maxOpenPreparedStatements != null) {
-			try {
-				iMaxOpen = Integer.valueOf(maxOpenPreparedStatements);
-			} catch (NumberFormatException nfe) {
-				throw new IllegalArgumentException(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS+" has non-integer value "+maxOpenPreparedStatements);
-			}
-		}
-		return iMaxOpen;
 	}
 
 	//---------------------------------------------------------------------------

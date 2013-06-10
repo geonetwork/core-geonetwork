@@ -92,6 +92,11 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+		<plugin>
+			<groupId>org.bsc.maven</groupId>
+			<artifactId>maven-processor-plugin</artifactId>
+          <version>2.2.3</version>
+		</plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -171,9 +176,7 @@
           <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
-          <excludes>
-            <exclude>**/trash/*.java</exclude>
-          </excludes>
+          <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
         </configuration>
       </plugin>
 
@@ -607,27 +610,10 @@
         <artifactId>lizard-tiff</artifactId>
         <version>1.0</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-annotations</artifactId>
-        <version>3.2.0.ga</version>
-        <exclusions>
-          <exclusion>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
       <dependency>
         <groupId>javax.media</groupId>
         <artifactId>jai_codec</artifactId>
         <version>1.1.3</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.persistence</groupId>
-        <artifactId>persistence-api</artifactId>
-        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
@@ -817,29 +803,47 @@
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-cas</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-config</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-ldap</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-web</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
-      <dependency>
+	  
+	  <!-- Persistence dependencies -->
+    <dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-entitymanager</artifactId>
+	  <version>4.2.2.Final</version>
+    </dependency>
+	<dependency>
+	  <groupId>org.hibernate.javax.persistence</groupId>
+	  <artifactId>hibernate-jpa-2.0-api</artifactId>
+	  <version>1.0.1.Final</version>
+	</dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+	  <version>1.3.2.RELEASE</version>
+    </dependency>
+
+	<dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>2.0.1</version>
@@ -1011,7 +1015,8 @@
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.1.0</lucene.version>
-    <spring.version>3.1.1.RELEASE</spring.version>
+    <spring.version>3.2.3.RELEASE</spring.version>
+	<spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>

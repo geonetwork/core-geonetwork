@@ -30,6 +30,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.domain.Operation;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -119,20 +121,22 @@ public class ResourceLib {
 	 *            See {@link AccessManager}.
 	 * @throws Exception
 	 */
-	public void checkPrivilege(ServiceContext context, String id,
-			String operation) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+    public void checkPrivilege(ServiceContext context, String id,
+            ReservedOperation operation) throws Exception {
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		AccessManager accessMan = gc.getBean(AccessManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
 
-		Set<String> hsOper = accessMan.getOperations(context, id, context
-				.getIpAddress());
-		
-		if (!hsOper.contains(operation)) {
-			denyAccess(context);
-		}
-	}
+        Set<Operation> hsOper = accessMan.getOperations(context, id, context.getIpAddress());
+        
+        for (Operation op : hsOper) {
+            if (op.is(operation)) {
+                return;
+            }
+        }
+            denyAccess(context);
+    }
 
 	public void denyAccess(ServiceContext context) throws Exception {
 		if (context.getUserSession().isAuthenticated()) {

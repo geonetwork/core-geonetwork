@@ -10,6 +10,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
@@ -160,7 +161,7 @@ public class MetadataRegionSearchRequest extends Request {
         String mdId = id.getMdId(context);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         
-        Lib.resource.checkPrivilege(context, mdId, AccessManager.OPER_VIEW);
+        Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
         boolean withEditorValidationErrors = false;
         boolean keepXlinkAttributes = true;

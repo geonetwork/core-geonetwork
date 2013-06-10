@@ -41,6 +41,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -125,7 +126,7 @@ public class DownloadArchive implements Service
 
 		//--- check whether notify is required
 		boolean doNotify = false;
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 		doNotify = true;
 
 		//--- set username for emails and logs
@@ -395,7 +396,7 @@ public class DownloadArchive implements Service
 				StringBuffer query = new StringBuffer();
 				query.append("SELECT g.id, g.name, g.email ");
 				query.append("FROM   OperationAllowed oa, Groups g ");
-				query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
+				query.append("WHERE  oa.operationId =" + ReservedOperation.notify.getId() + " ");
 				query.append("AND    oa.metadataId = ?");
 				query.append("AND    oa.groupId = g.id");
 

@@ -37,8 +37,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.jdom.Element;
 
-import scala.collection.mutable.StringBuilder;
-
 import java.util.Set;
 
 /**

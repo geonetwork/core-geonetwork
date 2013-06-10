@@ -27,7 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
@@ -113,7 +113,7 @@ class MEFExporter {
 
 		if (format == Format.FULL) {
 			try {
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 				MEFLib.savePrivate(zos, priDir, null);
 			} catch (Exception e) {
 				// Current user could not download private data

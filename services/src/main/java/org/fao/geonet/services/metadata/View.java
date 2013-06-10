@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.domain.ReservedOperation;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
@@ -86,7 +87,7 @@ public class View extends ShowViewBaseService {
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
 		// -----------------------------------------------------------------------
 		// --- get metadata

@@ -1,13 +1,10 @@
 package jeeves.config.springutil;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import jeeves.utils.Log;
 
-import org.geonetwork.config.MigrateConfiguration;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.Lifecycle;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
@@ -57,17 +54,6 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        String appPath = event.getServletContext().getRealPath("/");
-
-        if (!appPath.endsWith(File.separator)) {
-            appPath += File.separator;
-        }
-
-        String configPath = appPath + "WEB-INF" + File.separator;
-
-        // migrate from old configuration to new spring configuration if needed
-        new MigrateConfiguration().migrate(configPath, configPath, true);
-
         super.contextInitialized(event);
         Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
         context.start();

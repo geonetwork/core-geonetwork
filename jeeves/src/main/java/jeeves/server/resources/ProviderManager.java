@@ -23,8 +23,6 @@
 
 package jeeves.server.resources;
 
-import org.jdom.Element;
-
 import java.util.HashMap;
 
 //=============================================================================
@@ -46,15 +44,9 @@ public class ProviderManager
 	/** Register a new resource provider (like the dbmspool)
 	  */
 
-	public void register(String provider, String name, Element config) throws Exception
-	{
-		//--- load class and check it
-
-		ResourceProvider resProv =  (ResourceProvider) Class.forName(provider).newInstance();
-
-		resProv.init(name, config);
-		hmProviders.put(name, resProv);
-	}
+    public void register(ResourceProvider provider, String name) throws Exception {
+        hmProviders.put(name, provider);
+    }
 
 	//--------------------------------------------------------------------------
 
