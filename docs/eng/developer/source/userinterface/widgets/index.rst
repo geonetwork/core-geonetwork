@@ -1,18 +1,18 @@
 Widgets
 ########
 
-The geoNetwork widget framework provides a list of independent pieces of code that let you build a geonetwork user interface.
+The GeoNetwork widget framework provides a list of independent pieces of code that let you build a geonetwork user interface.
 
 Add widget
 **********
 
-Widgets are (usually) pieces of html that will be shown on your user interface. You should place them on some html structure so they are visually arranged.
+Widgets are (usually) pieces of html that will be shown on your user interface. You should place them in some html structure so they are visually arranged.
 
 .. figure:: widgets.png
 
 The widgets are prepared with some configuration options, so you can select some of the visual aspects. For example, on the picture above, you an select the number of tags on the cloud or the number of items shown on the "latest" section.
 
-To add a widget you should wait for the page to be loaded. This may be approached with the onReady function of ExtJS:
+To add a widget you should wait for the page to be loaded. This may be approached with the onReady function of ExtJS::
 
     Ext.onReady(function() {
        new GeoNetwork.TagCloudView({

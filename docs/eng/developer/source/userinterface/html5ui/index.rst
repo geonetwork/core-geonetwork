@@ -1,12 +1,12 @@
 HTML 5 UI 
-########
+#########
 
 This is an html5 based UI which uses the wigets from geonetwork and the library ExtJS.
 
 .. toctree::
     :maxdepth: 2
 
-    widgets/index.rst
+    ../widgets/index.rst
 
 It contains two maps: preview map and big map. You can access the big map
 clicking on the preview map. Both maps have synchronized layers, so if you add
@@ -21,7 +21,7 @@ Changing Style
 Basic changing styling is pretty easy with this UI:
 
 Colors
-=====
+======
  
 There is a file on web-client/src/main/resources/apps/html5ui/css/colors.css
 which contains all the colors of the app.
@@ -44,9 +44,9 @@ Results view templates
 They are on web/src/main/resources/apps/html5ui/js/Templates.js
 
 Add more tabs
-============
+=============
 
-To add more tabs just look on search.xsl around line 240 (id="main-navigation") and add a new element like this:
+To add more tabs just look on search.xsl around line 240 (id="main-navigation") and add a new element like this::
 
 
 	<li>
@@ -59,16 +59,16 @@ The value of the string will be taken from the strings.xml file that
 corresponds to the language used.
 
 Add a footer link
-================
+=================
 
-Look for the div element with id = "footer" and just add it:
+Look for the div element with id = "footer" and just add it::
 	
 	<li>
 		<a href="http://geonetwork-opensource.org/">GeoNetwork OpenSource</a>
 	</li>
 
 Maps and other elements: change display behaviour 
-================================================
+=================================================
 
 Maps are always loaded even if they are not displayed. You can change this
 behaviour and allow (for example) the big map to be shown at all times. This is
@@ -90,12 +90,12 @@ If you add a new "view", you should update all this functions so the view is
  hidden or shown when you want.
 
 Settings
-*****************************
+********
 
 There are a few configurations of this user interface defined on two javascript files.
 
 js/Settings.js
-========
+==============
 
 You can find here some global configuration settings for the UI. Usually you won't have to change any of them. 
 
@@ -105,7 +105,7 @@ There are constants like:
  * OpenLayers.ProxyHostURL: (relative or absolute) path to url required by openlayers.
 
 js/map/Settings.js
-========
+==================
 
 You can find here some specific map configuration settings for the UI. You can use this file to set up the kind of projection and default base layers the maps will use.
 
@@ -117,10 +117,10 @@ There are constants like:
  * GeoNetwork.map.MAP_OPTIONS: When the user interface creates a new secondary map, it uses this options on the constructor. Right now it works for the mini-map, but will be used on each view a secondary map is shown.
 
 Changing more complex features
-*****************************
+******************************
 
 Debugging
-========
+=========
 
 To debug javascript you only have to add a "debug" or "debug=true" parameter to
 the url like this: http://....../srv/eng/search?debug
@@ -138,7 +138,7 @@ Global variable app
 App.js creates the *app* global variable wich has (or should have) all the
 information needed for the app to run.
 
-It also initializes some secondary objects which contains information and loads more widgets:
+It also initializes some secondary objects which contains information and loads more widgets::
 
         init : function() {
 
@@ -174,7 +174,7 @@ the maps you should look here.
 Also initializes the maps (preview and big).
 
 app.searchApp
-------------
+-------------
 
 Closely related to Catalogue.js, it launches searches and initializes the
 results view. To change the advanced search you have to look here too.
@@ -183,13 +183,13 @@ More info
 *********
 
 History
-=========
+=======
 
 The ExtJS History plugin is also used on this UI. It is not quite stable (not
 at all on IE) but it can be modified to allow back button from browser to work.
 
 What is the div id="only_for_spiders"?
-===================================
+======================================
 
 As the name says, this is for spiders or crawlers. When you access with the
 direct link to a metadata, that div will be used to load plain xml data so
