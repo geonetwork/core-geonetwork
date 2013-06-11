@@ -362,6 +362,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/robots.txt" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/robots.txt" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/docs/.*" access="permitAll"></sec:intercept-url>
                 
                 <!-- Formatter services -->
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"></sec:intercept-url>
