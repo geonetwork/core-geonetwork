@@ -311,7 +311,7 @@
 							</th>
 							<td valign="top" class="padded">
 								<xsl:variable name="urlPrefix">http://www.seadatanet.org/urnurl/</xsl:variable>
-								<xsl:variable name="value"    select="substring-after(gmd:hierarchyLevelName/gmx:Anchor/text(), $urlPrefix)"/>
+								<xsl:variable name="value"    select="substring-after(gmd:hierarchyLevelName/gmx:Anchor/@xlink:href, $urlPrefix)"/>
 								<select class="md" onchange="document.getElementById('catalogueType').getElementsByTagName('input')[1].value='{$urlPrefix}'+this.options[this.selectedIndex].value.substring(0,this.options[this.selectedIndex].value.indexOf('=')).trim();document.getElementById('catalogueType').getElementsByTagName('input')[0].value=this.options[this.selectedIndex].value;" size="1">
 									<option name=""/>
 									<xsl:for-each select="$codelist/entry[not(@hideInEditMode)]">
