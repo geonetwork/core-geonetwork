@@ -67,6 +67,7 @@ TODO : Add procedure to only make a new release from an existing dev branch.
   
   # Set version numbers
   modules=( "docs" "gast" "geoserver" "installer" )
+  # TODO maybe add other modules if changes
   version=2.10.0
   devversion=2.10.x
   minorversion=RC0
@@ -154,16 +155,23 @@ TODO : Add procedure to only make a new release from an existing dev branch.
   
   
   # Push to github - could be done at the end of the process ?
-  git submodule foreach `git push origin $devversion`
+  # git submodule foreach `git push origin $devversion`
+  for i in "${modules[@]}"
+  do
+        cd $i; git add .; git push origin $devversion; cd ..
+  done
   git push origin $devversion
   
   
   # Publish in sourceforge
   sftp $sourceforge_username,geonetwork@frs.sourceforge.net
+  # For stable release
   cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
+  # or for RC release
+  cd /home/frs/project/g/ge/geonetwork/cd GeoNetwork_unstable_development_versions/
   mkdir 2.10.0
   cd 2.10.0
-  put changes*.txt
+  put docs/changes*.txt
   put geonetwork*/*.jar
   put web/target/geonetwork.war
   
@@ -172,6 +180,41 @@ TODO : Add procedure to only make a new release from an existing dev branch.
   # TODO
 
 
+
+Updating the master branch version number
+-----------------------------------------
+
+After a new development branch is created, it is required to update master version number.
+The following procedure could be applied::
+  
+  masterversion=2.9.0
+  version=2.11.0
+  modules=( "docs" "gast" "geoserver" "installer" )
+  # Get the code
+  git clone --recursive https://github.com/geonetwork/core-geonetwork.git geonetwork-$version
+  cd geonetwork-$version
+  
+  # Update version
+  ./update-version.sh $masterversion $version-SNAPSHOT
+  
+  # Update some SQL (TODO)
+  git checkout -- web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${masterversion//[.]/}/migrate-default.sql
+  mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${version//[.]/}
+  
+  # Commit
+  # git submodule foreach git add .
+  # FIXME : don't work due to $version ?
+  #git submodule foreach git commit -m "Update version to $version-SNAPSHOT."
+  for i in "${modules[@]}"
+  do
+        cd $i; git add .; git commit -m "Update version to $version-SNAPSHOT"; cd ..
+  done
+  
+  git add .
+  git commit -m "Update version to $version-SNAPSHOT."
+  git submodule foreach git push origin master
+  git push origin master
+  
 
 Upload and release on SourceForge
 ---------------------------------

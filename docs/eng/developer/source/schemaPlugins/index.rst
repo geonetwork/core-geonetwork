@@ -3,9 +3,42 @@
 Schema Plugins
 ==============
 
-A schema in GeoNetwork is a directory with stylesheets, XML schema 
-descriptions (XSDs) and other information necessary for GeoNetwork to index, 
-view and possibly edit content from XML metadata records. 
+Metadata schemas and profiles
+=============================
+
+A metadata schema describes:
+
+#. the names, descriptions and any value codelists of the elements in the metadata schema
+#. how the elements of the metadata schema are laid out in a metadata document (structure)
+#. constraints on elements and content in a metadata document
+#. documentation on how the elements of the metadata schema should be used
+#. sample metadata documents
+#. scripts to convert metadata documents to and from other metadata schemas
+
+A metadata schema is usually an implementation of a metadata standard. 
+
+A metadata profile is an adaptation of a metadata schema to suit the needs of a particular community. A metadata profile contains all the components of a metadata schema but may extend, restrict or redefine these components.
+
+Implementing a metadata schema or profile
+=========================================
+
+There are many ways in which a metadata schema or profile can be implemented. This section will describe the way in which metadata schemas are implemented on https://github.com/metadata-schemas.
+
+Each metadata schema is implemented as a filesystem tree. The root of the tree is the name of the metadata schema in abbreviated form. The essential components of a metadata schema in this tree are laid out as follows:
+
+#. **loc** directory with subdirectories for each three letter language code that this information is localized into, with the content in XML files (labels.xml, codelists.xml).  For example: ``loc/eng/codelists.xml`` describes the english codelists for metadata elements
+#. **schema** directory and file named **schema.xsd** providing a single entry point to the XSD hierarchy.  For example: ``schema/gmd/gmd.xsd``
+#. **schematron** directory has constraints on elements and content in a metadata document implemented using the ISO schematron language
+#. **docs** directory has documentation on how the elements of the metadata schema should be used.
+#. **sample-data** directory has sample metadata documents
+#. **convert** directory has XSLTs that convert metadata documents to and from other schemas
+
+More information on the content of these directories and files will be given in the next section. Note: some schemas on https://github.com/metadata-schemas have more information than described above because they have been implemented as GeoNetwork schema plugins.
+
+Schema Plugins
+==============
+
+A schema plugin that can be used in GeoNetwork is a directory of stylesheets, XML schema descriptions (XSDs) and other information necessary for GeoNetwork to index, view and possibly edit content from XML metadata records. 
 
 To be used in GeoNetwork, a schema directory can be manually placed in the 
 ``config/schema_plugins`` sub directory of 
@@ -32,11 +65,13 @@ When installed, a GeoNetwork schema is a directory.
 The following subdirectories can be present:
 
 - **convert**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. ``convert/oai_dc.xsl``
-- **loc**: (*Optional*) Directory of localized information: labels, codelists or schema specific strings. Eg. ``loc/eng/codelists.xml``
+- **docs**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. ``convert/oai_dc.xsl``
+- **loc**: (*Mandatory*) Directory of localized information: labels, codelists or schema specific strings. Eg. ``loc/eng/codelists.xml``
 - **present**: (*Mandatory*) contains XSLTs for presenting metadata in the viewer/editor and in response to CSW requests for brief, summary and full records.
 - **process**: (*Optional*) contains XSLTs for processing metadata elements by metadata suggestions mechanism (see **suggest.xsl** below).
 - **sample-data**: (*Mandatory*) Sample metadata for this schema. The metadata samples are in MEF format so that samples can have thumbnails or browse graphics as well as online resources.
 - **schema**: (*Optional*) Directory containing the official XSDs of the metadata schema. If the schema is described by a DTD then this directory is optional. Note that schemas described by a DTD cannot be edited by GeoNetwork.
+- **schematron**: (*Mandatory*) Directory containing the schematrons used to check conditions on content.
 - **templates**: (*Optional*) Directory containing template and subtemplate metadata records for this schema. Template metadata records are usually metadata records with the set of elements (and content) that will be used for a specific purpose. Eg. iso19139.mcp schema has a 'Minimum Element' template that has the mandatory elements for the schema and a example of the content that is expected. 
 
 The following stylesheets can be present:
@@ -46,7 +81,6 @@ The following stylesheets can be present:
 - **extract-thumbnails.xsl**: (*Optional*) Extract the browse graphic/thumbnail from the metadata record. 
 - **extract-uuid.xsl**: (*Mandatory*) Extract the UUID of the metadata record.
 - **index-fields.xsl**: (*Mandatory*) Index the metadata record content in Lucene. Creates the Lucene document used by GeoNetwork to index the metadata record content.
-- **schematron-rules-*.xsl**: (*Optional*) XSLT created from schematron rules when building the schema plugin (see schematrons directory).
 - **set-thumbnail.xsl**: (*Optional*) Set the browse graphic/thumbnail in the metadata record.
 - **set-uuid.xsl**: (*Optional*) Set the UUID of the metadata record.
 - **suggest.xsl**: (*Optional*) XSLT run by metadata suggestions service. The XSLT contains processes that can be registered and run on different elements of a metadata record. eg. expand keyword field with comma separated content into multiple keyword fields. See http://trac.osgeo.org/geonetwork/wiki/proposals/MetadataEditorSuggestion for more info.

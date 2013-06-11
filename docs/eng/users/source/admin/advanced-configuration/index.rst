@@ -357,14 +357,27 @@ The data directory variable can be set using:
 
 For java environment variable and servlet context parameter use:
 
- - <webappName>.dir and if not set using:
- - geonetwork.dir
+ - <webappName>.dir and if not set using geonetwork.dir
 
 
 For system environment variable use:
 
- - <webappName>_dir and if not set using:
- - geonetwork_dir
+ - <webappName>_dir and if not set using geonetwork_dir
+
+Resolution order is:
+ 
+ #. <webappname>.dir
+  #. Java environment variable (ie. -D<webappname>.dir=/a/data/dir)
+  #. Servlet context parameter (ie. web.xml)
+  #. Config.xml appHandler parameter (ie. config.xml)
+  #. System environment variable (ie. <webappname>_dir=/a/data/dir). "." is not supported in env variables
+ #. geonetwork.dir
+  #. Java environment variable (ie. -Dgeonetwork.dir=/a/data/dir)
+  #. Servlet context parameter (ie. web.xml)
+  #. Config.xml appHandler parameter (ie. config.xml)
+  #. System environment variable (ie. geonetwork_dir=/a/data/dir). "." is not supported in env variables
+
+
 
 
 Java System Property
@@ -709,3 +722,26 @@ An item element defines a facet with the following parameters:
 When an item is modified or added, reload the lucene configuration and rebuild the index from the administration panel.
 
 For easier update, config overrides could be used to modify the config-summary file (See :ref:`adv_configuration_overriddes`).
+
+Character Set
+-------------
+
+By default the character set of geonetwork is UTF-8.  This works well for many locales in the world and is compatible with ASCII
+that is typically used in US and Canada.  However, if UTF-8 is not a compatible characterset in your environment you can change
+the default.  
+
+To change it within GeoNetwork simply start the application with the system property geonetwork.file.encoding set to the desired character set name.
+
+For example if you are running tomcat you can set 
+
+JAVA_OPTS="-Dgeonetwork.file.encoding=UTF-16"
+
+to the startup script and the default codec in Geonetwork will be UTF-16.  
+
+It is also recommended to set the file.encoding parameter to the same codec as this dictates to the default encoding 
+used in Java and the Web Server may reference at times use the default codec.  
+
+Finally, by default the URL parameters are typically interpretted as ASCII characters which can be a problem when searching
+for metadata that are not in the english language.  Each Web Server will have a method for configuring the encoding
+used when reading the parameters.  For example, in Tomcat the encoding/charset configuration is in the server.xml Connector 
+element. 

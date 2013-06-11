@@ -332,10 +332,33 @@ Ce comportement est également appliqué pour les réponses au format dublin-cor
 Associer des logos aux contacts
 -------------------------------
 
-TODO
+Pour chaque contact, il est possible d'ajouter le logo de l'organisme. Le logo est renseigné dans l'élément
+instruction pour le contact (ie. gmd:contactInstruction). En édition, si ce champ n'est pas visible, basculer
+dans la vue avancée et ajouter le champ au contact.
+
+.. figure:: contact-add-logo.png
+
+Choisir "nom du fichier" dans la liste pour ajouter les informations sur le contact ainsi que le logo de
+l'organisme (ou "texte" pour uniquement ajouter les instruction sur le contact).
+
+Sélectionner le logo dans la liste des logos disponible dans le catalogue.
+
+.. figure:: contact-choose-logo.png
 
 
+Les logos sont affichés dans la page de consultation de la fiche et dans les résultats de la recherche.
 
+.. figure:: contact-logo-in-search.png
+
+
+L'information est stockée dans la fiche de la manière suivante :
+
+
+.. code-block:: xml
+
+  <gmd:contactInstructions>
+    <gmx:FileName src="http://localhost:8080/geonetwork/images/harvesting/fao.gif"/>
+  </gmd:contactInstructions>
 
 .. _compute_extent:
 

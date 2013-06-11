@@ -283,7 +283,7 @@ Debugging into eclipse
 
 Using the `JRebel plugin <http://zeroturnaround.com/software/jrebel/>`_ is very useful for debugging on eclipse. 
 
-An example of the configuration file for JRebel may be the following:
+An example of the configuration file for JRebel may be the following::
 
      <?xml version="1.0" encoding="UTF-8"?>
      <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
@@ -327,7 +327,7 @@ Code Quality Tools in Eclipse
 `````````````````````````````
 
 In order to see the same code quality warnings in eclipse as maven will detect, Find Bugs and Checkstyle need to be installed
-in your eclipse install and configured as follows:
+in your eclipse install and configured as follows::
 
  - Start Eclipse
  - Go to **Help > Eclipse Marketplace**
@@ -349,6 +349,8 @@ in your eclipse install and configured as follows:
    - Enter any name (IE Geonetwork)
    - For **location** choose **code_quality/checkstyle_checks.xml**
    - Press *OK*
+   - Select New configuration 
+   - Press *Set as Default*
   - Select **Java > FindBugs**
    - Set **analysis effort** to **Maximum**
    - Set **Minimum rank to report** to **2**
@@ -356,7 +358,7 @@ in your eclipse install and configured as follows:
    - Check(enable) all bug categories
    - Set all **Mark bugs with ... rank as** to **Warning**
    - Change to _Filter files_ tab
-    - Add **code_quality/findbugs-exclude.xml** file to the **Exclude filter files**
+    - Add **code_quality/findbugs-excludes.xml** file to the **Exclude filter files**
   - Close Prefences
   - Right click on project in **Projects View** select **Checkstyle > Activate Checkstyle**
   - Rebuild full project ( **Project > Clean...** )
@@ -364,3 +366,55 @@ in your eclipse install and configured as follows:
   - Right click on project in **Projects View** select **Find Bugs > Find Bugs**
    - FindBugs violations will show up as warnings
 
+Code Quality Tools and Maven
+````````````````````````````
+
+During the build process FindBugs and Checkstyle are ran.  If a violation is found then the build will fail.  Usually the easiest
+way of resolving violations are to use eclipse and run check style or find bugs on the class or project with the failure.  Usually
+a detailed report will be provided in eclipse along with suggested fixes.  If the violation is determined to be an intentional violation
+the **code_quality/findbugs-excludes.xml** or **code_quality/checkstyle_suppressions.xml** should be updated to suppress the reporting 
+of the violation.  (See Find Bugs and Checkstyle sections for more details.)
+
+Since the FindBugs and Checkstyle processes can be quite time consuming adding -DskipTests to the maven commandline will skip those 
+processes as well as tests.  For example:
+
+    mvn install -DskipTests
+	
+Or if you want to run the tests but skip static analysis:
+
+    mvn install -P-run-static-analysis
+	
+That disables the profile that executes the static analysis tasks.
+   
+FindBugs
+````````
+FindBugs is a tool that statically analyzes Java class files and searches for potential bugs.  It excels at finding
+issues like unclosed reasources, inconsistent locking of resources, refering null known null-values.  It also checks for
+bad practices like using default platform charset instead of a explicit charset.  
+
+Because bad practices are checked for, sometimes Findbugs detects issues that are intentional. In order to account for
+these intentional violations Findbugs has exclude filter files which contain rules for which violations should be ignored.
+In Geonetwork the excludes filter file can be found at **<root>/code_quality/findbugs-excludes.xml**.
+
+For complete details of how to specify matches in the excludes file see http://findbugs.sourceforge.net/manual/filter.html 
+and look at the existing examples in the file.
+
+The Maven build will fail if any violations are detected so it is important to run FindBugs on each project and fix or exclude
+each violation that is reported.
+
+FindBugs Annotations (JSR 305)
+``````````````````````````````
+In order to get the maximum benefit from the Findbugs (and eclipse) analysis the javax.annotation annotations can be used
+to add metadata to methods, fields and parameters.  The most commonly used annotations are @CheckForNull and @Nonnull.  These 
+can be used on a parameter or return value to indicate the parameter or return value must not be null or may be null.  The
+findbugs process will enforce these conditions and statically check that null is only ever correctly returned (in the 
+case of return values) or passed to a method (in the case of parameters).  
+
+Some resources for these annotations are:
+
+ - http://vard-lokkur.blogspot.ch/2012/03/findbugs-and-jsr-305.html
+ - http://www.infoq.com/news/2008/06/jsr-305-update
+ - http://www.klocwork.com/blog/static-analysis/jsr-305-a-silver-bullet-or-not-a-bullet-at-all/
+ - http://minds.coremedia.com/2012/10/31/jsr-305-nonnull-and-guava-preconditions/
+ - http://findbugs.sourceforge.net/manual/annotations.html (the package names are outof date 
+   and should be java.annotation instead of edu.umd.cs.findbugs.annotation but the descriptions are accurate)

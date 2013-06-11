@@ -52,13 +52,13 @@ Elle a été mise en place sur la base du travail réalisé par le projet `GeoSe
 Si vous avez des questions, trouvez des anomalies ou bien avez des améliorations, 
 contactez-nous via la liste de diffusion |project_name| à geonetwork-devel@lists.sourceforge.net.
 
-Traducteurs version francophone
-```````````````````````````````
+Version francophone
+```````````````````
 
-- Benjamin Chartier (Neogeo Technologies)
-- Paul Hasenohr (Agence Européenne de l'Environnement)
-- François-Xavier Prunayre (Neogeo Technologies)
-- Etienne Taffoureau (BRGM)
+- Benjamin Chartier
+- Paul Hasenohr
+- François-Xavier Prunayre
+- Etienne Taffoureau
 
 Qu'est ce que GeoNetwork ?
 --------------------------

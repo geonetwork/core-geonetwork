@@ -10,6 +10,7 @@ Quick Start Guide
     getting_started/index.rst
     viewing/index.rst
     new_metadata/index.rst
+    new_metadata/linking.rst
     metadata_concepts/index.rst
     newfeatures/index.rst
     installing/index.rst

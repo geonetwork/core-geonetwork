@@ -435,14 +435,27 @@ Le répertoire de données peut être configuré de 3 façons différentes:
 
 Pour les variables d'environnement Java ou les paramètres de context du Servlet, il faut utiliser :
 
- - <webappName>.dir sinon :
- - geonetwork.dir
+ - <webappName>.dir sinon geonetwork.dir
 
 
 Pour les variables d'environnement du système, il faut utiliser :
 
- - <webappName>_dir sinon
- - geonetwork_dir
+ - <webappName>_dir sinon geonetwork_dir
+
+L'ordre de résolution est le suivant :
+
+ #. <webappname>.dir
+  #. Java environment variable (ie. -D<webappname>.dir=/a/data/dir)
+  #. Servlet context parameter (ie. web.xml)
+  #. Config.xml appHandler parameter (ie. config.xml)
+  #. System environment variable (ie. <webappname>_dir=/a/data/dir)
+ #. geonetwork.dir
+  #. Java environment variable (ie. -Dgeonetwork.dir=/a/data/dir)
+  #. Servlet context parameter (ie. web.xml)
+  #. Config.xml appHandler parameter (ie. config.xml)
+  #. System environment variable (ie. geonetwork_dir=/a/data/dir)
+
+
 
 
 Variables d'environnement Java
