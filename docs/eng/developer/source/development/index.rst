@@ -283,7 +283,7 @@ Debugging into eclipse
 
 Using the `JRebel plugin <http://zeroturnaround.com/software/jrebel/>`_ is very useful for debugging on eclipse. 
 
-An example of the configuration file for JRebel may be the following:
+An example of the configuration file for JRebel may be the following::
 
      <?xml version="1.0" encoding="UTF-8"?>
      <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
@@ -327,7 +327,7 @@ Code Quality Tools in Eclipse
 `````````````````````````````
 
 In order to see the same code quality warnings in eclipse as maven will detect, Find Bugs and Checkstyle need to be installed
-in your eclipse install and configured as follows:
+in your eclipse install and configured as follows::
 
  - Start Eclipse
  - Go to **Help > Eclipse Marketplace**
