@@ -295,7 +295,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         }
     },
     actionMenuInit: function(idx, node){
-        this.acMenu = Ext.get(Ext.DomQuery.selectNode('span.md-action-menu', node));
+        this.acMenu = Ext.get(Ext.DomQuery.selectNode('div.md-action-menu', node));
         if (this.acMenu) {
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
@@ -314,7 +314,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     },
     createMenu: function(id, dv){
         var record = this.getStore().getAt(id);
-        
         if (!this.contextMenu) {
             this.contextMenu = new GeoNetwork.MetadataMenu({
                 floating: true,

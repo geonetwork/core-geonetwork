@@ -238,7 +238,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     
     createMenu: function(id, dv){
         var record = this.getStore().getAt(id);
-        
         if (!this.contextMenu) {
             this.contextMenu = new GeoNetwork.MetadataMenu({
                 floating: true,

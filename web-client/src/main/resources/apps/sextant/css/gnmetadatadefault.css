@@ -372,6 +372,9 @@ span.buttons a.small span, a.small.buttons span {
 .buttons a.down span {
   background-image : url(../images/default/bullet_arrow_down.png);
 }
+.addMenu {
+background-image: url(../images/default/add.png) !important;
+}
 
 div.button {
   float : left;
