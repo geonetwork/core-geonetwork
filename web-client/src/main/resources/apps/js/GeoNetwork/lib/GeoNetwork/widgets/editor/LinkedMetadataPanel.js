@@ -104,6 +104,11 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
          */
         resourcesTypesCfg: {
             iso19139: ['thumbnail', 'onlinesrc', 'parent', 'children', 'service', 'dataset', 'sources', 'fcats', 'sibling'],
+            'iso19139.sextant': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
+            'iso19139.emodnet.chemistry': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
+            'iso19139.emodnet.hydrography': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
+            'iso19139.myocean': ['thumbnail', 'onlinesrc', 'sibling'],
+            'iso19139.myocean.short': ['thumbnail'],
 //            'iso19139.xyz': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
             'dublin-core': ['children']
         },
@@ -178,8 +183,12 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             config.height = 450;
             config.width = 700;
         }
-        
-        window = new GeoNetwork.editor.LinkResourcesWindow(config);
+        if (this.metadataSchema === 'iso19139.myocean') {
+            window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);
+        } else {
+            window = new GeoNetwork.editor.LinkResourcesWindow(config);
+        }
+//        window = new GeoNetwork.editor.LinkResourcesWindow(config);
         window.show();
     },
     /** public: method[removeThumbnail] 
@@ -409,11 +418,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             
             // Generate relation panel content according to the relation service response
             Ext.each(this.resourcesTypes, function (type) {
-                console.log(type);
                 // Group title with a place for actions
                 var id = 'add' + this.sep + type;
                 var mds = store.query('type', type);
-                console.log(mds);
                 
                 mds.items.type = type;
                 if (panel.addMenuByType || (panel.addMenuByType === false && mds.items.length !== 0)) {

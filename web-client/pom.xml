@@ -154,6 +154,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_0_0.js</include>

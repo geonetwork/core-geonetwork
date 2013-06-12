@@ -135,7 +135,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /** api: config[identificationMode] 
          *  ``String`` Identify keyword by their label (default) or uri (requires to use gmx:Anchor in the metadata).
          */
-        identificationMode: 'label'
+        identificationMode: 'value'
     },
     initialKeywordLoaded: false,
     /** private: property[thesaurusIdentifier] 
@@ -305,7 +305,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
                     this.keywordStore.baseParams.maxResults = this.maxKeywords;
                     this.keywordStore.reload();
-                    
                 },
                 scope: this
             }

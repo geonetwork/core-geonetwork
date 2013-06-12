@@ -1379,7 +1379,7 @@
       }',keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
-      }', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
+      }', identificationMode: '{$identificationMode}', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
     
     <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>

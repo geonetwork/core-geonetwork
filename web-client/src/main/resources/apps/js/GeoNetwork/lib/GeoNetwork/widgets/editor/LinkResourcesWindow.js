@@ -87,8 +87,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 name: 'E__schema',
                 value: 'iso19110'
             }],
-            sibling: [],
-            onlinesrc: []
+            sibling: [{
+                name: 'E__groupPublished',
+                value: ''
+            }],
+            onlinesrc: [{
+                name: 'E__groupPublished',
+                value: null
+            }]
         },
         /*
          * Configuration for sibling per profile and per initiative type
@@ -1238,6 +1244,117 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
                 ctCls: 'gn-bt-main',
+                scope: this,
+                handler: function () {
+                    this.runProcess();
+                }
+            }, cancelBt]
+        });
+        return this.formPanel;
+    },
+    initComponent: function () {
+        Ext.applyIf(this, this.defaultConfig);
+        
+        GeoNetwork.editor.LinkResourcesWindow.superclass.initComponent.call(this);
+        
+        this.setTitle(OpenLayers.i18n('linkAResource-' + this.type));
+        
+        this.generateMode();
+    }
+});
+
+
+
+GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.LinkResourcesWindow, {
+    /**
+     * According to the type of resource to link build the
+     * form to populate process parameters.
+     */
+    generateMode: function () {
+        var self = this;
+        
+        var cancelBt = {
+                text: OpenLayers.i18n('cancel'),
+                iconCls: 'cancel',
+                scope: this,
+                handler: function () {
+                    self.hide();
+                }
+            };
+        
+        if (this.type === 'thumbnail') {
+            this.add(this.generateThumbnailForm(cancelBt));
+        } else if (this.type === 'onlinesrc') {
+            this.add(this.generateMultipleMetadataSelector(cancelBt));
+        } else if (this.type === 'sibling') {
+            this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
+        } else {
+            
+            this.add(this.generateMetadataSearchForm(cancelBt));
+            // TODO : add filter
+            this.doSearch();
+            //this.catalogue.search({E_template: 'n'}, null, null, 1, true, this.mdStore, null);
+        }
+    },
+    
+    /**
+     * Custom for MyOcean to allow multiple selection
+     */
+    generateMultipleMetadataSelector: function (cancelBt) {
+        
+        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
+        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
+        
+        var tpl = new Ext.XTemplate(
+                '<tpl for=".">',
+                    // TODO : add keyword definiton ?
+                    '<div class="ux-mselect-item">{title}</div>',
+                '</tpl>'
+            );
+
+        var cmp = [];
+        this.getHiddenFormInput(cmp);
+        cmp.push(this.getSearchInput());
+        
+        var itemSelector = new Ext.ux.ItemSelector({
+            dataFields: ["title"],
+            //toData: [],
+            toStore: this.mdSelectedStore,
+            msWidth: 320,
+            msHeight: 260,
+            valueField: "value",
+            hideLabel: true,
+            toSortField: undefined,
+            fromTpl: tpl,
+            toTpl: tpl,
+            toLegend: OpenLayers.i18n('Selected'),
+            fromLegend: OpenLayers.i18n('Found'),
+            fromStore: this.mdStore,
+            fromAllowTrash: false,
+            fromAllowDup: true,
+            toAllowDup: false,
+            drawUpIcon: false,
+            drawDownIcon: false,
+            drawTopIcon: false,
+            drawBotIcon: false,
+            imagePath: this.imagePath,
+            toTBar: [{
+                // control to clear all select keywwords and refresh the XML.
+                text: OpenLayers.i18n('clear'),
+                handler: function () {
+                    var i = itemSelector;
+                    itemSelector.reset.call(i);
+                },
+                scope: this
+            }]
+        });
+        cmp.push(itemSelector);
+        
+        this.formPanel = new Ext.form.FormPanel({
+            items: [cmp],
+            buttons: [{
+                text: OpenLayers.i18n('link'),
+                iconCls: 'linkIcon',
                 scope: this,
                 handler: function () {
                     this.runProcess();

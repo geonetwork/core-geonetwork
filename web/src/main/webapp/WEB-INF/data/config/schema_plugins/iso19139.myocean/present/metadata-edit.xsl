@@ -531,9 +531,9 @@
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="$productTypeKeywords/../geonet:element/@ref"/>
-								<xsl:with-param name="widgetMode" select="'combo'"/>
+								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 								<xsl:with-param name="thesaurusId" select="'local.discipline.myocean.discipline'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($productTypeKeywords/gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($productTypeKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
@@ -551,7 +551,7 @@
 								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 								<xsl:with-param name="thesaurusId" select="'local.feature-type.myocean.feature-type'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
 <!--								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName, '#,#'), '''', '\\'''), '#', '''')"/>-->
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
@@ -581,7 +581,7 @@
 								<xsl:with-param name="elementRef" select="$areaOfBenefitKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 								<xsl:with-param name="thesaurusId" select="'local.area-of-benefit.myocean.area-of-benefit'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($areaOfBenefitKeywords/gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($areaOfBenefitKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
@@ -608,7 +608,7 @@
 								<xsl:with-param name="elementRef" select="$oceanVariablesKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="''"/>
 								<xsl:with-param name="thesaurusId" select="'local.parameter.myocean.ocean-variables'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanVariablesKeywords/gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanVariablesKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
@@ -693,7 +693,7 @@
 										<xsl:with-param name="elementRef" select="$refAreaKeywords/../geonet:element/@ref"/>
 										<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 										<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.myocean.reference-geographical-area'"/>
-										<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refAreaKeywords/gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+										<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 										<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 										<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 									</xsl:call-template>
@@ -941,7 +941,7 @@
 										<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 										<xsl:with-param name="widgetMode" select="'combo'"/>
 										<xsl:with-param name="thesaurusId" select="'local.temporal-scale.myocean.temporal-scale'"/>
-										<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+										<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 										<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 										<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 									</xsl:call-template>
@@ -979,7 +979,7 @@
 								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'combo'"/>
 								<xsl:with-param name="thesaurusId" select="'local.processing-level.myocean.processing-level'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
